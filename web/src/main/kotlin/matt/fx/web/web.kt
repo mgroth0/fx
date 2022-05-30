@@ -15,6 +15,7 @@ import kotlinx.coroutines.NonCancellable.cancel
 import matt.async.daemon
 import matt.async.date.sec
 import matt.hurricanefx.eye.lang.DProp
+import matt.hurricanefx.layout.perfectBind
 import matt.hurricanefx.tornadofx.async.runLater
 import matt.hurricanefx.tornadofx.fx.attachTo
 import matt.hurricanefx.tornadofx.nodes.add
@@ -84,183 +85,13 @@ infix fun WebView.minBind(other: Stage) {
   minWidthProperty().bind(other.widthProperty())
 }
 
-@Suppress("unused")
-@ExperimentalContracts
-fun WebView.specialTransferingToWindowAndBack(par: Pane) {
-
-  val wv = this
-  this.setOnKeyPressed { k ->
-    if (k.code == KeyCode.W && k.isMetaDown) {
-      if (this.scene.root == this) {
-        this.removeFromParent()
-        (this.scene.window as Stage).close()
-        par.add(wv)
-        perfectBind(par)
-        runLater { zoom = perfectZoom(par.width) }
-        k.consume()
-      }
-    }
-  }
-
-  onDoubleClick {
-    if (this.scene.root != this) {
-      this.removeFromParent()
-      this.openInNewWindow().apply {
-        perfectBind(this)
-        setOnCloseRequest {
-          this.removeFromParent()
-          par.add(wv)
-          runLater { zoom = perfectZoom(par.width) }
-        }
-      }
-      runLater { zoom = perfectZoom(this.width) }
-    }
-  }
-}
 
 
-@ExperimentalContracts
-class WebViewPane private constructor(file: File? = null, html: String? = null): VBox() {
-
-  constructor(file: File): this(file = file, html = null)
-
-  constructor(html: String): this(html = html, file = null)
-
-  fun specialZooming() {
-    wv.specialZooming(this)
-  }
 
 
-  fun specialTransferingToWindowAndBack(par: Pane) {
-    val vb = this
-    this.setOnKeyPressed { k ->
-      if (k.code == KeyCode.W && k.isMetaDown) {
-        if (this.scene.root == this) {
-          this.removeFromParent()
-          (this.scene.window as Stage).close()
-          par.add(vb)
-          perfectBind(par)
-          runLater { wv.zoom = perfectZoom(vb.width) }
-          k.consume()
-        }
-      }
-    }
 
 
-    onDoubleClick {
-      if (this.scene.root != this) {
-        this.removeFromParent()
-        this.openInNewWindow().apply {
-          perfectBind(this)
-          setOnCloseRequest {
-            this.removeFromParent()
-            par.add(vb)
-            runLater { wv.zoom = perfectZoom(vb.width) }
-          }
-        }
-        runLater { wv.zoom = perfectZoom(vb.width) }
-      }
-    }
-  }
 
-  val wv = if (file != null) ImageRefreshingWebView(file) else {
-    WebView().apply {
-      engine.loadContent(html)
-    }
-  }
-
-  init {
-    if (html != null) {
-      mcontextmenu {
-        "copy html" does { html.copyToClipboard() }
-      }
-    }
-    actionbutton("refresh") {
-      wv.engine.reload()
-    }
-    add(wv.apply {
-      vgrow = Priority.ALWAYS
-    })
-  }
-}
-
-fun ImageRefreshingWebView(file: File) = WebView().apply {
-
-  engine.onError = EventHandler { event -> System.err.println(event) }
-
-
-  var refreshThisCycle = false
-
-  engine.loadWorker.stateProperty().addListener { _, _, new ->
-
-    println("${file.name}:loadstate:${new}")
-
-    val window = engine.executeScript("window") as JSObject
-    window.setMember("java", JavaBridge())
-    engine.executeScript(
-      """
-            console.log = function(message) {
-                java.log(message)
-            }
-        """.trimIndent()
-    )
-
-    //        println("refresh1${file.absolutePath})")
-
-
-    refreshThisCycle = true
-    //        refresh() // have to refresh once in the beginning or even a brand new webview will matt.gui.ser.load outdated caches
-
-  }
-
-
-  engine.load(file.toURI().toString())
-  daemon {
-    val imgFiles = mutableMapOf<File, Long>()
-    Jsoup.parse(file.readText()).allElements.forEach {
-      if (it.tag().name == "img") {
-        val src = it.attributes()["src"]
-        val imgFile = file.parentFile.toPath().resolve(src).normalize().toFile()
-        imgFiles[imgFile] = imgFile.lastModified()
-      }
-    }
-    println("watching mtimes of:")
-    for (entry in imgFiles) {
-      println("\t" + entry.key.toString())
-    }
-
-    refreshWhileInSceneEvery(2.sec) {
-      if (!file.exists()) cancel()
-
-      for (entry in imgFiles) {
-        if (entry.key.lastModified() != entry.value) {
-          imgFiles[entry.key] = entry.key.lastModified()
-          refreshThisCycle = true
-        }
-      }
-      if (refreshThisCycle) {
-        refreshThisCycle = false
-        //                println("refresh2(${file.absolutePath})")
-        runLaterReturn {
-          println("executing js refresh!")
-          engine.executeScript(refreshImages)
-        }
-      }
-    }
-  }
-}
-
-
-@Suppress("unused")
-class JavaBridge {
-  fun log(text: String?) {
-    println("WebView->JavaBridge:${text}")
-  }
-
-  fun copy(s: Any) {
-    s.toString().copyToClipboard()
-  }
-}
 
 @Language("JavaScript")
 val refreshImages = """
