@@ -3,4 +3,5 @@ dependencies {
   implementation(libs.fx.web)
   implementation(projects.kj.hurricanefx.eye)
   implementation(projects.kj.hurricanefx)
+  implementation(libs.jsoup)
 }
