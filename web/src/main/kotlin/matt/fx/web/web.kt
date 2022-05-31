@@ -26,7 +26,7 @@ import matt.klib.lang.NEVER
 import netscape.javascript.JSObject
 import org.intellij.lang.annotations.Language
 import org.jsoup.Jsoup
-import java.io.File
+
 import kotlin.contracts.ExperimentalContracts
 
 fun WebView.exactWidthProperty() = SimpleDoubleProperty().also {
