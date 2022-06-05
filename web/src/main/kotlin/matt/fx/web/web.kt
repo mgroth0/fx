@@ -1,33 +1,17 @@
 package matt.fx.web
 
 import javafx.beans.property.SimpleDoubleProperty
-import javafx.event.EventHandler
 import javafx.event.EventTarget
 import javafx.scene.input.KeyCode
-import javafx.scene.layout.Pane
-import javafx.scene.layout.Priority
 import javafx.scene.layout.Region
-import javafx.scene.layout.VBox
 import javafx.scene.web.HTMLEditor
 import javafx.scene.web.WebView
 import javafx.stage.Stage
-import kotlinx.coroutines.NonCancellable.cancel
-import matt.async.daemon
-import matt.async.date.sec
 import matt.hurricanefx.eye.lang.DProp
-import matt.hurricanefx.layout.perfectBind
 import matt.hurricanefx.tornadofx.async.runLater
 import matt.hurricanefx.tornadofx.fx.attachTo
-import matt.hurricanefx.tornadofx.nodes.add
-import matt.hurricanefx.tornadofx.nodes.onDoubleClick
-import matt.hurricanefx.tornadofx.nodes.removeFromParent
-import matt.hurricanefx.tornadofx.nodes.vgrow
 import matt.klib.lang.NEVER
-import netscape.javascript.JSObject
 import org.intellij.lang.annotations.Language
-import org.jsoup.Jsoup
-
-import kotlin.contracts.ExperimentalContracts
 
 fun WebView.exactWidthProperty() = SimpleDoubleProperty().also {
   minWidthProperty().bind(it)
