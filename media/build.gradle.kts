@@ -1,5 +1,5 @@
 modtype = LIB
 
 dependencies {
-  	implementation(libs.fx.media)
+  	api(libs.fx.media)
 }
