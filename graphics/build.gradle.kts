@@ -1,6 +1,7 @@
 modtype = LIB
 
 dependencies {
-	implementation(projects.kj.kjlib.lang)
-  	implementation(libs.fx.graphics)
+	api(projects.kj.kjlib.lang)
+  	api(libs.fx.graphics)
+  	api(projects.kj.hurricanefx.eye)
 }
