@@ -25,10 +25,10 @@ import matt.fx.graphics.style.DARK_MODENA_CSS
 import matt.fx.graphics.style.DarkModeController.darkModeProp
 import matt.fx.graphics.style.borderFill
 import matt.fx.graphics.style.styleInfo
-import matt.gui.win.interact.WinGeom
-import matt.gui.win.interact.WinOwn
-import matt.gui.win.interact.openInNewWindow
-import matt.gui.win.winfun.noDocking
+import matt.fx.graphics.win.interact.WinGeom
+import matt.fx.graphics.win.interact.WinOwn
+import matt.fx.graphics.win.interact.openInNewWindow
+import matt.fx.graphics.win.winfun.noDocking
 import matt.hurricanefx.tornadofx.async.runLater
 import matt.hurricanefx.tornadofx.menu.item
 import matt.hurricanefx.tornadofx.menu.menu
