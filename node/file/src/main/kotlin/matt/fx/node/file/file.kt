@@ -28,10 +28,8 @@ import matt.auto.openInSublime
 import matt.fx.web.specialZooming
 import matt.fx.graphics.clip.copyToClipboard
 import matt.fx.graphics.menu.context.mcontextmenu
-import matt.gui.core.refresh.refreshWhileInSceneEvery
 import matt.gui.draggableIcon
 import matt.gui.fxlang.onSelect
-import matt.gui.loop.runLaterReturn
 import matt.gui.setview.autoResizeColumns
 import matt.gui.setview.simpleCellFactory
 import matt.fx.graphics.win.interact.doubleClickToOpenInWindow
@@ -69,6 +67,10 @@ import java.lang.ref.WeakReference
 import java.net.URL
 import kotlin.concurrent.thread
 import javafx.scene.layout.Priority.ALWAYS
+import matt.fx.graphics.layout.perfectBind
+import matt.fx.graphics.refreshWhileInSceneEvery
+import matt.fx.web.WebViewPane
+import matt.hurricanefx.tornadofx.async.runLaterReturn
 
 
 private const val LINE_LIMIT = 1000
