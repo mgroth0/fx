@@ -1,6 +1,7 @@
 package matt.fx.web
 
 import javafx.beans.property.SimpleDoubleProperty
+import javafx.event.EventHandler
 import javafx.event.EventTarget
 import javafx.scene.input.KeyCode
 import javafx.scene.layout.Pane
@@ -10,16 +11,26 @@ import javafx.scene.layout.VBox
 import javafx.scene.web.HTMLEditor
 import javafx.scene.web.WebView
 import javafx.stage.Stage
+import kotlinx.coroutines.NonCancellable
+import matt.async.daemon
+import matt.async.date.sec
+import matt.fx.graphics.clip.copyToClipboard
+import matt.fx.graphics.layout.perfectBind
+import matt.fx.graphics.refreshWhileInSceneEvery
 import matt.hurricanefx.eye.lang.DProp
 import matt.hurricanefx.tornadofx.async.runLater
+import matt.hurricanefx.tornadofx.async.runLaterReturn
 import matt.hurricanefx.tornadofx.fx.attachTo
 import matt.hurricanefx.tornadofx.nodes.add
 import matt.hurricanefx.tornadofx.nodes.onDoubleClick
 import matt.hurricanefx.tornadofx.nodes.removeFromParent
 import matt.hurricanefx.tornadofx.nodes.vgrow
 import matt.klib.file.MFile
+import matt.klib.file.toMFile
 import matt.klib.lang.NEVER
+import netscape.javascript.JSObject
 import org.intellij.lang.annotations.Language
+import org.jsoup.Jsoup
 import kotlin.contracts.ExperimentalContracts
 
 fun WebView.exactWidthProperty() = SimpleDoubleProperty().also {
@@ -302,5 +313,86 @@ fun WebView.specialTransferingToWindowAndBack(par: Pane) {
       }
       runLater { zoom = perfectZoom(this.width) }
     }
+  }
+}
+
+
+
+fun ImageRefreshingWebView(file: MFile) = WebView().apply {
+
+  engine.onError = EventHandler { event -> System.err.println(event) }
+
+
+  var refreshThisCycle = false
+
+  engine.loadWorker.stateProperty().addListener { _, _, new ->
+
+    println("${file.name}:loadstate:${new}")
+
+    val window = engine.executeScript("window") as JSObject
+    window.setMember("java", JavaBridge())
+    engine.executeScript(
+      """
+            console.log = function(message) {
+                java.log(message)
+            }
+        """.trimIndent()
+    )
+
+    //        println("refresh1${file.absolutePath})")
+
+
+    refreshThisCycle = true
+    //        refresh() // have to refresh once in the beginning or even a brand new webview will matt.gui.ser.load outdated caches
+
+  }
+
+
+  engine.load(file.toURI().toString())
+  daemon {
+    val imgFiles = mutableMapOf<MFile, Long>()
+    Jsoup.parse(file.readText()).allElements.forEach {
+      if (it.tag().name == "img") {
+        val src = it.attributes()["src"]
+        val imgFile = file.parentFile!!.toPath().resolve(src).normalize().toFile().toMFile()
+        imgFiles[imgFile] = imgFile.lastModified()
+      }
+    }
+    println("watching mtimes of:")
+    for (entry in imgFiles) {
+      println("\t" + entry.key.toString())
+    }
+
+    refreshWhileInSceneEvery(2.sec) {
+      @Suppress("DEPRECATION")
+      if (!file.exists()) NonCancellable.cancel() // NOSONAR
+
+      for (entry in imgFiles) {
+        if (entry.key.lastModified() != entry.value) {
+          imgFiles[entry.key] = entry.key.lastModified()
+          refreshThisCycle = true
+        }
+      }
+      if (refreshThisCycle) {
+        refreshThisCycle = false
+        //                println("refresh2(${file.absolutePath})")
+        runLaterReturn {
+          println("executing js refresh!")
+          engine.executeScript(refreshImages)
+        }
+      }
+    }
+  }
+}
+
+
+@Suppress("unused")
+class JavaBridge {
+  fun log(text: String?) {
+    println("WebView->JavaBridge:${text}")
+  }
+
+  fun copy(s: Any) {
+    s.toString().copyToClipboard()
   }
 }

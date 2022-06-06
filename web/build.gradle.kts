@@ -1,10 +1,14 @@
 modtype = LIB
 
-dependencies {
-  implementation(projects.kj.kjlib.lang)
-  api(libs.fx.web)
-//  implementation(projects.kj.fx.graphics)
-  implementation(projects.kj.hurricanefx.eye)
-  implementation(projects.kj.hurricanefx)
-  implementation(libs.jsoup)
-}
+apis(
+  libs.fx.web,
+  projects.kj.fx.graphics
+)
+
+implementations(
+  projects.kj.kjlib.lang,
+  projects.kj.hurricanefx.eye,
+  projects.kj.hurricanefx,
+  libs.jsoup
+)
+

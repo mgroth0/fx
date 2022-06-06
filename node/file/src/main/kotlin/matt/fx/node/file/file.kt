@@ -26,7 +26,7 @@ import matt.auto.open
 import matt.auto.openInIntelliJ
 import matt.auto.openInSublime
 import matt.fx.web.specialZooming
-import matt.gui.clip.copyToClipboard
+import matt.fx.graphics.clip.copyToClipboard
 import matt.gui.core.context.mcontextmenu
 import matt.gui.core.refresh.refreshWhileInSceneEvery
 import matt.gui.draggableIcon
