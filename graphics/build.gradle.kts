@@ -5,4 +5,6 @@ apis(
   libs.fx.graphics,
   projects.kj.hurricanefx,
   libs.jSystemThemeDetector,
+  projects.kj.hotkey,
+  projects.kj.auto
 )
