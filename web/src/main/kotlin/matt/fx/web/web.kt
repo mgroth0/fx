@@ -21,6 +21,7 @@ import matt.fx.graphics.menu.context.mcontextmenu
 import matt.fx.graphics.refreshWhileInSceneEvery
 import matt.fx.graphics.win.interact.openInNewWindow
 import matt.hurricanefx.eye.lang.DProp
+import matt.hurricanefx.eye.lib.onChangeOnce
 import matt.hurricanefx.tornadofx.async.runLater
 import matt.hurricanefx.tornadofx.async.runLaterReturn
 import matt.hurricanefx.tornadofx.fx.attachTo
@@ -138,6 +139,7 @@ val AB = solve(Y1, Z1, Y2, Z2)
 val A = AB.first
 val B = AB.second
 fun perfectZoom(width_or_height: Double): Double {
+  require(width_or_height!=0.0)
   val r = width_or_height*A + B
   println("perfect zoom of $width_or_height is $r")
   return r
@@ -155,28 +157,47 @@ fun WebView.specialZooming(par: Region? = null) {
   setOnKeyPressed {
     if (it.code == KeyCode.EQUALS) {
 
+      if (zoom == 0.0) zoom = 1.0
+
       zoom *= SPECIAL_ZOOM_RATE
 
       scrollBy(SCROLL_COMPENSATION_RATE*(width/2.0)/zoom, SCROLL_COMPENSATION_RATE*(height/2.0)/zoom)
 
+      println("zoom=${zoom}")
+
     } else if (it.code == KeyCode.MINUS) {
+
+      if (zoom == 0.0) zoom = 1.0
+
       zoom /= SPECIAL_ZOOM_RATE
 
       scrollBy(-SCROLL_COMPENSATION_RATE*(width/2.0)/zoom, -SCROLL_COMPENSATION_RATE*(height/2.0)/zoom)
-
+      println("zoom=${zoom}")
     }
   }
   setOnZoom {
+
+    if (zoom == 0.0) zoom = 1.0
+
     zoom *= it.zoomFactor
     val compensation = it.zoomFactor - 1.0
     scrollBy(compensation*(width/2.0)/zoom, compensation*(height/2.0)/zoom)
+    println("zoom=${zoom}")
   }
 
 
 
 
   if (par != null) {
-    runLater { zoom = perfectZoom(par.width) }
+    runLater {
+      val w = par.width
+      if (w != 0.0) zoom = perfectZoom(par.width)
+      else {
+        par.widthProperty().onChangeOnce {
+          zoom = perfectZoom(it!!.toDouble())
+        }
+      }
+    }
   }
 
 

@@ -9,6 +9,8 @@ import matt.auto.compileAndOrRunApplescript
 import matt.auto.interactiveOsascript
 import matt.fx.graphics.mag.left
 import matt.hurricanefx.tornadofx.async.runLater
+import matt.klib.log.warn
+import matt.klib.todo
 import kotlin.concurrent.thread
 
 fun moveFrontmostWindowByApplescript(x: Number, y: Number, width: Number, height: Number) {
@@ -21,20 +23,6 @@ fun moveFrontmostWindowByApplescript(x: Number, y: Number, width: Number, height
 	  height.toInt().toString()
 	)
   )
-  /*  applescript(
-	  """
-	  tell application "System Events"
-		  set frontmostProcess to first application process where it is frontmost
-		  tell frontmostProcess
-			  tell (1st window whose value of attribute "AXMain" is true)
-				  set windowTitle to value of attribute "AXTitle"
-				  set position to {${x.toInt()}, ${y.toInt()}}
-				  set size to {${width.toInt()}, ${height.toInt()}}
-			  end tell
-		  end tell
-	  end tell
-	""".trimIndent()
-	)*/
 }
 
 fun moveAppWindowByApplescript(app: String, x: Number, y: Number, width: Number, height: Number) {
@@ -56,18 +44,6 @@ fun moveAppWindowByApplescript(app: String, x: Number, y: Number, width: Number,
 
 fun getFrontmostWindowPositionAndSizeByApplescript(): Rectangle2D {
   var s = compileAndOrRunApplescript("getFrontmostWindowPositionAndSize")
-  /*var s = applescript(
-	"""
-	tell application "System Events"
-		set frontmostProcess to first application process where it is frontmost
-		tell frontmostProcess
-			tell (1st window whose value of attribute "AXMain" is true)
-				return {position, size}
-			end tell
-		end tell
-	end tell
-  """.trimIndent()
-  )*/
   val x = s.substringBefore(",").trim().toInt()
   s = s.substringAfter(",")
   val y = s.substringBefore(",").trim().toInt()
@@ -101,20 +77,12 @@ fun getAppWindowPositionAndSizeByApplescript(app: String): Rectangle2D {
   return Rectangle2D(x.toDouble(), y.toDouble(), width.toDouble(), height.toDouble())
 }
 
+@Deprecated("use kotlin native instead")
 fun getNameOfFrontmostProcessFromApplescript(): String {
   return compileAndOrRunApplescript(
 	"getNameOfFrontmostProcess",
   )
-  /*return applescript(
-	"""
-	tell application "System Events"
-		set frontmostProcess to first application process where it is frontmost
-		return name of frontmostProcess
-	end tell
-  """.trimIndent()
-  )*/
 }
-
 
 
 fun sdtInTest() {
@@ -151,34 +119,19 @@ fun appleLeft() {
   /*https://stackoverflow.com/questions/70647124/how-to-reduce-overhead-and-run-applescripts-faster*/
   sdtInTest()
   val t = tic()
-  t.toc("toc1")
-  t.toc("toc2")
-  println("LEFT!")
   val appName = getNameOfFrontmostProcessFromApplescript()
-  t.toc("toc3")
-  println("appName=${appName}")
   if (appName != "java") {
 	val bounds = getFrontmostWindowPositionAndSizeByApplescript()
-	t.toc("toc4")
-	applescript("1+1")
-	t.toc("toc4.5")
-	compileAndOrRunApplescript("onePlusOne")
-	t.toc("toc4.6")
-	println("bounds=${bounds}")
 	runLater {
-	  t.toc("toc5")
 	  val screen =
 		Screen.getScreensForRectangle(bounds.minX, bounds.minY, bounds.width, bounds.height).firstOrNull()!!
-	  t.toc("toc6")
 	  moveFrontmostWindowByApplescript(
 		screen.bounds.minX,
 		screen.bounds.minY,
 		screen.bounds.width/2,
 		screen.bounds.height
 	  )
-	  t.toc("toc7")
 	}
-	t.toc("toc8")
   }
   if (false) {
 	runLater {
@@ -186,6 +139,4 @@ fun appleLeft() {
 	  fakeStage.left()
 	}
   }
-  /*matt.gui.mag.apple.moveFrontmostWindowByApplescript()*/
-  //aaaaaaaa
 }
