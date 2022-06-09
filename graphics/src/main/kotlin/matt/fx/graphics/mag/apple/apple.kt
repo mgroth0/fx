@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package matt.fx.graphics.mag.apple
 
 import javafx.geometry.Rectangle2D
