@@ -118,8 +118,8 @@ fun sdtInTest() {
 fun appleLeft() {
   /*https://stackoverflow.com/questions/70647124/how-to-reduce-overhead-and-run-applescripts-faster*/
   sdtInTest()
-  val t = tic()
-  val appName = getNameOfFrontmostProcessFromApplescript()
+  tic()
+  val appName = getNameOfFrontmostProcessFromApplescript() // NOSONAR
   if (appName != "java") {
 	val bounds = getFrontmostWindowPositionAndSizeByApplescript()
 	runLater {
