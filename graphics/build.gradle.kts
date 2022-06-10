@@ -1,10 +1,10 @@
 modtype = LIB
 
 apis(
-//  projects.kj.kjlib.lang,
   libs.fx.graphics,
-  projects.kj.hurricanefx,
   libs.jSystemThemeDetector,
+
+//  projects.kj.hurricanefx,
   projects.kj.hotkey,
   projects.kj.auto
 )
