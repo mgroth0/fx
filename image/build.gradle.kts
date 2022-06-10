@@ -1,7 +1,7 @@
 modtype = LIB
 
 dependencies {
-  implementation(projects.kj.kjlib.lang)
+//  implementation(projects.kj.kjlib.lang)
   implementation(libs.fx.swing)
-  implementation(projects.kj.kjlib)
+//  implementation(projects.kj.kjlib)
 }
