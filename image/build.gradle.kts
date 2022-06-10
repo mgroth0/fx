@@ -5,5 +5,5 @@ dependencies {
   implementation(libs.fx.swing)
   //  implementation(projects.kj.kjlib)
   //  implementation(projects.k.kl.)
-  projectOrLocalMavenJVM("implementation", "k:klib")
+  projectOrLocalMavenJVM("api", "k:klib")
 }
