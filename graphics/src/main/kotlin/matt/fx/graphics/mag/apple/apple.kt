@@ -2,6 +2,7 @@
 
 package matt.fx.graphics.mag.apple
 
+import javafx.application.Platform.runLater
 import javafx.geometry.Rectangle2D
 import javafx.stage.Screen
 import javafx.stage.Stage
@@ -10,9 +11,6 @@ import matt.auto.applescript
 import matt.auto.compileAndOrRunApplescript
 import matt.auto.interactiveOsascript
 import matt.fx.graphics.mag.left
-import matt.hurricanefx.tornadofx.async.runLater
-import matt.klib.log.warn
-import matt.klib.todo
 import kotlin.concurrent.thread
 
 fun moveFrontmostWindowByApplescript(x: Number, y: Number, width: Number, height: Number) {

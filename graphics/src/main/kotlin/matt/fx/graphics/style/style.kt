@@ -1,6 +1,7 @@
 package matt.fx.graphics.style
 
 import com.jthemedetecor.OsThemeDetector
+import javafx.application.Platform.runLater
 import javafx.css.Styleable
 import javafx.scene.layout.Border
 import javafx.scene.layout.BorderStroke
@@ -8,7 +9,6 @@ import javafx.scene.layout.BorderStrokeStyle
 import javafx.scene.layout.Region
 import javafx.scene.paint.Color
 import javafx.scene.paint.Paint
-import matt.hurricanefx.tornadofx.async.runLater
 import matt.klib.commons.RootProject.flow
 import matt.klib.commons.get
 import matt.kjlib.prop.BasicBooleanProperty

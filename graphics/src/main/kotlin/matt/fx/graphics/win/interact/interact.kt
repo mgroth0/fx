@@ -1,5 +1,6 @@
 package matt.fx.graphics.win.interact
 
+import javafx.application.Platform.runLater
 import javafx.beans.binding.DoubleBinding
 import javafx.beans.value.ObservableValue
 import javafx.geometry.Pos
@@ -37,7 +38,6 @@ import matt.hurricanefx.eye.lang.BProp
 import matt.hurricanefx.eye.lib.onChange
 import matt.hurricanefx.eye.prop.booleanBinding
 import matt.hurricanefx.eye.prop.doubleBinding
-import matt.hurricanefx.tornadofx.async.runLater
 import matt.hurricanefx.tornadofx.control.button
 import matt.hurricanefx.tornadofx.control.textarea
 import matt.hurricanefx.tornadofx.dialog.alert

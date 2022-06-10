@@ -1,5 +1,6 @@
 package matt.fx.graphics.core.scene
 
+import javafx.application.Platform.runLater
 import javafx.event.Event
 import javafx.scene.Node
 import javafx.scene.Parent
@@ -29,7 +30,6 @@ import matt.fx.graphics.win.interact.WinGeom
 import matt.fx.graphics.win.interact.WinOwn
 import matt.fx.graphics.win.interact.openInNewWindow
 import matt.fx.graphics.win.winfun.noDocking
-import matt.hurricanefx.tornadofx.async.runLater
 import matt.hurricanefx.tornadofx.menu.item
 import matt.hurricanefx.tornadofx.menu.menu
 import matt.stream.recurse.recurse
