@@ -3,6 +3,7 @@ package matt.fx.graphics.async
 /*slightly modified code I stole from tornadofx*/
 
 import javafx.application.Platform
+import javafx.application.Platform.runLater
 import matt.async.date.Duration
 import matt.fx.graphics.async.ThreadPoolType.Daemon
 import matt.fx.graphics.async.ThreadPoolType.NoDaemon
@@ -43,12 +44,6 @@ private class TFXThreadFactory(val daemon: Boolean): ThreadFactory {
   private fun threadName() = "tornadofx-thread-${threadCounter.incrementAndGet()}" + if (daemon) "-daemon" else ""
 }
 
-
-/**
- * Run the specified Runnable on the JavaFX Application Thread at some
- * unspecified time in the future.
- */
-fun runLater(op: ()->Unit) = Platform.runLater(op)
 
 private val runLaterTimer: Timer by lazy { Timer(true) }
 
