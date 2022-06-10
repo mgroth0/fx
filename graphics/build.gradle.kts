@@ -8,7 +8,9 @@ apis(
   projects.kj.async,
   projects.kj.hotkey,
   projects.kj.auto,
-  projects.kj.fx.image
+  projects.kj.fx.image,
+  projects.k.stream,
+  projects.kj.kjlib
 )
 
 implementations(
