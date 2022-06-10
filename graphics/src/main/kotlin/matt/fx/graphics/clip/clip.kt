@@ -26,3 +26,13 @@ fun clipboardString(): String? =
 	.getSystemClipboard()
 	.getContent(DataFormat.PLAIN_TEXT) as? String
 
+
+fun Clipboard.setContent(op: ClipboardContent.() -> Unit) {
+  val content = ClipboardContent()
+  op(content)
+  setContent(content)
+}
+
+fun Clipboard.putString(value: String) = setContent { putString(value) }
+fun Clipboard.putFiles(files: MutableList<MFile>) = setContent { putFiles(files.map { it.userFile }) }
+fun Clipboard.put(dataFormat: DataFormat, value: Any) = setContent { put(dataFormat, value) }
