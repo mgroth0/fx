@@ -331,6 +331,8 @@ fun EventTarget.pagination(pageCount: Int? = null, pageIndex: Int? = null, op: P
   return opcr(this, pagination, op)
 }
 
+class dummyClassYesIuse()
+
 fun EventTarget.scrollpane(
   fitToWidth: Boolean = false,
   fitToHeight: Boolean = false,
