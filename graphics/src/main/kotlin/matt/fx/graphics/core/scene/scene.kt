@@ -30,8 +30,10 @@ import matt.fx.graphics.win.interact.WinGeom
 import matt.fx.graphics.win.interact.WinOwn
 import matt.fx.graphics.win.interact.openInNewWindow
 import matt.fx.graphics.win.winfun.noDocking
+import matt.kjlib.byte.MemReport
 import matt.klib.commons.get
 import matt.klib.file.MFile
+import matt.stream.recurse.recurse
 
 import java.net.URL
 import kotlin.reflect.KClass
