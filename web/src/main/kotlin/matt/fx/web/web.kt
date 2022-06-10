@@ -24,11 +24,11 @@ import matt.fx.graphics.win.interact.openInNewWindow
 import matt.hurricanefx.eye.lang.DProp
 import matt.hurricanefx.eye.lib.onChangeOnce
 import matt.fx.graphics.async.runLaterReturn
+import matt.fx.graphics.layout.vgrow
 import matt.hurricanefx.tornadofx.fx.attachTo
 import matt.hurricanefx.tornadofx.nodes.add
 import matt.hurricanefx.tornadofx.nodes.onDoubleClick
 import matt.hurricanefx.tornadofx.nodes.removeFromParent
-import matt.hurricanefx.tornadofx.nodes.vgrow
 import matt.klib.file.MFile
 import matt.klib.file.toMFile
 import matt.klib.lang.NEVER
