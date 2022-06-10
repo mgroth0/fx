@@ -47,15 +47,11 @@ import matt.hurricanefx.tornadofx.control.button
 import matt.hurricanefx.tornadofx.control.imageview
 import matt.hurricanefx.tornadofx.control.textarea
 import matt.hurricanefx.tornadofx.item.column
-import matt.hurricanefx.tornadofx.layout.hbox
-import matt.hurricanefx.tornadofx.layout.vbox
 import matt.hurricanefx.tornadofx.nodes.add
 import matt.hurricanefx.tornadofx.nodes.clear
-import matt.hurricanefx.tornadofx.nodes.hgrow
 import matt.hurricanefx.tornadofx.nodes.onDoubleClick
 import matt.hurricanefx.tornadofx.nodes.populate
 import matt.hurricanefx.tornadofx.nodes.selectedItem
-import matt.hurricanefx.tornadofx.nodes.vgrow
 import matt.kjlib.file.recursiveChildren
 import matt.kjlib.file.size
 import matt.klib.file.MFile
@@ -71,6 +67,10 @@ import matt.fx.graphics.layout.perfectBind
 import matt.fx.graphics.refreshWhileInSceneEvery
 import matt.fx.web.WebViewPane
 import matt.fx.graphics.async.runLaterReturn
+import matt.fx.graphics.layout.hbox
+import matt.fx.graphics.layout.hgrow
+import matt.fx.graphics.layout.vbox
+import matt.fx.graphics.layout.vgrow
 
 
 private const val LINE_LIMIT = 1000
