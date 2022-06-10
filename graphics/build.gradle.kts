@@ -8,3 +8,7 @@ apis(
   projects.kj.hotkey,
   projects.kj.auto
 )
+
+implementations(
+  dependencies.kotlin("reflect")
+)
