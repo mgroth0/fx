@@ -332,7 +332,7 @@ fun EventTarget.pagination(pageCount: Int? = null, pageIndex: Int? = null, op: P
   return opcr(this, pagination, op)
 }
 
-class DummyClassYesIuse() {
+open class DummyClassYesIuse() {
   val v by lazy { Random.nextDouble() }
 }
 
