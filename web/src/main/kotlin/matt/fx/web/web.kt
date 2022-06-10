@@ -1,5 +1,6 @@
 package matt.fx.web
 
+import javafx.application.Platform.runLater
 import javafx.beans.property.SimpleDoubleProperty
 import javafx.event.EventHandler
 import javafx.event.EventTarget
@@ -22,7 +23,6 @@ import matt.fx.graphics.refreshWhileInSceneEvery
 import matt.fx.graphics.win.interact.openInNewWindow
 import matt.hurricanefx.eye.lang.DProp
 import matt.hurricanefx.eye.lib.onChangeOnce
-import matt.hurricanefx.tornadofx.async.runLater
 import matt.fx.graphics.async.runLaterReturn
 import matt.hurricanefx.tornadofx.fx.attachTo
 import matt.hurricanefx.tornadofx.nodes.add
