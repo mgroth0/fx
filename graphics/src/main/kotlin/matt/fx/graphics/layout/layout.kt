@@ -2,10 +2,12 @@
 
 package matt.fx.graphics.layout
 
+import javafx.beans.property.DoubleProperty
 import javafx.beans.value.ObservableValue
 import javafx.collections.ObservableList
 import javafx.event.EventTarget
 import javafx.geometry.Bounds
+import javafx.geometry.Insets
 import javafx.geometry.Orientation
 import javafx.geometry.Pos
 import javafx.geometry.Rectangle2D
@@ -35,6 +37,7 @@ import javafx.scene.layout.StackPane
 import javafx.scene.layout.TilePane
 import javafx.scene.layout.VBox
 import javafx.stage.Stage
+import matt.hurricanefx.eye.lib.proxypropDouble
 import matt.hurricanefx.tornadofx.fx.getChildList
 import matt.hurricanefx.tornadofx.fx.opcr
 import matt.hurricanefx.tornadofx.layout.row
@@ -516,3 +519,28 @@ fun Region.fitToSize(region: Region) {
   fitToHeight(region)
   fitToWidth(region)
 }
+
+
+
+val Region.paddingVerticalProperty: DoubleProperty
+  get() = properties.getOrPut("paddingVerticalProperty") {
+    proxypropDouble(paddingProperty(), { paddingVertical.toDouble() }) {
+      val half = it / 2.0
+      Insets(half, value.right, half, value.left)
+    }
+  } as DoubleProperty
+
+val Region.paddingHorizontalProperty: DoubleProperty
+  get() = properties.getOrPut("paddingHorizontalProperty") {
+    proxypropDouble(paddingProperty(), { paddingHorizontal.toDouble() }) {
+      val half = it / 2.0
+      Insets(value.top, half, value.bottom, half)
+    }
+  } as DoubleProperty
+
+val Region.paddingAllProperty: DoubleProperty
+  get() = properties.getOrPut("paddingAllProperty") {
+    proxypropDouble(paddingProperty(), { paddingAll.toDouble() }) {
+      Insets(it, it, it, it)
+    }
+  } as DoubleProperty
