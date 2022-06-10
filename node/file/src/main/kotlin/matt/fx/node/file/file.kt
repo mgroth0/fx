@@ -70,7 +70,7 @@ import javafx.scene.layout.Priority.ALWAYS
 import matt.fx.graphics.layout.perfectBind
 import matt.fx.graphics.refreshWhileInSceneEvery
 import matt.fx.web.WebViewPane
-import matt.hurricanefx.tornadofx.async.runLaterReturn
+import matt.fx.graphics.async.runLaterReturn
 
 
 private const val LINE_LIMIT = 1000

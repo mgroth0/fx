@@ -23,7 +23,7 @@ import matt.fx.graphics.win.interact.openInNewWindow
 import matt.hurricanefx.eye.lang.DProp
 import matt.hurricanefx.eye.lib.onChangeOnce
 import matt.hurricanefx.tornadofx.async.runLater
-import matt.hurricanefx.tornadofx.async.runLaterReturn
+import matt.fx.graphics.async.runLaterReturn
 import matt.hurricanefx.tornadofx.fx.attachTo
 import matt.hurricanefx.tornadofx.nodes.add
 import matt.hurricanefx.tornadofx.nodes.onDoubleClick
