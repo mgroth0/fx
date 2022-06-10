@@ -6,7 +6,7 @@ apis(
 )
 
 implementations(
-  projects.kj.kjlib.lang,
+//  projects.kj.kjlib.lang,
   projects.kj.hurricanefx.eye,
   projects.kj.hurricanefx,
   libs.jsoup
