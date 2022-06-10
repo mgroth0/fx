@@ -46,6 +46,8 @@ import matt.hurricanefx.eye.lib.proxypropDouble
 import matt.hurricanefx.tornadofx.fx.getChildList
 import matt.hurricanefx.tornadofx.fx.opcr
 import matt.hurricanefx.tornadofx.nodes.add
+import kotlin.random.Random
+import kotlin.random.Random.Default
 
 
 infix fun Region.minBind(other: Region) {
@@ -331,7 +333,9 @@ fun EventTarget.pagination(pageCount: Int? = null, pageIndex: Int? = null, op: P
   return opcr(this, pagination, op)
 }
 
-class dummyClassYesIuse()
+class dummyClassYesIuse() {
+  fun v() = Random.nextDouble()
+}
 
 fun EventTarget.scrollpane(
   fitToWidth: Boolean = false,
