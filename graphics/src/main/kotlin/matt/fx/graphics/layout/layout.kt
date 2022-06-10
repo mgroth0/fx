@@ -3,12 +3,15 @@ package matt.fx.graphics.layout
 import javafx.geometry.Bounds
 import javafx.geometry.Rectangle2D
 import javafx.scene.Node
+import javafx.scene.control.ToolBar
 import javafx.scene.layout.HBox
 import javafx.scene.layout.Pane
 import javafx.scene.layout.Priority
 import javafx.scene.layout.Region
 import javafx.scene.layout.VBox
 import javafx.stage.Stage
+import matt.hurricanefx.tornadofx.fx.opcr
+import matt.hurricanefx.tornadofx.nodes.add
 
 
 infix fun Region.minBind(other: Region) {
@@ -56,11 +59,27 @@ fun Rectangle2D.shrink(n: Int) = Rectangle2D(minX + n, minY + n, width - (n*2), 
 var Node.hgrow: Priority?
   get() = HBox.getHgrow(this)
   set(value) {
-    HBox.setHgrow(this, value)
+	HBox.setHgrow(this, value)
   }
 var Node.vgrow: Priority?
   get() = VBox.getVgrow(this)
   set(value) {
-    VBox.setVgrow(this, value)
-    // Input Container vgrow must propagate to Field and Fieldset
+	VBox.setVgrow(this, value)
+	// Input Container vgrow must propagate to Field and Fieldset
   }
+
+
+fun ToolBar.spacer(prio: Priority = Priority.ALWAYS, op: Pane.()->Unit = {}): Pane {
+  val pane = Pane().apply {
+	hgrow = prio
+  }
+  op(pane)
+  add(pane)
+  return pane
+}
+
+fun HBox.spacer(prio: Priority = Priority.ALWAYS, op: Pane.()->Unit = {}) =
+  opcr(this, Pane().apply { HBox.setHgrow(this, prio) }, op)
+
+fun VBox.spacer(prio: Priority = Priority.ALWAYS, op: Pane.()->Unit = {}) =
+  opcr(this, Pane().apply { VBox.setVgrow(this, prio) }, op)
