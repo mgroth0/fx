@@ -4,9 +4,10 @@ import javafx.embed.swing.SwingFXUtils
 import javafx.scene.image.Image
 
 import java.awt.image.BufferedImage
+import javax.imageio.ImageIO
 
 
- fun jswingIconToImage(jswingIcon: javax.swing.Icon): Image? {
+fun jswingIconToImage(jswingIcon: javax.swing.Icon): Image? {
   val bufferedImage = BufferedImage(
 	jswingIcon.iconWidth, jswingIcon.iconHeight,
 	BufferedImage.TYPE_INT_ARGB
@@ -18,3 +19,7 @@ import java.awt.image.BufferedImage
 fun Image.toBufferedImage(): BufferedImage = SwingFXUtils.fromFXImage(this, null)
 fun BufferedImage.toFXImage(): Image = SwingFXUtils.toFXImage(this, null)
 
+fun Image.save(file: MFile): MFile {
+  ImageIO.write(toBufferedImage(), file.extension, file)
+  return file
+}
