@@ -1,5 +1,6 @@
 modtype = LIB
 
 implementations(
-  projects.kj.fx.graphics
+  projects.kj.fx.graphics,
+  projects.kj.gui
 )
