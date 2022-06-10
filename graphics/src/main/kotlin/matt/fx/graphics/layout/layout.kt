@@ -40,7 +40,6 @@ import javafx.stage.Stage
 import matt.hurricanefx.eye.lib.proxypropDouble
 import matt.hurricanefx.tornadofx.fx.getChildList
 import matt.hurricanefx.tornadofx.fx.opcr
-import matt.hurricanefx.tornadofx.layout.row
 import matt.hurricanefx.tornadofx.nodes.add
 
 

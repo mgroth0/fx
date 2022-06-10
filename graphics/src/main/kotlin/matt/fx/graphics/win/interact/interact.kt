@@ -41,7 +41,6 @@ import matt.hurricanefx.eye.prop.doubleBinding
 import matt.hurricanefx.tornadofx.control.button
 import matt.hurricanefx.tornadofx.control.textarea
 import matt.hurricanefx.tornadofx.dialog.alert
-import matt.hurricanefx.tornadofx.layout.hbox
 import matt.hurricanefx.tornadofx.nodes.disableWhen
 import matt.hurricanefx.tornadofx.nodes.onDoubleClick
 import matt.json.prim.isValidJson
