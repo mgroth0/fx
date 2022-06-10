@@ -334,7 +334,7 @@ fun EventTarget.pagination(pageCount: Int? = null, pageIndex: Int? = null, op: P
 }
 
 class dummyClassYesIuse() {
-  fun v() = Random.nextDouble()
+  val v by lazy { Random.nextDouble() }
 }
 
 fun EventTarget.scrollpane(
