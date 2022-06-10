@@ -21,6 +21,7 @@ import javafx.stage.StageStyle
 import javafx.stage.Window
 import matt.fx.graphics.core.scene.MScene
 import matt.fx.graphics.lang.actionbutton
+import matt.fx.graphics.layout.hbox
 import matt.fx.graphics.style.borderFill
 import matt.fx.graphics.win.bindgeom.bindGeometry
 import matt.fx.graphics.win.interact.WinGeom.Centered
