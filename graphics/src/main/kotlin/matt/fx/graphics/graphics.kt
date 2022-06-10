@@ -1,6 +1,7 @@
 package matt.fx.graphics
 
 import javafx.scene.Node
+import javafx.scene.text.Font
 import matt.async.MyTimerTask
 import matt.async.date.Duration
 import matt.async.every
@@ -22,3 +23,5 @@ fun <T : Node> T.refreshWhileInSceneEvery(
 	}
   }
 }
+
+val fontFamilies: List<String> by lazy { Font.getFamilies() }
