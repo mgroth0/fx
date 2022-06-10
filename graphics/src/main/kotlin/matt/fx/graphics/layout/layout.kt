@@ -37,7 +37,11 @@ import javafx.scene.layout.StackPane
 import javafx.scene.layout.TilePane
 import javafx.scene.layout.VBox
 import javafx.stage.Stage
+import matt.fx.graphics.style.all
 import matt.fx.graphics.style.copy
+import matt.fx.graphics.style.horizontal
+import matt.fx.graphics.style.insets
+import matt.fx.graphics.style.vertical
 import matt.hurricanefx.eye.lib.proxypropDouble
 import matt.hurricanefx.tornadofx.fx.getChildList
 import matt.hurricanefx.tornadofx.fx.opcr
