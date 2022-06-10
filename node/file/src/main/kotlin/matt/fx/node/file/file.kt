@@ -1,6 +1,7 @@
 package matt.fx.node.file
 
 import javafx.application.Platform
+import javafx.application.Platform.runLater
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.event.EventHandler
@@ -42,7 +43,6 @@ import matt.hurricanefx.exactHeight
 import matt.hurricanefx.exactWidth
 import matt.hurricanefx.eye.lib.onChange
 import matt.hurricanefx.eye.prop.div
-import matt.hurricanefx.tornadofx.async.runLater
 import matt.hurricanefx.tornadofx.control.button
 import matt.hurricanefx.tornadofx.control.imageview
 import matt.hurricanefx.tornadofx.control.textarea
@@ -83,7 +83,7 @@ fun MFile.createNode(): Region {
 	  "log" -> TextArea().also { ta ->
 		ta.addEventFilter(KeyEvent.KEY_TYPED) { it.consume() }
 		val weakRef = WeakReference(ta)
-		Platform.runLater {
+		runLater {
 		  daemon {
 			var lastMod = 0L
 			while (exists()) {
@@ -97,7 +97,7 @@ fun MFile.createNode(): Region {
 				val newText = lines.joinToString("\n")
 				runLaterReturn {
 				  taa.text = newText
-				  Platform.runLater {
+				  runLater {
 					taa.end()
 				  }
 				}
@@ -110,7 +110,7 @@ fun MFile.createNode(): Region {
 		}
 	  }
 	  "svg" -> WebView().apply {
-		Platform.runLater {
+		runLater {
 		  vgrow = ALWAYS
 		  hgrow = ALWAYS
 
@@ -192,7 +192,7 @@ fun MFile.createNode(): Region {
 		}
 
 
-		Platform.runLater {
+		runLater {
 		  thread {
 			var mtime = lastModified()
 			while (true) {
@@ -201,7 +201,7 @@ fun MFile.createNode(): Region {
 			  val newmtime = lastModified()
 			  if (newmtime != mtime) {
 				mtime = newmtime
-				Platform.runLater {
+				runLater {
 				  wvv.engine.reload()
 				}
 			  }
