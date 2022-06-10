@@ -1,6 +1,7 @@
 package matt.fx.graphics
 
 import javafx.scene.Node
+import javafx.scene.layout.Pane
 import javafx.scene.text.Font
 import matt.async.MyTimerTask
 import matt.async.date.Duration
@@ -25,3 +26,7 @@ fun <T : Node> T.refreshWhileInSceneEvery(
 }
 
 val fontFamilies: List<String> by lazy { Font.getFamilies() }
+
+interface Inspectable {
+  fun inspect(): Pane
+}
