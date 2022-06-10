@@ -9,6 +9,7 @@ import javafx.scene.input.DataFormat
 import javafx.scene.input.MouseEvent
 import javafx.scene.input.TransferMode
 import javafx.scene.paint.Color
+import matt.fx.image.save
 //import matt.hurricanefx.save
 import matt.klib.commons.TEMP_DIR
 import matt.klib.commons.get
