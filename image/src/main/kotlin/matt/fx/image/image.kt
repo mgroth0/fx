@@ -19,7 +19,7 @@ fun jswingIconToImage(jswingIcon: javax.swing.Icon): Image? {
 fun Image.toBufferedImage(): BufferedImage = SwingFXUtils.fromFXImage(this, null)
 fun BufferedImage.toFXImage(): Image = SwingFXUtils.toFXImage(this, null)
 
-fun Image.save(file: MFile): MFile {
-  ImageIO.write(toBufferedImage(), file.extension, file)
-  return file
-}
+//fun Image.save(file: MFile): MFile {
+//  ImageIO.write(toBufferedImage(), file.extension, file)
+//  return file
+//}
