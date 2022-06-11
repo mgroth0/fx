@@ -11,6 +11,7 @@ import matt.auto.applescript
 import matt.auto.compileAndOrRunApplescript
 import matt.auto.interactiveOsascript
 import matt.fx.graphics.mag.left
+import matt.klib.lang.err
 import kotlin.concurrent.thread
 
 fun moveFrontmostWindowByApplescript(x: Number, y: Number, width: Number, height: Number) {
@@ -116,6 +117,9 @@ fun sdtInTest() {
 
 /*https://stackoverflow.com/questions/70647124/how-to-reduce-overhead-and-run-applescripts-faster*/
 fun appleLeft() {
+  err("""
+	its not worth it. Doing it through applescript is extremely slow and there is no workaround for that. The only other option is to do it through objective C, which is extremely complicated and not worth it. You can try again if you want, but trust me its insane and you have to go through annoying accessibility APIs. Even with kotlin native, it is not worth it. Keyboard maestro and magnet seemed to have done exactly this and developed the perfect native code for this. But guess what, they are closed source. Maybe I should just respect their work and use their software for now. Its not that bad...
+  """.trimIndent())
   /*https://stackoverflow.com/questions/70647124/how-to-reduce-overhead-and-run-applescripts-faster*/
   sdtInTest()
   tic()
