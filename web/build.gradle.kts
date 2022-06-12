@@ -2,12 +2,12 @@ modtype = LIB
 
 apis(
   libs.fx.web,
-  projects.kj.fx.graphics
+  projects.kj.fx.fxGraphics
 )
 
 implementations(
 //  projects.kj.kjlib.lang,
-  projects.kj.hurricanefx.eye,
+  projects.kj.hurricanefx.hurricanefxEye,
   projects.kj.hurricanefx,
   libs.jsoup
 )
