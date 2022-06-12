@@ -1,7 +1,6 @@
 modtype = LIB
 
-todo("this should be implementations")
-apis(
+implementations(
   project(":k:klib")
 )
 
@@ -10,5 +9,5 @@ dependencies {
   implementation(libs.fx.swing)
   //  implementation(projects.kj.kjlib)
   //  implementation(projects.k.kl.)
-//  projectOrLocalMavenJVM("implementation", ":k:klib")
+  //  projectOrLocalMavenJVM("implementation", ":k:klib")
 }
