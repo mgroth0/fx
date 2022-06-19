@@ -140,9 +140,10 @@ fun Pane.filetree(
 	  actionitem("open in new window") {
 		selectedItem?.let {
 		  VBox().apply {
+			val container = this
 			add(it.createNode(renderHTMLAndSVG = true).apply {
-			  perfectBind(this@apply)
-			  specialTransferingToWindowAndBack(this@apply)
+			  perfectBind(container)
+			  specialTransferingToWindowAndBack(container)
 			})
 		  }.openInNewWindow(
 			wMode = CLOSE
