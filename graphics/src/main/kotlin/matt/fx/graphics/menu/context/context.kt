@@ -17,7 +17,7 @@ import javafx.scene.shape.Shape
 import matt.auto.openInIntelliJ
 import matt.fx.graphics.hotkey.filters
 import matt.fx.graphics.hotkey.handlers
-import matt.klib.commons.RootProject.flow
+import matt.klib.commons.RootProjects.flow
 import matt.kjlib.reflect.jumpToKotlinSourceString
 import matt.klib.str.tab
 import matt.klib.lang.NEVER

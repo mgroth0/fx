@@ -3,7 +3,7 @@ package matt.fx.graphics.icon
 import javafx.scene.image.Image
 import javafx.scene.image.ImageView
 import matt.hurricanefx.tornadofx.nodes.add
-import matt.klib.commons.RootProject.flow
+import matt.klib.commons.RootProjects.flow
 import matt.klib.commons.get
 import matt.klib.file.MFile
 
