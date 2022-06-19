@@ -11,6 +11,12 @@ import javafx.scene.layout.Region
 import javafx.scene.layout.VBox
 import javafx.scene.text.Text
 import javafx.scene.web.WebView
+import kotlinx.html.body
+import kotlinx.html.html
+import kotlinx.html.img
+import kotlinx.html.stream.appendHTML
+import kotlinx.html.stream.createHTML
+import kotlinx.html.style
 import matt.async.daemon
 import matt.fx.graphics.async.runLaterReturn
 import matt.fx.graphics.layout.hbox
@@ -18,6 +24,7 @@ import matt.fx.graphics.layout.hgrow
 import matt.fx.graphics.layout.vbox
 import matt.fx.graphics.layout.vgrow
 import matt.fx.graphics.menu.context.mcontextmenu
+import matt.fx.graphics.style.sty
 import matt.fx.graphics.win.interact.doubleClickToOpenInWindow
 import matt.fx.graphics.win.interact.openImageInWindow
 import matt.fx.graphics.win.interact.openInNewWindow
@@ -182,22 +189,21 @@ private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): Region {
 
 		  val cacheBreaker = "?${System.currentTimeMillis()}" /*omfg it works...*/
 
-		  @Language("html") /*because i need that black background, and this is the only way i think*/
-		  val svgHTML =
 
-
-			"""
-				  
-				  <!DOCTYPE html>
-				  <html>
-				     <body style="background-color:black;">
-				        <img src="${toURI().toURL()}$cacheBreaker" alt="bad svg">
-				     </body>
-				  </html>
-				  
-				  
-				  
-				""".trimIndent()
+		  /*because i need that black background, and this is the only way i think*/
+		  val svgHTML = createHTML().apply {
+			html {
+			  body {
+				@Language("CSS")
+				val css = "background-color: black"
+				style = "background-color:black;"
+				img {
+				  src = "${toURI().toURL()}$cacheBreaker"
+				  alt = "bad svg"
+				}
+			  }
+			}
+		  }.finalize()
 
 		  engine.loadContent(svgHTML)
 

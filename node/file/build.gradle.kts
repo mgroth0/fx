@@ -1,10 +1,10 @@
 modtype = LIB
-dependencies {
-//  implementation(projects.kj.kjlib.lang)
-  implementation(projects.kj.hurricanefx)
-  implementation(libs.fx.controls)
-  implementation(projects.kj.fx.fxWeb)
-  implementation(projects.kj.async)
-  implementation(projects.kj.gui)
-  implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.7.5")
-}
+
+implementations(
+  projects.kj.hurricanefx,
+  libs.fx.controls,
+  projects.kj.fx.fxWeb,
+  projects.kj.async,
+  projects.kj.gui,
+  libs.kotlinx.html.jvm
+)
