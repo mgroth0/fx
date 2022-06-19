@@ -18,12 +18,14 @@ import matt.auto.openInIntelliJ
 import matt.auto.openInSublime
 import matt.fx.graphics.clip.copyToClipboard
 import matt.fx.graphics.layout.hgrow
+import matt.fx.graphics.layout.perfectBind
 import matt.fx.graphics.layout.vbox
 import matt.fx.graphics.menu.context.mcontextmenu
 import matt.fx.graphics.refreshWhileInSceneEvery
 import matt.fx.graphics.win.interact.openInNewWindow
 import matt.fx.graphics.win.stage.WMode.CLOSE
-import matt.fx.node.file.fillWithFileNode
+import matt.fx.node.file.createNode
+import matt.fx.web.specialTransferingToWindowAndBack
 import matt.gui.draggableIcon
 import matt.gui.fxlang.onSelect
 import matt.gui.setview.autoResizeColumns
@@ -68,14 +70,20 @@ fun FileTreeAndViewerPane(
 	treeTableView.onDoubleClick {
 	  treeTableView.selectedItem?.let {
 		viewbox.clear()
-		viewbox.fillWithFileNode(it, renderHTMLAndSVG = true)
+		viewbox.add(it.createNode(renderHTMLAndSVG = true).apply {
+		  perfectBind(viewbox)
+		  specialTransferingToWindowAndBack(viewbox)
+		})
 	  }
 	}
   } else {
 	treeTableView.onSelect { file ->
 	  viewbox.clear()
 	  if (file != null) {
-		viewbox.fillWithFileNode(file)
+		viewbox.add(file.createNode(renderHTMLAndSVG = true).apply {
+		  perfectBind(viewbox)
+		  specialTransferingToWindowAndBack(viewbox)
+		})
 	  }
 	}
   }
@@ -132,10 +140,10 @@ fun Pane.filetree(
 	  actionitem("open in new window") {
 		selectedItem?.let {
 		  VBox().apply {
-			fillWithFileNode(
-			  it,
-			  renderHTMLAndSVG = true
-			)
+			add(it.createNode(renderHTMLAndSVG = true).apply {
+			  perfectBind(this@apply)
+			  specialTransferingToWindowAndBack(this@apply)
+			})
 		  }.openInNewWindow(
 			wMode = CLOSE
 		  )
