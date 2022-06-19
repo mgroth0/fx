@@ -164,7 +164,7 @@ fun WebView.specialZooming(par: Region? = null) {
 
       scrollBy(SCROLL_COMPENSATION_RATE*(width/2.0)/zoom, SCROLL_COMPENSATION_RATE*(height/2.0)/zoom)
 
-      println("zoom=${zoom}")
+//      println("zoom=${zoom}")
 
     } else if (it.code == KeyCode.MINUS) {
 
@@ -173,7 +173,7 @@ fun WebView.specialZooming(par: Region? = null) {
       zoom /= SPECIAL_ZOOM_RATE
 
       scrollBy(-SCROLL_COMPENSATION_RATE*(width/2.0)/zoom, -SCROLL_COMPENSATION_RATE*(height/2.0)/zoom)
-      println("zoom=${zoom}")
+//      println("zoom=${zoom}")
     }
   }
   setOnZoom {
@@ -183,7 +183,7 @@ fun WebView.specialZooming(par: Region? = null) {
     zoom *= it.zoomFactor
     val compensation = it.zoomFactor - 1.0
     scrollBy(compensation*(width/2.0)/zoom, compensation*(height/2.0)/zoom)
-    println("zoom=${zoom}")
+//    println("zoom=${zoom}")
   }
 
 
