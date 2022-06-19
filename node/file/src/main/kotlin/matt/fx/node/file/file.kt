@@ -15,7 +15,6 @@ import kotlinx.html.body
 import kotlinx.html.html
 import kotlinx.html.img
 import kotlinx.html.stream.createHTML
-import kotlinx.html.style
 import matt.async.daemon
 import matt.fx.graphics.async.runLaterReturn
 import matt.fx.graphics.layout.hbox
@@ -39,10 +38,11 @@ import matt.hurricanefx.tornadofx.control.button
 import matt.hurricanefx.tornadofx.control.imageview
 import matt.hurricanefx.tornadofx.control.textarea
 import matt.hurricanefx.tornadofx.nodes.add
+import matt.klib.css.Color.black
+import matt.klib.css.sty
 import matt.klib.file.MFile
 import matt.klib.file.ext.isImage
 import matt.klib.lang.err
-import org.intellij.lang.annotations.Language
 import java.lang.ref.WeakReference
 import kotlin.concurrent.thread
 
@@ -192,11 +192,7 @@ private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): Region {
 		  val svgHTML = createHTML().apply {
 			html {
 			  body {
-				@Language("CSS")
-
-				val css = "background-color: black"
-//				this.sty
-				style = "background-color:black;"
+				sty.background = black
 				img {
 				  src = "${toURI().toURL()}$cacheBreaker"
 				  alt = "bad svg"
