@@ -41,7 +41,6 @@ import matt.hurricanefx.tornadofx.nodes.selectedItem
 import matt.kjlib.file.recursiveChildren
 import matt.kjlib.file.size
 import matt.klib.file.MFile
-import matt.klib.file.ext.abspath
 import java.net.URL
 
 fun FileTreeAndViewerPane(
