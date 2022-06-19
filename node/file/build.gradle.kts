@@ -6,4 +6,5 @@ dependencies {
   implementation(projects.kj.fx.fxWeb)
   implementation(projects.kj.async)
   implementation(projects.kj.gui)
+  implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.7.5")
 }

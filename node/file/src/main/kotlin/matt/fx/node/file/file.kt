@@ -1,86 +1,141 @@
 package matt.fx.node.file
 
-import javafx.application.Platform
 import javafx.application.Platform.runLater
-import javafx.beans.property.SimpleBooleanProperty
-import javafx.beans.property.SimpleStringProperty
 import javafx.event.EventHandler
-import javafx.geometry.Pos
 import javafx.scene.control.TextArea
-import javafx.scene.control.TreeItem
-import javafx.scene.control.TreeTableView
 import javafx.scene.image.Image
 import javafx.scene.input.KeyEvent
-import javafx.scene.layout.HBox
 import javafx.scene.layout.Pane
-import javafx.scene.layout.Priority
+import javafx.scene.layout.Priority.ALWAYS
 import javafx.scene.layout.Region
 import javafx.scene.layout.VBox
 import javafx.scene.text.Text
 import javafx.scene.web.WebView
 import matt.async.daemon
-import matt.async.date.sec
-import matt.auto.CHROME
-import matt.auto.Finder
-import matt.auto.VIVALDI
-import matt.auto.open
-import matt.auto.openInIntelliJ
-import matt.auto.openInSublime
-import matt.fx.web.specialZooming
-import matt.fx.graphics.clip.copyToClipboard
-import matt.fx.graphics.menu.context.mcontextmenu
-import matt.gui.draggableIcon
-import matt.gui.fxlang.onSelect
-import matt.gui.setview.autoResizeColumns
-import matt.gui.setview.simpleCellFactory
-import matt.fx.graphics.win.interact.doubleClickToOpenInWindow
-import matt.fx.graphics.win.interact.openImageInWindow
-import matt.fx.graphics.win.interact.openInNewWindow
-import matt.fx.graphics.win.interact.safe
-import matt.fx.graphics.win.stage.WMode.CLOSE
-import matt.hurricanefx.bindFitTo
-import matt.hurricanefx.exactHeight
-import matt.hurricanefx.exactWidth
-import matt.hurricanefx.eye.lib.onChange
-import matt.hurricanefx.eye.prop.div
-import matt.hurricanefx.tornadofx.control.button
-import matt.hurricanefx.tornadofx.control.imageview
-import matt.hurricanefx.tornadofx.control.textarea
-import matt.hurricanefx.tornadofx.item.column
-import matt.hurricanefx.tornadofx.nodes.add
-import matt.hurricanefx.tornadofx.nodes.clear
-import matt.hurricanefx.tornadofx.nodes.onDoubleClick
-import matt.hurricanefx.tornadofx.nodes.populate
-import matt.hurricanefx.tornadofx.nodes.selectedItem
-import matt.kjlib.file.recursiveChildren
-import matt.kjlib.file.size
-import matt.klib.file.MFile
-import matt.klib.file.ext.abspath
-import matt.klib.file.ext.isImage
-import matt.klib.lang.err
-import org.intellij.lang.annotations.Language
-import java.lang.ref.WeakReference
-import java.net.URL
-import kotlin.concurrent.thread
-import javafx.scene.layout.Priority.ALWAYS
-import matt.fx.graphics.layout.perfectBind
-import matt.fx.graphics.refreshWhileInSceneEvery
-import matt.fx.web.WebViewPane
 import matt.fx.graphics.async.runLaterReturn
 import matt.fx.graphics.layout.hbox
 import matt.fx.graphics.layout.hgrow
 import matt.fx.graphics.layout.vbox
 import matt.fx.graphics.layout.vgrow
+import matt.fx.graphics.menu.context.mcontextmenu
+import matt.fx.graphics.win.interact.doubleClickToOpenInWindow
+import matt.fx.graphics.win.interact.openImageInWindow
+import matt.fx.graphics.win.interact.openInNewWindow
+import matt.fx.graphics.win.interact.safe
+import matt.fx.graphics.win.stage.WMode.CLOSE
+import matt.fx.web.WebViewPane
+import matt.fx.web.specialZooming
+import matt.gui.draggableIcon
+import matt.hurricanefx.bindFitTo
+import matt.hurricanefx.exactHeight
+import matt.hurricanefx.exactWidth
+import matt.hurricanefx.eye.lib.onChange
+import matt.hurricanefx.tornadofx.control.button
+import matt.hurricanefx.tornadofx.control.imageview
+import matt.hurricanefx.tornadofx.control.textarea
+import matt.hurricanefx.tornadofx.nodes.add
+import matt.klib.file.MFile
+import matt.klib.file.ext.isImage
+import matt.klib.lang.err
+import org.intellij.lang.annotations.Language
+import java.lang.ref.WeakReference
+import kotlin.concurrent.thread
 
 
 private const val LINE_LIMIT = 1000
 
+fun MFile.createNode(renderHTMLAndSVG: Boolean = false): Region {
+  val node = createNodeInner(renderHTMLAndSVG = renderHTMLAndSVG)
+  node.mcontextmenu {
+	item(s = "", g = draggableIcon())
+  }
+  return node
+}
 
-fun MFile.createNode(): Region {
+private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): Region {
   if (exists()) {
 	println("opening file")
+	if (isImage()) {
+	  return Pane().apply {
+		imageview {
+		  image = Image(toURI().toString())
+		  isPreserveRatio = true
+		  bindFitTo(this@apply)
+		  isSmooth = true
+		  mcontextmenu {
+			item("os open") {
+			  setOnAction {
+				java.awt.Desktop.getDesktop().open(this@createNodeInner)
+			  }
+			}
+			item("test open in new window") { onAction = EventHandler { openImageInWindow() } }
+		  }
+		  doubleClickToOpenInWindow()
+		}
+	  }
+	}
+
+
+
+
+	if (extension in listOf(
+		"txt",
+		"yml",
+		"json",
+		"sh",
+		"kt",
+		"java",
+		"py",
+		"kts",
+		"gradle",
+		"css",
+		"less",
+		"js",
+		"tags",
+		"coffeescript"
+	  ) || (!renderHTMLAndSVG && extension in (listOf("html", "svg")))
+	) {
+	  val viewbox = Pane()
+	  var fsText = readText()
+	  val ta = viewbox.textarea {
+		text = fsText
+		prefHeightProperty().bind(viewbox.prefHeightProperty())
+		prefWidthProperty().bind(viewbox.prefWidthProperty())
+	  }
+	  viewbox.button("matt.gui.ser.save changes") {
+		isDisable = true
+		setOnAction {
+		  writeText(ta.text)
+		}
+		ta.textProperty().onChange {
+		  val fsTextCurrent = readText()
+		  if (fsTextCurrent != fsText) {
+			safe("file content on system changed. Reload?") {
+			  text = fsTextCurrent
+			  fsText = fsTextCurrent
+			}
+		  } else {
+			isDisable = fsTextCurrent == text
+		  }
+		}
+	  }
+	  if (extension in (listOf("html", "svg")) && !renderHTMLAndSVG) {
+		viewbox.button("render") {
+		  setOnAction {
+			WebViewPane(this@createNodeInner).openInNewWindow(wMode = CLOSE)
+		  }
+		}
+	  }
+	  return viewbox
+	}
+
+
+
+
+
+
 	return when (extension) {
-	  "log" -> TextArea().also { ta ->
+	  "log"  -> TextArea().also { ta ->
 		ta.addEventFilter(KeyEvent.KEY_TYPED) { it.consume() }
 		val weakRef = WeakReference(ta)
 		runLater {
@@ -109,7 +164,12 @@ fun MFile.createNode(): Region {
 
 		}
 	  }
-	  "svg" -> WebView().apply {
+
+	  "html" -> WebViewPane(this@createNodeInner).apply {
+		specialZooming()
+	  }
+
+	  "svg"  -> WebView().apply {
 		runLater {
 		  vgrow = ALWAYS
 		  hgrow = ALWAYS
@@ -123,7 +183,10 @@ fun MFile.createNode(): Region {
 		  val cacheBreaker = "?${System.currentTimeMillis()}" /*omfg it works...*/
 
 		  @Language("html") /*because i need that black background, and this is the only way i think*/
-		  val svgHTML = """
+		  val svgHTML =
+
+
+			"""
 				  
 				  <!DOCTYPE html>
 				  <html>
@@ -180,7 +243,7 @@ fun MFile.createNode(): Region {
 		  hbox { exactHeight = 10.0 }
 		}
 
-		val svgText = this@createNode.readText()
+		val svgText = this@createNodeInner.readText()
 		val svgWidthPx = svgText.substringAfter("width=\"").substringBefore("px").toInt()
 		val svgHeightPx = svgText.substringAfter("height=\"").substringBefore("px").toInt()
 
@@ -210,238 +273,13 @@ fun MFile.createNode(): Region {
 		}
 		root
 	  }
-	  else  -> err("how to make node for files with extension:${extension}")
+
+	  else   -> err("how to make node for files with extension:${extension}")
 	}
   } else return VBox(Text("file $this does not exist"))
 }
 
 
-fun FileTreeAndViewerPane(
-  rootFile: MFile,
-  doubleClickInsteadOfSelect: Boolean = false
-) = HBox().apply {
-  val hbox = this
-
-  alignment = Pos.CENTER_LEFT
-  val HEIGHT = 300.0
-
-  val treeTableView = filetree(rootFile).apply {
-	prefHeightProperty().set(HEIGHT)
-	maxWidthProperty().bind(hbox.widthProperty()/2)
-	hgrow = Priority.ALWAYS
-  }
-  val viewbox = vbox {
-	prefWidthProperty().bind(hbox.widthProperty()/2) /*less aggressive to solve these issues?*/
-	prefHeightProperty().bind(hbox.heightProperty())
-	hgrow = Priority.ALWAYS
-  }
-
-  if (doubleClickInsteadOfSelect) {
-	treeTableView.onDoubleClick {
-	  treeTableView.selectedItem?.let {
-		viewbox.clear()
-		viewbox.fillWithFileNode(it, renderHTMLAndSVG = true)
-	  }
-	}
-  } else {
-	treeTableView.onSelect { file ->
-	  viewbox.clear()
-	  if (file != null) {
-		viewbox.fillWithFileNode(file)
-	  }
-	}
-  }
-}
-
-fun Pane.fillWithFileNode(file: MFile, renderHTMLAndSVG: Boolean = false) {
-  val viewbox = this
-  if (file.isImage()) {
-	imageview {
-	  image = Image(file.toURI().toString())
-	  isPreserveRatio = true
-	  bindFitTo(viewbox)
-	  isSmooth = true
-	  mcontextmenu {
-		item("os open") {
-		  setOnAction {
-			java.awt.Desktop.getDesktop().open(file)
-		  }
-		}
-		item("test open in new window") { onAction = EventHandler { file.openImageInWindow() } }
-	  }
-	  doubleClickToOpenInWindow()
-	}
-  } else if (file.extension in listOf(
-	  "txt",
-	  "log",
-	  "yml",
-	  "json",
-	  "sh",
-	  "kt",
-	  "java",
-	  "py",
-	  "kts",
-	  "gradle",
-	  "css",
-	  "less",
-	  "js",
-	  "tags",
-	  "coffeescript"
-	) || (!renderHTMLAndSVG && file.extension in (listOf("html", "svg")))
-  ) {
-	var fsText = file.readText()
-	val ta = textarea {
-	  text = fsText
-	  prefHeightProperty().bind(viewbox.prefHeightProperty())
-	  prefWidthProperty().bind(viewbox.prefWidthProperty())
-	}
-	viewbox.button("matt.gui.ser.save changes") {
-	  isDisable = true
-	  setOnAction {
-		file.writeText(ta.text)
-	  }
-	  ta.textProperty().onChange {
-		val fsTextCurrent = file.readText()
-		if (fsTextCurrent != fsText) {
-		  safe("file content on system changed. Reload?") {
-			text = fsTextCurrent
-			fsText = fsTextCurrent
-		  }
-		} else {
-		  isDisable = fsTextCurrent == text
-		}
-	  }
-	}
-	if (file.extension in (listOf("html", "svg")) && !renderHTMLAndSVG) {
-	  viewbox.button("render") {
-		setOnAction {
-		  WebViewPane(file).openInNewWindow(wMode = CLOSE)
-		}
-	  }
-	}
-  } else if (file.extension in (listOf("html", "svg")) && renderHTMLAndSVG) {
-	viewbox.add(WebViewPane(file).apply {
-	  specialZooming()
-	  perfectBind(viewbox)
-	  specialTransferingToWindowAndBack(viewbox)
-	})
-  }
-  mcontextmenu {
-	item(s = "", g = file.draggableIcon())
-  }
-}
 
 
-
-
-fun Pane.filetree(
-  rootFile: MFile,
-  table: Boolean = true,
-  op: (TreeTableView<MFile>.()->Unit)? = null,
-): TreeTableView<MFile> {
-  return object: TreeTableView<MFile>() {
-	override fun resize(width: Double, height: Double) {
-	  super.resize(width, height)
-	  if (!table) {
-		val header = lookup("TableHeaderRow") as Pane
-		header.minHeight = 0.0
-		header.prefHeight = 0.0
-		header.maxHeight = 0.0
-		header.isVisible = false
-	  }
-	}
-  }.apply {
-	this@filetree.add(this)
-	/*column<MFile, String>("") {
-	  *//*the first matt.hurricanefx.tableview.coolColumn is where the branch expander arrows go, regardless of if theres also other data*//*
-	  SimpleStringProperty("")
-	  *//*and if there is other data, its pretty ugly (at least it has been)*//*
-	}*/
-
-
-	val nameCol = column("name", matt.klib.file.MFile::abspath) {
-	  simpleCellFactory { MFile(it).let { it.name to it.draggableIcon() } }
-	}
-	if (table) column("ext", matt.klib.file.MFile::extension)
-	else nameCol.prefWidthProperty().bind(this.widthProperty())
-
-
-	val showSizesProp = SimpleBooleanProperty(false)
-	if (table) showSizesProp.onChange { b ->
-	  if (b) {
-		column<MFile, String>("size") {
-		  SimpleStringProperty(it.value.value.size().formatted)
-		}
-		autoResizeColumns()
-	  } else {
-		columns.firstOrNull { col -> col.text == "size" }?.let { columns.remove(it) }
-		autoResizeColumns()
-	  }
-	}
-
-	mcontextmenu {
-
-	  if (table) checkitem("show sizes", showSizesProp)
-
-	  actionitem("open in new window") {
-		selectedItem?.let {
-		  VBox().apply {
-			fillWithFileNode(
-			  it,
-			  renderHTMLAndSVG = true
-			)
-		  }.openInNewWindow(
-			wMode = CLOSE
-		  )
-		}
-	  }
-	  actionitem("open in intelliJ") {
-		selectedItem?.let { it.openInIntelliJ() }
-	  }
-	  actionitem("open in Sublime") {
-		selectedItem?.let { it.openInSublime() }
-	  }
-	  actionitem("open in finder") {
-		selectedItem?.let { Finder.open(it) }
-	  }
-	  actionitem("open in chrome") {
-		selectedItem?.let { CHROME.open(it) }
-	  }
-	  actionitem("open in vivaldi") {
-		selectedItem?.let { VIVALDI.open(it) }
-	  }
-	  actionitem("open with webd") {
-		selectedItem?.let { URL(it.toURI().toURL().toString()).open() }
-	  }
-	  actionitem("copy full path") {
-		selectedItem?.absolutePath?.copyToClipboard()
-	  }
-	  actionitem("copy as file") {
-		selectedItem?.copyToClipboard()
-	  }
-
-	}
-
-	sortOrder.setAll(nameCol) /*not working, but can click columns*/
-	root = TreeItem(rootFile)
-	isShowRoot = true
-
-	populate {
-	  it.value.listFiles()?.toList() ?: listOf()
-	}
-	var files: Set<MFile> = rootFile.recursiveChildren().toSet()
-	refreshWhileInSceneEvery(5.sec) {
-	  val tempfiles = rootFile.recursiveChildren().toSet()
-	  if (!(tempfiles.containsAll(files.toSet()) && files.containsAll(tempfiles))) {
-		files = rootFile.recursiveChildren().toSet()
-		refresh()
-		if (table) autoResizeColumns()
-	  }
-	}
-	refresh()
-	root.isExpanded = true
-	if (table) autoResizeColumns()
-	if (op != null) op()
-  }
-}
 

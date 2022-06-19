@@ -4,6 +4,7 @@ import javafx.application.Platform.runLater
 import javafx.beans.property.SimpleDoubleProperty
 import javafx.event.EventHandler
 import javafx.event.EventTarget
+import javafx.scene.Node
 import javafx.scene.input.KeyCode
 import javafx.scene.layout.Pane
 import javafx.scene.layout.Priority
@@ -237,6 +238,43 @@ fun WebView.scrollMult(factor: Double) {
 
 
 
+fun Region.specialTransferingToWindowAndBack(par: Pane) {
+  val vb = this
+  this.setOnKeyPressed { k ->
+    if (k.code == KeyCode.W && k.isMetaDown) {
+      if (this.scene.root == this) {
+        this.removeFromParent()
+        (this.scene.window as Stage).close()
+        par.add(vb)
+        perfectBind(par)
+        if (this is WebViewPane) {
+          runLater { wv.zoom = perfectZoom(vb.width) }
+        }
+
+        k.consume()
+      }
+    }
+    onDoubleClick {
+      if (this.scene.root != this) {
+        this.removeFromParent()
+        this.openInNewWindow().apply {
+          perfectBind(this)
+          setOnCloseRequest {
+            this.removeFromParent()
+            par.add(vb)
+            if (this@specialTransferingToWindowAndBack is WebViewPane) {
+              runLater { wv.zoom = perfectZoom(vb.width) }
+            }
+          }
+        }
+        if (this is WebViewPane) {
+          runLater { wv.zoom = perfectZoom(vb.width) }
+        }
+
+      }
+    }
+  }
+}
 
 
 @ExperimentalContracts
@@ -251,37 +289,10 @@ class WebViewPane private constructor(file: MFile? = null, html: String? = null)
   }
 
 
-  fun specialTransferingToWindowAndBack(par: Pane) {
-    val vb = this
-    this.setOnKeyPressed { k ->
-      if (k.code == KeyCode.W && k.isMetaDown) {
-        if (this.scene.root == this) {
-          this.removeFromParent()
-          (this.scene.window as Stage).close()
-          par.add(vb)
-          perfectBind(par)
-          runLater { wv.zoom = perfectZoom(vb.width) }
-          k.consume()
-        }
-      }
-    }
 
 
-    onDoubleClick {
-      if (this.scene.root != this) {
-        this.removeFromParent()
-        this.openInNewWindow().apply {
-          perfectBind(this)
-          setOnCloseRequest {
-            this.removeFromParent()
-            par.add(vb)
-            runLater { wv.zoom = perfectZoom(vb.width) }
-          }
-        }
-        runLater { wv.zoom = perfectZoom(vb.width) }
-      }
-    }
-  }
+
+
 
   val wv = if (file != null) ImageRefreshingWebView(file) else {
     WebView().apply {
