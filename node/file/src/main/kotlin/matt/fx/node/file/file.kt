@@ -1,6 +1,9 @@
 package matt.fx.node.file
 
 import javafx.application.Platform.runLater
+import javafx.beans.value.ChangeListener
+import javafx.beans.value.ObservableValue
+import javafx.concurrent.Worker.State
 import javafx.event.EventHandler
 import javafx.scene.control.TextArea
 import javafx.scene.image.Image
@@ -178,11 +181,19 @@ private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): Region {
 		  vgrow = ALWAYS
 		  hgrow = ALWAYS
 
-
+		  //		  this.scroll
 
 		  specialZooming()
 
 		  blendMode
+
+
+		  engine.loadWorker.stateProperty().addListener { _, _, newValue ->
+			if (newValue == State.RUNNING || newValue == State.SUCCEEDED) {
+			  engine.executeScript("document.body.style.overflow = 'hidden';")
+			}
+		  }
+
 
 		  val cacheBreaker = "?${System.currentTimeMillis()}" /*omfg it works...*/
 
