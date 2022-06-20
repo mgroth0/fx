@@ -5,9 +5,9 @@ implementations(
 )
 
 dependencies {
-  //  implementation(projects.kj.kjlib.lang)
+  //  implementation(projects.k.kjlib.lang)
   implementation(libs.fx.swing)
-  //  implementation(projects.kj.kjlib)
+  //  implementation(projects.k.kjlib)
   //  implementation(projects.k.kl.)
   //  projectOrLocalMavenJVM("implementation", ":k:klib")
 }
