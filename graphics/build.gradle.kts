@@ -4,7 +4,7 @@ apis(
   libs.fx.graphics,
   libs.jSystemThemeDetector,
 
-  projects.kj.hurricanefx,
+  projects.k.hurricanefx,
   projects.k.async,
   projects.k.hotkey,
   projects.k.auto,

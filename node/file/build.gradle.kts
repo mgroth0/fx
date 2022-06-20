@@ -1,7 +1,7 @@
 modtype = LIB
 
 implementations(
-  projects.kj.hurricanefx,
+  projects.k.hurricanefx,
   libs.fx.controls,
   projects.k.fx.fxWeb,
   projects.k.async,
