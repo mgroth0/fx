@@ -2,7 +2,7 @@ modtype = LIB
 
 apis(
   libs.fx.web,
-  projects.kj.fx.fxGraphics
+  projects.k.fx.fxGraphics
 )
 
 implementations(

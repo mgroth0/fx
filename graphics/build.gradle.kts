@@ -8,7 +8,7 @@ apis(
   projects.k.async,
   projects.kj.hotkey,
   projects.k.auto,
-  projects.kj.fx.fxImage,
+  projects.k.fx.fxImage,
   projects.k.stream,
   projects.kj.kjlib,
   "k:color".jvm()
