@@ -5,7 +5,7 @@ implementations(
   libs.fx.controls,
   projects.k.fx.fxWeb,
   projects.k.async,
-  projects.kj.gui,
+  projects.k.gui,
   libs.kotlinx.html.jvm,
   projects.k.fx.fxFxauto
 )
