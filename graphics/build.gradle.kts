@@ -10,7 +10,8 @@ apis(
   projects.kj.auto,
   projects.kj.fx.fxImage,
   projects.k.stream,
-  projects.kj.kjlib
+  projects.kj.kjlib,
+  projects.k.color
 )
 
 implementations(
