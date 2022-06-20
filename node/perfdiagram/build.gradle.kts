@@ -1,7 +1,7 @@
 modtype = LIB
 apis(
-
+  projects.kj.fx.fxWeb
 )
 implementations(
-  projects.kj.fx.fxWeb
+
 )
