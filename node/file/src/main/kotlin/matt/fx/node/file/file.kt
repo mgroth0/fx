@@ -1,10 +1,10 @@
 package matt.fx.node.file
 
 import javafx.application.Platform.runLater
-import javafx.beans.value.ChangeListener
-import javafx.beans.value.ObservableValue
+import javafx.collections.ListChangeListener
 import javafx.concurrent.Worker.State
 import javafx.event.EventHandler
+import javafx.scene.Node
 import javafx.scene.control.TextArea
 import javafx.scene.image.Image
 import javafx.scene.input.KeyEvent
@@ -188,11 +188,18 @@ private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): Region {
 		  blendMode
 
 
-		  engine.loadWorker.stateProperty().addListener { _, _, newValue ->
+		/*  engine.loadWorker.stateProperty().addListener { _, _, newValue ->
 			if (newValue == State.RUNNING || newValue == State.SUCCEEDED) {
 			  engine.executeScript("document.body.style.overflow = 'hidden';")
 			}
-		  }
+		  }*/
+
+		  // hide webview scrollbars whenever they appear.
+		  // hide webview scrollbars whenever they appear.
+		  childrenUnmodifiable.addListener(ListChangeListener<Any?> {
+			val deadSeaScrolls: Set<Node> = lookupAll(".scroll-bar")
+			for (scroll in deadSeaScrolls) { scroll.isVisible = false }
+		  })
 
 
 		  val cacheBreaker = "?${System.currentTimeMillis()}" /*omfg it works...*/
