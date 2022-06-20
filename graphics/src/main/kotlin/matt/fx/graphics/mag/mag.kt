@@ -6,7 +6,7 @@ import matt.json.custom.bool
 import matt.json.prim.parseJsonObj
 import matt.json.prim.set
 import matt.json.prim.writeJson
-import matt.klib.commons.VAR_JSON
+import matt.klib.commons.VAR_JSON_FILE
 
 const val NEW_MAC_NOTCH_ESTIMATE = 32.0 /*35*/
 const val NEW_MAC_MENU_BAR_ESTIMATE = NEW_MAC_NOTCH_ESTIMATE + 2.0
@@ -261,14 +261,14 @@ fun Window.eighth8() {
 
 
 var reversed_displays
-  get() = VAR_JSON.takeIf { it.exists() }?.parseJsonObj()?.get("reversed_displays")?.bool ?: true
+  get() = VAR_JSON_FILE.takeIf { it.exists() }?.parseJsonObj()?.get("reversed_displays")?.bool ?: true
   set(b) {
-	if (VAR_JSON.exists()) {
+	if (VAR_JSON_FILE.exists()) {
 
-	  VAR_JSON.writeJson(
+	  VAR_JSON_FILE.writeJson(
 
 
-		VAR_JSON.parseJsonObj().apply {
+		VAR_JSON_FILE.parseJsonObj().apply {
 		  this["reversed_displays"] = b
 		}
 

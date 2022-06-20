@@ -10,13 +10,9 @@ import javafx.scene.layout.Pane
 import javafx.scene.layout.Priority.ALWAYS
 import javafx.scene.layout.VBox
 import matt.async.date.sec
-import matt.auto.CHROME
-import matt.auto.Finder
-import matt.auto.VIVALDI
-import matt.auto.open
-import matt.auto.openInIntelliJ
-import matt.auto.openInSublime
-import matt.fx.graphics.clip.copyToClipboard
+import matt.auto.actions
+import matt.fx.fxauto.actionitem
+import matt.fx.fxauto.fxActions
 import matt.fx.graphics.layout.hgrow
 import matt.fx.graphics.layout.perfectBind
 import matt.fx.graphics.layout.vbox
@@ -41,7 +37,6 @@ import matt.hurricanefx.tornadofx.nodes.selectedItem
 import matt.kjlib.file.recursiveChildren
 import matt.kjlib.file.size
 import matt.klib.file.MFile
-import java.net.URL
 
 fun FileTreeAndViewerPane(
   rootFile: MFile,
@@ -149,31 +144,9 @@ fun Pane.filetree(
 		  )
 		}
 	  }
-	  actionitem("open in intelliJ") {
-		selectedItem?.let { it.openInIntelliJ() }
+	  selectedItem?.let { it.actions() + it.fxActions() }?.forEach {
+		actionitem(it)
 	  }
-	  actionitem("open in Sublime") {
-		selectedItem?.let { it.openInSublime() }
-	  }
-	  actionitem("open in finder") {
-		selectedItem?.let { Finder.open(it) }
-	  }
-	  actionitem("open in chrome") {
-		selectedItem?.let { CHROME.open(it) }
-	  }
-	  actionitem("open in vivaldi") {
-		selectedItem?.let { VIVALDI.open(it) }
-	  }
-	  actionitem("open with webd") {
-		selectedItem?.let { URL(it.toURI().toURL().toString()).open() }
-	  }
-	  actionitem("copy full path") {
-		selectedItem?.absolutePath?.copyToClipboard()
-	  }
-	  actionitem("copy as file") {
-		selectedItem?.copyToClipboard()
-	  }
-
 	}
 
 	sortOrder.setAll(nameCol) /*not working, but can click columns*/

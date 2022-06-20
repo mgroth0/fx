@@ -1,6 +1,7 @@
 modtype = LIB
 apis (
-  libs.fx.controls
+  libs.fx.controls,
+  projects.kj.fx.fxGraphics
 )
 implementations (
 

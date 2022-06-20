@@ -51,39 +51,31 @@ class MContextMenuBuilder(
 	}
   }
 
-  fun actionitem(s: String, op: ()->Unit) {
-	add(MenuItem(s).apply {
-	  isMnemonicParsing = false
-	  setOnAction {
-		op()
-		it.consume()
-	  }
-	})
-  }
-
-  fun item(s: String, g: Node? = null, op: MenuItem.()->Unit = {}) {
-	add(MenuItem(s, g).apply {
-	  isMnemonicParsing = false
+  fun actionitem(s: String, op: ()->Unit) = MenuItem(s).apply {
+	isMnemonicParsing = false
+	setOnAction {
 	  op()
-	})
-  }
+	  it.consume()
+	}
+  }.also { add(it) }
+
+  fun item(s: String, g: Node? = null, op: MenuItem.()->Unit = {}) = MenuItem(s, g).apply {
+	isMnemonicParsing = false
+	op()
+  }.also { add(it) }
 
 
   infix fun String.toggles(b: BooleanProperty) = checkitem(this, b)
-  fun checkitem(s: String, b: BooleanProperty, op: CheckMenuItem.()->Unit = {}) {
-	add(CheckMenuItem(s).apply {
-	  isMnemonicParsing = false
-	  selectedProperty().bindBidirectional(b)
-	  op()
-	})
-  }
+  fun checkitem(s: String, b: BooleanProperty, op: CheckMenuItem.()->Unit = {}) = CheckMenuItem(s).apply {
+	isMnemonicParsing = false
+	selectedProperty().bindBidirectional(b)
+	op()
+  }.also { add(it) }
 
-  fun menu(s: String, op: Menu.()->Unit) {
-	add(Menu(s).apply {
-	  isMnemonicParsing = false
-	  op()
-	})
-  }
+  fun menu(s: String, op: Menu.()->Unit) = Menu(s).apply {
+	isMnemonicParsing = false
+	op()
+  }.also { add(it) }
 
   fun add(item: MenuItem) {
 	if (isGen) {
@@ -156,6 +148,7 @@ fun showMContextMenu(
 		  null -> node.scene
 		  else -> node.parent
 		}
+
 		is Shape            -> node.parent
 		is Canvas           -> node.parent
 		is Scene            -> node.window
