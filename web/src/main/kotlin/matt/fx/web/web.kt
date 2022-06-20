@@ -278,7 +278,7 @@ fun Region.specialTransferingToWindowAndBack(par: Pane) {
 
 
 @ExperimentalContracts
-class WebViewPane private constructor(file: MFile? = null, html: String? = null): VBox() {
+open class WebViewPane private constructor(file: MFile? = null, html: String? = null): VBox() {
 
   constructor(file: MFile): this(file = file, html = null)
 
