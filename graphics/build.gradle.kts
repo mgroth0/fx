@@ -7,7 +7,7 @@ apis(
   projects.kj.hurricanefx,
   projects.k.async,
   projects.kj.hotkey,
-  projects.kj.auto,
+  projects.k.auto,
   projects.kj.fx.fxImage,
   projects.k.stream,
   projects.kj.kjlib,
