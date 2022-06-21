@@ -21,6 +21,7 @@ import matt.fx.graphics.refreshWhileInSceneEvery
 import matt.fx.graphics.win.interact.openInNewWindow
 import matt.fx.graphics.win.stage.WMode.CLOSE
 import matt.fx.node.file.createNode
+import matt.fx.node.file.tree.FileTreePopulationStrategy.AUTOMATIC
 import matt.fx.web.specialTransferingToWindowAndBack
 import matt.gui.draggableIcon
 import matt.gui.fxlang.onSelect
@@ -37,10 +38,10 @@ import matt.hurricanefx.tornadofx.nodes.selectedItem
 import matt.kjlib.file.recursiveChildren
 import matt.kjlib.file.size
 import matt.klib.file.MFile
+import matt.klib.lang.inList
 
 fun FileTreeAndViewerPane(
-  rootFile: MFile,
-  doubleClickInsteadOfSelect: Boolean = false
+  rootFile: MFile, doubleClickInsteadOfSelect: Boolean = false
 ) = HBox().apply {
   val hbox = this
 
@@ -86,6 +87,14 @@ fun FileTreeAndViewerPane(
 fun Pane.filetree(
   rootFile: MFile,
   table: Boolean = true,
+  strategy: FileTreePopulationStrategy = AUTOMATIC,
+  op: (TreeTableView<MFile>.()->Unit)? = null,
+): TreeTableView<MFile> = filetree(rootFile.inList(), table, strategy, op)
+
+fun Pane.filetree(
+  rootFiles: List<MFile>,
+  table: Boolean = true,
+  strategy: FileTreePopulationStrategy = AUTOMATIC,
   op: (TreeTableView<MFile>.()->Unit)? = null,
 ): TreeTableView<MFile> {
   return object: TreeTableView<MFile>() {
@@ -100,8 +109,7 @@ fun Pane.filetree(
 	  }
 	}
   }.apply {
-	this@filetree.add(this)
-	/*column<MFile, String>("") {
+	this@filetree.add(this)    /*column<MFile, String>("") {
 	  *//*the first matt.hurricanefx.tableview.coolColumn is where the branch expander arrows go, regardless of if theres also other data*//*
 	  SimpleStringProperty("")
 	  *//*and if there is other data, its pretty ugly (at least it has been)*//*
@@ -144,31 +152,63 @@ fun Pane.filetree(
 		  )
 		}
 	  }
-	  selectedItem?.let { it.actions() + it.fxActions() }?.forEach {
-		actionitem(it)
+	  onRequest {
+		selectedItem?.let { it.actions() + it.fxActions() }?.forEach {
+		  actionitem(it)
+		}
 	  }
 	}
 
 	sortOrder.setAll(nameCol) /*not working, but can click columns*/
-	root = TreeItem(rootFile)
-	isShowRoot = true
 
-	populate {
-	  it.value.listFiles()?.toList() ?: listOf()
-	}
-	var files: Set<MFile> = rootFile.recursiveChildren().toSet()
-	refreshWhileInSceneEvery(5.sec) {
-	  val tempfiles = rootFile.recursiveChildren().toSet()
-	  if (!(tempfiles.containsAll(files.toSet()) && files.containsAll(tempfiles))) {
-		files = rootFile.recursiveChildren().toSet()
-		refresh()
-		if (table) autoResizeColumns()
+
+	root = TreeItem()
+	//	rootFiles.forEach {
+	//
+	//	}
+	//	val flowItem = TreeItem(rootFile)
+	root.children.addAll(rootFiles.map { TreeItem(it) })
+
+
+
+	isShowRoot = false
+
+	if (strategy == AUTOMATIC) {
+	  require(rootFiles.size == 1)
+	  populate {
+		it.value.listFiles()?.toList() ?: listOf()
+	  }
+	  var files: Set<MFile> = rootFiles[0].recursiveChildren().toSet()
+	  refreshWhileInSceneEvery(5.sec) {
+		val tempfiles = rootFiles[0].recursiveChildren().toSet()
+		if (!(tempfiles.containsAll(files.toSet()) && files.containsAll(tempfiles))) {
+		  files = rootFiles[0].recursiveChildren().toSet()
+		  refresh()
+		  if (table) autoResizeColumns()
+		}
+	  }
+	  refresh()
+	} else {
+	  //	  flowItem.expandedProperty().onChange {
+	  //		flowItem.children.setAll(rootFile.listFiles()?.map { TreeItem(it) } ?: listOf())
+	  //	  }
+	  //	  flowItem.graphic?.setOnMouseClicked {
+	  //		flowItem.children.setAll(rootFile.listFiles()?.map { TreeItem(it) } ?: listOf())
+	  //	  }
+	  selectionModel.selectedItemProperty().onChange {
+		it?.children?.setAll(it.value.listFiles()?.map { TreeItem(it) } ?: listOf())
 	  }
 	}
-	refresh()
+
+
 	root.isExpanded = true
 	if (table) autoResizeColumns()
 	if (op != null) op()
   }
+}
+
+
+enum class FileTreePopulationStrategy {
+  AUTOMATIC, EFFICIENT
 }
 
