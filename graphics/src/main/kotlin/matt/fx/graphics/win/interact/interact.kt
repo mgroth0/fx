@@ -19,6 +19,8 @@ import javafx.scene.paint.Color
 import javafx.stage.Stage
 import javafx.stage.StageStyle
 import javafx.stage.Window
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 import matt.fx.graphics.core.scene.MScene
 import matt.fx.graphics.lang.actionbutton
 import matt.fx.graphics.layout.hbox
@@ -46,6 +48,8 @@ import matt.hurricanefx.tornadofx.nodes.disableWhen
 import matt.hurricanefx.tornadofx.nodes.onDoubleClick
 import matt.json.prim.isValidJson
 import matt.klib.file.MFile
+import matt.klib.lang.noExceptions
+import matt.klib.lang.nullIfExceptions
 import java.net.URI
 import java.util.Optional
 import java.util.WeakHashMap
@@ -138,10 +142,12 @@ fun Stage.bindHWToOwner() {
 }
 
 
-fun jsonEditor(json: String? = null) = dialog<String?> {
+inline fun <reified T> jsonEditor(json: String? = null) = dialog<T?> {
   val ta = textarea(json ?: "")
   val goodBind = ta.textProperty().booleanBinding {
-	it?.isValidJson() ?: false
+	it != null
+		&& it.isValidJson()
+		&& noExceptions { Json.decodeFromString<T>(it) }
   }
   readyWhen(goodBind)
   ta.borderFill = Color.BLACK /*so it does not jitter*/
@@ -149,7 +155,7 @@ fun jsonEditor(json: String? = null) = dialog<String?> {
 	ta.borderFill = if (it) Color.BLACK else Color.RED
   }
   setResultConverter {
-	ta.text.takeIf { it.isValidJson() }
+	ta.text.takeIf { it.isValidJson() }?.let { nullIfExceptions { Json.decodeFromString<T>(it) } }
   }
 }
 

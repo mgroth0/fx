@@ -4,15 +4,21 @@ import com.jthemedetecor.OsThemeDetector
 import javafx.application.Platform.runLater
 import javafx.css.Styleable
 import javafx.geometry.Insets
+import javafx.scene.Node
 import javafx.scene.layout.Border
 import javafx.scene.layout.BorderStroke
 import javafx.scene.layout.BorderStrokeStyle
 import javafx.scene.layout.Region
 import javafx.scene.paint.Color
 import javafx.scene.paint.Paint
+import matt.color.hex
+import matt.fx.graphics.toAwtColor
 import matt.klib.commons.RootProjects.flow
 import matt.klib.commons.get
 import matt.kjlib.prop.BasicBooleanProperty
+import matt.klib.css.ColorLike
+import matt.klib.css.LinearGradient
+import matt.klib.css.MyStyleDsl
 import matt.klib.str.LineAppender
 import matt.klib.log.warn
 import java.util.logging.Level
@@ -116,7 +122,8 @@ private class StyleClass {
   }
 }
 
-class StyleClassDSL(val s: Styleable) {
+
+class StyleClassDSL(val s: Node): MyStyleDsl() {
   val yellowText by StyleClass()
   val blueText by StyleClass()
   val darkGreyText by StyleClass()
@@ -126,12 +133,39 @@ class StyleClassDSL(val s: Styleable) {
   val nodeTextField by StyleClass()
   val presentationMode by StyleClass()
   val flowablePresentationMode by StyleClass()
+
+  private fun styleMap() =
+	s.style.split(";").filter { it.isNotBlank() }.map { it.split(":") }.associate { it[0] to it[1] }.toMutableMap()
+
+  private fun updateFromMap(map: Map<String, String>) {
+	s.style = map.entries.joinToString(separator = ";") { "${it.key}: ${it.value}" }
+  }
+
+  override fun set(key: String, value: Any) {
+	val map = styleMap()
+	map["-$key"] = value.toString()
+	updateFromMap(map)
+  }
+
+  override fun get(key: String) = styleMap()["-$key"]!!
+
+  override fun remove(key: String) {
+	val map = styleMap()
+	map.remove("-$key")
+	updateFromMap(map)
+  }
+
+  override fun clear() {
+	s.style = ""
+  }
+
+  var fxTextFill: Color? by custom({ Color.valueOf(this) }, { toAwtColor().hex() })
+
 }
 
-fun Styleable.sty(op: StyleClassDSL.()->Unit) {
+fun Node.sty(op: StyleClassDSL.()->Unit) {
   StyleClassDSL(this).apply(op)
 }
-
 
 
 fun Region.yellow() {
@@ -157,10 +191,6 @@ fun Region.red() {
 fun Region.orange() {
   borderDashFill = Color.ORANGE
 }
-
-
-
-
 
 
 /*part of this file was taken from tornadofx*/

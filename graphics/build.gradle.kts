@@ -11,6 +11,7 @@ apis(
   projects.k.fx.fxImage,
   projects.k.stream,
   projects.k.kjlib,
+  projects.k.klib,
   "k:color".jvm()
 )
 
