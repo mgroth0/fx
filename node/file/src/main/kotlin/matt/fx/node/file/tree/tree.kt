@@ -5,6 +5,7 @@ import javafx.beans.property.SimpleStringProperty
 import javafx.collections.ObservableList
 import javafx.geometry.Pos
 import javafx.scene.control.TreeItem
+import javafx.scene.control.TreeTableRow
 import javafx.scene.control.TreeTableView
 import javafx.scene.layout.HBox
 import javafx.scene.layout.Pane
@@ -116,9 +117,8 @@ fun Pane.filetree(
 }
 
 private fun TreeTableView<MFile>.setupGUI(table: Boolean) {
-  val oldRowFactory = rowFactory
   setRowFactory {
-	oldRowFactory.call(it).apply {
+	TreeTableRow<MFile>().apply {
 	  setOnDoubleClick {
 		this.treeItem.value.open()
 	  }
