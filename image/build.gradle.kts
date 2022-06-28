@@ -1,8 +1,12 @@
 modtype = LIB
 
+apis(
+  ":k:file".jvm()
+)
 implementations(
   ":k:klib".jvm()
 )
+
 
 dependencies {
   //  implementation(projects.k.kjlib.lang)
