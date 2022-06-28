@@ -3,8 +3,7 @@ package matt.fx.graphics.icon
 import javafx.scene.image.Image
 import javafx.scene.image.ImageView
 import matt.hurricanefx.tornadofx.nodes.add
-import matt.klib.commons.RootProjects.flow
-import matt.klib.commons.get
+import matt.file.commons.RootProjects.flow
 import matt.file.MFile
 
 val IconFolder by lazy { flow.folder["icon"] }

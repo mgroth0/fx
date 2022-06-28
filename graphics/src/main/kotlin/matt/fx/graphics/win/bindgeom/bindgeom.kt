@@ -4,8 +4,7 @@ import javafx.stage.Stage
 import matt.hurricanefx.eye.lib.onChange
 import matt.json.prim.readJson
 import matt.json.prim.writeJson
-import matt.klib.commons.WINDOW_GEOMETRY_FOLDER
-import matt.klib.commons.get
+import matt.file.commons.WINDOW_GEOMETRY_FOLDER
 import matt.file.MFile
 import matt.klib.math.Geometry
 
