@@ -125,10 +125,10 @@ private fun TreeTableView<MFile>.setupGUI(table: Boolean) {
 	}
   }
 
-  val nameCol = column("name", matt.klib.file.MFile::abspath) {
+  val nameCol = column("name", matt.file.MFile::abspath) {
 	simpleCellFactory { value -> mFile(value).let { it.name to it.draggableIcon() } }
   }
-  if (table) column("ext", matt.klib.file.MFile::extension)
+  if (table) column("ext", matt.file.MFile::extension)
   else nameCol.prefWidthProperty().bind(this.widthProperty())
 
 
