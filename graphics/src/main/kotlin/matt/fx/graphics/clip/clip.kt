@@ -13,7 +13,7 @@ import matt.fx.image.save
 //import matt.hurricanefx.save
 import matt.klib.commons.TEMP_DIR
 import matt.klib.commons.get
-import matt.klib.file.MFile
+import matt.file.MFile
 
 
 fun String.copyToClipboard() {

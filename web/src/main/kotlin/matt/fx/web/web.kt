@@ -29,8 +29,8 @@ import matt.hurricanefx.tornadofx.fx.attachTo
 import matt.hurricanefx.tornadofx.nodes.add
 import matt.hurricanefx.tornadofx.nodes.setOnDoubleClick
 import matt.hurricanefx.tornadofx.nodes.removeFromParent
-import matt.klib.file.MFile
-import matt.klib.file.toMFile
+import matt.file.MFile
+import matt.file.toMFile
 import matt.klib.lang.NEVER
 import netscape.javascript.JSObject
 import org.intellij.lang.annotations.Language

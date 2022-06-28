@@ -2,7 +2,7 @@ package matt.fx.image
 
 import javafx.embed.swing.SwingFXUtils
 import javafx.scene.image.Image
-import matt.klib.file.MFile
+import matt.file.MFile
 
 import java.awt.image.BufferedImage
 import javax.imageio.ImageIO

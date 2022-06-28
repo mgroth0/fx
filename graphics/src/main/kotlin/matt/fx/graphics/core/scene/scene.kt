@@ -34,8 +34,8 @@ import matt.hurricanefx.tornadofx.menu.item
 import matt.hurricanefx.tornadofx.menu.menu
 import matt.kjlib.byte.MemReport
 import matt.klib.commons.get
-import matt.klib.file.MFile
-import matt.klib.file.mFile
+import matt.file.MFile
+import matt.file.mFile
 import matt.stream.recurse.recurse
 
 import java.net.URL

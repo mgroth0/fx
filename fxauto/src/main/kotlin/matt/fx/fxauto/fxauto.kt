@@ -4,7 +4,7 @@ import javafx.scene.control.MenuItem
 import matt.auto.Action
 import matt.fx.graphics.clip.copyToClipboard
 import matt.fx.graphics.menu.context.MContextMenuBuilder
-import matt.klib.file.MFile
+import matt.file.MFile
 
 fun MFile.fxActions() = listOf(
   Action("copy full path") {

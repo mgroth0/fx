@@ -42,7 +42,7 @@ import matt.hurricanefx.tornadofx.control.textarea
 import matt.hurricanefx.tornadofx.nodes.add
 import matt.klib.css.Color.black
 import matt.klib.css.sty
-import matt.klib.file.MFile
+import matt.file.MFile
 import matt.klib.lang.err
 import java.lang.ref.WeakReference
 import kotlin.concurrent.thread

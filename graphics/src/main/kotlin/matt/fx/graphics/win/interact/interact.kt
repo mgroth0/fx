@@ -49,8 +49,8 @@ import matt.hurricanefx.tornadofx.dialog.alert
 import matt.hurricanefx.tornadofx.nodes.disableWhen
 import matt.hurricanefx.tornadofx.nodes.setOnDoubleClick
 import matt.json.prim.isValidJson
-import matt.klib.file.MFile
-import matt.klib.file.mFile
+import matt.file.MFile
+import matt.file.mFile
 import matt.klib.lang.noExceptions
 import matt.klib.lang.nullIfExceptions
 import java.net.URI

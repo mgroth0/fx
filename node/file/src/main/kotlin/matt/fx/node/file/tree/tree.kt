@@ -43,8 +43,8 @@ import matt.hurricanefx.tornadofx.nodes.setOnDoubleClick
 import matt.hurricanefx.tornadofx.nodes.populateTree
 import matt.hurricanefx.tornadofx.nodes.selectedItem
 import matt.kjlib.file.size
-import matt.klib.file.MFile
-import matt.klib.file.mFile
+import matt.file.MFile
+import matt.file.mFile
 import matt.klib.lang.inList
 import matt.stream.recurse.recurse
 import matt.stream.sameContentsAnyOrder
