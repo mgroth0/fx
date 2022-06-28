@@ -35,6 +35,7 @@ import matt.hurricanefx.tornadofx.menu.menu
 import matt.kjlib.byte.MemReport
 import matt.klib.commons.get
 import matt.klib.file.MFile
+import matt.klib.file.mFile
 import matt.stream.recurse.recurse
 
 import java.net.URL
@@ -119,10 +120,10 @@ open class MScene(
 
 
 		actionitem("open darkModena.css") {
-		  MFile(URL(DARK_MODENA_CSS).file).openInIntelliJ()
+		  mFile(URL(DARK_MODENA_CSS).file).openInIntelliJ()
 		}
 		actionitem("open custom.css") {
-		  MFile(URL(CUSTOM_CSS).file).openInIntelliJ()
+		  mFile(URL(CUSTOM_CSS).file).openInIntelliJ()
 		}
 		actionitem("print style info samples") {
 		  val classesPrinted = mutableListOf<KClass<*>>()

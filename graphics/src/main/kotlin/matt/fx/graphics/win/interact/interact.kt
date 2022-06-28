@@ -50,6 +50,7 @@ import matt.hurricanefx.tornadofx.nodes.disableWhen
 import matt.hurricanefx.tornadofx.nodes.setOnDoubleClick
 import matt.json.prim.isValidJson
 import matt.klib.file.MFile
+import matt.klib.file.mFile
 import matt.klib.lang.noExceptions
 import matt.klib.lang.nullIfExceptions
 import java.net.URI
@@ -358,7 +359,7 @@ fun MFile.openImageInWindow() {
 }
 
 fun ImageView.doubleClickToOpenInWindow() {
-  this.setOnDoubleClick { MFile(URI(this.image.url)).openImageInWindow() }
+  this.setOnDoubleClick { mFile(URI(this.image.url)).openImageInWindow() }
 }
 
 @OptIn(ExperimentalStdlibApi::class)
