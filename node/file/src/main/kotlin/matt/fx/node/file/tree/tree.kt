@@ -116,9 +116,9 @@ fun Pane.filetree(
 }
 
 private fun TreeTableView<MFile>.setupGUI(table: Boolean) {
-
+  val oldRowFactory = rowFactory
   setRowFactory {
-	rowFactory.call(it).apply {
+	oldRowFactory.call(it).apply {
 	  setOnDoubleClick {
 		this.treeItem.value.open()
 	  }
