@@ -7,5 +7,6 @@ implementations(
   projects.k.async,
   projects.k.gui,
   libs.kotlinx.html.jvm,
-  projects.k.fx.fxFxauto
+  projects.k.fx.fxFxauto,
+  projects.k.stream
 )

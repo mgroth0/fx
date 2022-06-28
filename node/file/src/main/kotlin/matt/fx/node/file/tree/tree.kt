@@ -2,6 +2,7 @@ package matt.fx.node.file.tree
 
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleStringProperty
+import javafx.collections.ObservableList
 import javafx.geometry.Pos
 import javafx.scene.control.TreeItem
 import javafx.scene.control.TreeTableView
@@ -27,57 +28,60 @@ import matt.gui.draggableIcon
 import matt.gui.fxlang.onSelect
 import matt.gui.setview.autoResizeColumns
 import matt.gui.setview.simpleCellFactory
+import matt.hurricanefx.eye.collect.bind
+import matt.hurricanefx.eye.collect.toObservable
 import matt.hurricanefx.eye.lib.onChange
+import matt.hurricanefx.eye.mappedlist.toMappedList
 import matt.hurricanefx.eye.prop.div
 import matt.hurricanefx.tornadofx.item.column
 import matt.hurricanefx.tornadofx.nodes.add
 import matt.hurricanefx.tornadofx.nodes.clear
 import matt.hurricanefx.tornadofx.nodes.onDoubleClick
 import matt.hurricanefx.tornadofx.nodes.populate
+import matt.hurricanefx.tornadofx.nodes.populateTree
 import matt.hurricanefx.tornadofx.nodes.selectedItem
 import matt.kjlib.file.recursiveChildren
 import matt.kjlib.file.size
 import matt.klib.file.MFile
 import matt.klib.lang.inList
+import matt.stream.recurse.recurse
+import matt.stream.sameContentsAnyOrder
 
-fun FileTreeAndViewerPane(
+private const val HEIGHT = 300.0
+
+fun fileTreeAndViewerPane(
   rootFile: MFile, doubleClickInsteadOfSelect: Boolean = false
 ) = HBox().apply {
-  val hbox = this
-
-
-
+  val hBox = this
   alignment = Pos.CENTER_LEFT
-  val HEIGHT = 300.0
-
   val treeTableView = filetree(rootFile).apply {
 	prefHeightProperty().set(HEIGHT)
-	maxWidthProperty().bind(hbox.widthProperty()/2)
+	maxWidthProperty().bind(hBox.widthProperty()/2)
 	hgrow = ALWAYS
   }
-  val viewbox = vbox {
-	prefWidthProperty().bind(hbox.widthProperty()/2) /*less aggressive to solve these issues?*/
-	prefHeightProperty().bind(hbox.heightProperty())
+  val viewBox = vbox {
+	prefWidthProperty().bind(hBox.widthProperty()/2) /*less aggressive to solve these issues?*/
+	prefHeightProperty().bind(hBox.heightProperty())
 	hgrow = ALWAYS
   }
 
   if (doubleClickInsteadOfSelect) {
 	treeTableView.onDoubleClick {
 	  treeTableView.selectedItem?.let {
-		viewbox.clear()
-		viewbox.add(it.createNode(renderHTMLAndSVG = true).apply {
-		  perfectBind(viewbox)
-		  specialTransferingToWindowAndBack(viewbox)
+		viewBox.clear()
+		viewBox.add(it.createNode(renderHTMLAndSVG = true).apply {
+		  perfectBind(viewBox)
+		  specialTransferingToWindowAndBack(viewBox)
 		})
 	  }
 	}
   } else {
 	treeTableView.onSelect { file ->
-	  viewbox.clear()
+	  viewBox.clear()
 	  if (file != null) {
-		viewbox.add(file.createNode(renderHTMLAndSVG = true).apply {
-		  perfectBind(viewbox)
-		  specialTransferingToWindowAndBack(viewbox)
+		viewBox.add(file.createNode(renderHTMLAndSVG = true).apply {
+		  perfectBind(viewBox)
+		  specialTransferingToWindowAndBack(viewBox)
 		})
 	  }
 	}
@@ -89,10 +93,10 @@ fun Pane.filetree(
   table: Boolean = true,
   strategy: FileTreePopulationStrategy = AUTOMATIC,
   op: (TreeTableView<MFile>.()->Unit)? = null,
-): TreeTableView<MFile> = filetree(rootFile.inList(), table, strategy, op)
+): TreeTableView<MFile> = filetree(rootFile.inList().toObservable(), table, strategy, op)
 
 fun Pane.filetree(
-  rootFiles: List<MFile>,
+  rootFiles: ObservableList<MFile>,
   table: Boolean = true,
   strategy: FileTreePopulationStrategy = AUTOMATIC,
   op: (TreeTableView<MFile>.()->Unit)? = null,
@@ -109,94 +113,58 @@ fun Pane.filetree(
 	  }
 	}
   }.apply {
-	this@filetree.add(this)    /*column<MFile, String>("") {
-	  *//*the first matt.hurricanefx.tableview.coolColumn is where the branch expander arrows go, regardless of if theres also other data*//*
-	  SimpleStringProperty("")
-	  *//*and if there is other data, its pretty ugly (at least it has been)*//*
-	}*/
+	this@filetree.add(this)
 
-	val nameCol = column("name", matt.klib.file.MFile::abspath) {
-	  simpleCellFactory { MFile(it).let { it.name to it.draggableIcon() } }
-	}
-	if (table) column("ext", matt.klib.file.MFile::extension)
-	else nameCol.prefWidthProperty().bind(this.widthProperty())
-
-
-	val showSizesProp = SimpleBooleanProperty(false)
-	if (table) showSizesProp.onChange { b ->
-	  if (b) {
-		column<MFile, String>("size") {
-		  SimpleStringProperty(it.value.value.size().formatted)
-		}
-		autoResizeColumns()
-	  } else {
-		columns.firstOrNull { col -> col.text == "size" }?.let { columns.remove(it) }
-		autoResizeColumns()
-	  }
-	}
-
-	mcontextmenu {
-
-	  if (table) checkitem("show sizes", showSizesProp)
-
-	  actionitem("open in new window") {
-		selectedItem?.let {
-		  VBox().apply {
-			val container = this
-			add(it.createNode(renderHTMLAndSVG = true).apply {
-			  perfectBind(container)
-			  specialTransferingToWindowAndBack(container)
-			})
-		  }.openInNewWindow(
-			wMode = CLOSE
-		  )
-		}
-	  }
-	  onRequest {
-		selectedItem?.let { it.actions() + it.fxActions() }?.forEach {
-		  actionitem(it)
-		}
-	  }
-	}
-
-	sortOrder.setAll(nameCol) /*not working, but can click columns*/
+	setupColumnsAndMenus(table = table)
 
 
 	root = TreeItem()
-	//	rootFiles.forEach {
-	//
-	//	}
-	//	val flowItem = TreeItem(rootFile)
-	root.children.addAll(rootFiles.map { TreeItem(it) })
-
-
-
+	root.children.bind(rootFiles) {
+	  TreeItem(it)
+	}
 	isShowRoot = false
 
 	if (strategy == AUTOMATIC) {
-	  require(rootFiles.size == 1)
-	  populate {
-		it.value.listFiles()?.toList() ?: listOf()
+	  fun rePop() {
+		root.children.forEach {
+		  populateTree(it, { TreeItem(it) }) {
+			it.value.listFiles()?.toList() ?: listOf()
+		  }
+		}
+		if (table) autoResizeColumns()
 	  }
+	  rePop()
+
+
+	  //	  populate {
+	  //		it.value.listFiles()?.toList() ?: listOf()
+	  //	  }
 	  var files: Set<MFile> = rootFiles[0].recursiveChildren().toSet()
 	  refreshWhileInSceneEvery(5.sec) {
-		val tempfiles = rootFiles[0].recursiveChildren().toSet()
-		if (!(tempfiles.containsAll(files.toSet()) && files.containsAll(tempfiles))) {
-		  files = rootFiles[0].recursiveChildren().toSet()
-		  refresh()
-		  if (table) autoResizeColumns()
+
+
+		if (root.children.flatMap { it.recurse { it.children } }.any {
+			!it.children.map { it.value }.sameContentsAnyOrder(it.value.listFiles()?.toList() ?: listOf())
+		  }) {
+		  rePop()
 		}
+
+		//
+		//		val tempFiles = rootFiles[0].recursiveChildren().toSet()
+		//
+		//		if (!tempFiles
+		//
+		//
+		//		  !(tempFiles.containsAll(files.toSet()) && files.containsAll(tempFiles))) {
+		//		files = rootFiles[0].recursiveChildren().toSet()
+		////		refresh()
+		//		if (table) autoResizeColumns()
+		//	  }
 	  }
-	  refresh()
+	  //	  refresh()
 	} else {
-	  //	  flowItem.expandedProperty().onChange {
-	  //		flowItem.children.setAll(rootFile.listFiles()?.map { TreeItem(it) } ?: listOf())
-	  //	  }
-	  //	  flowItem.graphic?.setOnMouseClicked {
-	  //		flowItem.children.setAll(rootFile.listFiles()?.map { TreeItem(it) } ?: listOf())
-	  //	  }
-	  selectionModel.selectedItemProperty().onChange {
-		it?.children?.setAll(it.value.listFiles()?.map { TreeItem(it) } ?: listOf())
+	  selectionModel.selectedItemProperty().onChange { v ->
+		v?.children?.setAll(v.value.listFiles()?.map { TreeItem(it) } ?: listOf())
 	  }
 	}
 
@@ -205,6 +173,54 @@ fun Pane.filetree(
 	if (table) autoResizeColumns()
 	if (op != null) op()
   }
+}
+
+private fun TreeTableView<MFile>.setupColumnsAndMenus(table: Boolean) {
+  val nameCol = column("name", matt.klib.file.MFile::abspath) {
+	simpleCellFactory { value -> MFile(value).let { it.name to it.draggableIcon() } }
+  }
+  if (table) column("ext", matt.klib.file.MFile::extension)
+  else nameCol.prefWidthProperty().bind(this.widthProperty())
+
+
+  val showSizesProp = SimpleBooleanProperty(false)
+  if (table) showSizesProp.onChange { b ->
+	if (b) {
+	  column<MFile, String>("size") {
+		SimpleStringProperty(it.value.value.size().formatted)
+	  }
+	  autoResizeColumns()
+	} else {
+	  columns.firstOrNull { col -> col.text == "size" }?.let { columns.remove(it) }
+	  autoResizeColumns()
+	}
+  }
+
+  mcontextmenu {
+
+	if (table) checkitem("show sizes", showSizesProp)
+
+	"open in new window" does {
+	  selectedItem?.let {
+		VBox().apply {
+		  val container = this
+		  add(it.createNode(renderHTMLAndSVG = true).apply {
+			perfectBind(container)
+			specialTransferingToWindowAndBack(container)
+		  })
+		}.openInNewWindow(
+		  wMode = CLOSE
+		)
+	  }
+	}
+	onRequest {
+	  selectedItem?.let { it.actions() + it.fxActions() }?.forEach {
+		actionitem(it)
+	  }
+	}
+  }
+
+  sortOrder.setAll(nameCol) /*not working, but can click columns*/
 }
 
 

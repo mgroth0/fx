@@ -4,6 +4,7 @@ import javafx.application.Platform.runLater
 import javafx.beans.binding.DoubleBinding
 import javafx.beans.value.ObservableValue
 import javafx.geometry.Pos
+import javafx.scene.Node
 import javafx.scene.Parent
 import javafx.scene.Scene
 import javafx.scene.control.Alert
@@ -41,6 +42,7 @@ import matt.hurricanefx.eye.lang.BProp
 import matt.hurricanefx.eye.lib.onChange
 import matt.hurricanefx.eye.prop.booleanBinding
 import matt.hurricanefx.eye.prop.doubleBinding
+import matt.hurricanefx.stage
 import matt.hurricanefx.tornadofx.control.button
 import matt.hurricanefx.tornadofx.control.textarea
 import matt.hurricanefx.tornadofx.dialog.alert
@@ -51,8 +53,8 @@ import matt.klib.file.MFile
 import matt.klib.lang.noExceptions
 import matt.klib.lang.nullIfExceptions
 import java.net.URI
-import java.util.Optional
 import java.util.WeakHashMap
+import kotlin.jvm.optionals.getOrNull
 
 fun safe(s: String, op: ()->Unit): Boolean {
   var r = false
@@ -359,13 +361,13 @@ fun ImageView.doubleClickToOpenInWindow() {
   this.onDoubleClick { MFile(URI(this.image.url)).openImageInWindow() }
 }
 
-fun showMTextInputDialog(
-  promptAndDefault: String,
-  stage: Stage?
-): Optional<String> {
-  return TextInputDialog(promptAndDefault).apply {
-	initOwner(stage)
-	this.initStyle(StageStyle.UTILITY)
-  }.showAndWait()
-}
+@OptIn(ExperimentalStdlibApi::class)
+fun Node.textInput(
+  default: String = "insert default here",
+  prompt: String = "insert prompt here"
+): String? = TextInputDialog(default).apply {
+  initOwner(stage)
+  contentText = prompt
+  initStyle(StageStyle.UTILITY)
+}.showAndWait().getOrNull()
 
