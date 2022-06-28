@@ -4,7 +4,6 @@ import javafx.application.Platform.runLater
 import javafx.beans.property.SimpleDoubleProperty
 import javafx.event.EventHandler
 import javafx.event.EventTarget
-import javafx.scene.Node
 import javafx.scene.input.KeyCode
 import javafx.scene.layout.Pane
 import javafx.scene.layout.Priority
@@ -28,7 +27,7 @@ import matt.fx.graphics.async.runLaterReturn
 import matt.fx.graphics.layout.vgrow
 import matt.hurricanefx.tornadofx.fx.attachTo
 import matt.hurricanefx.tornadofx.nodes.add
-import matt.hurricanefx.tornadofx.nodes.onDoubleClick
+import matt.hurricanefx.tornadofx.nodes.setOnDoubleClick
 import matt.hurricanefx.tornadofx.nodes.removeFromParent
 import matt.klib.file.MFile
 import matt.klib.file.toMFile
@@ -254,7 +253,7 @@ fun Region.specialTransferingToWindowAndBack(par: Pane) {
         k.consume()
       }
     }
-    onDoubleClick {
+    setOnDoubleClick {
       if (this.scene.root != this) {
         this.removeFromParent()
         this.openInNewWindow().apply {
@@ -335,7 +334,7 @@ fun WebView.specialTransferingToWindowAndBack(par: Pane) {
     }
   }
 
-  onDoubleClick {
+  setOnDoubleClick {
     if (this.scene.root != this) {
       this.removeFromParent()
       this.openInNewWindow().apply {

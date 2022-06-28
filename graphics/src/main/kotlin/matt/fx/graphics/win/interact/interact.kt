@@ -47,7 +47,7 @@ import matt.hurricanefx.tornadofx.control.button
 import matt.hurricanefx.tornadofx.control.textarea
 import matt.hurricanefx.tornadofx.dialog.alert
 import matt.hurricanefx.tornadofx.nodes.disableWhen
-import matt.hurricanefx.tornadofx.nodes.onDoubleClick
+import matt.hurricanefx.tornadofx.nodes.setOnDoubleClick
 import matt.json.prim.isValidJson
 import matt.klib.file.MFile
 import matt.klib.lang.noExceptions
@@ -352,13 +352,13 @@ fun MFile.openImageInWindow() {
 	runLater {
 	  fitHeightProperty().bind(scene.window.heightProperty())
 	  fitWidthProperty().bind(scene.window.widthProperty())
-	  this.onDoubleClick { (scene.window as Stage).close() }
+	  this.setOnDoubleClick { (scene.window as Stage).close() }
 	}
   }).openInNewWindow()
 }
 
 fun ImageView.doubleClickToOpenInWindow() {
-  this.onDoubleClick { MFile(URI(this.image.url)).openImageInWindow() }
+  this.setOnDoubleClick { MFile(URI(this.image.url)).openImageInWindow() }
 }
 
 @OptIn(ExperimentalStdlibApi::class)

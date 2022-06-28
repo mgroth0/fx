@@ -12,6 +12,8 @@ import javafx.scene.layout.Priority.ALWAYS
 import javafx.scene.layout.VBox
 import matt.async.date.sec
 import matt.auto.actions
+import matt.auto.open
+import matt.auto.openInFinder
 import matt.fx.fxauto.actionitem
 import matt.fx.fxauto.fxActions
 import matt.fx.graphics.layout.hgrow
@@ -28,21 +30,20 @@ import matt.gui.draggableIcon
 import matt.gui.fxlang.onSelect
 import matt.gui.setview.autoResizeColumns
 import matt.gui.setview.simpleCellFactory
+import matt.hurricanefx.TreeTableTreeView
 import matt.hurricanefx.eye.collect.bind
 import matt.hurricanefx.eye.collect.toObservable
 import matt.hurricanefx.eye.lib.onChange
-import matt.hurricanefx.eye.mappedlist.toMappedList
 import matt.hurricanefx.eye.prop.div
 import matt.hurricanefx.tornadofx.item.column
 import matt.hurricanefx.tornadofx.nodes.add
 import matt.hurricanefx.tornadofx.nodes.clear
-import matt.hurricanefx.tornadofx.nodes.onDoubleClick
-import matt.hurricanefx.tornadofx.nodes.populate
+import matt.hurricanefx.tornadofx.nodes.setOnDoubleClick
 import matt.hurricanefx.tornadofx.nodes.populateTree
 import matt.hurricanefx.tornadofx.nodes.selectedItem
-import matt.kjlib.file.recursiveChildren
 import matt.kjlib.file.size
 import matt.klib.file.MFile
+import matt.klib.file.mFile
 import matt.klib.lang.inList
 import matt.stream.recurse.recurse
 import matt.stream.sameContentsAnyOrder
@@ -66,7 +67,7 @@ fun fileTreeAndViewerPane(
   }
 
   if (doubleClickInsteadOfSelect) {
-	treeTableView.onDoubleClick {
+	treeTableView.setOnDoubleClick {
 	  treeTableView.selectedItem?.let {
 		viewBox.clear()
 		viewBox.add(it.createNode(renderHTMLAndSVG = true).apply {
@@ -101,72 +102,11 @@ fun Pane.filetree(
   strategy: FileTreePopulationStrategy = AUTOMATIC,
   op: (TreeTableView<MFile>.()->Unit)? = null,
 ): TreeTableView<MFile> {
-  return object: TreeTableView<MFile>() {
-	override fun resize(width: Double, height: Double) {
-	  super.resize(width, height)
-	  if (!table) {
-		val header = lookup("TableHeaderRow") as Pane
-		header.minHeight = 0.0
-		header.prefHeight = 0.0
-		header.maxHeight = 0.0
-		header.isVisible = false
-	  }
-	}
-  }.apply {
+  return TreeTableTreeView<MFile>(table = table).apply {
 	this@filetree.add(this)
 
-	setupColumnsAndMenus(table = table)
-
-
-	root = TreeItem()
-	root.children.bind(rootFiles) {
-	  TreeItem(it)
-	}
-	isShowRoot = false
-
-	if (strategy == AUTOMATIC) {
-	  fun rePop() {
-		root.children.forEach {
-		  populateTree(it, { TreeItem(it) }) {
-			it.value.listFiles()?.toList() ?: listOf()
-		  }
-		}
-		if (table) autoResizeColumns()
-	  }
-	  rePop()
-
-
-	  //	  populate {
-	  //		it.value.listFiles()?.toList() ?: listOf()
-	  //	  }
-	  var files: Set<MFile> = rootFiles[0].recursiveChildren().toSet()
-	  refreshWhileInSceneEvery(5.sec) {
-
-
-		if (root.children.flatMap { it.recurse { it.children } }.any {
-			!it.children.map { it.value }.sameContentsAnyOrder(it.value.listFiles()?.toList() ?: listOf())
-		  }) {
-		  rePop()
-		}
-
-		//
-		//		val tempFiles = rootFiles[0].recursiveChildren().toSet()
-		//
-		//		if (!tempFiles
-		//
-		//
-		//		  !(tempFiles.containsAll(files.toSet()) && files.containsAll(tempFiles))) {
-		//		files = rootFiles[0].recursiveChildren().toSet()
-		////		refresh()
-		//		if (table) autoResizeColumns()
-		//	  }
-	  }
-	  //	  refresh()
-	} else {
-	  selectionModel.selectedItemProperty().onChange { v ->
-		v?.children?.setAll(v.value.listFiles()?.map { TreeItem(it) } ?: listOf())
-	  }
-	}
+	setupGUI(table = table)
+	setupContent(rootFiles, strategy, table)
 
 
 	root.isExpanded = true
@@ -175,9 +115,18 @@ fun Pane.filetree(
   }
 }
 
-private fun TreeTableView<MFile>.setupColumnsAndMenus(table: Boolean) {
+private fun TreeTableView<MFile>.setupGUI(table: Boolean) {
+
+  setRowFactory {
+	rowFactory.call(it).apply {
+	  setOnDoubleClick {
+		this.treeItem.value.open()
+	  }
+	}
+  }
+
   val nameCol = column("name", matt.klib.file.MFile::abspath) {
-	simpleCellFactory { value -> MFile(value).let { it.name to it.draggableIcon() } }
+	simpleCellFactory { value -> mFile(value).let { it.name to it.draggableIcon() } }
   }
   if (table) column("ext", matt.klib.file.MFile::extension)
   else nameCol.prefWidthProperty().bind(this.widthProperty())
@@ -221,6 +170,45 @@ private fun TreeTableView<MFile>.setupColumnsAndMenus(table: Boolean) {
   }
 
   sortOrder.setAll(nameCol) /*not working, but can click columns*/
+}
+
+private fun TreeTableView<MFile>.setupContent(
+  rootFiles: ObservableList<MFile>,
+  strategy: FileTreePopulationStrategy,
+  table: Boolean
+) {
+
+
+  root = TreeItem()
+  root.children.bind(rootFiles) {
+	TreeItem(it)
+  }
+  isShowRoot = false
+
+  if (strategy == AUTOMATIC) {
+	fun rePop() {
+	  root.children.forEach {
+		populateTree(it, { TreeItem(it) }) {
+		  it.value.listFiles()?.toList() ?: listOf()
+		}
+	  }
+	  if (table) autoResizeColumns()
+	}
+	rePop()
+
+	refreshWhileInSceneEvery(5.sec) {
+	  if (root.children.flatMap { it.recurse { it.children } }.any {
+		  !it.children.map { it.value }.sameContentsAnyOrder(it.value.listFiles()?.toList() ?: listOf())
+		}) {
+		rePop()
+	  }
+	}
+  } else {
+	selectionModel.selectedItemProperty().onChange { v ->
+	  v?.children?.setAll(v.value.listFiles()?.map { TreeItem(it) } ?: listOf())
+	}
+  }
+
 }
 
 
