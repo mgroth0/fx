@@ -4,7 +4,7 @@ apis(
   ":k:file".jvm()
 )
 implementations(
-  ":k:klib".jvm()
+//  ":k:klib".jvm()
 )
 
 
