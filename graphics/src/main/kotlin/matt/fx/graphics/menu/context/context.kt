@@ -121,9 +121,6 @@ fun showMContextMenu(
 ) {
   val devMenu = Menu("dev")
 
-  val mreport = MemReport()
-
-
   devMenu.actionitem("test exception") {
 	throw Exception("test exception")
   }
@@ -134,16 +131,13 @@ fun showMContextMenu(
 	var node: EventTarget = target
 	val added = mutableListOf<String>()
 	while (true) {
-	  var addedHere = false
 	  getCMItems(node)?.let {
 		if (items.isNotEmpty()) separator()
-		addedHere = true
 		items += it
 	  }
 	  node::class.qualifiedName
 		?.takeIf { "matt" in it && it !in added }
 		?.let {
-		  //		  if (items.isNotEmpty() && !addedHere) separator()
 		  reflectMenu.actionitem(node::class.simpleName!!, threaded = true) {
 			node::class.jumpToSource()
 		  }
@@ -194,7 +188,7 @@ private fun Node.hotkeyInfoMenu() = Menu("Hotkey Info").apply {
 		menu(node.toString()) {
 		  val h = when (type) {
 			Handler -> handlers[node]
-			Filter -> filters[node]
+			Filter  -> filters[node]
 		  }
 		  item("\tqp=${h?.quickPassForNormalTyping}")
 		  handlers[node]?.hotkeys?.forEach { hkc ->
