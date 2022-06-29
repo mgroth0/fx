@@ -15,12 +15,16 @@ import javafx.scene.control.SeparatorMenuItem
 import javafx.scene.layout.Region
 import javafx.scene.shape.Shape
 import matt.auto.openInIntelliJ
+import matt.file.commons.RootProjects.flow
 import matt.fx.graphics.hotkey.filters
 import matt.fx.graphics.hotkey.handlers
-import matt.file.commons.RootProjects.flow
+import matt.fx.graphics.menu.context.EventHandlerType.Filter
+import matt.fx.graphics.menu.context.EventHandlerType.Handler
+import matt.hurricanefx.tornadofx.menu.item
+import matt.hurricanefx.tornadofx.menu.menu
 import matt.kjlib.reflect.jumpToKotlinSourceString
-import matt.klib.str.tab
 import matt.klib.lang.NEVER
+import matt.stream.recurse.chain
 import java.util.WeakHashMap
 import kotlin.collections.set
 import kotlin.concurrent.thread
@@ -156,31 +160,30 @@ fun showMContextMenu(
 	  }
 	}
 	if (items.isNotEmpty()) items += SeparatorMenuItem()
-	items += MenuItem("Print Hotkey Info").apply {
-	  setOnAction {
-		println("\nHOTKEY INFO\n")
-		var hknode: Node? = target
-		while (hknode != null) {
-		  println(hknode)
-		  tab("HANDLERS")
-		  handlers[hknode]?.let { h ->
-			tab("\tqp=${h.quickPassForNormalTyping}")
-			h.hotkeys.forEach {
-			  tab("\t${it.getHotkeys().joinToString { it.toString() }}")
+	items += Menu("Hotkey Info").apply {
+	  fun addInfo(type: EventHandlerType) {
+		menu(when (type) {Handler -> "handlers"; Filter -> "filters"}) {
+		  target.chain { it.parent }.forEach { node ->
+			menu(node.toString()) {
+			  val h = when (type) {Handler -> handlers[node]; Filter -> filters[node]}
+			  item("\tqp=${h?.quickPassForNormalTyping}")
+			  handlers[node]?.hotkeys?.forEach { hkc ->
+				item("\t${hkc.getHotkeys().joinToString { it.toString() }}")
+			  }
 			}
 		  }
-		  tab("FILTERS")
-		  filters[hknode]?.let { h ->
-			tab("\tqp=${h.quickPassForNormalTyping}")
-			h.hotkeys.forEach {
-			  tab("\t${it.getHotkeys().joinToString { it.toString() }}")
-			}
-		  }
-		  hknode = hknode.parent
 		}
-		println("\n")
+	  }
+	  setOnShowing {
+		items.clear()
+		addInfo(Handler)
+		addInfo(Filter)
 	  }
 	}
   }.show(target, xy.first, xy.second)
+}
+
+enum class EventHandlerType {
+  Handler,Filter
 }
 
