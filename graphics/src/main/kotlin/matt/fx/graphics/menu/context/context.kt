@@ -18,16 +18,22 @@ import matt.auto.openInIntelliJ
 import matt.file.commons.RootProjects.flow
 import matt.fx.graphics.hotkey.filters
 import matt.fx.graphics.hotkey.handlers
+import matt.fx.graphics.menu.actionitem
 import matt.fx.graphics.menu.context.EventHandlerType.Filter
 import matt.fx.graphics.menu.context.EventHandlerType.Handler
+import matt.hurricanefx.stage
 import matt.hurricanefx.tornadofx.menu.item
+import matt.hurricanefx.tornadofx.menu.lazyContextmenu
 import matt.hurricanefx.tornadofx.menu.menu
+import matt.hurricanefx.tornadofx.menu.separator
+import matt.kjlib.byte.MemReport
 import matt.kjlib.reflect.jumpToKotlinSourceString
 import matt.klib.lang.NEVER
 import matt.stream.recurse.chain
 import java.util.WeakHashMap
 import kotlin.collections.set
 import kotlin.concurrent.thread
+import kotlin.reflect.KClass
 
 val contextMenuItems = WeakHashMap<EventTarget, MutableList<MenuItem>>()
 val contextMenuItemGens = WeakHashMap<EventTarget, MutableList<MContextMenuBuilder.()->Unit>>()
@@ -113,40 +119,36 @@ fun showMContextMenu(
   target: Node,
   xy: Pair<Double, Double>
 ) {
+  val devMenu = Menu("dev")
+
+  val mreport = MemReport()
+
+
+  devMenu.actionitem("test exception") {
+	throw Exception("test exception")
+  }
+
+  val reflectMenu = devMenu.menu("reflect")
   ContextMenu().apply {
 	isAutoHide = true; isAutoFix = true
 	var node: EventTarget = target
 	val added = mutableListOf<String>()
 	while (true) {
 	  var addedHere = false
-	  getCMItems(node)?.let { newitems ->
-		if (items.isNotEmpty()) items += SeparatorMenuItem()
+	  getCMItems(node)?.let {
+		if (items.isNotEmpty()) separator()
 		addedHere = true
-		newitems.forEach { items += it }
+		items += it
 	  }
-	  val qname = node::class.qualifiedName
-
-	  qname?.let {
-		val pack = node::class.java.`package`.name
-		val thisnode = node
-		if ("matt" in it && it !in added) {
-		  if (items.isNotEmpty() && !addedHere) items += SeparatorMenuItem()
-		  items += MenuItem("Reflect: ${thisnode::class.simpleName!!}").apply {
-			setOnAction {
-			  thread {
-				jumpToKotlinSourceString(
-				  flow.folder,
-				  thisnode::class.simpleName!!,
-				  packageFilter = pack
-				)?.let { fl ->
-				  openInIntelliJ(fl.first.absolutePath, fl.second)/*.start()*/
-				}
-			  }
-			}
+	  node::class.qualifiedName
+		?.takeIf { "matt" in it && it !in added }
+		?.let {
+		  //		  if (items.isNotEmpty() && !addedHere) separator()
+		  reflectMenu.actionitem(node::class.simpleName!!, threaded = true) {
+			node::class.jumpToSource()
 		  }
 		  added += it
 		}
-	  }
 	  node = when (node) {
 		is Region, is Group -> when ((node as Parent).parent) {
 		  null -> node.scene
@@ -159,31 +161,52 @@ fun showMContextMenu(
 		else                -> break
 	  }
 	}
-	if (items.isNotEmpty()) items += SeparatorMenuItem()
-	items += Menu("Hotkey Info").apply {
-	  fun addInfo(type: EventHandlerType) {
-		menu(when (type) {Handler -> "handlers"; Filter -> "filters"}) {
-		  target.chain { it.parent }.forEach { node ->
-			menu(node.toString()) {
-			  val h = when (type) {Handler -> handlers[node]; Filter -> filters[node]}
-			  item("\tqp=${h?.quickPassForNormalTyping}")
-			  handlers[node]?.hotkeys?.forEach { hkc ->
-				item("\t${hkc.getHotkeys().joinToString { it.toString() }}")
-			  }
-			}
-		  }
-		}
-	  }
-	  setOnShowing {
-		items.clear()
-		addInfo(Handler)
-		addInfo(Filter)
-	  }
-	}
+	if (items.isNotEmpty()) separator()
+	items += target.hotkeyInfoMenu()
+	items += devMenu
   }.show(target, xy.first, xy.second)
 }
 
 enum class EventHandlerType {
-  Handler,Filter
+  Handler, Filter
+}
+
+private fun KClass<*>.jumpToSource() {
+  val pack = this.java.`package`.name
+  jumpToKotlinSourceString(
+	flow.folder,
+	this.simpleName!!,
+	packageFilter = pack
+  )?.let { fl ->
+	openInIntelliJ(fl.first.absolutePath, fl.second)
+  }
+}
+
+private fun Node.hotkeyInfoMenu() = Menu("Hotkey Info").apply {
+  val node = this@hotkeyInfoMenu
+  fun addInfo(type: EventHandlerType) {
+	menu(
+	  when (type) {
+		Handler -> "handlers"; Filter -> "filters"
+	  }
+	) {
+	  (node.chain { it.parent } + node.scene + node.stage).forEach { node ->
+		menu(node.toString()) {
+		  val h = when (type) {
+			Handler -> handlers[node]
+			Filter -> filters[node]
+		  }
+		  item("\tqp=${h?.quickPassForNormalTyping}")
+		  handlers[node]?.hotkeys?.forEach { hkc ->
+			item("\t${hkc.getHotkeys().joinToString { it.toString() }}")
+		  }
+		}
+	  }
+	}
+  }
+
+  items.clear()
+  addInfo(Handler)
+  addInfo(Filter)
 }
 

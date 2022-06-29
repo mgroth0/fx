@@ -6,6 +6,7 @@ import javafx.scene.layout.Region
 import javafx.scene.paint.Color
 import javafx.stage.Stage
 import matt.fx.graphics.core.scene.MScene
+import matt.fx.graphics.core.scene.iconify
 import matt.fx.graphics.hotkey.HotKey
 import matt.fx.graphics.hotkey.hotkeys
 import matt.fx.graphics.mag.bottom
@@ -55,12 +56,12 @@ fun MScene.addDefaultHotkeys() {
 	UP.ctrl.opt.meta { window?.topleft() }
 	DOWN.ctrl.opt.meta { window?.bottomright() }
 
-		LEFT.ctrl.opt.shift {
-		  window?.apply {
-			if (!reversed_displays) lastdisplay()
-			else nextdisplay()
-		  }
-		}
+	LEFT.ctrl.opt.shift {
+	  window?.apply {
+		if (!reversed_displays) lastdisplay()
+		else nextdisplay()
+	  }
+	}
 	RIGHT.ctrl.opt.shift {
 	  window?.apply {
 		if (!reversed_displays) nextdisplay()
@@ -71,7 +72,7 @@ fun MScene.addDefaultHotkeys() {
 	F.ctrl.opt.shift { (window as? Stage?)?.isFullScreen = !((window as Stage).isFullScreen) }
 	ENTER.ctrl.opt.shift { (window as? Stage?)?.max() }
 	ENTER.ctrl.opt.shift.meta { window?.resetPosition() }
-	I.ctrl.opt.shift(::iconify)
+	I.ctrl.opt.shift { iconify(icon) }
 
 	DIGIT1.ctrl.opt.shift { window.eighth1() }
 	DIGIT2.ctrl.opt.shift { window.eighth2() }
