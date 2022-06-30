@@ -26,6 +26,7 @@ import matt.hurricanefx.tornadofx.menu.item
 import matt.hurricanefx.tornadofx.menu.lazyContextmenu
 import matt.hurricanefx.tornadofx.menu.menu
 import matt.hurricanefx.tornadofx.menu.separator
+import matt.hurricanefx.wrapper.NodeWrapper
 import matt.kjlib.byte.MemReport
 import matt.kjlib.reflect.jumpToKotlinSourceString
 import matt.klib.lang.NEVER
@@ -41,6 +42,7 @@ val contextMenuItemGens = WeakHashMap<EventTarget, MutableList<MContextMenuBuild
 fun EventTarget.mcontextmenu(op: MContextMenuBuilder.()->Unit) {
   MContextMenuBuilder(this).apply(op)
 }
+fun NodeWrapper<*>.mcontextmenu(op: MContextMenuBuilder.()->Unit) = node.mcontextmenu(op)
 
 class MContextMenuBuilder(
   val node: EventTarget,

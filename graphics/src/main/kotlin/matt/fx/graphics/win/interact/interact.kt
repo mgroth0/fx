@@ -51,6 +51,7 @@ import matt.hurricanefx.tornadofx.nodes.setOnDoubleClick
 import matt.json.prim.isValidJson
 import matt.file.MFile
 import matt.file.mFile
+import matt.hurricanefx.wrapper.NodeWrapper
 import matt.klib.lang.noExceptions
 import matt.klib.lang.nullIfExceptions
 import java.net.URI
@@ -313,6 +314,21 @@ sealed class WinOwn {
 
   abstract fun applyTo(win: Stage)
 }
+
+fun NodeWrapper<out Parent>.openInNewWindow(
+  showMode: ShowMode = SHOW,
+  wMode: WMode = NOTHING,
+  EscClosable: Boolean = false,
+  EnterClosable: Boolean = false,
+  own: WinOwn = Auto,
+  geom: WinGeom = Centered(),
+  mScene: Boolean = true,
+  beforeShowing: Stage.()->Unit = {},
+  border: Boolean = true,
+  decorated: Boolean = false
+) = node.openInNewWindow(
+  showMode, wMode, EscClosable, EnterClosable, own, geom, mScene, beforeShowing, border, decorated
+)
 
 fun Parent.openInNewWindow(
   showMode: ShowMode = SHOW,

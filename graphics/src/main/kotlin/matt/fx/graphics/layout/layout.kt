@@ -46,6 +46,7 @@ import matt.hurricanefx.eye.lib.proxypropDouble
 import matt.hurricanefx.tornadofx.fx.getChildList
 import matt.hurricanefx.tornadofx.fx.opcr
 import matt.hurricanefx.tornadofx.nodes.add
+import matt.hurricanefx.wrapper.NodeWrapper
 import kotlin.random.Random
 
 
@@ -239,6 +240,7 @@ fun EventTarget.hbox(spacing: Number? = null, alignment: Pos? = null, op: HBox.(
   if (spacing != null) hbox.spacing = spacing.toDouble()
   return opcr(this, hbox, op)
 }
+fun NodeWrapper<*>.hbox(spacing: Number? = null, alignment: Pos? = null, op: HBox.()->Unit = {}) = node.hbox(spacing,alignment,op)
 
 fun EventTarget.vbox(spacing: Number? = null, alignment: Pos? = null, op: VBox.()->Unit = {}): VBox {
   val vbox = VBox()
@@ -246,6 +248,7 @@ fun EventTarget.vbox(spacing: Number? = null, alignment: Pos? = null, op: VBox.(
   if (spacing != null) vbox.spacing = spacing.toDouble()
   return opcr(this, vbox, op)
 }
+fun NodeWrapper<*>.vbox(spacing: Number? = null, alignment: Pos? = null, op: VBox.()->Unit = {}) = node.vbox(spacing,alignment,op)
 
 fun ToolBar.separator(orientation: Orientation = Orientation.HORIZONTAL, op: Separator.()->Unit = {}): Separator {
   val separator = Separator(orientation).also(op)
@@ -265,6 +268,7 @@ fun EventTarget.stackpane(initialChildren: Iterable<Node>? = null, op: StackPane
 fun EventTarget.gridpane(op: GridPane.()->Unit = {}) = opcr(this, GridPane(), op)
 fun EventTarget.pane(op: Pane.()->Unit = {}) = opcr(this, Pane(), op)
 fun EventTarget.flowpane(op: FlowPane.()->Unit = {}) = opcr(this, FlowPane(), op)
+fun NodeWrapper<*>.flowpane(op: FlowPane.()->Unit = {}) = node.flowpane(op)
 fun EventTarget.tilepane(op: TilePane.()->Unit = {}) = opcr(this, TilePane(), op)
 fun EventTarget.borderpane(op: BorderPane.()->Unit = {}) = opcr(this, BorderPane(), op)
 

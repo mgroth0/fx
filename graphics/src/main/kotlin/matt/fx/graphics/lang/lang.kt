@@ -13,12 +13,13 @@ import javafx.scene.control.MenuItem
 import javafx.scene.input.KeyCombination
 import matt.hurricanefx.eye.lib.onChange
 import matt.hurricanefx.op
+import matt.hurricanefx.tornadofx.fx.addChildIfPossible
 import matt.hurricanefx.tornadofx.menu.item
 import matt.hurricanefx.tornadofx.nodes.add
 import matt.klib.lang.err
 
 fun Node.setOnFocusLost(op: ()->Unit) {
-  focusedProperty().onChange {it: Boolean? ->
+  focusedProperty().onChange { it: Boolean? ->
 	if (it == null) err("here it is")
 	if (!it) {
 	  op()
@@ -27,7 +28,7 @@ fun Node.setOnFocusLost(op: ()->Unit) {
 }
 
 fun Node.setOnFocusGained(op: ()->Unit) {
-  focusedProperty().onChange {it: Boolean? ->
+  focusedProperty().onChange { it: Boolean? ->
 	if (it == null) err("here it is")
 	if (it) {
 	  op()
@@ -35,25 +36,21 @@ fun Node.setOnFocusGained(op: ()->Unit) {
   }
 }
 
-fun ActionButton(text: String, graphic: Node? = null, action: (ActionEvent)->Unit) = Button(text, graphic).apply {
+fun actionbutton(text: String, graphic: Node? = null, action: Button.(ActionEvent)->Unit) = Button(text, graphic).apply {
   setOnAction {
 	action(it)
 	it.consume()
   }
 }
 
-// Buttons
-fun EventTarget.actionbutton(text: String = "", graphic: Node? = null, action: (ActionEvent)->Unit): Button =
-  ActionButton(text, graphic, action).also {
-	add(it)
+fun EventTarget.actionbutton(text: String = "", graphic: Node? = null, action: Button.(ActionEvent)->Unit) =
+  Button(text, graphic).apply {
+	setOnAction {
+	  action(it)
+	  it.consume()
+	}
+	this@actionbutton.addChildIfPossible(this)
   }
-//
-//fun EventTarget.actionbutton(text: String = "", graphic: Node? = null, action: ()->Unit): Button =
-//  actionbutton(text = text, graphic = graphic) { a: ActionEvent -> action() }
-//
-//fun EventTarget.actionbutton(text: String = "", action: ()->Unit): Button =
-//  actionbutton(text = text, graphic = null) { a: ActionEvent -> action() }
-
 
 infix fun Button.withAction(newOp: ()->Unit) = this.apply { op = newOp }
 
@@ -96,7 +93,6 @@ fun <T> ObservableList<T>.removeAllButLastN(num: Int) {
   val siz = size
   setToSublist(siz - num, siz)
 }
-
 
 
 @Suppress("unused")

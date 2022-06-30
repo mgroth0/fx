@@ -18,6 +18,7 @@ import kotlinx.html.html
 import kotlinx.html.img
 import kotlinx.html.stream.createHTML
 import matt.async.daemon
+import matt.file.MFile
 import matt.fx.graphics.async.runLaterReturn
 import matt.fx.graphics.layout.hbox
 import matt.fx.graphics.layout.hgrow
@@ -42,10 +43,8 @@ import matt.hurricanefx.tornadofx.control.textarea
 import matt.hurricanefx.tornadofx.nodes.add
 import matt.klib.css.Color.black
 import matt.klib.css.sty
-import matt.file.MFile
 import matt.klib.lang.err
 import java.lang.ref.WeakReference
-import kotlin.concurrent.thread
 
 
 private const val LINE_LIMIT = 1000
@@ -274,7 +273,7 @@ private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): Region {
 
 
 		runLater {
-		  thread {
+		  daemon {
 			var mtime = lastModified()
 			while (true) {
 			  Thread.sleep(1000)
