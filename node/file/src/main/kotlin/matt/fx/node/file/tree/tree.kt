@@ -45,6 +45,9 @@ import matt.hurricanefx.tornadofx.nodes.populateTree
 import matt.hurricanefx.tornadofx.nodes.selectedItem
 import matt.hurricanefx.tornadofx.nodes.setOnDoubleClick
 import matt.hurricanefx.tornadofx.tree.selectedValue
+import matt.hurricanefx.wrapper.TreeLikeWrapper
+import matt.hurricanefx.wrapper.TreeTableViewWrapper
+import matt.hurricanefx.wrapper.TreeViewWrapper
 import matt.kjlib.file.size
 import matt.klib.lang.inList
 import matt.stream.recurse.recurse
@@ -104,15 +107,6 @@ fun Pane.fileTableTree(
 ): TreeTableView<MFile> = fileTableTree(rootFile.inList().toObservable(), strategy, op)
 
 
-
-
-
-
-
-
-
-
-
 fun Pane.fileTree(
   rootFiles: ObservableList<MFile>,
   strategy: FileTreePopulationStrategy = AUTOMATIC,
@@ -129,6 +123,7 @@ fun Pane.fileTree(
 	if (op != null) op()
   }
 }
+
 fun Pane.fileTableTree(
   rootFiles: ObservableList<MFile>,
   strategy: FileTreePopulationStrategy = AUTOMATIC,
@@ -197,7 +192,6 @@ private fun TreeView<MFile>.setupGUI() {
 }
 
 
-
 private fun TreeTableView<MFile>.setupGUI() {
   setRowFactory {
 	TreeTableRow<MFile>().apply {
@@ -263,19 +257,13 @@ private fun TreeView<MFile>.setupContent(
   }
   isShowRoot = false
   if (strategy == AUTOMATIC) {
-	fun rePop() {
-	  root.children.forEach {
-		populateTree(it, { TreeItem(it) }) {
-		  it.value.listFiles()?.toList() ?: listOf()
-		}
-	  }
-	}
-	rePop()
+	val wrapper = TreeViewWrapper(this)
+	wrapper.rePop()
 	refreshWhileInSceneEvery(5.sec) {
 	  if (root.children.flatMap { it.recurse { it.children } }.any {
 		  !it.children.map { it.value }.sameContentsAnyOrder(it.value.listFiles()?.toList() ?: listOf())
 		}) {
-		rePop()
+		wrapper.rePop()
 	  }
 	}
   } else {
@@ -284,6 +272,7 @@ private fun TreeView<MFile>.setupContent(
 	}
   }
 }
+
 private fun TreeTableView<MFile>.setupContent(
   rootFiles: ObservableList<MFile>,
   strategy: FileTreePopulationStrategy,
@@ -294,20 +283,13 @@ private fun TreeTableView<MFile>.setupContent(
   }
   isShowRoot = false
   if (strategy == AUTOMATIC) {
-	fun rePop() {
-	  root.children.forEach {
-		populateTree(it, { TreeItem(it) }) {
-		  it.value.listFiles()?.toList() ?: listOf()
-		}
-	  }
-	  autoResizeColumns()
-	}
-	rePop()
+	val wrapper = TreeTableViewWrapper(this)
+	wrapper.rePop()
 	refreshWhileInSceneEvery(5.sec) {
 	  if (root.children.flatMap { it.recurse { it.children } }.any {
 		  !it.children.map { it.value }.sameContentsAnyOrder(it.value.listFiles()?.toList() ?: listOf())
 		}) {
-		rePop()
+		wrapper.rePop()
 	  }
 	}
   } else {
@@ -315,6 +297,16 @@ private fun TreeTableView<MFile>.setupContent(
 	  v?.children?.setAll(v.value.listFiles()?.map { TreeItem(it) } ?: listOf())
 	}
   }
+}
+
+private fun TreeLikeWrapper<*, MFile>.rePop() {
+  root.children.forEach { child ->
+	populateTree(child, { TreeItem(it) }) { item ->
+	  item.value.listFilesAsList()
+		?.sortedWith(compareBy<MFile> { it.isDirectory }.then(compareBy { it.name }))
+	}
+  }
+  (node as? TreeTableView<*>)?.autoResizeColumns()
 }
 
 
