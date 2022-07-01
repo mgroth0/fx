@@ -35,6 +35,7 @@ import matt.gui.fxlang.onSelect
 import matt.gui.setview.autoResizeColumns
 import matt.gui.setview.simpleCellFactory
 import matt.hurricanefx.eye.collect.bind
+import matt.hurricanefx.eye.collect.sortBy
 import matt.hurricanefx.eye.collect.toObservable
 import matt.hurricanefx.eye.lib.onChange
 import matt.hurricanefx.eye.prop.div
@@ -117,7 +118,7 @@ fun Pane.fileTree(
 	this@fileTree.add(this)
 
 	setupGUI()
-	setupContent(rootFiles, strategy)
+	TreeViewWrapper(this).setupContent(rootFiles, strategy)
 
 
 	root.isExpanded = true
@@ -134,7 +135,7 @@ fun Pane.fileTableTree(
 	this@fileTableTree.add(this)
 
 	setupGUI()
-	setupContent(rootFiles, strategy)
+	TreeTableViewWrapper(this).setupContent(rootFiles, strategy)
 
 
 	root.isExpanded = true
@@ -248,7 +249,7 @@ private fun TreeTableView<MFile>.setupGUI() {
   sortOrder.setAll(nameCol) /*not working, but can click columns*/
 }
 
-private fun TreeView<MFile>.setupContent(
+private fun TreeLikeWrapper<*, MFile>.setupContent(
   rootFiles: ObservableList<MFile>,
   strategy: FileTreePopulationStrategy,
 ) {
@@ -257,47 +258,7 @@ private fun TreeView<MFile>.setupContent(
 	TreeItem(it)
   }
   isShowRoot = false
-  if (strategy == AUTOMATIC) {
-	val wrapper = TreeViewWrapper(this)
-	wrapper.rePop()
-	refreshWhileInSceneEvery(5.sec) {
-	  if (root.children.flatMap { it.recurse { it.children } }.any {
-		  !it.children.map { it.value }.sameContentsAnyOrder(it.value.listFiles()?.toList() ?: listOf())
-		}) {
-		wrapper.rePop()
-	  }
-	}
-  } else {
-	selectionModel.selectedItemProperty().onChange { v ->
-	  v?.children?.setAll(v.value.childs()?.map { TreeItem(it) } ?: listOf())
-	}
-  }
-}
-
-private fun TreeTableView<MFile>.setupContent(
-  rootFiles: ObservableList<MFile>,
-  strategy: FileTreePopulationStrategy,
-) {
-  root = TreeItem()
-  root.children.bind(rootFiles) {
-	TreeItem(it)
-  }
-  isShowRoot = false
-  if (strategy == AUTOMATIC) {
-	val wrapper = TreeTableViewWrapper(this)
-	wrapper.rePop()
-	refreshWhileInSceneEvery(5.sec) {
-	  if (root.children.flatMap { it.recurse { it.children } }.any {
-		  !it.children.map { it.value }.sameContentsAnyOrder(it.value.listFiles()?.toList() ?: listOf())
-		}) {
-		wrapper.rePop()
-	  }
-	}
-  } else {
-	selectionModel.selectedItemProperty().onChange { v ->
-	  v?.children?.setAll(v.value.childs()?.map { TreeItem(it) } ?: listOf())
-	}
-  }
+  setupPopulating(strategy)
 }
 
 private fun TreeLikeWrapper<*, MFile>.rePop() {
@@ -309,11 +270,42 @@ private fun TreeLikeWrapper<*, MFile>.rePop() {
   (node as? TreeTableView<*>)?.autoResizeColumns()
 }
 
+private fun TreeLikeWrapper<*, MFile>.setupPopulating(strategy: FileTreePopulationStrategy) {
+  if (strategy == AUTOMATIC) {
+	rePop()
+	refreshWhileInSceneEvery(5.sec) {
+	  if (root.children.flatMap { it.recurse { it.children } }.any {
+		  !it.children.map { it.value }.sameContentsAnyOrder(it.value.listFiles()?.toList() ?: listOf())
+		}) {
+		rePop()
+	  }
+	}
+  } else setOnSelectionChange { v ->
+	if (v != null) {
+	  v.refreshChilds()
+	  v.children.forEach { it.refreshChilds() }
+	}
+  }
+}
+
+private fun TreeItem<MFile>.refreshChilds() {
+  val childs = value.childs() ?: listOf()
+  children.removeIf { it.value !in childs }
+  childs.filter { it !in children.map { it.value } }.forEach {
+	children.add(TreeItem(it))
+  }
+  children.sortWith(FILE_SORT_RULE_ITEMS)
+}
+
 private fun MFile.childs() = listFilesAsList()
-  ?.sortedWith(compareBy<MFile> { !it.isDirectory }.then(compareBy { it.name }))?.apply {
+  ?.sortedWith(FILE_SORT_RULE)?.apply {
 	taball("children", this)
   }
 
+
+private val FILE_SORT_RULE = compareBy<MFile> { !it.isDirectory }.then(compareBy { it.name })
+private val FILE_SORT_RULE_ITEMS =
+  compareBy<TreeItem<MFile>> { !it.value.isDirectory }.then(compareBy { it.value.name })
 
 enum class FileTreePopulationStrategy {
   AUTOMATIC, EFFICIENT

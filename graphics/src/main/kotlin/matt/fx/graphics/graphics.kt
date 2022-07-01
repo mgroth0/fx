@@ -12,6 +12,7 @@ import matt.color.AColor
 import matt.color.mostContrastingForMe
 import matt.hurricanefx.eye.lib.onChange
 import matt.hurricanefx.tornadofx.shapes.line
+import matt.hurricanefx.wrapper.NodeWrapper
 import matt.klib.math.BasicPoint
 import matt.klib.math.Point
 import matt.klib.math.unaryMinus
@@ -32,6 +33,10 @@ fun <T : Node> T.refreshWhileInSceneEvery(
 	}
   }
 }
+fun <T: Node> NodeWrapper<T>.refreshWhileInSceneEvery(
+  refresh_rate: Duration,
+  op: MyTimerTask.(T) -> Unit
+) = node.refreshWhileInSceneEvery(refresh_rate,op)
 
 val fontFamilies: List<String> by lazy { Font.getFamilies() }
 
