@@ -50,6 +50,7 @@ import matt.hurricanefx.wrapper.TreeTableViewWrapper
 import matt.hurricanefx.wrapper.TreeViewWrapper
 import matt.kjlib.file.size
 import matt.klib.lang.inList
+import matt.klib.str.taball
 import matt.stream.recurse.recurse
 import matt.stream.sameContentsAnyOrder
 
@@ -268,7 +269,7 @@ private fun TreeView<MFile>.setupContent(
 	}
   } else {
 	selectionModel.selectedItemProperty().onChange { v ->
-	  v?.children?.setAll(v.value.listFiles()?.map { TreeItem(it) } ?: listOf())
+	  v?.children?.setAll(v.value.childs()?.map { TreeItem(it) } ?: listOf())
 	}
   }
 }
@@ -294,7 +295,7 @@ private fun TreeTableView<MFile>.setupContent(
 	}
   } else {
 	selectionModel.selectedItemProperty().onChange { v ->
-	  v?.children?.setAll(v.value.listFiles()?.map { TreeItem(it) } ?: listOf())
+	  v?.children?.setAll(v.value.childs()?.map { TreeItem(it) } ?: listOf())
 	}
   }
 }
@@ -302,12 +303,16 @@ private fun TreeTableView<MFile>.setupContent(
 private fun TreeLikeWrapper<*, MFile>.rePop() {
   root.children.forEach { child ->
 	populateTree(child, { TreeItem(it) }) { item ->
-	  item.value.listFilesAsList()
-		?.sortedWith(compareBy<MFile> { it.isDirectory }.then(compareBy { it.name }))
+	  item.value.childs()
 	}
   }
   (node as? TreeTableView<*>)?.autoResizeColumns()
 }
+
+private fun MFile.childs() = listFilesAsList()
+  ?.sortedWith(compareBy<MFile> { !it.isDirectory }.then(compareBy { it.name }))?.apply {
+	taball("children", this)
+  }
 
 
 enum class FileTreePopulationStrategy {
