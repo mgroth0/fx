@@ -298,9 +298,7 @@ private fun TreeItem<MFile>.refreshChilds() {
 }
 
 private fun MFile.childs() = listFilesAsList()
-  ?.sortedWith(FILE_SORT_RULE)?.apply {
-	taball("children", this)
-  }
+  ?.sortedWith(FILE_SORT_RULE)
 
 
 private val FILE_SORT_RULE = compareBy<MFile> { !it.isDirectory }.then(compareBy { it.name })
