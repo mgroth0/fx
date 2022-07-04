@@ -13,6 +13,7 @@ import javafx.scene.layout.Priority.ALWAYS
 import javafx.scene.layout.VBox
 import matt.async.date.sec
 import matt.auto.actions
+import matt.auto.moveToTrash
 import matt.auto.open
 import matt.file.MFile
 import matt.file.mFile
@@ -236,12 +237,12 @@ private fun TreeLikeWrapper<*, MFile>.setupGUI() {
 		  actionitem(it)
 		}
 	  } else if (selects.size > 1) {
-		"delete all" does {
-		  confirm("delete all?") {
-			selects.forEach {
-			  it.value.deleteRecursively()
-			}
+		"move all to trash" does {
+		  //		  confirm("delete all?") {
+		  selects.forEach {
+			it.value.moveToTrash()
 		  }
+		  //		  }
 		}
 	  }
 	}
