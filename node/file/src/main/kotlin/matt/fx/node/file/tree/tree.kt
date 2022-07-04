@@ -236,12 +236,10 @@ private fun TreeLikeWrapper<*, MFile>.setupGUI() {
 		  actionitem(it)
 		}
 	  } else if (selects.size > 1) {
-		mcontextmenu {
-		  "delete all" does {
-			confirm("delete all?") {
-			  selects.forEach {
-				it.value.deleteRecursively()
-			  }
+		"delete all" does {
+		  confirm("delete all?") {
+			selects.forEach {
+			  it.value.deleteRecursively()
 			}
 		  }
 		}
