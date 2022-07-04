@@ -1,14 +1,12 @@
 package matt.fx.node.file.tree
 
-import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.ObservableList
 import javafx.geometry.Pos
+import javafx.scene.control.SelectionMode.MULTIPLE
 import javafx.scene.control.TreeCell
 import javafx.scene.control.TreeItem
 import javafx.scene.control.TreeTableRow
-import javafx.scene.control.TreeTableView
-import javafx.scene.control.TreeView
 import javafx.scene.layout.HBox
 import javafx.scene.layout.Pane
 import javafx.scene.layout.Priority.ALWAYS
@@ -35,23 +33,21 @@ import matt.gui.fxlang.onSelect
 import matt.gui.setview.autoResizeColumns
 import matt.gui.setview.simpleCellFactory
 import matt.hurricanefx.eye.collect.bind
-import matt.hurricanefx.eye.collect.sortBy
 import matt.hurricanefx.eye.collect.toObservable
+import matt.hurricanefx.eye.lang.BProp
 import matt.hurricanefx.eye.lib.onChange
 import matt.hurricanefx.eye.prop.div
+import matt.hurricanefx.tornadofx.dialog.confirm
 import matt.hurricanefx.tornadofx.item.column
 import matt.hurricanefx.tornadofx.nodes.add
 import matt.hurricanefx.tornadofx.nodes.clear
 import matt.hurricanefx.tornadofx.nodes.populateTree
-import matt.hurricanefx.tornadofx.nodes.selectedItem
 import matt.hurricanefx.tornadofx.nodes.setOnDoubleClick
-import matt.hurricanefx.tornadofx.tree.selectedValue
 import matt.hurricanefx.wrapper.TreeLikeWrapper
 import matt.hurricanefx.wrapper.TreeTableViewWrapper
 import matt.hurricanefx.wrapper.TreeViewWrapper
 import matt.kjlib.file.size
 import matt.klib.lang.inList
-import matt.klib.str.taball
 import matt.stream.recurse.recurse
 import matt.stream.sameContentsAnyOrder
 
@@ -77,7 +73,7 @@ fun fileTreeAndViewerPane(
 	treeTableView.setOnDoubleClick {
 	  treeTableView.selectedItem?.let {
 		viewBox.clear()
-		viewBox.add(it.createNode(renderHTMLAndSVG = true).apply {
+		viewBox.add(it.value.createNode(renderHTMLAndSVG = true).apply {
 		  perfectBind(viewBox)
 		  specialTransferingToWindowAndBack(viewBox)
 		})
@@ -99,26 +95,26 @@ fun fileTreeAndViewerPane(
 fun Pane.fileTree(
   rootFile: MFile,
   strategy: FileTreePopulationStrategy = AUTOMATIC,
-  op: (TreeView<MFile>.()->Unit)? = null,
-): TreeView<MFile> = fileTree(rootFile.inList().toObservable(), strategy, op)
+  op: (TreeViewWrapper<MFile>.()->Unit)? = null,
+): TreeViewWrapper<MFile> = fileTree(rootFile.inList().toObservable(), strategy, op)
 
 fun Pane.fileTableTree(
   rootFile: MFile,
   strategy: FileTreePopulationStrategy = AUTOMATIC,
-  op: (TreeTableView<MFile>.()->Unit)? = null,
-): TreeTableView<MFile> = fileTableTree(rootFile.inList().toObservable(), strategy, op)
+  op: (TreeTableViewWrapper<MFile>.()->Unit)? = null,
+): TreeTableViewWrapper<MFile> = fileTableTree(rootFile.inList().toObservable(), strategy, op)
 
 
 fun Pane.fileTree(
   rootFiles: ObservableList<MFile>,
   strategy: FileTreePopulationStrategy = AUTOMATIC,
-  op: (TreeView<MFile>.()->Unit)? = null,
-): TreeView<MFile> {
-  return TreeView<MFile>().apply {
+  op: (TreeViewWrapper<MFile>.()->Unit)? = null,
+): TreeViewWrapper<MFile> {
+  return TreeViewWrapper<MFile>().apply {
 	this@fileTree.add(this)
 
 	setupGUI()
-	TreeViewWrapper(this).setupContent(rootFiles, strategy)
+	setupContent(rootFiles, strategy)
 
 
 	root.isExpanded = true
@@ -129,13 +125,13 @@ fun Pane.fileTree(
 fun Pane.fileTableTree(
   rootFiles: ObservableList<MFile>,
   strategy: FileTreePopulationStrategy = AUTOMATIC,
-  op: (TreeTableView<MFile>.()->Unit)? = null,
-): TreeTableView<MFile> {
-  return TreeTableView<MFile>().apply {
+  op: (TreeTableViewWrapper<MFile>.()->Unit)? = null,
+): TreeTableViewWrapper<MFile> {
+  return TreeTableViewWrapper<MFile>().apply {
 	this@fileTableTree.add(this)
 
 	setupGUI()
-	TreeTableViewWrapper(this).setupContent(rootFiles, strategy)
+	setupContent(rootFiles, strategy)
 
 
 	root.isExpanded = true
@@ -145,108 +141,113 @@ fun Pane.fileTableTree(
 }
 
 
-private fun TreeView<MFile>.setupGUI() {
+private fun TreeLikeWrapper<*, MFile>.setupGUI() {
 
-  setCellFactory {
-	object: TreeCell<MFile>() {
-	  init {
-		setOnDoubleClick {
-		  this.treeItem?.value?.open()
+  selectionModel.selectionMode = MULTIPLE
+
+  var showSizesProp: BProp? = null
+
+  when (this) {
+	is TreeViewWrapper<MFile>      -> {
+
+	  node.setCellFactory {
+		object: TreeCell<MFile>() {
+		  init {
+			setOnDoubleClick {
+			  this.treeItem?.value?.open()
+			}
+		  }
+
+		  override fun updateItem(item: MFile?, empty: Boolean) {
+			super.updateItem(item, empty)
+			if (empty || item == null) {
+			  this.text = null
+			  graphic = null
+			} else {
+			  this.text = item.name
+			  graphic = item.draggableIcon()
+
+			}
+
+		  }
 		}
 	  }
+	}
 
-	  override fun updateItem(item: MFile?, empty: Boolean) {
-		super.updateItem(item, empty)
-		if (empty || item == null) {
-		  this.text = null
-		  graphic = null
+	is TreeTableViewWrapper<MFile> -> {
+	  node.setRowFactory {
+		TreeTableRow<MFile>().apply {
+		  setOnDoubleClick {
+			this.treeItem.value?.open()
+		  }
+		}
+	  }
+	  val nameCol = node.column("name", matt.file.MFile::abspath) {
+		simpleCellFactory { value -> mFile(value).let { it.name to it.draggableIcon() } }
+	  }
+	  node.column("ext", matt.file.MFile::extension)
+
+	  showSizesProp = BProp(false)
+	  showSizesProp.onChange { b ->
+		if (b) {
+		  node.column<MFile, String>("size") {
+			SimpleStringProperty(it.value.value.size().formatted)
+		  }
+		  autoResizeColumns()
 		} else {
-		  this.text = item.name
-		  graphic = item.draggableIcon()
+		  node.columns.firstOrNull { col -> col.text == "size" }?.let { node.columns.remove(it) }
+		  autoResizeColumns()
 		}
-
 	  }
+
+	  node.sortOrder.setAll(nameCol) /*not working, but can click columns*/
 	}
+
   }
+
+
+
 
   mcontextmenu {
-	"open in new window" does {
-	  selectedValue?.let {
-		VBox().apply {
-		  val container = this
-		  add(it.createNode(renderHTMLAndSVG = true).apply {
-			perfectBind(container)
-			specialTransferingToWindowAndBack(container)
-		  })
-		}.openInNewWindow(
-		  wMode = CLOSE
-		)
-	  }
+	if (this@setupGUI is TreeTableViewWrapper<*>) {
+	  checkitem("show sizes", showSizesProp!!)
 	}
+
+
+
+
 	onRequest {
-
-	  selectedValue?.let { it.actions() + it.fxActions() }?.forEach {
-		actionitem(it)
+	  val selects = selectionModel.selectedItems
+	  if (selects.size == 1) {
+		"open in new window" does {
+		  selectedValue?.let {
+			VBox().apply {
+			  val container = this
+			  add(it.createNode(renderHTMLAndSVG = true).apply {
+				perfectBind(container)
+				specialTransferingToWindowAndBack(container)
+			  })
+			}.openInNewWindow(
+			  wMode = CLOSE
+			)
+		  }
+		}
+		selectedValue?.let { it.actions() + it.fxActions() }?.forEach {
+		  actionitem(it)
+		}
+	  } else if (selects.size > 1) {
+		mcontextmenu {
+		  "delete all" does {
+			confirm("delete all?") {
+			  selects.forEach {
+				it.value.deleteRecursively()
+			  }
+			}
+		  }
+		}
 	  }
 	}
   }
-
-}
-
-
-private fun TreeTableView<MFile>.setupGUI() {
-  setRowFactory {
-	TreeTableRow<MFile>().apply {
-	  setOnDoubleClick {
-		this.treeItem.value?.open()
-	  }
-	}
-  }
-
-  val nameCol = column("name", matt.file.MFile::abspath) {
-	simpleCellFactory { value -> mFile(value).let { it.name to it.draggableIcon() } }
-  }
-  column("ext", matt.file.MFile::extension)
-
-
-  val showSizesProp = SimpleBooleanProperty(false)
-  showSizesProp.onChange { b ->
-	if (b) {
-	  column<MFile, String>("size") {
-		SimpleStringProperty(it.value.value.size().formatted)
-	  }
-	  autoResizeColumns()
-	} else {
-	  columns.firstOrNull { col -> col.text == "size" }?.let { columns.remove(it) }
-	  autoResizeColumns()
-	}
-  }
-
-  mcontextmenu {
-
-	checkitem("show sizes", showSizesProp)
-
-	"open in new window" does {
-	  selectedItem?.let {
-		VBox().apply {
-		  val container = this
-		  add(it.createNode(renderHTMLAndSVG = true).apply {
-			perfectBind(container)
-			specialTransferingToWindowAndBack(container)
-		  })
-		}.openInNewWindow(
-		  wMode = CLOSE
-		)
-	  }
-	}
-	onRequest {
-	  selectedItem?.let { it.actions() + it.fxActions() }?.forEach {
-		actionitem(it)
-	  }
-	}
-  }
-
-  sortOrder.setAll(nameCol) /*not working, but can click columns*/
 }
 
 private fun TreeLikeWrapper<*, MFile>.setupContent(
@@ -267,7 +268,7 @@ private fun TreeLikeWrapper<*, MFile>.rePop() {
 	  item.value.childs()
 	}
   }
-  (node as? TreeTableView<*>)?.autoResizeColumns()
+  (this as? TreeTableViewWrapper<*>)?.autoResizeColumns()
 }
 
 private fun TreeLikeWrapper<*, MFile>.setupPopulating(strategy: FileTreePopulationStrategy) {

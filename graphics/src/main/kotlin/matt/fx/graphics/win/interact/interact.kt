@@ -388,3 +388,8 @@ fun Node.textInput(
   initStyle(StageStyle.UTILITY)
 }.showAndWait().getOrNull()
 
+fun NodeWrapper<*>.textInput(
+  default: String = "insert default here",
+  prompt: String = "insert prompt here"
+): String? = node.textInput(default, prompt)
+

@@ -104,6 +104,18 @@ var Node.vgrow: Priority?
 	// Input Container vgrow must propagate to Field and Fieldset
   }
 
+var NodeWrapper<*>.hgrow: Priority?
+  get() = HBox.getHgrow(this.node)
+  set(value) {
+	HBox.setHgrow(this.node, value)
+  }
+var NodeWrapper<*>.vgrow: Priority?
+  get() = VBox.getVgrow(this.node)
+  set(value) {
+	VBox.setVgrow(this.node, value)
+	// Input Container vgrow must propagate to Field and Fieldset
+  }
+
 
 fun ToolBar.spacer(prio: Priority = Priority.ALWAYS, op: Pane.()->Unit = {}): Pane {
   val pane = Pane().apply {

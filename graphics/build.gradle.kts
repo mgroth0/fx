@@ -12,9 +12,17 @@ apis(
   projects.k.stream,
   projects.k.kjlib,
   projects.k.klib,
-  "k:color".jvm()
-)
+  "k:color".jvm(),
+
+  )
+
+//repositories {
+////  maven(url = "https://jitpack.io")
+//  maven(url="https://packages.atlassian.com/maven-public/")
+//}
 
 implementations(
-  dependencies.kotlin("reflect")
+  dependencies.kotlin("reflect"),
+//  libs.fxsvgimage,
+libs.svgsalamander
 )
