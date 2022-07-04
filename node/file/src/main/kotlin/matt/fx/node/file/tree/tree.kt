@@ -280,10 +280,13 @@ private fun TreeLikeWrapper<*, MFile>.setupPopulating(strategy: FileTreePopulati
 		rePop()
 	  }
 	}
-  } else setOnSelectionChange { v ->
-	if (v != null) {
-	  v.refreshChilds()
-	  v.children.forEach { it.refreshChilds() } /*so i can always see which have children*/
+  } else {
+	root.children.forEach { it.refreshChilds() }
+	setOnSelectionChange { v ->
+	  if (v != null) {
+		v.refreshChilds()
+		v.children.forEach { it.refreshChilds() } /*so i can always see which have children*/
+	  }
 	}
   }
 }
