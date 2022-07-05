@@ -12,7 +12,7 @@ apis(
   projects.k.stream,
   projects.k.kjlib,
   projects.k.klib,
-  "k:color".jvm(),
+  ":k:color".auto(),
 
   )
 
