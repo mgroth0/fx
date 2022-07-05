@@ -16,6 +16,7 @@ import matt.hurricanefx.op
 import matt.hurricanefx.tornadofx.fx.addChildIfPossible
 import matt.hurricanefx.tornadofx.menu.item
 import matt.hurricanefx.tornadofx.nodes.add
+import matt.hurricanefx.wrapper.NodeWrapper
 import matt.klib.lang.err
 
 fun Node.setOnFocusLost(op: ()->Unit) {
@@ -36,7 +37,9 @@ fun Node.setOnFocusGained(op: ()->Unit) {
   }
 }
 
-fun actionbutton(text: String, graphic: Node? = null, action: Button.(ActionEvent)->Unit) = Button(text, graphic).apply {
+fun actionbutton(text: String, graphic: Node? = null, action: Button.(ActionEvent)->Unit) =
+
+Button(text, graphic).apply {
   setOnAction {
 	action(it)
 	it.consume()
@@ -51,6 +54,7 @@ fun EventTarget.actionbutton(text: String = "", graphic: Node? = null, action: B
 	}
 	this@actionbutton.addChildIfPossible(this)
   }
+fun NodeWrapper<*>.actionbutton(text: String = "", graphic: Node? = null, action: Button.(ActionEvent)->Unit) = node.actionbutton(text,graphic,action)
 
 infix fun Button.withAction(newOp: ()->Unit) = this.apply { op = newOp }
 
