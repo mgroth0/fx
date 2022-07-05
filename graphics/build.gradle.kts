@@ -8,7 +8,7 @@ apis(
   projects.k.async,
   projects.k.hotkey,
   projects.k.auto,
-  projects.k.fx.fxImage,
+  projects.k.fx.image,
   projects.k.stream,
   projects.k.kjlib,
   projects.k.klib,
