@@ -7,9 +7,9 @@ import javafx.geometry.Rectangle2D
 import javafx.stage.Screen
 import javafx.stage.Stage
 import matt.async.date.tic
-import matt.auto.applescript
+import matt.auto.applescript.applescript
+import matt.auto.applescript.interactiveOsascript
 import matt.auto.compileAndOrRunApplescript
-import matt.auto.interactiveOsascript
 import matt.fx.graphics.mag.left
 import matt.klib.lang.err
 import kotlin.concurrent.thread
