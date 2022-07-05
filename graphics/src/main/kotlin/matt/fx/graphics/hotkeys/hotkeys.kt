@@ -43,7 +43,8 @@ import kotlin.contracts.ExperimentalContracts
 fun MScene.addDefaultHotkeys() {
   val scene = this
 
-  hotkeys(quickPassForNormalTyping = true) {
+  /*needed filter to be true here or for some reason LEFT.ctrl.opt.shift wasn't being captured in music app even though it was captured in all other apps (globalhotkeys, brainstorm, kjg)*/
+  hotkeys(quickPassForNormalTyping = true,filter=true) {
 
 
 	LEFT.ctrl.opt { window?.left() }
@@ -54,7 +55,9 @@ fun MScene.addDefaultHotkeys() {
 	LEFT.ctrl.opt.meta { window?.bottomleft() }
 	RIGHT.ctrl.opt.meta { window?.topright() }
 	UP.ctrl.opt.meta { window?.topleft() }
-	DOWN.ctrl.opt.meta { window?.bottomright() }
+	DOWN.ctrl.opt.meta {
+	  window?.bottomright()
+	}
 
 	LEFT.ctrl.opt.shift {
 	  window?.apply {
