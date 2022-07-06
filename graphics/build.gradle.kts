@@ -16,13 +16,7 @@ apis(
 
   )
 
-//repositories {
-////  maven(url = "https://jitpack.io")
-//  maven(url="https://packages.atlassian.com/maven-public/")
-//}
-
 implementations(
   dependencies.kotlin("reflect"),
-//  libs.fxsvgimage,
-libs.svgsalamander
+  libs.svgsalamander
 )
