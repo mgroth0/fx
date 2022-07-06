@@ -17,6 +17,7 @@ import matt.auto.moveToTrash
 import matt.auto.open
 import matt.file.MFile
 import matt.file.mFile
+import matt.file.size
 import matt.fx.fxauto.actionitem
 import matt.fx.fxauto.fxActions
 import matt.fx.graphics.layout.hgrow
@@ -47,7 +48,6 @@ import matt.hurricanefx.tornadofx.nodes.setOnDoubleClick
 import matt.hurricanefx.wrapper.TreeLikeWrapper
 import matt.hurricanefx.wrapper.TreeTableViewWrapper
 import matt.hurricanefx.wrapper.TreeViewWrapper
-import matt.kjlib.file.size
 import matt.klib.lang.inList
 import matt.stream.recurse.recurse
 import matt.stream.sameContentsAnyOrder
