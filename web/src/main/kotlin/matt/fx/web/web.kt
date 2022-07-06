@@ -31,6 +31,7 @@ import matt.hurricanefx.tornadofx.nodes.setOnDoubleClick
 import matt.hurricanefx.tornadofx.nodes.removeFromParent
 import matt.file.MFile
 import matt.file.toMFile
+import matt.hurricanefx.wrapper.NodeWrapper
 import matt.klib.lang.NEVER
 import netscape.javascript.JSObject
 import org.intellij.lang.annotations.Language
@@ -57,7 +58,7 @@ var WebView.exactHeight: Number
   }
   get() = NEVER
 
-fun EventTarget.webview(op: WebView.() -> Unit = {}) = WebView().attachTo(this, op)
+fun NodeWrapper<*>.webview(op: WebView.() -> Unit = {}) = WebView().attachTo(this.node, op)
 
 fun EventTarget.htmleditor(html: String? = null, op: HTMLEditor.() -> Unit = {}) = HTMLEditor().attachTo(this, op) {
   if (html != null) it.htmlText = html
