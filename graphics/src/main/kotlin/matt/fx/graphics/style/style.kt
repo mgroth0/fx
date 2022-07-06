@@ -12,14 +12,12 @@ import javafx.scene.layout.Region
 import javafx.scene.paint.Color
 import javafx.scene.paint.Paint
 import matt.color.hex
-import matt.fx.graphics.toAwtColor
 import matt.file.commons.RootProjects.flow
+import matt.fx.graphics.toAwtColor
 import matt.kjlib.prop.BasicBooleanProperty
-import matt.klib.css.ColorLike
-import matt.klib.css.LinearGradient
 import matt.klib.css.MyStyleDsl
-import matt.klib.str.LineAppender
 import matt.klib.log.warn
+import matt.klib.str.LineAppender
 import java.util.logging.Level
 import kotlin.reflect.KProperty
 
