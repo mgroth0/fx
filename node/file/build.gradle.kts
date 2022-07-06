@@ -1,4 +1,3 @@
-modtype = LIB
 
 implementations(
   projects.k.hurricanefx,
