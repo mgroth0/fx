@@ -15,7 +15,7 @@ import matt.color.hex
 import matt.file.commons.RootProjects.flow
 import matt.fx.graphics.toAwtColor
 import matt.klib.prop.BasicBooleanProperty
-import matt.klib.css.MyStyleDsl
+import matt.css.MyStyleDsl
 import matt.klib.log.warn
 import matt.klib.str.LineAppender
 import java.util.logging.Level
