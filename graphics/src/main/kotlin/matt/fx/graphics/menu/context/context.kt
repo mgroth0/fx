@@ -11,7 +11,6 @@ import javafx.scene.control.CheckMenuItem
 import javafx.scene.control.ContextMenu
 import javafx.scene.control.Menu
 import javafx.scene.control.MenuItem
-import javafx.scene.control.SeparatorMenuItem
 import javafx.scene.layout.Region
 import javafx.scene.shape.Shape
 import matt.auto.openInIntelliJ
@@ -23,11 +22,9 @@ import matt.fx.graphics.menu.context.EventHandlerType.Filter
 import matt.fx.graphics.menu.context.EventHandlerType.Handler
 import matt.hurricanefx.stage
 import matt.hurricanefx.tornadofx.menu.item
-import matt.hurricanefx.tornadofx.menu.lazyContextmenu
 import matt.hurricanefx.tornadofx.menu.menu
 import matt.hurricanefx.tornadofx.menu.separator
 import matt.hurricanefx.wrapper.NodeWrapper
-import matt.kjlib.byte.MemReport
 import matt.kjlib.reflect.jumpToKotlinSourceString
 import matt.klib.lang.NEVER
 import matt.stream.recurse.chain
