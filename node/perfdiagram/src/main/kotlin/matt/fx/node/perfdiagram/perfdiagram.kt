@@ -3,7 +3,7 @@ package matt.fx.node.perfdiagram
 import matt.async.date.Stopwatch
 import matt.fx.web.WebViewPane
 import matt.klib.math.MILLION
-import matt.klib.sankey.sankeyHTML
+import matt.html.sankey.sankeyHTML
 import kotlin.math.roundToInt
 
 fun Stopwatch.analysisNode() = StopWatchAnalysisNode(this)
