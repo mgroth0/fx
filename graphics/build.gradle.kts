@@ -10,6 +10,7 @@ apis(
   projects.k.fx.image,
   projects.k.stream,
   projects.k.klib,
+  projects.k.css,
   ":k:color".auto(),
 
   )
