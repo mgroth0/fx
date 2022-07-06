@@ -58,7 +58,15 @@ var WebView.exactHeight: Number
   }
   get() = NEVER
 
-fun NodeWrapper<*>.webview(op: WebView.() -> Unit = {}) = WebView().attachTo(this.node, op)
+fun NodeWrapper<*>.webview(
+  htmlContent: String? = null,
+  op: WebView.() -> Unit = {}
+) = WebView().apply{
+  htmlContent?.let {
+    engine.loadContent(htmlContent)
+  }
+}.attachTo(this.node, op)
+
 
 fun EventTarget.htmleditor(html: String? = null, op: HTMLEditor.() -> Unit = {}) = HTMLEditor().attachTo(this, op) {
   if (html != null) it.htmlText = html
