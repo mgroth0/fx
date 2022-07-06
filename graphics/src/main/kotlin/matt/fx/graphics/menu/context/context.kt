@@ -13,6 +13,7 @@ import javafx.scene.control.Menu
 import javafx.scene.control.MenuItem
 import javafx.scene.layout.Region
 import javafx.scene.shape.Shape
+import matt.auto.jumpToKotlinSourceString
 import matt.auto.openInIntelliJ
 import matt.file.commons.RootProjects.flow
 import matt.fx.graphics.hotkey.filters
@@ -25,7 +26,6 @@ import matt.hurricanefx.tornadofx.menu.item
 import matt.hurricanefx.tornadofx.menu.menu
 import matt.hurricanefx.tornadofx.menu.separator
 import matt.hurricanefx.wrapper.NodeWrapper
-import matt.kjlib.reflect.jumpToKotlinSourceString
 import matt.klib.lang.NEVER
 import matt.stream.recurse.chain
 import java.util.WeakHashMap
