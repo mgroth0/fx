@@ -41,8 +41,8 @@ import matt.hurricanefx.tornadofx.control.button
 import matt.hurricanefx.tornadofx.control.imageview
 import matt.hurricanefx.tornadofx.control.textarea
 import matt.hurricanefx.tornadofx.nodes.add
-import matt.klib.css.Color.black
-import matt.klib.css.sty
+import matt.css.Color.black
+import matt.css.sty
 import matt.klib.lang.err
 import java.lang.ref.WeakReference
 
