@@ -1,4 +1,6 @@
-
+apis {
+  css
+}
 apis(
   libs.fx.graphics,
   libs.jSystemThemeDetector,
@@ -10,7 +12,6 @@ apis(
   projects.k.fx.image,
   projects.k.stream,
   projects.k.klib,
-  projects.k.css,
   ":k:color".auto(),
 
   )
