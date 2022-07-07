@@ -248,21 +248,21 @@ fun EventTarget.toolbar(vararg nodes: Node, op: ToolBar.()->Unit = {}): ToolBar 
 )
 fun ToolBar.children(op: ToolBar.()->Unit) = apply { op() }
 
-fun EventTarget.hbox(spacing: Number? = null, alignment: Pos? = null, op: HBox.()->Unit = {}): HBoxWrapper {
-  val hbox = HBox()
+fun EventTarget.hbox(spacing: Number? = null, alignment: Pos? = null, op: HBoxWrapper.()->Unit = {}): HBoxWrapper {
+  val hbox = HBoxWrapper(HBox())
   if (alignment != null) hbox.alignment = alignment
   if (spacing != null) hbox.spacing = spacing.toDouble()
-  return HBoxWrapper(opcr(this, hbox, op))
+  return opcr(this, hbox, op)
 }
-fun NodeWrapper<*>.hbox(spacing: Number? = null, alignment: Pos? = null, op: HBox.()->Unit = {}) = node.hbox(spacing,alignment,op)
+fun NodeWrapper<*>.hbox(spacing: Number? = null, alignment: Pos? = null, op: HBoxWrapper.()->Unit = {}) = node.hbox(spacing,alignment,op)
 
-fun EventTarget.vbox(spacing: Number? = null, alignment: Pos? = null, op: VBox.()->Unit = {}): VBoxWrapper {
-  val vbox = VBox()
+fun EventTarget.vbox(spacing: Number? = null, alignment: Pos? = null, op: VBoxWrapper.()->Unit = {}): VBoxWrapper {
+  val vbox = VBoxWrapper(VBox())
   if (alignment != null) vbox.alignment = alignment
   if (spacing != null) vbox.spacing = spacing.toDouble()
-  return VBoxWrapper(opcr(this, vbox, op))
+  return opcr(this, vbox, op)
 }
-fun NodeWrapper<*>.vbox(spacing: Number? = null, alignment: Pos? = null, op: VBox.()->Unit = {}) = node.vbox(spacing,alignment,op)
+fun NodeWrapper<*>.vbox(spacing: Number? = null, alignment: Pos? = null, op: VBoxWrapper.()->Unit = {}) = node.vbox(spacing,alignment,op)
 
 fun ToolBar.separator(orientation: Orientation = Orientation.HORIZONTAL, op: Separator.()->Unit = {}): Separator {
   val separator = Separator(orientation).also(op)
