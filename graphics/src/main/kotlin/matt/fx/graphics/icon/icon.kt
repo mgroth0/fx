@@ -2,7 +2,6 @@ package matt.fx.graphics.icon
 
 //import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory
 import com.kitfox.svg.SVGUniverse
-import com.kitfox.svg.animation.AnimationElement.AT_AUTO
 import com.kitfox.svg.animation.AnimationElement.AT_XML
 import javafx.scene.image.Image
 import javafx.scene.image.ImageView
@@ -10,8 +9,7 @@ import matt.file.MFile
 import matt.file.commons.ICON_FOLDER
 import matt.fx.image.toFXImage
 import matt.hurricanefx.tornadofx.nodes.add
-import java.awt.Rectangle
-import java.awt.RenderingHints
+import matt.hurricanefx.wrapper.wrapped
 import java.awt.RenderingHints.KEY_ALPHA_INTERPOLATION
 import java.awt.RenderingHints.KEY_ANTIALIASING
 import java.awt.RenderingHints.KEY_COLOR_RENDERING
@@ -38,15 +36,15 @@ const val ICON_WIDTH = 20.0
 const val ICON_HEIGHT = 20.0
 
 fun javafx.scene.Node.icon(file: MFile) {
-  add(Icon(file))
+  wrapped().add(Icon(file).wrapped())
 }
 
 fun javafx.scene.Node.icon(image: Image) {
-  add(Icon(image))
+  wrapped(). add(Icon(image).wrapped())
 }
 
 fun javafx.scene.Node.icon(file: String) {
-  add(Icon(file))
+  wrapped().  add(Icon(file).wrapped())
 }
 
 
