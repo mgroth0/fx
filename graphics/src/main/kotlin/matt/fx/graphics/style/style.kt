@@ -16,6 +16,7 @@ import matt.file.commons.RootProjects.flow
 import matt.fx.graphics.toAwtColor
 import matt.klib.prop.BasicBooleanProperty
 import matt.css.MyStyleDsl
+import matt.hurricanefx.wrapper.RegionWrapper
 import matt.klib.log.warn
 import matt.klib.str.LineAppender
 import java.util.logging.Level
@@ -102,7 +103,7 @@ var Region.borderFill: Paint?
 
   }
 
-var Region.borderDashFill: Paint?
+var RegionWrapper<*>.borderDashFill: Paint?
   get() = border?.strokes?.firstOrNull { it.topStyle == BorderStrokeStyle.DASHED }?.topStroke
   set(value) {
 	border = if (value == null) null
@@ -165,30 +166,30 @@ fun Node.sty(op: StyleClassDSL.()->Unit) {
 }
 
 
-fun Region.yellow() {
+fun RegionWrapper<*>.yellow() {
   borderDashFill = Color.YELLOW
 }
 
-fun Region.blue() {
+fun RegionWrapper<*>.blue() {
   borderDashFill = Color.BLUE
 }
 
-fun Region.purple() {
+fun RegionWrapper<*>.purple() {
   borderDashFill = Color.PURPLE
 }
 
-fun Region.green() {
+fun RegionWrapper<*>.green() {
   borderDashFill = Color.GREEN
 }
 
-fun Region.red() {
+fun RegionWrapper<*>.red() {
   borderDashFill = Color.RED
 }
 
-fun Region.orange() {
+fun RegionWrapper<*>.orange() {
   borderDashFill = Color.ORANGE
 }
-fun Region.white() {
+fun RegionWrapper<*>.white() {
   borderDashFill = Color.WHITE
 }
 
