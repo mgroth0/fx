@@ -1,6 +1,8 @@
 package matt.fx.web
 
 import javafx.application.Platform.runLater
+import javafx.beans.property.DoubleProperty
+import javafx.beans.property.ReadOnlyDoubleProperty
 import javafx.beans.property.SimpleDoubleProperty
 import javafx.event.EventHandler
 import javafx.event.EventTarget
@@ -32,27 +34,28 @@ import matt.hurricanefx.tornadofx.nodes.removeFromParent
 import matt.file.MFile
 import matt.file.toMFile
 import matt.hurricanefx.wrapper.NodeWrapper
+import matt.hurricanefx.wrapper.RegionWrapper
 import matt.klib.lang.NEVER
 import netscape.javascript.JSObject
 import org.intellij.lang.annotations.Language
 import org.jsoup.Jsoup
 import kotlin.contracts.ExperimentalContracts
 
-fun WebView.exactWidthProperty() = SimpleDoubleProperty().also {
-  minWidthProperty().bind(it)
-  maxWidthProperty().bind(it)
+fun WebViewWrapper.exactWidthProperty() = SimpleDoubleProperty().also {
+  minWidthProperty.bind(it)
+  maxWidthProperty.bind(it)
 }
 
-fun WebView.exactHeightProperty() = SimpleDoubleProperty().also {
-  minHeightProperty().bind(it)
-  maxHeightProperty().bind(it)
+fun WebViewWrapper.exactHeightProperty() = SimpleDoubleProperty().also {
+  minHeightProperty.bind(it)
+  maxHeightProperty.bind(it)
 }
-var WebView.exactWidth: Number
+var WebViewWrapper.exactWidth: Number
   set(value) {
     exactWidthProperty().bind(DProp(value.toDouble()))
   }
   get() = NEVER
-var WebView.exactHeight: Number
+var WebViewWrapper.exactHeight: Number
   set(value) {
     exactHeightProperty().bind(DProp(value.toDouble()))
   }
@@ -72,34 +75,34 @@ fun EventTarget.htmleditor(html: String? = null, op: HTMLEditor.() -> Unit = {})
   if (html != null) it.htmlText = html
 }
 
-infix fun WebView.perfectBind(other: Region) {
+infix fun WebViewWrapper.perfectBind(other: Region) {
   this minBind other
   this maxBind other
 }
 
-infix fun WebView.perfectBind(other: Stage) {
+infix fun WebViewWrapper.perfectBind(other: Stage) {
   this minBind other
   this maxBind other
 }
 
-infix fun WebView.maxBind(other: Region) {
-  maxHeightProperty().bind(other.heightProperty()) // gotta be strict with webview, which I think tries to be big
-  maxWidthProperty().bind(other.widthProperty())
+infix fun WebViewWrapper.maxBind(other: Region) {
+  maxHeightProperty.bind(other.heightProperty()) // gotta be strict with webview, which I think tries to be big
+  maxWidthProperty.bind(other.widthProperty())
 }
 
-infix fun WebView.maxBind(other: Stage) {
-  maxHeightProperty().bind(other.heightProperty()) // gotta be strict with webview, which I think tries to be big
-  maxWidthProperty().bind(other.widthProperty())
+infix fun WebViewWrapper.maxBind(other: Stage) {
+  maxHeightProperty.bind(other.heightProperty()) // gotta be strict with webview, which I think tries to be big
+  maxWidthProperty.bind(other.widthProperty())
 }
 
-infix fun WebView.minBind(other: Region) {
-  minHeightProperty().bind(other.heightProperty())
-  minWidthProperty().bind(other.widthProperty())
+infix fun WebViewWrapper.minBind(other: Region) {
+  minHeightProperty.bind(other.heightProperty())
+  minWidthProperty.bind(other.widthProperty())
 }
 
-infix fun WebView.minBind(other: Stage) {
-  minHeightProperty().bind(other.heightProperty())
-  minWidthProperty().bind(other.widthProperty())
+infix fun WebViewWrapper.minBind(other: Stage) {
+  minHeightProperty.bind(other.heightProperty())
+  minWidthProperty.bind(other.widthProperty())
 }
 
 
@@ -248,7 +251,7 @@ fun WebView.scrollMult(factor: Double) {
 
 
 
-fun Region.specialTransferingToWindowAndBack(par: Pane) {
+fun RegionWrapper<*>.specialTransferingToWindowAndBack(par: Pane) {
   val vb = this
   this.setOnKeyPressed { k ->
     if (k.code == KeyCode.W && k.isMetaDown) {
@@ -440,4 +443,47 @@ class JavaBridge {
   fun copy(s: Any) {
     s.toString().copyToClipboard()
   }
+}
+
+
+interface WebViewWrapper: NodeWrapper<WebView> {
+  val widthProperty: ReadOnlyDoubleProperty get() = node.widthProperty()
+  val prefWidthProperty: DoubleProperty get() = node.prefWidthProperty()
+  var prefWidth: Double
+    get() = node.prefWidth
+    set(value) {
+      node.prefWidth = value
+    }
+  val minWidthProperty: DoubleProperty get() = node.minWidthProperty()
+  var minWidth: Double
+    get() = node.minWidth
+    set(value) {
+      node.minWidth = value
+    }
+  val maxWidthProperty: DoubleProperty get() = node.maxWidthProperty()
+  var maxWidth: Double
+    get() = node.maxWidth
+    set(value) {
+      node.maxWidth = value
+    }
+
+  val heightProperty: ReadOnlyDoubleProperty get() = node.heightProperty()
+  val prefHeightProperty: DoubleProperty get() = node.prefHeightProperty()
+  var prefHeight: Double
+    get() = node.prefHeight
+    set(value) {
+      node.prefHeight = value
+    }
+  val minHeightProperty: DoubleProperty get() = node.minHeightProperty()
+  var minHeight: Double
+    get() = node.minHeight
+    set(value) {
+      node.minHeight = value
+    }
+  val maxHeightProperty: DoubleProperty get() = node.maxHeightProperty()
+  var maxHeight: Double
+    get() = node.maxHeight
+    set(value) {
+      node.maxHeight = value
+    }
 }
