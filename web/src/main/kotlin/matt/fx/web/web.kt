@@ -69,10 +69,10 @@ fun NodeWrapper<*>.webview(
   htmlContent?.let {
     engine.loadContent(htmlContent)
   }
-}.attachTo(this.node, op)
+}.attachTo(this, op)
 
 
-fun EventTarget.htmleditor(html: String? = null, op: HTMLEditor.() -> Unit = {}) = HTMLEditor().attachTo(this, op) {
+fun EventTarget.htmleditor(html: String? = null, op: HTMLEditor.() -> Unit = {}) = HTMLEditor().attachTo(this.wrapped(), op) {
   if (html != null) it.htmlText = html
 }
 
@@ -323,9 +323,9 @@ open class WebViewPane private constructor(file: MFile? = null, html: String? = 
     actionbutton("refresh") {
       wv.engine.reload()
     }
-    add(wv.apply {
+    wrapped().add(wv.apply {
       vgrow = Priority.ALWAYS
-    })
+    }.wrapped())
   }
 }
 
