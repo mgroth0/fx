@@ -39,7 +39,6 @@ import matt.hurricanefx.eye.collect.toObservable
 import matt.hurricanefx.eye.lang.BProp
 import matt.hurricanefx.eye.lib.onChange
 import matt.hurricanefx.eye.prop.div
-import matt.hurricanefx.tornadofx.dialog.confirm
 import matt.hurricanefx.tornadofx.item.column
 import matt.hurricanefx.tornadofx.nodes.add
 import matt.hurricanefx.tornadofx.nodes.clear
@@ -48,6 +47,7 @@ import matt.hurricanefx.tornadofx.nodes.setOnDoubleClick
 import matt.hurricanefx.wrapper.TreeLikeWrapper
 import matt.hurricanefx.wrapper.TreeTableViewWrapper
 import matt.hurricanefx.wrapper.TreeViewWrapper
+import matt.hurricanefx.wrapper.wrapped
 import matt.klib.lang.inList
 import matt.stream.recurse.recurse
 import matt.stream.sameContentsAnyOrder
@@ -84,7 +84,6 @@ fun fileTreeAndViewerPane(
 	treeTableView.onSelect { file ->
 	  viewBox.clear()
 	  if (file != null) {
-		viewBox.node.add()
 		viewBox.add(file.createNode(renderHTMLAndSVG = true).apply {
 		  perfectBind(viewBox)
 		  specialTransferingToWindowAndBack(viewBox)
@@ -113,7 +112,7 @@ fun Pane.fileTree(
   op: (TreeViewWrapper<MFile>.()->Unit)? = null,
 ): TreeViewWrapper<MFile> {
   return TreeViewWrapper<MFile>().apply {
-	this@fileTree.add(this)
+	this@fileTree.wrapped().add(this)
 
 	setupGUI()
 	setupContent(rootFiles, strategy)
@@ -130,7 +129,7 @@ fun Pane.fileTableTree(
   op: (TreeTableViewWrapper<MFile>.()->Unit)? = null,
 ): TreeTableViewWrapper<MFile> {
   return TreeTableViewWrapper<MFile>().apply {
-	this@fileTableTree.add(this)
+	this@fileTableTree.wrapped().add(this)
 
 	setupGUI()
 	setupContent(rootFiles, strategy)
@@ -226,8 +225,8 @@ private fun TreeLikeWrapper<*, MFile>.setupGUI() {
 			VBox().apply {
 			  val container = this
 			  add(it.createNode(renderHTMLAndSVG = true).apply {
-				perfectBind(container)
-				specialTransferingToWindowAndBack(container)
+				perfectBind(container.wrapped())
+				specialTransferingToWindowAndBack(container.wrapped())
 			  })
 			}.openInNewWindow(
 			  wMode = CLOSE

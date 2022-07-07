@@ -29,24 +29,24 @@ fun <T: Inspectable> InspectionView(
   val root = if (dir == Orientation.HORIZONTAL) HBox() else VBox()
   val oitems = if (items is ObservableList) items else items.toObservable()
   val lv = if (table) TableView(oitems) else ListView(oitems)
-  root.add((wrap_lv?.apply { add(lv) } ?: lv).apply {
+  root.wrapped().add((wrap_lv?.apply { wrapped().add(lv.wrapped()) } ?: lv).apply {
 	lv.vgrow = Priority.ALWAYS
 	lv.hgrow = Priority.ALWAYS
-  })
+  }.wrapped())
   val inspectHolder: Pane = if (dir == Orientation.HORIZONTAL) HBox() else VBox()
   inspectHolder.vgrow = Priority.ALWAYS
   inspectHolder.hgrow = Priority.ALWAYS
-  root.add(inspectHolder)
+  root.wrapped().add(inspectHolder.wrapped())
 
   val onSelectBlock = { it: T? ->
 	inspectHolder.clear()
-	val noSelectionLabel = inspectHolder.label("no selection")
+	val noSelectionLabel = inspectHolder.wrapped().label("no selection")
 	it?.let {
 	  noSelectionLabel.wrapped().removeFromParent()
-	  inspectHolder.add(it.inspect().apply {
+	  inspectHolder.wrapped().add(it.inspect().apply {
 		this.vgrow = Priority.ALWAYS
 		this.hgrow = Priority.ALWAYS
-	  })
+	  }.wrapped())
 	}
 	Unit
   }
@@ -69,6 +69,6 @@ fun <T: Inspectable> Pane.inspectionview(
 	  op()
 	}
   }
-  add(iv)
+  wrapped().add(iv.wrapped())
   return iv
 }

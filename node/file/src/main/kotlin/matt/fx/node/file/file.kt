@@ -63,7 +63,7 @@ private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): RegionWrap
 	println("opening file")
 	if (isImage()) {
 	  return Pane().apply {
-		imageview {
+		wrapped().imageview {
 		  image = Image(toURI().toString())
 		  isPreserveRatio = true
 		  bindFitTo(this@apply)
@@ -103,12 +103,12 @@ private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): RegionWrap
 	) {
 	  val viewbox = Pane()
 	  var fsText = readText()
-	  val ta = viewbox.textarea {
+	  val ta = viewbox.wrapped().textarea {
 		text = fsText
 		prefHeightProperty().bind(viewbox.prefHeightProperty())
 		prefWidthProperty().bind(viewbox.prefWidthProperty())
 	  }
-	  viewbox.button("matt.gui.ser.save changes") {
+	  viewbox.wrapped().button("matt.gui.ser.save changes") {
 		isDisable = true
 		setOnAction {
 		  writeText(ta.text)
@@ -126,7 +126,7 @@ private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): RegionWrap
 		}
 	  }
 	  if (extension in (listOf("html", "svg")) && !renderHTMLAndSVG) {
-		viewbox.button("render") {
+		viewbox.wrapped().button("render") {
 		  setOnAction {
 			WebViewPane(this@createNodeInner).openInNewWindow(wMode = CLOSE)
 		  }
@@ -255,7 +255,7 @@ private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): RegionWrap
 			vgrow = ALWAYS
 			hgrow = ALWAYS
 			vbox { exactWidth = 10.0 }
-			add(wv)
+			add(wv.wrapped())
 			vbox { exactWidth = 10.0 }
 		  }
 		  hbox { exactHeight = 10.0 }
