@@ -34,6 +34,7 @@ import matt.hurricanefx.tornadofx.nodes.removeFromParent
 import matt.file.MFile
 import matt.file.toMFile
 import matt.hurricanefx.wrapper.NodeWrapper
+import matt.hurricanefx.wrapper.PaneWrapper
 import matt.hurricanefx.wrapper.RegionWrapper
 import matt.hurricanefx.wrapper.wrapped
 import matt.klib.lang.NEVER
@@ -76,7 +77,7 @@ fun EventTarget.htmleditor(html: String? = null, op: HTMLEditor.() -> Unit = {})
   if (html != null) it.htmlText = html
 }
 
-infix fun WebViewWrapper.perfectBind(other: Region) {
+infix fun WebViewWrapper.perfectBind(other: RegionWrapper<*>) {
   this minBind other
   this maxBind other
 }
@@ -86,9 +87,9 @@ infix fun WebViewWrapper.perfectBind(other: Stage) {
   this maxBind other
 }
 
-infix fun WebViewWrapper.maxBind(other: Region) {
-  maxHeightProperty.bind(other.heightProperty()) // gotta be strict with webview, which I think tries to be big
-  maxWidthProperty.bind(other.widthProperty())
+infix fun WebViewWrapper.maxBind(other: RegionWrapper<*>) {
+  maxHeightProperty.bind(other.heightProperty) // gotta be strict with webview, which I think tries to be big
+  maxWidthProperty.bind(other.widthProperty)
 }
 
 infix fun WebViewWrapper.maxBind(other: Stage) {
@@ -96,9 +97,9 @@ infix fun WebViewWrapper.maxBind(other: Stage) {
   maxWidthProperty.bind(other.widthProperty())
 }
 
-infix fun WebViewWrapper.minBind(other: Region) {
-  minHeightProperty.bind(other.heightProperty())
-  minWidthProperty.bind(other.widthProperty())
+infix fun WebViewWrapper.minBind(other: RegionWrapper<*>) {
+  minHeightProperty.bind(other.heightProperty)
+  minWidthProperty.bind(other.widthProperty)
 }
 
 infix fun WebViewWrapper.minBind(other: Stage) {
@@ -274,7 +275,7 @@ fun RegionWrapper<*>.specialTransferingToWindowAndBack(par: Pane) {
         this.openInNewWindow().apply {
           perfectBind(this)
           setOnCloseRequest {
-            this.removeFromParent()
+            this.wrapped().removeFromParent()
             par.add(vb)
             if (this@specialTransferingToWindowAndBack is WebViewPane) {
               runLater { wv.zoom = perfectZoom(vb.width) }
@@ -333,14 +334,14 @@ open class WebViewPane private constructor(file: MFile? = null, html: String? = 
 
 @Suppress("unused")
 @ExperimentalContracts
-fun WebView.specialTransferingToWindowAndBack(par: Pane) {
+fun WebViewWrapper.specialTransferingToWindowAndBack(par: PaneWrapper<*>) {
 
   val wv = this
   this.setOnKeyPressed { k ->
     if (k.code == KeyCode.W && k.isMetaDown) {
-      if (this.scene.root == this) {
+      if (this.scene?.root == this.node) {
         this.removeFromParent()
-        (this.scene.window as Stage).close()
+        (this.scene?.window as Stage).close()
         par.add(wv)
         perfectBind(par)
         runLater { zoom = perfectZoom(par.width) }
@@ -448,6 +449,14 @@ class JavaBridge {
 
 
 interface WebViewWrapper: NodeWrapper<WebView> {
+
+  val zoomProperty: DoubleProperty get() = node.zoomProperty()
+  var zoom: Double
+    get() = node.zoom
+    set(value) {
+      node.zoom = value
+    }
+
   val widthProperty: ReadOnlyDoubleProperty get() = node.widthProperty()
   val prefWidthProperty: DoubleProperty get() = node.prefWidthProperty()
   var prefWidth: Double
