@@ -54,34 +54,34 @@ import matt.hurricanefx.wrapper.VBoxWrapper
 import kotlin.random.Random
 
 
-infix fun RegionWrapper<*>.minBind(other: RegionWrapper<*>) {
+infix fun RegionWrapper.minBind(other: RegionWrapper) {
   minHeightProperty.bind(other.heightProperty)
   minWidthProperty.bind(other.widthProperty)
 }
 
-infix fun RegionWrapper<*>.minBind(other: Stage) {
+infix fun RegionWrapper.minBind(other: Stage) {
   minHeightProperty.bind(other.heightProperty())
   minWidthProperty.bind(other.widthProperty())
 }
 
 
-infix fun RegionWrapper<*>.maxBind(other: RegionWrapper<*>) {
+infix fun RegionWrapper.maxBind(other: RegionWrapper) {
   maxHeightProperty.bind(other.heightProperty)
   maxWidthProperty.bind(other.widthProperty)
 }
 
-infix fun RegionWrapper<*>.maxBind(other: Stage) {
+infix fun RegionWrapper.maxBind(other: Stage) {
   maxHeightProperty.bind(other.heightProperty())
   maxWidthProperty.bind(other.widthProperty())
 }
 
 
-infix fun RegionWrapper<*>.perfectBind(other: RegionWrapper<*>) {
+infix fun RegionWrapper.perfectBind(other: RegionWrapper) {
   this minBind other
   this maxBind other
 }
 
-infix fun RegionWrapper<*>.perfectBind(other: Stage) {
+infix fun RegionWrapper.perfectBind(other: Stage) {
   this minBind other
   this maxBind other
 }
