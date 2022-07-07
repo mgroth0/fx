@@ -46,7 +46,9 @@ import matt.hurricanefx.eye.lib.proxypropDouble
 import matt.hurricanefx.tornadofx.fx.getChildList
 import matt.hurricanefx.tornadofx.fx.opcr
 import matt.hurricanefx.tornadofx.nodes.add
+import matt.hurricanefx.wrapper.HBoxWrapper
 import matt.hurricanefx.wrapper.NodeWrapper
+import matt.hurricanefx.wrapper.VBoxWrapper
 import kotlin.random.Random
 
 
@@ -246,19 +248,19 @@ fun EventTarget.toolbar(vararg nodes: Node, op: ToolBar.()->Unit = {}): ToolBar 
 )
 fun ToolBar.children(op: ToolBar.()->Unit) = apply { op() }
 
-fun EventTarget.hbox(spacing: Number? = null, alignment: Pos? = null, op: HBox.()->Unit = {}): HBox {
+fun EventTarget.hbox(spacing: Number? = null, alignment: Pos? = null, op: HBox.()->Unit = {}): HBoxWrapper {
   val hbox = HBox()
   if (alignment != null) hbox.alignment = alignment
   if (spacing != null) hbox.spacing = spacing.toDouble()
-  return opcr(this, hbox, op)
+  return HBoxWrapper(opcr(this, hbox, op))
 }
 fun NodeWrapper<*>.hbox(spacing: Number? = null, alignment: Pos? = null, op: HBox.()->Unit = {}) = node.hbox(spacing,alignment,op)
 
-fun EventTarget.vbox(spacing: Number? = null, alignment: Pos? = null, op: VBox.()->Unit = {}): VBox {
+fun EventTarget.vbox(spacing: Number? = null, alignment: Pos? = null, op: VBox.()->Unit = {}): VBoxWrapper {
   val vbox = VBox()
   if (alignment != null) vbox.alignment = alignment
   if (spacing != null) vbox.spacing = spacing.toDouble()
-  return opcr(this, vbox, op)
+  return VBoxWrapper(opcr(this, vbox, op))
 }
 fun NodeWrapper<*>.vbox(spacing: Number? = null, alignment: Pos? = null, op: VBox.()->Unit = {}) = node.vbox(spacing,alignment,op)
 

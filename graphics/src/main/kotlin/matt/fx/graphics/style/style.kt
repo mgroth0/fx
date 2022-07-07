@@ -188,6 +188,9 @@ fun Region.red() {
 fun Region.orange() {
   borderDashFill = Color.ORANGE
 }
+fun Region.white() {
+  borderDashFill = Color.WHITE
+}
 
 
 /*part of this file was taken from tornadofx*/
