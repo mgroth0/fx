@@ -77,7 +77,7 @@ fun EventTarget.htmleditor(html: String? = null, op: HTMLEditor.() -> Unit = {})
   if (html != null) it.htmlText = html
 }
 
-infix fun WebViewWrapper.perfectBind(other: RegionWrapper<*>) {
+infix fun WebViewWrapper.perfectBind(other: RegionWrapper) {
   this minBind other
   this maxBind other
 }
@@ -87,7 +87,7 @@ infix fun WebViewWrapper.perfectBind(other: Stage) {
   this maxBind other
 }
 
-infix fun WebViewWrapper.maxBind(other: RegionWrapper<*>) {
+infix fun WebViewWrapper.maxBind(other: RegionWrapper) {
   maxHeightProperty.bind(other.heightProperty) // gotta be strict with webview, which I think tries to be big
   maxWidthProperty.bind(other.widthProperty)
 }
@@ -97,7 +97,7 @@ infix fun WebViewWrapper.maxBind(other: Stage) {
   maxWidthProperty.bind(other.widthProperty())
 }
 
-infix fun WebViewWrapper.minBind(other: RegionWrapper<*>) {
+infix fun WebViewWrapper.minBind(other: RegionWrapper) {
   minHeightProperty.bind(other.heightProperty)
   minWidthProperty.bind(other.widthProperty)
 }
@@ -253,7 +253,7 @@ fun WebView.scrollMult(factor: Double) {
 
 
 
-fun RegionWrapper<*>.specialTransferingToWindowAndBack(par: Pane) {
+fun RegionWrapper.specialTransferingToWindowAndBack(par: Pane) {
   val vb = this
   this.setOnKeyPressed { k ->
     if (k.code == KeyCode.W && k.isMetaDown) {
