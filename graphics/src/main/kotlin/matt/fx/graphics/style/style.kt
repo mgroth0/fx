@@ -93,7 +93,7 @@ fun Styleable.styleInfo(): String {
   return r.toString()
 }
 
-var Region.borderFill: Paint?
+var RegionWrapper.borderFill: Paint?
   get() = border?.strokes?.firstOrNull()?.topStroke
   set(value) {
 	border = if (value == null) null

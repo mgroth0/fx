@@ -15,7 +15,6 @@ import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
 import javafx.scene.layout.AnchorPane
 import javafx.scene.layout.Region
-import javafx.scene.layout.VBox
 import javafx.scene.paint.Color
 import javafx.stage.Stage
 import javafx.stage.StageStyle
@@ -52,6 +51,7 @@ import matt.json.prim.isValidJson
 import matt.file.MFile
 import matt.file.mFile
 import matt.hurricanefx.wrapper.NodeWrapper
+import matt.hurricanefx.wrapper.VBoxWrapper
 import matt.klib.lang.noExceptions
 import matt.klib.lang.nullIfExceptions
 import java.net.URI
@@ -76,15 +76,15 @@ fun safe(s: String, op: ()->Unit): Boolean {
   return r
 }
 
-class MDialog<R> internal constructor(): VBox() {
-  val stage = MStage(wMode = CLOSE, EscClosable = true).apply {
-	scene = MScene(this@MDialog)
+class MDialog<R> internal constructor(): VBoxWrapper() {
+  val stg = MStage(wMode = CLOSE, EscClosable = true).apply {
+	scene = MScene(this@MDialog.node)
 	width = 400.0
 	height = 400.0
   }
   lateinit var confirmButton: Button
   fun confirm() = confirmButton.fire()
-  val window get() = stage
+  val window get() = stg
   var x: Double? = null
   var y: Double? = null
   var owner: Window? = null
@@ -102,7 +102,7 @@ class MDialog<R> internal constructor(): VBox() {
   }
 
   init {
-	exactHeightProperty().bind(stage.heightProperty())
+	exactHeightProperty().bind(stg.heightProperty())
 	borderFill = Color.DARKBLUE
   }
 }
@@ -169,27 +169,27 @@ fun <R> dialog(
 ): R? {
   val d = MDialog<R>()
   d.apply(cfg)
-  d.stage.initOwner(d.owner ?: if (d.autoOwner) Window.getWindows().firstOrNull() else null)
-  if (d.stage.owner != null) {
-	Centered().applyTo(d.stage)
+  d.stg.initOwner(d.owner ?: if (d.autoOwner) Window.getWindows().firstOrNull() else null)
+  if (d.stg.owner != null) {
+	Centered().applyTo(d.stg)
   } // d.stage.initAndCenterToOwner(own)
   var r: R? = null
   d.hbox {
-	prefWidthProperty.bind(d.widthProperty())
+	prefWidthProperty.bind(d.widthProperty)
 	alignment = Pos.CENTER
 	actionbutton("cancel") {
 	  styleClass += "CancelButton"
-	  d.stage.close()
+	  d.stg.close()
 	}
 	d.confirmButton = button("confirm") {
 	  styleClass += "ConfirmButton"
 	  disableWhen { d.readyProperty.not() }
 	  setOnAction {
 		r = d.getResult()
-		d.stage.close()
+		d.stg.close()
 	  }
 	}
-	d.scene.addEventFilter(KeyEvent.KEY_PRESSED) {
+	d.scene!!.addEventFilter(KeyEvent.KEY_PRESSED) {
 	  if (it.code == KeyCode.ENTER) {
 		if (d.readyProperty.value) {
 		  d.confirmButton.fire()
