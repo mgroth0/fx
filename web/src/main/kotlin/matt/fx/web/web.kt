@@ -35,6 +35,7 @@ import matt.file.MFile
 import matt.file.toMFile
 import matt.hurricanefx.wrapper.NodeWrapper
 import matt.hurricanefx.wrapper.RegionWrapper
+import matt.hurricanefx.wrapper.wrapped
 import matt.klib.lang.NEVER
 import netscape.javascript.JSObject
 import org.intellij.lang.annotations.Language
@@ -255,11 +256,11 @@ fun RegionWrapper<*>.specialTransferingToWindowAndBack(par: Pane) {
   val vb = this
   this.setOnKeyPressed { k ->
     if (k.code == KeyCode.W && k.isMetaDown) {
-      if (this.scene.root == this) {
+      if (this.scene?.root == this) {
         this.removeFromParent()
-        (this.scene.window as Stage).close()
+        (this.scene!!.window as Stage).close()
         par.add(vb)
-        perfectBind(par)
+        perfectBind(par.wrapped())
         if (this is WebViewPane) {
           runLater { wv.zoom = perfectZoom(vb.width) }
         }
