@@ -6,6 +6,7 @@ import javafx.beans.property.ReadOnlyDoubleProperty
 import javafx.beans.property.SimpleDoubleProperty
 import javafx.event.EventHandler
 import javafx.event.EventTarget
+import javafx.scene.Parent
 import javafx.scene.input.KeyCode
 import javafx.scene.layout.Priority
 import javafx.scene.layout.Region
@@ -34,6 +35,7 @@ import matt.hurricanefx.tornadofx.nodes.removeFromParent
 import matt.hurricanefx.tornadofx.nodes.setOnDoubleClick
 import matt.hurricanefx.wrapper.NodeWrapper
 import matt.hurricanefx.wrapper.PaneWrapper
+import matt.hurricanefx.wrapper.ParentWrapper
 import matt.hurricanefx.wrapper.RegionWrapper
 import matt.hurricanefx.wrapper.wrapped
 import matt.klib.lang.NEVER
@@ -497,4 +499,7 @@ interface WebViewWrapper: NodeWrapper<WebView> {
     set(value) {
       node.maxHeight = value
     }
+}
+fun WebView.wrapped() = object: WebViewWrapper {
+  override val node = this@wrapped
 }
