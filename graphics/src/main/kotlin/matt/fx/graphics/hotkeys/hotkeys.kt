@@ -31,6 +31,7 @@ import matt.fx.graphics.mag.top
 import matt.fx.graphics.mag.topleft
 import matt.fx.graphics.mag.topright
 import matt.fx.graphics.style.borderFill
+import matt.hurricanefx.wrapper.wrapped
 import matt.klib.dmap.withStoringDefault
 import matt.klib.lang.go
 import java.lang.Thread.sleep
@@ -90,7 +91,7 @@ fun MScene.addDefaultHotkeys() {
 	  it.wrapOp {
 		val reg = (scene.root as? Region)
 		val old = regs[reg]
-		reg?.borderFill = Color.YELLOW
+		reg?.wrapped()?.borderFill = Color.YELLOW
 		it()
 		reg?.go {
 		  thread {

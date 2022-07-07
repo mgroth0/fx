@@ -21,6 +21,8 @@ import javafx.stage.StageStyle
 import javafx.stage.Window
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import matt.file.MFile
+import matt.file.mFile
 import matt.fx.graphics.core.scene.MScene
 import matt.fx.graphics.lang.actionbutton
 import matt.fx.graphics.layout.hbox
@@ -47,11 +49,10 @@ import matt.hurricanefx.tornadofx.control.textarea
 import matt.hurricanefx.tornadofx.dialog.alert
 import matt.hurricanefx.tornadofx.nodes.disableWhen
 import matt.hurricanefx.tornadofx.nodes.setOnDoubleClick
-import matt.json.prim.isValidJson
-import matt.file.MFile
-import matt.file.mFile
 import matt.hurricanefx.wrapper.NodeWrapper
 import matt.hurricanefx.wrapper.VBoxWrapper
+import matt.hurricanefx.wrapper.wrapped
+import matt.json.prim.isValidJson
 import matt.klib.lang.noExceptions
 import matt.klib.lang.nullIfExceptions
 import java.net.URI
@@ -154,9 +155,9 @@ inline fun <reified T> jsonEditor(json: String? = null) = dialog<T?> {
 		&& noExceptions { Json.decodeFromString<T>(it) }
   }
   readyWhen(goodBind)
-  ta.borderFill = Color.BLACK /*so it does not jitter*/
+  ta.wrapped().borderFill = Color.BLACK /*so it does not jitter*/
   goodBind.onChange {
-	ta.borderFill = if (it) Color.BLACK else Color.RED
+	ta.wrapped().borderFill = if (it) Color.BLACK else Color.RED
   }
   setResultConverter {
 	ta.text.takeIf { it.isValidJson() }?.let { nullIfExceptions { Json.decodeFromString<T>(it) } }
@@ -352,7 +353,7 @@ fun Parent.openInNewWindow(
 	own.applyTo(this)
 	geom.applyTo(this)
 	if (border) {
-	  (this@openInNewWindow as Region).borderFill = Color.DARKBLUE
+	  (this@openInNewWindow as Region).wrapped().borderFill = Color.DARKBLUE
 	}
 	beforeShowing()
 	when (showMode) {
