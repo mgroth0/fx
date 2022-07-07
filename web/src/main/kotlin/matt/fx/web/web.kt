@@ -7,7 +7,6 @@ import javafx.beans.property.SimpleDoubleProperty
 import javafx.event.EventHandler
 import javafx.event.EventTarget
 import javafx.scene.input.KeyCode
-import javafx.scene.layout.Pane
 import javafx.scene.layout.Priority
 import javafx.scene.layout.Region
 import javafx.scene.layout.VBox
@@ -253,7 +252,7 @@ fun WebView.scrollMult(factor: Double) {
 
 
 
-fun RegionWrapper.specialTransferingToWindowAndBack(par: Pane) {
+fun RegionWrapper.specialTransferingToWindowAndBack(par: PaneWrapper) {
   val vb = this
   this.setOnKeyPressed { k ->
     if (k.code == KeyCode.W && k.isMetaDown) {
@@ -261,7 +260,7 @@ fun RegionWrapper.specialTransferingToWindowAndBack(par: Pane) {
         this.removeFromParent()
         (this.scene!!.window as Stage).close()
         par.add(vb)
-        perfectBind(par.wrapped())
+        perfectBind(par)
         if (this is WebViewPane) {
           runLater { wv.zoom = perfectZoom(vb.width) }
         }

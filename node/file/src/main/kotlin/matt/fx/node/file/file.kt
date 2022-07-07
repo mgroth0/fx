@@ -50,7 +50,7 @@ import java.lang.ref.WeakReference
 
 private const val LINE_LIMIT = 1000
 
-fun MFile.createNode(renderHTMLAndSVG: Boolean = false): RegionWrapper<*> {
+fun MFile.createNode(renderHTMLAndSVG: Boolean = false): RegionWrapper {
   val node = createNodeInner(renderHTMLAndSVG = renderHTMLAndSVG)
   node.mcontextmenu {
 	item(s = "", g = draggableIcon())
@@ -58,7 +58,7 @@ fun MFile.createNode(renderHTMLAndSVG: Boolean = false): RegionWrapper<*> {
   return node
 }
 
-private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): RegionWrapper<*> {
+private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): RegionWrapper {
   if (exists()) {
 	println("opening file")
 	if (isImage()) {
