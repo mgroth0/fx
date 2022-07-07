@@ -13,6 +13,7 @@ import matt.color.mostContrastingForMe
 import matt.hurricanefx.eye.lib.onChange
 import matt.hurricanefx.tornadofx.shapes.line
 import matt.hurricanefx.wrapper.NodeWrapper
+import matt.hurricanefx.wrapper.wrapped
 import matt.klib.math.BasicPoint
 import matt.klib.math.Point
 import matt.klib.math.unaryMinus
@@ -57,7 +58,7 @@ fun FXColor.mostContrastingForMe() = toAwtColor().mostContrastingForMe().toFXCol
   private val linesM = mutableListOf<Line>()
   val lines: List<Line> = linesM
   fun to(point: Point) {
-	linesM += parent.line {
+	linesM += parent.wrapped().line {
 	  startX = current.xDouble
 	  startY = current.yDouble
 	  endX = point.xDouble
