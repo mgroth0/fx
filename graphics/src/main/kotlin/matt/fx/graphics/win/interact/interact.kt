@@ -175,7 +175,7 @@ fun <R> dialog(
   } // d.stage.initAndCenterToOwner(own)
   var r: R? = null
   d.hbox {
-	prefWidthProperty().bind(d.widthProperty())
+	prefWidthProperty.bind(d.widthProperty())
 	alignment = Pos.CENTER
 	actionbutton("cancel") {
 	  styleClass += "CancelButton"
