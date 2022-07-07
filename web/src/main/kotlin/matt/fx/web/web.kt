@@ -269,7 +269,7 @@ fun RegionWrapper<*>.specialTransferingToWindowAndBack(par: Pane) {
       }
     }
     setOnDoubleClick {
-      if (this.scene.root != this) {
+      if (this.scene?.root != this) {
         this.removeFromParent()
         this.openInNewWindow().apply {
           perfectBind(this)
