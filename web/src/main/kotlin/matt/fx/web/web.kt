@@ -17,22 +17,22 @@ import javafx.stage.Stage
 import kotlinx.coroutines.NonCancellable
 import matt.async.daemon
 import matt.async.date.sec
+import matt.file.MFile
+import matt.file.toMFile
+import matt.fx.graphics.async.runLaterReturn
 import matt.fx.graphics.clip.copyToClipboard
 import matt.fx.graphics.lang.actionbutton
 import matt.fx.graphics.layout.perfectBind
+import matt.fx.graphics.layout.vgrow
 import matt.fx.graphics.menu.context.mcontextmenu
 import matt.fx.graphics.refreshWhileInSceneEvery
 import matt.fx.graphics.win.interact.openInNewWindow
 import matt.hurricanefx.eye.lang.DProp
 import matt.hurricanefx.eye.lib.onChangeOnce
-import matt.fx.graphics.async.runLaterReturn
-import matt.fx.graphics.layout.vgrow
 import matt.hurricanefx.tornadofx.fx.attachTo
 import matt.hurricanefx.tornadofx.nodes.add
-import matt.hurricanefx.tornadofx.nodes.setOnDoubleClick
 import matt.hurricanefx.tornadofx.nodes.removeFromParent
-import matt.file.MFile
-import matt.file.toMFile
+import matt.hurricanefx.tornadofx.nodes.setOnDoubleClick
 import matt.hurricanefx.wrapper.NodeWrapper
 import matt.hurricanefx.wrapper.PaneWrapper
 import matt.hurricanefx.wrapper.RegionWrapper
@@ -351,12 +351,12 @@ fun WebViewWrapper.specialTransferingToWindowAndBack(par: PaneWrapper<*>) {
   }
 
   setOnDoubleClick {
-    if (this.scene.root != this) {
+    if (this.scene?.root != this) {
       this.removeFromParent()
       this.openInNewWindow().apply {
         perfectBind(this)
         setOnCloseRequest {
-          this.removeFromParent()
+          this.wrapped().removeFromParent()
           par.add(wv)
           runLater { zoom = perfectZoom(par.width) }
         }
@@ -457,6 +457,7 @@ interface WebViewWrapper: NodeWrapper<WebView> {
       node.zoom = value
     }
 
+  val width get() = widthProperty.value
   val widthProperty: ReadOnlyDoubleProperty get() = node.widthProperty()
   val prefWidthProperty: DoubleProperty get() = node.prefWidthProperty()
   var prefWidth: Double
@@ -477,6 +478,7 @@ interface WebViewWrapper: NodeWrapper<WebView> {
       node.maxWidth = value
     }
 
+  val height get() = heightProperty.value
   val heightProperty: ReadOnlyDoubleProperty get() = node.heightProperty()
   val prefHeightProperty: DoubleProperty get() = node.prefHeightProperty()
   var prefHeight: Double

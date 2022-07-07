@@ -17,7 +17,7 @@ import matt.hurricanefx.tornadofx.control.label
 import matt.hurricanefx.tornadofx.nodes.add
 import matt.hurricanefx.tornadofx.nodes.clear
 import matt.hurricanefx.tornadofx.nodes.removeFromParent
-
+import matt.hurricanefx.wrapper.wrapped
 
 
 fun <T: Inspectable> InspectionView(
@@ -42,7 +42,7 @@ fun <T: Inspectable> InspectionView(
 	inspectHolder.clear()
 	val noSelectionLabel = inspectHolder.label("no selection")
 	it?.let {
-	  noSelectionLabel.removeFromParent()
+	  noSelectionLabel.wrapped().removeFromParent()
 	  inspectHolder.add(it.inspect().apply {
 		this.vgrow = Priority.ALWAYS
 		this.hgrow = Priority.ALWAYS
