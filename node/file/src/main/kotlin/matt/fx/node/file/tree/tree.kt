@@ -65,8 +65,8 @@ fun fileTreeAndViewerPane(
 	hgrow = ALWAYS
   }
   val viewBox = vbox {
-	prefWidthProperty().bind(hBox.widthProperty()/2) /*less aggressive to solve these issues?*/
-	prefHeightProperty().bind(hBox.heightProperty())
+	prefWidthProperty.bind(hBox.widthProperty()/2) /*less aggressive to solve these issues?*/
+	prefHeightProperty.bind(hBox.heightProperty())
 	hgrow = ALWAYS
   }
 

@@ -46,6 +46,7 @@ import matt.hurricanefx.eye.lib.proxypropDouble
 import matt.hurricanefx.tornadofx.fx.getChildList
 import matt.hurricanefx.tornadofx.fx.opcr
 import matt.hurricanefx.tornadofx.nodes.add
+import matt.hurricanefx.tornadofx.nodes.clear
 import matt.hurricanefx.wrapper.HBoxWrapper
 import matt.hurricanefx.wrapper.NodeWrapper
 import matt.hurricanefx.wrapper.VBoxWrapper
