@@ -103,7 +103,7 @@ var Region.borderFill: Paint?
 
   }
 
-var RegionWrapper<*>.borderDashFill: Paint?
+var RegionWrapper.borderDashFill: Paint?
   get() = border?.strokes?.firstOrNull { it.topStyle == BorderStrokeStyle.DASHED }?.topStroke
   set(value) {
 	border = if (value == null) null
@@ -166,30 +166,30 @@ fun Node.sty(op: StyleClassDSL.()->Unit) {
 }
 
 
-fun RegionWrapper<*>.yellow() {
+fun RegionWrapper.yellow() {
   borderDashFill = Color.YELLOW
 }
 
-fun RegionWrapper<*>.blue() {
+fun RegionWrapper.blue() {
   borderDashFill = Color.BLUE
 }
 
-fun RegionWrapper<*>.purple() {
+fun RegionWrapper.purple() {
   borderDashFill = Color.PURPLE
 }
 
-fun RegionWrapper<*>.green() {
+fun RegionWrapper.green() {
   borderDashFill = Color.GREEN
 }
 
-fun RegionWrapper<*>.red() {
+fun RegionWrapper.red() {
   borderDashFill = Color.RED
 }
 
-fun RegionWrapper<*>.orange() {
+fun RegionWrapper.orange() {
   borderDashFill = Color.ORANGE
 }
-fun RegionWrapper<*>.white() {
+fun RegionWrapper.white() {
   borderDashFill = Color.WHITE
 }
 

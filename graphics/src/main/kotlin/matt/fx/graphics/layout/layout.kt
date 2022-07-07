@@ -86,7 +86,7 @@ infix fun RegionWrapper.perfectBind(other: Stage) {
   this maxBind other
 }
 
-fun PaneWrapper<*>.spacer() {
+fun PaneWrapper.spacer() {
   this.children.add(Pane().apply {
 	minWidth = 20.0
 	minHeight = 20.0
