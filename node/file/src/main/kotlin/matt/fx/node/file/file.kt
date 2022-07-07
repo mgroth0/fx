@@ -9,7 +9,6 @@ import javafx.scene.image.Image
 import javafx.scene.input.KeyEvent
 import javafx.scene.layout.Pane
 import javafx.scene.layout.Priority.ALWAYS
-import javafx.scene.layout.Region
 import javafx.scene.layout.VBox
 import javafx.scene.text.Text
 import javafx.scene.web.WebView
@@ -18,6 +17,8 @@ import kotlinx.html.html
 import kotlinx.html.img
 import kotlinx.html.stream.createHTML
 import matt.async.daemon
+import matt.css.Color.black
+import matt.css.sty
 import matt.file.MFile
 import matt.fx.graphics.async.runLaterReturn
 import matt.fx.graphics.layout.hbox
@@ -41,15 +42,15 @@ import matt.hurricanefx.tornadofx.control.button
 import matt.hurricanefx.tornadofx.control.imageview
 import matt.hurricanefx.tornadofx.control.textarea
 import matt.hurricanefx.tornadofx.nodes.add
-import matt.css.Color.black
-import matt.css.sty
+import matt.hurricanefx.wrapper.RegionWrapper
+import matt.hurricanefx.wrapper.wrapped
 import matt.klib.lang.err
 import java.lang.ref.WeakReference
 
 
 private const val LINE_LIMIT = 1000
 
-fun MFile.createNode(renderHTMLAndSVG: Boolean = false): Region {
+fun MFile.createNode(renderHTMLAndSVG: Boolean = false): RegionWrapper<*> {
   val node = createNodeInner(renderHTMLAndSVG = renderHTMLAndSVG)
   node.mcontextmenu {
 	item(s = "", g = draggableIcon())
@@ -57,7 +58,7 @@ fun MFile.createNode(renderHTMLAndSVG: Boolean = false): Region {
   return node
 }
 
-private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): Region {
+private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): RegionWrapper<*> {
   if (exists()) {
 	println("opening file")
 	if (isImage()) {
@@ -77,7 +78,7 @@ private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): Region {
 		  }
 		  doubleClickToOpenInWindow()
 		}
-	  }
+	  }.wrapped()
 	}
 
 
@@ -131,7 +132,7 @@ private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): Region {
 		  }
 		}
 	  }
-	  return viewbox
+	  return viewbox.wrapped()
 	}
 
 
@@ -168,11 +169,11 @@ private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): Region {
 		  }
 
 		}
-	  }
+	  }.wrapped()
 
 	  "html" -> WebViewPane(this@createNodeInner).apply {
 		specialZooming()
-	  }
+	  }.wrapped()
 
 	  "svg"  -> WebView().apply {
 		runLater {
@@ -288,12 +289,12 @@ private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): Region {
 			}
 		  }
 		}
-		root
+		root.wrapped()
 	  }
 
 	  else   -> err("how to make node for files with extension:${extension}")
 	}
-  } else return VBox(Text("file $this does not exist"))
+  } else return VBox(Text("file $this does not exist")).wrapped()
 }
 
 

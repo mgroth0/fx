@@ -84,6 +84,7 @@ fun fileTreeAndViewerPane(
 	treeTableView.onSelect { file ->
 	  viewBox.clear()
 	  if (file != null) {
+		viewBox.node.add()
 		viewBox.add(file.createNode(renderHTMLAndSVG = true).apply {
 		  perfectBind(viewBox)
 		  specialTransferingToWindowAndBack(viewBox)

@@ -46,46 +46,47 @@ import matt.hurricanefx.eye.lib.proxypropDouble
 import matt.hurricanefx.tornadofx.fx.getChildList
 import matt.hurricanefx.tornadofx.fx.opcr
 import matt.hurricanefx.tornadofx.nodes.add
-import matt.hurricanefx.tornadofx.nodes.clear
 import matt.hurricanefx.wrapper.HBoxWrapper
 import matt.hurricanefx.wrapper.NodeWrapper
+import matt.hurricanefx.wrapper.PaneWrapper
+import matt.hurricanefx.wrapper.RegionWrapper
 import matt.hurricanefx.wrapper.VBoxWrapper
 import kotlin.random.Random
 
 
-infix fun Region.minBind(other: Region) {
-  minHeightProperty().bind(other.heightProperty())
-  minWidthProperty().bind(other.widthProperty())
+infix fun RegionWrapper<*>.minBind(other: RegionWrapper<*>) {
+  minHeightProperty.bind(other.heightProperty)
+  minWidthProperty.bind(other.widthProperty)
 }
 
-infix fun Region.minBind(other: Stage) {
-  minHeightProperty().bind(other.heightProperty())
-  minWidthProperty().bind(other.widthProperty())
-}
-
-
-infix fun Region.maxBind(other: Region) {
-  maxHeightProperty().bind(other.heightProperty())
-  maxWidthProperty().bind(other.widthProperty())
-}
-
-infix fun Region.maxBind(other: Stage) {
-  maxHeightProperty().bind(other.heightProperty())
-  maxWidthProperty().bind(other.widthProperty())
+infix fun RegionWrapper<*>.minBind(other: Stage) {
+  minHeightProperty.bind(other.heightProperty())
+  minWidthProperty.bind(other.widthProperty())
 }
 
 
-infix fun Region.perfectBind(other: Region) {
+infix fun RegionWrapper<*>.maxBind(other: RegionWrapper<*>) {
+  maxHeightProperty.bind(other.heightProperty)
+  maxWidthProperty.bind(other.widthProperty)
+}
+
+infix fun RegionWrapper<*>.maxBind(other: Stage) {
+  maxHeightProperty.bind(other.heightProperty())
+  maxWidthProperty.bind(other.widthProperty())
+}
+
+
+infix fun RegionWrapper<*>.perfectBind(other: RegionWrapper<*>) {
   this minBind other
   this maxBind other
 }
 
-infix fun Region.perfectBind(other: Stage) {
+infix fun RegionWrapper<*>.perfectBind(other: Stage) {
   this minBind other
   this maxBind other
 }
 
-fun Pane.spacer() {
+fun PaneWrapper<*>.spacer() {
   this.children.add(Pane().apply {
 	minWidth = 20.0
 	minHeight = 20.0
