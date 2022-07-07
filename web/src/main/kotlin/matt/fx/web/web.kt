@@ -334,7 +334,7 @@ open class WebViewPane private constructor(file: MFile? = null, html: String? = 
 
 @Suppress("unused")
 @ExperimentalContracts
-fun WebViewWrapper.specialTransferingToWindowAndBack(par: PaneWrapper<*>) {
+fun WebViewWrapper.specialTransferingToWindowAndBack(par: PaneWrapper) {
 
   val wv = this
   this.setOnKeyPressed { k ->
