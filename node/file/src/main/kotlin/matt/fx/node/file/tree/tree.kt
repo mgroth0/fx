@@ -96,9 +96,11 @@ fun fileTreeAndViewerPane(
 
 fun TreeLikeWrapper<*, MFile>.nav(f: MFile) {
 
+  val fam = f.chain { it.parentFile }.toList()
+
   if (f.doesNotExist) return
 
-  root.children.firstOrNull { it.value in f.chain { it.parentFile } }?.let { subRoot ->
+  root.children.firstOrNull { it.value in fam }?.let { subRoot ->
 	println("good to nav")
 	var nextSubRoot = subRoot
 	var keepGoing = true
@@ -106,7 +108,7 @@ fun TreeLikeWrapper<*, MFile>.nav(f: MFile) {
 	  println("refreshing and checking ${nextSubRoot.value}")
 	  nextSubRoot.refreshChilds()
 	  nextSubRoot.children.firstOrNull {
-		it.value in f.chain { f.parentFile }
+		it.value in fam
 	  }?.let {
 		println("${it}?")
 		if (nextSubRoot.value == f) {
