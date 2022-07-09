@@ -96,9 +96,11 @@ fun fileTreeAndViewerPane(
 
 fun TreeLikeWrapper<*, MFile>.nav(f: MFile) {
   if (f.exists() && f.chain { it.parentFile }.any { it in root.children.map { it.value } }) {
+	println("good to nav")
 	root.recurse { it.children }.firstOrNull {
 	  it.value == f
 	}?.let {
+	  println("found treeitem: ${it}")
 	  it.parent.chain { it.parent }.forEach { it.isExpanded = true }
 	  selectionModel.select(it)
 	  scrollTo(getRow(it))
