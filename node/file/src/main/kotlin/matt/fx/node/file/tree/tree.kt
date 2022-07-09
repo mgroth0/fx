@@ -192,7 +192,7 @@ private fun TreeLikeWrapper<*, MFile>.setupGUI() {
 	  showSizesProp.onChange { b ->
 		if (b) {
 		  node.column<MFile, String>("size") {
-			SimpleStringProperty(it.value.value.size().formatted)
+			SimpleStringProperty(it.value.value.size().formatted.toString())
 		  }
 		  autoResizeColumns()
 		} else {
