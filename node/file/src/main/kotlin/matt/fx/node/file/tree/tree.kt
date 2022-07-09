@@ -18,6 +18,7 @@ import matt.file.mFile
 import matt.file.size
 import matt.fx.fxauto.actionitem
 import matt.fx.fxauto.fxActions
+import matt.fx.graphics.icon.Icon
 import matt.fx.graphics.layout.hgrow
 import matt.fx.graphics.layout.perfectBind
 import matt.fx.graphics.layout.vbox
@@ -272,8 +273,10 @@ private fun TreeLikeWrapper<*, MFile>.setupGUI() {
 			)
 		  }
 		}
-		selectedValue?.let { it.actions() + it.fxActions() }?.forEach {
-		  actionitem(it)
+		selectedValue?.let { it.actions() + it.fxActions() }?.forEach { action ->
+		  actionitem(action) {
+			graphic = action.icon?.let { Icon(it) }
+		  }
 		}
 	  } else if (selects.size > 1) {
 		"move all to trash" does {
