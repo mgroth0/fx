@@ -7,8 +7,6 @@ import javafx.scene.control.SelectionMode.MULTIPLE
 import javafx.scene.control.TreeCell
 import javafx.scene.control.TreeItem
 import javafx.scene.control.TreeTableRow
-import javafx.scene.layout.HBox
-import javafx.scene.layout.Pane
 import javafx.scene.layout.Priority.ALWAYS
 import javafx.scene.layout.VBox
 import matt.async.date.sec
@@ -44,11 +42,14 @@ import matt.hurricanefx.tornadofx.nodes.add
 import matt.hurricanefx.tornadofx.nodes.clear
 import matt.hurricanefx.tornadofx.nodes.populateTree
 import matt.hurricanefx.tornadofx.nodes.setOnDoubleClick
+import matt.hurricanefx.wrapper.HBoxWrapper
+import matt.hurricanefx.wrapper.PaneWrapper
 import matt.hurricanefx.wrapper.TreeLikeWrapper
 import matt.hurricanefx.wrapper.TreeTableViewWrapper
 import matt.hurricanefx.wrapper.TreeViewWrapper
 import matt.hurricanefx.wrapper.wrapped
 import matt.klib.lang.inList
+import matt.stream.recurse.chain
 import matt.stream.recurse.recurse
 import matt.stream.sameContentsAnyOrder
 
@@ -56,17 +57,17 @@ private const val HEIGHT = 300.0
 
 fun fileTreeAndViewerPane(
   rootFile: MFile, doubleClickInsteadOfSelect: Boolean = false
-) = HBox().apply {
+) = HBoxWrapper {
   val hBox = this
   alignment = Pos.CENTER_LEFT
   val treeTableView = fileTableTree(rootFile).apply {
-	prefHeightProperty().set(HEIGHT)
-	maxWidthProperty().bind(hBox.widthProperty()/2)
+	prefHeightProperty.set(HEIGHT)
+	maxWidthProperty.bind(hBox.widthProperty/2)
 	hgrow = ALWAYS
   }
   val viewBox = vbox {
-	prefWidthProperty.bind(hBox.widthProperty()/2) /*less aggressive to solve these issues?*/
-	prefHeightProperty.bind(hBox.heightProperty())
+	prefWidthProperty.bind(hBox.widthProperty/2) /*less aggressive to solve these issues?*/
+	prefHeightProperty.bind(hBox.heightProperty)
 	hgrow = ALWAYS
   }
 
@@ -93,26 +94,38 @@ fun fileTreeAndViewerPane(
   }
 }
 
-fun Pane.fileTree(
+fun TreeLikeWrapper<*, MFile>.nav(f: MFile) {
+  if (f.exists() && f.chain { it.parentFile }.any { it in root.children.map { it.value } }) {
+	root.recurse { it.children }.firstOrNull {
+	  it.value == f
+	}?.let {
+	  it.parent.chain { it.parent }.forEach { it.isExpanded = true }
+	  selectionModel.select(it)
+	  scrollTo(getRow(it))
+	}
+  }
+}
+
+fun PaneWrapper.fileTree(
   rootFile: MFile,
   strategy: FileTreePopulationStrategy = AUTOMATIC,
   op: (TreeViewWrapper<MFile>.()->Unit)? = null,
 ): TreeViewWrapper<MFile> = fileTree(rootFile.inList().toObservable(), strategy, op)
 
-fun Pane.fileTableTree(
+fun PaneWrapper.fileTableTree(
   rootFile: MFile,
   strategy: FileTreePopulationStrategy = AUTOMATIC,
   op: (TreeTableViewWrapper<MFile>.()->Unit)? = null,
 ): TreeTableViewWrapper<MFile> = fileTableTree(rootFile.inList().toObservable(), strategy, op)
 
 
-fun Pane.fileTree(
+fun PaneWrapper.fileTree(
   rootFiles: ObservableList<MFile>,
   strategy: FileTreePopulationStrategy = AUTOMATIC,
   op: (TreeViewWrapper<MFile>.()->Unit)? = null,
 ): TreeViewWrapper<MFile> {
   return TreeViewWrapper<MFile>().apply {
-	this@fileTree.wrapped().add(this)
+	this@fileTree.add(this)
 
 	setupGUI()
 	setupContent(rootFiles, strategy)
@@ -123,13 +136,13 @@ fun Pane.fileTree(
   }
 }
 
-fun Pane.fileTableTree(
+fun PaneWrapper.fileTableTree(
   rootFiles: ObservableList<MFile>,
   strategy: FileTreePopulationStrategy = AUTOMATIC,
   op: (TreeTableViewWrapper<MFile>.()->Unit)? = null,
 ): TreeTableViewWrapper<MFile> {
   return TreeTableViewWrapper<MFile>().apply {
-	this@fileTableTree.wrapped().add(this)
+	this@fileTableTree.add(this)
 
 	setupGUI()
 	setupContent(rootFiles, strategy)
@@ -247,6 +260,8 @@ private fun TreeLikeWrapper<*, MFile>.setupGUI() {
 	  }
 	}
   }
+
+
 }
 
 private fun TreeLikeWrapper<*, MFile>.setupContent(
