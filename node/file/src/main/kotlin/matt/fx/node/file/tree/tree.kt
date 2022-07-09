@@ -49,6 +49,7 @@ import matt.hurricanefx.wrapper.TreeTableViewWrapper
 import matt.hurricanefx.wrapper.TreeViewWrapper
 import matt.hurricanefx.wrapper.wrapped
 import matt.klib.lang.inList
+import matt.klib.todo
 import matt.stream.recurse.chain
 import matt.stream.recurse.recurse
 import matt.stream.sameContentsAnyOrder
@@ -102,11 +103,15 @@ fun TreeLikeWrapper<*, MFile>.nav(f: MFile) {
 
   root.children.firstOrNull { it.value in fam }?.let { subRoot ->
 	println("good to nav")
-	var nextSubRoot = subRoot
+	var nextSubRoot = subRoot as FileTreeItem
 	var keepGoing = true
 	while (keepGoing) {
 	  println("refreshing and checking ${nextSubRoot.value}")
 	  nextSubRoot.refreshChilds()
+	  nextSubRoot.children.forEach {
+		(it as FileTreeItem).refreshChilds()
+		todo("so I can see if they can expand... need a better way")
+	  }
 	  nextSubRoot.children.firstOrNull {
 		it.value in fam
 	  }?.let {
@@ -117,7 +122,7 @@ fun TreeLikeWrapper<*, MFile>.nav(f: MFile) {
 		  selectionModel.select(it)
 		  scrollTo(getRow(it))
 		  keepGoing = false
-		} else nextSubRoot = it
+		} else nextSubRoot = it as FileTreeItem
 	  } ?: run {
 		keepGoing = false
 	  }
@@ -291,7 +296,7 @@ private fun TreeLikeWrapper<*, MFile>.setupContent(
 ) {
   root = TreeItem()
   root.children.bind(rootFiles) {
-	TreeItem(it)
+	FileTreeItem(it)
   }
   isShowRoot = false
   setupPopulating(strategy)
@@ -299,7 +304,7 @@ private fun TreeLikeWrapper<*, MFile>.setupContent(
 
 private fun TreeLikeWrapper<*, MFile>.rePop() {
   root.children.forEach { child ->
-	populateTree(child, { TreeItem(it) }) { item ->
+	populateTree(child, { FileTreeItem(it) }) { item ->
 	  item.value.childs()
 	}
   }
@@ -317,24 +322,16 @@ private fun TreeLikeWrapper<*, MFile>.setupPopulating(strategy: FileTreePopulati
 	  }
 	}
   } else {
-	root.children.forEach { it.refreshChilds() }
+	root.children.forEach { (it as FileTreeItem).refreshChilds() }
 	setOnSelectionChange { v ->
 	  if (v != null) {
-		v.refreshChilds()
-		v.children.forEach { it.refreshChilds() } /*so i can always see which have children*/
+		(v as FileTreeItem).refreshChilds()
+		v.children.forEach { (it as FileTreeItem).refreshChilds() } /*so i can always see which have children*/
 	  }
 	}
   }
 }
 
-private fun TreeItem<MFile>.refreshChilds() {
-  val childs = value.childs() ?: listOf()
-  children.removeIf { it.value !in childs }
-  childs.filter { it !in children.map { it.value } }.forEach {
-	children.add(TreeItem(it))
-  }
-  children.sortWith(FILE_SORT_RULE_ITEMS)
-}
 
 private fun MFile.childs() = listFilesAsList()
   ?.sortedWith(FILE_SORT_RULE)
@@ -348,3 +345,21 @@ enum class FileTreePopulationStrategy {
   AUTOMATIC, EFFICIENT
 }
 
+private class FileTreeItem(file: MFile): TreeItem<MFile>(file) {
+  init {
+	expandedProperty().addListener { _, o, n ->
+	  if (o != n && !n) {
+		(this as TreeItem<MFile>).recurse { it.children }.forEach { it.isExpanded = false }
+	  }
+	}
+  }
+
+  fun refreshChilds() {
+	val childs = value.childs() ?: listOf()
+	children.removeIf { it.value !in childs }
+	childs.filter { it !in children.map { it.value } }.forEach {
+	  children.add(FileTreeItem(it))
+	}
+	children.sortWith(FILE_SORT_RULE_ITEMS)
+  }
+}
