@@ -111,7 +111,7 @@ fun TreeLikeWrapper<*, MFile>.nav(f: MFile) {
 		it.value in fam
 	  }?.let {
 		println("${it}?")
-		if (it == f) {
+		if (it.value == f) {
 		  println("found treeitem: ${it}")
 		  it.parent.chain { it.parent }.forEach { it.isExpanded = true }
 		  selectionModel.select(it)
