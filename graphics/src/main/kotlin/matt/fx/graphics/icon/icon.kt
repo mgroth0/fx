@@ -106,8 +106,19 @@ fun IconImage(file: MFile): Image =
 		  }
 		  dia.apply {
 
-			root.setAttribute("width", AT_XML, ICON_WIDTH.toInt().toString())
-			root.setAttribute("height", AT_XML, ICON_HEIGHT.toInt().toString())
+			if (root.hasAttribute("width", AT_XML)) {
+			  root.setAttribute("width", AT_XML, ICON_WIDTH.toInt().toString())
+			} else {
+			  root.addAttribute("width", AT_XML,ICON_WIDTH.toInt().toString())
+			}
+
+			if (root.hasAttribute("height", AT_XML)) {
+			  root.setAttribute("height", AT_XML, ICON_HEIGHT.toInt().toString())
+			} else {
+			  root.addAttribute("height", AT_XML,ICON_HEIGHT.toInt().toString())
+			}
+
+
 			//		this.deviceViewport = Rectangle(ICON_WIDTH.toInt(), ICON_HEIGHT.toInt())
 			//		this.
 			//		setIgnoringClipHeuristic(true)
