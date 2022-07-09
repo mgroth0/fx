@@ -95,17 +95,32 @@ fun fileTreeAndViewerPane(
 }
 
 fun TreeLikeWrapper<*, MFile>.nav(f: MFile) {
-  if (f.exists() && f.chain { it.parentFile }.any { it in root.children.map { it.value } }) {
+
+  if (f.doesNotExist) return
+
+  root.children.firstOrNull { it.value in f.chain { it.parentFile } }?.let { subRoot ->
 	println("good to nav")
-	root.recurse { it.children }.firstOrNull {
-	  it.value == f
-	}?.let {
-	  println("found treeitem: ${it}")
-	  it.parent.chain { it.parent }.forEach { it.isExpanded = true }
-	  selectionModel.select(it)
-	  scrollTo(getRow(it))
+	var nextSubRoot = subRoot
+	var keepGoing = true
+	while (keepGoing) {
+	  nextSubRoot.refreshChilds()
+	  nextSubRoot.children.firstOrNull {
+		it.value in f.chain { f.parentFile }
+	  }?.let {
+		if (nextSubRoot.value == f) {
+		  println("found treeitem: ${it}")
+		  it.parent.chain { it.parent }.forEach { it.isExpanded = true }
+		  selectionModel.select(it)
+		  scrollTo(getRow(it))
+		  keepGoing = false
+		} else nextSubRoot = it
+	  } ?: run {
+		keepGoing = false
+	  }
 	}
   }
+
+
 }
 
 fun PaneWrapper.fileTree(
