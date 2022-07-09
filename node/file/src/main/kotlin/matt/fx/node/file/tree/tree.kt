@@ -103,10 +103,12 @@ fun TreeLikeWrapper<*, MFile>.nav(f: MFile) {
 	var nextSubRoot = subRoot
 	var keepGoing = true
 	while (keepGoing) {
+	  println("refreshing and checking ${nextSubRoot.value}")
 	  nextSubRoot.refreshChilds()
 	  nextSubRoot.children.firstOrNull {
 		it.value in f.chain { f.parentFile }
 	  }?.let {
+		println("${it}?")
 		if (nextSubRoot.value == f) {
 		  println("found treeitem: ${it}")
 		  it.parent.chain { it.parent }.forEach { it.isExpanded = true }
