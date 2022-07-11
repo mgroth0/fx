@@ -47,10 +47,10 @@ fun MScene.addDefaultHotkeys() {
   /*needed filter to be true here or for some reason LEFT.ctrl.opt.shift wasn't being captured in music app even though it was captured in all other apps (globalhotkeys, brainstorm, kjg)*/
   hotkeys(quickPassForNormalTyping = true, filter = true) {
 
-	LEFT.ctrl { window.x -= window.width }
-	RIGHT.ctrl { window.x += window.width }
-	UP.ctrl { window.y -= window.height }
-	DOWN.ctrl { window.y += window.height }
+	A.ctrl.opt { window.x -= window.width }
+	D.ctrl.opt { window.x += window.width }
+	W.ctrl.opt { window.y -= window.height }
+	S.ctrl.opt { window.y += window.height }
 
 	LEFT.ctrl.meta {
 	  window.width /= 2
