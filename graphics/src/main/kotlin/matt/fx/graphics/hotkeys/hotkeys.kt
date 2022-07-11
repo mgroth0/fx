@@ -47,10 +47,10 @@ fun MScene.addDefaultHotkeys() {
   /*needed filter to be true here or for some reason LEFT.ctrl.opt.shift wasn't being captured in music app even though it was captured in all other apps (globalhotkeys, brainstorm, kjg)*/
   hotkeys(quickPassForNormalTyping = true, filter = true) {
 
-	A.ctrl.opt { window.x -= window.width }
-	D.ctrl.opt { window.x += window.width }
-	W.ctrl.opt { window.y -= window.height }
-	S.ctrl.opt { window.y += window.height }
+	LEFT.ctrl.opt { window.x -= window.width }
+	RIGHT.ctrl.opt { window.x += window.width }
+	UP.ctrl.opt { window.y -= window.height }
+	DOWN.ctrl.opt { window.y += window.height }
 
 	LEFT.ctrl.meta {
 	  window.width /= 2
@@ -86,44 +86,42 @@ fun MScene.addDefaultHotkeys() {
 //	  window.y += window.height
 	}
 
-	LEFT.ctrl.opt { window?.left() }
-	RIGHT.ctrl.opt { window?.right() }
-	UP.ctrl.opt { window?.top() }
-	DOWN.ctrl.opt { window?.bottom() }
+	A.ctrl.opt { window?.left() }
+	D.ctrl.opt { window?.right() }
+	W.ctrl.opt { window?.top() }
+	S.ctrl.opt { window?.bottom() }
 
-	LEFT.ctrl.opt.meta { window?.bottomleft() }
-	RIGHT.ctrl.opt.meta { window?.topright() }
-	UP.ctrl.opt.meta { window?.topleft() }
-	DOWN.ctrl.opt.meta {
-	  window?.bottomright()
-	}
+	Z.ctrl.opt { window?.bottomleft() }
+	E.ctrl.opt { window?.topright() }
+	Q.ctrl.opt { window?.topleft() }
+	C.ctrl.opt { window?.bottomright() }
 
-	LEFT.ctrl.opt.shift {
+	LEFT_BRACKET.ctrl.opt {
 	  window?.apply {
 		if (!reversed_displays) lastdisplay()
 		else nextdisplay()
 	  }
 	}
-	RIGHT.ctrl.opt.shift {
+	RIGHT_BRACKET.ctrl.opt {
 	  window?.apply {
 		if (!reversed_displays) nextdisplay()
 		else lastdisplay()
 	  }
 	}
 
-	F.ctrl.opt.shift { (window as? Stage?)?.isFullScreen = !((window as Stage).isFullScreen) }
-	ENTER.ctrl.opt.shift { (window as? Stage?)?.max() }
-	ENTER.ctrl.opt.shift.meta { window?.resetPosition() }
-	I.ctrl.opt.shift { iconify(icon) }
+	F.ctrl.opt { (window as? Stage?)?.isFullScreen = !((window as Stage).isFullScreen) }
+	TAB.ctrl.opt { (window as? Stage?)?.max() }
+	ENTER.ctrl.opt { window?.resetPosition() }
+	X.ctrl.opt { iconify(icon) }
 
-	DIGIT1.ctrl.opt.shift { window.eighth1() }
-	DIGIT2.ctrl.opt.shift { window.eighth2() }
-	DIGIT3.ctrl.opt.shift { window.eighth3() }
-	DIGIT4.ctrl.opt.shift { window.eighth4() }
-	DIGIT5.ctrl.opt.shift { window.eighth5() }
-	DIGIT6.ctrl.opt.shift { window.eighth6() }
-	DIGIT7.ctrl.opt.shift { window.eighth7() }
-	DIGIT8.ctrl.opt.shift { window.eighth8() }
+	DIGIT1.ctrl.opt { window.eighth1() }
+	DIGIT2.ctrl.opt { window.eighth2() }
+	DIGIT3.ctrl.opt { window.eighth3() }
+	DIGIT4.ctrl.opt { window.eighth4() }
+	DIGIT5.ctrl.opt { window.eighth5() }
+	DIGIT6.ctrl.opt { window.eighth6() }
+	DIGIT7.ctrl.opt { window.eighth7() }
+	DIGIT8.ctrl.opt { window.eighth8() }
 
 	hotkeys.map { it as HotKey }.forEach {
 	  it.wrapOp {

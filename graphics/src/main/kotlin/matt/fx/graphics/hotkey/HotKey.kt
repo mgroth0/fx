@@ -362,7 +362,9 @@ fun EventTarget.registerInFilter(
   val DELETE get() = KeyCode.DELETE.bare
   val BACK_SPACE get() = KeyCode.BACK_SPACE.bare
   val CLOSE_BRACKET get() = KeyCode.CLOSE_BRACKET.bare
+  val RIGHT_BRACKET get() = CLOSE_BRACKET
   val OPEN_BRACKET get() = KeyCode.OPEN_BRACKET.bare
+  val LEFT_BRACKET get() = OPEN_BRACKET
   val ESCAPE get() = KeyCode.ESCAPE.bare
   val TAB get() = KeyCode.TAB.bare
   val COMMA get() = KeyCode.COMMA.bare
