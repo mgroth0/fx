@@ -186,6 +186,7 @@ private fun TreeLikeWrapper<*, MFile>.setupGUI() {
 
   selectionModel.selectionMode = MULTIPLE
 
+
   var showSizesProp: BProp? = null
 
   when (this) {
@@ -200,16 +201,15 @@ private fun TreeLikeWrapper<*, MFile>.setupGUI() {
 		  }
 
 		  override fun updateItem(item: MFile?, empty: Boolean) {
+			val oldItem = this.item
 			super.updateItem(item, empty)
 			if (empty || item == null) {
-			  this.text = null
+			  text = null
 			  graphic = null
-			} else {
-			  this.text = item.name
+			} else if (oldItem != item) {
+			  text = item.name
 			  graphic = item.draggableIcon()
-
 			}
-
 		  }
 		}
 	  }

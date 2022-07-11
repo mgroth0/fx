@@ -10,6 +10,7 @@ import matt.file.commons.ICON_FOLDER
 import matt.fx.image.toFXImage
 import matt.hurricanefx.tornadofx.nodes.add
 import matt.hurricanefx.wrapper.wrapped
+import matt.stream.map.lazyMap
 import java.awt.RenderingHints.KEY_ALPHA_INTERPOLATION
 import java.awt.RenderingHints.KEY_ANTIALIASING
 import java.awt.RenderingHints.KEY_COLOR_RENDERING
@@ -85,13 +86,12 @@ is Image  ->*//* ImageView(image).apply {
 
 private val IMAGE_EXTENSIONS = listOf("png", "jpg", "jpeg", "svg")
 
-fun IconImage(file: MFile): Image =
+private val images = lazyMap<MFile,Image> {  file ->
   (file.takeIf { it.exists() } ?: if (file.extension.isBlank()) IMAGE_EXTENSIONS.map { file.withExtension(it) }
 	.firstOrNull {
 	  it.exists()
 	} ?: FALLBACK_FILE else FALLBACK_FILE)
 	.let { f ->
-//	  println("f=${f}")
 	  if (f.extension == "svg")
 		SVGUniverse().let {
 		  val docURI = it.loadSVG(f.toURI().toURL())
@@ -133,6 +133,9 @@ fun IconImage(file: MFile): Image =
 		f.toPath().toUri().toURL().toString()
 	  )
 	}
+}
+
+fun IconImage(file: MFile): Image = images[file]!!
 
 private val RENDERING_HINTS: MutableMap<Key, Any> = java.util.Map.of(
   KEY_ANTIALIASING,
