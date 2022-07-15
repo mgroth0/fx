@@ -42,6 +42,7 @@ import matt.fx.graphics.win.winfun.noDocking
 import matt.hurricanefx.tornadofx.menu.menu
 import matt.hurricanefx.tornadofx.nodes.setOnDoubleClick
 import matt.hurricanefx.wrapper.wrapped
+import matt.klib.str.tab
 import matt.stream.recurse.recurse
 import java.net.URL
 import kotlin.reflect.KClass
@@ -74,6 +75,9 @@ open class MScene(
   ): this(root, "chunk")
 
   private fun handleContextMenuReq(e: Event) {
+	println("context menu requested from e=${e.hashCode()}")
+	tab("target=${e.target}")
+	tab("source=${e.source}")
 	if (e is ContextMenuEvent) {
 	  (e.target as? Node)?.let {
 		showMContextMenu(it, e.screenX to e.screenY)
