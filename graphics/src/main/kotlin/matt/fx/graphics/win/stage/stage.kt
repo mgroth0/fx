@@ -10,7 +10,7 @@ import matt.fx.graphics.win.stage.WMode.ICONIFY
 import matt.fx.graphics.win.stage.WMode.NOTHING
 import matt.fx.graphics.win.winfun.pullBackWhenOffscreen
 import matt.klib.commons.thisMachine
-import matt.klib.sys.WINDOWS
+import matt.klib.sys.GAMING_WINDOWS
 
 enum class WMode {
   CLOSE,
@@ -36,10 +36,10 @@ open class MStage(
 	  pullBackWhenOffscreen()
 	}
 	hotkeys {
-	  if (thisMachine ==WINDOWS) {
+	  if (thisMachine ==GAMING_WINDOWS) {
 		Q.opt op ::close // on Mac, meta-Q quits program. this an OS feature.
 	  }
-	  (if (thisMachine == WINDOWS) {
+	  (if (thisMachine == GAMING_WINDOWS) {
 		W.opt
 	  } else W.meta) op when (wMode) {
 		CLOSE   -> ::close
