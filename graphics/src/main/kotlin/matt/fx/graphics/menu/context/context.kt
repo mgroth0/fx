@@ -27,6 +27,7 @@ import matt.hurricanefx.tornadofx.menu.menu
 import matt.hurricanefx.tornadofx.menu.separator
 import matt.hurricanefx.wrapper.NodeWrapper
 import matt.klib.lang.NEVER
+import matt.klib.log.warn
 import matt.stream.recurse.chain
 import java.util.WeakHashMap
 import kotlin.collections.set
@@ -166,6 +167,7 @@ enum class EventHandlerType {
 
 private fun KClass<*>.jumpToSource() {
   val pack = this.java.`package`.name
+  warn("reliance on flow project has to go")
   jumpToKotlinSourceString(
 	flow.folder,
 	this.simpleName!!,
