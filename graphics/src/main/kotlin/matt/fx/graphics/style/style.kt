@@ -19,6 +19,7 @@ import matt.css.MyStyleDsl
 import matt.hurricanefx.wrapper.RegionWrapper
 import matt.klib.log.warn
 import matt.klib.str.LineAppender
+import java.net.URI
 import java.util.logging.Level
 import kotlin.reflect.KProperty
 
@@ -64,15 +65,19 @@ object DarkModeController {
 }
 
 
-val MODENA_CSS = flow.folder["style"]["modena.css"].toURI().toURL().toString().apply {
-  warn("reliance on flow project has to go")
-}
-val DARK_MODENA_CSS = flow.folder["style"]["darkModena.css"].toURI().toURL().toString().apply {
-  warn("reliance on flow project has to go")
-}
-val CUSTOM_CSS = flow.folder["style"]["custom.css"].toURI().toURL().toString().apply {
-  warn("reliance on flow project has to go")
-}
+val MODENA_CSS = ClassLoader.getSystemResource("modena.css").toString()
+val DARK_MODENA_CSS = ClassLoader.getSystemResource("darkModena.css").toString()
+val CUSTOM_CSS = ClassLoader.getSystemResource("custom.css").toString()
+
+//  flow.folder["style"]["modena.css"].toURI().toURL().toString().apply {
+//  warn("reliance on flow project has to go")
+////}
+//val DARK_MODENA_CSS = flow.folder["style"]["darkModena.css"].toURI().toURL().toString().apply {
+//  warn("reliance on flow project has to go")
+//}
+//val CUSTOM_CSS = flow.folder["style"]["custom.css"].toURI().toURL().toString().apply {
+//  warn("reliance on flow project has to go")
+//}
 
 
 fun Styleable.styleInfo(): String {
@@ -196,6 +201,7 @@ fun RegionWrapper.red() {
 fun RegionWrapper.orange() {
   borderDashFill = Color.ORANGE
 }
+
 fun RegionWrapper.white() {
   borderDashFill = Color.WHITE
 }
