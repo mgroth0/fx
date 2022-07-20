@@ -49,6 +49,7 @@ import matt.hurricanefx.tornadofx.control.textarea
 import matt.hurricanefx.tornadofx.dialog.alert
 import matt.hurricanefx.tornadofx.nodes.disableWhen
 import matt.hurricanefx.tornadofx.nodes.setOnDoubleClick
+import matt.hurricanefx.wrapper.ButtonWrapper
 import matt.hurricanefx.wrapper.NodeWrapper
 import matt.hurricanefx.wrapper.VBoxWrapper
 import matt.hurricanefx.wrapper.wrapped
@@ -83,7 +84,7 @@ class MDialog<R> internal constructor(): VBoxWrapper() {
 	width = 400.0
 	height = 400.0
   }
-  lateinit var confirmButton: Button
+  lateinit var confirmButton: ButtonWrapper
   fun confirm() = confirmButton.fire()
   val window get() = stg
   var x: Double? = null
