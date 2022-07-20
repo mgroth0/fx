@@ -14,7 +14,7 @@ import matt.hurricanefx.eye.lib.onChange
 import matt.hurricanefx.tornadofx.shapes.line
 import matt.hurricanefx.wrapper.LineWrapper
 import matt.hurricanefx.wrapper.NodeWrapper
-import matt.hurricanefx.wrapper.wrapped
+import matt.hurricanefx.wrapper.PaneWrapper
 import matt.klib.math.BasicPoint
 import matt.klib.math.Point
 import matt.klib.math.unaryMinus
@@ -54,12 +54,12 @@ fun AColor.toFXColor() = FXColor(red/255.0, green/255.0, blue/255.0, alpha/255.0
 fun FXColor.mostContrastingForMe() = toAwtColor().mostContrastingForMe().toFXColor()
 
 
-@Suppress("unused") class LineDrawDSL(private val parent: Pane, start: Point) {
+@Suppress("unused") class LineDrawDSL(private val parent: PaneWrapper, start: Point) {
   private var current = start
   private val linesM = mutableListOf<LineWrapper>()
   val lines: List<LineWrapper> = linesM
   fun to(point: Point) {
-	linesM += parent.wrapped().line {
+	linesM += parent.line {
 	  startX = current.xDouble
 	  startY = current.yDouble
 	  endX = point.xDouble
@@ -86,7 +86,7 @@ fun FXColor.mostContrastingForMe() = toAwtColor().mostContrastingForMe().toFXCol
   fun down(y: Number) = move(x = 0.0, y = y)
 }
 
-fun Pane.drawLine(
+fun PaneWrapper.drawLine(
   color: FXColor, start: Point, op: LineDrawDSL.()->Unit
 ) {
   LineDrawDSL(this, start).apply {

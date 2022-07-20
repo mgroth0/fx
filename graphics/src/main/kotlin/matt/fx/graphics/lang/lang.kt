@@ -48,15 +48,13 @@ Button(text, graphic).apply {
   }
 }.wrapped()
 
-fun EventTarget.actionbutton(text: String = "", graphic: Node? = null, action: Button.(ActionEvent)->Unit) =
-  Button(text, graphic).apply {
-	setOnAction {
-	  action(it)
-	  it.consume()
-	}
-	this@actionbutton.wrapped().addChildIfPossible(this.wrapped())
-  }.wrapped()
-fun NodeWrapper<*>.actionbutton(text: String = "", graphic: Node? = null, action: Button.(ActionEvent)->Unit) = node.actionbutton(text,graphic,action)
+fun NodeWrapper<*>.actionbutton(text: String = "", graphic: Node? = null, action: Button.(ActionEvent)->Unit) =   ButtonWrapper(text, graphic).apply {
+  setOnAction {
+	action(it)
+	it.consume()
+  }
+  this@actionbutton.wrapped().addChildIfPossible(this.wrapped())
+}.wrapped()
 
 infix fun ButtonWrapper.withAction(newOp: ()->Unit) = this.apply { node.op = newOp }
 

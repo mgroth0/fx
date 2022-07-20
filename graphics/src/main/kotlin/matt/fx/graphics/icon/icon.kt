@@ -9,6 +9,7 @@ import matt.file.MFile
 import matt.file.commons.ICON_FOLDER
 import matt.fx.image.toFXImage
 import matt.hurricanefx.tornadofx.nodes.add
+import matt.hurricanefx.wrapper.NodeWrapper.Companion.wrapped
 import matt.hurricanefx.wrapper.wrapped
 import matt.stream.map.lazyMap
 import java.awt.RenderingHints.KEY_ALPHA_INTERPOLATION
@@ -41,11 +42,11 @@ fun javafx.scene.Node.icon(file: MFile) {
 }
 
 fun javafx.scene.Node.icon(image: Image) {
-  wrapped(). add(Icon(image).wrapped())
+  wrapped().add(Icon(image).wrapped())
 }
 
 fun javafx.scene.Node.icon(file: String) {
-  wrapped().  add(Icon(file).wrapped())
+  wrapped().add(Icon(file).wrapped())
 }
 
 
@@ -86,7 +87,7 @@ is Image  ->*//* ImageView(image).apply {
 
 private val IMAGE_EXTENSIONS = listOf("png", "jpg", "jpeg", "svg")
 
-private val images = lazyMap<MFile,Image> {  file ->
+private val images = lazyMap<MFile, Image> { file ->
   (file.takeIf { it.exists() } ?: if (file.extension.isBlank()) IMAGE_EXTENSIONS.map { file.withExtension(it) }
 	.firstOrNull {
 	  it.exists()
@@ -109,13 +110,13 @@ private val images = lazyMap<MFile,Image> {  file ->
 			if (root.hasAttribute("width", AT_XML)) {
 			  root.setAttribute("width", AT_XML, ICON_WIDTH.toInt().toString())
 			} else {
-			  root.addAttribute("width", AT_XML,ICON_WIDTH.toInt().toString())
+			  root.addAttribute("width", AT_XML, ICON_WIDTH.toInt().toString())
 			}
 
 			if (root.hasAttribute("height", AT_XML)) {
 			  root.setAttribute("height", AT_XML, ICON_HEIGHT.toInt().toString())
 			} else {
-			  root.addAttribute("height", AT_XML,ICON_HEIGHT.toInt().toString())
+			  root.addAttribute("height", AT_XML, ICON_HEIGHT.toInt().toString())
 			}
 
 
