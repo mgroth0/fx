@@ -46,13 +46,18 @@ import matt.hurricanefx.eye.lib.proxypropDouble
 import matt.hurricanefx.tornadofx.fx.getChildList
 import matt.hurricanefx.tornadofx.fx.opcr
 import matt.hurricanefx.tornadofx.nodes.add
+import matt.hurricanefx.wrapper.AccordionWrapper
+import matt.hurricanefx.wrapper.AnchorPaneWrapper
 import matt.hurricanefx.wrapper.BorderPaneWrapper
+import matt.hurricanefx.wrapper.CanvasWrapper
 import matt.hurricanefx.wrapper.GroupWrapper
 import matt.hurricanefx.wrapper.HBoxWrapper
 import matt.hurricanefx.wrapper.NodeWrapper
 import matt.hurricanefx.wrapper.PaneWrapper
 import matt.hurricanefx.wrapper.RegionWrapper
+import matt.hurricanefx.wrapper.ScrollPaneWrapper
 import matt.hurricanefx.wrapper.SeparatorWrapper
+import matt.hurricanefx.wrapper.SplitPaneWrapper
 import matt.hurricanefx.wrapper.StackPaneWrapper
 import matt.hurricanefx.wrapper.TitledPaneWrapper
 import matt.hurricanefx.wrapper.ToolBarWrapper
@@ -331,7 +336,7 @@ fun EventTarget.titledpane(
   collapsible: Boolean = true,
   op: (TitledPaneWrapper).()->Unit = {}
 ): TitledPaneWrapper {
-  val titledPane = TitledPane(title, node)
+  val titledPane = TitledPaneWrapper { text = title; graphic = node }
   titledPane.isCollapsible = collapsible
   opcr(this.wrapped(), titledPane, op)
   return titledPane
@@ -343,15 +348,15 @@ fun EventTarget.titledpane(
   collapsible: Boolean = true,
   op: (TitledPaneWrapper).()->Unit = {}
 ): TitledPaneWrapper {
-  val titledPane = TitledPaneWrapper("", node)
+  val titledPane = TitledPaneWrapper{ text = ""; graphic = node }
   titledPane.textProperty().bind(title)
   titledPane.isCollapsible = collapsible
   opcr(this.wrapped(), titledPane, op)
   return titledPane
 }
 
-fun EventTarget.pagination(pageCount: Int? = null, pageIndex: Int? = null, op: Pagination.()->Unit = {}): Pagination {
-  val pagination = Pagination()
+fun EventTarget.pagination(pageCount: Int? = null, pageIndex: Int? = null, op: PaginationWrapper.()->Unit = {}): PaginationWrapper {
+  val pagination = PaginationWrapper()
   if (pageCount != null) pagination.pageCount = pageCount
   if (pageIndex != null) pagination.currentPageIndex = pageIndex
   return opcr(this.wrapped(), pagination, op)
@@ -395,17 +400,17 @@ fun EventTarget.splitpane(
 fun SplitPane.items(op: (SplitPaneWrapper.()->Unit)) = op(this)
 
 fun EventTarget.canvas(width: Double = 0.0, height: Double = 0.0, op: CanvasWrapper.()->Unit = {}) =
-  opcr(this.wrapped(), Canvas(width, height), op)
+  opcr(this.wrapped(), CanvasWrapper(width, height), op)
 
 fun EventTarget.anchorpane(vararg nodes: Node, op: AnchorPaneWrapper.()->Unit = {}): AnchorPaneWrapper {
-  val anchorpane = AnchorPane()
+  val anchorpane = AnchorPaneWrapper()
   if (nodes.isNotEmpty()) anchorpane.children.addAll(nodes)
   opcr(this.wrapped(), anchorpane, op)
   return anchorpane
 }
 
 fun EventTarget.accordion(vararg panes: TitledPane, op: AccordionWrapper.()->Unit = {}): AccordionWrapper {
-  val accordion = Accordion()
+  val accordion = AccordionWrapper()
   if (panes.isNotEmpty()) accordion.panes.addAll(panes)
   opcr(this.wrapped(), accordion, op)
   return accordion
