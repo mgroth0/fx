@@ -139,12 +139,12 @@ var NodeWrapper<*>.vgrow: Priority?
   }
 
 
-fun ToolBar.spacer(prio: Priority = Priority.ALWAYS, op: PaneWrapper.()->Unit = {}): PaneWrapper {
+fun ToolBarWrapper.spacer(prio: Priority = Priority.ALWAYS, op: PaneWrapper.()->Unit = {}): PaneWrapper {
   val pane = PaneWrapper().apply {
 	hgrow = prio
   }
   op(pane)
-  add(pane.node)
+  add(pane)
   return pane
 }
 
@@ -282,13 +282,19 @@ fun NodeWrapper<*>.vbox(spacing: Number? = null, alignment: Pos? = null, op: VBo
   return opcr(this, vbox, op)
 }
 
-fun ToolBarWrapper.separator(orientation: Orientation = Orientation.HORIZONTAL, op: SeparatorWrapper.()->Unit = {}): SeparatorWrapper {
+fun ToolBarWrapper.separator(
+  orientation: Orientation = Orientation.HORIZONTAL,
+  op: SeparatorWrapper.()->Unit = {}
+): SeparatorWrapper {
   val separator = SeparatorWrapper(orientation).also(op)
   add(separator)
   return separator
 }
 
-fun EventTargetWrapper<*>.separator(orientation: Orientation = Orientation.HORIZONTAL, op: SeparatorWrapper.()->Unit = {}) =
+fun EventTargetWrapper<*>.separator(
+  orientation: Orientation = Orientation.HORIZONTAL,
+  op: SeparatorWrapper.()->Unit = {}
+) =
   opcr(this, SeparatorWrapper(orientation), op)
 
 fun EventTargetWrapper<*>.group(initialChildren: Iterable<Node>? = null, op: GroupWrapper.()->Unit = {}) =
@@ -300,7 +306,6 @@ fun EventTargetWrapper<*>.stackpane(initialChildren: Iterable<Node>? = null, op:
 fun EventTargetWrapper<*>.gridpane(op: GridPaneWrapper.()->Unit = {}) = opcr(this, GridPaneWrapper(), op)
 fun EventTargetWrapper<*>.pane(op: PaneWrapper.()->Unit = {}) = opcr(this, PaneWrapper(), op)
 fun EventTargetWrapper<*>.flowpane(op: FlowPaneWrapper.()->Unit = {}) = opcr(this, FlowPaneWrapper(), op)
-fun NodeWrapper<*>.flowpane(op: FlowPaneWrapper.()->Unit = {}) = node.flowpane(op)
 fun EventTargetWrapper<*>.tilepane(op: TilePaneWrapper.()->Unit = {}) = opcr(this, TilePaneWrapper(), op)
 fun EventTargetWrapper<*>.borderpane(op: BorderPaneWrapper.()->Unit = {}) = opcr(this, BorderPaneWrapper(), op)
 
@@ -354,14 +359,18 @@ fun EventTargetWrapper<*>.titledpane(
   collapsible: Boolean = true,
   op: (TitledPaneWrapper).()->Unit = {}
 ): TitledPaneWrapper {
-  val titledPane = TitledPaneWrapper{ text = ""; graphic = node }
+  val titledPane = TitledPaneWrapper { text = ""; graphic = node }
   titledPane.textProperty().bind(title)
   titledPane.isCollapsible = collapsible
   opcr(this, titledPane, op)
   return titledPane
 }
 
-fun EventTargetWrapper<*>.pagination(pageCount: Int? = null, pageIndex: Int? = null, op: PaginationWrapper.()->Unit = {}): PaginationWrapper {
+fun EventTargetWrapper<*>.pagination(
+  pageCount: Int? = null,
+  pageIndex: Int? = null,
+  op: PaginationWrapper.()->Unit = {}
+): PaginationWrapper {
   val pagination = PaginationWrapper()
   if (pageCount != null) pagination.pageCount = pageCount
   if (pageIndex != null) pagination.currentPageIndex = pageIndex
@@ -428,7 +437,7 @@ fun <T: Node> AccordionWrapper.fold(
   expanded: Boolean = false,
   op: T.()->Unit = {}
 ): TitledPaneWrapper {
-  val fold = TitledPaneWrapper{text=title;graphic= node}
+  val fold = TitledPaneWrapper { text = title;graphic = node }
   fold.isExpanded = expanded
   panes += fold.node
   op(node)
@@ -442,7 +451,7 @@ fun <T: Node> AccordionWrapper.fold(
 )
 fun AccordionWrapper.fold(title: String? = null, op: Pane.()->Unit = {}): TitledPaneWrapper {
   val vbox = VBox().also(op)
-  val fold = TitledPaneWrapper{text=title; graphic= if (vbox.children.size == 1) vbox.children[0] else vbox}
+  val fold = TitledPaneWrapper { text = title; graphic = if (vbox.children.size == 1) vbox.children[0] else vbox }
   panes += fold.node
   return fold
 }
@@ -530,17 +539,11 @@ var RegionWrapper.paddingAll: Number
   }
 
 fun RegionWrapper.fitToParentHeight() {
-  val parent = this.parent
-  if (parent != null && parent.node is Region) {
-	fitToHeight(parent)
-  }
+  (parent?.node as? Region)?.let { fitToHeight(it) }
 }
 
 fun RegionWrapper.fitToParentWidth() {
-  val parent = this.parent
-  if (parent != null && parent.node is Region) {
-	fitToWidth(parent)
-  }
+  (parent?.node as? Region)?.let { fitToWidth(it) }
 }
 
 fun RegionWrapper.fitToParentSize() {
@@ -564,7 +567,8 @@ fun RegionWrapper.fitToSize(region: Region) {
 
 val RegionWrapper.paddingVerticalProperty: DoubleProperty
   get() = node.properties.getOrPut("paddingVerticalProperty") {
-	proxypropDouble(paddingProperty(), { paddingVertical.toDouble() }) {
+	proxypropDouble(paddingProperty, { paddingVertical.toDouble() }) {
+
 	  val half = it/2.0
 	  Insets(half, value.right, half, value.left)
 	}
@@ -572,7 +576,7 @@ val RegionWrapper.paddingVerticalProperty: DoubleProperty
 
 val RegionWrapper.paddingHorizontalProperty: DoubleProperty
   get() = node.properties.getOrPut("paddingHorizontalProperty") {
-	proxypropDouble(paddingProperty(), { paddingHorizontal.toDouble() }) {
+	proxypropDouble(paddingProperty, { paddingHorizontal.toDouble() }) {
 	  val half = it/2.0
 	  Insets(value.top, half, value.bottom, half)
 	}
@@ -580,7 +584,7 @@ val RegionWrapper.paddingHorizontalProperty: DoubleProperty
 
 val RegionWrapper.paddingAllProperty: DoubleProperty
   get() = node.properties.getOrPut("paddingAllProperty") {
-	proxypropDouble(paddingProperty(), { paddingAll.toDouble() }) {
+	proxypropDouble(paddingProperty, { paddingAll.toDouble() }) {
 	  Insets(it, it, it, it)
 	}
   } as DoubleProperty
