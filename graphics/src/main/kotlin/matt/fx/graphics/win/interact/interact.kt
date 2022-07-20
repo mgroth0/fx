@@ -156,9 +156,9 @@ inline fun <reified T> jsonEditor(json: String? = null) = dialog<T?> {
 		&& noExceptions { Json.decodeFromString<T>(it) }
   }
   readyWhen(goodBind)
-  ta.wrapped().borderFill = Color.BLACK /*so it does not jitter*/
+  ta.borderFill = Color.BLACK /*so it does not jitter*/
   goodBind.onChange {
-	ta.wrapped().borderFill = if (it) Color.BLACK else Color.RED
+	ta.borderFill = if (it) Color.BLACK else Color.RED
   }
   setResultConverter {
 	ta.text.takeIf { it.isValidJson() }?.let { nullIfExceptions { Json.decodeFromString<T>(it) } }
