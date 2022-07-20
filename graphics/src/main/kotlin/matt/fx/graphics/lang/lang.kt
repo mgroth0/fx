@@ -16,6 +16,7 @@ import matt.hurricanefx.op
 import matt.hurricanefx.tornadofx.fx.addChildIfPossible
 import matt.hurricanefx.tornadofx.menu.item
 import matt.hurricanefx.wrapper.ButtonWrapper
+import matt.hurricanefx.wrapper.MenuItemWrapper
 import matt.hurricanefx.wrapper.NodeWrapper
 import matt.hurricanefx.wrapper.wrapped
 import matt.klib.lang.err
@@ -71,7 +72,7 @@ fun EventTarget.removecontextmenu() {
 // because when in listcells, "item" is taken
 @Suppress("unused")
 fun ContextMenu.menuitem(
-  name: String, keyCombination: KeyCombination? = null, graphic: Node? = null, op: MenuItem.()->Unit = {}
+  name: String, keyCombination: KeyCombination? = null, graphic: Node? = null, op: MenuItemWrapper.()->Unit = {}
 ) = item(name, keyCombination, graphic, op)
 
 

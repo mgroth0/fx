@@ -46,10 +46,16 @@ import matt.hurricanefx.eye.lib.proxypropDouble
 import matt.hurricanefx.tornadofx.fx.getChildList
 import matt.hurricanefx.tornadofx.fx.opcr
 import matt.hurricanefx.tornadofx.nodes.add
+import matt.hurricanefx.wrapper.BorderPaneWrapper
+import matt.hurricanefx.wrapper.GroupWrapper
 import matt.hurricanefx.wrapper.HBoxWrapper
 import matt.hurricanefx.wrapper.NodeWrapper
 import matt.hurricanefx.wrapper.PaneWrapper
 import matt.hurricanefx.wrapper.RegionWrapper
+import matt.hurricanefx.wrapper.SeparatorWrapper
+import matt.hurricanefx.wrapper.StackPaneWrapper
+import matt.hurricanefx.wrapper.TitledPaneWrapper
+import matt.hurricanefx.wrapper.ToolBarWrapper
 import matt.hurricanefx.wrapper.VBoxWrapper
 import matt.hurricanefx.wrapper.wrapped
 import kotlin.random.Random
@@ -132,10 +138,10 @@ fun ToolBar.spacer(prio: Priority = Priority.ALWAYS, op: Pane.()->Unit = {}): Pa
 }
 
 fun HBoxWrapper.spacer(prio: Priority = Priority.ALWAYS, op: Pane.()->Unit = {}) =
-  opcr(this, Pane().apply { HBox.setHgrow(this, prio) }, op)
+  opcr(this, PaneWrapper().apply { HBox.setHgrow(this, prio) }, op)
 
 fun VBoxWrapper.spacer(prio: Priority = Priority.ALWAYS, op: Pane.()->Unit = {}) =
-  opcr(this, Pane().apply { VBox.setVgrow(this, prio) }, op)
+  opcr(this, PaneWrapper().apply { VBox.setVgrow(this, prio) }, op)
 
 
 private val GridPaneRowIdKey = "TornadoFX.GridPaneRowId"
@@ -236,8 +242,8 @@ val Parent.gridpaneColumnConstraints: ColumnConstraints?
 fun Parent.gridpaneColumnConstraints(op: ColumnConstraints.()->Unit) = gridpaneColumnConstraints?.apply { op() }
 
 
-fun EventTarget.toolbar(vararg nodes: Node, op: ToolBar.()->Unit = {}): ToolBar {
-  val toolbar = ToolBar()
+fun EventTarget.toolbar(vararg nodes: Node, op: ToolBarWrapper.()->Unit = {}): ToolBarWrapper {
+  val toolbar = ToolBarWrapper()
   if (nodes.isNotEmpty()) toolbar.items.addAll(nodes)
   opcr(this.wrapped(), toolbar, op)
   return toolbar
@@ -251,21 +257,19 @@ fun EventTarget.toolbar(vararg nodes: Node, op: ToolBar.()->Unit = {}): ToolBar 
 )
 fun ToolBar.children(op: ToolBar.()->Unit) = apply { op() }
 
-fun EventTarget.hbox(spacing: Number? = null, alignment: Pos? = null, op: HBoxWrapper.()->Unit = {}): HBoxWrapper {
+fun NodeWrapper<*>.hbox(spacing: Number? = null, alignment: Pos? = null, op: HBoxWrapper.()->Unit = {}): HBoxWrapper {
   val hbox = HBoxWrapper(HBox())
   if (alignment != null) hbox.alignment = alignment
   if (spacing != null) hbox.spacing = spacing.toDouble()
   return opcr(this, hbox, op)
 }
-fun NodeWrapper<*>.hbox(spacing: Number? = null, alignment: Pos? = null, op: HBoxWrapper.()->Unit = {}) = node.hbox(spacing,alignment,op)
 
-fun EventTarget.vbox(spacing: Number? = null, alignment: Pos? = null, op: VBoxWrapper.()->Unit = {}): VBoxWrapper {
+fun NodeWrapper<*>.vbox(spacing: Number? = null, alignment: Pos? = null, op: VBoxWrapper.()->Unit = {}): VBoxWrapper {
   val vbox = VBoxWrapper(VBox())
   if (alignment != null) vbox.alignment = alignment
   if (spacing != null) vbox.spacing = spacing.toDouble()
   return opcr(this, vbox, op)
 }
-fun NodeWrapper<*>.vbox(spacing: Number? = null, alignment: Pos? = null, op: VBoxWrapper.()->Unit = {}) = node.vbox(spacing,alignment,op)
 
 fun ToolBar.separator(orientation: Orientation = Orientation.HORIZONTAL, op: Separator.()->Unit = {}): Separator {
   val separator = Separator(orientation).also(op)
@@ -273,50 +277,50 @@ fun ToolBar.separator(orientation: Orientation = Orientation.HORIZONTAL, op: Sep
   return separator
 }
 
-fun EventTarget.separator(orientation: Orientation = Orientation.HORIZONTAL, op: Separator.()->Unit = {}) =
-  opcr(this.wrapped(), Separator(orientation), op)
+fun EventTarget.separator(orientation: Orientation = Orientation.HORIZONTAL, op: SeparatorWrapper.()->Unit = {}) =
+  opcr(this.wrapped(), SeparatorWrapper(orientation), op)
 
-fun EventTarget.group(initialChildren: Iterable<Node>? = null, op: Group.()->Unit = {}) =
-  opcr(this.wrapped(), Group().apply { if (initialChildren != null) children.addAll(initialChildren) }, op)
+fun EventTarget.group(initialChildren: Iterable<Node>? = null, op: GroupWrapper.()->Unit = {}) =
+  opcr(this.wrapped(), GroupWrapper().apply { if (initialChildren != null) children.addAll(initialChildren) }, op)
 
-fun EventTarget.stackpane(initialChildren: Iterable<Node>? = null, op: StackPane.()->Unit = {}) =
-  opcr(this.wrapped(), StackPane().apply { if (initialChildren != null) children.addAll(initialChildren) }, op)
+fun EventTarget.stackpane(initialChildren: Iterable<Node>? = null, op: StackPaneWrapper.()->Unit = {}) =
+  opcr(this.wrapped(), StackPaneWrapper().apply { if (initialChildren != null) children.addAll(initialChildren) }, op)
 
-fun EventTarget.gridpane(op: GridPane.()->Unit = {}) = opcr(this.wrapped(), GridPane(), op)
+fun EventTarget.gridpane(op: GridPane.()->Unit = {}) = opcr(this.wrapped(), GridPaneWrapper(), op)
 fun EventTarget.pane(op: Pane.()->Unit = {}) = opcr(this.wrapped(), Pane(), op)
-fun EventTarget.flowpane(op: FlowPane.()->Unit = {}) = opcr(this.wrapped(), FlowPane(), op)
+fun EventTarget.flowpane(op: FlowPane.()->Unit = {}) = opcr(this.wrapped(), FlowPaneWrapper(), op)
 fun NodeWrapper<*>.flowpane(op: FlowPane.()->Unit = {}) = node.flowpane(op)
-fun EventTarget.tilepane(op: TilePane.()->Unit = {}) = opcr(this.wrapped(), TilePane(), op)
-fun EventTarget.borderpane(op: BorderPane.()->Unit = {}) = opcr(this.wrapped(), BorderPane(), op)
+fun EventTarget.tilepane(op: TilePane.()->Unit = {}) = opcr(this.wrapped(), TilePaneWrapper(), op)
+fun EventTarget.borderpane(op: BorderPane.()->Unit = {}) = opcr(this.wrapped(), BorderPaneWrapper(), op)
 
 
 @Deprecated("Use top = node {} instead")
-fun <T: Node> BorderPane.top(topNode: T, op: T.()->Unit = {}): T {
+fun <T: Node> BorderPaneWrapper.top(topNode: T, op: T.()->Unit = {}): T {
   top = topNode
   return opcr(this.wrapped(), topNode, op)
 }
 
 
 @Deprecated("Use bottom = node {} instead")
-fun <T: Node> BorderPane.bottom(bottomNode: T, op: T.()->Unit = {}): T {
+fun <T: Node> BorderPaneWrapper.bottom(bottomNode: T, op: T.()->Unit = {}): T {
   bottom = bottomNode
   return opcr(this.wrapped(), bottomNode, op)
 }
 
 @Deprecated("Use left = node {} instead")
-fun <T: Node> BorderPane.left(leftNode: T, op: T.()->Unit = {}): T {
+fun <T: Node> BorderPaneWrapper.left(leftNode: T, op: T.()->Unit = {}): T {
   left = leftNode
   return opcr(this.wrapped(), leftNode, op)
 }
 
 @Deprecated("Use right = node {} instead")
-fun <T: Node> BorderPane.right(rightNode: T, op: T.()->Unit = {}): T {
+fun <T: Node> BorderPaneWrapper.right(rightNode: T, op: T.()->Unit = {}): T {
   right = rightNode
   return opcr(this.wrapped(), rightNode, op)
 }
 
 @Deprecated("Use center = node {} instead")
-fun <T: Node> BorderPane.center(centerNode: T, op: T.()->Unit = {}): T {
+fun <T: Node> BorderPaneWrapper.center(centerNode: T, op: T.()->Unit = {}): T {
   center = centerNode
   return opcr(this.wrapped(), centerNode, op)
 }
@@ -325,8 +329,8 @@ fun EventTarget.titledpane(
   title: String? = null,
   node: Node? = null,
   collapsible: Boolean = true,
-  op: (TitledPane).()->Unit = {}
-): TitledPane {
+  op: (TitledPaneWrapper).()->Unit = {}
+): TitledPaneWrapper {
   val titledPane = TitledPane(title, node)
   titledPane.isCollapsible = collapsible
   opcr(this.wrapped(), titledPane, op)
@@ -337,9 +341,9 @@ fun EventTarget.titledpane(
   title: ObservableValue<String>,
   node: Node? = null,
   collapsible: Boolean = true,
-  op: (TitledPane).()->Unit = {}
-): TitledPane {
-  val titledPane = TitledPane("", node)
+  op: (TitledPaneWrapper).()->Unit = {}
+): TitledPaneWrapper {
+  val titledPane = TitledPaneWrapper("", node)
   titledPane.textProperty().bind(title)
   titledPane.isCollapsible = collapsible
   opcr(this.wrapped(), titledPane, op)
@@ -360,9 +364,9 @@ open class DummyClassYesIuse() {
 fun EventTarget.scrollpane(
   fitToWidth: Boolean = false,
   fitToHeight: Boolean = false,
-  op: ScrollPane.()->Unit = {}
-): ScrollPane {
-  val pane = ScrollPane()
+  op: ScrollPaneWrapper.()->Unit = {}
+): ScrollPaneWrapper {
+  val pane = ScrollPaneWrapper()
   pane.isFitToWidth = fitToWidth
   pane.isFitToHeight = fitToHeight
   opcr(this.wrapped(), pane, op)
@@ -373,9 +377,9 @@ fun EventTarget.scrollpane(
 fun EventTarget.splitpane(
   orientation: Orientation = Orientation.HORIZONTAL,
   vararg nodes: Node,
-  op: SplitPane.()->Unit = {}
-): SplitPane {
-  val splitpane = SplitPane()
+  op: SplitPaneWrapper.()->Unit = {}
+): SplitPaneWrapper {
+  val splitpane = SplitPaneWrapper()
   splitpane.orientation = orientation
   if (nodes.isNotEmpty())
 	splitpane.items.addAll(nodes)
@@ -388,32 +392,32 @@ fun EventTarget.splitpane(
   ReplaceWith("no items{} wrapper"),
   DeprecationLevel.WARNING
 )
-fun SplitPane.items(op: (SplitPane.()->Unit)) = op(this)
+fun SplitPane.items(op: (SplitPaneWrapper.()->Unit)) = op(this)
 
-fun EventTarget.canvas(width: Double = 0.0, height: Double = 0.0, op: Canvas.()->Unit = {}) =
+fun EventTarget.canvas(width: Double = 0.0, height: Double = 0.0, op: CanvasWrapper.()->Unit = {}) =
   opcr(this.wrapped(), Canvas(width, height), op)
 
-fun EventTarget.anchorpane(vararg nodes: Node, op: AnchorPane.()->Unit = {}): AnchorPane {
+fun EventTarget.anchorpane(vararg nodes: Node, op: AnchorPaneWrapper.()->Unit = {}): AnchorPaneWrapper {
   val anchorpane = AnchorPane()
   if (nodes.isNotEmpty()) anchorpane.children.addAll(nodes)
   opcr(this.wrapped(), anchorpane, op)
   return anchorpane
 }
 
-fun EventTarget.accordion(vararg panes: TitledPane, op: Accordion.()->Unit = {}): Accordion {
+fun EventTarget.accordion(vararg panes: TitledPane, op: AccordionWrapper.()->Unit = {}): AccordionWrapper {
   val accordion = Accordion()
   if (panes.isNotEmpty()) accordion.panes.addAll(panes)
   opcr(this.wrapped(), accordion, op)
   return accordion
 }
 
-fun <T: Node> Accordion.fold(
+fun <T: Node> AccordionWrapper.fold(
   title: String? = null,
   node: T,
   expanded: Boolean = false,
   op: T.()->Unit = {}
-): TitledPane {
-  val fold = TitledPane(title, node)
+): TitledPaneWrapper {
+  val fold = TitledPaneWrapper(title, node)
   fold.isExpanded = expanded
   panes += fold
   op(node)
@@ -425,7 +429,7 @@ fun <T: Node> Accordion.fold(
   ReplaceWith("Accordion.fold(title, node, op)"),
   DeprecationLevel.WARNING
 )
-fun Accordion.fold(title: String? = null, op: Pane.()->Unit = {}): TitledPane {
+fun AccordionWrapper.fold(title: String? = null, op: Pane.()->Unit = {}): TitledPaneWrapper {
   val vbox = VBox().also(op)
   val fold = TitledPane(title, if (vbox.children.size == 1) vbox.children[0] else vbox)
   panes += fold
