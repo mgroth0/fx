@@ -53,6 +53,7 @@ import matt.hurricanefx.wrapper.CanvasWrapper
 import matt.hurricanefx.wrapper.GroupWrapper
 import matt.hurricanefx.wrapper.HBoxWrapper
 import matt.hurricanefx.wrapper.NodeWrapper
+import matt.hurricanefx.wrapper.PaginationWrapper
 import matt.hurricanefx.wrapper.PaneWrapper
 import matt.hurricanefx.wrapper.RegionWrapper
 import matt.hurricanefx.wrapper.ScrollPaneWrapper
@@ -397,7 +398,7 @@ fun EventTarget.splitpane(
   ReplaceWith("no items{} wrapper"),
   DeprecationLevel.WARNING
 )
-fun SplitPane.items(op: (SplitPaneWrapper.()->Unit)) = op(this)
+fun SplitPaneWrapper.items(op: (SplitPaneWrapper.()->Unit)) = op(this)
 
 fun EventTarget.canvas(width: Double = 0.0, height: Double = 0.0, op: CanvasWrapper.()->Unit = {}) =
   opcr(this.wrapped(), CanvasWrapper(width, height), op)
@@ -436,12 +437,12 @@ fun <T: Node> AccordionWrapper.fold(
 )
 fun AccordionWrapper.fold(title: String? = null, op: Pane.()->Unit = {}): TitledPaneWrapper {
   val vbox = VBox().also(op)
-  val fold = TitledPane(title, if (vbox.children.size == 1) vbox.children[0] else vbox)
+  val fold = TitledPaneWrapper(title, if (vbox.children.size == 1) vbox.children[0] else vbox)
   panes += fold
   return fold
 }
 
-fun EventTarget.region(op: Region.()->Unit = {}) = opcr(this.wrapped(), Region(), op)
+fun EventTarget.region(op: Region.()->Unit = {}) = opcr(this.wrapped(), RegionWrapper(), op)
 
 
 @Deprecated("Use the paddingRight property instead", ReplaceWith("paddingRight = p"))

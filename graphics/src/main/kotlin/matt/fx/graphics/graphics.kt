@@ -12,6 +12,7 @@ import matt.color.AColor
 import matt.color.mostContrastingForMe
 import matt.hurricanefx.eye.lib.onChange
 import matt.hurricanefx.tornadofx.shapes.line
+import matt.hurricanefx.wrapper.LineWrapper
 import matt.hurricanefx.wrapper.NodeWrapper
 import matt.hurricanefx.wrapper.wrapped
 import matt.klib.math.BasicPoint
@@ -55,8 +56,8 @@ fun FXColor.mostContrastingForMe() = toAwtColor().mostContrastingForMe().toFXCol
 
 @Suppress("unused") class LineDrawDSL(private val parent: Pane, start: Point) {
   private var current = start
-  private val linesM = mutableListOf<Line>()
-  val lines: List<Line> = linesM
+  private val linesM = mutableListOf<LineWrapper>()
+  val lines: List<LineWrapper> = linesM
   fun to(point: Point) {
 	linesM += parent.wrapped().line {
 	  startX = current.xDouble
