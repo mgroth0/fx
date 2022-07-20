@@ -15,7 +15,7 @@ import javafx.scene.layout.Region
 import javafx.scene.shape.Shape
 import matt.auto.jumpToKotlinSourceString
 import matt.auto.openInIntelliJ
-import matt.file.commons.RootProjects.flow
+import matt.file.commons.IdeProject.flow
 import matt.fx.graphics.hotkey.filters
 import matt.fx.graphics.hotkey.handlers
 import matt.fx.graphics.menu.actionitem
