@@ -15,6 +15,7 @@ import matt.hurricanefx.eye.lib.onChange
 import matt.hurricanefx.op
 import matt.hurricanefx.tornadofx.fx.addChildIfPossible
 import matt.hurricanefx.tornadofx.menu.item
+import matt.hurricanefx.wrapper.ButtonWrapper
 import matt.hurricanefx.wrapper.NodeWrapper
 import matt.hurricanefx.wrapper.wrapped
 import matt.klib.lang.err
@@ -44,7 +45,7 @@ Button(text, graphic).apply {
 	action(it)
 	it.consume()
   }
-}
+}.wrapped()
 
 fun EventTarget.actionbutton(text: String = "", graphic: Node? = null, action: Button.(ActionEvent)->Unit) =
   Button(text, graphic).apply {
@@ -53,10 +54,10 @@ fun EventTarget.actionbutton(text: String = "", graphic: Node? = null, action: B
 	  it.consume()
 	}
 	this@actionbutton.wrapped().addChildIfPossible(this.wrapped())
-  }
+  }.wrapped()
 fun NodeWrapper<*>.actionbutton(text: String = "", graphic: Node? = null, action: Button.(ActionEvent)->Unit) = node.actionbutton(text,graphic,action)
 
-infix fun Button.withAction(newOp: ()->Unit) = this.apply { op = newOp }
+infix fun ButtonWrapper.withAction(newOp: ()->Unit) = this.apply { node.op = newOp }
 
 fun EventTarget.removecontextmenu() {
   if (this is Control) {
