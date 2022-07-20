@@ -41,6 +41,7 @@ import matt.fx.graphics.win.interact.openInNewWindow
 import matt.fx.graphics.win.winfun.noDocking
 import matt.hurricanefx.tornadofx.menu.menu
 import matt.hurricanefx.tornadofx.nodes.setOnDoubleClick
+import matt.hurricanefx.wrapper.RegionWrapper.Companion.wrapped
 import matt.hurricanefx.wrapper.wrapped
 import matt.klib.str.tab
 import matt.stream.recurse.recurse
@@ -169,7 +170,7 @@ open class MScene(
 
 fun Scene.iconify(icon: MFile) {
   var iconWindow: Stage? = null
-  println("making icon with ${icon}")
+  println("making icon with $icon")
   VBox(Icon(icon)).apply {
 	var xOffset: Double? = null
 	var yOffset: Double? = null

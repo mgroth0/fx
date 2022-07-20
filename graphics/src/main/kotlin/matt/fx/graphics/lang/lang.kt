@@ -39,22 +39,20 @@ fun Node.setOnFocusGained(op: ()->Unit) {
   }
 }
 
-fun actionbutton(text: String, graphic: Node? = null, action: Button.(ActionEvent)->Unit) =
-
-Button(text, graphic).apply {
+fun actionbutton(text: String, graphic: Node? = null, action: ButtonWrapper.(ActionEvent)->Unit) = ButtonWrapper(text, graphic).apply {
   setOnAction {
 	action(it)
 	it.consume()
   }
-}.wrapped()
+}
 
-fun NodeWrapper<*>.actionbutton(text: String = "", graphic: Node? = null, action: Button.(ActionEvent)->Unit) =   ButtonWrapper(text, graphic).apply {
+fun NodeWrapper<*>.actionbutton(text: String = "", graphic: Node? = null, action: ButtonWrapper.(ActionEvent)->Unit) =   ButtonWrapper(text, graphic).apply {
   setOnAction {
 	action(it)
 	it.consume()
   }
-  this@actionbutton.wrapped().addChildIfPossible(this.wrapped())
-}.wrapped()
+  this@actionbutton.addChildIfPossible(this)
+}
 
 infix fun ButtonWrapper.withAction(newOp: ()->Unit) = this.apply { node.op = newOp }
 
