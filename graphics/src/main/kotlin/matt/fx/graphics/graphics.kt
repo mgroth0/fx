@@ -1,7 +1,6 @@
 package matt.fx.graphics
 
 import javafx.scene.Node
-import javafx.scene.layout.Pane
 import javafx.scene.paint.Color
 import javafx.scene.shape.Line
 import javafx.scene.text.Font
