@@ -54,6 +54,7 @@ import matt.hurricanefx.wrapper.TilePaneWrapper
 import matt.hurricanefx.wrapper.TitledPaneWrapper
 import matt.hurricanefx.wrapper.ToolBarWrapper
 import matt.hurricanefx.wrapper.VBoxWrapper
+import matt.hurricanefx.wrapper.parent
 import kotlin.random.Random
 
 
