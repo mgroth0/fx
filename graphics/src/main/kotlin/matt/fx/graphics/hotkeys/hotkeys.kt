@@ -31,6 +31,7 @@ import matt.fx.graphics.mag.top
 import matt.fx.graphics.mag.topleft
 import matt.fx.graphics.mag.topright
 import matt.fx.graphics.style.borderFill
+import matt.hurricanefx.wrapper.EventTargetWrapper.Companion.wrapped
 import matt.hurricanefx.wrapper.RegionWrapper.Companion.wrapped
 import matt.hurricanefx.wrapper.wrapped
 import matt.klib.dmap.withStoringDefault
@@ -46,7 +47,7 @@ fun MScene.addDefaultHotkeys() {
   val scene = this
 
   /*needed filter to be true here or for some reason LEFT.ctrl.opt.shift wasn't being captured in music app even though it was captured in all other apps (globalhotkeys, brainstorm, kjg)*/
-  hotkeys(quickPassForNormalTyping = true, filter = true) {
+  wrapped().hotkeys(quickPassForNormalTyping = true, filter = true) {
 
 	LEFT.ctrl.opt { window.x -= window.width }
 	RIGHT.ctrl.opt { window.x += window.width }

@@ -9,6 +9,7 @@ import matt.fx.graphics.win.stage.WMode.HIDE
 import matt.fx.graphics.win.stage.WMode.ICONIFY
 import matt.fx.graphics.win.stage.WMode.NOTHING
 import matt.fx.graphics.win.winfun.pullBackWhenOffscreen
+import matt.hurricanefx.wrapper.EventTargetWrapper.Companion.wrapped
 import matt.klib.commons.thisMachine
 import matt.klib.sys.GAMING_WINDOWS
 
@@ -35,7 +36,7 @@ open class MStage(
 	if (pullBackWhenOffScreen) {
 	  pullBackWhenOffscreen()
 	}
-	hotkeys {
+	wrapped().hotkeys {
 	  if (thisMachine ==GAMING_WINDOWS) {
 		Q.opt op ::close // on Mac, meta-Q quits program. this an OS feature.
 	  }
