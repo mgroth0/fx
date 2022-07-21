@@ -6,7 +6,6 @@ import javafx.beans.property.ReadOnlyDoubleProperty
 import javafx.beans.property.SimpleDoubleProperty
 import javafx.event.EventHandler
 import javafx.event.EventTarget
-import javafx.scene.Parent
 import javafx.scene.input.KeyCode
 import javafx.scene.layout.Priority
 import javafx.scene.layout.Region
@@ -14,6 +13,7 @@ import javafx.scene.layout.VBox
 import javafx.scene.web.HTMLEditor
 import javafx.scene.web.WebView
 import javafx.stage.Stage
+import jdk.internal.net.http.common.SSLFlowDelegate.Monitor.add
 import kotlinx.coroutines.NonCancellable
 import matt.async.daemon
 import matt.async.date.sec
@@ -33,6 +33,8 @@ import matt.hurricanefx.tornadofx.fx.attachTo
 import matt.hurricanefx.tornadofx.nodes.add
 import matt.hurricanefx.tornadofx.nodes.removeFromParent
 import matt.hurricanefx.tornadofx.nodes.setOnDoubleClick
+import matt.hurricanefx.wrapper.ControlWrapper
+import matt.hurricanefx.wrapper.EventTargetWrapper.Companion.wrapped
 import matt.hurricanefx.wrapper.NodeWrapper
 import matt.hurricanefx.wrapper.PaneWrapper
 import matt.hurricanefx.wrapper.ParentWrapper
@@ -66,15 +68,15 @@ var WebViewWrapper.exactHeight: Number
 
 fun NodeWrapper<*>.webview(
   htmlContent: String? = null,
-  op: WebView.() -> Unit = {}
-) = WebView().apply{
+  op: WebViewWrapper.() -> Unit = {}
+) = WebViewWrapper().apply{
   htmlContent?.let {
     engine.loadContent(htmlContent)
   }
 }.attachTo(this, op)
 
 
-fun EventTarget.htmleditor(html: String? = null, op: HTMLEditor.() -> Unit = {}) = HTMLEditor().attachTo(this.wrapped(), op) {
+fun EventTarget.htmleditor(html: String? = null, op: HTMLEditorWrapper.() -> Unit = {}) = HTMLEditorWrapper().attachTo(this.wrapped(), op) {
   if (html != null) it.htmlText = html
 }
 
@@ -165,7 +167,7 @@ private const val SPECIAL_ZOOM_RATE = 1.1
 private const val SCROLL_COMPENSATION_RATE = SPECIAL_ZOOM_RATE - 1.0
 
 /*I figured this all out by myself. No help, no googling*/
-fun WebView.specialZooming(par: Region? = null) {
+fun WebViewWrapper.specialZooming(par: Region? = null) {
 
 
 
@@ -276,7 +278,7 @@ fun RegionWrapper.specialTransferingToWindowAndBack(par: PaneWrapper) {
         this.openInNewWindow().apply {
           perfectBind(this)
           setOnCloseRequest {
-            this.wrapped().removeFromParent()
+            this@specialTransferingToWindowAndBack.removeFromParent()
             par.add(vb)
             if (this@specialTransferingToWindowAndBack is WebViewPane) {
               runLater { wv.zoom = perfectZoom(vb.width) }
@@ -311,7 +313,7 @@ open class WebViewPane private constructor(file: MFile? = null, html: String? = 
 
 
   val wv = if (file != null) ImageRefreshingWebView(file) else {
-    WebView().apply {
+    WebViewWrapper().apply {
       engine.loadContent(html)
     }
   }
@@ -325,9 +327,9 @@ open class WebViewPane private constructor(file: MFile? = null, html: String? = 
     actionbutton("refresh") {
       wv.engine.reload()
     }
-    wrapped().add(wv.apply {
+    add(wv.apply {
       vgrow = Priority.ALWAYS
-    }.wrapped())
+    })
   }
 }
 
@@ -352,7 +354,7 @@ fun WebViewWrapper.specialTransferingToWindowAndBack(par: PaneWrapper) {
   }
 
   setOnDoubleClick {
-    if (this.scene?.root != this) {
+    if (this.scene?.root != this.node) {
       this.removeFromParent()
       this.openInNewWindow().apply {
         perfectBind(this)
@@ -369,7 +371,7 @@ fun WebViewWrapper.specialTransferingToWindowAndBack(par: PaneWrapper) {
 
 
 
-fun ImageRefreshingWebView(file: MFile) = WebView().apply {
+fun ImageRefreshingWebView(file: MFile) = WebViewWrapper().apply {
 
   engine.onError = EventHandler { event -> System.err.println(event) }
 
@@ -449,7 +451,19 @@ class JavaBridge {
 }
 
 
-interface WebViewWrapper: NodeWrapper<WebView> {
+class HTMLEditorWrapper(override val node: HTMLEditor = HTMLEditor()): ControlWrapper(node) {
+  var htmlText
+    get() = node.htmlText
+    set(value) {
+      node.htmlText = value
+    }
+}
+
+class WebViewWrapper(override val node: WebView = WebView()): ParentWrapper {
+
+  companion object {
+    fun WebView.wrapped() =  WebViewWrapper(this)
+  }
 
   val zoomProperty: DoubleProperty get() = node.zoomProperty()
   var zoom: Double
@@ -499,7 +513,9 @@ interface WebViewWrapper: NodeWrapper<WebView> {
     set(value) {
       node.maxHeight = value
     }
-}
-fun WebView.wrapped() = object: WebViewWrapper {
-  override val node = this@wrapped
+
+  val engine get() = node.engine
+
+  fun scrollBy(x: Double,y: Double) = node.scrollBy(x,y)
+
 }
