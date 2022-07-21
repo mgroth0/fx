@@ -8,7 +8,6 @@ import javafx.scene.control.TreeCell
 import javafx.scene.control.TreeItem
 import javafx.scene.control.TreeTableRow
 import javafx.scene.layout.Priority.ALWAYS
-import javafx.scene.layout.VBox
 import matt.async.date.sec
 import matt.auto.actions
 import matt.auto.moveToTrash
@@ -49,7 +48,6 @@ import matt.hurricanefx.wrapper.TreeLikeWrapper
 import matt.hurricanefx.wrapper.TreeTableViewWrapper
 import matt.hurricanefx.wrapper.TreeViewWrapper
 import matt.hurricanefx.wrapper.VBoxWrapper
-import matt.hurricanefx.wrapper.wrapped
 import matt.klib.lang.inList
 import matt.klib.todo
 import matt.stream.recurse.chain
@@ -209,7 +207,7 @@ private fun TreeLikeWrapper<*, MFile>.setupGUI() {
 			  graphic = null
 			} else if (oldItem != item) {
 			  text = item.name
-			  graphic = item.draggableIcon()
+			  graphic = item.draggableIcon().node
 			}
 		  }
 		}
@@ -225,7 +223,7 @@ private fun TreeLikeWrapper<*, MFile>.setupGUI() {
 		}
 	  }
 	  val nameCol = column("name", matt.file.MFile::abspath) {
-		simpleCellFactory { value -> mFile(value).let { it.name to it.draggableIcon() } }
+		simpleCellFactory { value -> mFile(value).let { it.name to it.draggableIcon().node } }
 	  }
 	  column("ext", matt.file.MFile::extension)
 
@@ -276,7 +274,7 @@ private fun TreeLikeWrapper<*, MFile>.setupGUI() {
 		}
 		selectedValue?.let { it.actions() + it.fxActions() }?.forEach { action ->
 		  actionitem(action) {
-			graphic = action.icon?.let { Icon(it) }
+			graphic = action.icon?.let { Icon(it).node }
 		  }
 		}
 	  } else if (selects.size > 1) {

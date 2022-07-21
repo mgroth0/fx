@@ -6,10 +6,8 @@ import javafx.event.ActionEvent
 import javafx.event.EventTarget
 import javafx.scene.Node
 import javafx.scene.Scene
-import javafx.scene.control.Button
 import javafx.scene.control.ContextMenu
 import javafx.scene.control.Control
-import javafx.scene.control.MenuItem
 import javafx.scene.input.KeyCombination
 import matt.hurricanefx.eye.lib.onChange
 import matt.hurricanefx.op
@@ -18,7 +16,6 @@ import matt.hurricanefx.tornadofx.menu.item
 import matt.hurricanefx.wrapper.ButtonWrapper
 import matt.hurricanefx.wrapper.MenuItemWrapper
 import matt.hurricanefx.wrapper.NodeWrapper
-import matt.hurricanefx.wrapper.wrapped
 import matt.klib.lang.err
 
 fun NodeWrapper<*>.setOnFocusLost(op: ()->Unit) {
