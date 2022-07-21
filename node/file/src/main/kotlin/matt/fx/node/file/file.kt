@@ -4,14 +4,10 @@ import javafx.application.Platform.runLater
 import javafx.collections.ListChangeListener
 import javafx.event.EventHandler
 import javafx.scene.Node
-import javafx.scene.control.TextArea
 import javafx.scene.image.Image
 import javafx.scene.input.KeyEvent
-import javafx.scene.layout.Pane
 import javafx.scene.layout.Priority.ALWAYS
-import javafx.scene.layout.VBox
 import javafx.scene.text.Text
-import javafx.scene.web.WebView
 import kotlinx.html.body
 import kotlinx.html.html
 import kotlinx.html.img
@@ -47,7 +43,6 @@ import matt.hurricanefx.wrapper.PaneWrapper
 import matt.hurricanefx.wrapper.RegionWrapper
 import matt.hurricanefx.wrapper.TextAreaWrapper
 import matt.hurricanefx.wrapper.VBoxWrapper
-import matt.hurricanefx.wrapper.wrapped
 import matt.klib.lang.err
 import java.lang.ref.WeakReference
 
