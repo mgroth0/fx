@@ -32,6 +32,7 @@ import matt.fx.graphics.win.interact.openInNewWindow
 import matt.fx.graphics.win.interact.safe
 import matt.fx.graphics.win.stage.WMode.CLOSE
 import matt.fx.web.WebViewPane
+import matt.fx.web.WebViewWrapper
 import matt.fx.web.specialZooming
 import matt.gui.draggableIcon
 import matt.hurricanefx.bindFitTo
@@ -42,7 +43,10 @@ import matt.hurricanefx.tornadofx.control.button
 import matt.hurricanefx.tornadofx.control.imageview
 import matt.hurricanefx.tornadofx.control.textarea
 import matt.hurricanefx.tornadofx.nodes.add
+import matt.hurricanefx.wrapper.PaneWrapper
 import matt.hurricanefx.wrapper.RegionWrapper
+import matt.hurricanefx.wrapper.TextAreaWrapper
+import matt.hurricanefx.wrapper.VBoxWrapper
 import matt.hurricanefx.wrapper.wrapped
 import matt.klib.lang.err
 import java.lang.ref.WeakReference
@@ -62,8 +66,8 @@ private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): RegionWrap
   if (exists()) {
 	println("opening file")
 	if (isImage()) {
-	  return Pane().apply {
-		wrapped().imageview {
+	  return PaneWrapper().apply {
+		imageview {
 		  image = Image(toURI().toString())
 		  isPreserveRatio = true
 		  bindFitTo(this@apply)
@@ -78,7 +82,7 @@ private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): RegionWrap
 		  }
 		  doubleClickToOpenInWindow()
 		}
-	  }.wrapped()
+	  }
 	}
 
 
@@ -101,14 +105,14 @@ private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): RegionWrap
 		"coffeescript"
 	  ) || (!renderHTMLAndSVG && extension in (listOf("html", "svg")))
 	) {
-	  val viewbox = Pane()
+	  val viewbox = PaneWrapper()
 	  var fsText = readText()
-	  val ta = viewbox.wrapped().textarea {
+	  val ta = viewbox.textarea {
 		text = fsText
-		prefHeightProperty().bind(viewbox.prefHeightProperty())
-		prefWidthProperty().bind(viewbox.prefWidthProperty())
+		prefHeightProperty.bind(viewbox.prefHeightProperty)
+		prefWidthProperty.bind(viewbox.prefWidthProperty)
 	  }
-	  viewbox.wrapped().button("matt.gui.ser.save changes") {
+	  viewbox.button("matt.gui.ser.save changes") {
 		isDisable = true
 		setOnAction {
 		  writeText(ta.text)
@@ -126,13 +130,13 @@ private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): RegionWrap
 		}
 	  }
 	  if (extension in (listOf("html", "svg")) && !renderHTMLAndSVG) {
-		viewbox.wrapped().button("render") {
+		viewbox.button("render") {
 		  setOnAction {
 			WebViewPane(this@createNodeInner).openInNewWindow(wMode = CLOSE)
 		  }
 		}
 	  }
-	  return viewbox.wrapped()
+	  return viewbox
 	}
 
 
@@ -141,7 +145,7 @@ private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): RegionWrap
 
 
 	return when (extension) {
-	  "log"  -> TextArea().also { ta ->
+	  "log"  -> TextAreaWrapper().also { ta ->
 		ta.addEventFilter(KeyEvent.KEY_TYPED) { it.consume() }
 		val weakRef = WeakReference(ta)
 		runLater {
@@ -169,13 +173,13 @@ private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): RegionWrap
 		  }
 
 		}
-	  }.wrapped()
+	  }
 
 	  "html" -> WebViewPane(this@createNodeInner).apply {
 		specialZooming()
-	  }.wrapped()
+	  }
 
-	  "svg"  -> WebView().apply {
+	  "svg"  -> WebViewWrapper().apply {
 		runLater {
 		  vgrow = ALWAYS
 		  hgrow = ALWAYS
@@ -234,7 +238,7 @@ private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): RegionWrap
 		val weakRef = WeakReference(wv)
 
 		/*areas around for right clicking!*/
-		val root = VBox().apply {
+		val root = VBoxWrapper().apply {
 		  mcontextmenu {
 			"refresh" does {
 
@@ -255,7 +259,7 @@ private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): RegionWrap
 			vgrow = ALWAYS
 			hgrow = ALWAYS
 			vbox { exactWidth = 10.0 }
-			add(wv.wrapped())
+			add(wv)
 			vbox { exactWidth = 10.0 }
 		  }
 		  hbox { exactHeight = 10.0 }
@@ -289,12 +293,12 @@ private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): RegionWrap
 			}
 		  }
 		}
-		root.wrapped()
+		root
 	  }
 
 	  else   -> err("how to make node for files with extension:${extension}")
 	}
-  } else return VBox(Text("file $this does not exist")).wrapped()
+  } else return VBoxWrapper(Text("file $this does not exist"))
 }
 
 

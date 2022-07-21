@@ -50,6 +50,7 @@ import matt.hurricanefx.tornadofx.dialog.alert
 import matt.hurricanefx.tornadofx.nodes.disableWhen
 import matt.hurricanefx.tornadofx.nodes.setOnDoubleClick
 import matt.hurricanefx.wrapper.ButtonWrapper
+import matt.hurricanefx.wrapper.ImageViewWrapper
 import matt.hurricanefx.wrapper.NodeWrapper
 import matt.hurricanefx.wrapper.RegionWrapper.Companion.wrapped
 import matt.hurricanefx.wrapper.VBoxWrapper
@@ -377,7 +378,7 @@ fun MFile.openImageInWindow() {
   }).openInNewWindow()
 }
 
-fun ImageView.doubleClickToOpenInWindow() {
+fun ImageViewWrapper.doubleClickToOpenInWindow() {
   this.setOnDoubleClick { mFile(URI(this.image.url)).openImageInWindow() }
 }
 
