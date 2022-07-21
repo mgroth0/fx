@@ -1,7 +1,6 @@
 package matt.fx.graphics.clip
 
 import javafx.scene.Cursor
-import javafx.scene.Node
 import javafx.scene.SnapshotParameters
 import javafx.scene.input.Clipboard
 import javafx.scene.input.ClipboardContent
@@ -9,10 +8,10 @@ import javafx.scene.input.DataFormat
 import javafx.scene.input.MouseEvent
 import javafx.scene.input.TransferMode
 import javafx.scene.paint.Color
-import matt.fx.image.save
-//import matt.hurricanefx.save
-import matt.file.commons.TEMP_DIR
 import matt.file.MFile
+import matt.file.commons.TEMP_DIR
+import matt.fx.image.save
+import matt.hurricanefx.wrapper.NodeWrapper
 
 
 fun String.copyToClipboard() {
@@ -47,7 +46,7 @@ fun Clipboard.putFiles(files: MutableList<MFile>) = setContent { putFiles(files.
 fun Clipboard.put(dataFormat: DataFormat, value: Any) = setContent { put(dataFormat, value) }
 
 
-fun Node.drags(file: MFile) {
+fun NodeWrapper<*>.drags(file: MFile) {
   setOnDragDetected {
     val db = startDragAndDrop(*TransferMode.ANY)
     db.putFiles(mutableListOf(file))
@@ -56,7 +55,7 @@ fun Node.drags(file: MFile) {
   }
 }
 
-fun Node.dragsSnapshot(fill: Color = Color.BLACK) {
+fun NodeWrapper<*>.dragsSnapshot(fill: Color = Color.BLACK) {
   addEventFilter(MouseEvent.DRAG_DETECTED) {
     println("drag detected")
     val params = SnapshotParameters()
@@ -75,9 +74,9 @@ fun Node.dragsSnapshot(fill: Color = Color.BLACK) {
 var dummyDragBoard: Any? = null
 const val DUMMY_TEXT = "DUMMY TEXT"
 
-fun Node.easyDrag(data: Any, getSnapshotNode: ()->Node? = { null }) = easyDrag({ true }, { data }, getSnapshotNode)
+fun NodeWrapper<*>.easyDrag(data: Any, getSnapshotNode: ()->NodeWrapper<*>? = { null }) = easyDrag({ true }, { data }, getSnapshotNode)
 
-fun Node.easyDrag(condition: ()->Boolean = { true }, getData: ()->Any, getSnapshotNode: ()->Node? = { null }) {
+fun NodeWrapper<*>.easyDrag(condition: ()->Boolean = { true }, getData: ()->Any, getSnapshotNode: ()->NodeWrapper<*>? = { null }) {
   this.cursor = Cursor.DEFAULT /*just never change it please*/
   setOnDragDone {
     this.cursor = Cursor.DEFAULT /*just never change it please*/
@@ -99,7 +98,7 @@ fun Node.easyDrag(condition: ()->Boolean = { true }, getData: ()->Any, getSnapsh
   }
 }
 
-fun Node.easyDrop(handler: ((Any)->Unit)) {
+fun NodeWrapper<*>.easyDrop(handler: ((Any)->Unit)) {
   this.cursor = Cursor.DEFAULT /*just never change it please*/
   setOnDragEntered {
     this.cursor = Cursor.DEFAULT /*just never change it please*/

@@ -25,6 +25,7 @@ import matt.hurricanefx.stage
 import matt.hurricanefx.tornadofx.menu.item
 import matt.hurricanefx.tornadofx.menu.menu
 import matt.hurricanefx.tornadofx.menu.separator
+import matt.hurricanefx.wrapper.MenuItemWrapper
 import matt.hurricanefx.wrapper.NodeWrapper
 import matt.klib.lang.NEVER
 import matt.klib.log.warn
@@ -69,10 +70,10 @@ class MContextMenuBuilder(
 	}
   }.also { add(it) }
 
-  fun item(s: String, g: Node? = null, op: MenuItem.()->Unit = {}) = MenuItem(s, g).apply {
+  fun item(s: String, g: NodeWrapper<*>? = null, op: MenuItemWrapper.()->Unit = {}) = MenuItemWrapper(s, g?.node).apply {
 	isMnemonicParsing = false
 	op()
-  }.also { add(it) }
+  }.also { add(it.node) }
 
 
   infix fun String.toggles(b: BooleanProperty) = checkitem(this, b)
