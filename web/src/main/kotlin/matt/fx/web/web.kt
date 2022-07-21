@@ -38,6 +38,7 @@ import matt.hurricanefx.wrapper.NodeWrapper
 import matt.hurricanefx.wrapper.PaneWrapper
 import matt.hurricanefx.wrapper.ParentWrapper
 import matt.hurricanefx.wrapper.RegionWrapper
+import matt.hurricanefx.wrapper.VBoxWrapper
 import matt.klib.lang.NEVER
 import netscape.javascript.JSObject
 import org.intellij.lang.annotations.Language
@@ -165,7 +166,7 @@ private const val SPECIAL_ZOOM_RATE = 1.1
 private const val SCROLL_COMPENSATION_RATE = SPECIAL_ZOOM_RATE - 1.0
 
 /*I figured this all out by myself. No help, no googling*/
-fun WebViewWrapper.specialZooming(par: Region? = null) {
+fun WebViewWrapper.specialZooming(par: RegionWrapper? = null) {
 
 
 
@@ -208,7 +209,7 @@ fun WebViewWrapper.specialZooming(par: Region? = null) {
       val w = par.width
       if (w != 0.0) zoom = perfectZoom(par.width)
       else {
-        par.widthProperty().onChangeOnce {
+        par.widthProperty.onChangeOnce {
           zoom = perfectZoom(it!!.toDouble())
         }
       }
@@ -219,7 +220,7 @@ fun WebViewWrapper.specialZooming(par: Region? = null) {
 }
 
 
-fun WebView.scrollTo(xPos: Int, yPos: Int) {
+fun WebViewWrapper.scrollTo(xPos: Int, yPos: Int) {
 
   engine.executeScript(
     """
@@ -231,17 +232,8 @@ fun WebView.scrollTo(xPos: Int, yPos: Int) {
 
 
 
-fun WebView.scrollBy(x: Double, y: Double) {
 
-  engine.executeScript(
-    """
-	  window.scrollBy($x,$y)
-	""".trimIndent()
-  )
-
-}
-
-fun WebView.scrollMult(factor: Double) {
+fun WebViewWrapper.scrollMult(factor: Double) {
 
   engine.executeScript(
     """
@@ -294,7 +286,7 @@ fun RegionWrapper.specialTransferingToWindowAndBack(par: PaneWrapper) {
 
 
 @ExperimentalContracts
-open class WebViewPane private constructor(file: MFile? = null, html: String? = null): VBox() {
+open class WebViewPane private constructor(file: MFile? = null, html: String? = null): VBoxWrapper() {
 
   constructor(file: MFile): this(file = file, html = null)
 
@@ -323,7 +315,7 @@ open class WebViewPane private constructor(file: MFile? = null, html: String? = 
       }
     }
     actionbutton("refresh") {
-      wv.engine.reload()
+      this@WebViewPane.wv.engine.reload()
     }
     add(wv.apply {
       vgrow = Priority.ALWAYS
@@ -514,6 +506,12 @@ class WebViewWrapper(override val node: WebView = WebView()): ParentWrapper {
 
   val engine get() = node.engine
 
-  fun scrollBy(x: Double,y: Double) = node.scrollBy(x,y)
+  fun scrollBy(x: Double,y: Double) {
+    engine.executeScript(
+      """
+	  window.scrollBy($x,$y)
+	""".trimIndent()
+    )
+  }
 
 }
