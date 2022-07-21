@@ -14,6 +14,7 @@ import matt.color.hex
 import matt.fx.graphics.toAwtColor
 import matt.klib.prop.BasicBooleanProperty
 import matt.css.MyStyleDsl
+import matt.hurricanefx.wrapper.NodeWrapper
 import matt.hurricanefx.wrapper.RegionWrapper
 import matt.klib.log.warn
 import matt.klib.str.LineAppender
@@ -159,8 +160,8 @@ class StyleClassDSL(val s: Node): MyStyleDsl() {
 
 }
 
-fun Node.sty(op: StyleClassDSL.()->Unit) {
-  StyleClassDSL(this).apply(op)
+fun NodeWrapper<*>.sty(op: StyleClassDSL.()->Unit) {
+  StyleClassDSL(this.node).apply(op)
 }
 
 
