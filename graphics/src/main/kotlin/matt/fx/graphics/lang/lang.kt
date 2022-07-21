@@ -54,7 +54,7 @@ fun NodeWrapper<*>.actionbutton(text: String = "", graphic: Node? = null, action
   this@actionbutton.addChildIfPossible(this)
 }
 
-infix fun ButtonWrapper.withAction(newOp: ()->Unit) = this.apply { node.op = newOp }
+infix fun ButtonWrapper.withAction(newOp: ()->Unit) = this.apply { op = newOp }
 
 fun EventTarget.removecontextmenu() {
   if (this is Control) {

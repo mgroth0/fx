@@ -6,7 +6,6 @@ import javafx.scene.Parent
 import javafx.scene.Scene
 import javafx.scene.input.ContextMenuEvent
 import javafx.scene.layout.Region
-import javafx.scene.layout.VBox
 import javafx.scene.paint.Color
 import javafx.scene.paint.Color.BLUE
 import javafx.scene.paint.Color.GREEN
@@ -42,7 +41,7 @@ import matt.fx.graphics.win.winfun.noDocking
 import matt.hurricanefx.tornadofx.menu.menu
 import matt.hurricanefx.tornadofx.nodes.setOnDoubleClick
 import matt.hurricanefx.wrapper.RegionWrapper.Companion.wrapped
-import matt.hurricanefx.wrapper.wrapped
+import matt.hurricanefx.wrapper.VBoxWrapper
 import matt.klib.str.tab
 import matt.stream.recurse.recurse
 import java.net.URL
@@ -171,7 +170,7 @@ open class MScene(
 fun Scene.iconify(icon: MFile) {
   var iconWindow: Stage? = null
   println("making icon with $icon")
-  VBox(Icon(icon)).apply {
+  VBoxWrapper(Icon(icon)).apply {
 	var xOffset: Double? = null
 	var yOffset: Double? = null
 	setOnMousePressed { e ->
@@ -186,7 +185,7 @@ fun Scene.iconify(icon: MFile) {
 	}
 	setOnDoubleClick {
 	  (this@iconify.window as Stage).show()
-	  (scene.window as Stage).close()
+	  (scene!!.window as Stage).close()
 	}
   }.openInNewWindow(own = WinOwn.None, geom = WinGeom.ManualOr0(
 	width = ICON_WIDTH,
