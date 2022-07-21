@@ -48,6 +48,7 @@ import matt.hurricanefx.wrapper.PaneWrapper
 import matt.hurricanefx.wrapper.TreeLikeWrapper
 import matt.hurricanefx.wrapper.TreeTableViewWrapper
 import matt.hurricanefx.wrapper.TreeViewWrapper
+import matt.hurricanefx.wrapper.VBoxWrapper
 import matt.hurricanefx.wrapper.wrapped
 import matt.klib.lang.inList
 import matt.klib.todo
@@ -223,20 +224,20 @@ private fun TreeLikeWrapper<*, MFile>.setupGUI() {
 		  }
 		}
 	  }
-	  val nameCol = node.column("name", matt.file.MFile::abspath) {
+	  val nameCol = column("name", matt.file.MFile::abspath) {
 		simpleCellFactory { value -> mFile(value).let { it.name to it.draggableIcon() } }
 	  }
-	  node.column("ext", matt.file.MFile::extension)
+	  column("ext", matt.file.MFile::extension)
 
 	  showSizesProp = BProp(false)
 	  showSizesProp.onChange { b ->
 		if (b) {
-		  node.column<MFile, String>("size") {
+		  column<MFile, String>("size") {
 			SimpleStringProperty(it.value.value.size().formatted.toString())
 		  }
 		  autoResizeColumns()
 		} else {
-		  node.columns.firstOrNull { col -> col.text == "size" }?.let { node.columns.remove(it) }
+		  columns.firstOrNull { col -> col.text == "size" }?.let { node.columns.remove(it) }
 		  autoResizeColumns()
 		}
 	  }
@@ -262,11 +263,11 @@ private fun TreeLikeWrapper<*, MFile>.setupGUI() {
 	  if (selects.size == 1) {
 		"open in new window" does {
 		  selectedValue?.let {
-			VBox().apply {
+			VBoxWrapper().apply {
 			  val container = this
 			  add(it.createNode(renderHTMLAndSVG = true).apply {
-				perfectBind(container.wrapped())
-				specialTransferingToWindowAndBack(container.wrapped())
+				perfectBind(container)
+				specialTransferingToWindowAndBack(container)
 			  })
 			}.openInNewWindow(
 			  wMode = CLOSE

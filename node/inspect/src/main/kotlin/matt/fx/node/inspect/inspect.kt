@@ -2,12 +2,7 @@ package matt.fx.node.inspect
 
 import javafx.collections.ObservableList
 import javafx.geometry.Orientation
-import javafx.scene.control.ListView
-import javafx.scene.control.TableView
-import javafx.scene.layout.HBox
-import javafx.scene.layout.Pane
 import javafx.scene.layout.Priority
-import javafx.scene.layout.VBox
 import matt.fx.graphics.Inspectable
 import matt.fx.graphics.layout.hgrow
 import matt.fx.graphics.layout.vgrow
@@ -17,58 +12,63 @@ import matt.hurricanefx.tornadofx.control.label
 import matt.hurricanefx.tornadofx.nodes.add
 import matt.hurricanefx.tornadofx.nodes.clear
 import matt.hurricanefx.tornadofx.nodes.removeFromParent
-import matt.hurricanefx.wrapper.wrapped
+import matt.hurricanefx.wrapper.BoxWrapper
+import matt.hurricanefx.wrapper.HBoxWrapper
+import matt.hurricanefx.wrapper.ListViewWrapper
+import matt.hurricanefx.wrapper.PaneWrapper
+import matt.hurricanefx.wrapper.TableViewWrapper
+import matt.hurricanefx.wrapper.VBoxWrapper
 
 
 fun <T: Inspectable> InspectionView(
   items: List<T>,
   dir: Orientation = Orientation.HORIZONTAL,
   table: Boolean = false,
-  wrap_lv: Pane? = null
-): Pane {
-  val root = if (dir == Orientation.HORIZONTAL) HBox() else VBox()
+  wrap_lv: PaneWrapper? = null
+): PaneWrapper {
+  val root = if (dir == Orientation.HORIZONTAL) HBoxWrapper() else VBoxWrapper()
   val oitems = if (items is ObservableList) items else items.toObservable()
-  val lv = if (table) TableView(oitems) else ListView(oitems)
-  root.wrapped().add((wrap_lv?.apply { wrapped().add(lv.wrapped()) } ?: lv).apply {
+  val lv = if (table) TableViewWrapper(oitems) else ListViewWrapper(oitems)
+  root.add((wrap_lv?.apply { add(lv) } ?: lv).apply {
 	lv.vgrow = Priority.ALWAYS
 	lv.hgrow = Priority.ALWAYS
-  }.wrapped())
-  val inspectHolder: Pane = if (dir == Orientation.HORIZONTAL) HBox() else VBox()
+  })
+  val inspectHolder: BoxWrapper<*> = if (dir == Orientation.HORIZONTAL) HBoxWrapper() else VBoxWrapper()
   inspectHolder.vgrow = Priority.ALWAYS
   inspectHolder.hgrow = Priority.ALWAYS
-  root.wrapped().add(inspectHolder.wrapped())
+  root.add(inspectHolder)
 
   val onSelectBlock = { it: T? ->
 	inspectHolder.clear()
-	val noSelectionLabel = inspectHolder.wrapped().label("no selection")
+	val noSelectionLabel = inspectHolder.label("no selection")
 	it?.let {
-	  noSelectionLabel.wrapped().removeFromParent()
-	  inspectHolder.wrapped().add(it.inspect().apply {
+	  noSelectionLabel.removeFromParent()
+	  inspectHolder.add(it.inspect().apply {
 		this.vgrow = Priority.ALWAYS
 		this.hgrow = Priority.ALWAYS
-	  }.wrapped())
+	  })
 	}
 	Unit
   }
   @Suppress("UNCHECKED_CAST")
-  (lv as? ListView<T>)?.onSelect(onSelectBlock)
+  (lv as? ListViewWrapper<T>)?.onSelect(onSelectBlock)
   @Suppress("UNCHECKED_CAST")
-  (lv as? TableView<T>)?.onSelect(onSelectBlock)
+  (lv as? TableViewWrapper<T>)?.onSelect(onSelectBlock)
   return root
 }
 
-fun <T: Inspectable> Pane.inspectionview(
+fun <T: Inspectable> PaneWrapper.inspectionview(
   items: List<T>,
   dir: Orientation = Orientation.HORIZONTAL,
   table: Boolean = false,
-  op: (Pane.()->Unit)? = null,
-  wrap_lv: Pane? = null
-): Pane {
+  op: (PaneWrapper.()->Unit)? = null,
+  wrap_lv: PaneWrapper? = null
+): PaneWrapper {
   val iv = InspectionView(items, dir, table, wrap_lv).apply {
 	if (op != null) {
 	  op()
 	}
   }
-  wrapped().add(iv.wrapped())
+  add(iv)
   return iv
 }

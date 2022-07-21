@@ -43,7 +43,7 @@ fun <T: Node> NodeWrapper<T>.refreshWhileInSceneEvery(
 val fontFamilies: List<String> by lazy { Font.getFamilies() }
 
 interface Inspectable {
-  fun inspect(): Pane
+  fun inspect(): PaneWrapper
 }
 
 
