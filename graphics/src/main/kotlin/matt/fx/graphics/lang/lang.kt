@@ -21,7 +21,7 @@ import matt.hurricanefx.wrapper.NodeWrapper
 import matt.hurricanefx.wrapper.wrapped
 import matt.klib.lang.err
 
-fun Node.setOnFocusLost(op: ()->Unit) {
+fun NodeWrapper<*>.setOnFocusLost(op: ()->Unit) {
   focusedProperty().onChange { it: Boolean? ->
 	if (it == null) err("here it is")
 	if (!it) {
@@ -30,7 +30,7 @@ fun Node.setOnFocusLost(op: ()->Unit) {
   }
 }
 
-fun Node.setOnFocusGained(op: ()->Unit) {
+fun NodeWrapper<*>.setOnFocusGained(op: ()->Unit) {
   focusedProperty().onChange { it: Boolean? ->
 	if (it == null) err("here it is")
 	if (it) {
