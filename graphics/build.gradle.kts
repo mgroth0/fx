@@ -1,3 +1,6 @@
+import matt.file.kt
+import matt.file.mFile
+
 apis {
   css
   libs.`fx-graphics`
@@ -18,4 +21,8 @@ implementations(
   dependencies.kotlin("reflect"),
 )
 
-//generateKt()
+generateKt(mFile("matt") + "fx" + "graphics" + "icon" + "gen".kt) {
+  """
+  package matt.fx.graphics.icon.gen
+  """.trimIndent()
+}
