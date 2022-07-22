@@ -6,7 +6,6 @@ import com.kitfox.svg.animation.AnimationElement.AT_XML
 import javafx.scene.image.Image
 import matt.file.MFile
 import matt.file.commons.ICON_FOLDER
-import matt.fx.graphics.icon.gen.Icon
 import matt.fx.image.toFXImage
 import matt.hurricanefx.tornadofx.nodes.add
 import matt.hurricanefx.wrapper.ImageViewWrapper
