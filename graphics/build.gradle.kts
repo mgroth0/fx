@@ -21,7 +21,7 @@ implementations(
   dependencies.kotlin("reflect"),
 )
 
-generateKt(mFile("matt") + "fx" + "graphics" + "icon" + "gen".kt) {
+generateKt(mFile("matt") + "fx" + "graphics" + "icon" + "gen" + "gen".kt) {
   """
   package matt.fx.graphics.icon.gen
   """.trimIndent()
