@@ -178,7 +178,7 @@ private fun KClass<*>.jumpToSource() {
   }
 }
 
-private fun Node.hotkeyInfoMenu() = Menu("Hotkey Info").apply {
+private fun Node.hotkeyInfoMenu() = Menu("Click For Hotkey Info").apply {
   val node = this@hotkeyInfoMenu
   fun addInfo(type: EventHandlerType) {
 	menu(
@@ -186,6 +186,8 @@ private fun Node.hotkeyInfoMenu() = Menu("Hotkey Info").apply {
 		Handler -> "handlers"; Filter -> "filters"
 	  }
 	) {
+
+
 	  (node.chain { it.parent } + node.scene + node.stage).forEach { node ->
 		menu(node.toString()) {
 		  val h = when (type) {
@@ -201,8 +203,11 @@ private fun Node.hotkeyInfoMenu() = Menu("Hotkey Info").apply {
 	}
   }
 
-  items.clear()
-  addInfo(Handler)
-  addInfo(Filter)
+  setOnMouseClicked {
+	items.clear()
+	addInfo(Handler)
+	addInfo(Filter)
+  }
+
 }
 
