@@ -1,3 +1,4 @@
+import matt.file.ImageFile
 import matt.file.KotlinFile
 import matt.file.kt
 import matt.file.mFile
@@ -22,13 +23,3 @@ implementations(
   dependencies.kotlin("reflect"),
 )
 
-generateKt(mFile("matt") + "fx" + "graphics" + "icon" + "gen" + "gen".kt) {
-  """
-  package matt.fx.graphics.icon.gen
-  
-  enum class Icon {
-    ${matt.file.commons.ICON_FOLDER.listFiles()!!.filter { it.extension == "png" }.joinToString(",") { safeKtName(it.nameWithoutExtension) }}
-  }
-  
-  """
-}

@@ -6,6 +6,7 @@ import com.kitfox.svg.animation.AnimationElement.AT_XML
 import javafx.scene.image.Image
 import matt.file.MFile
 import matt.file.commons.ICON_FOLDER
+import matt.fx.graphics.icon.gen.Icon
 import matt.fx.image.toFXImage
 import matt.hurricanefx.tornadofx.nodes.add
 import matt.hurricanefx.wrapper.ImageViewWrapper
@@ -51,6 +52,8 @@ fun javafx.scene.Node.icon(file: String) {
 
 private val FALLBACK_FILE = (ICON_FOLDER + "chunk.png").apply { //  SvgImageLoaderFactory.install();
 }
+
+//fun Icon.view() = Icon(name)
 
 fun Icon(file: String) = Icon(ICON_FOLDER[file])
 fun IconImage(file: String) = IconImage(ICON_FOLDER[file])
