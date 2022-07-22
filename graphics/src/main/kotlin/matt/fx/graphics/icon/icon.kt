@@ -82,51 +82,51 @@ is Image  ->*//* ImageView(image).apply {
 
   else      -> Icon(FALLBACK_FILE)*//*}*/
 
-private val IMAGE_EXTENSIONS = listOf("png", "jpg", "jpeg", "svg")
+private val IMAGE_EXTENSIONS = listOf("svg", "png", "jpg", "jpeg")
 
 private val images = lazyMap<MFile, Image> { file ->
   (file.takeIf { it.exists() } ?: if (file.extension.isBlank()) IMAGE_EXTENSIONS.map { file.withExtension(it) }
 	.firstOrNull {
 	  it.exists()
 	} ?: FALLBACK_FILE else FALLBACK_FILE).let { f ->
-	  if (f.extension == "svg") SVGUniverse().let {
-		val docURI = it.loadSVG(f.toURI().toURL())
-		val bim = BufferedImage(ICON_WIDTH.toInt(), ICON_HEIGHT.toInt(), TYPE_INT_ARGB)
-		val dia = it.getDiagram(docURI)
-		val g = bim.createGraphics().apply {
+	if (f.extension == "svg") SVGUniverse().let {
+	  val docURI = it.loadSVG(f.toURI().toURL())
+	  val bim = BufferedImage(ICON_WIDTH.toInt(), ICON_HEIGHT.toInt(), TYPE_INT_ARGB)
+	  val dia = it.getDiagram(docURI)
+	  val g = bim.createGraphics().apply {
 
-		  //		transform.setToScale(ICON_WIDTH/dia.width, ICON_HEIGHT/dia.height)
+		//		transform.setToScale(ICON_WIDTH/dia.width, ICON_HEIGHT/dia.height)
 
-		  /*renderingHints = RenderingHints(RENDERING_HINTS)*/			//		renderingHints.putAll(RENDERING_HINTS)
+		/*renderingHints = RenderingHints(RENDERING_HINTS)*/            //		renderingHints.putAll(RENDERING_HINTS)
+	  }
+	  dia.apply {
+
+		if (root.hasAttribute("width", AT_XML)) {
+		  root.setAttribute("width", AT_XML, ICON_WIDTH.toInt().toString())
+		} else {
+		  root.addAttribute("width", AT_XML, ICON_WIDTH.toInt().toString())
 		}
-		dia.apply {
 
-		  if (root.hasAttribute("width", AT_XML)) {
-			root.setAttribute("width", AT_XML, ICON_WIDTH.toInt().toString())
-		  } else {
-			root.addAttribute("width", AT_XML, ICON_WIDTH.toInt().toString())
-		  }
-
-		  if (root.hasAttribute("height", AT_XML)) {
-			root.setAttribute("height", AT_XML, ICON_HEIGHT.toInt().toString())
-		  } else {
-			root.addAttribute("height", AT_XML, ICON_HEIGHT.toInt().toString())
-		  }
+		if (root.hasAttribute("height", AT_XML)) {
+		  root.setAttribute("height", AT_XML, ICON_HEIGHT.toInt().toString())
+		} else {
+		  root.addAttribute("height", AT_XML, ICON_HEIGHT.toInt().toString())
+		}
 
 
-		  //		this.deviceViewport = Rectangle(ICON_WIDTH.toInt(), ICON_HEIGHT.toInt())
-		  //		this.
-		  //		setIgnoringClipHeuristic(true)
-		  root.build()			//		  println("svg string = ${this.toString()}")
-		  //		  println("svg root string = ${this.root.toString()}")
+		//		this.deviceViewport = Rectangle(ICON_WIDTH.toInt(), ICON_HEIGHT.toInt())
+		//		this.
+		//		setIgnoringClipHeuristic(true)
+		root.build()            //		  println("svg string = ${this.toString()}")
+		//		  println("svg root string = ${this.root.toString()}")
 
-		}.render(g)
+	  }.render(g)
 
-		bim.toFXImage()
-	  } else Image(
-		f.toPath().toUri().toURL().toString()
-	  )
-	}
+	  bim.toFXImage()
+	} else Image(
+	  f.toPath().toUri().toURL().toString()
+	)
+  }
 }
 
 fun IconImage(file: MFile): Image = images[file]!!
