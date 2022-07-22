@@ -1,22 +1,21 @@
 apis {
   css
+  libs.`fx-graphics`
+  libs.jSystemThemeDetector
+  hurricanefx
+  async
+  hotkey
+  auto
+  fxImage
+  stream
+  klib
+  color
 }
-apis(
-  libs.fx.graphics,
-  libs.jSystemThemeDetector,
-
-  projects.k.hurricanefx,
-  projects.k.async,
-  projects.k.hotkey,
-  projects.k.auto,
-  projects.k.fx.image,
-  projects.k.stream,
-  projects.k.klib,
-  ":k:color".auto(),
-
-  )
-
+implementations {
+  libs.svgsalamander
+}
 implementations(
   dependencies.kotlin("reflect"),
-  libs.svgsalamander
 )
+
+//generateKt()

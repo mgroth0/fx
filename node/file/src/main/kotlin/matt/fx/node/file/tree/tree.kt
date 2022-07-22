@@ -253,37 +253,38 @@ private fun TreeLikeWrapper<*, MFile>.setupGUI() {
 	  checkitem("show sizes", showSizesProp!!)
 	}
 
-
-
-
 	onRequest {
 	  val selects = selectionModel.selectedItems
-	  if (selects.size == 1) {
-		"open in new window" does {
-		  selectedValue?.let {
-			VBoxWrapper().apply {
-			  val container = this
-			  add(it.createNode(renderHTMLAndSVG = true).apply {
-				perfectBind(container)
-				specialTransferingToWindowAndBack(container)
-			  })
-			}.openInNewWindow(
-			  wMode = CLOSE
-			)
+	  when (selects.size) {
+		0    -> Unit
+		1    -> {
+		  "open in new window" does {
+			selectedValue?.let {
+			  VBoxWrapper().apply {
+				val container = this
+				add(it.createNode(renderHTMLAndSVG = true).apply {
+				  perfectBind(container)
+				  specialTransferingToWindowAndBack(container)
+				})
+			  }.openInNewWindow(
+				wMode = CLOSE
+			  )
+			}
+		  }
+		  selectedValue?.let { it.actions() + it.fxActions() }?.forEach { action ->
+			actionitem(action) {
+			  graphic = action.icon?.let { Icon(it).node }
+			}
 		  }
 		}
-		selectedValue?.let { it.actions() + it.fxActions() }?.forEach { action ->
-		  actionitem(action) {
-			graphic = action.icon?.let { Icon(it).node }
+		else -> {
+		  "move all to trash" does {
+			//		  confirm("delete all?") {
+			selects.forEach {
+			  it.value.moveToTrash()
+			}
+			//		  }
 		  }
-		}
-	  } else if (selects.size > 1) {
-		"move all to trash" does {
-		  //		  confirm("delete all?") {
-		  selects.forEach {
-			it.value.moveToTrash()
-		  }
-		  //		  }
 		}
 	  }
 	}
