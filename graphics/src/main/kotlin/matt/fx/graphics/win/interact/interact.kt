@@ -8,7 +8,6 @@ import javafx.scene.Node
 import javafx.scene.Parent
 import javafx.scene.Scene
 import javafx.scene.control.Alert
-import javafx.scene.control.Button
 import javafx.scene.control.TextInputDialog
 import javafx.scene.image.ImageView
 import javafx.scene.input.KeyCode
@@ -54,7 +53,6 @@ import matt.hurricanefx.wrapper.ImageViewWrapper
 import matt.hurricanefx.wrapper.NodeWrapper
 import matt.hurricanefx.wrapper.RegionWrapper.Companion.wrapped
 import matt.hurricanefx.wrapper.VBoxWrapper
-import matt.hurricanefx.wrapper.wrapped
 import matt.json.prim.isValidJson
 import matt.klib.lang.noExceptions
 import matt.klib.lang.nullIfExceptions

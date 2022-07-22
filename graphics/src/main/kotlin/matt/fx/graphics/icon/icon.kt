@@ -4,14 +4,12 @@ package matt.fx.graphics.icon
 import com.kitfox.svg.SVGUniverse
 import com.kitfox.svg.animation.AnimationElement.AT_XML
 import javafx.scene.image.Image
-import javafx.scene.image.ImageView
 import matt.file.MFile
 import matt.file.commons.ICON_FOLDER
 import matt.fx.image.toFXImage
 import matt.hurricanefx.tornadofx.nodes.add
 import matt.hurricanefx.wrapper.ImageViewWrapper
 import matt.hurricanefx.wrapper.NodeWrapper.Companion.wrapped
-import matt.hurricanefx.wrapper.wrapped
 import matt.stream.map.lazyMap
 import java.awt.RenderingHints.KEY_ALPHA_INTERPOLATION
 import java.awt.RenderingHints.KEY_ANTIALIASING
