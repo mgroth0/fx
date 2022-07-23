@@ -258,7 +258,7 @@ enum class EventHandlerType {
 private fun KClass<*>.jumpToSource() {
   val pack = this.java.`package`.name
   jumpToKotlinSourceString(
-	matt.mstruct.IdeProject.all.folder,
+	matt.file.commons.IdeProject.all.folder,
 	this.simpleName!!,
 	packageFilter = pack
   )?.let { fl ->
