@@ -244,11 +244,11 @@ fun SceneWrapper.showMContextMenu(
 	}
 	if (items.isNotEmpty()) separator()
 	t.toc("made spe")
-	items += target.hotkeyInfoMenu()
+	items += target.wrapped().hotkeyInfoMenu()
 	t.toc("added hotkey info menu")
 	items += devMenu
 	t.toc("added devMeny")
-  }.show(target.node, xy.first, xy.second)
+  }.show(target, xy.first, xy.second)
   t.toc("showed cm")
 }
 
