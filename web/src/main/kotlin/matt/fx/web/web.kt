@@ -1,5 +1,6 @@
 package matt.fx.web
 
+import javafx.application.Platform
 import javafx.application.Platform.runLater
 import javafx.beans.property.DoubleProperty
 import javafx.beans.property.ReadOnlyDoubleProperty
@@ -335,7 +336,9 @@ fun WebViewWrapper.specialTransferingToWindowAndBack(par: PaneWrapper) {
 		setOnCloseRequest {
 		  this.removeFromParent()
 		  par.add(wv)
-		  runLater { zoom = perfectZoom(par.width) }
+		  Platform.runLater {
+			this@specialTransferingToWindowAndBack.zoom = perfectZoom(par.width)
+		  }
 		}
 	  }
 	  runLater { zoom = perfectZoom(this.width) }
