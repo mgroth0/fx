@@ -30,7 +30,7 @@ import matt.hurricanefx.tornadofx.menu.separator
 import matt.hurricanefx.wrapper.EventTargetWrapper
 import matt.hurricanefx.wrapper.MenuItemWrapper
 import matt.hurricanefx.wrapper.NodeW
-import matt.hurricanefx.wrapper.NodeW.Companion.wrapped
+import matt.hurricanefx.wrapper.NodeWrapper.Companion.wrapped
 import matt.hurricanefx.wrapper.NodeWrapper
 import matt.hurricanefx.wrapper.SceneWrapper
 import matt.hurricanefx.wrapper.parent
