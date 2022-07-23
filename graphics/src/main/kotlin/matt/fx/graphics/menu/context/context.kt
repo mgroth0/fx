@@ -258,9 +258,8 @@ enum class EventHandlerType {
 
 private fun KClass<*>.jumpToSource() {
   val pack = this.java.`package`.name
-  warn("reliance on flow project has to go")
   jumpToKotlinSourceString(
-	flow.folder,
+	all.folder,
 	this.simpleName!!,
 	packageFilter = pack
   )?.let { fl ->
