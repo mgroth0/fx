@@ -51,7 +51,9 @@ import matt.hurricanefx.tornadofx.nodes.setOnDoubleClick
 import matt.hurricanefx.wrapper.ButtonWrapper
 import matt.hurricanefx.wrapper.ImageViewWrapper
 import matt.hurricanefx.wrapper.NodeWrapper
+import matt.hurricanefx.wrapper.ParentWrapper.Companion.wrapped
 import matt.hurricanefx.wrapper.RegionWrapper.Companion.wrapped
+import matt.hurricanefx.wrapper.StageWrapper
 import matt.hurricanefx.wrapper.VBoxWrapper
 import matt.json.prim.isValidJson
 import matt.klib.lang.noExceptions
@@ -80,7 +82,7 @@ fun safe(s: String, op: ()->Unit): Boolean {
 
 class MDialog<R> internal constructor(): VBoxWrapper() {
   val stg = MStage(wMode = CLOSE, EscClosable = true).apply {
-	scene = MScene(this@MDialog.node)
+	scene = MScene(this@MDialog).node
 	width = 400.0
 	height = 400.0
   }
@@ -111,7 +113,7 @@ class MDialog<R> internal constructor(): VBoxWrapper() {
 
 val aXBindingStrengthener = WeakHashMap<Stage, DoubleBinding>()
 val aYBindingStrengthener = WeakHashMap<Stage, DoubleBinding>()
-fun Stage.bindXYToOwnerCenter() {
+fun StageWrapper.bindXYToOwnerCenter() {
   require(owner != null) {
 	"must use initOwner before bindXYToOwnerCenter"
   }
@@ -121,8 +123,8 @@ fun Stage.bindXYToOwnerCenter() {
   val yBinding = owner.yProperty().doubleBinding(owner.heightProperty(), this.heightProperty()) {
 	(owner.y + (owner.height/2)) - height/2
   }
-  aXBindingStrengthener[this] = xBinding
-  aYBindingStrengthener[this] = yBinding
+  aXBindingStrengthener[this.node] = xBinding
+  aYBindingStrengthener[this.node] = yBinding
   x = xBinding.value
   xBinding.onChange {
 	x = it
@@ -133,7 +135,7 @@ fun Stage.bindXYToOwnerCenter() {
   }
 }
 
-fun Stage.bindHWToOwner() {
+fun StageWrapper.bindHWToOwner() {
   require(owner != null) {
 	"must use initOwner before bindXYToOwnerCenter"
   }
@@ -208,7 +210,7 @@ sealed class WinGeom {
 
 
   class Bound(val key: String): WinGeom() {
-	override fun applyTo(win: Stage) {
+	override fun applyTo(win: StageWrapper) {
 	  win.bindGeometry(key)
 	}
   }
@@ -219,7 +221,7 @@ sealed class WinGeom {
 	val width: Double = 0.0,
 	val height: Double = 0.0
   ): WinGeom() {
-	override fun applyTo(win: Stage) {
+	override fun applyTo(win: StageWrapper) {
 	  win.x = x
 	  win.y = y
 	  win.height = height
@@ -233,7 +235,7 @@ sealed class WinGeom {
 	val width: Double? = null,
 	val height: Double? = null
   ): WinGeom() {
-	override fun applyTo(win: Stage) {
+	override fun applyTo(win: StageWrapper) {
 	  require(win.owner != null) { "use initOwner first" }
 	  win.x = x ?: win.owner.x
 	  win.y = y ?: win.owner.y
@@ -246,7 +248,7 @@ sealed class WinGeom {
 	val width: Double = 400.0,
 	val height: Double = 400.0
   ): WinGeom() {
-	override fun applyTo(win: Stage) {
+	override fun applyTo(win: StageWrapper) {
 	  win.width = width
 	  win.height = height
 	  if (win.owner == null) {
@@ -261,7 +263,7 @@ sealed class WinGeom {
   }
 
   object Max: WinGeom() {
-	override fun applyTo(win: Stage) {
+	override fun applyTo(win: StageWrapper) {
 	  win.isMaximized = true
 	  //	  win.width = width
 	  //	  win.height = height
@@ -277,7 +279,7 @@ sealed class WinGeom {
   }
 
   object CenteredMinWrapContent: WinGeom() {
-	override fun applyTo(win: Stage) {
+	override fun applyTo(win: StageWrapper) {
 	  require(win.owner != null) { "use initOwner first" }
 
 	  win.bindXYToOwnerCenter()
@@ -285,36 +287,36 @@ sealed class WinGeom {
   }
 
   class MatchOwner: WinGeom() {
-	override fun applyTo(win: Stage) {
+	override fun applyTo(win: StageWrapper) {
 	  require(win.owner != null) { "use initOwner first" }
 	  win.bindXYToOwnerCenter()
 	  win.bindHWToOwner()
 	}
   }
 
-  abstract fun applyTo(win: Stage)
+  abstract fun applyTo(win: StageWrapper)
 }
 
 sealed class WinOwn {
   object None: WinOwn() {
-	override fun applyTo(win: Stage) {
+	override fun applyTo(win: StageWrapper) {
 	  /*do nothing*/
 	}
   }
 
   class Owner(val owner: Window): WinOwn() {
-	override fun applyTo(win: Stage) {
+	override fun applyTo(win: StageWrapper) {
 	  win.initOwner(owner)
 	}
   }
 
   object Auto: WinOwn() {
-	override fun applyTo(win: Stage) {
+	override fun applyTo(win: StageWrapper) {
 	  win.initOwner(Window.getWindows().firstOrNull())
 	}
   }
 
-  abstract fun applyTo(win: Stage)
+  abstract fun applyTo(win: StageWrapper)
 }
 
 fun NodeWrapper<out Parent>.openInNewWindow(
@@ -325,7 +327,7 @@ fun NodeWrapper<out Parent>.openInNewWindow(
   own: WinOwn = Auto,
   geom: WinGeom = Centered(),
   mScene: Boolean = true,
-  beforeShowing: Stage.()->Unit = {},
+  beforeShowing: StageWrapper.()->Unit = {},
   border: Boolean = true,
   decorated: Boolean = false
 ) = node.openInNewWindow(
@@ -340,7 +342,7 @@ fun Parent.openInNewWindow(
   own: WinOwn = Auto,
   geom: WinGeom = Centered(),
   mScene: Boolean = true,
-  beforeShowing: Stage.()->Unit = {},
+  beforeShowing: StageWrapper.()->Unit = {},
   border: Boolean = true,
   decorated: Boolean = false
 ): MStage {
@@ -350,7 +352,7 @@ fun Parent.openInNewWindow(
 	EnterClosable = EnterClosable,
 	decorated = decorated
   ).apply {
-	scene = if (mScene) MScene(this@openInNewWindow) else Scene(this@openInNewWindow)
+	scene = if (mScene) MScene(this@openInNewWindow.wrapped()).node else Scene(this@openInNewWindow)
 	own.applyTo(this)
 	geom.applyTo(this)
 	if (border) {

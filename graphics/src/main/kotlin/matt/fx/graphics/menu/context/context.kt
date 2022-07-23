@@ -210,7 +210,7 @@ fun SceneWrapper.showMContextMenu(
   contextMenus[this.node]!!.apply {
 	items.clear()
 	t.toc("cleared items")
-	var node: EventTarget = target.node
+	var node: EventTarget = target
 	val added = mutableListOf<String>()
 	t.toc("starting loop")
 	while (true) {
