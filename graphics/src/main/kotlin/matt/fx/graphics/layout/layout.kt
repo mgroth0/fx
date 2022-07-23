@@ -50,6 +50,7 @@ import matt.hurricanefx.wrapper.ScrollPaneWrapper
 import matt.hurricanefx.wrapper.SeparatorWrapper
 import matt.hurricanefx.wrapper.SplitPaneWrapper
 import matt.hurricanefx.wrapper.StackPaneWrapper
+import matt.hurricanefx.wrapper.StageWrapper
 import matt.hurricanefx.wrapper.TilePaneWrapper
 import matt.hurricanefx.wrapper.TitledPaneWrapper
 import matt.hurricanefx.wrapper.ToolBarWrapper
@@ -63,7 +64,7 @@ infix fun RegionWrapper.minBind(other: RegionWrapper) {
   minWidthProperty.bind(other.widthProperty)
 }
 
-infix fun RegionWrapper.minBind(other: Stage) {
+infix fun RegionWrapper.minBind(other: StageWrapper) {
   minHeightProperty.bind(other.heightProperty())
   minWidthProperty.bind(other.widthProperty())
 }
@@ -74,7 +75,7 @@ infix fun RegionWrapper.maxBind(other: RegionWrapper) {
   maxWidthProperty.bind(other.widthProperty)
 }
 
-infix fun RegionWrapper.maxBind(other: Stage) {
+infix fun RegionWrapper.maxBind(other: StageWrapper) {
   maxHeightProperty.bind(other.heightProperty())
   maxWidthProperty.bind(other.widthProperty())
 }
@@ -85,7 +86,7 @@ infix fun RegionWrapper.perfectBind(other: RegionWrapper) {
   this maxBind other
 }
 
-infix fun RegionWrapper.perfectBind(other: Stage) {
+infix fun RegionWrapper.perfectBind(other: StageWrapper) {
   this minBind other
   this maxBind other
 }
