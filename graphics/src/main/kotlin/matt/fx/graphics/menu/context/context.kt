@@ -5,6 +5,7 @@ import javafx.beans.property.BooleanProperty
 import javafx.collections.ListChangeListener.Change
 import javafx.event.EventTarget
 import javafx.scene.Group
+import javafx.scene.Node
 import javafx.scene.Parent
 import javafx.scene.Scene
 import javafx.scene.canvas.Canvas
@@ -170,13 +171,23 @@ val contextMenus = lazyMap<Scene, ContextMenu> {
 }
 
 
-/*
-* https://docs.oracle.com/javase/8/javafx/api/javafx/scene/control/ContextMenu.html
-* */
+
+
+
+/**
+ * see [here](https://docs.oracle.com/javase/8/javafx/api/javafx/scene/control/ContextMenu.html) for info on how to propertly use a context menu
+ * KDoc test: [NodeWrapper]
+ * [inline markup](https://kotlinlang.org/docs/kotlin-doc.html#inline-markup)
+ *
+ * @param target must be a [Node] and not a [NodeWrapper] because event targets dont carry a wrapper reference
+ *
+ */
 fun SceneWrapper.showMContextMenu(
-  target: NodeW,
+  target: Node, /*cannot be [NodeWrapper] because event targets are not wrappers?*/
   xy: Pair<Double, Double>
 ) {
+
+  sequenceOf(1,2,3)
 
   CmFix()
 
