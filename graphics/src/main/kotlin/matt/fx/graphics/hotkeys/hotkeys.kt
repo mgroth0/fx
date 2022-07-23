@@ -31,9 +31,8 @@ import matt.fx.graphics.mag.top
 import matt.fx.graphics.mag.topleft
 import matt.fx.graphics.mag.topright
 import matt.fx.graphics.style.borderFill
-import matt.hurricanefx.wrapper.EventTargetWrapper.Companion.wrapped
 import matt.hurricanefx.wrapper.RegionWrapper.Companion.wrapped
-import matt.hurricanefx.wrapper.wrapped
+import matt.hurricanefx.wrapper.WindowWrapper.Companion.wrapped
 import matt.klib.dmap.withStoringDefault
 import matt.klib.lang.go
 import java.lang.Thread.sleep
@@ -47,7 +46,7 @@ fun MScene.addDefaultHotkeys() {
   val scene = this
 
   /*needed filter to be true here or for some reason LEFT.ctrl.opt.shift wasn't being captured in music app even though it was captured in all other apps (globalhotkeys, brainstorm, kjg)*/
-  wrapped().hotkeys(quickPassForNormalTyping = true, filter = true) {
+  hotkeys(quickPassForNormalTyping = true, filter = true) {
 
 	LEFT.ctrl.opt { window.x -= window.width }
 	RIGHT.ctrl.opt { window.x += window.width }
@@ -88,42 +87,42 @@ fun MScene.addDefaultHotkeys() {
 //	  window.y += window.height
 	}
 
-	A.ctrl.opt { window?.left() }
-	D.ctrl.opt { window?.right() }
-	W.ctrl.opt { window?.top() }
-	S.ctrl.opt { window?.bottom() }
+	A.ctrl.opt { window?.wrapped()?.left() }
+	D.ctrl.opt { window?.wrapped()?.right() }
+	W.ctrl.opt { window?.wrapped()?.top() }
+	S.ctrl.opt { window?.wrapped()?.bottom() }
 
-	Z.ctrl.opt { window?.bottomleft() }
-	E.ctrl.opt { window?.topright() }
-	Q.ctrl.opt { window?.topleft() }
-	C.ctrl.opt { window?.bottomright() }
+	Z.ctrl.opt { window?.wrapped()?.bottomleft() }
+	E.ctrl.opt { window?.wrapped()?.topright() }
+	Q.ctrl.opt { window?.wrapped()?.topleft() }
+	C.ctrl.opt { window?.wrapped()?.bottomright() }
 
 	LEFT_BRACKET.ctrl.opt {
-	  window?.apply {
+	  window?.wrapped()?.apply {
 		if (!reversed_displays) lastdisplay()
 		else nextdisplay()
 	  }
 	}
 	RIGHT_BRACKET.ctrl.opt {
-	  window?.apply {
+	  window?.wrapped()?.apply {
 		if (!reversed_displays) nextdisplay()
 		else lastdisplay()
 	  }
 	}
 
 	F.ctrl.opt { (window as? Stage?)?.isFullScreen = !((window as Stage).isFullScreen) }
-	TAB.ctrl.opt { (window as? Stage?)?.max() }
-	ENTER.ctrl.opt { window?.resetPosition() }
+	TAB.ctrl.opt { (window as? Stage?)?.wrapped()?.max() }
+	ENTER.ctrl.opt { window?.wrapped()?.resetPosition() }
 	X.ctrl.opt { iconify(icon) }
 
-	DIGIT1.ctrl.opt { window.eighth1() }
-	DIGIT2.ctrl.opt { window.eighth2() }
-	DIGIT3.ctrl.opt { window.eighth3() }
-	DIGIT4.ctrl.opt { window.eighth4() }
-	DIGIT5.ctrl.opt { window.eighth5() }
-	DIGIT6.ctrl.opt { window.eighth6() }
-	DIGIT7.ctrl.opt { window.eighth7() }
-	DIGIT8.ctrl.opt { window.eighth8() }
+	DIGIT1.ctrl.opt { window?.wrapped()?.eighth1() }
+	DIGIT2.ctrl.opt { window?.wrapped()?.eighth2() }
+	DIGIT3.ctrl.opt { window?.wrapped()?.eighth3() }
+	DIGIT4.ctrl.opt { window?.wrapped()?.eighth4() }
+	DIGIT5.ctrl.opt { window?.wrapped()?.eighth5() }
+	DIGIT6.ctrl.opt { window?.wrapped()?.eighth6() }
+	DIGIT7.ctrl.opt { window?.wrapped()?.eighth7() }
+	DIGIT8.ctrl.opt { window?.wrapped()?.eighth8() }
 
 	hotkeys.map { it as HotKey }.forEach {
 	  it.wrapOp {

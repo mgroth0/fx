@@ -1,7 +1,6 @@
 package matt.fx.graphics.mag
 
 import javafx.stage.Screen
-import javafx.stage.Window
 import matt.file.commons.VAR_JSON_FILE
 import matt.hurricanefx.wrapper.WindowWrapper
 import matt.json.custom.bool
