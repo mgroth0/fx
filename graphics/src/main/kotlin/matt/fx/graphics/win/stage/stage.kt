@@ -1,6 +1,5 @@
 package matt.fx.graphics.win.stage
 
-import javafx.stage.Stage
 import javafx.stage.StageStyle
 import matt.fx.graphics.core.scene.MScene
 import matt.fx.graphics.hotkey.hotkeys
@@ -9,8 +8,9 @@ import matt.fx.graphics.win.stage.WMode.HIDE
 import matt.fx.graphics.win.stage.WMode.ICONIFY
 import matt.fx.graphics.win.stage.WMode.NOTHING
 import matt.fx.graphics.win.winfun.pullBackWhenOffscreen
-import matt.hurricanefx.wrapper.EventTargetWrapper.Companion.wrapped
+import matt.hurricanefx.wrapper.StageWrapper
 import matt.klib.commons.thisMachine
+import matt.klib.log.warn
 import matt.klib.sys.GAMING_WINDOWS
 
 enum class WMode {
@@ -31,12 +31,12 @@ open class MStage(
   EnterClosable: Boolean = false,
   decorated: Boolean = false,
   pullBackWhenOffScreen: Boolean = true
-): Stage(if (decorated) StageStyle.DECORATED else StageStyle.UNDECORATED) {
+): StageWrapper(if (decorated) StageStyle.DECORATED else StageStyle.UNDECORATED) {
   init {
 	if (pullBackWhenOffScreen) {
 	  pullBackWhenOffscreen()
 	}
-	wrapped().hotkeys {
+	hotkeys {
 	  if (thisMachine ==GAMING_WINDOWS) {
 		Q.opt op ::close // on Mac, meta-Q quits program. this an OS feature.
 	  }
@@ -50,6 +50,8 @@ open class MStage(
 		}
 		ICONIFY -> {
 		  {
+			warn("dealing with this later... i guess now")
+			@Suppress("CAST_NEVER_SUCCEEDS")
 			(this@MStage.scene as MScene).iconify()
 		  }
 		}

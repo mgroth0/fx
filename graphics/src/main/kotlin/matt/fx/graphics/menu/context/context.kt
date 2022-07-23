@@ -5,7 +5,6 @@ import javafx.beans.property.BooleanProperty
 import javafx.collections.ListChangeListener.Change
 import javafx.event.EventTarget
 import javafx.scene.Group
-import javafx.scene.Node
 import javafx.scene.Parent
 import javafx.scene.Scene
 import javafx.scene.canvas.Canvas
@@ -15,7 +14,6 @@ import javafx.scene.control.Menu
 import javafx.scene.control.MenuItem
 import javafx.scene.layout.Region
 import javafx.scene.shape.Shape
-import matt.async.date.sec
 import matt.async.date.tic
 import matt.auto.jumpToKotlinSourceString
 import matt.auto.openInIntelliJ
@@ -25,20 +23,20 @@ import matt.fx.graphics.hotkey.handlers
 import matt.fx.graphics.menu.actionitem
 import matt.fx.graphics.menu.context.EventHandlerType.Filter
 import matt.fx.graphics.menu.context.EventHandlerType.Handler
-import matt.hurricanefx.stage
 import matt.hurricanefx.tornadofx.menu.item
 import matt.hurricanefx.tornadofx.menu.menu
 import matt.hurricanefx.tornadofx.menu.separator
 import matt.hurricanefx.wrapper.MenuItemWrapper
+import matt.hurricanefx.wrapper.NodeW
 import matt.hurricanefx.wrapper.NodeWrapper
+import matt.hurricanefx.wrapper.SceneWrapper
+import matt.hurricanefx.wrapper.parent
 import matt.klib.dmap.withStoringDefault
-import matt.klib.lang.NEVER
 import matt.klib.log.warn
 import matt.stream.map.lazyMap
 import matt.stream.recurse.chain
 import java.lang.Thread.sleep
 import java.util.WeakHashMap
-import kotlin.collections.set
 import kotlin.concurrent.thread
 import kotlin.reflect.KClass
 
@@ -175,8 +173,8 @@ val contextMenus = lazyMap<Scene, ContextMenu> {
 /*
 * https://docs.oracle.com/javase/8/javafx/api/javafx/scene/control/ContextMenu.html
 * */
-fun Scene.showMContextMenu(
-  target: Node,
+fun SceneWrapper.showMContextMenu(
+  target: NodeW,
   xy: Pair<Double, Double>
 ) {
 
@@ -197,10 +195,10 @@ fun Scene.showMContextMenu(
 
   val reflectMenu = devMenu.menu("reflect")
   t.toc("made reflect menu")
-  contextMenus[this]!!.apply {
+  contextMenus[this.node]!!.apply {
 	items.clear()
 	t.toc("cleared items")
-	var node: EventTarget = target
+	var node: EventTarget = target.node
 	val added = mutableListOf<String>()
 	t.toc("starting loop")
 	while (true) {
@@ -238,7 +236,7 @@ fun Scene.showMContextMenu(
 	t.toc("added hotkey info menu")
 	items += devMenu
 	t.toc("added devMeny")
-  }.show(target, xy.first, xy.second)
+  }.show(target.node, xy.first, xy.second)
   t.toc("showed cm")
 }
 
@@ -258,7 +256,7 @@ private fun KClass<*>.jumpToSource() {
   }
 }
 
-private fun Node.hotkeyInfoMenu() = Menu("Click For Hotkey Info").apply {
+private fun NodeW.hotkeyInfoMenu() = Menu("Click For Hotkey Info").apply {
   val node = this@hotkeyInfoMenu
   fun addInfo(type: EventHandlerType) {
 	menu(

@@ -40,7 +40,9 @@ import matt.fx.graphics.win.interact.openInNewWindow
 import matt.fx.graphics.win.winfun.noDocking
 import matt.hurricanefx.tornadofx.menu.menu
 import matt.hurricanefx.tornadofx.nodes.setOnDoubleClick
+import matt.hurricanefx.wrapper.ParentWrapper
 import matt.hurricanefx.wrapper.RegionWrapper.Companion.wrapped
+import matt.hurricanefx.wrapper.SceneWrapper
 import matt.hurricanefx.wrapper.VBoxWrapper
 import matt.klib.str.tab
 import matt.stream.recurse.recurse
@@ -64,14 +66,14 @@ fun Scene.reloadStyle(darkMode: Boolean) {
 }
 
 open class MScene(
-  root: Parent, val icon: MFile
-): Scene(root) {
+  root: ParentWrapper, val icon: MFile
+): SceneWrapper(root) {
   constructor(
-	root: Parent, icon: String
+	root: ParentWrapper, icon: String
   ): this(root, ICON_FOLDER["white/$icon.png"])
 
   constructor(
-	root: Parent
+	root: ParentWrapper
   ): this(root, "chunk")
 
   private fun handleContextMenuReq(e: Event) {

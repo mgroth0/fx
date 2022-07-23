@@ -3,6 +3,7 @@ package matt.fx.graphics.mag
 import javafx.stage.Screen
 import javafx.stage.Window
 import matt.file.commons.VAR_JSON_FILE
+import matt.hurricanefx.wrapper.WindowWrapper
 import matt.json.custom.bool
 import matt.json.prim.parseJsonObj
 import matt.json.prim.set
@@ -12,7 +13,7 @@ const val NEW_MAC_NOTCH_ESTIMATE = 32.0 /*35*/
 const val NEW_MAC_MENU_BAR_ESTIMATE = NEW_MAC_NOTCH_ESTIMATE + 2.0
 val NEW_MAX_MENU_Y_ESTIMATE_SECONDARY = 25.0
 
-val Window.screen: Screen?
+val WindowWrapper<*>.screen: Screen?
   get() = Screen.getScreensForRectangle(x, y, 1.0, 1.0).firstOrNull()
 
 data class RectSize(
@@ -26,16 +27,16 @@ data class RectSize(
 /*no idea if this will work*/
 fun Screen.isPrimary() = bounds.minX == 0.0 && bounds.minY == 0.0
 
-fun Window.extraMinY() = if (this.screen?.isPrimary() != false) NEW_MAC_NOTCH_ESTIMATE else 0.0
+fun WindowWrapper<*>.extraMinY() = if (this.screen?.isPrimary() != false) NEW_MAC_NOTCH_ESTIMATE else 0.0
 
-fun Window.maxsize() {
+fun WindowWrapper<*>.maxsize() {
   screen?.let {
 	width = it.bounds.width
 	height = it.bounds.height - extraMinY()
   }
 }
 
-fun Window.hhalf() {
+fun WindowWrapper<*>.hhalf() {
   println("hhalf")
   println("screen=${screen}")
   screen?.let {
@@ -46,28 +47,28 @@ fun Window.hhalf() {
   }
 }
 
-fun Window.vhalf() {
+fun WindowWrapper<*>.vhalf() {
   screen?.let {
 	width = it.bounds.width
 	height = it.bounds.height/2 - (extraMinY()/2.0)
   }
 }
 
-fun Window.corner() {
+fun WindowWrapper<*>.corner() {
   screen?.let {
 	width = it.bounds.width/2
 	height = it.bounds.height/2 - (extraMinY()/2.0)
   }
 }
 
-fun Window.eigth() {
+fun WindowWrapper<*>.eigth() {
   screen?.let {
 	width = it.bounds.width/4
 	height = it.bounds.height/2 - (extraMinY()/2.0)
   }
 }
 
-fun Window.resetPosition() {
+fun WindowWrapper<*>.resetPosition() {
   Screen.getPrimary().let {
 	x = it.bounds.minX
 	y = it.bounds.minY + extraMinY()
@@ -76,7 +77,7 @@ fun Window.resetPosition() {
   }
 }
 
-fun Window.myMax() {
+fun WindowWrapper<*>.myMax() {
   screen?.let {
 	x = it.bounds.minX
 	y = it.bounds.minY + extraMinY()
@@ -84,7 +85,7 @@ fun Window.myMax() {
   }
 }
 
-fun Window.left() {
+fun WindowWrapper<*>.left() {
   println("left")
   println("screen = $screen")
   screen?.let {
@@ -97,7 +98,7 @@ fun Window.left() {
 }
 
 
-fun Window.right() {
+fun WindowWrapper<*>.right() {
   println("right")
   println("screen = $screen")
   screen?.let {
@@ -109,7 +110,7 @@ fun Window.right() {
   }
 }
 
-fun Window.top() {
+fun WindowWrapper<*>.top() {
   screen?.let {
 	x = it.bounds.minX
 	y = it.bounds.minY + extraMinY()
@@ -117,7 +118,7 @@ fun Window.top() {
   }
 }
 
-fun Window.bottom() {
+fun WindowWrapper<*>.bottom() {
   screen?.let {
 	x = it.bounds.minX
 	y = it.bounds.maxY - (it.bounds.height/2) - (extraMinY()/2.0)
@@ -126,7 +127,7 @@ fun Window.bottom() {
 }
 
 
-fun Window.topleft() {
+fun WindowWrapper<*>.topleft() {
   screen?.let {
 	x = it.bounds.minX
 	y = it.bounds.minY + extraMinY()
@@ -134,7 +135,7 @@ fun Window.topleft() {
   }
 }
 
-fun Window.topright() {
+fun WindowWrapper<*>.topright() {
   screen?.let {
 	x = it.bounds.maxX - (it.bounds.width/2)
 	y = it.bounds.minY + extraMinY()
@@ -142,7 +143,7 @@ fun Window.topright() {
   }
 }
 
-fun Window.bottomleft() {
+fun WindowWrapper<*>.bottomleft() {
   screen?.let {
 	x = it.bounds.minX
 	y = it.bounds.maxY - (it.bounds.height/2) - (extraMinY()/2.0)
@@ -150,7 +151,7 @@ fun Window.bottomleft() {
   }
 }
 
-fun Window.bottomright() {
+fun WindowWrapper<*>.bottomright() {
   screen?.let {
 	x = it.bounds.maxX - (it.bounds.width/2)
 	y = it.bounds.maxY - (it.bounds.height/2) - (extraMinY()/2.0)
@@ -158,7 +159,7 @@ fun Window.bottomright() {
   }
 }
 
-fun Window.max() {
+fun WindowWrapper<*>.max() {
   // isMaximized isnt working for undecorated
   screen?.let {
 	x = it.bounds.minX
@@ -168,7 +169,7 @@ fun Window.max() {
   }
 }
 
-fun Window.nextdisplay(reversed: Boolean = false) {
+fun WindowWrapper<*>.nextdisplay(reversed: Boolean = false) {
   val myscreen = screen
   val screens = Screen.getScreens().let { if (reversed) it.reversed() else it }
   if (screens.size > 1) {
@@ -190,12 +191,12 @@ fun Window.nextdisplay(reversed: Boolean = false) {
   }
 }
 
-fun Window.lastdisplay() {
+fun WindowWrapper<*>.lastdisplay() {
   return nextdisplay(reversed = true)
 }
 
 
-fun Window.eighth1() {
+fun WindowWrapper<*>.eighth1() {
   screen?.let {
 	x = it.bounds.minX
 	y = it.bounds.minY + extraMinY()
@@ -203,7 +204,7 @@ fun Window.eighth1() {
   }
 }
 
-fun Window.eighth2() {
+fun WindowWrapper<*>.eighth2() {
   screen?.let {
 	x = it.bounds.minX + (it.bounds.width/4)
 	y = it.bounds.minY + extraMinY()
@@ -211,7 +212,7 @@ fun Window.eighth2() {
   }
 }
 
-fun Window.eighth3() {
+fun WindowWrapper<*>.eighth3() {
   screen?.let {
 	x = it.bounds.minX + (it.bounds.width/2)
 	y = it.bounds.minY + extraMinY()
@@ -219,7 +220,7 @@ fun Window.eighth3() {
   }
 }
 
-fun Window.eighth4() {
+fun WindowWrapper<*>.eighth4() {
   screen?.let {
 	x = it.bounds.maxX - (it.bounds.width/4)
 	y = it.bounds.minY + extraMinY()
@@ -227,7 +228,7 @@ fun Window.eighth4() {
   }
 }
 
-fun Window.eighth5() {
+fun WindowWrapper<*>.eighth5() {
   screen?.let {
 	x = it.bounds.minX
 	y = it.bounds.minY + (it.bounds.height/2) - (extraMinY()/2.0)
@@ -235,7 +236,7 @@ fun Window.eighth5() {
   }
 }
 
-fun Window.eighth6() {
+fun WindowWrapper<*>.eighth6() {
   screen?.let {
 	x = it.bounds.minX + (it.bounds.width/4)
 	y = it.bounds.minY + (it.bounds.height/2) - (extraMinY()/2.0)
@@ -243,7 +244,7 @@ fun Window.eighth6() {
   }
 }
 
-fun Window.eighth7() {
+fun WindowWrapper<*>.eighth7() {
   screen?.let {
 	x = it.bounds.minX + (it.bounds.width/2)
 	y = it.bounds.minY + (it.bounds.height/2) - (extraMinY()/2.0)
@@ -251,7 +252,7 @@ fun Window.eighth7() {
   }
 }
 
-fun Window.eighth8() {
+fun WindowWrapper<*>.eighth8() {
   screen?.let {
 	x = it.bounds.maxX - (it.bounds.width/4)
 	y = it.bounds.minY + (it.bounds.height/2) - (extraMinY()/2.0)

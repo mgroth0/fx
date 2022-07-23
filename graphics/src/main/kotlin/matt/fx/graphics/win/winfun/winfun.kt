@@ -1,14 +1,14 @@
 package matt.fx.graphics.win.winfun
 
 import javafx.application.Platform.runLater
-import javafx.stage.Stage
 import matt.async.daemon
+import matt.fx.graphics.async.runLaterReturn
 import matt.fx.graphics.mag.screen
 import matt.hurricanefx.eye.lib.onChange
-import matt.fx.graphics.async.runLaterReturn
+import matt.hurricanefx.wrapper.StageWrapper
 import matt.klib.log.warn
 
-fun Stage.pullBackWhenOffscreen() {
+fun StageWrapper.pullBackWhenOffscreen() {
   setOnShowing {
 	daemon {
 	  while (isShowing) {
@@ -27,7 +27,7 @@ fun Stage.pullBackWhenOffscreen() {
   }
 }
 
-fun Stage.noDocking(
+fun StageWrapper.noDocking(
   ifCondition: ()->Boolean = { true }
 ) {
   iconifiedProperty().onChange {
