@@ -3,7 +3,6 @@ package matt.fx.graphics.core.scene
 import javafx.event.Event
 import javafx.scene.Node
 import javafx.scene.Parent
-import javafx.scene.Scene
 import javafx.scene.input.ContextMenuEvent
 import javafx.scene.layout.Region
 import javafx.scene.paint.Color
@@ -43,6 +42,8 @@ import matt.hurricanefx.tornadofx.nodes.setOnDoubleClick
 import matt.hurricanefx.wrapper.ParentWrapper
 import matt.hurricanefx.wrapper.RegionWrapper.Companion.wrapped
 import matt.hurricanefx.wrapper.SceneWrapper
+import matt.hurricanefx.wrapper.SceneWrapper.Companion.wrapped
+import matt.hurricanefx.wrapper.StageWrapper
 import matt.hurricanefx.wrapper.VBoxWrapper
 import matt.klib.str.tab
 import matt.stream.recurse.recurse
@@ -52,7 +53,7 @@ import kotlin.reflect.KClass
 /*this is for when I have two monitors that are the scame brand and therefore mac is mixing up which side each is on I think*/
 const val NEED_REVERSED_DISPLAYS_FEATURE = false
 
-fun Scene.reloadStyle(darkMode: Boolean) {
+fun SceneWrapper.reloadStyle(darkMode: Boolean) {
   stylesheets.clear()
   fill = null
   if (darkMode) {
@@ -169,8 +170,8 @@ open class MScene(
 }
 
 
-fun Scene.iconify(icon: MFile) {
-  var iconWindow: Stage? = null
+fun SceneWrapper.iconify(icon: MFile) {
+  var iconWindow: StageWrapper? = null
   println("making icon with $icon")
   VBoxWrapper(Icon(icon)).apply {
 	var xOffset: Double? = null
@@ -195,8 +196,8 @@ fun Scene.iconify(icon: MFile) {
 	x = this@iconify.window.x + (this@iconify.window.width/2) - (ICON_WIDTH/2),
 	y = this@iconify.window.y + (this@iconify.window.height/2) - (ICON_HEIGHT/2),
   ), mScene = false, border = false, beforeShowing = {
-	scene.reloadStyle(darkModeProp.value)
-	darkModeProp.onChangeWithWeak(this) { scene.reloadStyle(darkModeProp.value) }
+	scene.wrapped().reloadStyle(darkModeProp.value)
+	darkModeProp.onChangeWithWeak(this) { scene.wrapped().reloadStyle(darkModeProp.value) }
   }).apply {
 	iconWindow = this
 	isAlwaysOnTop = true

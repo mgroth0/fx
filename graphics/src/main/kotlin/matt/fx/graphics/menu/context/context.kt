@@ -27,6 +27,7 @@ import matt.fx.graphics.menu.context.EventHandlerType.Handler
 import matt.hurricanefx.tornadofx.menu.item
 import matt.hurricanefx.tornadofx.menu.menu
 import matt.hurricanefx.tornadofx.menu.separator
+import matt.hurricanefx.wrapper.EventTargetWrapper
 import matt.hurricanefx.wrapper.MenuItemWrapper
 import matt.hurricanefx.wrapper.NodeW
 import matt.hurricanefx.wrapper.NodeWrapper
@@ -46,7 +47,7 @@ fun EventTarget.mcontextmenu(op: MContextMenuBuilder.()->Unit) {
   MContextMenuBuilder(this).apply(op)
 }
 
-fun NodeWrapper<*>.mcontextmenu(op: MContextMenuBuilder.()->Unit) = node.mcontextmenu(op)
+fun EventTargetWrapper<*>.mcontextmenu(op: MContextMenuBuilder.()->Unit) = node.mcontextmenu(op)
 
 class MContextMenuBuilder(
   val node: EventTarget,
