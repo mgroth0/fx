@@ -29,12 +29,11 @@ import matt.hurricanefx.tornadofx.menu.separator
 import matt.hurricanefx.wrapper.EventTargetWrapper
 import matt.hurricanefx.wrapper.MenuItemWrapper
 import matt.hurricanefx.wrapper.NodeW
-import matt.hurricanefx.wrapper.NodeWrapper.Companion.wrapped
 import matt.hurricanefx.wrapper.NodeWrapper
+import matt.hurricanefx.wrapper.NodeWrapper.Companion.wrapped
 import matt.hurricanefx.wrapper.SceneWrapper
 import matt.hurricanefx.wrapper.parent
 import matt.klib.dmap.withStoringDefault
-import matt.klib.log.warn
 import matt.stream.map.lazyMap
 import matt.stream.recurse.chain
 import java.lang.Thread.sleep
@@ -259,7 +258,7 @@ enum class EventHandlerType {
 private fun KClass<*>.jumpToSource() {
   val pack = this.java.`package`.name
   jumpToKotlinSourceString(
-	all.folder,
+	matt.mstruct.IdeProject.all.folder,
 	this.simpleName!!,
 	packageFilter = pack
   )?.let { fl ->
