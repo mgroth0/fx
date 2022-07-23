@@ -26,6 +26,7 @@ import matt.fx.graphics.refreshWhileInSceneEvery
 import matt.fx.graphics.win.interact.openInNewWindow
 import matt.hurricanefx.eye.lang.DProp
 import matt.hurricanefx.eye.lib.onChangeOnce
+import matt.hurricanefx.runLater
 import matt.hurricanefx.tornadofx.fx.attachTo
 import matt.hurricanefx.tornadofx.nodes.add
 import matt.hurricanefx.tornadofx.nodes.removeFromParent
@@ -36,6 +37,7 @@ import matt.hurricanefx.wrapper.NodeWrapper
 import matt.hurricanefx.wrapper.PaneWrapper
 import matt.hurricanefx.wrapper.ParentWrapper
 import matt.hurricanefx.wrapper.RegionWrapper
+import matt.hurricanefx.wrapper.StageWrapper
 import matt.hurricanefx.wrapper.VBoxWrapper
 import matt.klib.lang.NEVER
 import netscape.javascript.JSObject
@@ -52,37 +54,39 @@ fun WebViewWrapper.exactHeightProperty() = SimpleDoubleProperty().also {
   minHeightProperty.bind(it)
   maxHeightProperty.bind(it)
 }
+
 var WebViewWrapper.exactWidth: Number
   set(value) {
-    exactWidthProperty().bind(DProp(value.toDouble()))
+	exactWidthProperty().bind(DProp(value.toDouble()))
   }
   get() = NEVER
 var WebViewWrapper.exactHeight: Number
   set(value) {
-    exactHeightProperty().bind(DProp(value.toDouble()))
+	exactHeightProperty().bind(DProp(value.toDouble()))
   }
   get() = NEVER
 
 fun NodeWrapper<*>.webview(
   htmlContent: String? = null,
-  op: WebViewWrapper.() -> Unit = {}
-) = WebViewWrapper().apply{
+  op: WebViewWrapper.()->Unit = {}
+) = WebViewWrapper().apply {
   htmlContent?.let {
-    engine.loadContent(htmlContent)
+	engine.loadContent(htmlContent)
   }
 }.attachTo(this, op)
 
 
-fun EventTarget.htmleditor(html: String? = null, op: HTMLEditorWrapper.() -> Unit = {}) = HTMLEditorWrapper().attachTo(this.wrapped(), op) {
-  if (html != null) it.htmlText = html
-}
+fun EventTarget.htmleditor(html: String? = null, op: HTMLEditorWrapper.()->Unit = {}) =
+  HTMLEditorWrapper().attachTo(this.wrapped(), op) {
+	if (html != null) it.htmlText = html
+  }
 
 infix fun WebViewWrapper.perfectBind(other: RegionWrapper) {
   this minBind other
   this maxBind other
 }
 
-infix fun WebViewWrapper.perfectBind(other: Stage) {
+infix fun WebViewWrapper.perfectBind(other: StageWrapper) {
   this minBind other
   this maxBind other
 }
@@ -92,7 +96,7 @@ infix fun WebViewWrapper.maxBind(other: RegionWrapper) {
   maxWidthProperty.bind(other.widthProperty)
 }
 
-infix fun WebViewWrapper.maxBind(other: Stage) {
+infix fun WebViewWrapper.maxBind(other: StageWrapper) {
   maxHeightProperty.bind(other.heightProperty()) // gotta be strict with webview, which I think tries to be big
   maxWidthProperty.bind(other.widthProperty())
 }
@@ -102,17 +106,10 @@ infix fun WebViewWrapper.minBind(other: RegionWrapper) {
   minWidthProperty.bind(other.widthProperty)
 }
 
-infix fun WebViewWrapper.minBind(other: Stage) {
+infix fun WebViewWrapper.minBind(other: StageWrapper) {
   minHeightProperty.bind(other.heightProperty())
   minWidthProperty.bind(other.widthProperty())
 }
-
-
-
-
-
-
-
 
 
 @Language("JavaScript")
@@ -153,7 +150,7 @@ val AB = solve(Y1, Z1, Y2, Z2)
 val A = AB.first
 val B = AB.second
 fun perfectZoom(width_or_height: Double): Double {
-  require(width_or_height!=0.0)
+  require(width_or_height != 0.0)
   val r = width_or_height*A + B
   println("perfect zoom of $width_or_height is $r")
   return r
@@ -167,51 +164,50 @@ private const val SCROLL_COMPENSATION_RATE = SPECIAL_ZOOM_RATE - 1.0
 fun WebViewWrapper.specialZooming(par: RegionWrapper? = null) {
 
 
-
   setOnKeyPressed {
-    if (it.code == KeyCode.EQUALS) {
+	if (it.code == KeyCode.EQUALS) {
 
-      if (zoom == 0.0) zoom = 1.0
+	  if (zoom == 0.0) zoom = 1.0
 
-      zoom *= SPECIAL_ZOOM_RATE
+	  zoom *= SPECIAL_ZOOM_RATE
 
-      scrollBy(SCROLL_COMPENSATION_RATE*(width/2.0)/zoom, SCROLL_COMPENSATION_RATE*(height/2.0)/zoom)
+	  scrollBy(SCROLL_COMPENSATION_RATE*(width/2.0)/zoom, SCROLL_COMPENSATION_RATE*(height/2.0)/zoom)
 
-//      println("zoom=${zoom}")
+	  //      println("zoom=${zoom}")
 
-    } else if (it.code == KeyCode.MINUS) {
+	} else if (it.code == KeyCode.MINUS) {
 
-      if (zoom == 0.0) zoom = 1.0
+	  if (zoom == 0.0) zoom = 1.0
 
-      zoom /= SPECIAL_ZOOM_RATE
+	  zoom /= SPECIAL_ZOOM_RATE
 
-      scrollBy(-SCROLL_COMPENSATION_RATE*(width/2.0)/zoom, -SCROLL_COMPENSATION_RATE*(height/2.0)/zoom)
-//      println("zoom=${zoom}")
-    }
+	  scrollBy(-SCROLL_COMPENSATION_RATE*(width/2.0)/zoom, -SCROLL_COMPENSATION_RATE*(height/2.0)/zoom)
+	  //      println("zoom=${zoom}")
+	}
   }
   setOnZoom {
 
-    if (zoom == 0.0) zoom = 1.0
+	if (zoom == 0.0) zoom = 1.0
 
-    zoom *= it.zoomFactor
-    val compensation = it.zoomFactor - 1.0
-    scrollBy(compensation*(width/2.0)/zoom, compensation*(height/2.0)/zoom)
-//    println("zoom=${zoom}")
+	zoom *= it.zoomFactor
+	val compensation = it.zoomFactor - 1.0
+	scrollBy(compensation*(width/2.0)/zoom, compensation*(height/2.0)/zoom)
+	//    println("zoom=${zoom}")
   }
 
 
 
 
   if (par != null) {
-    runLater {
-      val w = par.width
-      if (w != 0.0) zoom = perfectZoom(par.width)
-      else {
-        par.widthProperty.onChangeOnce {
-          zoom = perfectZoom(it!!.toDouble())
-        }
-      }
-    }
+	runLater {
+	  val w = par.width
+	  if (w != 0.0) zoom = perfectZoom(par.width)
+	  else {
+		par.widthProperty.onChangeOnce {
+		  zoom = perfectZoom(it!!.toDouble())
+		}
+	  }
+	}
   }
 
 
@@ -221,7 +217,7 @@ fun WebViewWrapper.specialZooming(par: RegionWrapper? = null) {
 fun WebViewWrapper.scrollTo(xPos: Int, yPos: Int) {
 
   engine.executeScript(
-    """
+	"""
 	  window.scrollTo($xPos,$yPos)
 	""".trimIndent()
   )
@@ -229,12 +225,10 @@ fun WebViewWrapper.scrollTo(xPos: Int, yPos: Int) {
 }
 
 
-
-
 fun WebViewWrapper.scrollMult(factor: Double) {
 
   engine.executeScript(
-    """
+	"""
 	  window.scrollTo(window.scrollX*${factor},window.scrollY*${factor})
 	""".trimIndent()
   )
@@ -242,43 +236,41 @@ fun WebViewWrapper.scrollMult(factor: Double) {
 }
 
 
-
-
 fun RegionWrapper.specialTransferingToWindowAndBack(par: PaneWrapper) {
   val vb = this
   this.setOnKeyPressed { k ->
-    if (k.code == KeyCode.W && k.isMetaDown) {
-      if (this.scene?.root == this) {
-        this.removeFromParent()
-        (this.scene!!.window as Stage).close()
-        par.add(vb)
-        perfectBind(par)
-        if (this is WebViewPane) {
-          runLater { wv.zoom = perfectZoom(vb.width) }
-        }
+	if (k.code == KeyCode.W && k.isMetaDown) {
+	  if (this.scene?.root == this) {
+		this.removeFromParent()
+		(this.scene!!.window as Stage).close()
+		par.add(vb)
+		perfectBind(par)
+		if (this is WebViewPane) {
+		  runLater { wv.zoom = perfectZoom(vb.width) }
+		}
 
-        k.consume()
-      }
-    }
-    setOnDoubleClick {
-      if (this.scene?.root != this) {
-        this.removeFromParent()
-        this.openInNewWindow().apply {
-          perfectBind(this)
-          setOnCloseRequest {
-            this@specialTransferingToWindowAndBack.removeFromParent()
-            par.add(vb)
-            if (this@specialTransferingToWindowAndBack is WebViewPane) {
-              runLater { wv.zoom = perfectZoom(vb.width) }
-            }
-          }
-        }
-        if (this is WebViewPane) {
-          runLater { wv.zoom = perfectZoom(vb.width) }
-        }
+		k.consume()
+	  }
+	}
+	setOnDoubleClick {
+	  if (this.scene?.root != this) {
+		this.removeFromParent()
+		this.openInNewWindow().apply {
+		  this@specialTransferingToWindowAndBack.perfectBind(this)
+		  setOnCloseRequest {
+			this@specialTransferingToWindowAndBack.removeFromParent()
+			par.add(vb)
+			(this@specialTransferingToWindowAndBack as? WebViewPane)?.runLater {
+			  wv.zoom = perfectZoom(vb.width)
+			}
+		  }
+		}
+		if (this is WebViewPane) {
+		  runLater { wv.zoom = perfectZoom(vb.width) }
+		}
 
-      }
-    }
+	  }
+	}
   }
 }
 
@@ -291,36 +283,30 @@ open class WebViewPane private constructor(file: MFile? = null, html: String? = 
   constructor(html: String): this(html = html, file = null)
 
   fun specialZooming() {
-    wv.specialZooming(this)
+	wv.specialZooming(this)
   }
-
-
-
-
-
 
 
   val wv = if (file != null) ImageRefreshingWebView(file) else {
-    WebViewWrapper().apply {
-      engine.loadContent(html)
-    }
+	WebViewWrapper().apply {
+	  engine.loadContent(html)
+	}
   }
 
   init {
-    if (html != null) {
-      mcontextmenu {
-        "copy html" does { html.copyToClipboard() }
-      }
-    }
-    actionbutton("refresh") {
-      this@WebViewPane.wv.engine.reload()
-    }
-    add(wv.apply {
-      vgrow = Priority.ALWAYS
-    })
+	if (html != null) {
+	  mcontextmenu {
+		"copy html" does { html.copyToClipboard() }
+	  }
+	}
+	actionbutton("refresh") {
+	  this@WebViewPane.wv.engine.reload()
+	}
+	add(wv.apply {
+	  vgrow = Priority.ALWAYS
+	})
   }
 }
-
 
 
 @Suppress("unused")
@@ -329,34 +315,33 @@ fun WebViewWrapper.specialTransferingToWindowAndBack(par: PaneWrapper) {
 
   val wv = this
   this.setOnKeyPressed { k ->
-    if (k.code == KeyCode.W && k.isMetaDown) {
-      if (this.scene?.root == this.node) {
-        this.removeFromParent()
-        (this.scene?.window as Stage).close()
-        par.add(wv)
-        perfectBind(par)
-        runLater { zoom = perfectZoom(par.width) }
-        k.consume()
-      }
-    }
+	if (k.code == KeyCode.W && k.isMetaDown) {
+	  if (this.scene?.root == this.node) {
+		this.removeFromParent()
+		(this.scene?.window as Stage).close()
+		par.add(wv)
+		perfectBind(par)
+		runLater { zoom = perfectZoom(par.width) }
+		k.consume()
+	  }
+	}
   }
 
   setOnDoubleClick {
-    if (this.scene?.root != this.node) {
-      this.removeFromParent()
-      this.openInNewWindow().apply {
-        perfectBind(this)
-        setOnCloseRequest {
-          this.wrapped().removeFromParent()
-          par.add(wv)
-          runLater { zoom = perfectZoom(par.width) }
-        }
-      }
-      runLater { zoom = perfectZoom(this.width) }
-    }
+	if (this.scene?.root != this.node) {
+	  this.removeFromParent()
+	  this.openInNewWindow().apply {
+		this@specialTransferingToWindowAndBack.perfectBind(this)
+		setOnCloseRequest {
+		  this.removeFromParent()
+		  par.add(wv)
+		  runLater { zoom = perfectZoom(par.width) }
+		}
+	  }
+	  runLater { zoom = perfectZoom(this.width) }
+	}
   }
 }
-
 
 
 fun ImageRefreshingWebView(file: MFile) = WebViewWrapper().apply {
@@ -368,61 +353,61 @@ fun ImageRefreshingWebView(file: MFile) = WebViewWrapper().apply {
 
   engine.loadWorker.stateProperty().addListener { _, _, new ->
 
-    println("${file.name}:loadstate:${new}")
+	println("${file.name}:loadstate:${new}")
 
-    val window = engine.executeScript("window") as JSObject
-    window.setMember("java", JavaBridge())
-    engine.executeScript(
-      """
+	val window = engine.executeScript("window") as JSObject
+	window.setMember("java", JavaBridge())
+	engine.executeScript(
+	  """
             console.log = function(message) {
                 java.log(message)
             }
         """.trimIndent()
-    )
+	)
 
-    //        println("refresh1${file.absolutePath})")
+	//        println("refresh1${file.absolutePath})")
 
 
-    refreshThisCycle = true
-    //        refresh() // have to refresh once in the beginning or even a brand new webview will matt.gui.ser.load outdated caches
+	refreshThisCycle = true
+	//        refresh() // have to refresh once in the beginning or even a brand new webview will matt.gui.ser.load outdated caches
 
   }
 
 
   engine.load(file.toURI().toString())
   daemon {
-    val imgFiles = mutableMapOf<MFile, Long>()
-    Jsoup.parse(file.readText()).allElements.forEach {
-      if (it.tag().name == "img") {
-        val src = it.attributes()["src"]
-        val imgFile = file.parentFile!!.toPath().resolve(src).normalize().toFile().toMFile()
-        imgFiles[imgFile] = imgFile.lastModified()
-      }
-    }
-    println("watching mtimes of:")
-    for (entry in imgFiles) {
-      println("\t" + entry.key.toString())
-    }
+	val imgFiles = mutableMapOf<MFile, Long>()
+	Jsoup.parse(file.readText()).allElements.forEach {
+	  if (it.tag().name == "img") {
+		val src = it.attributes()["src"]
+		val imgFile = file.parentFile!!.toPath().resolve(src).normalize().toFile().toMFile()
+		imgFiles[imgFile] = imgFile.lastModified()
+	  }
+	}
+	println("watching mtimes of:")
+	for (entry in imgFiles) {
+	  println("\t" + entry.key.toString())
+	}
 
-    refreshWhileInSceneEvery(2.sec) {
-      @Suppress("DEPRECATION")
-      if (!file.exists()) NonCancellable.cancel() // NOSONAR
+	refreshWhileInSceneEvery(2.sec) {
+	  @Suppress("DEPRECATION")
+	  if (!file.exists()) NonCancellable.cancel() // NOSONAR
 
-      for (entry in imgFiles) {
-        if (entry.key.lastModified() != entry.value) {
-          imgFiles[entry.key] = entry.key.lastModified()
-          refreshThisCycle = true
-        }
-      }
-      if (refreshThisCycle) {
-        refreshThisCycle = false
-        //                println("refresh2(${file.absolutePath})")
-        runLaterReturn {
-          println("executing js refresh!")
-          engine.executeScript(refreshImages)
-        }
-      }
-    }
+	  for (entry in imgFiles) {
+		if (entry.key.lastModified() != entry.value) {
+		  imgFiles[entry.key] = entry.key.lastModified()
+		  refreshThisCycle = true
+		}
+	  }
+	  if (refreshThisCycle) {
+		refreshThisCycle = false
+		//                println("refresh2(${file.absolutePath})")
+		runLaterReturn {
+		  println("executing js refresh!")
+		  engine.executeScript(refreshImages)
+		}
+	  }
+	}
   }
 }
 
@@ -430,86 +415,86 @@ fun ImageRefreshingWebView(file: MFile) = WebViewWrapper().apply {
 @Suppress("unused")
 class JavaBridge {
   fun log(text: String?) {
-    println("WebView->JavaBridge:${text}")
+	println("WebView->JavaBridge:${text}")
   }
 
   fun copy(s: Any) {
-    s.toString().copyToClipboard()
+	s.toString().copyToClipboard()
   }
 }
 
 
 class HTMLEditorWrapper(override val node: HTMLEditor = HTMLEditor()): ControlWrapper(node) {
   var htmlText
-    get() = node.htmlText
-    set(value) {
-      node.htmlText = value
-    }
+	get() = node.htmlText
+	set(value) {
+	  node.htmlText = value
+	}
 }
 
 class WebViewWrapper(override val node: WebView = WebView()): ParentWrapper {
 
   companion object {
-    fun WebView.wrapped() =  WebViewWrapper(this)
+	fun WebView.wrapped() = WebViewWrapper(this)
   }
 
   val zoomProperty: DoubleProperty get() = node.zoomProperty()
   var zoom: Double
-    get() = node.zoom
-    set(value) {
-      node.zoom = value
-    }
+	get() = node.zoom
+	set(value) {
+	  node.zoom = value
+	}
 
   val width get() = widthProperty.value
   val widthProperty: ReadOnlyDoubleProperty get() = node.widthProperty()
   val prefWidthProperty: DoubleProperty get() = node.prefWidthProperty()
   var prefWidth: Double
-    get() = node.prefWidth
-    set(value) {
-      node.prefWidth = value
-    }
+	get() = node.prefWidth
+	set(value) {
+	  node.prefWidth = value
+	}
   val minWidthProperty: DoubleProperty get() = node.minWidthProperty()
   var minWidth: Double
-    get() = node.minWidth
-    set(value) {
-      node.minWidth = value
-    }
+	get() = node.minWidth
+	set(value) {
+	  node.minWidth = value
+	}
   val maxWidthProperty: DoubleProperty get() = node.maxWidthProperty()
   var maxWidth: Double
-    get() = node.maxWidth
-    set(value) {
-      node.maxWidth = value
-    }
+	get() = node.maxWidth
+	set(value) {
+	  node.maxWidth = value
+	}
 
   val height get() = heightProperty.value
   val heightProperty: ReadOnlyDoubleProperty get() = node.heightProperty()
   val prefHeightProperty: DoubleProperty get() = node.prefHeightProperty()
   var prefHeight: Double
-    get() = node.prefHeight
-    set(value) {
-      node.prefHeight = value
-    }
+	get() = node.prefHeight
+	set(value) {
+	  node.prefHeight = value
+	}
   val minHeightProperty: DoubleProperty get() = node.minHeightProperty()
   var minHeight: Double
-    get() = node.minHeight
-    set(value) {
-      node.minHeight = value
-    }
+	get() = node.minHeight
+	set(value) {
+	  node.minHeight = value
+	}
   val maxHeightProperty: DoubleProperty get() = node.maxHeightProperty()
   var maxHeight: Double
-    get() = node.maxHeight
-    set(value) {
-      node.maxHeight = value
-    }
+	get() = node.maxHeight
+	set(value) {
+	  node.maxHeight = value
+	}
 
   val engine get() = node.engine
 
-  fun scrollBy(x: Double,y: Double) {
-    engine.executeScript(
-      """
+  fun scrollBy(x: Double, y: Double) {
+	engine.executeScript(
+	  """
 	  window.scrollBy($x,$y)
 	""".trimIndent()
-    )
+	)
   }
 
 
