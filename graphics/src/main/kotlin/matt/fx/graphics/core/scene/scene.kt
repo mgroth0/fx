@@ -133,7 +133,7 @@ open class MScene(
 		}
 		actionitem("print style info samples") {
 		  val classesPrinted = mutableListOf<KClass<*>>()
-		  (root as Node).recurse {
+		  (root.node as Node).recurse {
 			(it as? Parent)?.childrenUnmodifiable ?: listOf()
 		  }.forEach {
 			if (it::class !in classesPrinted) {
@@ -145,11 +145,11 @@ open class MScene(
 		this.menu("set border") {        /*specify this here explicitly at least once
 		  * or else it will use the `matt.fx.graphics.menu.actionitem` above without import*/
 		  this.actionitem("none") {
-			(root as? Region)?.wrapped()?.borderFill = null
+			(root.node as? Region)?.wrapped()?.borderFill = null
 		  }
 		  listOf(YELLOW, BLUE, RED, GREEN, ORANGE, PURPLE, WHITE).forEach {
 			actionitem(ColorUtils().getColorNameFromColor(it.toAwtColor())) {
-			  (root as? Region)?.wrapped()?.borderFill = it
+			  (root.node as? Region)?.wrapped()?.borderFill = it
 			}
 		  }
 		}
