@@ -203,8 +203,8 @@ private fun TreeLikeWrapper<*, MFile>.setupGUI() {
 			val oldItem = this.item
 			super.updateItem(item, empty)
 			if (empty || item == null) {
-			  text = null
-			  graphic = null
+			  if (text != null) text = null
+			  if (graphic != null) graphic = null
 			} else if (oldItem != item) {
 			  text = item.name
 			  graphic = item.draggableIcon().node
@@ -277,6 +277,7 @@ private fun TreeLikeWrapper<*, MFile>.setupGUI() {
 			}
 		  }
 		}
+
 		else -> {
 		  "move all to trash" does {
 			//		  confirm("delete all?") {

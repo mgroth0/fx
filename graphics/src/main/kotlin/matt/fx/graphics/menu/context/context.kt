@@ -1,6 +1,8 @@
 package matt.fx.graphics.menu.context
 
+import javafx.application.Platform.runLater
 import javafx.beans.property.BooleanProperty
+import javafx.collections.ListChangeListener.Change
 import javafx.event.EventTarget
 import javafx.scene.Group
 import javafx.scene.Node
@@ -13,6 +15,8 @@ import javafx.scene.control.Menu
 import javafx.scene.control.MenuItem
 import javafx.scene.layout.Region
 import javafx.scene.shape.Shape
+import matt.async.date.sec
+import matt.async.date.tic
 import matt.auto.jumpToKotlinSourceString
 import matt.auto.openInIntelliJ
 import matt.file.commons.IdeProject.flow
@@ -27,33 +31,31 @@ import matt.hurricanefx.tornadofx.menu.menu
 import matt.hurricanefx.tornadofx.menu.separator
 import matt.hurricanefx.wrapper.MenuItemWrapper
 import matt.hurricanefx.wrapper.NodeWrapper
+import matt.klib.dmap.withStoringDefault
 import matt.klib.lang.NEVER
 import matt.klib.log.warn
+import matt.stream.map.lazyMap
 import matt.stream.recurse.chain
+import java.lang.Thread.sleep
 import java.util.WeakHashMap
 import kotlin.collections.set
 import kotlin.concurrent.thread
 import kotlin.reflect.KClass
 
-val contextMenuItems = WeakHashMap<EventTarget, MutableList<MenuItem>>()
-val contextMenuItemGens = WeakHashMap<EventTarget, MutableList<MContextMenuBuilder.()->Unit>>()
 
 fun EventTarget.mcontextmenu(op: MContextMenuBuilder.()->Unit) {
   MContextMenuBuilder(this).apply(op)
 }
+
 fun NodeWrapper<*>.mcontextmenu(op: MContextMenuBuilder.()->Unit) = node.mcontextmenu(op)
 
 class MContextMenuBuilder(
   val node: EventTarget,
   private val isGen: Boolean = false
 ) {
-  val genList = mutableListOf<MenuItem>()
 
-  init {
-	if (!isGen && contextMenuItems[node] == null) {
-	  contextMenuItems[node] = mutableListOf()
-	}
-  }
+
+  val genList = mutableListOf<MenuItem>()
 
   infix fun String.does(op: ()->Unit) = actionitem(this, op)
   infix fun String.doesInThread(op: ()->Unit) = actionitem(this) {
@@ -70,10 +72,11 @@ class MContextMenuBuilder(
 	}
   }.also { add(it) }
 
-  fun item(s: String, g: NodeWrapper<*>? = null, op: MenuItemWrapper.()->Unit = {}) = MenuItemWrapper(s, g?.node).apply {
-	isMnemonicParsing = false
-	op()
-  }.also { add(it.node) }
+  fun item(s: String, g: NodeWrapper<*>? = null, op: MenuItemWrapper.()->Unit = {}) =
+	MenuItemWrapper(s, g?.node).apply {
+	  isMnemonicParsing = false
+	  op()
+	}.also { add(it.node) }
 
 
   infix fun String.toggles(b: BooleanProperty) = checkitem(this, b)
@@ -98,44 +101,115 @@ class MContextMenuBuilder(
 
 
   fun onRequest(op: MContextMenuBuilder.()->Unit) {
-	if (isGen) NEVER
-	if (contextMenuItemGens[node] == null) {
-	  contextMenuItemGens[node] = mutableListOf()
-	}
+	require(!isGen)
 	contextMenuItemGens[node]!!.add(op)
+
   }
+  //
+  //  fun <T: Any?> onRequest(keyGetter: ()->T, op: MContextMenuBuilder.(T)->Unit) {
+  //	require(!isGen)
+  //	contextMenuItemsByKey[node]!![key]!!.add(op(keyGetter()))
+  //  }
 
 
 }
 
 private fun getCMItems(node: EventTarget): List<MenuItem>? {
-  val normal = contextMenuItems[node]
-  val gen = contextMenuItemGens[node]?.flatMap {
+  val normal = contextMenuItems[node]!!
+  val gen = contextMenuItemGens[node]!!.flatMap {
 	MContextMenuBuilder(node, isGen = true).apply(it).genList
   }
-  return ((normal ?: listOf()) + (gen ?: listOf())).takeIf { it.isNotEmpty() }
+  //  val keyGen = contextMenuItemsByKey[node]!!
+  return (normal + gen).takeIf { it.isNotEmpty() }
 }
 
-fun showMContextMenu(
+
+abstract class RunOnce {
+  companion object {
+	var ranOnce = mutableSetOf<KClass<out RunOnce>>()
+  }
+
+
+  protected abstract fun run()
+
+  init {
+	if (this::class !in ranOnce) {
+	  run()
+	  ranOnce += this::class
+	}
+  }
+
+}
+
+
+class CmFix: RunOnce() {
+  override fun run() {
+	/*https://bugs.openjdk.org/browse/JDK-8198497*/
+	ContextMenu.getWindows().addListener { change: Change<*> ->
+	  while (change.next()) {
+		change.addedSubList.filterIsInstance<ContextMenu>().forEach { cm ->
+		  cm.setOnShown {
+			/* I added the thread and runLater, since this still isn't working */
+			thread {
+			  sleep(100)
+			  runLater {
+				cm.sizeToScene()
+				/*IT FINALLY WORKS*/
+			  }
+			}
+		  }
+		}
+	  }
+	}
+  }
+}
+
+val contextMenus = lazyMap<Scene, ContextMenu> {
+  ContextMenu().apply {
+	isAutoHide = true
+	isAutoFix = true
+  }
+}
+
+
+/*
+* https://docs.oracle.com/javase/8/javafx/api/javafx/scene/control/ContextMenu.html
+* */
+fun Scene.showMContextMenu(
   target: Node,
   xy: Pair<Double, Double>
 ) {
+
+  CmFix()
+
+  val t = tic(prefix = "showMContextMenu", enabled = false)
+  t.toc("start")
+
   val devMenu = Menu("dev")
+
+  t.toc("made devMenu")
 
   devMenu.actionitem("test exception") {
 	throw Exception("test exception")
   }
 
+  t.toc("made first actionitem")
+
   val reflectMenu = devMenu.menu("reflect")
-  ContextMenu().apply {
-	isAutoHide = true; isAutoFix = true
+  t.toc("made reflect menu")
+  contextMenus[this]!!.apply {
+	items.clear()
+	t.toc("cleared items")
 	var node: EventTarget = target
 	val added = mutableListOf<String>()
+	t.toc("starting loop")
 	while (true) {
+	  t.toc("starting loop block for $node")
 	  getCMItems(node)?.let {
 		if (items.isNotEmpty()) separator()
 		items += it
 	  }
+	  t.toc("got CmItems")
 	  node::class.qualifiedName
 		?.takeIf { "matt" in it && it !in added }
 		?.let {
@@ -144,6 +218,7 @@ fun showMContextMenu(
 		  }
 		  added += it
 		}
+	  t.toc("something with q name done")
 	  node = when (node) {
 		is Region, is Group -> when ((node as Parent).parent) {
 		  null -> node.scene
@@ -155,11 +230,16 @@ fun showMContextMenu(
 		is Scene            -> node.window
 		else                -> break
 	  }
+	  t.toc("finished loop block")
 	}
 	if (items.isNotEmpty()) separator()
+	t.toc("made spe")
 	items += target.hotkeyInfoMenu()
+	t.toc("added hotkey info menu")
 	items += devMenu
+	t.toc("added devMeny")
   }.show(target, xy.first, xy.second)
+  t.toc("showed cm")
 }
 
 enum class EventHandlerType {
@@ -211,3 +291,19 @@ private fun Node.hotkeyInfoMenu() = Menu("Click For Hotkey Info").apply {
 
 }
 
+
+private val contextMenuItems = WeakHashMap<EventTarget, MutableList<MenuItem>>().withStoringDefault { mutableListOf() }
+
+private val contextMenuItemGens =
+  WeakHashMap<EventTarget, MutableList<MContextMenuBuilder.()->Unit>>().withStoringDefault { mutableListOf() }
+//
+//
+//private val contextMenuItemsByKey = WeakHashMap<
+//	EventTarget,
+//	Map<
+//		Any?,
+//		MutableList<MenuItem>
+//		>
+//	>().withStoringDefault {
+//  mutableMapOf<Any?, MutableList<MenuItem>>().withStoringDefault { mutableListOf() }
+//}
