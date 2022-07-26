@@ -206,7 +206,7 @@ fun SceneWrapper.showMContextMenu(
 
   val reflectMenu = devMenu.menu("reflect")
   t.toc("made reflect menu")
-  contextMenus[this.node]!!.apply {
+  contextMenus[this.node].apply {
 	items.clear()
 	t.toc("cleared items")
 	var node: EventTarget = target

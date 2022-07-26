@@ -131,7 +131,7 @@ private val images = lazyMap<MFile, Image> { file ->
   }
 }
 
-fun IconImage(file: MFile): Image = images[file]!!
+fun IconImage(file: MFile): Image = images[file]
 
 private val RENDERING_HINTS: MutableMap<Key, Any> = java.util.Map.of(
   KEY_ANTIALIASING, VALUE_ANTIALIAS_ON, KEY_ALPHA_INTERPOLATION, VALUE_ALPHA_INTERPOLATION_QUALITY, KEY_COLOR_RENDERING,
