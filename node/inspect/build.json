@@ -1,1 +1,15 @@
-{"modType":"LIB"}
+{
+    "modType": "LIB",
+    "dependencies": [
+        {
+            "type": "matt.mstruct.BuildJsonProjectDependency",
+            "cfg": "implementation",
+            "path": ":k:fx:graphics"
+        },
+        {
+            "type": "matt.mstruct.BuildJsonProjectDependency",
+            "cfg": "implementation",
+            "path": ":k:gui"
+        }
+    ]
+}
