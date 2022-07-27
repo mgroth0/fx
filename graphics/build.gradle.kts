@@ -13,8 +13,5 @@ apis {
 }
 implementations {
   libs.svgsalamander
+  libs.`kt-reflect`
 }
-implementations(
-  dependencies.kotlin("reflect"),
-)
-
