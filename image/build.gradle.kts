@@ -1,6 +1,6 @@
 
 apis(
-  ":k:file".jvm()
+  ":k:file".auto()
 )
 implementations(
 //  ":k:klib".jvm()
