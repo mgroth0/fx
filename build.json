@@ -1,1 +1,8 @@
-{}
+{
+    "modType": {
+        "type": "matt.klib.mod.ABSTRACT"
+    },
+    "dependencies": [
+    ],
+    "note": null
+}

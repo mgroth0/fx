@@ -1,10 +1,13 @@
 {
-    "modType": "LIB",
+    "modType": {
+        "type": "matt.klib.mod.LIB"
+    },
     "dependencies": [
         {
             "type": "matt.mstruct.BuildJsonLibDependency",
             "cfg": "implementation",
             "key": "fx-controls"
         }
-    ]
+    ],
+    "note": null
 }
