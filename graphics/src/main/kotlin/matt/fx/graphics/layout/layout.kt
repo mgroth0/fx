@@ -42,7 +42,7 @@ import matt.hurricanefx.wrapper.pane.flow.FlowPaneWrapper
 import matt.hurricanefx.wrapper.pane.grid.GridPaneWrapper
 import matt.hurricanefx.wrapper.pane.hbox.HBoxWrapper
 import matt.hurricanefx.wrapper.node.NodeWrapper
-import matt.hurricanefx.wrapper.page.PaginationWrapper
+import matt.hurricanefx.wrapper.control.page.PaginationWrapper
 import matt.hurricanefx.wrapper.pane.PaneWrapper
 import matt.hurricanefx.wrapper.region.RegionWrapper
 import matt.hurricanefx.wrapper.pane.scroll.ScrollPaneWrapper
