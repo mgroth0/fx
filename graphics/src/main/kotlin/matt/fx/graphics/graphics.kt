@@ -11,9 +11,9 @@ import matt.color.AColor
 import matt.color.mostContrastingForMe
 import matt.hurricanefx.eye.lib.onChange
 import matt.hurricanefx.tornadofx.shapes.line
-import matt.hurricanefx.wrapper.LineWrapper
-import matt.hurricanefx.wrapper.NodeWrapper
-import matt.hurricanefx.wrapper.PaneWrapper
+import matt.hurricanefx.wrapper.line.LineWrapper
+import matt.hurricanefx.wrapper.node.NodeWrapper
+import matt.hurricanefx.wrapper.pane.PaneWrapper
 import matt.klib.math.BasicPoint
 import matt.klib.math.Point
 import matt.klib.math.unaryMinus

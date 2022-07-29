@@ -31,8 +31,8 @@ import matt.fx.graphics.mag.top
 import matt.fx.graphics.mag.topleft
 import matt.fx.graphics.mag.topright
 import matt.fx.graphics.style.borderFill
-import matt.hurricanefx.wrapper.RegionWrapper.Companion.wrapped
-import matt.hurricanefx.wrapper.WindowWrapper.Companion.wrapped
+import matt.hurricanefx.wrapper.region.RegionWrapper.Companion.wrapped
+import matt.hurricanefx.wrapper.window.WindowWrapper.Companion.wrapped
 import matt.klib.dmap.withStoringDefault
 import matt.klib.lang.go
 import java.lang.Thread.sleep

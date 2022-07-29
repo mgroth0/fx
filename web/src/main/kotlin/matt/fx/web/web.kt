@@ -1,7 +1,6 @@
 package matt.fx.web
 
 import javafx.application.Platform
-import javafx.application.Platform.runLater
 import javafx.beans.property.DoubleProperty
 import javafx.beans.property.ReadOnlyDoubleProperty
 import javafx.beans.property.SimpleDoubleProperty
@@ -32,14 +31,14 @@ import matt.hurricanefx.tornadofx.fx.attachTo
 import matt.hurricanefx.tornadofx.nodes.add
 import matt.hurricanefx.tornadofx.nodes.removeFromParent
 import matt.hurricanefx.tornadofx.nodes.setOnDoubleClick
-import matt.hurricanefx.wrapper.ControlWrapper
-import matt.hurricanefx.wrapper.EventTargetWrapper.Companion.wrapped
-import matt.hurricanefx.wrapper.NodeWrapper
-import matt.hurricanefx.wrapper.PaneWrapper
-import matt.hurricanefx.wrapper.ParentWrapper
-import matt.hurricanefx.wrapper.RegionWrapper
-import matt.hurricanefx.wrapper.StageWrapper
-import matt.hurricanefx.wrapper.VBoxWrapper
+import matt.hurricanefx.wrapper.control.ControlWrapper
+import matt.hurricanefx.wrapper.target.EventTargetWrapper.Companion.wrapped
+import matt.hurricanefx.wrapper.node.NodeWrapper
+import matt.hurricanefx.wrapper.pane.PaneWrapper
+import matt.hurricanefx.wrapper.parent.ParentWrapper
+import matt.hurricanefx.wrapper.region.RegionWrapper
+import matt.hurricanefx.wrapper.stage.StageWrapper
+import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
 import matt.klib.lang.NEVER
 import netscape.javascript.JSObject
 import org.intellij.lang.annotations.Language

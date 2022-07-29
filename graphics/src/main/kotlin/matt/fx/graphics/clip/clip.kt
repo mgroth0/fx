@@ -11,7 +11,7 @@ import javafx.scene.paint.Color
 import matt.file.MFile
 import matt.file.commons.TEMP_DIR
 import matt.fx.image.save
-import matt.hurricanefx.wrapper.NodeWrapper
+import matt.hurricanefx.wrapper.node.NodeWrapper
 
 
 fun String.copyToClipboard() {

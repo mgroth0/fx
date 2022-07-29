@@ -39,10 +39,10 @@ import matt.hurricanefx.tornadofx.control.button
 import matt.hurricanefx.tornadofx.control.imageview
 import matt.hurricanefx.tornadofx.control.textarea
 import matt.hurricanefx.tornadofx.nodes.add
-import matt.hurricanefx.wrapper.PaneWrapper
-import matt.hurricanefx.wrapper.RegionWrapper
-import matt.hurricanefx.wrapper.TextAreaWrapper
-import matt.hurricanefx.wrapper.VBoxWrapper
+import matt.hurricanefx.wrapper.pane.PaneWrapper
+import matt.hurricanefx.wrapper.region.RegionWrapper
+import matt.hurricanefx.wrapper.control.text.area.TextAreaWrapper
+import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
 import matt.klib.lang.err
 import java.lang.ref.WeakReference
 

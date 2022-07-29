@@ -13,8 +13,8 @@ import javafx.scene.paint.Paint
 import matt.color.hex
 import matt.fx.graphics.toAwtColor
 import matt.css.MyStyleDsl
-import matt.hurricanefx.wrapper.NodeWrapper
-import matt.hurricanefx.wrapper.RegionWrapper
+import matt.hurricanefx.wrapper.node.NodeWrapper
+import matt.hurricanefx.wrapper.region.RegionWrapper
 import matt.klib.log.warn
 import matt.klib.prop.BasicProperty
 import matt.klib.str.LineAppender

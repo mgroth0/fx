@@ -3,7 +3,7 @@ package matt.fx.graphics.win.bindgeom
 import matt.file.MFile
 import matt.file.commons.WINDOW_GEOMETRY_FOLDER
 import matt.hurricanefx.eye.lib.onChange
-import matt.hurricanefx.wrapper.StageWrapper
+import matt.hurricanefx.wrapper.stage.StageWrapper
 import matt.json.prim.readJson
 import matt.json.prim.writeJson
 import matt.klib.math.Geometry

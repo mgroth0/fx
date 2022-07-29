@@ -5,7 +5,7 @@ import matt.async.daemon
 import matt.fx.graphics.async.runLaterReturn
 import matt.fx.graphics.mag.screen
 import matt.hurricanefx.eye.lib.onChange
-import matt.hurricanefx.wrapper.StageWrapper
+import matt.hurricanefx.wrapper.stage.StageWrapper
 import matt.klib.log.warn
 
 fun StageWrapper.pullBackWhenOffscreen() {

@@ -13,9 +13,9 @@ import matt.hurricanefx.eye.lib.onChange
 import matt.hurricanefx.op
 import matt.hurricanefx.tornadofx.fx.addChildIfPossible
 import matt.hurricanefx.tornadofx.menu.item
-import matt.hurricanefx.wrapper.ButtonWrapper
-import matt.hurricanefx.wrapper.MenuItemWrapper
-import matt.hurricanefx.wrapper.NodeWrapper
+import matt.hurricanefx.wrapper.control.button.ButtonWrapper
+import matt.hurricanefx.wrapper.menu.item.MenuItemWrapper
+import matt.hurricanefx.wrapper.node.NodeWrapper
 import matt.klib.lang.err
 
 fun NodeWrapper<*>.setOnFocusLost(op: ()->Unit) {

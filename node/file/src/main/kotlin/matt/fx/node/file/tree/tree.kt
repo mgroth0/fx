@@ -2,7 +2,7 @@ package matt.fx.node.file.tree
 
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.ObservableList
-import javafx.geometry.Pos
+import javafx.geometry.Pos.CENTER_LEFT
 import javafx.scene.control.SelectionMode.MULTIPLE
 import javafx.scene.control.TreeCell
 import javafx.scene.control.TreeItem
@@ -17,7 +17,6 @@ import matt.file.mFile
 import matt.file.size
 import matt.fx.fxauto.actionitem
 import matt.fx.fxauto.fxActions
-import matt.fx.graphics.icon.Icon
 import matt.fx.graphics.icon.view
 import matt.fx.graphics.layout.hgrow
 import matt.fx.graphics.layout.perfectBind
@@ -43,12 +42,12 @@ import matt.hurricanefx.tornadofx.nodes.add
 import matt.hurricanefx.tornadofx.nodes.clear
 import matt.hurricanefx.tornadofx.nodes.populateTree
 import matt.hurricanefx.tornadofx.nodes.setOnDoubleClick
-import matt.hurricanefx.wrapper.HBoxWrapper
-import matt.hurricanefx.wrapper.PaneWrapper
-import matt.hurricanefx.wrapper.TreeLikeWrapper
-import matt.hurricanefx.wrapper.TreeTableViewWrapper
-import matt.hurricanefx.wrapper.TreeViewWrapper
-import matt.hurricanefx.wrapper.VBoxWrapper
+import matt.hurricanefx.wrapper.pane.hbox.HBoxWrapper
+import matt.hurricanefx.wrapper.pane.PaneWrapper
+import matt.hurricanefx.wrapper.control.tree.TreeLikeWrapper
+import matt.hurricanefx.wrapper.control.treetable.TreeTableViewWrapper
+import matt.hurricanefx.wrapper.control.tree.TreeViewWrapper
+import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
 import matt.klib.lang.inList
 import matt.klib.todo
 import matt.stream.recurse.chain
@@ -61,7 +60,7 @@ fun fileTreeAndViewerPane(
   rootFile: MFile, doubleClickInsteadOfSelect: Boolean = false
 ) = HBoxWrapper {
   val hBox = this
-  alignment = Pos.CENTER_LEFT
+  alignment = CENTER_LEFT
   val treeTableView = fileTableTree(rootFile).apply {
 	prefHeightProperty.set(HEIGHT)
 	maxWidthProperty.bind(hBox.widthProperty/2)
@@ -190,7 +189,7 @@ private fun TreeLikeWrapper<*, MFile>.setupGUI() {
   var showSizesProp: BProp? = null
 
   when (this) {
-	is TreeViewWrapper<MFile>      -> {
+	is TreeViewWrapper<MFile> -> {
 
 	  node.setCellFactory {
 		object: TreeCell<MFile>() {

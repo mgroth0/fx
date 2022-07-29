@@ -2,7 +2,7 @@ package matt.fx.graphics.mag
 
 import javafx.stage.Screen
 import matt.file.commons.VAR_JSON_FILE
-import matt.hurricanefx.wrapper.WindowWrapper
+import matt.hurricanefx.wrapper.window.WindowWrapper
 import matt.json.custom.bool
 import matt.json.prim.parseJsonObj
 import matt.json.prim.set

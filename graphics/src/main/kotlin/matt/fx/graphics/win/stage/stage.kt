@@ -8,7 +8,7 @@ import matt.fx.graphics.win.stage.WMode.HIDE
 import matt.fx.graphics.win.stage.WMode.ICONIFY
 import matt.fx.graphics.win.stage.WMode.NOTHING
 import matt.fx.graphics.win.winfun.pullBackWhenOffscreen
-import matt.hurricanefx.wrapper.StageWrapper
+import matt.hurricanefx.wrapper.stage.StageWrapper
 import matt.klib.commons.thisMachine
 import matt.klib.log.warn
 import matt.klib.sys.GAMING_WINDOWS

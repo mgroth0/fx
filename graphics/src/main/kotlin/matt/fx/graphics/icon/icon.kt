@@ -8,8 +8,8 @@ import matt.file.MFile
 import matt.file.commons.ICON_FOLDER
 import matt.fx.image.toFXImage
 import matt.hurricanefx.tornadofx.nodes.add
-import matt.hurricanefx.wrapper.ImageViewWrapper
-import matt.hurricanefx.wrapper.NodeWrapper.Companion.wrapped
+import matt.hurricanefx.wrapper.imageview.ImageViewWrapper
+import matt.hurricanefx.wrapper.node.NodeWrapper.Companion.wrapped
 import matt.stream.map.lazyMap
 import java.awt.RenderingHints.KEY_ALPHA_INTERPOLATION
 import java.awt.RenderingHints.KEY_ANTIALIASING
