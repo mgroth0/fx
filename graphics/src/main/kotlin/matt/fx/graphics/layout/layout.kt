@@ -55,6 +55,8 @@ import matt.hurricanefx.wrapper.toolbar.ToolBarWrapper
 import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
 import matt.hurricanefx.wrapper.parent.parent
 import matt.hurricanefx.wrapper.sep.SeparatorWrapper
+import kotlin.contracts.InvocationKind.EXACTLY_ONCE
+import kotlin.contracts.contract
 import kotlin.random.Random
 
 
@@ -261,7 +263,10 @@ fun NodeWrapper<*>.hbox(spacing: Number? = null, alignment: Pos? = null, op: HBo
   return opcr(this, hbox, op)
 }
 
-fun NodeWrapper<*>.vbox(spacing: Number? = null, alignment: Pos? = null, op: VBoxWrapper.()->Unit = {}): VBoxWrapper {
+inline fun NodeWrapper<*>.vbox(spacing: Number? = null, alignment: Pos? = null, op: VBoxWrapper.()->Unit = {}): VBoxWrapper {
+  contract {
+	callsInPlace(op, EXACTLY_ONCE)
+  }
   val vbox = VBoxWrapper(VBox())
   if (alignment != null) vbox.alignment = alignment
   if (spacing != null) vbox.spacing = spacing.toDouble()
