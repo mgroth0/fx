@@ -338,7 +338,7 @@ fun EventTargetWrapper<*>.titledpane(
   collapsible: Boolean = true,
   op: (TitledPaneWrapper).()->Unit = {}
 ): TitledPaneWrapper {
-  val titledPane = TitledPaneWrapper { text = title; graphic = node }
+  val titledPane = TitledPaneWrapper().apply { text = title; graphic = node }
   titledPane.isCollapsible = collapsible
   opcr(this, titledPane, op)
   return titledPane
@@ -350,7 +350,7 @@ fun EventTargetWrapper<*>.titledpane(
   collapsible: Boolean = true,
   op: (TitledPaneWrapper).()->Unit = {}
 ): TitledPaneWrapper {
-  val titledPane = TitledPaneWrapper { text = ""; graphic = node }
+  val titledPane = TitledPaneWrapper().apply { text = ""; graphic = node }
   titledPane.textProperty().bind(title)
   titledPane.isCollapsible = collapsible
   opcr(this, titledPane, op)
@@ -428,7 +428,7 @@ fun <T: Node> AccordionWrapper.fold(
   expanded: Boolean = false,
   op: T.()->Unit = {}
 ): TitledPaneWrapper {
-  val fold = TitledPaneWrapper { text = title;graphic = node }
+  val fold = TitledPaneWrapper().apply { text = title;graphic = node }
   fold.isExpanded = expanded
   panes += fold.node
   op(node)
@@ -442,7 +442,7 @@ fun <T: Node> AccordionWrapper.fold(
 )
 fun AccordionWrapper.fold(title: String? = null, op: Pane.()->Unit = {}): TitledPaneWrapper {
   val vbox = VBox().also(op)
-  val fold = TitledPaneWrapper { text = title; graphic = if (vbox.children.size == 1) vbox.children[0] else vbox }
+  val fold = TitledPaneWrapper().apply { text = title; graphic = if (vbox.children.size == 1) vbox.children[0] else vbox }
   panes += fold.node
   return fold
 }
