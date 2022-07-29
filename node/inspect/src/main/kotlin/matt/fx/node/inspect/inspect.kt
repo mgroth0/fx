@@ -12,11 +12,11 @@ import matt.hurricanefx.tornadofx.control.label
 import matt.hurricanefx.tornadofx.nodes.add
 import matt.hurricanefx.tornadofx.nodes.clear
 import matt.hurricanefx.tornadofx.nodes.removeFromParent
+import matt.hurricanefx.wrapper.control.list.ListViewWrapper
+import matt.hurricanefx.wrapper.control.table.TableViewWrapper
 import matt.hurricanefx.wrapper.pane.box.BoxWrapper
 import matt.hurricanefx.wrapper.pane.hbox.HBoxWrapper
-import matt.hurricanefx.wrapper.ListViewWrapper
 import matt.hurricanefx.wrapper.pane.PaneWrapper
-import matt.hurricanefx.wrapper.TableViewWrapper
 import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
 
 
