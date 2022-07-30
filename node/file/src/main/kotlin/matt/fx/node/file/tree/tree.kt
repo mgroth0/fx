@@ -31,22 +31,20 @@ import matt.fx.web.specialTransferingToWindowAndBack
 import matt.gui.draggableIcon
 import matt.gui.fxlang.onSelect
 import matt.gui.setview.autoResizeColumns
-import matt.gui.setview.simpleCellFactory
 import matt.hurricanefx.eye.collect.bind
 import matt.hurricanefx.eye.collect.toObservable
 import matt.hurricanefx.eye.lang.BProp
 import matt.hurricanefx.eye.lib.onChange
 import matt.hurricanefx.eye.prop.div
-import matt.hurricanefx.tornadofx.item.column
 import matt.hurricanefx.tornadofx.nodes.add
 import matt.hurricanefx.tornadofx.nodes.clear
 import matt.hurricanefx.tornadofx.nodes.populateTree
 import matt.hurricanefx.tornadofx.nodes.setOnDoubleClick
-import matt.hurricanefx.wrapper.pane.hbox.HBoxWrapper
-import matt.hurricanefx.wrapper.pane.PaneWrapper
 import matt.hurricanefx.wrapper.control.tree.TreeLikeWrapper
-import matt.hurricanefx.wrapper.control.treetable.TreeTableViewWrapper
 import matt.hurricanefx.wrapper.control.tree.TreeViewWrapper
+import matt.hurricanefx.wrapper.control.treetable.TreeTableViewWrapper
+import matt.hurricanefx.wrapper.pane.PaneWrapper
+import matt.hurricanefx.wrapper.pane.hbox.HBoxWrapper
 import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
 import matt.klib.lang.inList
 import matt.klib.todo
@@ -223,7 +221,7 @@ private fun TreeLikeWrapper<*, MFile>.setupGUI() {
 		}
 	  }
 	  val nameCol = column("name", matt.file.MFile::abspath) {
-		simpleCellFactory { value -> mFile(value).let { it.name to it.draggableIcon().node } }
+		simpleCellFactory( { value -> mFile(value).let { it.name to it.draggableIcon().node } })
 	  }
 	  column("ext", matt.file.MFile::extension)
 

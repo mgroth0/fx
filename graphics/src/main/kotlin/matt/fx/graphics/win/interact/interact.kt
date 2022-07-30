@@ -181,7 +181,7 @@ fun <R> dialog(
   d.hbox {
 	prefWidthProperty.bind(d.widthProperty)
 	alignment = Pos.CENTER
-	actionbutton("cancel") {
+	actionbutton("matt.hurricanefx.wrapper.control.column.cancel") {
 	  styleClass += "CancelButton"
 	  d.stg.close()
 	}
