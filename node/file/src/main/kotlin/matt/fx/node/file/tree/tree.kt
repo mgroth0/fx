@@ -39,6 +39,7 @@ import matt.hurricanefx.tornadofx.nodes.add
 import matt.hurricanefx.tornadofx.nodes.clear
 import matt.hurricanefx.tornadofx.nodes.populateTree
 import matt.hurricanefx.tornadofx.nodes.setOnDoubleClick
+import matt.hurricanefx.wrapper.cellfact.SimpleFactory
 import matt.hurricanefx.wrapper.control.tree.TreeViewWrapper
 import matt.hurricanefx.wrapper.control.tree.like.TreeLikeWrapper
 import matt.hurricanefx.wrapper.control.treetable.TreeTableViewWrapper
@@ -83,7 +84,7 @@ fun fileTreeAndViewerPane(
 	treeTableView.onSelect { file ->
 	  viewBox.clear()
 	  if (file != null) {
-		viewBox.add(file.createNode(renderHTMLAndSVG = true).apply {
+		viewBox.add(file.value.createNode(renderHTMLAndSVG = true).apply {
 		  perfectBind(viewBox)
 		  specialTransferingToWindowAndBack(viewBox)
 		})
@@ -186,7 +187,7 @@ private fun TreeLikeWrapper<*, MFile>.setupGUI() {
   var showSizesProp: BProp? = null
 
   when (this) {
-	is TreeViewWrapper<MFile> -> {
+	is TreeViewWrapper<MFile>      -> {
 
 	  node.setCellFactory {
 		object: TreeCell<MFile>() {
@@ -220,7 +221,7 @@ private fun TreeLikeWrapper<*, MFile>.setupGUI() {
 		}
 	  }
 	  val nameCol = column("name", matt.file.MFile::abspath) {
-		simpleCellFactory ( { value -> mFile(value).let { it.name to it.draggableIcon().node } })
+		simpleCellFactory(SimpleFactory { value -> mFile(value).let { it.name to it.draggableIcon().node } })
 	  }
 	  column("ext", matt.file.MFile::extension)
 
@@ -237,7 +238,7 @@ private fun TreeLikeWrapper<*, MFile>.setupGUI() {
 		}
 	  }
 
-	  node.sortOrder.setAll(nameCol) /*not working, but can click columns*/
+	  node.sortOrder.setAll(nameCol.node) /*not working, but can click columns*/
 	}
 
   }
