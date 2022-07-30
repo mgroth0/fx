@@ -40,8 +40,8 @@ import matt.hurricanefx.tornadofx.nodes.add
 import matt.hurricanefx.tornadofx.nodes.clear
 import matt.hurricanefx.tornadofx.nodes.populateTree
 import matt.hurricanefx.tornadofx.nodes.setOnDoubleClick
-import matt.hurricanefx.wrapper.control.tree.TreeLikeWrapper
 import matt.hurricanefx.wrapper.control.tree.TreeViewWrapper
+import matt.hurricanefx.wrapper.control.tree.like.TreeLikeWrapper
 import matt.hurricanefx.wrapper.control.treetable.TreeTableViewWrapper
 import matt.hurricanefx.wrapper.pane.PaneWrapper
 import matt.hurricanefx.wrapper.pane.hbox.HBoxWrapper
@@ -221,7 +221,7 @@ private fun TreeLikeWrapper<*, MFile>.setupGUI() {
 		}
 	  }
 	  val nameCol = column("name", matt.file.MFile::abspath) {
-		simpleCellFactory( { value -> mFile(value).let { it.name to it.draggableIcon().node } })
+		simpleCellFactory ( { value -> mFile(value).let { it.name to it.draggableIcon().node } })
 	  }
 	  column("ext", matt.file.MFile::extension)
 
