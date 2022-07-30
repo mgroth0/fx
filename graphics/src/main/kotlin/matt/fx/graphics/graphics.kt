@@ -109,4 +109,3 @@ fun PaneWrapper.drawLine(
 }
 
 
-fun backgroundColor(c: Paint) = Background(BackgroundFill(c, null, null))
