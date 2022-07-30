@@ -6,7 +6,6 @@ import javafx.scene.layout.Priority
 import matt.fx.graphics.Inspectable
 import matt.fx.graphics.layout.hgrow
 import matt.fx.graphics.layout.vgrow
-import matt.gui.fxlang.onSelect
 import matt.hurricanefx.eye.collect.toObservable
 import matt.hurricanefx.tornadofx.control.label
 import matt.hurricanefx.tornadofx.nodes.add
