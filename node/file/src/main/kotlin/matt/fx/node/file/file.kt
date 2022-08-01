@@ -12,7 +12,7 @@ import kotlinx.html.body
 import kotlinx.html.html
 import kotlinx.html.img
 import kotlinx.html.stream.createHTML
-import matt.async.daemon
+import matt.async.thread.daemon
 import matt.css.Color.black
 import matt.css.sty
 import matt.file.MFile
