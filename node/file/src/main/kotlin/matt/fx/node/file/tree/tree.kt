@@ -14,7 +14,6 @@ import matt.auto.moveToTrash
 import matt.auto.open
 import matt.file.MFile
 import matt.file.construct.mFile
-import matt.file.size
 import matt.fx.fxauto.actionitem
 import matt.fx.fxauto.fxActions
 import matt.fx.graphics.icon.view
