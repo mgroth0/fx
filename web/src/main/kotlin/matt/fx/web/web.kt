@@ -12,8 +12,8 @@ import javafx.scene.web.HTMLEditor
 import javafx.scene.web.WebView
 import javafx.stage.Stage
 import kotlinx.coroutines.NonCancellable
-import matt.async.daemon
 import matt.async.date.sec
+import matt.async.thread.daemon
 import matt.file.MFile
 import matt.file.toMFile
 import matt.fx.graphics.async.runLaterReturn
