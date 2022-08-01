@@ -18,7 +18,7 @@ import matt.auto.openInIntelliJ
 import matt.color.name.ColorUtils
 import matt.file.MFile
 import matt.file.commons.ICON_FOLDER
-import matt.file.mFile
+import matt.file.construct.mFile
 import matt.fx.graphics.hotkeys.addDefaultHotkeys
 import matt.fx.graphics.icon.ICON_HEIGHT
 import matt.fx.graphics.icon.ICON_WIDTH
