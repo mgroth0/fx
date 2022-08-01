@@ -7,9 +7,9 @@ import javafx.scene.paint.Color
 import javafx.scene.paint.Paint
 import javafx.scene.shape.Line
 import javafx.scene.text.Font
-import matt.async.MyTimerTask
 import matt.async.date.Duration
-import matt.async.every
+import matt.async.schedule.MyTimerTask
+import matt.async.schedule.every
 import matt.color.AColor
 import matt.color.mostContrastingForMe
 import matt.hurricanefx.eye.lib.onChange

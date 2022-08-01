@@ -1,7 +1,7 @@
 package matt.fx.graphics.win.winfun
 
 import javafx.application.Platform.runLater
-import matt.async.daemon
+import matt.async.thread.daemon
 import matt.fx.graphics.async.runLaterReturn
 import matt.fx.graphics.mag.screen
 import matt.hurricanefx.eye.lib.onChange
