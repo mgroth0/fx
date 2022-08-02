@@ -27,9 +27,6 @@ import matt.fx.web.WebViewPane
 import matt.fx.web.WebViewWrapper
 import matt.fx.web.specialZooming
 import matt.gui.draggableIcon
-import matt.hurricanefx.bindFitTo
-import matt.hurricanefx.exactHeight
-import matt.hurricanefx.exactWidth
 import matt.hurricanefx.eye.lib.onChange
 import matt.hurricanefx.tornadofx.control.button
 import matt.hurricanefx.tornadofx.control.imageview
