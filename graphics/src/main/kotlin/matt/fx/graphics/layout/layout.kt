@@ -60,45 +60,6 @@ import kotlin.contracts.contract
 import kotlin.random.Random
 
 
-infix fun RegionWrapper.minBind(other: RegionWrapper) {
-  minHeightProperty.bind(other.heightProperty)
-  minWidthProperty.bind(other.widthProperty)
-}
-
-infix fun RegionWrapper.minBind(other: StageWrapper) {
-  minHeightProperty.bind(other.heightProperty())
-  minWidthProperty.bind(other.widthProperty())
-}
-
-
-infix fun RegionWrapper.maxBind(other: RegionWrapper) {
-  maxHeightProperty.bind(other.heightProperty)
-  maxWidthProperty.bind(other.widthProperty)
-}
-
-infix fun RegionWrapper.maxBind(other: StageWrapper) {
-  maxHeightProperty.bind(other.heightProperty())
-  maxWidthProperty.bind(other.widthProperty())
-}
-
-
-infix fun RegionWrapper.perfectBind(other: RegionWrapper) {
-  this minBind other
-  this maxBind other
-}
-
-infix fun RegionWrapper.perfectBind(other: StageWrapper) {
-  this minBind other
-  this maxBind other
-}
-
-fun PaneWrapper.spacer() {
-  this.children.add(Pane().apply {
-	minWidth = 20.0
-	minHeight = 20.0
-  })
-}
-
 fun Bounds.toRect() = Rectangle2D(minX, minY, width, height)
 fun Rectangle2D.shrink(n: Int) = Rectangle2D(minX + n, minY + n, width - (n*2), height - (n*2))
 
@@ -113,34 +74,6 @@ var Node.vgrow: Priority?
 	VBox.setVgrow(this, value)
 	// Input Container vgrow must propagate to Field and Fieldset
   }
-
-var NodeWrapper<*>.hgrow: Priority?
-  get() = HBox.getHgrow(this.node)
-  set(value) {
-	HBox.setHgrow(this.node, value)
-  }
-var NodeWrapper<*>.vgrow: Priority?
-  get() = VBox.getVgrow(this.node)
-  set(value) {
-	VBox.setVgrow(this.node, value)
-	// Input Container vgrow must propagate to Field and Fieldset
-  }
-
-
-fun ToolBarWrapper.spacer(prio: Priority = Priority.ALWAYS, op: PaneWrapper.()->Unit = {}): PaneWrapper {
-  val pane = PaneWrapper().apply {
-	hgrow = prio
-  }
-  op(pane)
-  add(pane)
-  return pane
-}
-
-fun HBoxWrapper.spacer(prio: Priority = Priority.ALWAYS, op: PaneWrapper.()->Unit = {}) =
-  opcr(this, PaneWrapper().apply { hGrow = prio }, op)
-
-fun VBoxWrapper.spacer(prio: Priority = Priority.ALWAYS, op: PaneWrapper.()->Unit = {}) =
-  opcr(this, PaneWrapper().apply { vGrow = prio }, op)
 
 
 private val GridPaneRowIdKey = "TornadoFX.GridPaneRowId"
@@ -241,12 +174,6 @@ val Parent.gridpaneColumnConstraints: ColumnConstraints?
 fun Parent.gridpaneColumnConstraints(op: ColumnConstraints.()->Unit) = gridpaneColumnConstraints?.apply { op() }
 
 
-fun EventTargetWrapper<*>.toolbar(vararg nodes: Node, op: ToolBarWrapper.()->Unit = {}): ToolBarWrapper {
-  val toolbar = ToolBarWrapper()
-  if (nodes.isNotEmpty()) toolbar.items.addAll(nodes)
-  opcr(this, toolbar, op)
-  return toolbar
-}
 
 
 @Deprecated(
@@ -256,49 +183,9 @@ fun EventTargetWrapper<*>.toolbar(vararg nodes: Node, op: ToolBarWrapper.()->Uni
 )
 fun ToolBar.children(op: ToolBar.()->Unit) = apply { op() }
 
-fun NodeWrapper<*>.hbox(spacing: Number? = null, alignment: Pos? = null, op: HBoxWrapper.()->Unit = {}): HBoxWrapper {
-  val hbox = HBoxWrapper(HBox())
-  if (alignment != null) hbox.alignment = alignment
-  if (spacing != null) hbox.spacing = spacing.toDouble()
-  return opcr(this, hbox, op)
-}
 
-inline fun NodeWrapper<*>.vbox(spacing: Number? = null, alignment: Pos? = null, op: VBoxWrapper.()->Unit = {}): VBoxWrapper {
-  contract {
-	callsInPlace(op, EXACTLY_ONCE)
-  }
-  val vbox = VBoxWrapper(VBox())
-  if (alignment != null) vbox.alignment = alignment
-  if (spacing != null) vbox.spacing = spacing.toDouble()
-  return opcr(this, vbox, op)
-}
 
-fun ToolBarWrapper.separator(
-  orientation: Orientation = Orientation.HORIZONTAL,
-  op: SeparatorWrapper.()->Unit = {}
-): SeparatorWrapper {
-  val separator = SeparatorWrapper(orientation).also(op)
-  add(separator)
-  return separator
-}
 
-fun EventTargetWrapper<*>.separator(
-  orientation: Orientation = Orientation.HORIZONTAL,
-  op: SeparatorWrapper.()->Unit = {}
-) =
-  opcr(this, SeparatorWrapper(orientation), op)
-
-fun EventTargetWrapper<*>.group(initialChildren: Iterable<Node>? = null, op: GroupWrapper.()->Unit = {}) =
-  opcr(this, GroupWrapper().apply { if (initialChildren != null) children.addAll(initialChildren) }, op)
-
-fun EventTargetWrapper<*>.stackpane(initialChildren: Iterable<Node>? = null, op: StackPaneWrapper.()->Unit = {}) =
-  opcr(this, StackPaneWrapper().apply { if (initialChildren != null) children.addAll(initialChildren) }, op)
-
-fun EventTargetWrapper<*>.gridpane(op: GridPaneWrapper.()->Unit = {}) = opcr(this, GridPaneWrapper(), op)
-fun EventTargetWrapper<*>.pane(op: PaneWrapper.()->Unit = {}) = opcr(this, PaneWrapper(), op)
-fun EventTargetWrapper<*>.flowpane(op: FlowPaneWrapper.()->Unit = {}) = opcr(this, FlowPaneWrapper(), op)
-fun EventTargetWrapper<*>.tilepane(op: TilePaneWrapper.()->Unit = {}) = opcr(this, TilePaneWrapper(), op)
-fun EventTargetWrapper<*>.borderpane(op: BorderPaneWrapper.()->Unit = {}) = opcr(this, BorderPaneWrapper(), op)
 
 
 @Deprecated("Use top = node {} instead")
