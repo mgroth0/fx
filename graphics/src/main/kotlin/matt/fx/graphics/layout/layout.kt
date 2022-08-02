@@ -4,7 +4,6 @@ package matt.fx.graphics.layout
 
 import javafx.collections.ObservableList
 import javafx.geometry.Bounds
-import javafx.geometry.Insets
 import javafx.geometry.Rectangle2D
 import javafx.scene.Node
 import javafx.scene.Parent
