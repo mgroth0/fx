@@ -2,6 +2,7 @@ package matt.fx.graphics.menu.context
 
 import javafx.application.Platform.runLater
 import javafx.beans.property.BooleanProperty
+import javafx.beans.property.Property
 import javafx.collections.ListChangeListener.Change
 import javafx.event.EventTarget
 import javafx.scene.Group
@@ -78,8 +79,9 @@ class MContextMenuBuilder(
 	}.also { add(it.node) }
 
 
-  infix fun String.toggles(b: BooleanProperty) = checkitem(this, b)
-  fun checkitem(s: String, b: BooleanProperty, op: CheckMenuItem.()->Unit = {}) = CheckMenuItem(s).apply {
+  infix fun String.toggles(b: Property<Boolean>) = checkitem(this, b)
+
+  fun checkitem(s: String, b: Property<Boolean>, op: CheckMenuItem.()->Unit = {}) = CheckMenuItem(s).apply {
 	isMnemonicParsing = false
 	selectedProperty().bindBidirectional(b)
 	op()
