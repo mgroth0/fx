@@ -19,7 +19,6 @@ import matt.file.construct.toMFile
 import matt.fx.graphics.async.runLaterReturn
 import matt.fx.graphics.clip.copyToClipboard
 import matt.fx.graphics.lang.actionbutton
-import matt.fx.graphics.layout.perfectBind
 import matt.fx.graphics.layout.vgrow
 import matt.fx.graphics.menu.context.mcontextmenu
 import matt.fx.graphics.refreshWhileInSceneEvery
