@@ -96,8 +96,8 @@ infix fun WebViewWrapper.maxBind(other: RegionWrapper) {
 }
 
 infix fun WebViewWrapper.maxBind(other: StageWrapper) {
-  maxHeightProperty.bind(other.heightProperty()) // gotta be strict with webview, which I think tries to be big
-  maxWidthProperty.bind(other.widthProperty())
+  maxHeightProperty.bind(other.heightProperty) // gotta be strict with webview, which I think tries to be big
+  maxWidthProperty.bind(other.widthProperty)
 }
 
 infix fun WebViewWrapper.minBind(other: RegionWrapper) {
@@ -106,8 +106,8 @@ infix fun WebViewWrapper.minBind(other: RegionWrapper) {
 }
 
 infix fun WebViewWrapper.minBind(other: StageWrapper) {
-  minHeightProperty.bind(other.heightProperty())
-  minWidthProperty.bind(other.widthProperty())
+  minHeightProperty.bind(other.heightProperty)
+  minWidthProperty.bind(other.widthProperty)
 }
 
 
