@@ -17,10 +17,6 @@ import matt.css.Color.black
 import matt.css.sty
 import matt.file.MFile
 import matt.fx.graphics.async.runLaterReturn
-import matt.fx.graphics.layout.hbox
-import matt.fx.graphics.layout.hgrow
-import matt.fx.graphics.layout.vbox
-import matt.fx.graphics.layout.vgrow
 import matt.fx.graphics.menu.context.mcontextmenu
 import matt.fx.graphics.win.interact.doubleClickToOpenInWindow
 import matt.fx.graphics.win.interact.openImageInWindow
@@ -39,10 +35,10 @@ import matt.hurricanefx.tornadofx.control.button
 import matt.hurricanefx.tornadofx.control.imageview
 import matt.hurricanefx.tornadofx.control.textarea
 import matt.hurricanefx.tornadofx.nodes.add
-import matt.hurricanefx.wrapper.pane.PaneWrapper
-import matt.hurricanefx.wrapper.region.RegionWrapper
 import matt.hurricanefx.wrapper.control.text.area.TextAreaWrapper
+import matt.hurricanefx.wrapper.pane.PaneWrapper
 import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
+import matt.hurricanefx.wrapper.region.RegionWrapper
 import matt.klib.lang.err
 import java.lang.ref.WeakReference
 

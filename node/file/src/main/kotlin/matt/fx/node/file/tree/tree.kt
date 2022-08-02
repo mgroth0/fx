@@ -18,8 +18,6 @@ import matt.fx.fxauto.actionitem
 import matt.fx.fxauto.fxActions
 import matt.fx.graphics.icon.view
 import matt.fx.graphics.layout.hgrow
-import matt.fx.graphics.layout.perfectBind
-import matt.fx.graphics.layout.vbox
 import matt.fx.graphics.menu.context.mcontextmenu
 import matt.fx.graphics.refreshWhileInSceneEvery
 import matt.fx.graphics.win.interact.openInNewWindow
