@@ -104,7 +104,7 @@ class MDialog<R> internal constructor(): VBoxWrapper() {
   }
 
   init {
-	exactHeightProperty().bind(stg.heightProperty())
+	exactHeightProperty().bind(stg.heightProperty)
 	borderFill = Color.DARKBLUE
   }
 }
@@ -115,10 +115,10 @@ fun StageWrapper.bindXYToOwnerCenter() {
   require(owner != null) {
 	"must use initOwner before bindXYToOwnerCenter"
   }
-  val xBinding = owner.xProperty().doubleBinding(owner.widthProperty(), this.widthProperty()) {
+  val xBinding = owner.xProperty().doubleBinding(owner.widthProperty(), this.widthProperty) {
 	(owner.x + (owner.width/2)) - width/2
   }
-  val yBinding = owner.yProperty().doubleBinding(owner.heightProperty(), this.heightProperty()) {
+  val yBinding = owner.yProperty().doubleBinding(owner.heightProperty(), this.heightProperty) {
 	(owner.y + (owner.height/2)) - height/2
   }
   aXBindingStrengthener[this.node] = xBinding
