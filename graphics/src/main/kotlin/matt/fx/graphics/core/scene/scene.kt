@@ -30,8 +30,6 @@ import matt.fx.graphics.menu.context.showMContextMenu
 import matt.fx.graphics.style.CUSTOM_CSS
 import matt.fx.graphics.style.DARK_MODENA_CSS
 import matt.fx.graphics.style.DarkModeController.darkModeProp
-import matt.fx.graphics.style.borderFill
-import matt.fx.graphics.style.styleInfo
 import matt.fx.graphics.toAwtColor
 import matt.fx.graphics.win.interact.WinGeom
 import matt.fx.graphics.win.interact.WinOwn
@@ -39,6 +37,7 @@ import matt.fx.graphics.win.interact.openInNewWindow
 import matt.fx.graphics.win.winfun.noDocking
 import matt.hurricanefx.tornadofx.menu.menu
 import matt.hurricanefx.tornadofx.nodes.setOnDoubleClick
+import matt.hurricanefx.wrapper.node.NodeWrapper.Companion.wrapped
 import matt.hurricanefx.wrapper.parent.ParentWrapper
 import matt.hurricanefx.wrapper.region.RegionWrapper.Companion.wrapped
 import matt.hurricanefx.wrapper.scene.SceneWrapper
@@ -137,7 +136,7 @@ open class MScene(
 			(it as? Parent)?.childrenUnmodifiable ?: listOf()
 		  }.forEach {
 			if (it::class !in classesPrinted) {
-			  println(it.styleInfo())
+			  println(it.wrapped().styleInfo())
 			  classesPrinted += it::class
 			}
 		  }

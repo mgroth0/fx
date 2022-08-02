@@ -24,7 +24,6 @@ import matt.file.MFile
 import matt.file.construct.mFile
 import matt.fx.graphics.core.scene.MScene
 import matt.fx.graphics.lang.actionbutton
-import matt.fx.graphics.style.borderFill
 import matt.fx.graphics.win.bindgeom.bindGeometry
 import matt.fx.graphics.win.interact.WinGeom.Centered
 import matt.fx.graphics.win.interact.WinOwn.Auto
@@ -41,7 +40,6 @@ import matt.hurricanefx.eye.lang.BProp
 import matt.hurricanefx.eye.lib.onChange
 import matt.hurricanefx.eye.prop.booleanBinding
 import matt.hurricanefx.eye.prop.doubleBinding
-import matt.hurricanefx.stage
 import matt.hurricanefx.tornadofx.control.button
 import matt.hurricanefx.tornadofx.control.textarea
 import matt.hurricanefx.tornadofx.dialog.alert
@@ -50,6 +48,7 @@ import matt.hurricanefx.tornadofx.nodes.setOnDoubleClick
 import matt.hurricanefx.wrapper.control.button.ButtonWrapper
 import matt.hurricanefx.wrapper.imageview.ImageViewWrapper
 import matt.hurricanefx.wrapper.node.NodeWrapper
+import matt.hurricanefx.wrapper.node.NodeWrapper.Companion.wrapped
 import matt.hurricanefx.wrapper.parent.ParentWrapper.Companion.wrapped
 import matt.hurricanefx.wrapper.region.RegionWrapper.Companion.wrapped
 import matt.hurricanefx.wrapper.stage.StageWrapper
@@ -386,7 +385,7 @@ fun Node.textInput(
   default: String = "insert default here",
   prompt: String = "insert prompt here"
 ): String? = TextInputDialog(default).apply {
-  initOwner(stage)
+  initOwner(wrapped().stage)
   contentText = prompt
   initStyle(StageStyle.UTILITY)
 }.showAndWait().getOrNull()
