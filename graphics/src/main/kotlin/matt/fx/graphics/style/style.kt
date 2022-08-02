@@ -2,22 +2,15 @@ package matt.fx.graphics.style
 
 import com.jthemedetecor.OsThemeDetector
 import javafx.application.Platform.runLater
-import javafx.css.Styleable
 import javafx.geometry.Insets
 import javafx.scene.Node
-import javafx.scene.layout.Border
-import javafx.scene.layout.BorderStroke
-import javafx.scene.layout.BorderStrokeStyle
 import javafx.scene.paint.Color
-import javafx.scene.paint.Paint
 import matt.color.hex
-import matt.fx.graphics.toAwtColor
 import matt.css.MyStyleDsl
+import matt.fx.graphics.toAwtColor
 import matt.hurricanefx.wrapper.node.NodeWrapper
-import matt.hurricanefx.wrapper.region.RegionWrapper
 import matt.klib.log.warn
 import matt.klib.prop.BasicProperty
-import matt.klib.str.LineAppender
 import java.util.logging.Level
 import kotlin.reflect.KProperty
 
@@ -67,50 +60,10 @@ val MODENA_CSS = ClassLoader.getSystemResource("modena.css").toString()
 val DARK_MODENA_CSS = ClassLoader.getSystemResource("darkModena.css").toString()
 val CUSTOM_CSS = ClassLoader.getSystemResource("custom.css").toString()
 
-fun Styleable.styleInfo(): String {
-  val r = LineAppender()
-  r += ("${this::class}->${typeSelector}")
 
-  r += ("\tstyleclasses")
-  styleClass.forEach { sc ->
-	r += ("\t\t$sc")
-  }
 
-  r += ("\tpseudo")
-  pseudoClassStates.forEach { pc ->
-	r += ("\t\t$pc->${pc.pseudoClassName}")
-  }
-  r += ("\tsample")
-  r += ("\t\t${style}")
-  if (false) {
-	// string too big!
-	r += ("\tmeta (${cssMetaData.size})")
-	cssMetaData.forEach {
-	  r += ("\t\t${it}")
-	}
-  }
-  return r.toString()
-}
 
-var RegionWrapper.borderFill: Paint?
-  get() = border?.strokes?.firstOrNull()?.topStroke
-  set(value) {
-	border = if (value == null) null
-	else {
-	  Border(BorderStroke(value, BorderStrokeStyle.SOLID, null, null))
-	}
 
-  }
-
-var RegionWrapper.borderDashFill: Paint?
-  get() = border?.strokes?.firstOrNull { it.topStyle == BorderStrokeStyle.DASHED }?.topStroke
-  set(value) {
-	border = if (value == null) null
-	else {
-	  Border(BorderStroke(value, BorderStrokeStyle.DASHED, null, null))
-	}
-
-  }
 
 private class StyleClass {
   operator fun getValue(styleClassDSL: StyleClassDSL, property: KProperty<*>): Any? {
@@ -165,82 +118,5 @@ fun NodeWrapper<*>.sty(op: StyleClassDSL.()->Unit) {
 }
 
 
-fun RegionWrapper.yellow() {
-  borderDashFill = Color.YELLOW
-}
-
-fun RegionWrapper.blue() {
-  borderDashFill = Color.BLUE
-}
-
-fun RegionWrapper.purple() {
-  borderDashFill = Color.PURPLE
-}
-
-fun RegionWrapper.green() {
-  borderDashFill = Color.GREEN
-}
-
-fun RegionWrapper.red() {
-  borderDashFill = Color.RED
-}
-
-fun RegionWrapper.orange() {
-  borderDashFill = Color.ORANGE
-}
-
-fun RegionWrapper.white() {
-  borderDashFill = Color.WHITE
-}
 
 
-/*part of this file was taken from tornadofx*/
-
-
-
-fun insets(all: Number) = Insets(all.toDouble(), all.toDouble(), all.toDouble(), all.toDouble())
-fun insets(horizontal: Number? = null, vertical: Number? = null) = Insets(
-  vertical?.toDouble() ?: 0.0,
-  horizontal?.toDouble() ?: 0.0,
-  vertical?.toDouble() ?: 0.0,
-  horizontal?.toDouble() ?: 0.0
-)
-
-fun insets(
-  top: Number? = null,
-  right: Number? = null,
-  bottom: Number? = null,
-  left: Number? = null
-) = Insets(
-  top?.toDouble() ?: 0.0,
-  right?.toDouble() ?: 0.0,
-  bottom?.toDouble() ?: 0.0,
-  left?.toDouble() ?: 0.0
-)
-
-fun Insets.copy(
-  top: Number? = null,
-  right: Number? = null,
-  bottom: Number? = null,
-  left: Number? = null
-) = Insets(
-  top?.toDouble() ?: this.top,
-  right?.toDouble() ?: this.right,
-  bottom?.toDouble() ?: this.bottom,
-  left?.toDouble() ?: this.left
-)
-
-
-fun Insets.copy(
-  horizontal: Number? = null,
-  vertical: Number? = null
-) = Insets(
-  vertical?.toDouble() ?: this.top,
-  horizontal?.toDouble() ?: this.right,
-  vertical?.toDouble() ?: this.bottom,
-  horizontal?.toDouble() ?: this.left
-)
-
-val Insets.horizontal get() = (left + right)/2
-val Insets.vertical get() = (top + bottom)/2
-val Insets.all get() = (left + right + top + bottom)/4
