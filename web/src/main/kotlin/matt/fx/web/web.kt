@@ -36,7 +36,6 @@ import matt.hurricanefx.wrapper.region.RegionWrapperImpl
 import matt.hurricanefx.wrapper.stage.StageWrapper
 import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
 import matt.hurricanefx.wrapper.region.RegionWrapper
-import matt.hurricanefx.wrapper.target.removeFromParent
 import matt.hurricanefx.wrapper.wrapped
 import matt.klib.lang.NEVER
 import netscape.javascript.JSObject
