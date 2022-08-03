@@ -107,7 +107,7 @@ open class MScene(
 	mcontextmenu {
 	  menu("style") {
 		actionitem("reload style") {
-		  reloadStyle(darkModeProp.value)
+		  this@MScene.reloadStyle(darkModeProp.value)
 		}
 
 		/*this is controlled from the OS from now on*/        /*matt.fx.graphics.menu.actionitem("toggle darkMode") {
