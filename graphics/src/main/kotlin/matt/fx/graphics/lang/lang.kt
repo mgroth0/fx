@@ -42,7 +42,7 @@ fun NodeWrapperImpl<*>.actionbutton(text: String = "", graphic: Node? = null, ac
 	action(it)
 	it.consume()
   }
-  this@actionbutton.addChildIfPossible(this)
+  this@actionbutton.addChild(this)
 }
 
 infix fun ButtonWrapper.withAction(newOp: ()->Unit) = this.apply { op = newOp }
