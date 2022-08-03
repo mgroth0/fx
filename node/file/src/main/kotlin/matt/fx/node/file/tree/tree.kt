@@ -124,20 +124,20 @@ fun TreeLikeWrapper<*, MFile>.nav(f: MFile) {
 
 }
 
-fun PaneWrapper.fileTree(
+fun PaneWrapper<*>.fileTree(
   rootFile: MFile,
   strategy: FileTreePopulationStrategy = AUTOMATIC,
   op: (TreeViewWrapper<MFile>.()->Unit)? = null,
 ): TreeViewWrapper<MFile> = fileTree(rootFile.inList().toObservable(), strategy, op)
 
-fun PaneWrapper.fileTableTree(
+fun PaneWrapper<*>.fileTableTree(
   rootFile: MFile,
   strategy: FileTreePopulationStrategy = AUTOMATIC,
   op: (TreeTableViewWrapper<MFile>.()->Unit)? = null,
 ): TreeTableViewWrapper<MFile> = fileTableTree(rootFile.inList().toObservable(), strategy, op)
 
 
-fun PaneWrapper.fileTree(
+fun PaneWrapper<*>.fileTree(
   rootFiles: ObservableList<MFile>,
   strategy: FileTreePopulationStrategy = AUTOMATIC,
   op: (TreeViewWrapper<MFile>.()->Unit)? = null,
@@ -154,7 +154,7 @@ fun PaneWrapper.fileTree(
   }
 }
 
-fun PaneWrapper.fileTableTree(
+fun PaneWrapper<*>.fileTableTree(
   rootFiles: ObservableList<MFile>,
   strategy: FileTreePopulationStrategy = AUTOMATIC,
   op: (TreeTableViewWrapper<MFile>.()->Unit)? = null,
