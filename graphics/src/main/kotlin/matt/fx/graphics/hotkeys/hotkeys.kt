@@ -30,7 +30,6 @@ import matt.fx.graphics.mag.right
 import matt.fx.graphics.mag.top
 import matt.fx.graphics.mag.topleft
 import matt.fx.graphics.mag.topright
-import matt.hurricanefx.wrapper.region.RegionWrapper
 import matt.hurricanefx.wrapper.window.WindowWrapper.Companion.wrapped
 import matt.hurricanefx.wrapper.wrapped
 import matt.klib.dmap.withStoringDefault
@@ -42,7 +41,7 @@ import kotlin.contracts.ExperimentalContracts
 
 
 @ExperimentalContracts
-fun MScene.addDefaultHotkeys() {
+fun MScene<*>.addDefaultHotkeys() {
   val scene = this
 
   /*needed filter to be true here or for some reason LEFT.ctrl.opt.shift wasn't being captured in music app even though it was captured in all other apps (globalhotkeys, brainstorm, kjg)*/
