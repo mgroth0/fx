@@ -50,7 +50,7 @@ import kotlin.reflect.KClass
 /*this is for when I have two monitors that are the scame brand and therefore mac is mixing up which side each is on I think*/
 const val NEED_REVERSED_DISPLAYS_FEATURE = false
 
-fun SceneWrapper.reloadStyle(darkMode: Boolean) {
+fun SceneWrapper<*>.reloadStyle(darkMode: Boolean) {
   stylesheets.clear()
   fill = null
   if (darkMode) {
@@ -65,7 +65,7 @@ fun SceneWrapper.reloadStyle(darkMode: Boolean) {
 
 open class MScene(
   root: ParentWrapper, val icon: MFile
-): SceneWrapper(root) {
+): SceneWrapper<ParentWrapper>(root) {
   constructor(
 	root: ParentWrapper, icon: String
   ): this(root, ICON_FOLDER["white/$icon.png"])
@@ -179,7 +179,7 @@ open class MScene(
 }
 
 
-fun SceneWrapper.iconify(icon: MFile) {
+fun SceneWrapper<*>.iconify(icon: MFile) {
   var iconWindow: StageWrapper? = null
   println("making icon with $icon")
   VBoxWrapper(Icon(icon)).apply {
