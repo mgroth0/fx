@@ -5,7 +5,6 @@ import matt.file.commons.VAR_JSON_FILE
 import matt.hurricanefx.wrapper.window.WindowWrapper
 import matt.json.custom.bool
 import matt.json.prim.parseJsonObj
-import matt.json.prim.set
 import matt.json.prim.writeJson
 
 const val NEW_MAC_NOTCH_ESTIMATE = 32.0 /*35*/
