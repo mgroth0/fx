@@ -21,8 +21,8 @@ fun <T: Inspectable> InspectionView(
   items: List<T>,
   dir: Orientation = Orientation.HORIZONTAL,
   table: Boolean = false,
-  wrap_lv: PaneWrapper? = null
-): PaneWrapper {
+  wrap_lv: PaneWrapper<*>? = null
+): PaneWrapper<*> {
   val root = if (dir == Orientation.HORIZONTAL) HBoxWrapper() else VBoxWrapper()
   val oitems = if (items is ObservableList) items else items.toObservable()
   val lv = if (table) TableViewWrapper(oitems) else ListViewWrapper(oitems)
@@ -54,13 +54,13 @@ fun <T: Inspectable> InspectionView(
   return root
 }
 
-fun <T: Inspectable> PaneWrapper.inspectionview(
+fun <T: Inspectable> PaneWrapper<*>.inspectionview(
   items: List<T>,
   dir: Orientation = Orientation.HORIZONTAL,
   table: Boolean = false,
-  op: (PaneWrapper.()->Unit)? = null,
-  wrap_lv: PaneWrapper? = null
-): PaneWrapper {
+  op: (PaneWrapper<*>.()->Unit)? = null,
+  wrap_lv: PaneWrapper<*>? = null
+): PaneWrapper<*> {
   val iv = InspectionView(items, dir, table, wrap_lv).apply {
 	if (op != null) {
 	  op()
