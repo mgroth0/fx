@@ -20,13 +20,11 @@ import matt.auto.jumpToKotlinSourceString
 import matt.auto.openInIntelliJ
 import matt.fx.graphics.hotkey.filters
 import matt.fx.graphics.hotkey.handlers
-import matt.fx.graphics.menu.actionitem
 import matt.fx.graphics.menu.context.EventHandlerType.Filter
 import matt.fx.graphics.menu.context.EventHandlerType.Handler
-import matt.hurricanefx.tornadofx.menu.item
-import matt.hurricanefx.tornadofx.menu.menu
-import matt.hurricanefx.tornadofx.menu.separator
+import matt.hurricanefx.wrapper.menu.MenuWrapper
 import matt.hurricanefx.wrapper.menu.item.MenuItemWrapper
+import matt.hurricanefx.wrapper.menu.item.SimpleMenuItem
 import matt.hurricanefx.wrapper.node.NodeWrapper
 import matt.hurricanefx.wrapper.node.NodeWrapperImpl
 import matt.hurricanefx.wrapper.scene.SceneWrapper
@@ -66,8 +64,8 @@ class MContextMenuBuilder(
 	}
   }.also { add(it) }
 
-  fun item(s: String, g: NodeWrapperImpl<*>? = null, op: MenuItemWrapper.()->Unit = {}) =
-	MenuItemWrapper(s, g?.node).apply {
+  fun item(s: String, g: NodeWrapperImpl<*>? = null, op: MenuItemWrapper<*>.()->Unit = {}) =
+	SimpleMenuItem(s, g?.node).apply {
 	  isMnemonicParsing = false
 	  op()
 	}.also { add(it.node) }
@@ -190,7 +188,7 @@ fun SceneWrapper<*>.showMContextMenu(
   val t = tic(prefix = "showMContextMenu", enabled = false)
   t.toc("start")
 
-  val devMenu = Menu("dev")
+  val devMenu = MenuWrapper("dev")
 
   t.toc("made devMenu")
 
@@ -239,9 +237,9 @@ fun SceneWrapper<*>.showMContextMenu(
 	}
 	if (items.isNotEmpty()) separator()
 	t.toc("made spe")
-	items += target.wrapped().hotkeyInfoMenu()
+	items += target.wrapped().hotkeyInfoMenu().node
 	t.toc("added hotkey info menu")
-	items += devMenu
+	items += devMenu.node
 	t.toc("added devMeny")
   }.show(target, xy.first, xy.second)
   t.toc("showed cm")
@@ -262,7 +260,7 @@ private fun KClass<*>.jumpToSource() {
   }
 }
 
-private fun NodeWrapper.hotkeyInfoMenu() = Menu("Click For Hotkey Info").apply {
+private fun NodeWrapper.hotkeyInfoMenu() = MenuWrapper("Click For Hotkey Info").apply {
   val node = this@hotkeyInfoMenu
   fun addInfo(type: EventHandlerType) {
 	menu(
