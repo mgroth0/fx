@@ -31,11 +31,11 @@ import matt.hurricanefx.eye.lib.onChange
 import matt.hurricanefx.tornadofx.control.button
 import matt.hurricanefx.tornadofx.control.imageview
 import matt.hurricanefx.tornadofx.control.textarea
-import matt.hurricanefx.tornadofx.nodes.add
 import matt.hurricanefx.wrapper.control.text.area.TextAreaWrapper
 import matt.hurricanefx.wrapper.pane.PaneWrapper
 import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
 import matt.hurricanefx.wrapper.region.RegionWrapperImpl
+import matt.hurricanefx.wrapper.text.TextWrapper
 import matt.klib.lang.err
 import java.lang.ref.WeakReference
 
@@ -286,7 +286,7 @@ private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): RegionWrap
 
 	  else   -> err("how to make node for files with extension:${extension}")
 	}
-  } else return VBoxWrapper(Text("file $this does not exist"))
+  } else return VBoxWrapper(TextWrapper("file $this does not exist"))
 }
 
 

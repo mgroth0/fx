@@ -31,14 +31,12 @@ import matt.hurricanefx.eye.collect.toObservable
 import matt.hurricanefx.eye.lang.BProp
 import matt.hurricanefx.eye.lib.onChange
 import matt.hurricanefx.eye.prop.div
-import matt.hurricanefx.tornadofx.nodes.add
-import matt.hurricanefx.tornadofx.nodes.clear
-import matt.hurricanefx.tornadofx.nodes.populateTree
-import matt.hurricanefx.tornadofx.nodes.setOnDoubleClick
 import matt.hurricanefx.wrapper.cellfact.SimpleFactory
 import matt.hurricanefx.wrapper.control.tree.TreeViewWrapper
 import matt.hurricanefx.wrapper.control.tree.like.TreeLikeWrapper
+import matt.hurricanefx.wrapper.control.tree.like.populateTree
 import matt.hurricanefx.wrapper.control.treetable.TreeTableViewWrapper
+import matt.hurricanefx.wrapper.node.setOnDoubleClick
 import matt.hurricanefx.wrapper.pane.PaneWrapper
 import matt.hurricanefx.wrapper.pane.hbox.HBoxWrapper
 import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
@@ -52,7 +50,7 @@ private const val HEIGHT = 300.0
 
 fun fileTreeAndViewerPane(
   rootFile: MFile, doubleClickInsteadOfSelect: Boolean = false
-) = HBoxWrapper {
+) = HBoxWrapper().apply {
   val hBox = this
   alignment = CENTER_LEFT
   val treeTableView = fileTableTree(rootFile).apply {
