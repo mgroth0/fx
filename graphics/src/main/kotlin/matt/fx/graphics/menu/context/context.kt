@@ -23,6 +23,7 @@ import matt.fx.graphics.hotkey.handlers
 import matt.fx.graphics.menu.context.EventHandlerType.Filter
 import matt.fx.graphics.menu.context.EventHandlerType.Handler
 import matt.hurricanefx.wrapper.menu.MenuWrapper
+import matt.hurricanefx.wrapper.menu.checkitem.CheckMenuItemWrapper
 import matt.hurricanefx.wrapper.menu.item.MenuItemWrapper
 import matt.hurricanefx.wrapper.menu.item.SimpleMenuItem
 import matt.hurricanefx.wrapper.node.NodeWrapper
@@ -47,7 +48,7 @@ class MContextMenuBuilder(
 ) {
 
 
-  val genList = mutableListOf<MenuItem>()
+  val genList = mutableListOf<MenuItemWrapper<*>>()
 
   infix fun String.does(op: ()->Unit) = actionitem(this, op)
   infix fun String.doesInThread(op: ()->Unit) = actionitem(this) {
@@ -56,7 +57,7 @@ class MContextMenuBuilder(
 	}
   }
 
-  fun actionitem(s: String, op: ()->Unit) = MenuItem(s).apply {
+  fun actionitem(s: String, op: ()->Unit) = SimpleMenuItem(s).apply {
 	isMnemonicParsing = false
 	setOnAction {
 	  op()
@@ -68,23 +69,23 @@ class MContextMenuBuilder(
 	SimpleMenuItem(s, g?.node).apply {
 	  isMnemonicParsing = false
 	  op()
-	}.also { add(it.node) }
+	}.also { add(it) }
 
 
   infix fun String.toggles(b: Property<Boolean>) = checkitem(this, b)
 
-  fun checkitem(s: String, b: Property<Boolean>, op: CheckMenuItem.()->Unit = {}) = CheckMenuItem(s).apply {
+  fun checkitem(s: String, b: Property<Boolean>, op: CheckMenuItemWrapper.()->Unit = {}) = CheckMenuItemWrapper(s).apply {
 	isMnemonicParsing = false
 	selectedProperty().bindBidirectional(b)
 	op()
   }.also { add(it) }
 
-  fun menu(s: String, op: Menu.()->Unit) = Menu(s).apply {
+  fun menu(s: String, op: MenuWrapper.()->Unit) = MenuWrapper(s).apply {
 	isMnemonicParsing = false
 	op()
-  }.also { add(it) }
+  }.also { add(it.node) }
 
-  fun add(item: MenuItem) {
+  fun add(item: MenuItemWrapper<*>) {
 	if (isGen) {
 	  genList.add(item)
 	} else {

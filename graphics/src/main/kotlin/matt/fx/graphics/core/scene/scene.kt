@@ -36,6 +36,7 @@ import matt.fx.graphics.win.winfun.noDocking
 import matt.hurricanefx.wrapper.node.setOnDoubleClick
 import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
 import matt.hurricanefx.wrapper.parent.ParentWrapper
+import matt.hurricanefx.wrapper.region.RegionWrapper
 import matt.hurricanefx.wrapper.region.RegionWrapperImpl
 import matt.hurricanefx.wrapper.scene.SceneWrapper
 import matt.hurricanefx.wrapper.stage.StageWrapper
@@ -150,12 +151,12 @@ open class MScene(
 		this.menu("set border") {        /*specify this here explicitly at least once
 		  * or else it will use the `matt.fx.graphics.menu.actionitem` above without import*/
 		  this.actionitem("none") {
-			(root as RegionWrapperImpl).borderFill = null
+			(root as RegionWrapper).borderFill = null
 			/*(root.node as? Region)?.wrapped()?.borderFill = null*/
 		  }
 		  listOf(YELLOW, BLUE, RED, GREEN, ORANGE, PURPLE, WHITE).forEach {
 			actionitem(ColorUtils().getColorNameFromColor(it.toAwtColor())) {
-			  (root as RegionWrapperImpl).borderFill = it
+			  (root as RegionWrapper).borderFill = it
 			  /*(root.node as? Region)?.wrapped()?.borderFill = it*/
 			}
 		  }
