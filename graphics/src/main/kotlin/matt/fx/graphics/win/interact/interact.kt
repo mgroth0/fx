@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalStdlibApi::class)
+
 package matt.fx.graphics.win.interact
 
 import javafx.application.Platform.runLater
@@ -44,6 +46,7 @@ import matt.hurricanefx.tornadofx.control.textarea
 import matt.hurricanefx.tornadofx.dialog.alert
 import matt.hurricanefx.wrapper.control.button.ButtonWrapper
 import matt.hurricanefx.wrapper.imageview.ImageViewWrapper
+import matt.hurricanefx.wrapper.node.NodeWrapper
 import matt.hurricanefx.wrapper.node.NodeWrapperImpl
 import matt.hurricanefx.wrapper.node.disableWhen
 import matt.hurricanefx.wrapper.node.setOnDoubleClick
@@ -150,7 +153,11 @@ fun StageWrapper.bindHWToOwner() {
 
 inline fun <reified T> jsonEditor(json: String? = null) = dialog<T?> {
   val ta = textarea(json ?: "")
+
+
+
   val goodBind = ta.textProperty().booleanBinding {
+
 	it != null
 		&& it.isValidJson()
 		&& noExceptions { Json.decodeFromString<T>(it) }
@@ -369,9 +376,9 @@ fun MFile.openImageInWindow() {
   AnchorPaneWrapper(ImageViewWrapper(this@openImageInWindow.toURI().toString()).apply {
 	isPreserveRatio = true
 	runLater {
-	  fitHeightProperty().bind(scene.window.heightProperty())
-	  fitWidthProperty().bind(scene.window.widthProperty())
-	  this.setOnDoubleClick { (scene.window as Stage).close() }
+	  fitHeightProperty().bind(scene!!.window.heightProperty())
+	  fitWidthProperty().bind(scene!!.window.widthProperty())
+	  this.setOnDoubleClick { (scene!!.window as Stage).close() }
 	}
   }).openInNewWindow()
 }
@@ -380,18 +387,12 @@ fun ImageViewWrapper.doubleClickToOpenInWindow() {
   this.setOnDoubleClick { mFile(URI(this.image.url)).openImageInWindow() }
 }
 
-@OptIn(ExperimentalStdlibApi::class)
-fun Node.textInput(
+fun NodeWrapper.textInput(
   default: String = "insert default here",
   prompt: String = "insert prompt here"
 ): String? = TextInputDialog(default).apply {
-  initOwner(wrapped().stage)
+  initOwner(stage)
   contentText = prompt
   initStyle(StageStyle.UTILITY)
 }.showAndWait().getOrNull()
-
-fun NodeWrapperImpl<*>.textInput(
-  default: String = "insert default here",
-  prompt: String = "insert prompt here"
-): String? = node.textInput(default, prompt)
 
