@@ -30,7 +30,7 @@ import matt.hurricanefx.tornadofx.nodes.add
 import matt.hurricanefx.tornadofx.nodes.removeFromParent
 import matt.hurricanefx.tornadofx.nodes.setOnDoubleClick
 import matt.hurricanefx.wrapper.control.ControlWrapper
-import matt.hurricanefx.wrapper.target.EventTargetWrapper.Companion.wrapped
+import matt.hurricanefx.wrapper.target.EventTargetWrapperImpl.Companion.wrapped
 import matt.hurricanefx.wrapper.node.NodeWrapper
 import matt.hurricanefx.wrapper.pane.PaneWrapper
 import matt.hurricanefx.wrapper.parent.ParentWrapper

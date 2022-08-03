@@ -26,13 +26,13 @@ import matt.fx.graphics.menu.context.EventHandlerType.Handler
 import matt.hurricanefx.tornadofx.menu.item
 import matt.hurricanefx.tornadofx.menu.menu
 import matt.hurricanefx.tornadofx.menu.separator
-import matt.hurricanefx.wrapper.target.EventTargetWrapper
 import matt.hurricanefx.wrapper.menu.item.MenuItemWrapper
 import matt.hurricanefx.wrapper.node.NodeW
 import matt.hurricanefx.wrapper.node.NodeWrapper
 import matt.hurricanefx.wrapper.node.NodeWrapper.Companion.wrapped
 import matt.hurricanefx.wrapper.scene.SceneWrapper
 import matt.hurricanefx.wrapper.parent.parent
+import matt.hurricanefx.wrapper.target.EventTargetWrapper
 import matt.klib.dmap.withStoringDefault
 import matt.stream.map.lazyMap
 import matt.stream.recurse.chain
@@ -41,12 +41,7 @@ import java.util.WeakHashMap
 import kotlin.concurrent.thread
 import kotlin.reflect.KClass
 
-
-fun EventTarget.mcontextmenu(op: MContextMenuBuilder.()->Unit) {
-  MContextMenuBuilder(this).apply(op)
-}
-
-fun EventTargetWrapper<*>.mcontextmenu(op: MContextMenuBuilder.()->Unit) = node.mcontextmenu(op)
+fun EventTargetWrapper.mcontextmenu(op: MContextMenuBuilder.()->Unit) = MContextMenuBuilder(this.node).apply(op)
 
 class MContextMenuBuilder(
   val node: EventTarget,

@@ -4,7 +4,6 @@ import javafx.event.Event
 import javafx.scene.Node
 import javafx.scene.Parent
 import javafx.scene.input.ContextMenuEvent
-import javafx.scene.layout.Region
 import javafx.scene.paint.Color
 import javafx.scene.paint.Color.BLUE
 import javafx.scene.paint.Color.GREEN
@@ -38,14 +37,12 @@ import matt.fx.graphics.win.winfun.noDocking
 import matt.hurricanefx.tornadofx.menu.menu
 import matt.hurricanefx.tornadofx.nodes.setOnDoubleClick
 import matt.hurricanefx.wrapper.node.NodeWrapper
-import matt.hurricanefx.wrapper.node.NodeWrapper.Companion.wrapped
 import matt.hurricanefx.wrapper.parent.ParentWrapper
 import matt.hurricanefx.wrapper.scene.SceneWrapper
 import matt.hurricanefx.wrapper.scene.SceneWrapper.Companion.wrapped
 import matt.hurricanefx.wrapper.stage.StageWrapper
 import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
 import matt.hurricanefx.wrapper.region.RegionWrapper
-import matt.hurricanefx.wrapper.target.EventTargetWrapper.Companion.wrapped
 import matt.klib.str.tab
 import matt.stream.recurse.recurse
 import java.net.URL

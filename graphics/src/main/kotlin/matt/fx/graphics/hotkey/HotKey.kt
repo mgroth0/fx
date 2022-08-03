@@ -12,7 +12,7 @@ import matt.hotkey.Hotkey
 import matt.hotkey.HotkeyDSL
 import matt.hurricanefx.eye.lang.BProp
 import matt.hurricanefx.eye.prop.toggle
-import matt.hurricanefx.wrapper.target.EventTargetWrapper
+import matt.hurricanefx.wrapper.target.EventTargetWrapperImpl
 import matt.klib.commons.thisMachine
 import matt.klib.lang.NEVER
 import matt.klib.lang.err
@@ -440,7 +440,7 @@ fun EventTarget.registerInFilter(
   }
 }
 
-inline fun EventTargetWrapper<*>.hotkeys(
+inline fun EventTargetWrapperImpl<*>.hotkeys(
   filter: Boolean = false,
   quickPassForNormalTyping: Boolean = false,
   op: FXHotkeyDSL.()->Unit,
