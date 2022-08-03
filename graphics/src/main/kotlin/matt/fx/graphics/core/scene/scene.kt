@@ -66,14 +66,14 @@ fun SceneWrapper.reloadStyle(darkMode: Boolean) {
 }
 
 open class MScene(
-  root: ParentWrapper, val icon: MFile
+  root: ParentWrapper<*>, val icon: MFile
 ): SceneWrapper(root) {
   constructor(
-	root: ParentWrapper, icon: String
+	root: ParentWrapper<*>, icon: String
   ): this(root, ICON_FOLDER["white/$icon.png"])
 
   constructor(
-	root: ParentWrapper
+	root: ParentWrapper<*>
   ): this(root, "chunk")
 
   private fun handleContextMenuReq(e: Event) {
