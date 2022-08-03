@@ -11,6 +11,7 @@ import matt.auto.applescript.applescript
 import matt.auto.applescript.interactiveOsascript
 import matt.auto.compileAndOrRunApplescript
 import matt.fx.graphics.mag.left
+import matt.hurricanefx.wrapper.stage.StageWrapper
 import matt.hurricanefx.wrapper.wrapped
 import matt.klib.lang.err
 import kotlin.concurrent.thread
@@ -140,8 +141,8 @@ fun sdtInTest() {
   }
   if (false) {
 	runLater {
-	  val fakeStage = Stage()
-	  fakeStage.wrapped().left()
+	  val fakeStage = StageWrapper(Stage())
+	  fakeStage.left()
 	}
   }
 }

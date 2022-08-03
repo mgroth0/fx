@@ -143,7 +143,7 @@ open class MScene(
 			(it as? Parent)?.childrenUnmodifiable ?: listOf()
 		  }.forEach {
 			if (it::class !in classesPrinted) {
-			  println(it.wrapped<NodeWrapper>().styleInfo())
+			  println(it.wrapped().styleInfo())
 			  classesPrinted += it::class
 			}
 		  }

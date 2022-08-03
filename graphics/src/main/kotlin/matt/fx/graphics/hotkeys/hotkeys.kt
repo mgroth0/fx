@@ -128,7 +128,7 @@ fun MScene.addDefaultHotkeys() {
 	  it.wrapOp {
 		val reg = (scene.root as? Region)
 		val old = regs[reg]
-		reg?.wrapped<RegionWrapper>()?.borderFill = Color.YELLOW
+		reg?.wrapped()?.borderFill = Color.YELLOW
 		it()
 		reg?.go {
 		  thread {
