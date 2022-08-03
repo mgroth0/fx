@@ -4,16 +4,11 @@ import javafx.application.Platform.runLater
 import javafx.beans.property.Property
 import javafx.collections.ListChangeListener.Change
 import javafx.event.EventTarget
-import javafx.scene.Group
 import javafx.scene.Node
 import javafx.scene.Parent
 import javafx.scene.Scene
 import javafx.scene.canvas.Canvas
-import javafx.scene.control.CheckMenuItem
 import javafx.scene.control.ContextMenu
-import javafx.scene.control.Menu
-import javafx.scene.control.MenuItem
-import javafx.scene.layout.Region
 import javafx.scene.shape.Shape
 import matt.async.date.tic
 import matt.auto.jumpToKotlinSourceString
@@ -22,14 +17,15 @@ import matt.fx.graphics.hotkey.filters
 import matt.fx.graphics.hotkey.handlers
 import matt.fx.graphics.menu.context.EventHandlerType.Filter
 import matt.fx.graphics.menu.context.EventHandlerType.Handler
+import matt.hurricanefx.wrapper.contextmenu.ContextMenuWrapper
 import matt.hurricanefx.wrapper.menu.MenuWrapper
 import matt.hurricanefx.wrapper.menu.checkitem.CheckMenuItemWrapper
 import matt.hurricanefx.wrapper.menu.item.MenuItemWrapper
 import matt.hurricanefx.wrapper.menu.item.SimpleMenuItem
 import matt.hurricanefx.wrapper.node.NodeWrapper
 import matt.hurricanefx.wrapper.node.NodeWrapperImpl
-import matt.hurricanefx.wrapper.scene.SceneWrapper
 import matt.hurricanefx.wrapper.parent.parent
+import matt.hurricanefx.wrapper.scene.SceneWrapper
 import matt.hurricanefx.wrapper.target.EventTargetWrapper
 import matt.hurricanefx.wrapper.wrapped
 import matt.klib.dmap.withStoringDefault
@@ -74,11 +70,12 @@ class MContextMenuBuilder(
 
   infix fun String.toggles(b: Property<Boolean>) = checkitem(this, b)
 
-  fun checkitem(s: String, b: Property<Boolean>, op: CheckMenuItemWrapper.()->Unit = {}) = CheckMenuItemWrapper(s).apply {
-	isMnemonicParsing = false
-	selectedProperty().bindBidirectional(b)
-	op()
-  }.also { add(it) }
+  fun checkitem(s: String, b: Property<Boolean>, op: CheckMenuItemWrapper.()->Unit = {}) =
+	CheckMenuItemWrapper(s).apply {
+	  isMnemonicParsing = false
+	  selectedProperty().bindBidirectional(b)
+	  op()
+	}.also { add(it) }
 
   fun menu(s: String, op: MenuWrapper.()->Unit) = MenuWrapper(s).apply {
 	isMnemonicParsing = false
@@ -158,15 +155,12 @@ class CmFix: RunOnce() {
   }
 }
 
-val contextMenus = lazyMap<Scene, ContextMenu> {
-  ContextMenu().apply {
+val contextMenus = lazyMap<Scene, ContextMenuWrapper> {
+  ContextMenuWrapper().apply {
 	isAutoHide = true
 	isAutoFix = true
   }
 }
-
-
-
 
 
 /**
@@ -182,7 +176,7 @@ fun SceneWrapper<*>.showMContextMenu(
   xy: Pair<Double, Double>
 ) {
 
-  sequenceOf(1,2,3)
+  sequenceOf(1, 2, 3)
 
   CmFix()
 
@@ -208,12 +202,22 @@ fun SceneWrapper<*>.showMContextMenu(
 	val added = mutableListOf<String>()
 	t.toc("starting loop")
 	while (true) {
+	  println("1looking for parent of $node (parent=${(node as? Parent)?.parent}) (scene=${(node as? Parent)?.scene})")
+	  println("1node=${(node as? Node)}")
+	  println("1node.scene=${(node as? Node)?.scene}")
+	  println("1node.scene.root=${(node as? Node)?.scene?.root}")
+	  println("1node.scene.root.scene=${(node as? Node)?.scene?.root?.scene}")
 	  t.toc("starting loop block for $node")
 	  getCMItems(node)?.let {
 		if (items.isNotEmpty()) separator()
 		items += it.map { it.node }
 	  }
 	  t.toc("got CmItems")
+	  println("2looking for parent of $node (parent=${(node as? Parent)?.parent}) (scene=${(node as? Parent)?.scene})")
+	  println("2node=${(node as? Node)}")
+	  println("2node.scene=${(node as? Node)?.scene}")
+	  println("2node.scene.root=${(node as? Node)?.scene?.root}")
+	  println("2node.scene.root.scene=${(node as? Node)?.scene?.root?.scene}")
 	  node::class.qualifiedName
 		?.takeIf { "matt" in it && it !in added }
 		?.let {
@@ -223,16 +227,17 @@ fun SceneWrapper<*>.showMContextMenu(
 		  added += it
 		}
 	  t.toc("something with q name done")
+	  println("3looking for parent of $node (parent=${(node as? Parent)?.parent}) (scene=${(node as? Parent)?.scene})")
+	  println("3node=${(node as? Node)}")
+	  println("3node.scene=${(node as? Node)?.scene}")
+	  println("3node.scene.root=${(node as? Node)?.scene?.root}")
+	  println("3node.scene.root.scene=${(node as? Node)?.scene?.root?.scene}")
 	  node = when (node) {
-		is Region, is Group -> when ((node as Parent).parent) {
-		  null -> node.scene
-		  else -> node.parent
-		}
-
-		is Shape            -> node.parent
-		is Canvas           -> node.parent
-		is Scene            -> node.window
-		else                -> break
+		is Parent -> node.parent ?: node.scene
+		is Shape  -> node.parent
+		is Canvas -> node.parent
+		is Scene  -> node.window
+		else      -> break
 	  }
 	  t.toc("finished loop block")
 	}
@@ -242,7 +247,7 @@ fun SceneWrapper<*>.showMContextMenu(
 	t.toc("added hotkey info menu")
 	items += devMenu.node
 	t.toc("added devMeny")
-  }.show(target, xy.first, xy.second)
+  }.node.show(target, xy.first, xy.second)
   t.toc("showed cm")
 }
 
@@ -295,7 +300,8 @@ private fun NodeWrapper.hotkeyInfoMenu() = MenuWrapper("Click For Hotkey Info").
 }
 
 
-private val contextMenuItems = WeakHashMap<EventTarget, MutableList<MenuItemWrapper<*>>>().withStoringDefault { mutableListOf() }
+private val contextMenuItems =
+  WeakHashMap<EventTarget, MutableList<MenuItemWrapper<*>>>().withStoringDefault { mutableListOf() }
 
 private val contextMenuItemGens =
   WeakHashMap<EventTarget, MutableList<MContextMenuBuilder.()->Unit>>().withStoringDefault { mutableListOf() }
