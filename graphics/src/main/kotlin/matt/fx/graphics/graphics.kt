@@ -1,6 +1,5 @@
 package matt.fx.graphics
 
-import javafx.scene.Node
 import javafx.scene.paint.Color
 import javafx.scene.shape.Line
 import javafx.scene.text.Font
@@ -18,14 +17,15 @@ import matt.klib.math.BasicPoint
 import matt.klib.math.Point
 import matt.klib.math.unaryMinus
 
-fun <T : Node> T.refreshWhileInSceneEvery(
-  refresh_rate: Duration,
-  op: MyTimerTask.(T) -> Unit
+
+fun <T: NodeWrapper<*>> T.refreshWhileInSceneEvery(
+  refreshRate: Duration,
+  op: MyTimerTask.(T)->Unit
 ) {
   val thisNode: T = this
   sceneProperty().onChange {
 	if (it != null) {
-	  every(refresh_rate, ownTimer = true) {
+	  every(refreshRate, ownTimer = true) {
 		if (thisNode.scene == null) {
 		  cancel()
 		}
@@ -34,10 +34,6 @@ fun <T : Node> T.refreshWhileInSceneEvery(
 	}
   }
 }
-fun <T: Node> NodeWrapper<T>.refreshWhileInSceneEvery(
-  refresh_rate: Duration,
-  op: MyTimerTask.(T) -> Unit
-) = node.refreshWhileInSceneEvery(refresh_rate,op)
 
 val fontFamilies: List<String> by lazy { Font.getFamilies() }
 
@@ -96,8 +92,6 @@ fun PaneWrapper.drawLine(
 	}
   }
 }
-
-
 
 
 @Suppress("unused") fun Line.startFrom(line: Line) {

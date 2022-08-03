@@ -37,11 +37,13 @@ import matt.fx.graphics.win.interact.openInNewWindow
 import matt.fx.graphics.win.winfun.noDocking
 import matt.hurricanefx.tornadofx.menu.menu
 import matt.hurricanefx.tornadofx.nodes.setOnDoubleClick
+import matt.hurricanefx.wrapper.node.NodeWrapper
 import matt.hurricanefx.wrapper.parent.ParentWrapper
 import matt.hurricanefx.wrapper.scene.SceneWrapper
 import matt.hurricanefx.wrapper.scene.SceneWrapper.Companion.wrapped
 import matt.hurricanefx.wrapper.stage.StageWrapper
 import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
+import matt.hurricanefx.wrapper.region.RegionWrapper
 import matt.klib.str.tab
 import matt.stream.recurse.recurse
 import java.net.URL
@@ -130,7 +132,16 @@ open class MScene(
 		}
 		actionitem("print style info samples") {
 		  val classesPrinted = mutableListOf<KClass<*>>()
-		  (root.node as Node).recurse {
+		/*  (root.node as Node).recurse {
+			(it as? Parent)?.childrenUnmodifiable ?: listOf()
+		  }.forEach {
+			if (it::class !in classesPrinted) {
+			  println(it.wrapped().styleInfo())
+			  classesPrinted += it::class
+			}
+		  }*/
+
+		  (root as NodeWrapper<*>).recurse {
 			(it as? Parent)?.childrenUnmodifiable ?: listOf()
 		  }.forEach {
 			if (it::class !in classesPrinted) {
@@ -138,15 +149,18 @@ open class MScene(
 			  classesPrinted += it::class
 			}
 		  }
+
 		}        /*need this*/
 		this.menu("set border") {        /*specify this here explicitly at least once
 		  * or else it will use the `matt.fx.graphics.menu.actionitem` above without import*/
 		  this.actionitem("none") {
-			(root.node as? Region)?.wrapped()?.borderFill = null
+			(root as RegionWrapper).borderFill = null
+			/*(root.node as? Region)?.wrapped()?.borderFill = null*/
 		  }
 		  listOf(YELLOW, BLUE, RED, GREEN, ORANGE, PURPLE, WHITE).forEach {
 			actionitem(ColorUtils().getColorNameFromColor(it.toAwtColor())) {
-			  (root.node as? Region)?.wrapped()?.borderFill = it
+			  (root as RegionWrapper).borderFill = it
+			  /*(root.node as? Region)?.wrapped()?.borderFill = it*/
 			}
 		  }
 		}
