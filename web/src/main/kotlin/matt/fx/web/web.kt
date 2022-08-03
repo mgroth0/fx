@@ -34,6 +34,7 @@ import matt.hurricanefx.wrapper.parent.ParentWrapperImpl
 import matt.hurricanefx.wrapper.region.RegionWrapperImpl
 import matt.hurricanefx.wrapper.stage.StageWrapper
 import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
+import matt.hurricanefx.wrapper.region.RegionWrapper
 import matt.hurricanefx.wrapper.target.removeFromParent
 import matt.hurricanefx.wrapper.wrapped
 import matt.klib.lang.NEVER
@@ -78,7 +79,7 @@ fun EventTarget.htmleditor(html: String? = null, op: HTMLEditorWrapper.()->Unit 
 	if (html != null) it.htmlText = html
   }
 
-infix fun WebViewWrapper.perfectBind(other: RegionWrapperImpl) {
+infix fun WebViewWrapper.perfectBind(other: RegionWrapper) {
   this minBind other
   this maxBind other
 }
@@ -88,7 +89,7 @@ infix fun WebViewWrapper.perfectBind(other: StageWrapper) {
   this maxBind other
 }
 
-infix fun WebViewWrapper.maxBind(other: RegionWrapperImpl) {
+infix fun WebViewWrapper.maxBind(other: RegionWrapper) {
   maxHeightProperty.bind(other.heightProperty) // gotta be strict with webview, which I think tries to be big
   maxWidthProperty.bind(other.widthProperty)
 }
@@ -98,7 +99,7 @@ infix fun WebViewWrapper.maxBind(other: StageWrapper) {
   maxWidthProperty.bind(other.widthProperty)
 }
 
-infix fun WebViewWrapper.minBind(other: RegionWrapperImpl) {
+infix fun WebViewWrapper.minBind(other: RegionWrapper) {
   minHeightProperty.bind(other.heightProperty)
   minWidthProperty.bind(other.widthProperty)
 }
@@ -424,7 +425,7 @@ class JavaBridge {
 }
 
 
-class HTMLEditorWrapper(override val node: HTMLEditor = HTMLEditor()): ControlWrapper(node) {
+class HTMLEditorWrapper(node: HTMLEditor = HTMLEditor()): ControlWrapper<HTMLEditor>(node) {
   var htmlText
 	get() = node.htmlText
 	set(value) {
@@ -432,7 +433,7 @@ class HTMLEditorWrapper(override val node: HTMLEditor = HTMLEditor()): ControlWr
 	}
 }
 
-class WebViewWrapper(override val node: WebView = WebView()): ParentWrapperImpl<WebView>(node) {
+class WebViewWrapper(node: WebView = WebView()): ParentWrapperImpl<WebView>(node) {
 
   companion object {
 	fun WebView.wrapped() = WebViewWrapper(this)
