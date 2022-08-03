@@ -178,7 +178,7 @@ val contextMenus = lazyMap<Scene, ContextMenu> {
  * @param target must be a [Node] and not a [NodeWrapperImpl] because event targets dont carry a wrapper reference
  *
  */
-fun SceneWrapper.showMContextMenu(
+fun SceneWrapper<*>.showMContextMenu(
   target: Node, /*cannot be [NodeWrapper] because event targets are not wrappers?*/
   xy: Pair<Double, Double>
 ) {
