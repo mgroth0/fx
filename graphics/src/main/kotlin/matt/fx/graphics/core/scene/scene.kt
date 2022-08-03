@@ -37,12 +37,12 @@ import matt.fx.graphics.win.winfun.noDocking
 import matt.hurricanefx.tornadofx.menu.menu
 import matt.hurricanefx.tornadofx.nodes.setOnDoubleClick
 import matt.hurricanefx.wrapper.node.NodeWrapperImpl
-import matt.hurricanefx.wrapper.parent.ParentWrapper
+import matt.hurricanefx.wrapper.parent.ParentWrapperImpl
 import matt.hurricanefx.wrapper.scene.SceneWrapper
 import matt.hurricanefx.wrapper.scene.SceneWrapper.Companion.wrapped
 import matt.hurricanefx.wrapper.stage.StageWrapper
 import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
-import matt.hurricanefx.wrapper.region.RegionWrapper
+import matt.hurricanefx.wrapper.region.RegionWrapperImpl
 import matt.klib.str.tab
 import matt.stream.recurse.recurse
 import java.net.URL
@@ -65,14 +65,14 @@ fun SceneWrapper.reloadStyle(darkMode: Boolean) {
 }
 
 open class MScene(
-  root: ParentWrapper<*>, val icon: MFile
+  root: ParentWrapperImpl<*>, val icon: MFile
 ): SceneWrapper(root) {
   constructor(
-	root: ParentWrapper<*>, icon: String
+	root: ParentWrapperImpl<*>, icon: String
   ): this(root, ICON_FOLDER["white/$icon.png"])
 
   constructor(
-	root: ParentWrapper<*>
+	root: ParentWrapperImpl<*>
   ): this(root, "chunk")
 
   private fun handleContextMenuReq(e: Event) {
@@ -155,12 +155,12 @@ open class MScene(
 		this.menu("set border") {        /*specify this here explicitly at least once
 		  * or else it will use the `matt.fx.graphics.menu.actionitem` above without import*/
 		  this.actionitem("none") {
-			(root as RegionWrapper).borderFill = null
+			(root as RegionWrapperImpl).borderFill = null
 			/*(root.node as? Region)?.wrapped()?.borderFill = null*/
 		  }
 		  listOf(YELLOW, BLUE, RED, GREEN, ORANGE, PURPLE, WHITE).forEach {
 			actionitem(ColorUtils().getColorNameFromColor(it.toAwtColor())) {
-			  (root as RegionWrapper).borderFill = it
+			  (root as RegionWrapperImpl).borderFill = it
 			  /*(root.node as? Region)?.wrapped()?.borderFill = it*/
 			}
 		  }

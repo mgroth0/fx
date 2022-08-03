@@ -26,15 +26,14 @@ import matt.hurricanefx.eye.lang.DProp
 import matt.hurricanefx.eye.lib.onChangeOnce
 import matt.hurricanefx.runLater
 import matt.hurricanefx.tornadofx.fx.attachTo
-import matt.hurricanefx.tornadofx.nodes.add
 import matt.hurricanefx.tornadofx.nodes.removeFromParent
 import matt.hurricanefx.tornadofx.nodes.setOnDoubleClick
 import matt.hurricanefx.wrapper.control.ControlWrapper
 import matt.hurricanefx.wrapper.target.EventTargetWrapperImpl.Companion.wrapped
 import matt.hurricanefx.wrapper.node.NodeWrapperImpl
 import matt.hurricanefx.wrapper.pane.PaneWrapper
-import matt.hurricanefx.wrapper.parent.ParentWrapper
-import matt.hurricanefx.wrapper.region.RegionWrapper
+import matt.hurricanefx.wrapper.parent.ParentWrapperImpl
+import matt.hurricanefx.wrapper.region.RegionWrapperImpl
 import matt.hurricanefx.wrapper.stage.StageWrapper
 import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
 import matt.klib.lang.NEVER
@@ -79,7 +78,7 @@ fun EventTarget.htmleditor(html: String? = null, op: HTMLEditorWrapper.()->Unit 
 	if (html != null) it.htmlText = html
   }
 
-infix fun WebViewWrapper.perfectBind(other: RegionWrapper) {
+infix fun WebViewWrapper.perfectBind(other: RegionWrapperImpl) {
   this minBind other
   this maxBind other
 }
@@ -89,7 +88,7 @@ infix fun WebViewWrapper.perfectBind(other: StageWrapper) {
   this maxBind other
 }
 
-infix fun WebViewWrapper.maxBind(other: RegionWrapper) {
+infix fun WebViewWrapper.maxBind(other: RegionWrapperImpl) {
   maxHeightProperty.bind(other.heightProperty) // gotta be strict with webview, which I think tries to be big
   maxWidthProperty.bind(other.widthProperty)
 }
@@ -99,7 +98,7 @@ infix fun WebViewWrapper.maxBind(other: StageWrapper) {
   maxWidthProperty.bind(other.widthProperty)
 }
 
-infix fun WebViewWrapper.minBind(other: RegionWrapper) {
+infix fun WebViewWrapper.minBind(other: RegionWrapperImpl) {
   minHeightProperty.bind(other.heightProperty)
   minWidthProperty.bind(other.widthProperty)
 }
@@ -159,7 +158,7 @@ private const val SPECIAL_ZOOM_RATE = 1.1
 private const val SCROLL_COMPENSATION_RATE = SPECIAL_ZOOM_RATE - 1.0
 
 /*I figured this all out by myself. No help, no googling*/
-fun WebViewWrapper.specialZooming(par: RegionWrapper? = null) {
+fun WebViewWrapper.specialZooming(par: RegionWrapperImpl? = null) {
 
 
   setOnKeyPressed {
@@ -234,7 +233,7 @@ fun WebViewWrapper.scrollMult(factor: Double) {
 }
 
 
-fun RegionWrapper.specialTransferingToWindowAndBack(par: PaneWrapper) {
+fun RegionWrapperImpl.specialTransferingToWindowAndBack(par: PaneWrapper) {
   val vb = this
   this.setOnKeyPressed { k ->
 	if (k.code == KeyCode.W && k.isMetaDown) {
@@ -432,7 +431,7 @@ class HTMLEditorWrapper(override val node: HTMLEditor = HTMLEditor()): ControlWr
 	}
 }
 
-class WebViewWrapper(override val node: WebView = WebView()): ParentWrapper<WebView>(node) {
+class WebViewWrapper(override val node: WebView = WebView()): ParentWrapperImpl<WebView>(node) {
 
   companion object {
 	fun WebView.wrapped() = WebViewWrapper(this)

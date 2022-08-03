@@ -48,8 +48,8 @@ import matt.hurricanefx.wrapper.control.button.ButtonWrapper
 import matt.hurricanefx.wrapper.imageview.ImageViewWrapper
 import matt.hurricanefx.wrapper.node.NodeWrapperImpl
 import matt.hurricanefx.wrapper.node.NodeWrapperImpl.Companion.wrapped
-import matt.hurricanefx.wrapper.parent.ParentWrapper.Companion.wrapped
-import matt.hurricanefx.wrapper.region.RegionWrapper.Companion.wrapped
+import matt.hurricanefx.wrapper.parent.ParentWrapperImpl.Companion.wrapped
+import matt.hurricanefx.wrapper.region.RegionWrapperImpl.Companion.wrapped
 import matt.hurricanefx.wrapper.stage.StageWrapper
 import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
 import matt.json.prim.isValidJson

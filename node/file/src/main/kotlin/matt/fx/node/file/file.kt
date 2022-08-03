@@ -35,14 +35,14 @@ import matt.hurricanefx.tornadofx.nodes.add
 import matt.hurricanefx.wrapper.control.text.area.TextAreaWrapper
 import matt.hurricanefx.wrapper.pane.PaneWrapper
 import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
-import matt.hurricanefx.wrapper.region.RegionWrapper
+import matt.hurricanefx.wrapper.region.RegionWrapperImpl
 import matt.klib.lang.err
 import java.lang.ref.WeakReference
 
 
 private const val LINE_LIMIT = 1000
 
-fun MFile.createNode(renderHTMLAndSVG: Boolean = false): RegionWrapper {
+fun MFile.createNode(renderHTMLAndSVG: Boolean = false): RegionWrapperImpl {
   val node = createNodeInner(renderHTMLAndSVG = renderHTMLAndSVG)
   node.mcontextmenu {
 	item(s = "", g = draggableIcon())
@@ -50,7 +50,7 @@ fun MFile.createNode(renderHTMLAndSVG: Boolean = false): RegionWrapper {
   return node
 }
 
-private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): RegionWrapper {
+private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): RegionWrapperImpl {
   if (exists()) {
 	println("opening file")
 	if (isImage()) {
