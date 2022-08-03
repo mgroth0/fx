@@ -6,7 +6,6 @@ import javafx.collections.ObservableList
 import javafx.geometry.Bounds
 import javafx.geometry.Rectangle2D
 import javafx.scene.Node
-import javafx.scene.Parent
 import javafx.scene.control.Label
 import javafx.scene.control.ToolBar
 import javafx.scene.layout.ColumnConstraints
@@ -16,7 +15,9 @@ import javafx.scene.layout.HBox
 import javafx.scene.layout.Pane
 import javafx.scene.layout.Priority
 import javafx.scene.layout.VBox
-import matt.hurricanefx.tornadofx.fx.getChildList
+import matt.hurricanefx.wrapper.pane.grid.GridPaneWrapper
+import matt.hurricanefx.wrapper.parent.ParentWrapper
+import matt.hurricanefx.wrapper.parent.parent
 
 
 fun Bounds.toRect() = Rectangle2D(minX, minY, width, height)
@@ -105,18 +106,18 @@ internal inline fun <reified T: ConstraintsBase> constraintsFor(constraints: Obs
   return constraints[index]
 }
 
-val Parent.gridpaneColumnConstraints: ColumnConstraints?
+val ParentWrapper.gridpaneColumnConstraints: ColumnConstraints?
   get() {
 
 
-	var cursor = this
+	var cursor = this.node
 	var next = parent
 	while (next != null) {
 	  val gridReference = when {
-		next is GridPane    -> next to GridPane.getColumnIndex(cursor)?.let { it }
+		next is GridPaneWrapper    -> next to GridPane.getColumnIndex(cursor)?.let { it }
 		// perhaps we're still in the row builder
-		next.parent == null -> (next.properties[GridPaneParentObjectKey] as? GridPane)?.let {
-		  it to next.getChildList()?.indexOf(cursor)
+		next.parent == null -> (next.properties[GridPaneParentObjectKey] as? GridPaneWrapper)?.let {
+		  it to next!!.getChildList()?.indexOf(cursor)
 		}
 
 		else                -> null
@@ -124,15 +125,15 @@ val Parent.gridpaneColumnConstraints: ColumnConstraints?
 
 	  if (gridReference != null) {
 		val (grid, columnIndex) = gridReference
-		if (columnIndex != null && columnIndex >= 0) return grid.constraintsForColumn(columnIndex)
+		if (columnIndex != null && columnIndex >= 0) return grid.node.constraintsForColumn(columnIndex)
 	  }
-	  cursor = next
+	  cursor = next.node
 	  next = next.parent
 	}
 	return null
   }
 
-fun Parent.gridpaneColumnConstraints(op: ColumnConstraints.()->Unit) = gridpaneColumnConstraints?.apply { op() }
+fun ParentWrapper.gridpaneColumnConstraints(op: ColumnConstraints.()->Unit) = gridpaneColumnConstraints?.apply { op() }
 
 
 

@@ -9,9 +9,9 @@ import matt.async.schedule.every
 import matt.color.AColor
 import matt.color.mostContrastingForMe
 import matt.hurricanefx.eye.lib.onChange
-import matt.hurricanefx.tornadofx.shapes.line
 import matt.hurricanefx.wrapper.line.LineWrapper
 import matt.hurricanefx.wrapper.node.NodeWrapper
+import matt.hurricanefx.wrapper.node.line
 import matt.hurricanefx.wrapper.pane.PaneWrapper
 import matt.klib.math.BasicPoint
 import matt.klib.math.Point

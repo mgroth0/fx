@@ -35,14 +35,16 @@ import matt.fx.graphics.win.interact.WinOwn
 import matt.fx.graphics.win.interact.openInNewWindow
 import matt.fx.graphics.win.winfun.noDocking
 import matt.hurricanefx.tornadofx.menu.menu
-import matt.hurricanefx.tornadofx.nodes.setOnDoubleClick
 import matt.hurricanefx.wrapper.node.NodeWrapperImpl
+import matt.hurricanefx.wrapper.node.setOnDoubleClick
 import matt.hurricanefx.wrapper.parent.ParentWrapperImpl
 import matt.hurricanefx.wrapper.scene.SceneWrapper
 import matt.hurricanefx.wrapper.scene.SceneWrapper.Companion.wrapped
 import matt.hurricanefx.wrapper.stage.StageWrapper
 import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
+import matt.hurricanefx.wrapper.parent.ParentWrapper
 import matt.hurricanefx.wrapper.region.RegionWrapperImpl
+import matt.hurricanefx.wrapper.wrapped
 import matt.klib.str.tab
 import matt.stream.recurse.recurse
 import java.net.URL
@@ -65,14 +67,14 @@ fun SceneWrapper.reloadStyle(darkMode: Boolean) {
 }
 
 open class MScene(
-  root: ParentWrapperImpl<*>, val icon: MFile
+  root: ParentWrapper, val icon: MFile
 ): SceneWrapper(root) {
   constructor(
-	root: ParentWrapperImpl<*>, icon: String
+	root: ParentWrapper, icon: String
   ): this(root, ICON_FOLDER["white/$icon.png"])
 
   constructor(
-	root: ParentWrapperImpl<*>
+	root: ParentWrapper
   ): this(root, "chunk")
 
   private fun handleContextMenuReq(e: Event) {
@@ -131,22 +133,20 @@ open class MScene(
 		}
 		actionitem("print style info samples") {
 		  val classesPrinted = mutableListOf<KClass<*>>()
-		/*  (root.node as Node).recurse {
-			(it as? Parent)?.childrenUnmodifiable ?: listOf()
-		  }.forEach {
-			if (it::class !in classesPrinted) {
-			  println(it.wrapped().styleInfo())
-			  classesPrinted += it::class
-			}
-		  }*/
+		  /*  (root.node as Node).recurse {
+			  (it as? Parent)?.childrenUnmodifiable ?: listOf()
+			}.forEach {
+			  if (it::class !in classesPrinted) {
+				println(it.wrapped().styleInfo())
+				classesPrinted += it::class
+			  }
+			}*/
 
 		  (root.node as Node).recurse {
 			(it as? Parent)?.childrenUnmodifiable ?: listOf()
 		  }.forEach {
 			if (it::class !in classesPrinted) {
-			  NodeWrapperImpl.Companion.run {
-				println(it.wrapped().styleInfo())
-			  }
+			  println(it.wrapped().styleInfo())
 			  classesPrinted += it::class
 			}
 		  }

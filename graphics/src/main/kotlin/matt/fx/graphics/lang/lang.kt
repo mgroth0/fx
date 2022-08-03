@@ -10,7 +10,6 @@ import javafx.scene.control.ContextMenu
 import javafx.scene.control.Control
 import javafx.scene.input.KeyCombination
 import matt.hurricanefx.eye.lib.onChange
-import matt.hurricanefx.tornadofx.fx.addChildIfPossible
 import matt.hurricanefx.tornadofx.menu.item
 import matt.hurricanefx.wrapper.control.button.ButtonWrapper
 import matt.hurricanefx.wrapper.menu.item.MenuItemWrapper

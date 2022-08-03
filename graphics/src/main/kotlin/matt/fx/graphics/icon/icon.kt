@@ -7,9 +7,9 @@ import javafx.scene.image.Image
 import matt.file.MFile
 import matt.file.commons.ICON_FOLDER
 import matt.fx.image.toFXImage
-import matt.hurricanefx.tornadofx.nodes.add
 import matt.hurricanefx.wrapper.imageview.ImageViewWrapper
-import matt.hurricanefx.wrapper.node.NodeWrapperImpl.Companion.wrapped
+import matt.hurricanefx.wrapper.node.NodeWrapper
+import matt.hurricanefx.wrapper.wrapped
 import matt.stream.map.lazyMap
 import java.awt.RenderingHints.KEY_ALPHA_INTERPOLATION
 import java.awt.RenderingHints.KEY_ANTIALIASING
@@ -36,17 +36,11 @@ import java.awt.image.BufferedImage.TYPE_INT_ARGB
 const val ICON_WIDTH = 20.0
 const val ICON_HEIGHT = 20.0
 
-fun javafx.scene.Node.icon(file: MFile) {
-  wrapped().add(Icon(file))
-}
+fun NodeWrapper.icon(file: MFile) = add(Icon(file))
 
-fun javafx.scene.Node.icon(image: Image) {
-  wrapped().add(Icon(image))
-}
+fun NodeWrapper.icon(image: Image) = add(Icon(image))
 
-fun javafx.scene.Node.icon(file: String) {
-  wrapped().add(Icon(file))
-}
+fun NodeWrapper.icon(file: String) = add(Icon(file))
 
 
 private val FALLBACK_FILE = (ICON_FOLDER + "chunk.png").apply { //  SvgImageLoaderFactory.install();

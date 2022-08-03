@@ -28,11 +28,12 @@ import matt.hurricanefx.tornadofx.menu.menu
 import matt.hurricanefx.tornadofx.menu.separator
 import matt.hurricanefx.wrapper.menu.item.MenuItemWrapper
 import matt.hurricanefx.wrapper.node.NodeW
+import matt.hurricanefx.wrapper.node.NodeWrapper
 import matt.hurricanefx.wrapper.node.NodeWrapperImpl
-import matt.hurricanefx.wrapper.node.NodeWrapperImpl.Companion.wrapped
 import matt.hurricanefx.wrapper.scene.SceneWrapper
 import matt.hurricanefx.wrapper.parent.parent
 import matt.hurricanefx.wrapper.target.EventTargetWrapper
+import matt.hurricanefx.wrapper.wrapped
 import matt.klib.dmap.withStoringDefault
 import matt.stream.map.lazyMap
 import matt.stream.recurse.chain
@@ -262,7 +263,7 @@ private fun KClass<*>.jumpToSource() {
   }
 }
 
-private fun NodeW.hotkeyInfoMenu() = Menu("Click For Hotkey Info").apply {
+private fun NodeWrapper.hotkeyInfoMenu() = Menu("Click For Hotkey Info").apply {
   val node = this@hotkeyInfoMenu
   fun addInfo(type: EventHandlerType) {
 	menu(
