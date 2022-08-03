@@ -7,7 +7,6 @@ import javafx.scene.Node
 import javafx.scene.image.Image
 import javafx.scene.input.KeyEvent
 import javafx.scene.layout.Priority.ALWAYS
-import javafx.scene.text.Text
 import kotlinx.html.body
 import kotlinx.html.html
 import kotlinx.html.img
@@ -32,9 +31,9 @@ import matt.hurricanefx.tornadofx.control.button
 import matt.hurricanefx.tornadofx.control.imageview
 import matt.hurricanefx.tornadofx.control.textarea
 import matt.hurricanefx.wrapper.control.text.area.TextAreaWrapper
-import matt.hurricanefx.wrapper.pane.PaneWrapper
+import matt.hurricanefx.wrapper.pane.SimplePaneWrapper
 import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
-import matt.hurricanefx.wrapper.region.RegionWrapperImpl
+import matt.hurricanefx.wrapper.region.RegionWrapper
 import matt.hurricanefx.wrapper.text.TextWrapper
 import matt.klib.lang.err
 import java.lang.ref.WeakReference
@@ -42,7 +41,7 @@ import java.lang.ref.WeakReference
 
 private const val LINE_LIMIT = 1000
 
-fun MFile.createNode(renderHTMLAndSVG: Boolean = false): RegionWrapperImpl {
+fun MFile.createNode(renderHTMLAndSVG: Boolean = false): RegionWrapper {
   val node = createNodeInner(renderHTMLAndSVG = renderHTMLAndSVG)
   node.mcontextmenu {
 	item(s = "", g = draggableIcon())
@@ -50,11 +49,11 @@ fun MFile.createNode(renderHTMLAndSVG: Boolean = false): RegionWrapperImpl {
   return node
 }
 
-private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): RegionWrapperImpl {
+private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): RegionWrapper {
   if (exists()) {
 	println("opening file")
 	if (isImage()) {
-	  return PaneWrapper().apply {
+	  return SimplePaneWrapper().apply {
 		imageview {
 		  image = Image(toURI().toString())
 		  isPreserveRatio = true
@@ -93,7 +92,7 @@ private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): RegionWrap
 		"coffeescript"
 	  ) || (!renderHTMLAndSVG && extension in (listOf("html", "svg")))
 	) {
-	  val viewbox = PaneWrapper()
+	  val viewbox = SimplePaneWrapper()
 	  var fsText = readText()
 	  val ta = viewbox.textarea {
 		text = fsText
