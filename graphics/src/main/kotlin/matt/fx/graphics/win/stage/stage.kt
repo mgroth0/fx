@@ -52,7 +52,7 @@ open class MStage(
 		  {
 			warn("dealing with this later... i guess now")
 			@Suppress("CAST_NEVER_SUCCEEDS")
-			(this@MStage.scene as MScene).iconify()
+			(this@MStage.scene as MScene<*>).iconify()
 		  }
 		}
 
