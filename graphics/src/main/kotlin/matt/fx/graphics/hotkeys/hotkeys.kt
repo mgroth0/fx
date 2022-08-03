@@ -30,7 +30,6 @@ import matt.fx.graphics.mag.right
 import matt.fx.graphics.mag.top
 import matt.fx.graphics.mag.topleft
 import matt.fx.graphics.mag.topright
-import matt.hurricanefx.wrapper.region.RegionWrapperImpl.Companion.wrapped
 import matt.hurricanefx.wrapper.window.WindowWrapper.Companion.wrapped
 import matt.klib.dmap.withStoringDefault
 import matt.klib.lang.go

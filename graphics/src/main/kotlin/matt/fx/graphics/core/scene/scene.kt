@@ -35,15 +35,12 @@ import matt.fx.graphics.win.interact.WinOwn
 import matt.fx.graphics.win.interact.openInNewWindow
 import matt.fx.graphics.win.winfun.noDocking
 import matt.hurricanefx.tornadofx.menu.menu
-import matt.hurricanefx.wrapper.node.NodeWrapperImpl
 import matt.hurricanefx.wrapper.node.setOnDoubleClick
-import matt.hurricanefx.wrapper.parent.ParentWrapperImpl
-import matt.hurricanefx.wrapper.scene.SceneWrapper
-import matt.hurricanefx.wrapper.scene.SceneWrapper.Companion.wrapped
-import matt.hurricanefx.wrapper.stage.StageWrapper
 import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
 import matt.hurricanefx.wrapper.parent.ParentWrapper
 import matt.hurricanefx.wrapper.region.RegionWrapperImpl
+import matt.hurricanefx.wrapper.scene.SceneWrapper
+import matt.hurricanefx.wrapper.stage.StageWrapper
 import matt.hurricanefx.wrapper.wrapped
 import matt.klib.str.tab
 import matt.stream.recurse.recurse

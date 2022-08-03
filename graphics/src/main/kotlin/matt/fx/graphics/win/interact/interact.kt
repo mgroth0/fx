@@ -48,6 +48,8 @@ import matt.hurricanefx.wrapper.node.NodeWrapperImpl
 import matt.hurricanefx.wrapper.node.disableWhen
 import matt.hurricanefx.wrapper.stage.StageWrapper
 import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
+import matt.hurricanefx.wrapper.parent.ParentWrapper
+import matt.hurricanefx.wrapper.region.RegionWrapper
 import matt.hurricanefx.wrapper.wrapped
 import matt.json.prim.isValidJson
 import matt.klib.lang.noExceptions
@@ -313,22 +315,22 @@ sealed class WinOwn {
   abstract fun applyTo(win: StageWrapper)
 }
 
-fun NodeWrapperImpl<Parent>.openInNewWindow(
-  showMode: ShowMode = SHOW,
-  wMode: WMode = NOTHING,
-  EscClosable: Boolean = false,
-  EnterClosable: Boolean = false,
-  own: WinOwn = Auto,
-  geom: WinGeom = Centered(),
-  mScene: Boolean = true,
-  beforeShowing: StageWrapper.()->Unit = {},
-  border: Boolean = true,
-  decorated: Boolean = false
-) = node.openInNewWindow(
-  showMode, wMode, EscClosable, EnterClosable, own, geom, mScene, beforeShowing, border, decorated
-)
+//fun NodeWrapperImpl<Parent>.openInNewWindow(
+//  showMode: ShowMode = SHOW,
+//  wMode: WMode = NOTHING,
+//  EscClosable: Boolean = false,
+//  EnterClosable: Boolean = false,
+//  own: WinOwn = Auto,
+//  geom: WinGeom = Centered(),
+//  mScene: Boolean = true,
+//  beforeShowing: StageWrapper.()->Unit = {},
+//  border: Boolean = true,
+//  decorated: Boolean = false
+//) = node.openInNewWindow(
+//  showMode, wMode, EscClosable, EnterClosable, own, geom, mScene, beforeShowing, border, decorated
+//)
 
-fun Parent.openInNewWindow(
+fun ParentWrapper.openInNewWindow(
   showMode: ShowMode = SHOW,
   wMode: WMode = NOTHING,
   EscClosable: Boolean = false,
@@ -346,11 +348,11 @@ fun Parent.openInNewWindow(
 	EnterClosable = EnterClosable,
 	decorated = decorated
   ).apply {
-	scene = if (mScene) MScene(this@openInNewWindow.wrapped()).node else Scene(this@openInNewWindow)
+	scene = if (mScene) MScene(this@openInNewWindow).node else Scene(this@openInNewWindow.node)
 	own.applyTo(this)
 	geom.applyTo(this)
 	if (border) {
-	  (this@openInNewWindow as Region).wrapped().borderFill = Color.DARKBLUE
+	  (this@openInNewWindow as RegionWrapper).borderFill = Color.DARKBLUE
 	}
 	beforeShowing()
 	when (showMode) {
