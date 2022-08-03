@@ -83,7 +83,7 @@ class MContextMenuBuilder(
   fun menu(s: String, op: MenuWrapper.()->Unit) = MenuWrapper(s).apply {
 	isMnemonicParsing = false
 	op()
-  }.also { add(it.node) }
+  }.also { add(it) }
 
   fun add(item: MenuItemWrapper<*>) {
 	if (isGen) {
@@ -108,7 +108,7 @@ class MContextMenuBuilder(
 
 }
 
-private fun getCMItems(node: EventTarget): List<MenuItem>? {
+private fun getCMItems(node: EventTarget): List<MenuItemWrapper<*>>? {
   val normal = contextMenuItems[node]!!
   val gen = contextMenuItemGens[node]!!.flatMap {
 	MContextMenuBuilder(node, isGen = true).apply(it).genList
@@ -295,7 +295,7 @@ private fun NodeWrapper.hotkeyInfoMenu() = MenuWrapper("Click For Hotkey Info").
 }
 
 
-private val contextMenuItems = WeakHashMap<EventTarget, MutableList<MenuItem>>().withStoringDefault { mutableListOf() }
+private val contextMenuItems = WeakHashMap<EventTarget, MutableList<MenuItemWrapper<*>>>().withStoringDefault { mutableListOf() }
 
 private val contextMenuItemGens =
   WeakHashMap<EventTarget, MutableList<MContextMenuBuilder.()->Unit>>().withStoringDefault { mutableListOf() }
