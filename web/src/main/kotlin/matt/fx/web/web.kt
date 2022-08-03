@@ -26,6 +26,7 @@ import matt.hurricanefx.eye.lang.DProp
 import matt.hurricanefx.eye.lib.onChangeOnce
 import matt.hurricanefx.runLater
 import matt.hurricanefx.wrapper.control.ControlWrapper
+import matt.hurricanefx.wrapper.node.NodeWrapper
 import matt.hurricanefx.wrapper.node.NodeWrapperImpl
 import matt.hurricanefx.wrapper.node.attachTo
 import matt.hurricanefx.wrapper.node.setOnDoubleClick
@@ -431,6 +432,10 @@ class HTMLEditorWrapper(node: HTMLEditor = HTMLEditor()): ControlWrapper<HTMLEdi
 	set(value) {
 	  node.htmlText = value
 	}
+
+  override fun addChild(child: NodeWrapper, index: Int?) {
+	TODO("Not yet implemented")
+  }
 }
 
 class WebViewWrapper(node: WebView = WebView()): ParentWrapperImpl<WebView>(node) {
@@ -496,6 +501,10 @@ class WebViewWrapper(node: WebView = WebView()): ParentWrapperImpl<WebView>(node
 	  window.scrollBy($x,$y)
 	""".trimIndent()
 	)
+  }
+
+  override fun addChild(child: NodeWrapper, index: Int?) {
+	TODO("Not yet implemented")
   }
 
 
