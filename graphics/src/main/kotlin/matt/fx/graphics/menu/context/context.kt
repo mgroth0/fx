@@ -202,22 +202,22 @@ fun SceneWrapper<*>.showMContextMenu(
 	val added = mutableListOf<String>()
 	t.toc("starting loop")
 	while (true) {
-	  println("1looking for parent of $node (parent=${(node as? Parent)?.parent}) (scene=${(node as? Parent)?.scene})")
-	  println("1node=${(node as? Node)}")
-	  println("1node.scene=${(node as? Node)?.scene}")
-	  println("1node.scene.root=${(node as? Node)?.scene?.root}")
-	  println("1node.scene.root.scene=${(node as? Node)?.scene?.root?.scene}")
+//	  println("1looking for parent of $node (parent=${(node as? Parent)?.parent}) (scene=${(node as? Parent)?.scene})")
+//	  println("1node=${(node as? Node)}")
+//	  println("1node.scene=${(node as? Node)?.scene}")
+//	  println("1node.scene.root=${(node as? Node)?.scene?.root}")
+//	  println("1node.scene.root.scene=${(node as? Node)?.scene?.root?.scene}")
 	  t.toc("starting loop block for $node")
 	  getCMItems(node)?.let {
 		if (items.isNotEmpty()) separator()
 		items += it.map { it.node }
 	  }
 	  t.toc("got CmItems")
-	  println("2looking for parent of $node (parent=${(node as? Parent)?.parent}) (scene=${(node as? Parent)?.scene})")
-	  println("2node=${(node as? Node)}")
-	  println("2node.scene=${(node as? Node)?.scene}")
-	  println("2node.scene.root=${(node as? Node)?.scene?.root}")
-	  println("2node.scene.root.scene=${(node as? Node)?.scene?.root?.scene}")
+//	  println("2looking for parent of $node (parent=${(node as? Parent)?.parent}) (scene=${(node as? Parent)?.scene})")
+//	  println("2node=${(node as? Node)}")
+//	  println("2node.scene=${(node as? Node)?.scene}")
+//	  println("2node.scene.root=${(node as? Node)?.scene?.root}")
+//	  println("2node.scene.root.scene=${(node as? Node)?.scene?.root?.scene}")
 	  node::class.qualifiedName
 		?.takeIf { "matt" in it && it !in added }
 		?.let {
@@ -227,11 +227,11 @@ fun SceneWrapper<*>.showMContextMenu(
 		  added += it
 		}
 	  t.toc("something with q name done")
-	  println("3looking for parent of $node (parent=${(node as? Parent)?.parent}) (scene=${(node as? Parent)?.scene})")
-	  println("3node=${(node as? Node)}")
-	  println("3node.scene=${(node as? Node)?.scene}")
-	  println("3node.scene.root=${(node as? Node)?.scene?.root}")
-	  println("3node.scene.root.scene=${(node as? Node)?.scene?.root?.scene}")
+//	  println("3looking for parent of $node (parent=${(node as? Parent)?.parent}) (scene=${(node as? Parent)?.scene})")
+//	  println("3node=${(node as? Node)}")
+//	  println("3node.scene=${(node as? Node)?.scene}")
+//	  println("3node.scene.root=${(node as? Node)?.scene?.root}")
+//	  println("3node.scene.root.scene=${(node as? Node)?.scene?.root?.scene}")
 	  node = when (node) {
 		is Parent -> node.parent ?: node.scene
 		is Shape  -> node.parent
