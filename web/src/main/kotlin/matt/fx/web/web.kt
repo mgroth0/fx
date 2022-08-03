@@ -25,17 +25,17 @@ import matt.fx.graphics.win.interact.openInNewWindow
 import matt.hurricanefx.eye.lang.DProp
 import matt.hurricanefx.eye.lib.onChangeOnce
 import matt.hurricanefx.runLater
-import matt.hurricanefx.tornadofx.fx.attachTo
-import matt.hurricanefx.tornadofx.nodes.removeFromParent
-import matt.hurricanefx.tornadofx.nodes.setOnDoubleClick
 import matt.hurricanefx.wrapper.control.ControlWrapper
-import matt.hurricanefx.wrapper.target.EventTargetWrapperImpl.Companion.wrapped
 import matt.hurricanefx.wrapper.node.NodeWrapperImpl
+import matt.hurricanefx.wrapper.node.attachTo
+import matt.hurricanefx.wrapper.node.setOnDoubleClick
 import matt.hurricanefx.wrapper.pane.PaneWrapper
 import matt.hurricanefx.wrapper.parent.ParentWrapperImpl
 import matt.hurricanefx.wrapper.region.RegionWrapperImpl
 import matt.hurricanefx.wrapper.stage.StageWrapper
 import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
+import matt.hurricanefx.wrapper.target.removeFromParent
+import matt.hurricanefx.wrapper.wrapped
 import matt.klib.lang.NEVER
 import netscape.javascript.JSObject
 import org.intellij.lang.annotations.Language
@@ -327,6 +327,7 @@ fun WebViewWrapper.specialTransferingToWindowAndBack(par: PaneWrapper) {
   setOnDoubleClick {
 	if (this.scene?.root != this.node) {
 	  this.removeFromParent()
+
 	  this.openInNewWindow().apply {
 		this@specialTransferingToWindowAndBack.perfectBind(this)
 		setOnCloseRequest {
