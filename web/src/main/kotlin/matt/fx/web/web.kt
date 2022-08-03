@@ -432,7 +432,7 @@ class HTMLEditorWrapper(override val node: HTMLEditor = HTMLEditor()): ControlWr
 	}
 }
 
-class WebViewWrapper(val node: WebView = WebView()): ParentWrapper {
+class WebViewWrapper(override val node: WebView = WebView()): ParentWrapper<WebView>(node) {
 
   companion object {
 	fun WebView.wrapped() = WebViewWrapper(this)
