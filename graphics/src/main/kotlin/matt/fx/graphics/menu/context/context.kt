@@ -1,7 +1,6 @@
 package matt.fx.graphics.menu.context
 
 import javafx.application.Platform.runLater
-import javafx.beans.property.BooleanProperty
 import javafx.beans.property.Property
 import javafx.collections.ListChangeListener.Change
 import javafx.event.EventTarget

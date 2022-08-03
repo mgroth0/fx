@@ -2,7 +2,6 @@ package matt.fx.graphics.style
 
 import com.jthemedetecor.OsThemeDetector
 import javafx.application.Platform.runLater
-import javafx.geometry.Insets
 import javafx.scene.Node
 import javafx.scene.paint.Color
 import matt.color.hex

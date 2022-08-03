@@ -19,7 +19,6 @@ import matt.file.construct.toMFile
 import matt.fx.graphics.async.runLaterReturn
 import matt.fx.graphics.clip.copyToClipboard
 import matt.fx.graphics.lang.actionbutton
-import matt.fx.graphics.layout.vgrow
 import matt.fx.graphics.menu.context.mcontextmenu
 import matt.fx.graphics.refreshWhileInSceneEvery
 import matt.fx.graphics.win.interact.openInNewWindow
@@ -433,7 +432,7 @@ class HTMLEditorWrapper(override val node: HTMLEditor = HTMLEditor()): ControlWr
 	}
 }
 
-class WebViewWrapper(override val node: WebView = WebView()): ParentWrapper {
+class WebViewWrapper(val node: WebView = WebView()): ParentWrapper {
 
   companion object {
 	fun WebView.wrapped() = WebViewWrapper(this)

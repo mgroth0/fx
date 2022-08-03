@@ -35,7 +35,6 @@ import matt.fx.graphics.win.stage.ShowMode.SHOW_AND_WAIT
 import matt.fx.graphics.win.stage.WMode
 import matt.fx.graphics.win.stage.WMode.CLOSE
 import matt.fx.graphics.win.stage.WMode.NOTHING
-import matt.hurricanefx.exactHeightProperty
 import matt.hurricanefx.eye.lang.BProp
 import matt.hurricanefx.eye.lib.onChange
 import matt.hurricanefx.eye.prop.booleanBinding
