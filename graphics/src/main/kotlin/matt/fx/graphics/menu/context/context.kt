@@ -211,7 +211,7 @@ fun SceneWrapper<*>.showMContextMenu(
 	  t.toc("starting loop block for $node")
 	  getCMItems(node)?.let {
 		if (items.isNotEmpty()) separator()
-		items += it
+		items += it.map { it.node }
 	  }
 	  t.toc("got CmItems")
 	  node::class.qualifiedName
