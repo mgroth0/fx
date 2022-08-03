@@ -184,7 +184,7 @@ fun <R> dialog(
   d.hbox {
 	prefWidthProperty.bind(d.widthProperty)
 	alignment = Pos.CENTER
-	actionbutton("matt.hurricanefx.wrapper.control.column.matt.hurricanefx.wrapper.control.colbase.cancel") {
+	actionbutton("cancel") {
 	  styleClass += "CancelButton"
 	  d.stg.close()
 	}
@@ -349,24 +349,32 @@ fun ParentWrapper.openInNewWindow(
   border: Boolean = true,
   decorated: Boolean = false
 ): MStage {
+  println("opening something in a new window")
   return MStage(
 	wMode = wMode,
 	EscClosable = EscClosable,
 	EnterClosable = EnterClosable,
 	decorated = decorated
   ).apply {
+	println("opening something in a new window 1")
 	scene = if (mScene) MScene(this@openInNewWindow).node else Scene(this@openInNewWindow.node)
+	println("opening something in a new window 2")
 	own.applyTo(this)
+	println("opening something in a new window 3")
 	geom.applyTo(this)
+	println("opening something in a new window 4")
 	if (border) {
 	  (this@openInNewWindow as RegionWrapper).borderFill = Color.DARKBLUE
 	}
+	println("opening something in a new window 5")
 	beforeShowing()
+	println("opening something in a new window 6")
 	when (showMode) {
 	  SHOW -> show()
 	  SHOW_AND_WAIT -> showAndWait()
 	  DO_NOT_SHOW -> Unit
 	}
+	println("almost done opening something in a new window")
   }
 }
 

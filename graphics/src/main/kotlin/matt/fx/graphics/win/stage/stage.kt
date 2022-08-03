@@ -19,6 +19,7 @@ enum class WMode {
   NOTHING,
   ICONIFY
 }
+
 enum class ShowMode {
   SHOW,
   SHOW_AND_WAIT,
@@ -37,7 +38,7 @@ open class MStage(
 	  pullBackWhenOffscreen()
 	}
 	hotkeys {
-	  if (thisMachine ==GAMING_WINDOWS) {
+	  if (thisMachine == GAMING_WINDOWS) {
 		Q.opt op ::close // on Mac, meta-Q quits program. this an OS feature.
 	  }
 	  (if (thisMachine == GAMING_WINDOWS) {
@@ -48,6 +49,7 @@ open class MStage(
 		NOTHING -> {
 		  {}
 		}
+
 		ICONIFY -> {
 		  {
 			warn("dealing with this later... i guess now")
