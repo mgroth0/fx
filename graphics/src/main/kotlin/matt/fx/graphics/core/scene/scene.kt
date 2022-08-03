@@ -38,12 +38,14 @@ import matt.fx.graphics.win.winfun.noDocking
 import matt.hurricanefx.tornadofx.menu.menu
 import matt.hurricanefx.tornadofx.nodes.setOnDoubleClick
 import matt.hurricanefx.wrapper.node.NodeWrapper
+import matt.hurricanefx.wrapper.node.NodeWrapper.Companion.wrapped
 import matt.hurricanefx.wrapper.parent.ParentWrapper
 import matt.hurricanefx.wrapper.scene.SceneWrapper
 import matt.hurricanefx.wrapper.scene.SceneWrapper.Companion.wrapped
 import matt.hurricanefx.wrapper.stage.StageWrapper
 import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
 import matt.hurricanefx.wrapper.region.RegionWrapper
+import matt.hurricanefx.wrapper.target.EventTargetWrapper.Companion.wrapped
 import matt.klib.str.tab
 import matt.stream.recurse.recurse
 import java.net.URL
@@ -141,11 +143,13 @@ open class MScene(
 			}
 		  }*/
 
-		  (root as NodeWrapper<*>).recurse {
+		  (root.node as Node).recurse {
 			(it as? Parent)?.childrenUnmodifiable ?: listOf()
 		  }.forEach {
 			if (it::class !in classesPrinted) {
-			  println(it.wrapped().styleInfo())
+			  NodeWrapper.Companion.run {
+				println(it.wrapped().styleInfo())
+			  }
 			  classesPrinted += it::class
 			}
 		  }
