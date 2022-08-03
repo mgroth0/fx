@@ -6,13 +6,9 @@ import javafx.event.ActionEvent
 import javafx.event.EventTarget
 import javafx.scene.Node
 import javafx.scene.Scene
-import javafx.scene.control.ContextMenu
 import javafx.scene.control.Control
-import javafx.scene.input.KeyCombination
 import matt.hurricanefx.eye.lib.onChange
-import matt.hurricanefx.tornadofx.menu.item
 import matt.hurricanefx.wrapper.control.button.ButtonWrapper
-import matt.hurricanefx.wrapper.menu.item.MenuItemWrapper
 import matt.hurricanefx.wrapper.node.NodeWrapperImpl
 import matt.klib.lang.err
 
@@ -60,11 +56,6 @@ fun EventTarget.removecontextmenu() {
   }
 }
 
-// because when in listcells, "item" is taken
-@Suppress("unused")
-fun ContextMenu.menuitem(
-  name: String, keyCombination: KeyCombination? = null, graphic: Node? = null, op: MenuItemWrapper.()->Unit = {}
-) = item(name, keyCombination, graphic, op)
 
 
 @Suppress("unused")

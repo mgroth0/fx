@@ -38,7 +38,7 @@ fun <T: NodeWrapper> T.refreshWhileInSceneEvery(
 val fontFamilies: List<String> by lazy { Font.getFamilies() }
 
 interface Inspectable {
-  fun inspect(): PaneWrapper
+  fun inspect(): PaneWrapper<*>
 }
 
 
@@ -49,7 +49,7 @@ fun AColor.toFXColor() = FXColor(red/255.0, green/255.0, blue/255.0, alpha/255.0
 fun FXColor.mostContrastingForMe() = toAwtColor().mostContrastingForMe().toFXColor()
 
 
-@Suppress("unused") class LineDrawDSL(private val parent: PaneWrapper, start: Point) {
+@Suppress("unused") class LineDrawDSL(private val parent: PaneWrapper<*>, start: Point) {
   private var current = start
   private val linesM = mutableListOf<LineWrapper>()
   val lines: List<LineWrapper> = linesM
@@ -81,7 +81,7 @@ fun FXColor.mostContrastingForMe() = toAwtColor().mostContrastingForMe().toFXCol
   fun down(y: Number) = move(x = 0.0, y = y)
 }
 
-fun PaneWrapper.drawLine(
+fun PaneWrapper<*>.drawLine(
   color: FXColor, start: Point, op: LineDrawDSL.()->Unit
 ) {
   LineDrawDSL(this, start).apply {
