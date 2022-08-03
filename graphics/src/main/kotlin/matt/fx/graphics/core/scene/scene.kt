@@ -33,12 +33,10 @@ import matt.fx.graphics.win.interact.WinGeom
 import matt.fx.graphics.win.interact.WinOwn
 import matt.fx.graphics.win.interact.openInNewWindow
 import matt.fx.graphics.win.winfun.noDocking
-import matt.hurricanefx.wrapper.node.NodeWrapper
 import matt.hurricanefx.wrapper.node.setOnDoubleClick
 import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
 import matt.hurricanefx.wrapper.parent.ParentWrapper
 import matt.hurricanefx.wrapper.region.RegionWrapper
-import matt.hurricanefx.wrapper.region.RegionWrapperImpl
 import matt.hurricanefx.wrapper.scene.SceneWrapper
 import matt.hurricanefx.wrapper.stage.StageWrapper
 import matt.hurricanefx.wrapper.wrapped
@@ -63,15 +61,15 @@ fun SceneWrapper<*>.reloadStyle(darkMode: Boolean) {
   }
 }
 
-open class MScene(
-  root: ParentWrapper, val icon: MFile
-): SceneWrapper<ParentWrapper>(root) {
+open class MScene<R: ParentWrapper>(
+  root: R, val icon: MFile
+): SceneWrapper<R>(root) {
   constructor(
-	root: ParentWrapper, icon: String
+	root: R, icon: String
   ): this(root, ICON_FOLDER["white/$icon.png"])
 
   constructor(
-	root: ParentWrapper
+	root: R
   ): this(root, "chunk")
 
   private fun handleContextMenuReq(e: Event) {
