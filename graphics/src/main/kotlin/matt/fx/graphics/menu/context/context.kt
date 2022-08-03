@@ -28,8 +28,8 @@ import matt.hurricanefx.tornadofx.menu.menu
 import matt.hurricanefx.tornadofx.menu.separator
 import matt.hurricanefx.wrapper.menu.item.MenuItemWrapper
 import matt.hurricanefx.wrapper.node.NodeW
-import matt.hurricanefx.wrapper.node.NodeWrapper
-import matt.hurricanefx.wrapper.node.NodeWrapper.Companion.wrapped
+import matt.hurricanefx.wrapper.node.NodeWrapperImpl
+import matt.hurricanefx.wrapper.node.NodeWrapperImpl.Companion.wrapped
 import matt.hurricanefx.wrapper.scene.SceneWrapper
 import matt.hurricanefx.wrapper.parent.parent
 import matt.hurricanefx.wrapper.target.EventTargetWrapper
@@ -66,7 +66,7 @@ class MContextMenuBuilder(
 	}
   }.also { add(it) }
 
-  fun item(s: String, g: NodeWrapper<*>? = null, op: MenuItemWrapper.()->Unit = {}) =
+  fun item(s: String, g: NodeWrapperImpl<*>? = null, op: MenuItemWrapper.()->Unit = {}) =
 	MenuItemWrapper(s, g?.node).apply {
 	  isMnemonicParsing = false
 	  op()
@@ -172,10 +172,10 @@ val contextMenus = lazyMap<Scene, ContextMenu> {
 
 /**
  * see [here](https://docs.oracle.com/javase/8/javafx/api/javafx/scene/control/ContextMenu.html) for info on how to propertly use a context menu
- * KDoc test: [NodeWrapper]
+ * KDoc test: [NodeWrapperImpl]
  * [inline markup](https://kotlinlang.org/docs/kotlin-doc.html#inline-markup)
  *
- * @param target must be a [Node] and not a [NodeWrapper] because event targets dont carry a wrapper reference
+ * @param target must be a [Node] and not a [NodeWrapperImpl] because event targets dont carry a wrapper reference
  *
  */
 fun SceneWrapper.showMContextMenu(

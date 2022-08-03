@@ -46,8 +46,8 @@ import matt.hurricanefx.tornadofx.nodes.disableWhen
 import matt.hurricanefx.tornadofx.nodes.setOnDoubleClick
 import matt.hurricanefx.wrapper.control.button.ButtonWrapper
 import matt.hurricanefx.wrapper.imageview.ImageViewWrapper
-import matt.hurricanefx.wrapper.node.NodeWrapper
-import matt.hurricanefx.wrapper.node.NodeWrapper.Companion.wrapped
+import matt.hurricanefx.wrapper.node.NodeWrapperImpl
+import matt.hurricanefx.wrapper.node.NodeWrapperImpl.Companion.wrapped
 import matt.hurricanefx.wrapper.parent.ParentWrapper.Companion.wrapped
 import matt.hurricanefx.wrapper.region.RegionWrapper.Companion.wrapped
 import matt.hurricanefx.wrapper.stage.StageWrapper
@@ -316,7 +316,7 @@ sealed class WinOwn {
   abstract fun applyTo(win: StageWrapper)
 }
 
-fun NodeWrapper<out Parent>.openInNewWindow(
+fun NodeWrapperImpl<Parent>.openInNewWindow(
   showMode: ShowMode = SHOW,
   wMode: WMode = NOTHING,
   EscClosable: Boolean = false,
@@ -389,7 +389,7 @@ fun Node.textInput(
   initStyle(StageStyle.UTILITY)
 }.showAndWait().getOrNull()
 
-fun NodeWrapper<*>.textInput(
+fun NodeWrapperImpl<*>.textInput(
   default: String = "insert default here",
   prompt: String = "insert prompt here"
 ): String? = node.textInput(default, prompt)

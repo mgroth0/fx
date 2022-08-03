@@ -7,7 +7,7 @@ import javafx.scene.paint.Color
 import matt.color.hex
 import matt.css.MyStyleDsl
 import matt.fx.graphics.toAwtColor
-import matt.hurricanefx.wrapper.node.NodeWrapper
+import matt.hurricanefx.wrapper.node.NodeWrapperImpl
 import matt.klib.log.warn
 import matt.klib.prop.BasicProperty
 import java.util.logging.Level
@@ -112,7 +112,7 @@ class StyleClassDSL(val s: Node): MyStyleDsl() {
 
 }
 
-fun NodeWrapper<*>.sty(op: StyleClassDSL.()->Unit) {
+fun NodeWrapperImpl<*>.sty(op: StyleClassDSL.()->Unit) {
   StyleClassDSL(this.node).apply(op)
 }
 

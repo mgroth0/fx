@@ -18,7 +18,7 @@ import matt.klib.math.Point
 import matt.klib.math.unaryMinus
 
 
-fun <T: NodeWrapper<*>> T.refreshWhileInSceneEvery(
+fun <T: NodeWrapper> T.refreshWhileInSceneEvery(
   refreshRate: Duration,
   op: MyTimerTask.(T)->Unit
 ) {
@@ -26,7 +26,7 @@ fun <T: NodeWrapper<*>> T.refreshWhileInSceneEvery(
   sceneProperty().onChange {
 	if (it != null) {
 	  every(refreshRate, ownTimer = true) {
-		if (thisNode.scene == null) {
+		if (thisNode.node.scene == null) {
 		  cancel()
 		}
 		op(thisNode)

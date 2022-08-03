@@ -36,7 +36,7 @@ import matt.fx.graphics.win.interact.openInNewWindow
 import matt.fx.graphics.win.winfun.noDocking
 import matt.hurricanefx.tornadofx.menu.menu
 import matt.hurricanefx.tornadofx.nodes.setOnDoubleClick
-import matt.hurricanefx.wrapper.node.NodeWrapper
+import matt.hurricanefx.wrapper.node.NodeWrapperImpl
 import matt.hurricanefx.wrapper.parent.ParentWrapper
 import matt.hurricanefx.wrapper.scene.SceneWrapper
 import matt.hurricanefx.wrapper.scene.SceneWrapper.Companion.wrapped
@@ -144,7 +144,7 @@ open class MScene(
 			(it as? Parent)?.childrenUnmodifiable ?: listOf()
 		  }.forEach {
 			if (it::class !in classesPrinted) {
-			  NodeWrapper.Companion.run {
+			  NodeWrapperImpl.Companion.run {
 				println(it.wrapped().styleInfo())
 			  }
 			  classesPrinted += it::class

@@ -11,7 +11,7 @@ import javafx.scene.paint.Color
 import matt.file.MFile
 import matt.file.commons.TEMP_DIR
 import matt.fx.image.save
-import matt.hurricanefx.wrapper.node.NodeWrapper
+import matt.hurricanefx.wrapper.node.NodeWrapperImpl
 
 
 fun String.copyToClipboard() {
@@ -46,7 +46,7 @@ fun Clipboard.putFiles(files: MutableList<MFile>) = setContent { putFiles(files.
 fun Clipboard.put(dataFormat: DataFormat, value: Any) = setContent { put(dataFormat, value) }
 
 
-fun NodeWrapper<*>.drags(file: MFile) {
+fun NodeWrapperImpl<*>.drags(file: MFile) {
   setOnDragDetected {
     val db = startDragAndDrop(*TransferMode.ANY)
     db.putFiles(mutableListOf(file))
@@ -55,7 +55,7 @@ fun NodeWrapper<*>.drags(file: MFile) {
   }
 }
 
-fun NodeWrapper<*>.dragsSnapshot(fill: Color = Color.BLACK) {
+fun NodeWrapperImpl<*>.dragsSnapshot(fill: Color = Color.BLACK) {
   addEventFilter(MouseEvent.DRAG_DETECTED) {
     println("drag detected")
     val params = SnapshotParameters()
@@ -74,9 +74,9 @@ fun NodeWrapper<*>.dragsSnapshot(fill: Color = Color.BLACK) {
 var dummyDragBoard: Any? = null
 const val DUMMY_TEXT = "DUMMY TEXT"
 
-fun NodeWrapper<*>.easyDrag(data: Any, getSnapshotNode: ()->NodeWrapper<*>? = { null }) = easyDrag({ true }, { data }, getSnapshotNode)
+fun NodeWrapperImpl<*>.easyDrag(data: Any, getSnapshotNode: ()->NodeWrapperImpl<*>? = { null }) = easyDrag({ true }, { data }, getSnapshotNode)
 
-fun NodeWrapper<*>.easyDrag(condition: ()->Boolean = { true }, getData: ()->Any, getSnapshotNode: ()->NodeWrapper<*>? = { null }) {
+fun NodeWrapperImpl<*>.easyDrag(condition: ()->Boolean = { true }, getData: ()->Any, getSnapshotNode: ()->NodeWrapperImpl<*>? = { null }) {
   this.cursor = Cursor.DEFAULT /*just never change it please*/
   setOnDragDone {
     this.cursor = Cursor.DEFAULT /*just never change it please*/
@@ -98,7 +98,7 @@ fun NodeWrapper<*>.easyDrag(condition: ()->Boolean = { true }, getData: ()->Any,
   }
 }
 
-fun NodeWrapper<*>.easyDrop(handler: ((Any)->Unit)) {
+fun NodeWrapperImpl<*>.easyDrop(handler: ((Any)->Unit)) {
   this.cursor = Cursor.DEFAULT /*just never change it please*/
   setOnDragEntered {
     this.cursor = Cursor.DEFAULT /*just never change it please*/

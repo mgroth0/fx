@@ -14,10 +14,10 @@ import matt.hurricanefx.tornadofx.fx.addChildIfPossible
 import matt.hurricanefx.tornadofx.menu.item
 import matt.hurricanefx.wrapper.control.button.ButtonWrapper
 import matt.hurricanefx.wrapper.menu.item.MenuItemWrapper
-import matt.hurricanefx.wrapper.node.NodeWrapper
+import matt.hurricanefx.wrapper.node.NodeWrapperImpl
 import matt.klib.lang.err
 
-fun NodeWrapper<*>.setOnFocusLost(op: ()->Unit) {
+fun NodeWrapperImpl<*>.setOnFocusLost(op: ()->Unit) {
   focusedProperty().onChange { it: Boolean? ->
 	if (it == null) err("here it is")
 	if (!it) {
@@ -26,7 +26,7 @@ fun NodeWrapper<*>.setOnFocusLost(op: ()->Unit) {
   }
 }
 
-fun NodeWrapper<*>.setOnFocusGained(op: ()->Unit) {
+fun NodeWrapperImpl<*>.setOnFocusGained(op: ()->Unit) {
   focusedProperty().onChange { it: Boolean? ->
 	if (it == null) err("here it is")
 	if (it) {
@@ -42,7 +42,7 @@ fun actionbutton(text: String, graphic: Node? = null, action: ButtonWrapper.(Act
   }
 }
 
-fun NodeWrapper<*>.actionbutton(text: String = "", graphic: Node? = null, action: ButtonWrapper.(ActionEvent)->Unit) =   ButtonWrapper(text, graphic).apply {
+fun NodeWrapperImpl<*>.actionbutton(text: String = "", graphic: Node? = null, action: ButtonWrapper.(ActionEvent)->Unit) =   ButtonWrapper(text, graphic).apply {
   setOnAction {
 	action(it)
 	it.consume()
