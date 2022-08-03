@@ -159,7 +159,7 @@ private const val SPECIAL_ZOOM_RATE = 1.1
 private const val SCROLL_COMPENSATION_RATE = SPECIAL_ZOOM_RATE - 1.0
 
 /*I figured this all out by myself. No help, no googling*/
-fun WebViewWrapper.specialZooming(par: RegionWrapperImpl? = null) {
+fun WebViewWrapper.specialZooming(par: RegionWrapper? = null) {
 
 
   setOnKeyPressed {
@@ -234,7 +234,7 @@ fun WebViewWrapper.scrollMult(factor: Double) {
 }
 
 
-fun RegionWrapperImpl.specialTransferingToWindowAndBack(par: PaneWrapper) {
+fun RegionWrapper.specialTransferingToWindowAndBack(par: PaneWrapper<*>) {
   val vb = this
   this.setOnKeyPressed { k ->
 	if (k.code == KeyCode.W && k.isMetaDown) {
