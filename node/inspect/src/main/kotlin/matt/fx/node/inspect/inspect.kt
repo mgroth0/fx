@@ -7,14 +7,12 @@ import matt.fx.graphics.Inspectable
 import matt.fx.graphics.layout.hgrow
 import matt.fx.graphics.layout.vgrow
 import matt.hurricanefx.eye.collect.toObservable
-import matt.hurricanefx.tornadofx.control.label
 import matt.hurricanefx.wrapper.control.list.ListViewWrapper
 import matt.hurricanefx.wrapper.control.table.TableViewWrapper
 import matt.hurricanefx.wrapper.pane.box.BoxWrapper
 import matt.hurricanefx.wrapper.pane.hbox.HBoxWrapper
 import matt.hurricanefx.wrapper.pane.PaneWrapper
 import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
-import matt.hurricanefx.wrapper.target.removeFromParent
 
 
 fun <T: Inspectable> InspectionView(

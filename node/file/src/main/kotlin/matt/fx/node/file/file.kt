@@ -27,9 +27,6 @@ import matt.fx.web.WebViewWrapper
 import matt.fx.web.specialZooming
 import matt.gui.draggableIcon
 import matt.hurricanefx.eye.lib.onChange
-import matt.hurricanefx.tornadofx.control.button
-import matt.hurricanefx.tornadofx.control.imageview
-import matt.hurricanefx.tornadofx.control.textarea
 import matt.hurricanefx.wrapper.control.text.area.TextAreaWrapper
 import matt.hurricanefx.wrapper.pane.SimplePaneWrapper
 import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
