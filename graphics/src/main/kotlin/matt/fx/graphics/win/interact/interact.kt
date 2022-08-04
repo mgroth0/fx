@@ -204,7 +204,9 @@ fun <R> dialog(
 	  }
 	}
   }
+  println("SHOW AND WAIT 1")
   d.window.showAndWait()
+  println("SHOW AND WAIT 2")
   return r
 }
 

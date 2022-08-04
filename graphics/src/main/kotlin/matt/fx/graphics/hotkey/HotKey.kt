@@ -268,7 +268,9 @@ class HotKeyEventHandler(
 	  return
 	}    //    println("event.code: ${event.code}")
 	//    println("hotkeys length: ${hotkeys.size}")
+	println("START HOTKEY RUN")
 	event.runAgainst(hotkeys, last = last, fixer = this)
+	println("FINISHED HOTKEY RUN")
   }
 }
 
