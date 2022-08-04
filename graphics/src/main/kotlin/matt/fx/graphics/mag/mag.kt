@@ -1,11 +1,12 @@
 package matt.fx.graphics.mag
 
 import javafx.stage.Screen
+import kotlinx.serialization.Serializable
 import matt.file.commons.VAR_JSON_FILE
 import matt.hurricanefx.wrapper.window.WindowWrapper
-import matt.json.custom.bool
-import matt.json.prim.parseJsonObj
-import matt.json.prim.writeJson
+import matt.json.prim.loadJson
+import matt.json.prim.save
+import matt.json.toJson
 
 const val NEW_MAC_NOTCH_ESTIMATE = 32.0 /*35*/
 const val NEW_MAC_MENU_BAR_ESTIMATE = NEW_MAC_NOTCH_ESTIMATE + 2.0
@@ -259,18 +260,29 @@ fun WindowWrapper<*>.eighth8() {
 }
 
 
-var reversed_displays
-  get() = VAR_JSON_FILE.takeIf { it.exists() }?.parseJsonObj()?.get("reversed_displays")?.bool ?: true
-  set(b) {
-	if (VAR_JSON_FILE.exists()) {
-
-	  VAR_JSON_FILE.writeJson(
-
-
-		VAR_JSON_FILE.parseJsonObj().apply {
-		  this["reversed_displays"] = b
-		}
-
-	  )
-	}
+@Serializable
+class VarJson(
+  var reversedDisplays: Boolean = true,
+  var bib: String? = null
+) {
+  companion object {
+	fun load() = VAR_JSON_FILE.takeIf { it.exists() }?.loadJson() ?: VarJson()
+	var reversed_displays
+	  get() = load().reversedDisplays
+	  set(b) {
+		load().apply {
+		  reversedDisplays = b
+		}.save()
+	  }
+	var bib
+	  get() = load().bib
+	  set(b) {
+		load().apply {
+		  bib = b
+		}.save()
+	  }
   }
+  fun save() {
+	VAR_JSON_FILE.save(toJson())
+  }
+}
