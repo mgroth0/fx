@@ -22,7 +22,7 @@ import matt.fx.graphics.hotkeys.addDefaultHotkeys
 import matt.fx.graphics.icon.ICON_HEIGHT
 import matt.fx.graphics.icon.ICON_WIDTH
 import matt.fx.graphics.icon.Icon
-import matt.fx.graphics.mag.reversed_displays
+import matt.fx.graphics.mag.VarJson
 import matt.fx.graphics.menu.context.mcontextmenu
 import matt.fx.graphics.menu.context.showMContextMenu
 import matt.fx.graphics.style.CUSTOM_CSS
@@ -164,7 +164,7 @@ open class MScene<R: ParentWrapper>(
 
 
 	  if (NEED_REVERSED_DISPLAYS_FEATURE) actionitem("reverse displays") {
-		reversed_displays = !reversed_displays
+		VarJson.reversed_displays = !VarJson.reversed_displays
 	  }
 
 	}

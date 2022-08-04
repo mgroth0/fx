@@ -9,6 +9,7 @@ import matt.fx.graphics.core.scene.MScene
 import matt.fx.graphics.core.scene.iconify
 import matt.fx.graphics.hotkey.HotKey
 import matt.fx.graphics.hotkey.hotkeys
+import matt.fx.graphics.mag.VarJson
 import matt.fx.graphics.mag.bottom
 import matt.fx.graphics.mag.bottomleft
 import matt.fx.graphics.mag.bottomright
@@ -25,7 +26,6 @@ import matt.fx.graphics.mag.left
 import matt.fx.graphics.mag.max
 import matt.fx.graphics.mag.nextdisplay
 import matt.fx.graphics.mag.resetPosition
-import matt.fx.graphics.mag.reversed_displays
 import matt.fx.graphics.mag.right
 import matt.fx.graphics.mag.top
 import matt.fx.graphics.mag.topleft
@@ -98,13 +98,13 @@ fun MScene<*>.addDefaultHotkeys() {
 
 	LEFT_BRACKET.ctrl.opt {
 	  window?.wrapped()?.apply {
-		if (!reversed_displays) lastdisplay()
+		if (!VarJson.reversed_displays) lastdisplay()
 		else nextdisplay()
 	  }
 	}
 	RIGHT_BRACKET.ctrl.opt {
 	  window?.wrapped()?.apply {
-		if (!reversed_displays) nextdisplay()
+		if (!VarJson.reversed_displays) nextdisplay()
 		else lastdisplay()
 	  }
 	}
