@@ -25,14 +25,13 @@ import matt.fx.graphics.win.interact.openInNewWindow
 import matt.hurricanefx.eye.lang.DProp
 import matt.hurricanefx.eye.lib.onChangeOnce
 import matt.hurricanefx.runLater
-import matt.hurricanefx.wrapper.control.ControlWrapper
+import matt.hurricanefx.wrapper.control.ControlWrapperImpl
 import matt.hurricanefx.wrapper.node.NodeWrapper
 import matt.hurricanefx.wrapper.node.NodeWrapperImpl
 import matt.hurricanefx.wrapper.node.attachTo
 import matt.hurricanefx.wrapper.node.setOnDoubleClick
 import matt.hurricanefx.wrapper.pane.PaneWrapper
 import matt.hurricanefx.wrapper.parent.ParentWrapperImpl
-import matt.hurricanefx.wrapper.region.RegionWrapperImpl
 import matt.hurricanefx.wrapper.stage.StageWrapper
 import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
 import matt.hurricanefx.wrapper.region.RegionWrapper
@@ -425,7 +424,7 @@ class JavaBridge {
 }
 
 
-class HTMLEditorWrapper(node: HTMLEditor = HTMLEditor()): ControlWrapper<HTMLEditor>(node) {
+class HTMLEditorWrapper(node: HTMLEditor = HTMLEditor()): ControlWrapperImpl<HTMLEditor>(node) {
   var htmlText
 	get() = node.htmlText
 	set(value) {
