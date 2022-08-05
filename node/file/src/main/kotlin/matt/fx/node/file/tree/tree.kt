@@ -1,5 +1,6 @@
 package matt.fx.node.file.tree
 
+import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.ObservableList
 import javafx.geometry.Pos.CENTER_LEFT
@@ -28,7 +29,6 @@ import matt.gui.draggableIcon
 import matt.gui.setview.autoResizeColumns
 import matt.hurricanefx.eye.collect.bind
 import matt.hurricanefx.eye.collect.toObservable
-import matt.hurricanefx.eye.lang.BProp
 import matt.hurricanefx.eye.lib.onChange
 import matt.hurricanefx.eye.prop.div
 import matt.hurricanefx.wrapper.cellfact.SimpleFactory
@@ -178,7 +178,7 @@ private fun TreeLikeWrapper<*, MFile>.setupGUI() {
   selectionModel.selectionMode = MULTIPLE
 
 
-  var showSizesProp: BProp? = null
+  var showSizesProp: SimpleBooleanProperty? = null
 
   when (this) {
 	is TreeViewWrapper<MFile>      -> {
@@ -219,7 +219,7 @@ private fun TreeLikeWrapper<*, MFile>.setupGUI() {
 	  }
 	  column("ext", matt.file.MFile::extension)
 
-	  showSizesProp = BProp(false)
+	  showSizesProp = SimpleBooleanProperty(false)
 	  showSizesProp.onChange { b ->
 		if (b) {
 		  column<String>("size") {
