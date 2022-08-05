@@ -6,16 +6,11 @@ import javafx.application.Platform.runLater
 import javafx.beans.binding.DoubleBinding
 import javafx.beans.value.ObservableValue
 import javafx.geometry.Pos
-import javafx.scene.Node
-import javafx.scene.Parent
 import javafx.scene.Scene
 import javafx.scene.control.Alert
 import javafx.scene.control.TextInputDialog
-import javafx.scene.image.ImageView
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
-import javafx.scene.layout.AnchorPane
-import javafx.scene.layout.Region
 import javafx.scene.paint.Color
 import javafx.stage.Stage
 import javafx.stage.StageStyle
@@ -45,15 +40,15 @@ import matt.hurricanefx.tornadofx.dialog.alert
 import matt.hurricanefx.wrapper.control.button.ButtonWrapper
 import matt.hurricanefx.wrapper.imageview.ImageViewWrapper
 import matt.hurricanefx.wrapper.node.NodeWrapper
-import matt.hurricanefx.wrapper.node.NodeWrapperImpl
 import matt.hurricanefx.wrapper.node.disableWhen
 import matt.hurricanefx.wrapper.node.setOnDoubleClick
 import matt.hurricanefx.wrapper.pane.anchor.AnchorPaneWrapper
-import matt.hurricanefx.wrapper.stage.StageWrapper
 import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
 import matt.hurricanefx.wrapper.parent.ParentWrapper
 import matt.hurricanefx.wrapper.region.RegionWrapper
-import matt.hurricanefx.wrapper.wrapped
+import matt.hurricanefx.wrapper.region.border.FXBorder
+import matt.hurricanefx.wrapper.region.border.solidBorder
+import matt.hurricanefx.wrapper.stage.StageWrapper
 import matt.json.prim.isValidJson
 import matt.klib.lang.noExceptions
 import matt.klib.lang.nullIfExceptions
@@ -106,7 +101,7 @@ class MDialog<R> internal constructor(): VBoxWrapper() {
 
   init {
 	exactHeightProperty().bind(stg.heightProperty)
-	borderFill = Color.DARKBLUE
+	border = FXBorder.solid(Color.DARKBLUE)
   }
 }
 
@@ -153,7 +148,6 @@ inline fun <reified T> jsonEditor(json: String? = null) = dialog<T?> {
   val ta = textarea(json ?: "")
 
 
-
   val goodBind = ta.textProperty().booleanBinding {
 
 	it != null
@@ -161,9 +155,9 @@ inline fun <reified T> jsonEditor(json: String? = null) = dialog<T?> {
 		&& noExceptions { Json.decodeFromString<T>(it) }
   }
   readyWhen(goodBind)
-  ta.borderFill = Color.BLACK /*so it does not jitter*/
+  ta.border = Color.BLACK.solidBorder() /*so it does not jitter*/
   goodBind.onChange {
-	ta.borderFill = if (it) Color.BLACK else Color.RED
+	ta.border = if (it) Color.BLACK.solidBorder() else Color.RED.solidBorder()
   }
   setResultConverter {
 	ta.text.takeIf { it.isValidJson() }?.let { nullIfExceptions { Json.decodeFromString<T>(it) } }
@@ -366,7 +360,7 @@ fun ParentWrapper.openInNewWindow(
 	geom.applyTo(this)
 	println("opening something in a new window 4")
 	if (border) {
-	  (this@openInNewWindow as RegionWrapper).borderFill = Color.DARKBLUE
+	  (this@openInNewWindow as RegionWrapper).border = Color.DARKBLUE.solidBorder()
 	}
 	println("opening something in a new window 5")
 	beforeShowing()
