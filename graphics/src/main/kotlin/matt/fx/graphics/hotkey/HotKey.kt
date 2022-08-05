@@ -1,6 +1,7 @@
 package matt.fx.graphics.hotkey
 
 import javafx.application.Platform.runLater
+import javafx.beans.property.SimpleBooleanProperty
 import javafx.event.EventHandler
 import javafx.event.EventTarget
 import javafx.scene.Node
@@ -414,7 +415,7 @@ fun EventTarget.registerInFilter(
   }
 
 
-  infix fun HotKey.toggles(b: BProp) = op { b.toggle() }
+  infix fun HotKey.toggles(b: SimpleBooleanProperty) = op { b.toggle() }
 
   infix fun HotKey.handle(setHandler: (KeyEvent)->Unit) = apply {
 	require(theOp == null)
@@ -430,7 +431,7 @@ fun EventTarget.registerInFilter(
 	hotkeys.add(this)
   }
 
-  infix fun HotKeySet.toggles(b: BProp) = op { b.toggle() }
+  infix fun HotKeySet.toggles(b: SimpleBooleanProperty) = op { b.toggle() }
 
   infix fun HotKeySet.handle(setHandler: (KeyEvent)->Unit) = apply {
 	keys.applyEach {

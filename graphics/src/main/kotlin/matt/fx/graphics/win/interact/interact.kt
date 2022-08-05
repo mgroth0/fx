@@ -4,6 +4,7 @@ package matt.fx.graphics.win.interact
 
 import javafx.application.Platform.runLater
 import javafx.beans.binding.DoubleBinding
+import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.value.ObservableValue
 import javafx.geometry.Pos
 import javafx.scene.Scene
@@ -93,7 +94,7 @@ class MDialog<R> internal constructor(): VBoxWrapper() {
 	resultConverter = op
   }
 
-  val readyProperty = BProp(true)
+  val readyProperty = SimpleBooleanProperty(true)
 
   fun readyWhen(o: ObservableValue<Boolean>) {
 	readyProperty.bind(o)
