@@ -10,9 +10,10 @@ import matt.async.date.tic
 import matt.auto.applescript.applescript
 import matt.auto.applescript.interactiveOsascript
 import matt.auto.compileAndOrRunApplescript
+import matt.auto.macapp.JavaMacApp
+import matt.auto.macapp.getFrontmostProcessFromKotlinNative
 import matt.fx.graphics.mag.left
 import matt.hurricanefx.wrapper.stage.StageWrapper
-import matt.hurricanefx.wrapper.wrapped
 import matt.klib.lang.err
 import kotlin.concurrent.thread
 
@@ -80,13 +81,6 @@ fun getAppWindowPositionAndSizeByApplescript(app: String): Rectangle2D {
   return Rectangle2D(x.toDouble(), y.toDouble(), width.toDouble(), height.toDouble())
 }
 
-@Deprecated("use kotlin native instead")
-fun getNameOfFrontmostProcessFromApplescript(): String {
-  return compileAndOrRunApplescript(
-	"getNameOfFrontmostProcess",
-  )
-}
-
 
 fun sdtInTest() {
   val writerP = interactiveOsascript(
@@ -119,14 +113,16 @@ fun sdtInTest() {
 
 /*https://stackoverflow.com/questions/70647124/how-to-reduce-overhead-and-run-applescripts-faster*/
 @Suppress("UNREACHABLE_CODE") fun appleLeft() {
-  err("""
+  err(
+	"""
 	its not worth it. Doing it through matt.auto.applescript.applescript is extremely slow and there is no workaround for that. The only other option is to do it through objective C, which is extremely complicated and not worth it. You can try again if you want, but trust me its insane and you have to go through annoying accessibility APIs. Even with kotlin native, it is not worth it. Keyboard maestro and magnet seemed to have done exactly this and developed the perfect native code for this. But guess what, they are closed source. Maybe I should just respect their work and use their software for now. Its not that bad...
-  """.trimIndent())
+  """.trimIndent()
+  )
   /*https://stackoverflow.com/questions/70647124/how-to-reduce-overhead-and-run-applescripts-faster*/
   sdtInTest()
   tic()
-  val appName = getNameOfFrontmostProcessFromApplescript() // NOSONAR
-  if (appName != "java") {
+  val app = getFrontmostProcessFromKotlinNative() // NOSONAR
+  if (app !is JavaMacApp) {
 	val bounds = getFrontmostWindowPositionAndSizeByApplescript()
 	runLater {
 	  val screen =
