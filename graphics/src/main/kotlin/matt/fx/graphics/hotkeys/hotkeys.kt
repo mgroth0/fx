@@ -1,8 +1,6 @@
 package matt.fx.graphics.hotkeys
 
 import javafx.application.Platform.runLater
-import javafx.scene.layout.Border
-import javafx.scene.layout.Region
 import javafx.scene.paint.Color
 import javafx.stage.Stage
 import matt.fx.graphics.core.scene.MScene
@@ -30,18 +28,18 @@ import matt.fx.graphics.mag.right
 import matt.fx.graphics.mag.top
 import matt.fx.graphics.mag.topleft
 import matt.fx.graphics.mag.topright
+import matt.hurricanefx.wrapper.region.RegionWrapper
+import matt.hurricanefx.wrapper.region.RegionWrapperImpl
+import matt.hurricanefx.wrapper.region.border.FXBorder
 import matt.hurricanefx.wrapper.window.WindowWrapper.Companion.wrapped
 import matt.hurricanefx.wrapper.wrapped
-import matt.klib.dmap.withStoringDefault
 import matt.klib.lang.go
 import java.lang.Thread.sleep
-import java.util.WeakHashMap
 import kotlin.concurrent.thread
 import kotlin.contracts.ExperimentalContracts
 
 
-@ExperimentalContracts
-fun MScene<*>.addDefaultHotkeys() {
+@ExperimentalContracts fun MScene<*>.addDefaultHotkeys() {
   val scene = this
 
   /*needed filter to be true here or for some reason LEFT.ctrl.opt.shift wasn't being captured in music app even though it was captured in all other apps (globalhotkeys, brainstorm, kjg)*/
@@ -53,16 +51,14 @@ fun MScene<*>.addDefaultHotkeys() {
 	DOWN.ctrl.opt { window.y += window.height }
 
 	LEFT.ctrl.meta {
-	  window.width /= 2
-	  //	  window.x -= window.width
+	  window.width /= 2	//	  window.x -= window.width
 	}
 	RIGHT.ctrl.meta {
 	  window.width /= 2
 	  window.x += window.width
 	}
 	UP.ctrl.meta {
-	  window.height /= 2
-	  //	  window.y -= window.height
+	  window.height /= 2	//	  window.y -= window.height
 	}
 	DOWN.ctrl.meta {
 	  window.height /= 2
@@ -74,16 +70,14 @@ fun MScene<*>.addDefaultHotkeys() {
 	  window.width *= 2
 	}
 	RIGHT.ctrl.meta.shift {
-	  window.width *= 2
-	  //	  window.x += window.width
+	  window.width *= 2	//	  window.x += window.width
 	}
 	UP.ctrl.meta.shift {
 	  window.y -= window.height
 	  window.height *= 2
 	}
 	DOWN.ctrl.meta.shift {
-	  window.height *= 2
-//	  window.y += window.height
+	  window.height *= 2	//	  window.y += window.height
 	}
 
 	A.ctrl.opt { window?.wrapped()?.left() }
@@ -125,23 +119,19 @@ fun MScene<*>.addDefaultHotkeys() {
 
 	hotkeys.map { it as HotKey }.forEach {
 	  it.wrapOp {
-		val reg = (scene.root as? Region)
-		val old = regs[reg]
-		reg?.wrapped()?.borderFill = Color.YELLOW
+		val reg = (scene.root as? RegionWrapper)
+		reg?.border = FXBorder.solid(Color.YELLOW)
 		it()
-		reg?.go {
+		(reg as? RegionWrapperImpl<*>)?.go {
 		  thread {
 			sleep(750)
 			runLater {
-			  it.border = old
+			  it.border = it.defaultBorder
 			}
 		  }
 		}
 	  }
 	}
   }
-
 }
 
-
-val regs = WeakHashMap<Region, Border>().withStoringDefault { it.border ?: Border.EMPTY }
