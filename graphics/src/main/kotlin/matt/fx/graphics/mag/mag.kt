@@ -12,9 +12,6 @@ const val NEW_MAC_NOTCH_ESTIMATE = 32.0 /*35*/
 const val NEW_MAC_MENU_BAR_ESTIMATE = NEW_MAC_NOTCH_ESTIMATE + 2.0
 val NEW_MAX_MENU_Y_ESTIMATE_SECONDARY = 25.0
 
-val WindowWrapper<*>.screen: Screen?
-  get() = Screen.getScreensForRectangle(x, y, 1.0, 1.0).firstOrNull()
-
 data class RectSize(
   val width: Number,
   val height: Number

@@ -9,17 +9,20 @@ import javafx.scene.Scene
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
 import javafx.stage.Stage
+import matt.file.log.Logger
+import matt.file.log.NOPLogger
+import matt.file.log.SystemOutLogger
 import matt.hotkey.Hotkey
 import matt.hotkey.HotkeyDSL
-import matt.hurricanefx.eye.lang.BProp
 import matt.hurricanefx.eye.prop.toggle
 import matt.hurricanefx.wrapper.target.EventTargetWrapper
-import matt.hurricanefx.wrapper.target.EventTargetWrapperImpl
 import matt.klib.commons.thisMachine
 import matt.klib.lang.NEVER
 import matt.klib.lang.err
 import matt.klib.lang.go
+import matt.klib.str.joinWithNewLinesAndTabs
 import matt.klib.stream.allUnique
+import matt.klib.stream.duplicates
 import matt.klib.sys.Mac
 import matt.stream.applyEach
 import java.lang.System.currentTimeMillis
@@ -150,22 +153,22 @@ var lastHotKey: Pair<HotKey, Long>? = null
 
 
 fun KeyEvent.runAgainst(
-  hotkeys: Iterable<HotKeyContainer>, last: KeyEvent? = null, fixer: HotKeyEventHandler
+  hotkeys: Iterable<HotKeyContainer>, last: KeyEvent? = null, fixer: HotKeyEventHandler, log: Logger
 ) {
 
-  //    println("got hotkey: ${this}")
+  log += "got hotkey: ${this}"
 
   val pressTime = currentTimeMillis()
 
-  if (this.code.isModifierKey) {    //        println("consume 1")
+  if (this.code.isModifierKey) {
 	return consume()
-  } //  val debug = !this.code.isModifierKey
-  //  if (debug) {
-  //  println("${this} is running against")
-  //  hotkeys.forEach {
-  //	println(it)
-  //  }
-  //    }
+  }
+
+  log += "$this is running against"
+
+  hotkeys.forEach {
+	log += it
+  }
 
 
   /*https://stackoverflow.com/questions/47797980/javafx-keyevent-triggers-twice*//*the solution apparently is to use key released*//*but that feels less responsive to me. heres my custom solution... here goes...*//*potential issue: if I'm typing and I need to type same key multiple times and hjavafx is laggy, it might not clear this and my keys might not go through. So I'm only doing this with keys that are actual hotkeys*/
@@ -214,7 +217,8 @@ fun KeyEvent.runAgainst(
 	  yield(it)
 	  it.previous?.go { yield(it) }
 	}
-  }.filter { h ->    //            println("h(${this matches h}): ${h}")
+  }.filter { h ->
+	log += "h(${this matches h}): $h"
 	this matches h && (h.previous == null || (lastHotKey?.let {
 	  h.previous!!.matches(it.first) && (pressTime - it.second) <= DOUBLE_HOTKEY_WINDOW_MS
 	} ?: false))
@@ -241,10 +245,12 @@ fun KeyEvent.runAgainst(
 }
 
 class HotKeyEventHandler(
-  hks: Iterable<HotKeyContainer>, var quickPassForNormalTyping: Boolean
+  var quickPassForNormalTyping: Boolean
 ): EventHandler<KeyEvent> {
 
-  val hotkeys = hks.toMutableList()
+  var debug: Boolean = false
+
+  val hotkeys = mutableListOf<HotKeyContainer>()
 
   init {    //        println("making handler ${this.hashCode()} with")
 	//        hotkeys.forEach {
@@ -269,7 +275,7 @@ class HotKeyEventHandler(
 	  return
 	}    //    println("event.code: ${event.code}")
 	//    println("hotkeys length: ${hotkeys.size}")
-	event.runAgainst(hotkeys, last = last, fixer = this)
+	event.runAgainst(hotkeys, last = last, fixer = this, log = if (debug) SystemOutLogger else NOPLogger)
   }
 }
 
@@ -282,48 +288,41 @@ val handlers = WeakHashMap<EventTarget, HotKeyEventHandler>()
 val filters = WeakHashMap<EventTarget, HotKeyEventHandler>()
 
 fun EventTarget.register(
+  inFilter: Boolean,
   hotkeys: Iterable<HotKeyContainer>,
   quickPassForNormalTyping: Boolean = false,
+  debug: Boolean = false,
 ) {
-  val oldHandler = handlers[this]
-  if (oldHandler != null) {
-	oldHandler.hotkeys.addAll(hotkeys.toList())
-	if (quickPassForNormalTyping) {
-	  oldHandler.quickPassForNormalTyping = true
-	}
-  } else {
-	val handler = HotKeyEventHandler(hotkeys, quickPassForNormalTyping)
-	handlers[this] = handler
-	when (this) {
-	  is Node  -> addEventHandler(KeyEvent.KEY_PRESSED, handler)
-	  is Scene -> addEventHandler(KeyEvent.KEY_PRESSED, handler)
-	  is Stage -> addEventHandler(KeyEvent.KEY_PRESSED, handler)
-	  else     -> NEVER
+  val map = if (inFilter) filters else handlers
+  val handler = map[this] ?: HotKeyEventHandler(quickPassForNormalTyping).also {
+	map[this] = it
+	if (inFilter) {
+	  when (this) {
+		is Node  -> addEventFilter(KeyEvent.KEY_PRESSED, it)
+		is Scene -> addEventFilter(KeyEvent.KEY_PRESSED, it)
+		is Stage -> addEventFilter(KeyEvent.KEY_PRESSED, it)
+		else     -> NEVER
+	  }
+	} else {
+	  when (this) {
+		is Node  -> addEventHandler(KeyEvent.KEY_PRESSED, it)
+		is Scene -> addEventHandler(KeyEvent.KEY_PRESSED, it)
+		is Stage -> addEventHandler(KeyEvent.KEY_PRESSED, it)
+		else     -> NEVER
+	  }
 	}
   }
-
-}
-
-fun EventTarget.registerInFilter(
-  hotkeys: Iterable<HotKeyContainer>,
-  quickPassForNormalTyping: Boolean = false,
-) {
-
-  val oldHandler = filters[this] //    println("this=${this}") //    println("oldHandler=${oldHandler}")
-  if (oldHandler != null) {
-	oldHandler.hotkeys.addAll(hotkeys.toList())
-	if (quickPassForNormalTyping) {
-	  oldHandler.quickPassForNormalTyping = true
-	}
-  } else {
-	val handler = HotKeyEventHandler(hotkeys, quickPassForNormalTyping)
-	filters[this] = handler
-	when (this) {
-	  is Node  -> addEventFilter(KeyEvent.KEY_PRESSED, handler)
-	  is Scene -> addEventFilter(KeyEvent.KEY_PRESSED, handler)
-	  is Stage -> addEventFilter(KeyEvent.KEY_PRESSED, handler)
-	  else     -> NEVER
-	}
+  if (quickPassForNormalTyping) handler.quickPassForNormalTyping = true
+  handler.hotkeys.addAll(hotkeys.toList())
+  if (debug) handler.debug = true
+  val dups = handler.hotkeys.duplicates()
+  if (dups.isNotEmpty()) { /*doesnt check handlers and filters together, and doesnt check from multiple nodes together!*/
+	err(
+	  """
+	  hotkey duplicates!:
+	  ${dups.joinWithNewLinesAndTabs()}
+	""".trimIndent()
+	)
   }
 }
 
@@ -333,6 +332,7 @@ fun EventTarget.registerInFilter(
   fun keyCode(name: String) = KeyCode.valueOf(name).bare
 
   val hotkeys = mutableSetOf<HotKeyContainer>()
+
 
   override val A get() = KeyCode.A.bare
   override val B get() = KeyCode.B.bare
@@ -445,13 +445,14 @@ fun EventTarget.registerInFilter(
 inline fun EventTargetWrapper.hotkeys(
   filter: Boolean = false,
   quickPassForNormalTyping: Boolean = false,
+  debug: Boolean = false,
   op: FXHotkeyDSL.()->Unit,
-) {
+  ) {
   contract {
 	callsInPlace(op, EXACTLY_ONCE)
   }
   FXHotkeyDSL().apply(op).hotkeys.go {
-	if (filter) this.node.registerInFilter(it, quickPassForNormalTyping)
-	else this.node.register(it, quickPassForNormalTyping)
+	if (filter) this.node.register(inFilter = true, it, quickPassForNormalTyping, debug)
+	else this.node.register(inFilter = false, it, quickPassForNormalTyping, debug)
   }
 }

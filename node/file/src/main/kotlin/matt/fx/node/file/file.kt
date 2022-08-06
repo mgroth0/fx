@@ -15,7 +15,7 @@ import matt.async.thread.daemon
 import matt.css.Color.black
 import matt.css.sty
 import matt.file.MFile
-import matt.fx.graphics.async.runLaterReturn
+import matt.hurricanefx.async.runLaterReturn
 import matt.fx.graphics.menu.context.mcontextmenu
 import matt.fx.graphics.win.interact.doubleClickToOpenInWindow
 import matt.fx.graphics.win.interact.openImageInWindow

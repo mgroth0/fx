@@ -31,7 +31,6 @@ import matt.fx.graphics.mag.topright
 import matt.hurricanefx.wrapper.region.RegionWrapper
 import matt.hurricanefx.wrapper.region.RegionWrapperImpl
 import matt.hurricanefx.wrapper.region.border.FXBorder
-import matt.hurricanefx.wrapper.window.WindowWrapper.Companion.wrapped
 import matt.hurricanefx.wrapper.wrapped
 import matt.klib.lang.go
 import java.lang.Thread.sleep
