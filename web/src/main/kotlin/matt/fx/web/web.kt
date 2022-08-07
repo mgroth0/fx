@@ -16,12 +16,12 @@ import matt.async.date.sec
 import matt.async.thread.daemon
 import matt.file.MFile
 import matt.file.construct.toMFile
-import matt.hurricanefx.async.runLaterReturn
 import matt.fx.graphics.clip.copyToClipboard
 import matt.fx.graphics.lang.actionbutton
 import matt.fx.graphics.menu.context.mcontextmenu
 import matt.fx.graphics.refreshWhileInSceneEvery
 import matt.fx.graphics.win.interact.openInNewWindow
+import matt.hurricanefx.async.runLaterReturn
 import matt.hurricanefx.eye.lang.DProp
 import matt.hurricanefx.eye.lib.onChangeOnce
 import matt.hurricanefx.runLater
@@ -31,10 +31,10 @@ import matt.hurricanefx.wrapper.node.NodeWrapperImpl
 import matt.hurricanefx.wrapper.node.attachTo
 import matt.hurricanefx.wrapper.node.setOnDoubleClick
 import matt.hurricanefx.wrapper.pane.PaneWrapper
-import matt.hurricanefx.wrapper.parent.ParentWrapperImpl
-import matt.hurricanefx.wrapper.stage.StageWrapper
 import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
+import matt.hurricanefx.wrapper.parent.ParentWrapperImpl
 import matt.hurricanefx.wrapper.region.RegionWrapper
+import matt.hurricanefx.wrapper.stage.StageWrapper
 import matt.hurricanefx.wrapper.wrapped
 import matt.klib.lang.NEVER
 import netscape.javascript.JSObject
@@ -343,18 +343,8 @@ fun WebViewWrapper.specialTransferingToWindowAndBack(par: PaneWrapper<*>) {
   }
 }
 
-
-fun ImageRefreshingWebView(file: MFile) = WebViewWrapper().apply {
-
-  engine.onError = EventHandler { event -> System.err.println(event) }
-
-
-  var refreshThisCycle = false
-
-  engine.loadWorker.stateProperty().addListener { _, _, new ->
-
-	println("${file.name}:loadstate:${new}")
-
+fun WebViewWrapper.interceptConsole() {
+  engine.loadWorker.stateProperty().addListener { _, _, _ ->
 	val window = engine.executeScript("window") as JSObject
 	window.setMember("java", JavaBridge())
 	engine.executeScript(
@@ -364,13 +354,22 @@ fun ImageRefreshingWebView(file: MFile) = WebViewWrapper().apply {
             }
         """.trimIndent()
 	)
+  }
+}
 
-	//        println("refresh1${file.absolutePath})")
+
+fun ImageRefreshingWebView(file: MFile) = WebViewWrapper().apply {
+
+  engine.onError = EventHandler { event -> System.err.println(event) }
 
 
+  var refreshThisCycle = false
+
+  interceptConsole()
+
+  engine.loadWorker.stateProperty().addListener { _, _, new ->
+	println("${file.name}:loadstate:${new}")
 	refreshThisCycle = true
-	//        refresh() // have to refresh once in the beginning or even a brand new webview will matt.gui.ser.load outdated caches
-
   }
 
 
