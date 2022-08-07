@@ -9,8 +9,6 @@ import javafx.scene.Scene
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
 import javafx.stage.Stage
-import matt.file.log.NOPLogger
-import matt.file.log.SystemOutLogger
 import matt.hotkey.Hotkey
 import matt.hotkey.HotkeyDSL
 import matt.hurricanefx.eye.prop.toggle
@@ -20,6 +18,8 @@ import matt.klib.lang.NEVER
 import matt.klib.lang.err
 import matt.klib.lang.go
 import matt.klib.log.Logger
+import matt.klib.log.NOPLogger
+import matt.klib.log.SystemOutLogger
 import matt.klib.str.joinWithNewLinesAndTabs
 import matt.klib.stream.allUnique
 import matt.klib.stream.duplicates
