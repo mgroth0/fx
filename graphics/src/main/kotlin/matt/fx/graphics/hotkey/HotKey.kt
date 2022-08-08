@@ -171,7 +171,7 @@ fun KeyEvent.runAgainst(
   }
 
 
-  /*https://stackoverflow.com/questions/47797980/javafx-keyevent-triggers-twice*//*the solution apparently is to use key released*//*but that feels less responsive to me. heres my custom solution... here goes...*//*potential issue: if I'm typing and I need to type same key multiple times and hjavafx is laggy, it might not clear this and my keys might not go through. So I'm only doing this with keys that are actual hotkeys*/
+  /*https://stackoverflow.com/questions/47797980/javafx-keyevent-triggers-twice*//*the solution apparently is to use key released*//*but that feels less responsive to me. heres my custom solution... here goes...*//*potential issue: if I'm typing and I need to type same key multiple matt.hurricanefx.eye.prop.math.times and hjavafx is laggy, it might not clear this and my keys might not go through. So I'm only doing this with keys that are actual hotkeys*/
   if (last != null) {
 	if (this matches last) {
 	  if (this.target == last.target) { //this one never passes

@@ -137,7 +137,6 @@ open class MScene<R: ParentWrapper>(
 				classesPrinted += it::class
 			  }
 			}*/
-
 		  (root.node as Node).recurse {
 			(it as? Parent)?.childrenUnmodifiable ?: listOf()
 		  }.forEach {
@@ -146,8 +145,8 @@ open class MScene<R: ParentWrapper>(
 			  classesPrinted += it::class
 			}
 		  }
-
-		}        /*need this*/
+		}
+		/*need this*/
 		this.menu("set border") {        /*specify this here explicitly at least once
 		  * or else it will use the `matt.fx.graphics.menu.actionitem` above without import*/
 		  this.actionitem("none") {

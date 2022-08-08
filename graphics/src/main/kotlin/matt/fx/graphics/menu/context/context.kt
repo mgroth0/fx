@@ -29,6 +29,7 @@ import matt.hurricanefx.wrapper.scene.SceneWrapper
 import matt.hurricanefx.wrapper.target.EventTargetWrapper
 import matt.hurricanefx.wrapper.wrapped
 import matt.klib.dmap.withStoringDefault
+import matt.klib.str.tab
 import matt.stream.map.lazyMap
 import matt.stream.recurse.chain
 import java.lang.Thread.sleep
@@ -191,6 +192,16 @@ fun SceneWrapper<*>.showMContextMenu(
 	throw Exception("test exception")
   }
 
+  devMenu.actionitem("print nodes") {
+	println("NODES:")
+	tab("TARGET:\t${target::class.simpleName}")
+	var parent: Node? = target.parent
+	while (parent != null) {
+	  tab("PARENT:\t${parent::class.simpleName}")
+	  parent = parent.parent
+	}
+  }
+
   t.toc("made first actionitem")
 
   val reflectMenu = devMenu.menu("reflect")
@@ -202,22 +213,22 @@ fun SceneWrapper<*>.showMContextMenu(
 	val added = mutableListOf<String>()
 	t.toc("starting loop")
 	while (true) {
-//	  println("1looking for parent of $node (parent=${(node as? Parent)?.parent}) (scene=${(node as? Parent)?.scene})")
-//	  println("1node=${(node as? Node)}")
-//	  println("1node.scene=${(node as? Node)?.scene}")
-//	  println("1node.scene.root=${(node as? Node)?.scene?.root}")
-//	  println("1node.scene.root.scene=${(node as? Node)?.scene?.root?.scene}")
+	  //	  println("1looking for parent of $node (parent=${(node as? Parent)?.parent}) (scene=${(node as? Parent)?.scene})")
+	  //	  println("1node=${(node as? Node)}")
+	  //	  println("1node.scene=${(node as? Node)?.scene}")
+	  //	  println("1node.scene.root=${(node as? Node)?.scene?.root}")
+	  //	  println("1node.scene.root.scene=${(node as? Node)?.scene?.root?.scene}")
 	  t.toc("starting loop block for $node")
 	  getCMItems(node)?.let {
 		if (items.isNotEmpty()) separator()
 		items += it.map { it.node }
 	  }
 	  t.toc("got CmItems")
-//	  println("2looking for parent of $node (parent=${(node as? Parent)?.parent}) (scene=${(node as? Parent)?.scene})")
-//	  println("2node=${(node as? Node)}")
-//	  println("2node.scene=${(node as? Node)?.scene}")
-//	  println("2node.scene.root=${(node as? Node)?.scene?.root}")
-//	  println("2node.scene.root.scene=${(node as? Node)?.scene?.root?.scene}")
+	  //	  println("2looking for parent of $node (parent=${(node as? Parent)?.parent}) (scene=${(node as? Parent)?.scene})")
+	  //	  println("2node=${(node as? Node)}")
+	  //	  println("2node.scene=${(node as? Node)?.scene}")
+	  //	  println("2node.scene.root=${(node as? Node)?.scene?.root}")
+	  //	  println("2node.scene.root.scene=${(node as? Node)?.scene?.root?.scene}")
 	  node::class.qualifiedName
 		?.takeIf { "matt" in it && it !in added }
 		?.let {
@@ -227,11 +238,11 @@ fun SceneWrapper<*>.showMContextMenu(
 		  added += it
 		}
 	  t.toc("something with q name done")
-//	  println("3looking for parent of $node (parent=${(node as? Parent)?.parent}) (scene=${(node as? Parent)?.scene})")
-//	  println("3node=${(node as? Node)}")
-//	  println("3node.scene=${(node as? Node)?.scene}")
-//	  println("3node.scene.root=${(node as? Node)?.scene?.root}")
-//	  println("3node.scene.root.scene=${(node as? Node)?.scene?.root?.scene}")
+	  //	  println("3looking for parent of $node (parent=${(node as? Parent)?.parent}) (scene=${(node as? Parent)?.scene})")
+	  //	  println("3node=${(node as? Node)}")
+	  //	  println("3node.scene=${(node as? Node)?.scene}")
+	  //	  println("3node.scene.root=${(node as? Node)?.scene?.root}")
+	  //	  println("3node.scene.root.scene=${(node as? Node)?.scene?.root?.scene}")
 	  node = when (node) {
 		is Parent -> node.parent ?: node.scene
 		is Shape  -> node.parent
