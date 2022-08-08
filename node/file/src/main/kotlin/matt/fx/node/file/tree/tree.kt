@@ -30,7 +30,7 @@ import matt.gui.setview.autoResizeColumns
 import matt.hurricanefx.eye.collect.bind
 import matt.hurricanefx.eye.collect.toObservable
 import matt.hurricanefx.eye.lib.onChange
-import matt.hurricanefx.eye.prop.div
+import matt.hurricanefx.eye.prop.math.div
 import matt.hurricanefx.wrapper.cellfact.SimpleFactory
 import matt.hurricanefx.wrapper.control.tree.TreeViewWrapper
 import matt.hurricanefx.wrapper.control.tree.like.TreeLikeWrapper
