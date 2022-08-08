@@ -54,8 +54,10 @@ open class MStage(
 		}
 
 	  }
-	  if (EscClosable) ESCAPE op ::close
 	  if (EnterClosable) ENTER op ::close
+	}
+	hotkeys(filter = true) {
+	  if (EscClosable) ESCAPE op ::close
 	}
   }
 }
