@@ -354,7 +354,9 @@ private class FileTreeItem(file: MFile): TreeItem<MFile>(file) {
   }
 
   fun refreshChilds() {
+	println("refreshing childs of ${value}")
 	val childs = value.childs() ?: listOf()
+	taball("childs", childs)
 	children.removeIf { it.value !in childs }
 	childs.filter { it !in children.map { it.value } }.forEach {
 	  children.add(FileTreeItem(it))
