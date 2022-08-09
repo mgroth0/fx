@@ -30,7 +30,7 @@ import matt.hurricanefx.wrapper.node.NodeWrapper
 import matt.hurricanefx.wrapper.node.NodeWrapperImpl
 import matt.hurricanefx.wrapper.node.attachTo
 import matt.hurricanefx.wrapper.node.setOnDoubleClick
-import matt.hurricanefx.wrapper.pane.PaneWrapper
+import matt.hurricanefx.wrapper.pane.PaneWrapperImpl
 import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
 import matt.hurricanefx.wrapper.parent.ParentWrapperImpl
 import matt.hurricanefx.wrapper.region.RegionWrapper
@@ -233,7 +233,7 @@ fun WebViewWrapper.scrollMult(factor: Double) {
 }
 
 
-fun RegionWrapper.specialTransferingToWindowAndBack(par: PaneWrapper<*>) {
+fun RegionWrapper.specialTransferingToWindowAndBack(par: PaneWrapperImpl<*>) {
   val vb = this
   this.setOnKeyPressed { k ->
 	if (k.code == KeyCode.W && k.isMetaDown) {
@@ -308,7 +308,7 @@ open class WebViewPane private constructor(file: MFile? = null, html: String? = 
 
 @Suppress("unused")
 @ExperimentalContracts
-fun WebViewWrapper.specialTransferingToWindowAndBack(par: PaneWrapper<*>) {
+fun WebViewWrapper.specialTransferingToWindowAndBack(par: PaneWrapperImpl<*>) {
 
   val wv = this
   this.setOnKeyPressed { k ->

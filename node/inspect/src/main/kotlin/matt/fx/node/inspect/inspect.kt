@@ -4,14 +4,12 @@ import javafx.collections.ObservableList
 import javafx.geometry.Orientation
 import javafx.scene.layout.Priority
 import matt.fx.graphics.Inspectable
-import matt.fx.graphics.layout.hgrow
-import matt.fx.graphics.layout.vgrow
 import matt.hurricanefx.eye.collect.toObservable
 import matt.hurricanefx.wrapper.control.list.ListViewWrapper
 import matt.hurricanefx.wrapper.control.table.TableViewWrapper
 import matt.hurricanefx.wrapper.pane.box.BoxWrapper
 import matt.hurricanefx.wrapper.pane.hbox.HBoxWrapper
-import matt.hurricanefx.wrapper.pane.PaneWrapper
+import matt.hurricanefx.wrapper.pane.PaneWrapperImpl
 import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
 
 
@@ -19,8 +17,8 @@ fun <T: Inspectable> InspectionView(
   items: List<T>,
   dir: Orientation = Orientation.HORIZONTAL,
   table: Boolean = false,
-  wrap_lv: PaneWrapper<*>? = null
-): PaneWrapper<*> {
+  wrap_lv: PaneWrapperImpl<*>? = null
+): PaneWrapperImpl<*> {
   val root = if (dir == Orientation.HORIZONTAL) HBoxWrapper() else VBoxWrapper()
   val oitems = if (items is ObservableList) items else items.toObservable()
   val lv = if (table) TableViewWrapper(oitems) else ListViewWrapper(oitems)
@@ -52,13 +50,13 @@ fun <T: Inspectable> InspectionView(
   return root
 }
 
-fun <T: Inspectable> PaneWrapper<*>.inspectionview(
+fun <T: Inspectable> PaneWrapperImpl<*>.inspectionview(
   items: List<T>,
   dir: Orientation = Orientation.HORIZONTAL,
   table: Boolean = false,
-  op: (PaneWrapper<*>.()->Unit)? = null,
-  wrap_lv: PaneWrapper<*>? = null
-): PaneWrapper<*> {
+  op: (PaneWrapperImpl<*>.()->Unit)? = null,
+  wrap_lv: PaneWrapperImpl<*>? = null
+): PaneWrapperImpl<*> {
   val iv = InspectionView(items, dir, table, wrap_lv).apply {
 	if (op != null) {
 	  op()

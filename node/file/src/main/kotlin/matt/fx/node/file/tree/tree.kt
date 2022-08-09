@@ -37,7 +37,7 @@ import matt.hurricanefx.wrapper.control.tree.like.TreeLikeWrapper
 import matt.hurricanefx.wrapper.control.tree.like.populateTree
 import matt.hurricanefx.wrapper.control.treetable.TreeTableViewWrapper
 import matt.hurricanefx.wrapper.node.setOnDoubleClick
-import matt.hurricanefx.wrapper.pane.PaneWrapper
+import matt.hurricanefx.wrapper.pane.PaneWrapperImpl
 import matt.hurricanefx.wrapper.pane.hbox.HBoxWrapper
 import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
 import matt.klib.lang.inList
@@ -125,20 +125,20 @@ fun TreeLikeWrapper<*, MFile>.nav(f: MFile) {
 
 }
 
-fun PaneWrapper<*>.fileTree(
+fun PaneWrapperImpl<*>.fileTree(
   rootFile: MFile,
   strategy: FileTreePopulationStrategy = AUTOMATIC,
   op: (TreeViewWrapper<MFile>.()->Unit)? = null,
 ): TreeViewWrapper<MFile> = fileTree(rootFile.inList().toObservable(), strategy, op)
 
-fun PaneWrapper<*>.fileTableTree(
+fun PaneWrapperImpl<*>.fileTableTree(
   rootFile: MFile,
   strategy: FileTreePopulationStrategy = AUTOMATIC,
   op: (TreeTableViewWrapper<MFile>.()->Unit)? = null,
 ): TreeTableViewWrapper<MFile> = fileTableTree(rootFile.inList().toObservable(), strategy, op)
 
 
-fun PaneWrapper<*>.fileTree(
+fun PaneWrapperImpl<*>.fileTree(
   rootFiles: ObservableList<MFile>,
   strategy: FileTreePopulationStrategy = AUTOMATIC,
   op: (TreeViewWrapper<MFile>.()->Unit)? = null,
@@ -155,7 +155,7 @@ fun PaneWrapper<*>.fileTree(
   }
 }
 
-fun PaneWrapper<*>.fileTableTree(
+fun PaneWrapperImpl<*>.fileTableTree(
   rootFiles: ObservableList<MFile>,
   strategy: FileTreePopulationStrategy = AUTOMATIC,
   op: (TreeTableViewWrapper<MFile>.()->Unit)? = null,

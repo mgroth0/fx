@@ -42,7 +42,7 @@ import matt.hurricanefx.wrapper.imageview.ImageViewWrapper
 import matt.hurricanefx.wrapper.node.NodeWrapper
 import matt.hurricanefx.wrapper.node.disableWhen
 import matt.hurricanefx.wrapper.node.setOnDoubleClick
-import matt.hurricanefx.wrapper.pane.anchor.AnchorPaneWrapper
+import matt.hurricanefx.wrapper.pane.anchor.AnchorPaneWrapperImpl
 import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
 import matt.hurricanefx.wrapper.parent.ParentWrapper
 import matt.hurricanefx.wrapper.region.RegionWrapper
@@ -375,7 +375,7 @@ fun ParentWrapper.openInNewWindow(
 }
 
 fun MFile.openImageInWindow() {
-  AnchorPaneWrapper(ImageViewWrapper(this@openImageInWindow.toURI().toString()).apply {
+  AnchorPaneWrapperImpl(ImageViewWrapper(this@openImageInWindow.toURI().toString()).apply {
 	isPreserveRatio = true
 	runLater {
 	  fitHeightProperty().bind(scene!!.window.heightProperty())
