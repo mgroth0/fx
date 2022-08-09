@@ -41,6 +41,7 @@ import matt.hurricanefx.wrapper.pane.PaneWrapper
 import matt.hurricanefx.wrapper.pane.hbox.HBoxWrapper
 import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
 import matt.klib.lang.inList
+import matt.klib.str.taball
 import matt.klib.todo
 import matt.stream.recurse.chain
 import matt.stream.recurse.recurse
@@ -301,7 +302,9 @@ private fun TreeLikeWrapper<*, MFile>.setupContent(
 private fun TreeLikeWrapper<*, MFile>.rePop() {
   root.children.forEach { child ->
 	populateTree(child, { FileTreeItem(it) }) { item ->
-	  item.value.childs()
+	  val cs = item.value.childs()
+	  taball("cs of ${item.value}", cs)
+	  cs
 	}
   }
   (this as? TreeTableViewWrapper<*>)?.autoResizeColumns()
