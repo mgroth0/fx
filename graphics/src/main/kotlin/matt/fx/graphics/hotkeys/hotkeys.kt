@@ -44,39 +44,39 @@ import kotlin.contracts.ExperimentalContracts
   /*needed filter to be true here or for some reason LEFT.ctrl.opt.shift wasn't being captured in music app even though it was captured in all other apps (globalhotkeys, brainstorm, kjg)*/
   hotkeys(quickPassForNormalTyping = true, filter = true) {
 
-	LEFT.ctrl.opt { window.x -= window.width }
-	RIGHT.ctrl.opt { window.x += window.width }
-	UP.ctrl.opt { window.y -= window.height }
-	DOWN.ctrl.opt { window.y += window.height }
+	LEFT.ctrl.opt { window!!.x -= window!!.width }
+	RIGHT.ctrl.opt { window!!.x += window!!.width }
+	UP.ctrl.opt { window!!.y -= window!!.height }
+	DOWN.ctrl.opt { window!!.y += window!!.height }
 
 	LEFT.ctrl.meta {
-	  window.width /= 2	//	  window.x -= window.width
+	  window!!.width /= 2	//	  window.x -= window.width
 	}
 	RIGHT.ctrl.meta {
-	  window.width /= 2
-	  window.x += window.width
+	  window!!.width /= 2
+	  window!!.x += window!!.width
 	}
 	UP.ctrl.meta {
-	  window.height /= 2	//	  window.y -= window.height
+	  window!!.height /= 2	//	  window.y -= window.height
 	}
 	DOWN.ctrl.meta {
-	  window.height /= 2
-	  window.y += window.height
+	  window!!.height /= 2
+	  window!!.y += window!!.height
 	}
 
 	LEFT.ctrl.meta.shift {
-	  window.x -= window.width
-	  window.width *= 2
+	  window!!.x -= window!!.width
+	  window!!.width *= 2
 	}
 	RIGHT.ctrl.meta.shift {
-	  window.width *= 2	//	  window.x += window.width
+	  window!!.width *= 2	//	  window.x += window.width
 	}
 	UP.ctrl.meta.shift {
-	  window.y -= window.height
-	  window.height *= 2
+	  window!!.y -= window!!.height
+	  window!!.height *= 2
 	}
 	DOWN.ctrl.meta.shift {
-	  window.height *= 2	//	  window.y += window.height
+	  window!!.height *= 2	//	  window.y += window.height
 	}
 
 	A.ctrl.opt { window?.wrapped()?.left() }

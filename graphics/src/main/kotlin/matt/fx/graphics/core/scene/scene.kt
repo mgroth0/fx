@@ -51,7 +51,7 @@ const val NEED_REVERSED_DISPLAYS_FEATURE = false
 
 fun SceneWrapper<*>.reloadStyle(darkMode: Boolean) {
   stylesheets.clear()
-  fill = null
+  fill = WHITE /*FX DEFAULT*/
   if (darkMode) {
 	stylesheets.add(DARK_MODENA_CSS)
 	stylesheets.add(CUSTOM_CSS)
@@ -200,15 +200,15 @@ fun SceneWrapper<*>.iconify(icon: MFile) {
   }.openInNewWindow(own = WinOwn.None, geom = WinGeom.ManualOr0(
 	width = ICON_WIDTH,
 	height = ICON_HEIGHT,
-	x = this@iconify.window.x + (this@iconify.window.width/2) - (ICON_WIDTH/2),
-	y = this@iconify.window.y + (this@iconify.window.height/2) - (ICON_HEIGHT/2),
+	x = this@iconify.window!!.x + (this@iconify.window!!.width/2) - (ICON_WIDTH/2),
+	y = this@iconify.window!!.y + (this@iconify.window!!.height/2) - (ICON_HEIGHT/2),
   ), mScene = false, border = false, beforeShowing = {
 	scene.wrapped().reloadStyle(darkModeProp.value)
-	darkModeProp.onChangeWithWeak(this) { scene.wrapped().reloadStyle(darkModeProp.value) }
+	darkModeProp.onChangeWithWeak(this) { scene!!.wrapped().reloadStyle(darkModeProp.value) }
   }).apply {
 	iconWindow = this
 	isAlwaysOnTop = true
 	noDocking()
   }
-  window.hide()
+  window!!.hide()
 }

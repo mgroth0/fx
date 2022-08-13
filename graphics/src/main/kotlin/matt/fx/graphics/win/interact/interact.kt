@@ -111,11 +111,11 @@ fun StageWrapper.bindXYToOwnerCenter() {
   require(owner != null) {
 	"must use initOwner before bindXYToOwnerCenter"
   }
-  val xBinding = owner.xProperty().doubleBinding(owner.widthProperty(), this.widthProperty) {
-	(owner.x + (owner.width/2)) - width/2
+  val xBinding = owner!!.xProperty().doubleBinding(owner!!.widthProperty(), this.widthProperty) {
+	(owner!!.x + (owner!!.width/2)) - width/2
   }
-  val yBinding = owner.yProperty().doubleBinding(owner.heightProperty(), this.heightProperty) {
-	(owner.y + (owner.height/2)) - height/2
+  val yBinding = owner!!.yProperty().doubleBinding(owner!!.heightProperty(), this.heightProperty) {
+	(owner!!.y + (owner!!.height/2)) - height/2
   }
   aXBindingStrengthener[this.node] = xBinding
   aYBindingStrengthener[this.node] = yBinding
@@ -133,12 +133,12 @@ fun StageWrapper.bindHWToOwner() {
   require(owner != null) {
 	"must use initOwner before bindXYToOwnerCenter"
   }
-  width = owner.width
-  owner.widthProperty().onChange {
+  width = owner!!.width
+  owner!!.widthProperty().onChange {
 	width = it
   }
-  height = owner.height
-  owner.heightProperty().onChange {
+  height = owner!!.height
+  owner!!.heightProperty().onChange {
 	y = it
   }
 }
@@ -236,10 +236,10 @@ sealed class WinGeom {
   ): WinGeom() {
 	override fun applyTo(win: StageWrapper) {
 	  require(win.owner != null) { "use initOwner first" }
-	  win.x = x ?: win.owner.x
-	  win.y = y ?: win.owner.y
-	  win.height = height ?: win.owner.height
-	  win.width = width ?: win.owner.width
+	  win.x = x ?: win.owner!!.x
+	  win.y = y ?: win.owner!!.y
+	  win.height = height ?: win.owner!!.height
+	  win.width = width ?: win.owner!!.width
 	}
   }
 
@@ -389,6 +389,7 @@ fun ImageViewWrapper.doubleClickToOpenInWindow() {
   this.setOnDoubleClick { mFile(URI(this.image.url)).openImageInWindow() }
 }
 
+@OptIn(ExperimentalStdlibApi::class)
 fun NodeWrapper.textInput(
   default: String = "insert default here",
   prompt: String = "insert prompt here"
