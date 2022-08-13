@@ -160,7 +160,7 @@ inline fun <reified T> jsonEditor(json: String? = null) = dialog<T?> {
 	ta.border = if (it) Color.BLACK.solidBorder() else Color.RED.solidBorder()
   }
   setResultConverter {
-	ta.text.takeIf { it.isValidJson() }?.let { nullIfExceptions { Json.decodeFromString<T>(it) } }
+	ta.text.takeIf { it!!.isValidJson() }?.let { nullIfExceptions { Json.decodeFromString<T>(it) } }
   }
 }
 
@@ -386,7 +386,7 @@ fun MFile.openImageInWindow() {
 }
 
 fun ImageViewWrapper.doubleClickToOpenInWindow() {
-  this.setOnDoubleClick { mFile(URI(this.image.url)).openImageInWindow() }
+  this.setOnDoubleClick { mFile(URI(this.image!!.url)).openImageInWindow() }
 }
 
 @OptIn(ExperimentalStdlibApi::class)
