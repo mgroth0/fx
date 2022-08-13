@@ -15,7 +15,6 @@ import matt.async.thread.daemon
 import matt.css.Color.black
 import matt.css.sty
 import matt.file.MFile
-import matt.hurricanefx.async.runLaterReturn
 import matt.fx.graphics.menu.context.mcontextmenu
 import matt.fx.graphics.win.interact.doubleClickToOpenInWindow
 import matt.fx.graphics.win.interact.openImageInWindow
@@ -26,6 +25,7 @@ import matt.fx.web.WebViewPane
 import matt.fx.web.WebViewWrapper
 import matt.fx.web.specialZooming
 import matt.gui.draggableIcon
+import matt.hurricanefx.async.runLaterReturn
 import matt.hurricanefx.eye.lib.onChange
 import matt.hurricanefx.wrapper.control.text.area.TextAreaWrapper
 import matt.hurricanefx.wrapper.pane.SimplePaneWrapper
@@ -99,7 +99,7 @@ private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): RegionWrap
 	  viewbox.button("matt.gui.ser.save changes") {
 		isDisable = true
 		setOnAction {
-		  writeText(ta.text)
+		  writeText(ta.text!!)
 		}
 		ta.textProperty().onChange {
 		  val fsTextCurrent = readText()
