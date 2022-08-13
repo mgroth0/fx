@@ -9,6 +9,7 @@ import javafx.event.EventTarget
 import javafx.scene.input.KeyCode
 import javafx.scene.layout.Priority
 import javafx.scene.web.HTMLEditor
+import javafx.scene.web.WebEngine
 import javafx.scene.web.WebView
 import javafx.stage.Stage
 import kotlinx.coroutines.NonCancellable
@@ -424,7 +425,7 @@ class JavaBridge {
 
 
 class HTMLEditorWrapper(node: HTMLEditor = HTMLEditor()): ControlWrapperImpl<HTMLEditor>(node) {
-  var htmlText
+  var htmlText: String?
 	get() = node.htmlText
 	set(value) {
 	  node.htmlText = value
@@ -448,7 +449,7 @@ class WebViewWrapper(node: WebView = WebView()): ParentWrapperImpl<WebView>(node
 	  node.zoom = value
 	}
 
-  val width get() = widthProperty.value
+  val width: Double get() = widthProperty.value
   val widthProperty: ReadOnlyDoubleProperty get() = node.widthProperty()
   val prefWidthProperty: DoubleProperty get() = node.prefWidthProperty()
   var prefWidth: Double
@@ -469,7 +470,7 @@ class WebViewWrapper(node: WebView = WebView()): ParentWrapperImpl<WebView>(node
 	  node.maxWidth = value
 	}
 
-  val height get() = heightProperty.value
+  val height: Double get() = heightProperty.value
   val heightProperty: ReadOnlyDoubleProperty get() = node.heightProperty()
   val prefHeightProperty: DoubleProperty get() = node.prefHeightProperty()
   var prefHeight: Double
@@ -490,7 +491,7 @@ class WebViewWrapper(node: WebView = WebView()): ParentWrapperImpl<WebView>(node
 	  node.maxHeight = value
 	}
 
-  val engine get() = node.engine
+  val engine: WebEngine get() = node.engine
 
   fun scrollBy(x: Double, y: Double) {
 	engine.executeScript(

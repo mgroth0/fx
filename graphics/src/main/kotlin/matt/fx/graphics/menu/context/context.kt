@@ -28,6 +28,7 @@ import matt.hurricanefx.wrapper.parent.parent
 import matt.hurricanefx.wrapper.scene.SceneWrapper
 import matt.hurricanefx.wrapper.target.EventTargetWrapper
 import matt.hurricanefx.wrapper.wrapped
+import matt.klib.dmap.DefaultStoringMap
 import matt.klib.dmap.withStoringDefault
 import matt.klib.str.tab
 import matt.stream.map.lazyMap
@@ -311,10 +312,10 @@ private fun NodeWrapper.hotkeyInfoMenu() = MenuWrapper("Click For Hotkey Info").
 }
 
 
-private val contextMenuItems =
+private val contextMenuItems: DefaultStoringMap<EventTarget, MutableList<MenuItemWrapper<*>>> =
   WeakHashMap<EventTarget, MutableList<MenuItemWrapper<*>>>().withStoringDefault { mutableListOf() }
 
-private val contextMenuItemGens =
+private val contextMenuItemGens: DefaultStoringMap<EventTarget, MutableList<MContextMenuBuilder.() -> Unit>> =
   WeakHashMap<EventTarget, MutableList<MContextMenuBuilder.()->Unit>>().withStoringDefault { mutableListOf() }
 //
 //

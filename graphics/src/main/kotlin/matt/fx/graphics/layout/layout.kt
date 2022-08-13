@@ -14,6 +14,7 @@ import javafx.scene.layout.GridPane
 import javafx.scene.layout.HBox
 import javafx.scene.layout.Pane
 import javafx.scene.layout.Priority
+import javafx.scene.layout.RowConstraints
 import javafx.scene.layout.VBox
 import matt.hurricanefx.wrapper.pane.grid.GridPaneWrapper
 import matt.hurricanefx.wrapper.parent.ParentWrapper
@@ -95,9 +96,9 @@ fun GridPane.removeAllRows() {
   properties.remove(GridPaneRowIdKey)
 }
 
-fun GridPane.constraintsForColumn(columnIndex: Int) = constraintsFor(columnConstraints, columnIndex)
+fun GridPane.constraintsForColumn(columnIndex: Int): ColumnConstraints = constraintsFor(columnConstraints, columnIndex)
 
-fun GridPane.constraintsForRow(rowIndex: Int) = constraintsFor(rowConstraints, rowIndex)
+fun GridPane.constraintsForRow(rowIndex: Int): RowConstraints = constraintsFor(rowConstraints, rowIndex)
 
 //constraints for row and matt.hurricanefx.tableview.coolColumn can be handled the same way
 internal inline fun <reified T: ConstraintsBase> constraintsFor(constraints: ObservableList<T>, index: Int): T {
