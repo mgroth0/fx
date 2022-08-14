@@ -234,7 +234,7 @@ fun WebViewWrapper.scrollMult(factor: Double) {
 }
 
 
-fun RegionWrapper<*>.specialTransferingToWindowAndBack(par: PaneWrapperImpl<*,*>) {
+fun RegionWrapper<*>.specialTransferingToWindowAndBack(par: PaneWrapperImpl<*, *>) {
   val vb = this
   this.setOnKeyPressed { k ->
 	if (k.code == KeyCode.W && k.isMetaDown) {
@@ -309,7 +309,7 @@ open class WebViewPane private constructor(file: MFile? = null, html: String? = 
 
 @Suppress("unused")
 @ExperimentalContracts
-fun WebViewWrapper.specialTransferingToWindowAndBack(par: PaneWrapperImpl<*,*>) {
+fun WebViewWrapper.specialTransferingToWindowAndBack(par: PaneWrapperImpl<*, *>) {
 
   val wv = this
   this.setOnKeyPressed { k ->
@@ -436,7 +436,7 @@ class HTMLEditorWrapper(node: HTMLEditor = HTMLEditor()): ControlWrapperImpl<HTM
   }
 }
 
-class WebViewWrapper(node: WebView = WebView()): ParentWrapperImpl<WebView>(node) {
+class WebViewWrapper(node: WebView = WebView()): ParentWrapperImpl<WebView, NodeWrapper>(node) {
 
   companion object {
 	fun WebView.wrapped() = WebViewWrapper(this)
