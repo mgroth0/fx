@@ -36,6 +36,7 @@ import matt.hurricanefx.wrapper.control.tree.TreeViewWrapper
 import matt.hurricanefx.wrapper.control.tree.like.TreeLikeWrapper
 import matt.hurricanefx.wrapper.control.tree.like.populateTree
 import matt.hurricanefx.wrapper.control.treetable.TreeTableViewWrapper
+import matt.hurricanefx.wrapper.node.NodeWrapper
 import matt.hurricanefx.wrapper.node.setOnDoubleClick
 import matt.hurricanefx.wrapper.pane.PaneWrapperImpl
 import matt.hurricanefx.wrapper.pane.hbox.HBoxWrapper
@@ -51,7 +52,7 @@ private const val HEIGHT = 300.0
 
 fun fileTreeAndViewerPane(
   rootFile: MFile, doubleClickInsteadOfSelect: Boolean = false
-) = HBoxWrapper().apply {
+) = HBoxWrapper<NodeWrapper>().apply {
   val hBox = this
   alignment = CENTER_LEFT
   val treeTableView = fileTableTree(rootFile).apply {
@@ -59,7 +60,7 @@ fun fileTreeAndViewerPane(
 	maxWidthProperty.bind(hBox.widthProperty/2)
 	hgrow = ALWAYS
   }
-  val viewBox = vbox {
+  val viewBox = vbox<NodeWrapper> {
 	prefWidthProperty.bind(hBox.widthProperty/2) /*less aggressive to solve these issues?*/
 	prefHeightProperty.bind(hBox.heightProperty)
 	hgrow = ALWAYS
@@ -125,20 +126,20 @@ fun TreeLikeWrapper<*, MFile>.nav(f: MFile) {
 
 }
 
-fun PaneWrapperImpl<*>.fileTree(
+fun PaneWrapperImpl<*,*>.fileTree(
   rootFile: MFile,
   strategy: FileTreePopulationStrategy = AUTOMATIC,
   op: (TreeViewWrapper<MFile>.()->Unit)? = null,
 ): TreeViewWrapper<MFile> = fileTree(rootFile.inList().toObservable(), strategy, op)
 
-fun PaneWrapperImpl<*>.fileTableTree(
+fun PaneWrapperImpl<*,*>.fileTableTree(
   rootFile: MFile,
   strategy: FileTreePopulationStrategy = AUTOMATIC,
   op: (TreeTableViewWrapper<MFile>.()->Unit)? = null,
 ): TreeTableViewWrapper<MFile> = fileTableTree(rootFile.inList().toObservable(), strategy, op)
 
 
-fun PaneWrapperImpl<*>.fileTree(
+fun PaneWrapperImpl<*,*>.fileTree(
   rootFiles: ObservableList<MFile>,
   strategy: FileTreePopulationStrategy = AUTOMATIC,
   op: (TreeViewWrapper<MFile>.()->Unit)? = null,
@@ -155,7 +156,7 @@ fun PaneWrapperImpl<*>.fileTree(
   }
 }
 
-fun PaneWrapperImpl<*>.fileTableTree(
+fun PaneWrapperImpl<*,*>.fileTableTree(
   rootFiles: ObservableList<MFile>,
   strategy: FileTreePopulationStrategy = AUTOMATIC,
   op: (TreeTableViewWrapper<MFile>.()->Unit)? = null,
@@ -253,7 +254,7 @@ private fun TreeLikeWrapper<*, MFile>.setupGUI() {
 		1    -> {
 		  "open in new window" does {
 			selectedValue?.let {
-			  VBoxWrapper().apply {
+			  VBoxWrapper<NodeWrapper>().apply {
 				val container = this
 				add(it.createNode(renderHTMLAndSVG = true).apply {
 				  perfectBind(container)

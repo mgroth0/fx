@@ -28,6 +28,7 @@ import matt.gui.draggableIcon
 import matt.hurricanefx.async.runLaterReturn
 import matt.hurricanefx.eye.lib.onChange
 import matt.hurricanefx.wrapper.control.text.area.TextAreaWrapper
+import matt.hurricanefx.wrapper.node.NodeWrapper
 import matt.hurricanefx.wrapper.pane.SimplePaneWrapper
 import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
 import matt.hurricanefx.wrapper.region.RegionWrapper
@@ -38,7 +39,7 @@ import java.lang.ref.WeakReference
 
 private const val LINE_LIMIT = 1000
 
-fun MFile.createNode(renderHTMLAndSVG: Boolean = false): RegionWrapper {
+fun MFile.createNode(renderHTMLAndSVG: Boolean = false): RegionWrapper<NodeWrapper> {
   val node = createNodeInner(renderHTMLAndSVG = renderHTMLAndSVG)
   node.mcontextmenu {
 	item(s = "", g = draggableIcon())
@@ -46,11 +47,11 @@ fun MFile.createNode(renderHTMLAndSVG: Boolean = false): RegionWrapper {
   return node
 }
 
-private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): RegionWrapper {
+private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): RegionWrapper<NodeWrapper> {
   if (exists()) {
 	println("opening file")
 	if (isImage()) {
-	  return SimplePaneWrapper().apply {
+	  return SimplePaneWrapper<NodeWrapper>().apply {
 		imageview {
 		  image = Image(toURI().toString())
 		  isPreserveRatio = true
@@ -89,7 +90,7 @@ private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): RegionWrap
 		"coffeescript"
 	  ) || (!renderHTMLAndSVG && extension in (listOf("html", "svg")))
 	) {
-	  val viewbox = SimplePaneWrapper()
+	  val viewbox = SimplePaneWrapper<NodeWrapper>()
 	  var fsText = readText()
 	  val ta = viewbox.textarea {
 		text = fsText
@@ -175,17 +176,19 @@ private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): RegionWrap
 		  blendMode
 
 
-		/*  engine.loadWorker.stateProperty().addListener { _, _, newValue ->
-			if (newValue == State.RUNNING || newValue == State.SUCCEEDED) {
-			  engine.executeScript("document.body.style.overflow = 'hidden';")
-			}
-		  }*/
+		  /*  engine.loadWorker.stateProperty().addListener { _, _, newValue ->
+			  if (newValue == State.RUNNING || newValue == State.SUCCEEDED) {
+				engine.executeScript("document.body.style.overflow = 'hidden';")
+			  }
+			}*/
 
 		  // hide webview scrollbars whenever they appear.
 		  // hide webview scrollbars whenever they appear.
 		  childrenUnmodifiable.addListener(ListChangeListener<Any?> {
 			val deadSeaScrolls: Set<Node> = lookupAll(".scroll-bar")
-			for (scroll in deadSeaScrolls) { scroll.isVisible = false }
+			for (scroll in deadSeaScrolls) {
+			  scroll.isVisible = false
+			}
 		  })
 
 
@@ -222,7 +225,7 @@ private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): RegionWrap
 		val weakRef = WeakReference(wv)
 
 		/*areas around for right clicking!*/
-		val root = VBoxWrapper().apply {
+		val root = VBoxWrapper<NodeWrapper>().apply {
 		  mcontextmenu {
 			"refresh" does {
 
@@ -238,15 +241,15 @@ private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): RegionWrap
 		  //		  yellow()
 		  //		  vgrow = ALWAYS
 		  //		  hgrow = ALWAYS
-		  hbox { exactHeight = 10.0 }
-		  hbox {
+		  hbox<NodeWrapper> { exactHeight = 10.0 }
+		  hbox<NodeWrapper> {
 			vgrow = ALWAYS
 			hgrow = ALWAYS
-			vbox { exactWidth = 10.0 }
+			vbox<NodeWrapper> { exactWidth = 10.0 }
 			add(wv)
-			vbox { exactWidth = 10.0 }
+			vbox<NodeWrapper> { exactWidth = 10.0 }
 		  }
-		  hbox { exactHeight = 10.0 }
+		  hbox<NodeWrapper> { exactHeight = 10.0 }
 		}
 
 		val svgText = this@createNodeInner.readText()
