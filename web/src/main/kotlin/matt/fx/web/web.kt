@@ -79,7 +79,7 @@ fun EventTarget.htmleditor(html: String? = null, op: HTMLEditorWrapper.()->Unit 
 	if (html != null) it.htmlText = html
   }
 
-infix fun WebViewWrapper.perfectBind(other: RegionWrapper) {
+infix fun WebViewWrapper.perfectBind(other: RegionWrapper<*>) {
   this minBind other
   this maxBind other
 }
@@ -89,7 +89,7 @@ infix fun WebViewWrapper.perfectBind(other: StageWrapper) {
   this maxBind other
 }
 
-infix fun WebViewWrapper.maxBind(other: RegionWrapper) {
+infix fun WebViewWrapper.maxBind(other: RegionWrapper<*>) {
   maxHeightProperty.bind(other.heightProperty) // gotta be strict with webview, which I think tries to be big
   maxWidthProperty.bind(other.widthProperty)
 }
@@ -99,7 +99,7 @@ infix fun WebViewWrapper.maxBind(other: StageWrapper) {
   maxWidthProperty.bind(other.widthProperty)
 }
 
-infix fun WebViewWrapper.minBind(other: RegionWrapper) {
+infix fun WebViewWrapper.minBind(other: RegionWrapper<*>) {
   minHeightProperty.bind(other.heightProperty)
   minWidthProperty.bind(other.widthProperty)
 }
@@ -159,7 +159,7 @@ private const val SPECIAL_ZOOM_RATE = 1.1
 private const val SCROLL_COMPENSATION_RATE = SPECIAL_ZOOM_RATE - 1.0
 
 /*I figured this all out by myself. No help, no googling*/
-fun WebViewWrapper.specialZooming(par: RegionWrapper? = null) {
+fun WebViewWrapper.specialZooming(par: RegionWrapper<*>? = null) {
 
 
   setOnKeyPressed {
@@ -234,7 +234,7 @@ fun WebViewWrapper.scrollMult(factor: Double) {
 }
 
 
-fun RegionWrapper.specialTransferingToWindowAndBack(par: PaneWrapperImpl<*>) {
+fun RegionWrapper<*>.specialTransferingToWindowAndBack(par: PaneWrapperImpl<*,*>) {
   val vb = this
   this.setOnKeyPressed { k ->
 	if (k.code == KeyCode.W && k.isMetaDown) {
@@ -274,7 +274,7 @@ fun RegionWrapper.specialTransferingToWindowAndBack(par: PaneWrapperImpl<*>) {
 
 
 @ExperimentalContracts
-open class WebViewPane private constructor(file: MFile? = null, html: String? = null): VBoxWrapper() {
+open class WebViewPane private constructor(file: MFile? = null, html: String? = null): VBoxWrapper<NodeWrapper>() {
 
   constructor(file: MFile): this(file = file, html = null)
 
@@ -309,7 +309,7 @@ open class WebViewPane private constructor(file: MFile? = null, html: String? = 
 
 @Suppress("unused")
 @ExperimentalContracts
-fun WebViewWrapper.specialTransferingToWindowAndBack(par: PaneWrapperImpl<*>) {
+fun WebViewWrapper.specialTransferingToWindowAndBack(par: PaneWrapperImpl<*,*>) {
 
   val wv = this
   this.setOnKeyPressed { k ->
