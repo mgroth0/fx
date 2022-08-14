@@ -74,7 +74,7 @@ fun safe(s: String, op: ()->Unit): Boolean {
   return r
 }
 
-class MDialog<R> internal constructor(): VBoxWrapper() {
+class MDialog<R> internal constructor(): VBoxWrapper<NodeWrapper>() {
   val stg = MStage(wMode = CLOSE, EscClosable = true).apply {
 	scene = MScene(this@MDialog).node
 	width = 400.0
@@ -175,7 +175,7 @@ fun <R> dialog(
 	Centered().applyTo(d.stg)
   } // d.stage.initAndCenterToOwner(own)
   var r: R? = null
-  d.hbox {
+  d.hbox<NodeWrapper> {
 	prefWidthProperty.bind(d.widthProperty)
 	alignment = Pos.CENTER
 	actionbutton("cancel") {
@@ -333,7 +333,7 @@ sealed class WinOwn {
 //  showMode, wMode, EscClosable, EnterClosable, own, geom, mScene, beforeShowing, border, decorated
 //)
 
-fun ParentWrapper.openInNewWindow(
+fun ParentWrapper<*>.openInNewWindow(
   showMode: ShowMode = SHOW,
   wMode: WMode = NOTHING,
   EscClosable: Boolean = false,
@@ -375,7 +375,7 @@ fun ParentWrapper.openInNewWindow(
 }
 
 fun MFile.openImageInWindow() {
-  AnchorPaneWrapperImpl(ImageViewWrapper(this@openImageInWindow.toURI().toString()).apply {
+  AnchorPaneWrapperImpl<NodeWrapper>(ImageViewWrapper(this@openImageInWindow.toURI().toString()).apply {
 	isPreserveRatio = true
 	runLater {
 	  fitHeightProperty().bind(scene!!.window.heightProperty())

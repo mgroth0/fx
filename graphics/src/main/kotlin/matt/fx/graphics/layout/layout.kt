@@ -107,7 +107,7 @@ internal inline fun <reified T: ConstraintsBase> constraintsFor(constraints: Obs
   return constraints[index]
 }
 
-val ParentWrapper.gridpaneColumnConstraints: ColumnConstraints?
+val ParentWrapper<*>.gridpaneColumnConstraints: ColumnConstraints?
   get() {
 
 
@@ -117,7 +117,7 @@ val ParentWrapper.gridpaneColumnConstraints: ColumnConstraints?
 	  val gridReference = when {
 		next is GridPaneWrapper    -> next to GridPane.getColumnIndex(cursor)?.let { it }
 		// perhaps we're still in the row builder
-		next.parent == null -> (next.properties[GridPaneParentObjectKey] as? GridPaneWrapper)?.let {
+		next.parent == null -> (next.properties[GridPaneParentObjectKey] as? GridPaneWrapper<*>)?.let {
 		  it to next!!.getChildList()?.indexOf(cursor)
 		}
 
@@ -134,7 +134,7 @@ val ParentWrapper.gridpaneColumnConstraints: ColumnConstraints?
 	return null
   }
 
-fun ParentWrapper.gridpaneColumnConstraints(op: ColumnConstraints.()->Unit) = gridpaneColumnConstraints?.apply { op() }
+fun ParentWrapper<*>.gridpaneColumnConstraints(op: ColumnConstraints.()->Unit) = gridpaneColumnConstraints?.apply { op() }
 
 
 

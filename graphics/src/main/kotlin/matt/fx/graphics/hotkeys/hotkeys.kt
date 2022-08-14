@@ -121,7 +121,7 @@ import kotlin.contracts.ExperimentalContracts
 		val reg = (scene.root as? RegionWrapper)
 		reg?.border = FXBorder.solid(Color.YELLOW)
 		it()
-		(reg as? RegionWrapperImpl<*>)?.go {
+		(reg as? RegionWrapperImpl<*,*>)?.go {
 		  thread {
 			sleep(750)
 			runLater {
