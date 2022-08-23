@@ -4,7 +4,7 @@
     },
     "dependencies": [
         {
-            "type": "matt.mstruct.BuildJsonLibDependency",
+            "type": "matt.mstruct.bj.BuildJsonLibDependency",
             "cfg": "implementation",
             "key": "fx-controls"
         }
