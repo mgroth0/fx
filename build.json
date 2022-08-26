@@ -1,8 +1,6 @@
 {
-    "modType": {
-        "type": "matt.klib.mod.ABSTRACT"
-    },
-    "dependencies": [
-    ],
-    "note": null
+  "type" :         "matt.mstruct.bj.ABSTRACTModule",
+  "dependencies" : [
+  ],
+  "note" :         null
 }

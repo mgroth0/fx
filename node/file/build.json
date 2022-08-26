@@ -1,48 +1,46 @@
 {
-    "modType": {
-        "type": "matt.klib.mod.LIB"
-    },
-    "dependencies": [
-        {
-            "type": "matt.mstruct.bj.BuildJsonProjectDependency",
-            "cfg": "implementation",
-            "path": ":k:hurricanefx"
-        },
-        {
-            "type": "matt.mstruct.bj.BuildJsonLibDependency",
-            "cfg": "implementation",
-            "key": "fx-controls"
-        },
-        {
-            "type": "matt.mstruct.bj.BuildJsonProjectDependency",
-            "cfg": "implementation",
-            "path": ":k:fx:web"
-        },
-        {
-            "type": "matt.mstruct.bj.BuildJsonProjectDependency",
-            "cfg": "implementation",
-            "path": ":k:async"
-        },
-        {
-            "type": "matt.mstruct.bj.BuildJsonProjectDependency",
-            "cfg": "implementation",
-            "path": ":k:gui"
-        },
-        {
-            "type": "matt.mstruct.bj.BuildJsonLibDependency",
-            "cfg": "implementation",
-            "key": "kotlinx-html-jvm"
-        },
-        {
-            "type": "matt.mstruct.bj.BuildJsonProjectDependency",
-            "cfg": "implementation",
-            "path": ":k:fx:fxauto"
-        },
-        {
-            "type": "matt.mstruct.bj.BuildJsonProjectDependency",
-            "cfg": "implementation",
-            "path": ":k:stream"
-        }
-    ],
-    "note": null
+  "type" :         "matt.mstruct.bj.LIBModule",
+  "dependencies" : [
+	{
+	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
+	  "cfg" :  "implementation",
+	  "path" : ":k:hurricanefx"
+	},
+	{
+	  "type" : "matt.mstruct.bj.BuildJsonLibDependency",
+	  "cfg" :  "implementation",
+	  "key" :  "fx-controls"
+	},
+	{
+	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
+	  "cfg" :  "implementation",
+	  "path" : ":k:fx:web"
+	},
+	{
+	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
+	  "cfg" :  "implementation",
+	  "path" : ":k:async"
+	},
+	{
+	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
+	  "cfg" :  "implementation",
+	  "path" : ":k:gui"
+	},
+	{
+	  "type" : "matt.mstruct.bj.BuildJsonLibDependency",
+	  "cfg" :  "implementation",
+	  "key" :  "kotlinx-html-jvm"
+	},
+	{
+	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
+	  "cfg" :  "implementation",
+	  "path" : ":k:fx:fxauto"
+	},
+	{
+	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
+	  "cfg" :  "implementation",
+	  "path" : ":k:stream"
+	}
+  ],
+  "note" :         null
 }

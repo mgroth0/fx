@@ -5,9 +5,7 @@ import javafx.beans.property.SimpleStringProperty
 import javafx.collections.ObservableList
 import javafx.geometry.Pos.CENTER_LEFT
 import javafx.scene.control.SelectionMode.MULTIPLE
-import javafx.scene.control.TreeCell
 import javafx.scene.control.TreeItem
-import javafx.scene.control.TreeTableRow
 import javafx.scene.layout.Priority.ALWAYS
 import matt.async.date.sec
 import matt.auto.actions
@@ -20,6 +18,7 @@ import matt.fx.fxauto.fxActions
 import matt.fx.graphics.icon.view
 import matt.fx.graphics.menu.context.mcontextmenu
 import matt.fx.graphics.refreshWhileInSceneEvery
+import matt.fx.graphics.win.interact.WinGeom
 import matt.fx.graphics.win.interact.openInNewWindow
 import matt.fx.graphics.win.stage.WMode.CLOSE
 import matt.fx.node.file.createNode
@@ -32,6 +31,8 @@ import matt.hurricanefx.eye.collect.toObservable
 import matt.hurricanefx.eye.lib.onChange
 import matt.hurricanefx.eye.prop.math.div
 import matt.hurricanefx.wrapper.cellfact.SimpleFactory
+import matt.hurricanefx.wrapper.control.row.TreeCellWrapper
+import matt.hurricanefx.wrapper.control.row.TreeTableRowWrapper
 import matt.hurricanefx.wrapper.control.tree.TreeViewWrapper
 import matt.hurricanefx.wrapper.control.tree.like.TreeLikeWrapper
 import matt.hurricanefx.wrapper.control.tree.like.populateTree
@@ -44,6 +45,7 @@ import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
 import matt.klib.lang.inList
 import matt.klib.str.taball
 import matt.klib.todo
+import matt.stream.map.lazyMap
 import matt.stream.recurse.chain
 import matt.stream.recurse.recurse
 import matt.stream.sameContentsAnyOrder
@@ -126,20 +128,20 @@ fun TreeLikeWrapper<*, MFile>.nav(f: MFile) {
 
 }
 
-fun PaneWrapperImpl<*,*>.fileTree(
+fun PaneWrapperImpl<*, *>.fileTree(
   rootFile: MFile,
   strategy: FileTreePopulationStrategy = AUTOMATIC,
   op: (TreeViewWrapper<MFile>.()->Unit)? = null,
 ): TreeViewWrapper<MFile> = fileTree(rootFile.inList().toObservable(), strategy, op)
 
-fun PaneWrapperImpl<*,*>.fileTableTree(
+fun PaneWrapperImpl<*, *>.fileTableTree(
   rootFile: MFile,
   strategy: FileTreePopulationStrategy = AUTOMATIC,
   op: (TreeTableViewWrapper<MFile>.()->Unit)? = null,
 ): TreeTableViewWrapper<MFile> = fileTableTree(rootFile.inList().toObservable(), strategy, op)
 
 
-fun PaneWrapperImpl<*,*>.fileTree(
+fun PaneWrapperImpl<*, *>.fileTree(
   rootFiles: ObservableList<MFile>,
   strategy: FileTreePopulationStrategy = AUTOMATIC,
   op: (TreeViewWrapper<MFile>.()->Unit)? = null,
@@ -156,7 +158,7 @@ fun PaneWrapperImpl<*,*>.fileTree(
   }
 }
 
-fun PaneWrapperImpl<*,*>.fileTableTree(
+fun PaneWrapperImpl<*, *>.fileTableTree(
   rootFiles: ObservableList<MFile>,
   strategy: FileTreePopulationStrategy = AUTOMATIC,
   op: (TreeTableViewWrapper<MFile>.()->Unit)? = null,
@@ -186,35 +188,35 @@ private fun TreeLikeWrapper<*, MFile>.setupGUI() {
 	is TreeViewWrapper<MFile>      -> {
 
 	  node.setCellFactory {
-		object: TreeCell<MFile>() {
-		  init {
-			setOnDoubleClick {
-			  this.treeItem?.value?.open()
-			}
+		TreeCellWrapper<MFile>().apply {
+		  setOnDoubleClick {
+			this.treeItem?.value?.open()
 		  }
 
-		  override fun updateItem(item: MFile?, empty: Boolean) {
-			val oldItem = this.item
-			super.updateItem(item, empty)
+		  val dragIconCache = lazyMap<MFile, NodeWrapper> {
+			/*without this cache, performance suffers because i think new drag icons are being created constantly?*/
+			it.draggableIcon()
+		  }
+		  updateItemOv = { item: MFile?, empty: Boolean ->
 			if (empty || item == null) {
-			  if (text != null) text = null
+			  if (text.isNotBlank()) text = ""
 			  if (graphic != null) graphic = null
-			} else if (oldItem != item) {
+			} else {
 			  text = item.name
-			  graphic = item.draggableIcon().node
+			  graphic = dragIconCache[item]
 			}
 		  }
-		}
+		}.node
 	  }
 	}
 
 	is TreeTableViewWrapper<MFile> -> {
 	  node.setRowFactory {
-		TreeTableRow<MFile>().apply {
+		TreeTableRowWrapper<MFile>().apply {
 		  setOnDoubleClick {
-			this.treeItem.value?.open()
+			this.treeItem?.value?.open()
 		  }
-		}
+		}.node
 	  }
 	  val nameCol = column("name", matt.file.MFile::abspath) {
 		simpleCellFactory(SimpleFactory { value -> mFile(value).let { it.name to it.draggableIcon().node } })
@@ -261,7 +263,12 @@ private fun TreeLikeWrapper<*, MFile>.setupGUI() {
 				  specialTransferingToWindowAndBack(container)
 				})
 			  }.openInNewWindow(
-				wMode = CLOSE
+				wMode = CLOSE,
+				decorated = true,
+				geom = WinGeom.Centered(bind = false),
+				beforeShowing = {
+				  title = it.name
+				}
 			  )
 			}
 		  }

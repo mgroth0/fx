@@ -1,73 +1,71 @@
 {
-    "modType": {
-        "type": "matt.klib.mod.LIB"
-    },
-    "dependencies": [
-        {
-            "type": "matt.mstruct.bj.BuildJsonProjectDependency",
-            "cfg": "api",
-            "path": ":k:css"
-        },
-        {
-            "type": "matt.mstruct.bj.BuildJsonLibDependency",
-            "cfg": "api",
-            "key": "fx-graphics"
-        },
-        {
-            "type": "matt.mstruct.bj.BuildJsonLibDependency",
-            "cfg": "api",
-            "key": "jSystemThemeDetector"
-        },
-        {
-            "type": "matt.mstruct.bj.BuildJsonProjectDependency",
-            "cfg": "api",
-            "path": ":k:hurricanefx"
-        },
-        {
-            "type": "matt.mstruct.bj.BuildJsonProjectDependency",
-            "cfg": "api",
-            "path": ":k:async"
-        },
-        {
-            "type": "matt.mstruct.bj.BuildJsonProjectDependency",
-            "cfg": "api",
-            "path": ":k:hotkey"
-        },
-        {
-            "type": "matt.mstruct.bj.BuildJsonProjectDependency",
-            "cfg": "api",
-            "path": ":k:auto"
-        },
-        {
-            "type": "matt.mstruct.bj.BuildJsonProjectDependency",
-            "cfg": "api",
-            "path": ":k:fx:image"
-        },
-        {
-            "type": "matt.mstruct.bj.BuildJsonProjectDependency",
-            "cfg": "api",
-            "path": ":k:stream"
-        },
-        {
-            "type": "matt.mstruct.bj.BuildJsonProjectDependency",
-            "cfg": "api",
-            "path": ":k:klib"
-        },
-        {
-            "type": "matt.mstruct.bj.BuildJsonProjectDependency",
-            "cfg": "api",
-            "path": ":k:color"
-        },
-        {
-            "type": "matt.mstruct.bj.BuildJsonLibDependency",
-            "cfg": "implementation",
-            "key": "svgsalamander"
-        },
-        {
-            "type": "matt.mstruct.bj.BuildJsonLibDependency",
-            "cfg": "implementation",
-            "key": "kt-reflect"
-        }
-    ],
-    "note": null
+  "type" :         "matt.mstruct.bj.LIBModule",
+  "dependencies" : [
+	{
+	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
+	  "cfg" :  "api",
+	  "path" : ":k:css"
+	},
+	{
+	  "type" : "matt.mstruct.bj.BuildJsonLibDependency",
+	  "cfg" :  "api",
+	  "key" :  "fx-graphics"
+	},
+	{
+	  "type" : "matt.mstruct.bj.BuildJsonLibDependency",
+	  "cfg" :  "api",
+	  "key" :  "jSystemThemeDetector"
+	},
+	{
+	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
+	  "cfg" :  "api",
+	  "path" : ":k:hurricanefx"
+	},
+	{
+	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
+	  "cfg" :  "api",
+	  "path" : ":k:async"
+	},
+	{
+	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
+	  "cfg" :  "api",
+	  "path" : ":k:hotkey"
+	},
+	{
+	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
+	  "cfg" :  "api",
+	  "path" : ":k:auto"
+	},
+	{
+	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
+	  "cfg" :  "api",
+	  "path" : ":k:fx:image"
+	},
+	{
+	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
+	  "cfg" :  "api",
+	  "path" : ":k:stream"
+	},
+	{
+	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
+	  "cfg" :  "api",
+	  "path" : ":k:klib"
+	},
+	{
+	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
+	  "cfg" :  "api",
+	  "path" : ":k:color"
+	},
+	{
+	  "type" : "matt.mstruct.bj.BuildJsonLibDependency",
+	  "cfg" :  "implementation",
+	  "key" :  "svgsalamander"
+	},
+	{
+	  "type" : "matt.mstruct.bj.BuildJsonLibDependency",
+	  "cfg" :  "implementation",
+	  "key" :  "kt-reflect"
+	}
+  ],
+  "note" :         null
 }

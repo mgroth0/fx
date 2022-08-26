@@ -1,33 +1,31 @@
 {
-    "modType": {
-        "type": "matt.klib.mod.LIB"
-    },
-    "dependencies": [
-        {
-            "type": "matt.mstruct.bj.BuildJsonLibDependency",
-            "cfg": "api",
-            "key": "fx-web"
-        },
-        {
-            "type": "matt.mstruct.bj.BuildJsonProjectDependency",
-            "cfg": "api",
-            "path": ":k:fx:graphics"
-        },
-        {
-            "type": "matt.mstruct.bj.BuildJsonProjectDependency",
-            "cfg": "implementation",
-            "path": ":k:hurricanefx:eye"
-        },
-        {
-            "type": "matt.mstruct.bj.BuildJsonProjectDependency",
-            "cfg": "implementation",
-            "path": ":k:hurricanefx"
-        },
-        {
-            "type": "matt.mstruct.bj.BuildJsonLibDependency",
-            "cfg": "implementation",
-            "key": "jsoup"
-        }
-    ],
-    "note": null
+  "type" :         "matt.mstruct.bj.LIBModule",
+  "dependencies" : [
+	{
+	  "type" : "matt.mstruct.bj.BuildJsonLibDependency",
+	  "cfg" :  "api",
+	  "key" :  "fx-web"
+	},
+	{
+	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
+	  "cfg" :  "api",
+	  "path" : ":k:fx:graphics"
+	},
+	{
+	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
+	  "cfg" :  "implementation",
+	  "path" : ":k:hurricanefx:eye"
+	},
+	{
+	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
+	  "cfg" :  "implementation",
+	  "path" : ":k:hurricanefx"
+	},
+	{
+	  "type" : "matt.mstruct.bj.BuildJsonLibDependency",
+	  "cfg" :  "implementation",
+	  "key" :  "jsoup"
+	}
+  ],
+  "note" :         null
 }

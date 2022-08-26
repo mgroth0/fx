@@ -5,16 +5,24 @@ import javafx.collections.ListChangeListener
 import javafx.event.EventHandler
 import javafx.scene.Node
 import javafx.scene.image.Image
+import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
 import javafx.scene.layout.Priority.ALWAYS
 import kotlinx.html.body
 import kotlinx.html.html
 import kotlinx.html.img
 import kotlinx.html.stream.createHTML
+import matt.async.date.sec
+import matt.async.schedule.AccurateTimer
+import matt.async.schedule.every
 import matt.async.thread.daemon
 import matt.css.Color.black
 import matt.css.sty
+import matt.file.HTMLFile
+import matt.file.LogFile
 import matt.file.MFile
+import matt.file.SvgFile
+import matt.fx.graphics.lang.actionbutton
 import matt.fx.graphics.menu.context.mcontextmenu
 import matt.fx.graphics.win.interact.doubleClickToOpenInWindow
 import matt.fx.graphics.win.interact.openImageInWindow
@@ -26,18 +34,20 @@ import matt.fx.web.WebViewWrapper
 import matt.fx.web.specialZooming
 import matt.gui.draggableIcon
 import matt.hurricanefx.async.runLaterReturn
+import matt.hurricanefx.eye.lang.BProp
+import matt.hurricanefx.eye.lang.IProp
 import matt.hurricanefx.eye.lib.onChange
-import matt.hurricanefx.wrapper.control.text.area.TextAreaWrapper
+import matt.hurricanefx.tornadofx.item.spinner
 import matt.hurricanefx.wrapper.node.NodeWrapper
+import matt.hurricanefx.wrapper.node.disableWhen
 import matt.hurricanefx.wrapper.pane.SimplePaneWrapper
 import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
 import matt.hurricanefx.wrapper.region.RegionWrapper
 import matt.hurricanefx.wrapper.text.TextWrapper
 import matt.klib.lang.err
+import java.lang.Thread.sleep
 import java.lang.ref.WeakReference
 
-
-private const val LINE_LIMIT = 1000
 
 fun MFile.createNode(renderHTMLAndSVG: Boolean = false): RegionWrapper<NodeWrapper> {
   val node = createNodeInner(renderHTMLAndSVG = renderHTMLAndSVG)
@@ -129,42 +139,66 @@ private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): RegionWrap
 
 
 
-	return when (extension) {
-	  "log"  -> TextAreaWrapper().also { ta ->
-		ta.addEventFilter(KeyEvent.KEY_TYPED) { it.consume() }
-		val weakRef = WeakReference(ta)
-		runLater {
-		  daemon {
-			var lastMod = 0L
-			while (exists()) {
-			  val taa = weakRef.get() ?: break
-			  val mod = lastModified()
-			  if (mod != lastMod) {
-				var lines = readText().lines()
-				if (lines.size > LINE_LIMIT) {
-				  lines = lines.subList(lines.size - LINE_LIMIT, lines.size)
-				}
-				val newText = lines.joinToString("\n")
-				runLaterReturn {
-				  taa.text = newText
-				  runLater {
-					taa.end()
-				  }
-				}
-				lastMod = mod
-			  }
-			  Thread.sleep(1000)
+	return when (this) {
+	  is LogFile  -> VBoxWrapper<NodeWrapper>().apply {
+		val lineLimit = IProp(1000)
+		val infiniteLines = BProp(false)
+		hbox<NodeWrapper> {
+		  checkbox("infinite", property = infiniteLines)
+		  spinner(property = lineLimit, amountToStepBy = 1000) {
+			disableWhen { infiniteLines }
+		  }
+		  actionbutton("perma-clear") {
+			this@createNodeInner.write("")
+		  }
+		}
+
+		textarea {
+		  vgrow = ALWAYS
+		  addEventFilter(KeyEvent.KEY_TYPED) { it.consume() }
+		  addEventFilter(KeyEvent.KEY_PRESSED) {
+			if (it.code in listOf(
+				KeyCode.DELETE, KeyCode.BACK_SPACE
+			  )
+			) it.consume()
+		  }
+		  val weakRef = WeakReference(this)
+
+		  @Synchronized
+		  fun refresh() {
+			val ta = weakRef.get() ?: return
+			val linLim = if (infiniteLines.get()) Integer.MAX_VALUE else lineLimit.get()
+			var lines = readText().lines()
+			if (lines.size > linLim) {
+			  lines = lines.subList(lines.size - linLim, lines.size)
+			}
+			val newText = lines.joinToString("\n")
+			runLaterReturn {
+			  ta.text = newText
+			  runLater { ta.end() }
 			}
 		  }
 
+		  lineLimit.onChange { daemon { refresh() } }
+		  infiniteLines.onChange { daemon { refresh() } }
+
+		  var lastMod = 0L
+		  every(1.sec, timer = AccurateTimer(), zeroDelayFirst = true) {
+			if (weakRef.get() == null) cancel()
+			val mod = lastModified()
+			if (mod != lastMod) {
+			  refresh()
+			  lastMod = mod
+			}
+		  }
 		}
 	  }
 
-	  "html" -> WebViewPane(this@createNodeInner).apply {
+	  is HTMLFile -> WebViewPane(this@createNodeInner).apply {
 		specialZooming()
 	  }
 
-	  "svg"  -> WebViewWrapper().apply {
+	  is SvgFile  -> WebViewWrapper().apply {
 		runLater {
 		  vgrow = ALWAYS
 		  hgrow = ALWAYS
@@ -268,7 +302,7 @@ private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): RegionWrap
 		  daemon {
 			var mtime = lastModified()
 			while (true) {
-			  Thread.sleep(1000)
+			  sleep(1000)
 			  val wvv = weakRef.get() ?: break
 			  val newmtime = lastModified()
 			  if (newmtime != mtime) {
@@ -283,7 +317,7 @@ private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): RegionWrap
 		root
 	  }
 
-	  else   -> err("how to make node for files with extension:${extension}")
+	  else        -> err("how to make node for files with extension:${extension}")
 	}
   } else return VBoxWrapper(TextWrapper("file $this does not exist"))
 }

@@ -1,18 +1,16 @@
 {
-    "modType": {
-        "type": "matt.klib.mod.LIB"
-    },
-    "dependencies": [
-        {
-            "type": "matt.mstruct.bj.BuildJsonProjectDependency",
-            "cfg": "implementation",
-            "path": ":k:fx:graphics"
-        },
-        {
-            "type": "matt.mstruct.bj.BuildJsonProjectDependency",
-            "cfg": "implementation",
-            "path": ":k:gui"
-        }
-    ],
-    "note": null
+  "type" :         "matt.mstruct.bj.LIBModule",
+  "dependencies" : [
+	{
+	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
+	  "cfg" :  "implementation",
+	  "path" : ":k:fx:graphics"
+	},
+	{
+	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
+	  "cfg" :  "implementation",
+	  "path" : ":k:gui"
+	}
+  ],
+  "note" :         null
 }

@@ -245,7 +245,8 @@ sealed class WinGeom {
 
   class Centered(
 	val width: Double = 400.0,
-	val height: Double = 400.0
+	val height: Double = 400.0,
+	val bind: Boolean = true
   ): WinGeom() {
 	override fun applyTo(win: StageWrapper) {
 	  win.width = width
@@ -253,7 +254,7 @@ sealed class WinGeom {
 	  if (win.owner == null) {
 		win.centerOnScreen()
 	  } else {
-		win.bindXYToOwnerCenter()
+		if (bind) win.bindXYToOwnerCenter()
 	  }
 	  /*require(win.owner != null) { "use initOwner first" }*/
 
