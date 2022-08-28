@@ -28,7 +28,6 @@ import matt.fx.graphics.menu.context.showMContextMenu
 import matt.fx.graphics.style.CUSTOM_CSS
 import matt.fx.graphics.style.DARK_MODENA_CSS
 import matt.fx.graphics.style.DarkModeController.darkModeProp
-import matt.fx.graphics.toAwtColor
 import matt.fx.graphics.win.interact.WinGeom
 import matt.fx.graphics.win.interact.WinOwn
 import matt.fx.graphics.win.interact.openInNewWindow
@@ -40,6 +39,7 @@ import matt.hurricanefx.wrapper.region.RegionWrapper
 import matt.hurricanefx.wrapper.region.border.FXBorder
 import matt.hurricanefx.wrapper.scene.SceneWrapper
 import matt.hurricanefx.wrapper.stage.StageWrapper
+import matt.hurricanefx.wrapper.style.toAwtColor
 import matt.hurricanefx.wrapper.wrapped
 import matt.klib.str.tab
 import matt.stream.recurse.recurse

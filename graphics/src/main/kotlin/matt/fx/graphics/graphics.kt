@@ -1,18 +1,16 @@
 package matt.fx.graphics
 
-import javafx.scene.paint.Color
 import javafx.scene.shape.Line
 import javafx.scene.text.Font
 import matt.async.date.Duration
 import matt.async.schedule.MyTimerTask
 import matt.async.schedule.every
-import matt.color.AColor
-import matt.color.mostContrastingForMe
 import matt.hurricanefx.eye.lib.onChange
 import matt.hurricanefx.wrapper.line.LineWrapper
 import matt.hurricanefx.wrapper.node.NodeWrapper
 import matt.hurricanefx.wrapper.node.line
 import matt.hurricanefx.wrapper.pane.PaneWrapperImpl
+import matt.hurricanefx.wrapper.style.FXColor
 import matt.klib.math.BasicPoint
 import matt.klib.math.Point
 import matt.klib.math.unaryMinus
@@ -42,11 +40,7 @@ interface Inspectable {
 }
 
 
-typealias FXColor = Color
 
-fun FXColor.toAwtColor() = AColor(red.toFloat(), green.toFloat(), blue.toFloat(), opacity.toFloat())
-fun AColor.toFXColor() = FXColor(red/255.0, green/255.0, blue/255.0, alpha/255.0)
-fun FXColor.mostContrastingForMe() = toAwtColor().mostContrastingForMe().toFXColor()
 
 
 @Suppress("unused") class LineDrawDSL(private val parent: PaneWrapperImpl<*,*>, start: Point) {

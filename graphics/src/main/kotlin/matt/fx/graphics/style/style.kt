@@ -6,8 +6,8 @@ import javafx.scene.Node
 import javafx.scene.paint.Color
 import matt.color.hex
 import matt.css.MyStyleDsl
-import matt.fx.graphics.toAwtColor
 import matt.hurricanefx.wrapper.node.NodeWrapperImpl
+import matt.hurricanefx.wrapper.style.toAwtColor
 import matt.klib.log.warn
 import matt.klib.prop.BasicProperty
 import java.util.logging.Level
@@ -58,10 +58,6 @@ object DarkModeController {
 val MODENA_CSS = ClassLoader.getSystemResource("modena.css").toString()
 val DARK_MODENA_CSS = ClassLoader.getSystemResource("darkModena.css").toString()
 val CUSTOM_CSS = ClassLoader.getSystemResource("custom.css").toString()
-
-
-
-
 
 
 private class StyleClass {
