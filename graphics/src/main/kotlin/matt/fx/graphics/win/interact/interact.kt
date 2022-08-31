@@ -344,7 +344,8 @@ fun ParentWrapper<*>.openInNewWindow(
   mScene: Boolean = true,
   beforeShowing: StageWrapper.()->Unit = {},
   border: Boolean = true,
-  decorated: Boolean = false
+  decorated: Boolean = false,
+  title: String? = null
 ): MStage {
   println("opening something in a new window")
   return MStage(
@@ -353,6 +354,10 @@ fun ParentWrapper<*>.openInNewWindow(
 	EnterClosable = EnterClosable,
 	decorated = decorated
   ).apply {
+	if (title != null) {
+	  require(decorated)
+	  this.title = title
+	}
 	println("opening something in a new window 1")
 	scene = if (mScene) MScene(this@openInNewWindow).node else Scene(this@openInNewWindow.node)
 	println("opening something in a new window 2")
