@@ -1,7 +1,6 @@
 package matt.fx.graphics.lang
 
 import javafx.beans.property.StringProperty
-import javafx.collections.ObservableList
 import javafx.event.ActionEvent
 import javafx.event.EventTarget
 import javafx.scene.Node
@@ -11,6 +10,7 @@ import matt.hurricanefx.eye.lib.onChange
 import matt.hurricanefx.wrapper.control.button.ButtonWrapper
 import matt.hurricanefx.wrapper.node.NodeWrapperImpl
 import matt.klib.lang.err
+import matt.klib.lang.setAll
 
 fun NodeWrapperImpl<*>.setOnFocusLost(op: ()->Unit) {
   focusedProperty().onChange { it: Boolean? ->
@@ -30,14 +30,19 @@ fun NodeWrapperImpl<*>.setOnFocusGained(op: ()->Unit) {
   }
 }
 
-fun actionbutton(text: String, graphic: Node? = null, action: ButtonWrapper.(ActionEvent)->Unit) = ButtonWrapper(text, graphic).apply {
-  setOnAction {
-	action(it)
-	it.consume()
+fun actionbutton(text: String, graphic: Node? = null, action: ButtonWrapper.(ActionEvent)->Unit) =
+  ButtonWrapper(text, graphic).apply {
+	setOnAction {
+	  action(it)
+	  it.consume()
+	}
   }
-}
 
-fun NodeWrapperImpl<*>.actionbutton(text: String = "", graphic: Node? = null, action: ButtonWrapper.(ActionEvent)->Unit) =   ButtonWrapper(text, graphic).apply {
+fun NodeWrapperImpl<*>.actionbutton(
+  text: String = "",
+  graphic: Node? = null,
+  action: ButtonWrapper.(ActionEvent)->Unit
+) = ButtonWrapper(text, graphic).apply {
   setOnAction {
 	action(it)
 	it.consume()
@@ -57,7 +62,6 @@ fun EventTarget.removecontextmenu() {
 }
 
 
-
 @Suppress("unused")
 fun StringProperty.appendln(s: String) {
   append("\n" + s)
@@ -73,11 +77,11 @@ fun StringProperty.append(c: Char) {
 }
 
 
-fun <T> ObservableList<T>.setToSublist(start: Int, Stop: Int) {
+fun <T> MutableList<T>.setToSublist(start: Int, Stop: Int) {
   setAll(subList(start, Stop).toList())
 }
 
-fun <T> ObservableList<T>.removeAllButLastN(num: Int) {
+fun <T> MutableList<T>.removeAllButLastN(num: Int) {
   val siz = size
   setToSublist(siz - num, siz)
 }
