@@ -133,7 +133,7 @@ open class MScene<R: ParentWrapper<*>>(
 			  (it as? Parent)?.childrenUnmodifiable ?: listOf()
 			}.forEach {
 			  if (it::class !in classesPrinted) {
-				println(it.matt.hurricanefx.eye.wrapper.wrapped().styleInfo())
+				println(it.matt.hurricanefx.eye.wrapper.matt.hurricanefx.eye.wrapper.obs.collect.wrapped().styleInfo())
 				classesPrinted += it::class
 			  }
 			}*/
@@ -151,12 +151,12 @@ open class MScene<R: ParentWrapper<*>>(
 		  * or else it will use the `matt.fx.graphics.menu.actionitem` above without import*/
 		  this.actionitem("none") {
 			(root as RegionWrapper<*>).border = null
-			/*(root.node as? Region)?.matt.hurricanefx.eye.wrapper.wrapped()?.borderFill = null*/
+			/*(root.node as? Region)?.matt.hurricanefx.eye.wrapper.matt.hurricanefx.eye.wrapper.obs.collect.wrapped()?.borderFill = null*/
 		  }
 		  listOf(YELLOW, BLUE, RED, GREEN, ORANGE, PURPLE, WHITE).forEach {
 			actionitem(ColorUtils().getColorNameFromColor(it.toAwtColor())) {
 			  (root as RegionWrapper<*>).border = FXBorder.solid(it)
-			  /*(root.node as? Region)?.matt.hurricanefx.eye.wrapper.wrapped()?.borderFill = it*/
+			  /*(root.node as? Region)?.matt.hurricanefx.eye.wrapper.matt.hurricanefx.eye.wrapper.obs.collect.wrapped()?.borderFill = it*/
 			}
 		  }
 		}
