@@ -102,6 +102,7 @@ class MDialog<R> internal constructor(): VBoxWrapper<NodeWrapper>() {
   init {
 	exactHeightProperty.bind(stg.heightProperty)
 	border = FXBorder.solid(Color.DARKBLUE)
+	styleClass.add("MDialog")
   }
 }
 
