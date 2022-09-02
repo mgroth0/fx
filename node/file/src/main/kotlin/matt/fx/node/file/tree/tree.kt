@@ -26,7 +26,7 @@ import matt.fx.node.file.tree.FileTreePopulationStrategy.AUTOMATIC
 import matt.fx.web.specialTransferingToWindowAndBack
 import matt.gui.draggableIcon
 import matt.gui.setview.autoResizeColumns
-import matt.hurricanefx.eye.collect.bind
+import matt.hurricanefx.eye.collect.collectbind.bind
 import matt.hurricanefx.eye.collect.toObservable
 import matt.hurricanefx.eye.lib.onChange
 import matt.hurricanefx.eye.prop.math.div
