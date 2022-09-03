@@ -8,7 +8,7 @@ import matt.fx.graphics.win.stage.WMode.HIDE
 import matt.fx.graphics.win.stage.WMode.ICONIFY
 import matt.fx.graphics.win.stage.WMode.NOTHING
 import matt.hurricanefx.wrapper.stage.StageWrapper
-import matt.klib.commons.thisMachine
+import matt.file.thismachine.thisMachine
 import matt.log.warn
 import matt.model.sys.GAMING_WINDOWS
 
