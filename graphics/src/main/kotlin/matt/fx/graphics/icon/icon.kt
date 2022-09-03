@@ -46,7 +46,7 @@ fun NodeWrapper.icon(file: String) = add(Icon(file))
 private val FALLBACK_FILE = (ICON_FOLDER + "chunk.png").apply { //  SvgImageLoaderFactory.install();
 }
 
-fun matt.klib.icongen.Icon.view() = Icon(name)
+fun matt.file.icongen.Icon.view() = Icon(name)
 
 fun Icon(file: String) = Icon(ICON_FOLDER[file])
 fun IconImage(file: String) = IconImage(ICON_FOLDER[file])
