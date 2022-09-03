@@ -28,8 +28,8 @@ import matt.hurricanefx.wrapper.parent.parent
 import matt.hurricanefx.wrapper.scene.SceneWrapper
 import matt.hurricanefx.wrapper.target.EventTargetWrapper
 import matt.hurricanefx.wrapper.wrapped
-import matt.klib.dmap.DefaultStoringMap
-import matt.klib.dmap.withStoringDefault
+import matt.collect.dmap.DefaultStoringMap
+import matt.collect.dmap.withStoringDefault
 import matt.klib.str.tab
 import matt.stream.map.lazyMap
 import matt.stream.recurse.chain
