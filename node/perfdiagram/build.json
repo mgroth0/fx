@@ -15,6 +15,11 @@
 	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
 	  "cfg" :  "api",
 	  "path" : ":k:math"
+	},
+	{
+	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
+	  "cfg" :  "api",
+	  "path" : ":k:time"
 	}
   ],
   "note" :         null
