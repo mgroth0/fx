@@ -10,7 +10,7 @@ import javafx.scene.Scene
 import javafx.scene.canvas.Canvas
 import javafx.scene.control.ContextMenu
 import javafx.scene.shape.Shape
-import matt.time.profile.tic
+import matt.log.profile.tic
 import matt.auto.jumpToKotlinSourceString
 import matt.auto.openInIntelliJ
 import matt.fx.graphics.hotkey.filters
