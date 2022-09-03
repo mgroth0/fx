@@ -9,7 +9,6 @@ import matt.file.commons.ICON_FOLDER
 import matt.fx.image.toFXImage
 import matt.hurricanefx.wrapper.imageview.ImageViewWrapper
 import matt.hurricanefx.wrapper.node.NodeWrapper
-import matt.hurricanefx.wrapper.wrapped
 import matt.stream.map.lazyMap
 import java.awt.RenderingHints.KEY_ALPHA_INTERPOLATION
 import java.awt.RenderingHints.KEY_ANTIALIASING
