@@ -2,7 +2,7 @@ package matt.fx.graphics
 
 import javafx.scene.shape.Line
 import javafx.scene.text.Font
-import matt.async.date.Duration
+import matt.time.dur.Duration
 import matt.async.schedule.MyTimerTask
 import matt.async.schedule.every
 import matt.hurricanefx.eye.lib.onChange
