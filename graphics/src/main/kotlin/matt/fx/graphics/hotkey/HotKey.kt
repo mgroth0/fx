@@ -23,7 +23,7 @@ import matt.log.SystemOutLogger
 import matt.prim.str.joinWithNewLinesAndTabs
 import matt.klib.stream.allUnique
 import matt.klib.stream.duplicates
-import matt.klib.sys.Mac
+import matt.model.sys.Mac
 import matt.stream.applyEach
 import java.lang.System.currentTimeMillis
 import java.util.WeakHashMap

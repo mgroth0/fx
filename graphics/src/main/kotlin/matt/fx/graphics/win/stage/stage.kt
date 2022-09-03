@@ -10,7 +10,7 @@ import matt.fx.graphics.win.stage.WMode.NOTHING
 import matt.hurricanefx.wrapper.stage.StageWrapper
 import matt.klib.commons.thisMachine
 import matt.log.warn
-import matt.klib.sys.GAMING_WINDOWS
+import matt.model.sys.GAMING_WINDOWS
 
 enum class WMode {
   CLOSE,
