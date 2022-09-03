@@ -42,7 +42,7 @@ import matt.hurricanefx.wrapper.node.setOnDoubleClick
 import matt.hurricanefx.wrapper.pane.PaneWrapperImpl
 import matt.hurricanefx.wrapper.pane.hbox.HBoxWrapper
 import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
-import matt.klib.lang.inList
+import matt.lang.inList
 import matt.klib.str.taball
 import matt.klib.todo
 import matt.stream.map.lazyMap

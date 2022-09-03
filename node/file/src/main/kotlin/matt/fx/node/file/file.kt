@@ -44,7 +44,7 @@ import matt.hurricanefx.wrapper.pane.SimplePaneWrapper
 import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
 import matt.hurricanefx.wrapper.region.RegionWrapper
 import matt.hurricanefx.wrapper.text.TextWrapper
-import matt.klib.lang.err
+import matt.lang.err
 import java.lang.Thread.sleep
 import java.lang.ref.WeakReference
 

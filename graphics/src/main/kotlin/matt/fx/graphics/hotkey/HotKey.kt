@@ -14,9 +14,9 @@ import matt.hotkey.HotkeyDSL
 import matt.hurricanefx.eye.prop.toggle
 import matt.hurricanefx.wrapper.target.EventTargetWrapper
 import matt.klib.commons.thisMachine
-import matt.klib.lang.NEVER
-import matt.klib.lang.err
-import matt.klib.lang.go
+import matt.lang.NEVER
+import matt.lang.err
+import matt.lang.go
 import matt.klib.log.Logger
 import matt.klib.log.NOPLogger
 import matt.klib.log.SystemOutLogger

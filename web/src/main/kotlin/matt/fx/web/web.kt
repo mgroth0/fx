@@ -37,7 +37,7 @@ import matt.hurricanefx.wrapper.parent.ParentWrapperImpl
 import matt.hurricanefx.wrapper.region.RegionWrapper
 import matt.hurricanefx.wrapper.stage.StageWrapper
 import matt.hurricanefx.wrapper.wrapped
-import matt.klib.lang.NEVER
+import matt.lang.NEVER
 import netscape.javascript.JSObject
 import org.intellij.lang.annotations.Language
 import org.jsoup.Jsoup

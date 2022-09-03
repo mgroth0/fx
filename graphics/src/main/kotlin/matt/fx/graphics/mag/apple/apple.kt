@@ -14,7 +14,7 @@ import matt.auto.macapp.JavaMacApp
 import matt.auto.macapp.getFrontmostProcessFromKotlinNative
 import matt.fx.graphics.mag.left
 import matt.hurricanefx.wrapper.stage.StageWrapper
-import matt.klib.lang.err
+import matt.lang.err
 import kotlin.concurrent.thread
 
 fun moveFrontmostWindowByApplescript(x: Number, y: Number, width: Number, height: Number) {

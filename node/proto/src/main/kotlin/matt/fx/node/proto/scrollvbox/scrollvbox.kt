@@ -9,7 +9,7 @@ import matt.hurricanefx.wrapper.node.NodeWrapper
 import matt.hurricanefx.wrapper.pane.PaneWrapperImpl
 import matt.hurricanefx.wrapper.pane.scroll.ScrollPaneWrapper
 import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
-import matt.klib.lang.applyIt
+import matt.lang.applyIt
 
 abstract class ScrollVBox(
   scrollpane: ScrollPaneWrapper<VBoxWrapper<*>> = ScrollPaneWrapper(),

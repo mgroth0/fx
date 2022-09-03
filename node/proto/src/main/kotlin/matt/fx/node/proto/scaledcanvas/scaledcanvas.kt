@@ -11,7 +11,7 @@ import matt.hurricanefx.wrapper.node.NodeWrapper
 import matt.hurricanefx.wrapper.node.attach
 import matt.hurricanefx.wrapper.region.RegionWrapperImpl
 import matt.hurricanefx.wrapper.target.EventTargetWrapper
-import matt.klib.lang.NEVER
+import matt.lang.NEVER
 
 fun EventTargetWrapper.scaledCanvas(
   width: Number,

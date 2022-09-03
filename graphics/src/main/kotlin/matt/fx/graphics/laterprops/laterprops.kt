@@ -5,7 +5,7 @@ import javafx.beans.property.BooleanProperty
 import javafx.beans.property.DoubleProperty
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleDoubleProperty
-import matt.klib.lang.jDefault
+import matt.lang.jDefault
 
 fun BooleanProperty.later() = LaterBoolean().apply {
   bindBidirectional(this@later)

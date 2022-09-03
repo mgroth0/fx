@@ -50,8 +50,8 @@ import matt.hurricanefx.wrapper.region.border.FXBorder
 import matt.hurricanefx.wrapper.region.border.solidBorder
 import matt.hurricanefx.wrapper.stage.StageWrapper
 import matt.json.prim.isValidJson
-import matt.klib.lang.noExceptions
-import matt.klib.lang.nullIfExceptions
+import matt.lang.noExceptions
+import matt.lang.nullIfExceptions
 import java.net.URI
 import java.util.WeakHashMap
 import kotlin.jvm.optionals.getOrNull

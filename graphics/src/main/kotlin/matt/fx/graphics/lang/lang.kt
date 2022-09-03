@@ -9,8 +9,8 @@ import javafx.scene.control.Control
 import matt.hurricanefx.eye.lib.onChange
 import matt.hurricanefx.wrapper.control.button.ButtonWrapper
 import matt.hurricanefx.wrapper.node.NodeWrapperImpl
-import matt.klib.lang.err
-import matt.klib.lang.setAll
+import matt.lang.err
+import matt.lang.setAll
 
 fun NodeWrapperImpl<*>.setOnFocusLost(op: ()->Unit) {
   focusedProperty().onChange { it: Boolean? ->
