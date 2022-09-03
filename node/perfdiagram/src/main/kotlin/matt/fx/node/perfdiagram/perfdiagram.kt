@@ -5,8 +5,6 @@ package matt.fx.node.perfdiagram
 import matt.fx.web.WebViewPane
 import matt.html.sankey.sankeyHTML
 import matt.log.profile.Stopwatch
-import kotlin.math.roundToInt
-import kotlin.time.DurationUnit.SECONDS
 import kotlin.time.ExperimentalTime
 
 fun Stopwatch.analysisNode() = StopWatchAnalysisNode(this)
