@@ -30,7 +30,7 @@ import matt.hurricanefx.wrapper.target.EventTargetWrapper
 import matt.hurricanefx.wrapper.wrapped
 import matt.collect.dmap.DefaultStoringMap
 import matt.collect.dmap.withStoringDefault
-import matt.klib.str.tab
+import matt.prim.str.tab
 import matt.stream.map.lazyMap
 import matt.stream.recurse.chain
 import java.lang.Thread.sleep

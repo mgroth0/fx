@@ -20,7 +20,7 @@ import matt.lang.go
 import matt.klib.log.Logger
 import matt.klib.log.NOPLogger
 import matt.klib.log.SystemOutLogger
-import matt.klib.str.joinWithNewLinesAndTabs
+import matt.prim.str.joinWithNewLinesAndTabs
 import matt.klib.stream.allUnique
 import matt.klib.stream.duplicates
 import matt.klib.sys.Mac

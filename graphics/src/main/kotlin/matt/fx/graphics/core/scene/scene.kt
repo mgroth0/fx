@@ -41,7 +41,7 @@ import matt.hurricanefx.wrapper.scene.SceneWrapper
 import matt.hurricanefx.wrapper.stage.StageWrapper
 import matt.hurricanefx.wrapper.style.toAwtColor
 import matt.hurricanefx.wrapper.wrapped
-import matt.klib.str.tab
+import matt.prim.str.tab
 import matt.stream.recurse.recurse
 import java.net.URL
 import kotlin.reflect.KClass
