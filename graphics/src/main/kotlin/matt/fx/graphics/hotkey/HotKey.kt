@@ -17,9 +17,9 @@ import matt.klib.commons.thisMachine
 import matt.lang.NEVER
 import matt.lang.err
 import matt.lang.go
-import matt.klib.log.Logger
-import matt.klib.log.NOPLogger
-import matt.klib.log.SystemOutLogger
+import matt.log.Logger
+import matt.log.NOPLogger
+import matt.log.SystemOutLogger
 import matt.prim.str.joinWithNewLinesAndTabs
 import matt.klib.stream.allUnique
 import matt.klib.stream.duplicates

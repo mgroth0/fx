@@ -8,7 +8,7 @@ import matt.color.hex
 import matt.css.MyStyleDsl
 import matt.hurricanefx.wrapper.node.NodeWrapperImpl
 import matt.hurricanefx.wrapper.style.toAwtColor
-import matt.klib.log.warn
+import matt.log.warn
 import matt.klib.prop.BasicProperty
 import java.util.logging.Level
 import kotlin.reflect.KProperty
