@@ -1,6 +1,6 @@
 package matt.fx.node.perfdiagram
 
-import matt.async.date.Stopwatch
+import matt.log.profile.Stopwatch
 import matt.fx.web.WebViewPane
 import matt.math.MILLION
 import matt.html.sankey.sankeyHTML
