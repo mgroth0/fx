@@ -7,7 +7,7 @@ import javafx.geometry.Pos.CENTER_LEFT
 import javafx.scene.control.SelectionMode.MULTIPLE
 import javafx.scene.control.TreeItem
 import javafx.scene.layout.Priority.ALWAYS
-import matt.async.date.sec
+import matt.time.dur.sec
 import matt.auto.actions
 import matt.auto.moveToTrash
 import matt.auto.open

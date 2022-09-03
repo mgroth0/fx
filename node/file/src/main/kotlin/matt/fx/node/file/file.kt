@@ -12,7 +12,7 @@ import kotlinx.html.body
 import kotlinx.html.html
 import kotlinx.html.img
 import kotlinx.html.stream.createHTML
-import matt.async.date.sec
+import matt.time.dur.sec
 import matt.async.schedule.AccurateTimer
 import matt.async.schedule.every
 import matt.async.thread.daemon

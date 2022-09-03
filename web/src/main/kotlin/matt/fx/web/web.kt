@@ -13,7 +13,7 @@ import javafx.scene.web.WebEngine
 import javafx.scene.web.WebView
 import javafx.stage.Stage
 import kotlinx.coroutines.NonCancellable
-import matt.async.date.sec
+import matt.time.dur.sec
 import matt.async.thread.daemon
 import matt.file.MFile
 import matt.file.construct.toMFile
