@@ -1,13 +1,17 @@
+@file:OptIn(ExperimentalTime::class)
+
 package matt.fx.node.perfdiagram
 
-import matt.log.profile.Stopwatch
 import matt.fx.web.WebViewPane
-import matt.math.MILLION
 import matt.html.sankey.sankeyHTML
+import matt.log.profile.Stopwatch
 import kotlin.math.roundToInt
+import kotlin.time.DurationUnit.SECONDS
+import kotlin.time.ExperimentalTime
 
 fun Stopwatch.analysisNode() = StopWatchAnalysisNode(this)
 
 class StopWatchAnalysisNode(val sw: Stopwatch): WebViewPane(sankeyHTML(sw.increments().joinToString("\n") {
-  "[ '${sw.prefix}', '${it.second}', ${(it.first/MILLION).roundToInt()} ],"
+  it.first
+  "[ '${sw.prefix}', '${it.second}', ${it.first.inWholeMilliseconds} ],"
 }))
