@@ -6,7 +6,7 @@ import matt.hurricanefx.eye.lib.onChange
 import matt.hurricanefx.wrapper.stage.StageWrapper
 import matt.json.prim.readJson
 import matt.json.prim.writeJson
-import matt.klib.math.Geometry
+import matt.math.Geometry
 
 
 fun StageWrapper.bindGeometry(key: String) = bindGeometry(WINDOW_GEOMETRY_FOLDER["$key.json"])

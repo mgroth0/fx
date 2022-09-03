@@ -11,9 +11,9 @@ import matt.hurricanefx.wrapper.node.NodeWrapper
 import matt.hurricanefx.wrapper.node.line
 import matt.hurricanefx.wrapper.pane.PaneWrapperImpl
 import matt.hurricanefx.wrapper.style.FXColor
-import matt.klib.math.BasicPoint
-import matt.klib.math.Point
-import matt.klib.math.unaryMinus
+import matt.math.BasicPoint
+import matt.math.Point
+import matt.math.unaryMinus
 
 
 fun <T: NodeWrapper> T.refreshWhileInSceneEvery(

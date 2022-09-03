@@ -2,7 +2,7 @@ package matt.fx.node.perfdiagram
 
 import matt.async.date.Stopwatch
 import matt.fx.web.WebViewPane
-import matt.klib.math.MILLION
+import matt.math.MILLION
 import matt.html.sankey.sankeyHTML
 import kotlin.math.roundToInt
 
