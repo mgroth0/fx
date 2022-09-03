@@ -6,7 +6,7 @@ import javafx.application.Platform.runLater
 import javafx.geometry.Rectangle2D
 import javafx.stage.Screen
 import javafx.stage.Stage
-import matt.async.date.tic
+import matt.time.profile.tic
 import matt.auto.applescript.applescript
 import matt.auto.applescript.interactiveOsascript
 import matt.auto.compileAndOrRunApplescript

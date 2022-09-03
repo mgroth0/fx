@@ -43,7 +43,7 @@ import matt.hurricanefx.wrapper.pane.PaneWrapperImpl
 import matt.hurricanefx.wrapper.pane.hbox.HBoxWrapper
 import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
 import matt.lang.inList
-import matt.prim.str.taball
+import matt.log.taball
 import matt.klib.todo
 import matt.stream.map.lazyMap
 import matt.stream.recurse.chain

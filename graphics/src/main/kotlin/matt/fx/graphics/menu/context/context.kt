@@ -10,7 +10,7 @@ import javafx.scene.Scene
 import javafx.scene.canvas.Canvas
 import javafx.scene.control.ContextMenu
 import javafx.scene.shape.Shape
-import matt.async.date.tic
+import matt.time.profile.tic
 import matt.auto.jumpToKotlinSourceString
 import matt.auto.openInIntelliJ
 import matt.fx.graphics.hotkey.filters
@@ -30,7 +30,7 @@ import matt.hurricanefx.wrapper.target.EventTargetWrapper
 import matt.hurricanefx.wrapper.wrapped
 import matt.collect.dmap.DefaultStoringMap
 import matt.collect.dmap.withStoringDefault
-import matt.prim.str.tab
+import matt.log.tab
 import matt.stream.map.lazyMap
 import matt.stream.recurse.chain
 import java.lang.Thread.sleep
