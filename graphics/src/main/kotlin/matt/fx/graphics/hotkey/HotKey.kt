@@ -21,8 +21,8 @@ import matt.log.Logger
 import matt.log.NOPLogger
 import matt.log.SystemOutLogger
 import matt.prim.str.joinWithNewLinesAndTabs
-import matt.klib.stream.allUnique
-import matt.klib.stream.duplicates
+import matt.stream.allUnique
+import matt.stream.duplicates
 import matt.model.sys.Mac
 import matt.stream.applyEach
 import java.lang.System.currentTimeMillis
