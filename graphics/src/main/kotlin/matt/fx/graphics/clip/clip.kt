@@ -15,7 +15,7 @@ import matt.file.MFile
 import matt.file.commons.TEMP_DIR
 import matt.fx.image.save
 import matt.hurricanefx.wrapper.node.NodeWrapperImpl
-import matt.klib.See
+import matt.lang.See
 
 
 fun String.copyToClipboard() {
