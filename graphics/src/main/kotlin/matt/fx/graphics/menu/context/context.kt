@@ -10,9 +10,11 @@ import javafx.scene.Scene
 import javafx.scene.canvas.Canvas
 import javafx.scene.control.ContextMenu
 import javafx.scene.shape.Shape
-import matt.log.profile.tic
 import matt.auto.jumpToKotlinSourceString
 import matt.auto.openInIntelliJ
+import matt.collect.dmap.DefaultStoringMap
+import matt.collect.dmap.withStoringDefault
+import matt.collect.map.lazyMap
 import matt.fx.graphics.hotkey.filters
 import matt.fx.graphics.hotkey.handlers
 import matt.fx.graphics.menu.context.EventHandlerType.Filter
@@ -28,10 +30,8 @@ import matt.hurricanefx.wrapper.parent.parent
 import matt.hurricanefx.wrapper.scene.SceneWrapper
 import matt.hurricanefx.wrapper.target.EventTargetWrapper
 import matt.hurricanefx.wrapper.wrapped
-import matt.collect.dmap.DefaultStoringMap
-import matt.collect.dmap.withStoringDefault
+import matt.log.profile.tic
 import matt.log.tab
-import matt.collect.map.lazyMap
 import matt.stream.recurse.chain
 import java.lang.Thread.sleep
 import java.util.WeakHashMap
