@@ -31,7 +31,7 @@ import matt.hurricanefx.wrapper.wrapped
 import matt.collect.dmap.DefaultStoringMap
 import matt.collect.dmap.withStoringDefault
 import matt.log.tab
-import matt.stream.map.lazyMap
+import matt.collect.map.lazyMap
 import matt.stream.recurse.chain
 import java.lang.Thread.sleep
 import java.util.WeakHashMap

@@ -45,7 +45,7 @@ import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
 import matt.lang.inList
 import matt.log.taball
 import matt.log.todo
-import matt.stream.map.lazyMap
+import matt.collect.map.lazyMap
 import matt.stream.recurse.chain
 import matt.stream.recurse.recurse
 import matt.stream.sameContentsAnyOrder
