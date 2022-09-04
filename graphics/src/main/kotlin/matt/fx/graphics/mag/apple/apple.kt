@@ -6,15 +6,15 @@ import javafx.application.Platform.runLater
 import javafx.geometry.Rectangle2D
 import javafx.stage.Screen
 import javafx.stage.Stage
-import matt.log.profile.tic
 import matt.auto.applescript.applescript
 import matt.auto.applescript.interactiveOsascript
 import matt.auto.compileAndOrRunApplescript
 import matt.auto.macapp.JavaMacApp
-import matt.auto.macapp.getFrontmostProcessFromKotlinNative
+import matt.auto.macapp.MacApp.Companion.getFrontmostProcessFromKotlinNative
 import matt.fx.graphics.mag.left
 import matt.hurricanefx.wrapper.stage.StageWrapper
 import matt.lang.err
+import matt.log.profile.tic
 import kotlin.concurrent.thread
 
 fun moveFrontmostWindowByApplescript(x: Number, y: Number, width: Number, height: Number) {
