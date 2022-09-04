@@ -9,6 +9,7 @@ import javafx.scene.Parent
 import javafx.scene.Scene
 import javafx.scene.canvas.Canvas
 import javafx.scene.control.ContextMenu
+import javafx.scene.control.MenuItem
 import javafx.scene.shape.Shape
 import matt.auto.jumpToKotlinSourceString
 import matt.auto.openInIntelliJ
@@ -32,6 +33,7 @@ import matt.hurricanefx.wrapper.target.EventTargetWrapper
 import matt.hurricanefx.wrapper.wrapped
 import matt.log.profile.tic
 import matt.log.tab
+import matt.log.warn
 import matt.stream.recurse.chain
 import java.lang.Thread.sleep
 import java.util.WeakHashMap
@@ -244,13 +246,23 @@ fun SceneWrapper<*>.showMContextMenu(
 	  //	  println("3node.scene=${(node as? Node)?.scene}")
 	  //	  println("3node.scene.root=${(node as? Node)?.scene?.root}")
 	  //	  println("3node.scene.root.scene=${(node as? Node)?.scene?.root?.scene}")
-	  node = when (node) {
-		is Parent -> node.parent ?: node.scene
-		is Shape  -> node.parent
-		is Canvas -> node.parent
-		is Scene  -> node.window
-		else      -> break
+	  println("looking for parent of $node")
+	  try {
+		node = when (node) {
+		  is Parent -> node.parent ?: node.scene
+		  is Shape  -> node.parent
+		  is Canvas -> node.parent
+		  is Scene  -> node.window
+		  else      -> break
+		}
+	  } catch (e: NullPointerException) {
+		warn("got null parent in context menu generator again")
+		System.err.println("here is the stack trace:")
+		e.printStackTrace()
+		items.add(MenuItem("Got weird null parent in context menu generator! see log for stack trace"))
+		break
 	  }
+
 	  t.toc("finished loop block")
 	}
 	if (items.isNotEmpty()) separator()
@@ -315,7 +327,7 @@ private fun NodeWrapper.hotkeyInfoMenu() = MenuWrapper("Click For Hotkey Info").
 private val contextMenuItems: DefaultStoringMap<EventTarget, MutableList<MenuItemWrapper<*>>> =
   WeakHashMap<EventTarget, MutableList<MenuItemWrapper<*>>>().withStoringDefault { mutableListOf() }
 
-private val contextMenuItemGens: DefaultStoringMap<EventTarget, MutableList<MContextMenuBuilder.() -> Unit>> =
+private val contextMenuItemGens: DefaultStoringMap<EventTarget, MutableList<MContextMenuBuilder.()->Unit>> =
   WeakHashMap<EventTarget, MutableList<MContextMenuBuilder.()->Unit>>().withStoringDefault { mutableListOf() }
 //
 //
