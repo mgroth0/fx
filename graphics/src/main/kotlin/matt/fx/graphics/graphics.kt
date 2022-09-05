@@ -2,7 +2,6 @@ package matt.fx.graphics
 
 import javafx.scene.shape.Line
 import javafx.scene.text.Font
-import matt.time.dur.Duration
 import matt.async.schedule.MyTimerTask
 import matt.async.schedule.every
 import matt.hurricanefx.eye.lib.onChange
@@ -14,6 +13,7 @@ import matt.hurricanefx.wrapper.style.FXColor
 import matt.math.BasicPoint
 import matt.math.Point
 import matt.math.unaryMinus
+import matt.time.dur.Duration
 
 
 fun <T: NodeWrapper> T.refreshWhileInSceneEvery(
@@ -35,8 +35,8 @@ fun <T: NodeWrapper> T.refreshWhileInSceneEvery(
 
 val fontFamilies: List<String> by lazy { Font.getFamilies() }
 
-interface Inspectable {
-  fun inspect(): PaneWrapperImpl<*,*>
+interface Inspectable<N: PaneWrapperImpl<*,*>> {
+  fun inspect(): N
 }
 
 
