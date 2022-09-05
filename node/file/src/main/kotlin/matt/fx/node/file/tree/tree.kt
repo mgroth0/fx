@@ -7,10 +7,10 @@ import javafx.geometry.Pos.CENTER_LEFT
 import javafx.scene.control.SelectionMode.MULTIPLE
 import javafx.scene.control.TreeItem
 import javafx.scene.layout.Priority.ALWAYS
-import matt.time.dur.sec
 import matt.auto.actions
 import matt.auto.moveToTrash
 import matt.auto.open
+import matt.collect.map.lazyMap
 import matt.file.MFile
 import matt.file.construct.mFile
 import matt.fx.fxauto.actionitem
@@ -45,10 +45,10 @@ import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
 import matt.lang.inList
 import matt.log.taball
 import matt.log.todo
-import matt.collect.map.lazyMap
 import matt.stream.recurse.chain
 import matt.stream.recurse.recurse
 import matt.stream.sameContentsAnyOrder
+import matt.time.dur.sec
 
 private const val HEIGHT = 300.0
 
@@ -218,10 +218,10 @@ private fun TreeLikeWrapper<*, MFile>.setupGUI() {
 		  }
 		}.node
 	  }
-	  val nameCol = column("name", matt.file.MFile::abspath) {
+	  val nameCol = column("name", MFile::abspath) {
 		simpleCellFactory(SimpleFactory { value -> mFile(value).let { it.name to it.draggableIcon().node } })
 	  }
-	  column("ext", matt.file.MFile::extension)
+	  column("ext", MFile::extension)
 
 	  showSizesProp = SimpleBooleanProperty(false)
 	  showSizesProp.onChange { b ->
