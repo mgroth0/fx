@@ -1,6 +1,7 @@
 package matt.fx.graphics.win.stage
 
 import javafx.stage.StageStyle
+import matt.file.thismachine.thisMachine
 import matt.fx.graphics.core.scene.MScene
 import matt.fx.graphics.hotkey.hotkeys
 import matt.fx.graphics.win.stage.WMode.CLOSE
@@ -8,8 +9,7 @@ import matt.fx.graphics.win.stage.WMode.HIDE
 import matt.fx.graphics.win.stage.WMode.ICONIFY
 import matt.fx.graphics.win.stage.WMode.NOTHING
 import matt.hurricanefx.wrapper.stage.StageWrapper
-import matt.file.thismachine.thisMachine
-import matt.log.warn
+import matt.hurricanefx.wrapper.wrapped
 import matt.model.sys.GAMING_WINDOWS
 
 enum class WMode {
@@ -47,9 +47,8 @@ open class MStage(
 
 		ICONIFY -> {
 		  {
-			warn("dealing with this later... i guess now")
-			@Suppress("CAST_NEVER_SUCCEEDS")
-			(this@MStage.scene as MScene<*>).iconify()
+			(this@MStage.scene?.wrapped() as? MScene<*>)?.iconify()
+			Unit
 		  }
 		}
 
