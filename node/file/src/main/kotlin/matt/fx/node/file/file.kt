@@ -12,7 +12,6 @@ import kotlinx.html.body
 import kotlinx.html.html
 import kotlinx.html.img
 import kotlinx.html.stream.createHTML
-import matt.time.dur.sec
 import matt.async.schedule.AccurateTimer
 import matt.async.schedule.every
 import matt.async.thread.daemon
@@ -45,6 +44,7 @@ import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
 import matt.hurricanefx.wrapper.region.RegionWrapper
 import matt.hurricanefx.wrapper.text.TextWrapper
 import matt.lang.err
+import matt.time.dur.sec
 import java.lang.Thread.sleep
 import java.lang.ref.WeakReference
 
