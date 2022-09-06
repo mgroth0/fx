@@ -8,12 +8,13 @@ import javafx.scene.text.Text
 import javafx.stage.Window
 import matt.async.schedule.AccurateTimer
 import matt.fx.graphics.lang.removeAllButLastN
-import matt.fx.node.console.style.ConsoleText
 import matt.hurricanefx.font.copy
 import matt.hurricanefx.toFXDuration
 import matt.hurricanefx.tornadofx.animation.keyframe
 import matt.hurricanefx.tornadofx.animation.timeline
 import matt.hurricanefx.wrapper.node.NodeWrapper
+import matt.hurricanefx.wrapper.text.TextWrapper
+import matt.hurricanefx.wrapper.text.textlike.applyConsoleStyle
 import matt.hurricanefx.wrapper.textflow.TextFlowWrapper
 import matt.lang.ifTrueOrNull
 import matt.time.dur.ms
@@ -263,13 +264,16 @@ class ConsoleTextFlow(val takesInput: Boolean = true): TextFlowWrapper<NodeWrapp
 	reachedBufferNumLines = false
   }
 
-  private fun SepText(newline: Boolean = true) = ConsoleText(fontSize).apply {
-	fill = PROMPT_COLOR
+  private fun SepText(newline: Boolean = true) = TextWrapper().apply {
+	applyConsoleStyle(
+	  size = this@ConsoleTextFlow.fontSize,
+	  color = PROMPT_COLOR
+	)
 	text = if (newline) "\n$PROMPT" else PROMPT
   }
 
-  private fun InputText() = ConsoleText(fontSize, Color.LIGHTBLUE)
-  private fun OutputText() = ConsoleText(fontSize, Color.YELLOW)
+  private fun InputText() = TextWrapper().applyConsoleStyle(size = fontSize, color = Color.LIGHTBLUE)
+  private fun OutputText() = TextWrapper().applyConsoleStyle(size = fontSize, color = Color.YELLOW)
 
 
   private var fontSize = 12.0
