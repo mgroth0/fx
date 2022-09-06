@@ -1,0 +1,26 @@
+{
+  "type" :         "matt.mstruct.bj.LIBModule",
+  "dependencies" : [
+	{
+	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
+	  "cfg" :  "implementation",
+	  "path" : ":k:async"
+	},
+	{
+	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
+	  "cfg" :  "implementation",
+	  "path" : ":k:hurricanefx"
+	},
+	{
+	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
+	  "cfg" :  "implementation",
+	  "path" : ":k:auto"
+	},
+	{
+	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
+	  "cfg" :  "implementation",
+	  "path" : ":k:fx:graphics"
+	}
+  ],
+  "note" :         null
+}
