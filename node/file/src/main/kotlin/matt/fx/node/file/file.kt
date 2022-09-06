@@ -112,7 +112,7 @@ private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): RegionWrap
 		setOnAction {
 		  writeText(ta.text!!)
 		}
-		ta.textProperty().onChange {
+		ta.textProperty.onChange {
 		  val fsTextCurrent = readText()
 		  if (fsTextCurrent != fsText) {
 			safe("file content on system changed. Reload?") {
