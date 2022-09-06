@@ -348,7 +348,6 @@ fun ParentWrapper<*>.openInNewWindow(
   decorated: Boolean = false,
   title: String? = null
 ): MStage {
-  println("opening something in a new window")
   return MStage(
 	wMode = wMode,
 	EscClosable = EscClosable,
@@ -359,25 +358,18 @@ fun ParentWrapper<*>.openInNewWindow(
 	  require(decorated)
 	  this.title = title
 	}
-	println("opening something in a new window 1")
 	scene = if (mScene) MScene(this@openInNewWindow).node else Scene(this@openInNewWindow.node)
-	println("opening something in a new window 2")
 	own.applyTo(this)
-	println("opening something in a new window 3")
 	geom.applyTo(this)
-	println("opening something in a new window 4")
 	if (border) {
 	  (this@openInNewWindow as RegionWrapper).border = Color.DARKBLUE.solidBorder()
 	}
-	println("opening something in a new window 5")
 	beforeShowing()
-	println("opening something in a new window 6")
 	when (showMode) {
 	  SHOW -> show()
 	  SHOW_AND_WAIT -> showAndWait()
 	  DO_NOT_SHOW -> Unit
 	}
-	println("almost done opening something in a new window")
   }
 }
 
