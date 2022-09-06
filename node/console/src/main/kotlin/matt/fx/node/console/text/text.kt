@@ -8,7 +8,7 @@ import javafx.scene.text.Text
 import javafx.stage.Window
 import matt.async.schedule.AccurateTimer
 import matt.fx.graphics.lang.removeAllButLastN
-import matt.hurricanefx.font.copy
+import matt.hurricanefx.font.fixed
 import matt.hurricanefx.toFXDuration
 import matt.hurricanefx.tornadofx.animation.keyframe
 import matt.hurricanefx.tornadofx.animation.timeline
@@ -45,7 +45,7 @@ class ConsoleTextFlow(val takesInput: Boolean = true): TextFlowWrapper<NodeWrapp
 
   private fun updateFonts() {
 	children.filterIsInstance<Text>().forEach {
-	  it.font = it.font.copy(size = fontSize)
+	  it.font = it.font.fixed().copy(size = fontSize).fx()
 	}
   }
 
