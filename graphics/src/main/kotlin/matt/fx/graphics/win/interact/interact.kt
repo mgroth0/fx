@@ -149,7 +149,7 @@ inline fun <reified T> jsonEditor(json: String? = null) = dialog<T?> {
   val ta = textarea(json ?: "")
 
 
-  val goodBind = ta.textProperty().booleanBinding {
+  val goodBind = ta.textProperty.booleanBinding {
 
 	it != null
 		&& it.isValidJson()
@@ -161,7 +161,7 @@ inline fun <reified T> jsonEditor(json: String? = null) = dialog<T?> {
 	ta.border = if (it) Color.BLACK.solidBorder() else Color.RED.solidBorder()
   }
   setResultConverter {
-	ta.text.takeIf { it!!.isValidJson() }?.let { nullIfExceptions { Json.decodeFromString<T>(it) } }
+	ta.text.takeIf { it.isValidJson() }?.let { nullIfExceptions { Json.decodeFromString<T>(it) } }
   }
 }
 
