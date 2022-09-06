@@ -110,7 +110,7 @@ private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): RegionWrap
 	  viewbox.button("matt.gui.ser.save changes") {
 		isDisable = true
 		setOnAction {
-		  writeText(ta.text!!)
+		  writeText(ta.text)
 		}
 		ta.textProperty.onChange {
 		  val fsTextCurrent = readText()
