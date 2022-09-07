@@ -246,7 +246,7 @@ fun SceneWrapper<*>.showMContextMenu(
 	  //	  println("3node.scene=${(node as? Node)?.scene}")
 	  //	  println("3node.scene.root=${(node as? Node)?.scene?.root}")
 	  //	  println("3node.scene.root.scene=${(node as? Node)?.scene?.root?.scene}")
-	  println("looking for parent of $node")
+//	  println("looking for parent of $node")
 	  try {
 		node = when (node) {
 		  is Parent -> node.parent ?: node.scene
