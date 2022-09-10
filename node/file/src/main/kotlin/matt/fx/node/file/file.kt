@@ -44,6 +44,7 @@ import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
 import matt.hurricanefx.wrapper.region.RegionWrapper
 import matt.hurricanefx.wrapper.text.TextWrapper
 import matt.lang.err
+import matt.obs.prop.BindableProperty
 import matt.time.dur.sec
 import java.lang.Thread.sleep
 import java.lang.ref.WeakReference
@@ -141,8 +142,8 @@ private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): RegionWrap
 
 	return when (this) {
 	  is LogFile  -> VBoxWrapper<NodeWrapper>().apply {
-		val lineLimit = IProp(1000)
-		val infiniteLines = BProp(false)
+		val lineLimit = BindableProperty(1000)
+		val infiniteLines = BindableProperty(false)
 		hbox<NodeWrapper> {
 		  checkbox("infinite", property = infiniteLines)
 		  spinner(property = lineLimit, amountToStepBy = 1000) {
