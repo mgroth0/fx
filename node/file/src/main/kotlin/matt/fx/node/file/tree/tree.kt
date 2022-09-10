@@ -1,6 +1,5 @@
 package matt.fx.node.file.tree
 
-import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.ObservableList
 import javafx.geometry.Pos.CENTER_LEFT
@@ -28,7 +27,6 @@ import matt.gui.draggableIcon
 import matt.gui.setview.autoResizeColumns
 import matt.hurricanefx.eye.collect.collectbind.bind
 import matt.hurricanefx.eye.collect.toObservable
-import matt.hurricanefx.eye.lib.onChange
 import matt.hurricanefx.eye.prop.math.div
 import matt.hurricanefx.wrapper.cellfact.SimpleFactory
 import matt.hurricanefx.wrapper.control.row.TreeCellWrapper
@@ -45,6 +43,7 @@ import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
 import matt.lang.inList
 import matt.log.taball
 import matt.log.todo
+import matt.obs.prop.BindableProperty
 import matt.stream.recurse.chain
 import matt.stream.recurse.recurse
 import matt.stream.sameContentsAnyOrder
@@ -182,7 +181,7 @@ private fun TreeLikeWrapper<*, MFile>.setupGUI() {
   selectionModel.selectionMode = MULTIPLE
 
 
-  var showSizesProp: SimpleBooleanProperty? = null
+  var showSizesProp: BindableProperty<Boolean>? = null
 
   when (this) {
 	is TreeViewWrapper<MFile>      -> {
@@ -223,7 +222,7 @@ private fun TreeLikeWrapper<*, MFile>.setupGUI() {
 	  }
 	  column("ext", MFile::extension)
 
-	  showSizesProp = SimpleBooleanProperty(false)
+	  showSizesProp = BindableProperty(false)
 	  showSizesProp.onChange { b ->
 		if (b) {
 		  column<String>("size") {

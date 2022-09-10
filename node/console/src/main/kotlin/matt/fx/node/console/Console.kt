@@ -34,6 +34,7 @@ import matt.lang.err
 import matt.lang.go
 import matt.log.tab
 import matt.log.todoOnce
+import matt.obs.prop.BindableProperty
 import matt.prim.str.throttled
 import matt.stream.ReaderEndReason
 import matt.stream.forEachChar
@@ -82,7 +83,7 @@ sealed class Console(
 	const val HASTE_COUNT = (HASTE_DUR/HASTE).toInt()
   }
 
-  private val hscrollOption = SimpleBooleanProperty(true)
+  private val hscrollOption = BindableProperty(true)
   private val myLogFolder = LOG_FOLDER + name
   protected val logfile = myLogFolder + "$name.log"
   protected val errFile = mFile(logfile.absolutePath + ".err")
@@ -90,9 +91,9 @@ sealed class Console(
   private val mem = ConsoleMemory(CONSOLE_MEM_FOLD + "$name.txt")
   private val consoleTextFlow = ConsoleTextFlow(takesInput)
 
-  private val autoscrollProp = SimpleBooleanProperty(true)
-  private val throttleProp = SimpleBooleanProperty(true)
-  private val enableProp = SimpleBooleanProperty(true)
+  private val autoscrollProp = BindableProperty(true)
+  private val throttleProp = BindableProperty(true)
+  private val enableProp = BindableProperty(true)
   private var autoscroll by autoscrollProp
   private var throttle by throttleProp
 
