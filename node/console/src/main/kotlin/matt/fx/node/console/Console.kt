@@ -23,7 +23,7 @@ import matt.fx.graphics.menu.context.mcontextmenu
 import matt.fx.node.console.Console.RefreshRate.NORMAL
 import matt.fx.node.console.mem.ConsoleMemory
 import matt.fx.node.console.text.ConsoleTextFlow
-import matt.hurricanefx.eye.mtofx.toFXProp
+import matt.hurricanefx.eye.mtofx.createROFXPropWrapper
 import matt.hurricanefx.wrapper.node.NodeWrapper
 import matt.hurricanefx.wrapper.pane.scroll.ScrollPaneWrapper
 import matt.hurricanefx.wrapper.parent.ParentWrapperImpl
@@ -177,7 +177,7 @@ sealed class Console(
 	hbarPolicy = ScrollBarPolicy.NEVER
 
 	consoleTextFlow.padding = Insets(15.0, 30.0, 15.0, 15.0)
-	fitToWidthProperty().bind(hscrollOption.not().toFXProp())
+	fitToWidthProperty().bind(hscrollOption.not().createROFXPropWrapper())
 
 	consoleTextFlow.heightProperty.addListener { _, oldValue, newValue ->
 	  if ((newValue.toDouble() > oldValue.toDouble()) && autoscroll) {
