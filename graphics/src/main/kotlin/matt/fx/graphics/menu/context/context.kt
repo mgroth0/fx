@@ -1,7 +1,6 @@
 package matt.fx.graphics.menu.context
 
 import javafx.application.Platform.runLater
-import javafx.beans.property.Property
 import javafx.collections.ListChangeListener.Change
 import javafx.event.EventTarget
 import javafx.scene.Node
@@ -34,6 +33,7 @@ import matt.hurricanefx.wrapper.wrapped
 import matt.log.profile.tic
 import matt.log.tab
 import matt.log.warn
+import matt.obs.prop.BindableProperty
 import matt.stream.recurse.chain
 import java.lang.Thread.sleep
 import java.util.WeakHashMap
@@ -72,12 +72,12 @@ class MContextMenuBuilder(
 	}.also { add(it) }
 
 
-  infix fun String.toggles(b: Property<Boolean>) = checkitem(this, b)
+  infix fun String.toggles(b: BindableProperty<Boolean>) = checkitem(this, b)
 
-  fun checkitem(s: String, b: Property<Boolean>, op: CheckMenuItemWrapper.()->Unit = {}) =
+  fun checkitem(s: String, b: BindableProperty<Boolean>, op: CheckMenuItemWrapper.()->Unit = {}) =
 	CheckMenuItemWrapper(s).apply {
 	  isMnemonicParsing = false
-	  selectedProperty().bindBidirectional(b)
+	  selectedProperty.bindBidirectional(b)
 	  op()
 	}.also { add(it) }
 
@@ -246,7 +246,7 @@ fun SceneWrapper<*>.showMContextMenu(
 	  //	  println("3node.scene=${(node as? Node)?.scene}")
 	  //	  println("3node.scene.root=${(node as? Node)?.scene?.root}")
 	  //	  println("3node.scene.root.scene=${(node as? Node)?.scene?.root?.scene}")
-//	  println("looking for parent of $node")
+	  //	  println("looking for parent of $node")
 	  try {
 		node = when (node) {
 		  is Parent -> node.parent ?: node.scene
