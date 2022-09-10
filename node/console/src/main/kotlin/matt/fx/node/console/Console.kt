@@ -1,7 +1,6 @@
 package matt.fx.node.console
 
 import javafx.application.Platform.runLater
-import javafx.beans.property.SimpleBooleanProperty
 import javafx.geometry.Insets
 import javafx.scene.control.ScrollPane.ScrollBarPolicy
 import javafx.scene.input.Clipboard
@@ -24,10 +23,7 @@ import matt.fx.graphics.menu.context.mcontextmenu
 import matt.fx.node.console.Console.RefreshRate.NORMAL
 import matt.fx.node.console.mem.ConsoleMemory
 import matt.fx.node.console.text.ConsoleTextFlow
-import matt.hurricanefx.eye.lib.onChange
 import matt.hurricanefx.eye.mtofx.toFXProp
-import matt.hurricanefx.eye.prop.getValue
-import matt.hurricanefx.eye.prop.setValue
 import matt.hurricanefx.wrapper.node.NodeWrapper
 import matt.hurricanefx.wrapper.pane.scroll.ScrollPaneWrapper
 import matt.hurricanefx.wrapper.parent.ParentWrapperImpl
