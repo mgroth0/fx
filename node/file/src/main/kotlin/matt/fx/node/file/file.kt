@@ -36,6 +36,7 @@ import matt.hurricanefx.async.runLaterReturn
 import matt.hurricanefx.eye.lang.BProp
 import matt.hurricanefx.eye.lang.IProp
 import matt.hurricanefx.eye.lib.onChange
+import matt.hurricanefx.eye.mtofx.createROFXPropWrapper
 import matt.hurricanefx.tornadofx.item.spinner
 import matt.hurricanefx.wrapper.node.NodeWrapper
 import matt.hurricanefx.wrapper.node.disableWhen
@@ -147,7 +148,7 @@ private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): RegionWrap
 		hbox<NodeWrapper> {
 		  checkbox("infinite", property = infiniteLines)
 		  spinner(property = lineLimit, amountToStepBy = 1000) {
-			disableWhen { infiniteLines }
+			disableWhen { infiniteLines.createROFXPropWrapper() }
 		  }
 		  actionbutton("perma-clear") {
 			this@createNodeInner.write("")
@@ -168,7 +169,7 @@ private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): RegionWrap
 		  @Synchronized
 		  fun refresh() {
 			val ta = weakRef.get() ?: return
-			val linLim = if (infiniteLines.get()) Integer.MAX_VALUE else lineLimit.get()
+			val linLim = if (infiniteLines.value) Integer.MAX_VALUE else lineLimit.value
 			var lines = readText().lines()
 			if (lines.size > linLim) {
 			  lines = lines.subList(lines.size - linLim, lines.size)
