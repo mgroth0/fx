@@ -34,6 +34,7 @@ import matt.lang.err
 import matt.lang.go
 import matt.log.tab
 import matt.log.todoOnce
+import matt.obs.bindings.not
 import matt.obs.prop.BindableProperty
 import matt.prim.str.throttled
 import matt.stream.ReaderEndReason
