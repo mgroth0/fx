@@ -19,7 +19,7 @@ fun StageWrapper.bindGeometry(file: MFile, defaultWidth: Double = 400.0, default
 	height = defaultHeight
   }
   listOf(
-	xProperty(), yProperty(), widthProperty, heightProperty
+	xProperty, yProperty, widthProperty, heightProperty
   ).forEach { it.onChange { saveGeometryIfValid(file) } }
 }
 
