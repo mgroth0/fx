@@ -43,6 +43,7 @@ import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
 import matt.lang.inList
 import matt.log.taball
 import matt.log.todo
+import matt.obs.bindings.math.div
 import matt.obs.prop.BindableProperty
 import matt.stream.recurse.chain
 import matt.stream.recurse.recurse
@@ -57,7 +58,7 @@ fun fileTreeAndViewerPane(
   val hBox = this
   alignment = CENTER_LEFT
   val treeTableView = fileTableTree(rootFile).apply {
-	prefHeightProperty.set(HEIGHT)
+	prefHeightProperty.value = HEIGHT
 	maxWidthProperty.bind(hBox.widthProperty/2)
 	hgrow = ALWAYS
   }
@@ -361,9 +362,9 @@ private class FileTreeItem(file: MFile): TreeItem<MFile>(file) {
   }
 
   fun refreshChilds() {
-//	println("refreshing childs of ${value}")
+	//	println("refreshing childs of ${value}")
 	val childs = value.childs() ?: listOf()
-//	taball("childs", childs)
+	//	taball("childs", childs)
 	children.removeIf { it.value !in childs }
 	childs.filter { it !in children.map { it.value } }.forEach {
 	  children.add(FileTreeItem(it))
