@@ -5,6 +5,7 @@ import matt.hurricanefx.eye.lang.DProp
 import matt.hurricanefx.eye.prop.math.div
 import matt.hurricanefx.eye.prop.math.minus
 import matt.hurricanefx.eye.prop.math.times
+import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
 import matt.hurricanefx.wrapper.canvas.Canv
 import matt.hurricanefx.wrapper.canvas.CanvasWrapper
 import matt.hurricanefx.wrapper.node.NodeWrapper
@@ -56,8 +57,8 @@ open class ScaledCanvas(
 	  scaleYProperty.bind(this@ScaledCanvas.scale)
 	  this@ScaledCanvas.regionChildren.add(this)
 	}
-	exactHeightProperty.bind(actualHeight)
-	exactWidthProperty.bind(actualWidth)
+	exactHeightProperty.bind(actualHeight.toNonNullableROProp().cast())
+	exactWidthProperty.bind(actualWidth.toNonNullableROProp().cast())
   }
 
   override fun addChild(child: NodeWrapper, index: Int?) = NEVER

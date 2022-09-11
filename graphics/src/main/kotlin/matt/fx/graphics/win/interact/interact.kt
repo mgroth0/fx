@@ -34,8 +34,10 @@ import matt.fx.graphics.win.stage.WMode
 import matt.fx.graphics.win.stage.WMode.CLOSE
 import matt.fx.graphics.win.stage.WMode.NOTHING
 import matt.hurricanefx.eye.lib.onChange
+import matt.hurricanefx.eye.mtofx.createROFXPropWrapper
 import matt.hurricanefx.eye.prop.booleanBinding
 import matt.hurricanefx.eye.prop.doubleBinding
+import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
 import matt.hurricanefx.tornadofx.dialog.alert
 import matt.hurricanefx.wrapper.control.button.ButtonWrapper
 import matt.hurricanefx.wrapper.imageview.ImageViewWrapper
@@ -112,10 +114,10 @@ fun StageWrapper.bindXYToOwnerCenter() {
   require(owner != null) {
 	"must use initOwner before bindXYToOwnerCenter"
   }
-  val xBinding = owner!!.xProperty().doubleBinding(owner!!.widthProperty(), this.widthProperty) {
+  val xBinding = owner!!.xProperty().doubleBinding(owner!!.widthProperty(), this.widthProperty.createROFXPropWrapper()) {
 	(owner!!.x + (owner!!.width/2)) - width/2
   }
-  val yBinding = owner!!.yProperty().doubleBinding(owner!!.heightProperty(), this.heightProperty) {
+  val yBinding = owner!!.yProperty().doubleBinding(owner!!.heightProperty(), this.heightProperty.createROFXPropWrapper()) {
 	(owner!!.y + (owner!!.height/2)) - height/2
   }
   aXBindingStrengthener[this.node] = xBinding
@@ -377,8 +379,8 @@ fun MFile.openImageInWindow() {
   AnchorPaneWrapperImpl<NodeWrapper>(ImageViewWrapper(this@openImageInWindow.toURI().toString()).apply {
 	isPreserveRatio = true
 	runLater {
-	  fitHeightProperty().bind(scene!!.window.heightProperty())
-	  fitWidthProperty().bind(scene!!.window.widthProperty())
+	  fitHeightProperty.bind(scene!!.window.heightProperty().toNonNullableROProp().cast())
+	  fitWidthProperty.bind(scene!!.window.widthProperty().toNonNullableROProp().cast())
 	  this.setOnDoubleClick { (scene!!.window as Stage).close() }
 	}
   }).openInNewWindow()
