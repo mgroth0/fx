@@ -13,6 +13,9 @@ import matt.hurricanefx.wrapper.node.attach
 import matt.hurricanefx.wrapper.region.RegionWrapperImpl
 import matt.hurricanefx.wrapper.target.EventTargetWrapper
 import matt.lang.NEVER
+import matt.obs.bindings.math.minus
+import matt.obs.bindings.math.times
+import matt.obs.prop.BindableProperty
 
 fun EventTargetWrapper.scaledCanvas(
   width: Number,
@@ -47,7 +50,7 @@ open class ScaledCanvas(
 
   constructor(hw: Number, scale: Double): this(height = hw.toDouble(), width = hw.toDouble(), initialScale = scale)
 
-  val scale = DProp(initialScale)
+  val scale = BindableProperty(initialScale)
 
   init {
 	canvas.apply {
@@ -57,8 +60,8 @@ open class ScaledCanvas(
 	  scaleYProperty.bind(this@ScaledCanvas.scale)
 	  this@ScaledCanvas.regionChildren.add(this)
 	}
-	exactHeightProperty.bind(actualHeight.toNonNullableROProp().cast())
-	exactWidthProperty.bind(actualWidth.toNonNullableROProp().cast())
+	exactHeightProperty.bind(actualHeight)
+	exactWidthProperty.bind(actualWidth)
   }
 
   override fun addChild(child: NodeWrapper, index: Int?) = NEVER
