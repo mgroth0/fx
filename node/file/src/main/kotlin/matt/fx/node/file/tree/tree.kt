@@ -43,6 +43,7 @@ import matt.lang.inList
 import matt.log.taball
 import matt.log.todo
 import matt.obs.bindings.math.div
+import matt.obs.col.olist.BasicObservableListImpl
 import matt.obs.prop.BindableProperty
 import matt.stream.recurse.chain
 import matt.stream.recurse.recurse
@@ -295,7 +296,7 @@ private fun TreeLikeWrapper<*, MFile>.setupGUI() {
 }
 
 private fun TreeLikeWrapper<*, MFile>.setupContent(
-  rootFiles: ObservableList<MFile>,
+  rootFiles: BasicObservableListImpl<MFile>,
   strategy: FileTreePopulationStrategy,
 ) {
   root = TreeItem()
