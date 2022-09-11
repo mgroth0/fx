@@ -13,6 +13,7 @@ import matt.hurricanefx.wrapper.node.attach
 import matt.hurricanefx.wrapper.region.RegionWrapperImpl
 import matt.hurricanefx.wrapper.target.EventTargetWrapper
 import matt.lang.NEVER
+import matt.obs.bindings.math.div
 import matt.obs.bindings.math.minus
 import matt.obs.bindings.math.times
 import matt.obs.prop.BindableProperty
