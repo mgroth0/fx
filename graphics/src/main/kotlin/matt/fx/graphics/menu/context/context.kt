@@ -33,8 +33,8 @@ import matt.hurricanefx.wrapper.wrapped
 import matt.log.profile.tic
 import matt.log.tab
 import matt.log.warn
-import matt.obs.WritableMObservableVal
 import matt.obs.prop.BindableProperty
+import matt.obs.prop.WritableMObservableVal
 import matt.stream.recurse.chain
 import java.lang.Thread.sleep
 import java.util.WeakHashMap
