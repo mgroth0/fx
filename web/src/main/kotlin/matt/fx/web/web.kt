@@ -25,6 +25,7 @@ import matt.fx.graphics.win.interact.openInNewWindow
 import matt.hurricanefx.async.runLaterReturn
 import matt.hurricanefx.eye.lang.DProp
 import matt.hurricanefx.eye.lib.onChangeOnce
+import matt.hurricanefx.eye.mtofx.createROFXPropWrapper
 import matt.hurricanefx.runLater
 import matt.hurricanefx.wrapper.control.ControlWrapperImpl
 import matt.hurricanefx.wrapper.node.NodeWrapper
@@ -38,6 +39,7 @@ import matt.hurricanefx.wrapper.region.RegionWrapper
 import matt.hurricanefx.wrapper.stage.StageWrapper
 import matt.hurricanefx.wrapper.wrapped
 import matt.lang.NEVER
+import matt.obs.NewListener
 import netscape.javascript.JSObject
 import org.intellij.lang.annotations.Language
 import org.jsoup.Jsoup
@@ -90,23 +92,27 @@ infix fun WebViewWrapper.perfectBind(other: StageWrapper) {
 }
 
 infix fun WebViewWrapper.maxBind(other: RegionWrapper<*>) {
-  maxHeightProperty.bind(other.heightProperty) // gotta be strict with webview, which I think tries to be big
-  maxWidthProperty.bind(other.widthProperty)
+  maxHeightProperty.bind(
+	other.heightProperty.createROFXPropWrapper()
+  ) // gotta be strict with webview, which I think tries to be big
+  maxWidthProperty.bind(other.widthProperty.createROFXPropWrapper())
 }
 
 infix fun WebViewWrapper.maxBind(other: StageWrapper) {
-  maxHeightProperty.bind(other.heightProperty) // gotta be strict with webview, which I think tries to be big
-  maxWidthProperty.bind(other.widthProperty)
+  maxHeightProperty.bind(
+	other.heightProperty.createROFXPropWrapper()
+  ) // gotta be strict with webview, which I think tries to be big
+  maxWidthProperty.bind(other.widthProperty.createROFXPropWrapper())
 }
 
 infix fun WebViewWrapper.minBind(other: RegionWrapper<*>) {
-  minHeightProperty.bind(other.heightProperty)
-  minWidthProperty.bind(other.widthProperty)
+  minHeightProperty.bind(other.heightProperty.createROFXPropWrapper())
+  minWidthProperty.bind(other.widthProperty.createROFXPropWrapper())
 }
 
 infix fun WebViewWrapper.minBind(other: StageWrapper) {
-  minHeightProperty.bind(other.heightProperty)
-  minWidthProperty.bind(other.widthProperty)
+  minHeightProperty.bind(other.heightProperty.createROFXPropWrapper())
+  minWidthProperty.bind(other.widthProperty.createROFXPropWrapper())
 }
 
 
@@ -201,9 +207,9 @@ fun WebViewWrapper.specialZooming(par: RegionWrapper<*>? = null) {
 	  val w = par.width
 	  if (w != 0.0) zoom = perfectZoom(par.width)
 	  else {
-		par.widthProperty.onChangeOnce {
-		  zoom = perfectZoom(it!!.toDouble())
-		}
+		par.widthProperty.onChangeOnce(NewListener {
+		  zoom = perfectZoom(it.toDouble())
+		})
 	  }
 	}
   }

@@ -31,6 +31,7 @@ import matt.lang.err
 import matt.lang.go
 import matt.log.tab
 import matt.log.todoOnce
+import matt.obs.OldAndNewListener
 import matt.obs.bindings.not
 import matt.obs.prop.BindableProperty
 import matt.prim.str.throttled
@@ -179,11 +180,11 @@ sealed class Console(
 	consoleTextFlow.padding = Insets(15.0, 30.0, 15.0, 15.0)
 	fitToWidthProperty().bind(hscrollOption.not().createROFXPropWrapper())
 
-	consoleTextFlow.heightProperty.addListener { _, oldValue, newValue ->
+	consoleTextFlow.heightProperty.onChange(OldAndNewListener { oldValue, newValue ->
 	  if ((newValue.toDouble() > oldValue.toDouble()) && autoscroll) {
 		vvalue = consoleTextFlow.height
 	  }
-	}
+	})
 
 
 
@@ -193,7 +194,7 @@ sealed class Console(
 	}
 	backgroundFill = Color.BLACK
 	every(1.sec) {
-	  runLater {		//                THIS ACTUALLY WORKS!!!
+	  runLater {        //                THIS ACTUALLY WORKS!!!
 		//                 THIS SOLVES THE PROBLEM WHERE THE CONSOLE IS TOO SMALL
 		//                ITS ABSOLUTELY AN INTERNAL JFX BUG
 		autosize() // DEBUG
@@ -216,7 +217,7 @@ sealed class Console(
 	todoOnce("removed parentProperty listener here... make sure the key handlers below still work")
 	/*parentProperty().onChange { parent ->*/
 
-	if (takesInput) {		/*parent?.apply {*/
+	if (takesInput) {        /*parent?.apply {*/
 	  addEventFilter(KeyEvent.KEY_TYPED) {
 		println("console got key typed")
 		if (!it.isMetaDown) {
@@ -224,7 +225,7 @@ sealed class Console(
 		  else consoleTextFlow.displayAndHoldNewUnsentInputChar(it.character)
 		}
 		it.consume()
-	  }		/*}*/
+	  }        /*}*/
 	}
 
 	hotkeys(filter = true) {
@@ -246,7 +247,7 @@ sealed class Console(
 	  K.meta op consoleTextFlow::clearOutputAndStoredInput
 	  (PLUS + EQUALS).meta op consoleTextFlow::tryIncreaseFontSize
 	  MINUS.meta op consoleTextFlow::tryDecreaseFontSize
-	}	/*}*/
+	}    /*}*/
 	mcontextmenu {
 	  checkitem("autoscroll", autoscrollProp)
 	  checkitem("throttle", throttleProp)
