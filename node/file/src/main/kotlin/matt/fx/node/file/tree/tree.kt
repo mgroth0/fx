@@ -1,7 +1,6 @@
 package matt.fx.node.file.tree
 
 import javafx.beans.property.SimpleStringProperty
-import javafx.collections.ObservableList
 import javafx.geometry.Pos.CENTER_LEFT
 import javafx.scene.control.SelectionMode.MULTIPLE
 import javafx.scene.control.TreeItem
@@ -25,7 +24,6 @@ import matt.fx.node.file.tree.FileTreePopulationStrategy.AUTOMATIC
 import matt.fx.web.specialTransferingToWindowAndBack
 import matt.gui.draggableIcon
 import matt.gui.setview.autoResizeColumns
-import matt.hurricanefx.eye.collect.toObservable
 import matt.hurricanefx.eye.wrapper.obs.collect.createMutableWrapper
 import matt.hurricanefx.wrapper.cellfact.SimpleFactory
 import matt.hurricanefx.wrapper.control.row.TreeCellWrapper
@@ -44,6 +42,7 @@ import matt.log.taball
 import matt.log.todo
 import matt.obs.bindings.math.div
 import matt.obs.col.olist.BasicObservableListImpl
+import matt.obs.col.olist.toBasicObservableList
 import matt.obs.prop.BindableProperty
 import matt.stream.recurse.chain
 import matt.stream.recurse.recurse
@@ -132,17 +131,17 @@ fun PaneWrapperImpl<*, *>.fileTree(
   rootFile: MFile,
   strategy: FileTreePopulationStrategy = AUTOMATIC,
   op: (TreeViewWrapper<MFile>.()->Unit)? = null,
-): TreeViewWrapper<MFile> = fileTree(rootFile.inList().toObservable(), strategy, op)
+): TreeViewWrapper<MFile> = fileTree(rootFile.inList().toBasicObservableList(), strategy, op)
 
 fun PaneWrapperImpl<*, *>.fileTableTree(
   rootFile: MFile,
   strategy: FileTreePopulationStrategy = AUTOMATIC,
   op: (TreeTableViewWrapper<MFile>.()->Unit)? = null,
-): TreeTableViewWrapper<MFile> = fileTableTree(rootFile.inList().toObservable(), strategy, op)
+): TreeTableViewWrapper<MFile> = fileTableTree(rootFile.inList().toBasicObservableList(), strategy, op)
 
 
 fun PaneWrapperImpl<*, *>.fileTree(
-  rootFiles: ObservableList<MFile>,
+  rootFiles: BasicObservableListImpl<MFile>,
   strategy: FileTreePopulationStrategy = AUTOMATIC,
   op: (TreeViewWrapper<MFile>.()->Unit)? = null,
 ): TreeViewWrapper<MFile> {
@@ -159,7 +158,7 @@ fun PaneWrapperImpl<*, *>.fileTree(
 }
 
 fun PaneWrapperImpl<*, *>.fileTableTree(
-  rootFiles: ObservableList<MFile>,
+  rootFiles: BasicObservableListImpl<MFile>,
   strategy: FileTreePopulationStrategy = AUTOMATIC,
   op: (TreeTableViewWrapper<MFile>.()->Unit)? = null,
 ): TreeTableViewWrapper<MFile> {
