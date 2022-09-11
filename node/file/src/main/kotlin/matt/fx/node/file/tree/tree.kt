@@ -25,9 +25,8 @@ import matt.fx.node.file.tree.FileTreePopulationStrategy.AUTOMATIC
 import matt.fx.web.specialTransferingToWindowAndBack
 import matt.gui.draggableIcon
 import matt.gui.setview.autoResizeColumns
-import matt.hurricanefx.eye.collect.collectbind.bind
 import matt.hurricanefx.eye.collect.toObservable
-import matt.hurricanefx.eye.prop.math.div
+import matt.hurricanefx.eye.wrapper.obs.collect.createMutableWrapper
 import matt.hurricanefx.wrapper.cellfact.SimpleFactory
 import matt.hurricanefx.wrapper.control.row.TreeCellWrapper
 import matt.hurricanefx.wrapper.control.row.TreeTableRowWrapper
@@ -300,7 +299,7 @@ private fun TreeLikeWrapper<*, MFile>.setupContent(
   strategy: FileTreePopulationStrategy,
 ) {
   root = TreeItem()
-  root.children.bind(rootFiles) {
+  root.children.createMutableWrapper().bind(rootFiles) {
 	FileTreeItem(it)
   }
   isShowRoot = false
