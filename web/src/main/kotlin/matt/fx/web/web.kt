@@ -13,7 +13,6 @@ import javafx.scene.web.WebEngine
 import javafx.scene.web.WebView
 import javafx.stage.Stage
 import kotlinx.coroutines.NonCancellable
-import matt.time.dur.sec
 import matt.async.thread.daemon
 import matt.file.MFile
 import matt.file.construct.toMFile
@@ -24,7 +23,6 @@ import matt.fx.graphics.refreshWhileInSceneEvery
 import matt.fx.graphics.win.interact.openInNewWindow
 import matt.hurricanefx.async.runLaterReturn
 import matt.hurricanefx.eye.lang.DProp
-import matt.hurricanefx.eye.lib.onChangeOnce
 import matt.hurricanefx.eye.mtofx.createROFXPropWrapper
 import matt.hurricanefx.runLater
 import matt.hurricanefx.wrapper.control.ControlWrapperImpl
@@ -40,6 +38,7 @@ import matt.hurricanefx.wrapper.stage.StageWrapper
 import matt.hurricanefx.wrapper.wrapped
 import matt.lang.NEVER
 import matt.obs.prop.listen.NewListener
+import matt.time.dur.sec
 import netscape.javascript.JSObject
 import org.intellij.lang.annotations.Language
 import org.jsoup.Jsoup
