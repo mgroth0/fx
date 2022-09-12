@@ -33,7 +33,7 @@ import matt.log.tab
 import matt.log.todoOnce
 import matt.obs.bindings.not
 import matt.obs.prop.BindableProperty
-import matt.obs.prop.OldAndNewListener
+import matt.obs.prop.listen.OldAndNewListener
 import matt.prim.str.throttled
 import matt.stream.ReaderEndReason
 import matt.stream.forEachChar
