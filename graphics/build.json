@@ -46,11 +46,7 @@
 	  "cfg" :  "api",
 	  "path" : ":k:stream"
 	},
-	{
-	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
-	  "cfg" :  "api",
-	  "path" : ":k:klib"
-	},
+
 	{
 	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
 	  "cfg" :  "api",
