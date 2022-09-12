@@ -33,10 +33,6 @@ import matt.fx.web.WebViewWrapper
 import matt.fx.web.specialZooming
 import matt.gui.draggableIcon
 import matt.hurricanefx.async.runLaterReturn
-import matt.hurricanefx.eye.lang.BProp
-import matt.hurricanefx.eye.lang.IProp
-import matt.hurricanefx.eye.lib.onChange
-import matt.hurricanefx.eye.mtofx.createROFXPropWrapper
 import matt.hurricanefx.tornadofx.item.spinner
 import matt.hurricanefx.wrapper.node.NodeWrapper
 import matt.hurricanefx.wrapper.node.disableWhen
@@ -148,7 +144,7 @@ private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): RegionWrap
 		hbox<NodeWrapper> {
 		  checkbox("infinite", property = infiniteLines)
 		  spinner(property = lineLimit, amountToStepBy = 1000) {
-			disableWhen { infiniteLines.createROFXPropWrapper() }
+			disableWhen { infiniteLines }
 		  }
 		  actionbutton("perma-clear") {
 			this@createNodeInner.write("")
