@@ -25,6 +25,8 @@ import matt.log.NOPLogger
 import matt.log.SystemOutLogger
 import matt.prim.str.joinWithNewLinesAndTabs
 import matt.model.sys.Mac
+import matt.obs.prop.BindableProperty
+import matt.obs.prop.toggle
 import java.lang.System.currentTimeMillis
 import java.util.WeakHashMap
 import kotlin.contracts.InvocationKind.EXACTLY_ONCE
@@ -415,7 +417,7 @@ fun EventTarget.register(
   }
 
 
-  infix fun HotKey.toggles(b: SimpleBooleanProperty) = op { b.toggle() }
+  infix fun HotKey.toggles(b: BindableProperty<Boolean>) = op { b.toggle() }
 
   infix fun HotKey.handle(setHandler: (KeyEvent)->Unit) = apply {
 	require(theOp == null)
