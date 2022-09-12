@@ -27,6 +27,8 @@ import matt.hurricanefx.eye.mtofx.createROFXPropWrapper
 import matt.hurricanefx.wrapper.node.NodeWrapper
 import matt.hurricanefx.wrapper.pane.scroll.ScrollPaneWrapper
 import matt.hurricanefx.wrapper.parent.ParentWrapperImpl
+import matt.kjlib.shell.forEachErrChar
+import matt.kjlib.shell.forEachOutChar
 import matt.lang.err
 import matt.lang.go
 import matt.log.tab
