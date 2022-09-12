@@ -8,6 +8,7 @@ import javafx.scene.text.Text
 import javafx.stage.Window
 import matt.async.schedule.AccurateTimer
 import matt.fx.graphics.lang.removeAllButLastN
+import matt.hurricanefx.eye.mtofx.createWritableFXPropWrapper
 import matt.hurricanefx.font.fixed
 import matt.hurricanefx.toFXDuration
 import matt.hurricanefx.tornadofx.animation.keyframe
@@ -57,10 +58,10 @@ class ConsoleTextFlow(val takesInput: Boolean = true): TextFlowWrapper<NodeWrapp
 		isAutoReverse = true
 		cycleCount = Timeline.INDEFINITE
 		keyframe(0.ms.toFXDuration()) {
-		  keyvalue(sepText.fillProperty(), PROMPT_COLOR)
+		  keyvalue(sepText.fillProperty.createWritableFXPropWrapper(), PROMPT_COLOR)
 		}
 		keyframe(350.ms.toFXDuration()) {
-		  keyvalue(sepText.fillProperty(), Color.BLUE)
+		  keyvalue(sepText.fillProperty.createWritableFXPropWrapper(), Color.BLUE)
 		}
 	  }
 	  var sceneListener: ChangeListener<Window?>? = null
