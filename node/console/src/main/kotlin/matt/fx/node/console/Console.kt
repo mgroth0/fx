@@ -37,8 +37,6 @@ import matt.obs.prop.listen.OldAndNewListener
 import matt.prim.str.throttled
 import matt.stream.ReaderEndReason
 import matt.stream.forEachChar
-import matt.stream.forEachErrChar
-import matt.stream.forEachOutChar
 import matt.stream.piping.redirectErr
 import matt.stream.piping.redirectOut
 import matt.time.dur.ms
