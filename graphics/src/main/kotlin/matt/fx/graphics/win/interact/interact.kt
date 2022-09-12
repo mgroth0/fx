@@ -54,6 +54,10 @@ import matt.hurricanefx.wrapper.stage.StageWrapper
 import matt.json.prim.isValidJson
 import matt.lang.noExceptions
 import matt.lang.nullIfExceptions
+import matt.obs.bind.binding
+import matt.obs.bindings.bool.not
+import matt.obs.prop.BindableProperty
+import matt.obs.prop.ValProp
 import java.net.URI
 import java.util.WeakHashMap
 import kotlin.jvm.optionals.getOrNull
@@ -95,9 +99,9 @@ class MDialog<R> internal constructor(): VBoxWrapper<NodeWrapper>() {
 	resultConverter = op
   }
 
-  val readyProperty = SimpleBooleanProperty(true)
+  val readyProperty = BindableProperty(true)
 
-  fun readyWhen(o: ObservableValue<Boolean>) {
+  fun readyWhen(o: ValProp<Boolean>) {
 	readyProperty.bind(o)
   }
 
@@ -151,7 +155,7 @@ inline fun <reified T> jsonEditor(json: String? = null) = dialog<T?> {
   val ta = textarea(json ?: "")
 
 
-  val goodBind = ta.textProperty.booleanBinding {
+  val goodBind = ta.textProperty.binding {
 
 	it != null
 		&& it.isValidJson()
