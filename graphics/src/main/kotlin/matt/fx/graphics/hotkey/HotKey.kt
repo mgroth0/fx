@@ -9,6 +9,9 @@ import javafx.scene.Scene
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
 import javafx.stage.Stage
+import matt.collect.itr.allUnique
+import matt.collect.itr.applyEach
+import matt.collect.itr.duplicates
 import matt.hotkey.Hotkey
 import matt.hotkey.HotkeyDSL
 import matt.hurricanefx.eye.prop.toggle
