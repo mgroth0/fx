@@ -4,8 +4,6 @@ package matt.fx.graphics.win.interact
 
 import javafx.application.Platform.runLater
 import javafx.beans.binding.DoubleBinding
-import javafx.beans.property.SimpleBooleanProperty
-import javafx.beans.value.ObservableValue
 import javafx.geometry.Pos
 import javafx.scene.Scene
 import javafx.scene.control.Alert
@@ -35,7 +33,6 @@ import matt.fx.graphics.win.stage.WMode.CLOSE
 import matt.fx.graphics.win.stage.WMode.NOTHING
 import matt.hurricanefx.eye.lib.onChange
 import matt.hurricanefx.eye.mtofx.createROFXPropWrapper
-import matt.hurricanefx.eye.prop.booleanBinding
 import matt.hurricanefx.eye.prop.doubleBinding
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
 import matt.hurricanefx.tornadofx.dialog.alert
