@@ -8,6 +8,7 @@ import javafx.scene.layout.Priority.ALWAYS
 import matt.auto.actions
 import matt.auto.moveToTrash
 import matt.auto.open
+import matt.collect.itr.sameContentsAnyOrder
 import matt.collect.map.lazyMap
 import matt.file.MFile
 import matt.file.construct.mFile
@@ -46,7 +47,6 @@ import matt.obs.col.olist.toBasicObservableList
 import matt.obs.prop.BindableProperty
 import matt.stream.recurse.chain
 import matt.stream.recurse.recurse
-import matt.stream.sameContentsAnyOrder
 import matt.time.dur.sec
 
 private const val HEIGHT = 300.0
