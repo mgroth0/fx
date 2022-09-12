@@ -9,7 +9,7 @@ import matt.css.MyStyleDsl
 import matt.hurricanefx.wrapper.node.NodeWrapperImpl
 import matt.hurricanefx.wrapper.style.toAwtColor
 import matt.log.warn
-import matt.obs.prop.BasicProperty
+import matt.obs.prop.BindableProperty
 import java.util.logging.Level
 import kotlin.reflect.KProperty
 
@@ -39,7 +39,7 @@ object DarkModeController {
 	}
   }
 
-  val darkModeProp = BasicProperty(getIsDarkSafe() ?: true)
+  val darkModeProp = BindableProperty(getIsDarkSafe() ?: true)
 
   init {
 	detector.registerListener { isDark ->
