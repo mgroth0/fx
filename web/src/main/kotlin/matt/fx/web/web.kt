@@ -37,7 +37,6 @@ import matt.hurricanefx.wrapper.region.RegionWrapper
 import matt.hurricanefx.wrapper.stage.StageWrapper
 import matt.hurricanefx.wrapper.wrapped
 import matt.lang.NEVER
-import matt.obs.listen.NewListener
 import matt.time.dur.sec
 import netscape.javascript.JSObject
 import org.intellij.lang.annotations.Language
@@ -206,9 +205,12 @@ fun WebViewWrapper.specialZooming(par: RegionWrapper<*>? = null) {
 	  val w = par.width
 	  if (w != 0.0) zoom = perfectZoom(par.width)
 	  else {
-		par.widthProperty.onChangeOnce(NewListener {
+		par.widthProperty.onChange {
 		  zoom = perfectZoom(it.toDouble())
-		})
+		}.removeAfterInvocation = true
+//		par.widthProperty.onChangeOnce(NewListener {
+//		  zoom = perfectZoom(it.toDouble())
+//		})
 	  }
 	}
   }
