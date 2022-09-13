@@ -1,7 +1,6 @@
 package matt.fx.node.file
 
 import javafx.application.Platform.runLater
-import javafx.collections.ListChangeListener
 import javafx.event.EventHandler
 import javafx.scene.Node
 import javafx.scene.image.Image
