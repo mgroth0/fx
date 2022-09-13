@@ -34,7 +34,6 @@ import matt.lang.go
 import matt.log.tab
 import matt.log.todoOnce
 import matt.obs.bindings.bool.not
-import matt.obs.listen.OldAndNewListener
 import matt.obs.prop.BindableProperty
 import matt.prim.str.throttled
 import matt.stream.ReaderEndReason
@@ -180,11 +179,13 @@ sealed class Console(
 	consoleTextFlow.padding = Insets(15.0, 30.0, 15.0, 15.0)
 	fitToWidthProperty().bind(hscrollOption.not().createROFXPropWrapper())
 
-	consoleTextFlow.heightProperty.addListener(OldAndNewListener { oldValue, newValue ->
-	  if ((newValue.toDouble() > oldValue.toDouble()) && autoscroll) {
+	var old = consoleTextFlow.height
+	consoleTextFlow.heightProperty.onChange { newValue ->
+	  if ((newValue.toDouble() > old.toDouble()) && autoscroll) {
 		vvalue = consoleTextFlow.height
 	  }
-	})
+	  old = newValue
+	}
 
 
 
