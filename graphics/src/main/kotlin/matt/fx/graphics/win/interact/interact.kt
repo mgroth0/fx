@@ -51,6 +51,7 @@ import matt.hurricanefx.wrapper.stage.StageWrapper
 import matt.json.prim.isValidJson
 import matt.lang.noExceptions
 import matt.lang.nullIfExceptions
+import matt.obs.bindings.bool.ObsB
 import matt.obs.bindings.bool.not
 import matt.obs.prop.BindableProperty
 import matt.obs.prop.ValProp
@@ -97,7 +98,7 @@ class MDialog<R> internal constructor(): VBoxWrapper<NodeWrapper>() {
 
   val readyProperty = BindableProperty(true)
 
-  fun readyWhen(o: ValProp<Boolean>) {
+  fun readyWhen(o: ObsB) {
 	readyProperty.bind(o)
   }
 
