@@ -34,6 +34,7 @@ import matt.log.profile.tic
 import matt.log.tab
 import matt.log.warn
 import matt.obs.prop.BindableProperty
+import matt.obs.prop.Var
 import matt.obs.prop.WritableMObservableVal
 import matt.stream.recurse.chain
 import java.lang.Thread.sleep
@@ -75,7 +76,7 @@ class MContextMenuBuilder(
 
   infix fun String.toggles(b: BindableProperty<Boolean>) = checkitem(this, b)
 
-  fun checkitem(s: String, b: WritableMObservableVal<Boolean>, op: CheckMenuItemWrapper.()->Unit = {}) =
+  fun checkitem(s: String, b: Var<Boolean>, op: CheckMenuItemWrapper.()->Unit = {}) =
 	CheckMenuItemWrapper(s).apply {
 	  isMnemonicParsing = false
 	  selectedProperty.bindBidirectional(b)
