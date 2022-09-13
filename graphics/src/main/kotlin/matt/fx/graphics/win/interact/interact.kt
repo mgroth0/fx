@@ -51,7 +51,6 @@ import matt.hurricanefx.wrapper.stage.StageWrapper
 import matt.json.prim.isValidJson
 import matt.lang.noExceptions
 import matt.lang.nullIfExceptions
-import matt.obs.bind.binding
 import matt.obs.bindings.bool.not
 import matt.obs.prop.BindableProperty
 import matt.obs.prop.ValProp
