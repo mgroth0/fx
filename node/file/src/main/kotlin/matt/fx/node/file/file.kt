@@ -216,12 +216,15 @@ private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): RegionWrap
 
 		  // hide webview scrollbars whenever they appear.
 		  // hide webview scrollbars whenever they appear.
-		  childrenUnmodifiable.addListener(ListChangeListener<Any?> {
+		  childrenUnmodifiable.observe {
 			val deadSeaScrolls: Set<Node> = lookupAll(".scroll-bar")
 			for (scroll in deadSeaScrolls) {
 			  scroll.isVisible = false
 			}
-		  })
+		  }
+//		  childrenUnmodifiable.addListener(ListChangeListener<Any?> {
+//
+//		  })
 
 
 		  val cacheBreaker = "?${System.currentTimeMillis()}" /*omfg it works...*/
