@@ -37,7 +37,7 @@ import matt.hurricanefx.wrapper.region.RegionWrapper
 import matt.hurricanefx.wrapper.stage.StageWrapper
 import matt.hurricanefx.wrapper.wrapped
 import matt.lang.NEVER
-import matt.obs.prop.listen.NewListener
+import matt.obs.listen.NewListener
 import matt.time.dur.sec
 import netscape.javascript.JSObject
 import org.intellij.lang.annotations.Language
