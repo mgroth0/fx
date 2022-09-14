@@ -2,11 +2,6 @@
   "type" :         "matt.mstruct.bj.LIBModule",
   "dependencies" : [
 	{
-	  "type" : "matt.mstruct.bj.BuildJsonLibDependency",
-	  "cfg" :  "api",
-	  "key" :  "fx-controls"
-	},
-	{
 	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
 	  "cfg" :  "api",
 	  "path" : ":k:fx:graphics"
