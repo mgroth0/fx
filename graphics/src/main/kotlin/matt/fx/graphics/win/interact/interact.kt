@@ -14,7 +14,6 @@ import javafx.scene.paint.Color
 import javafx.stage.Stage
 import javafx.stage.StageStyle
 import javafx.stage.Window
-import matt.obs.bind.binding
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import matt.file.MFile
@@ -52,10 +51,10 @@ import matt.hurricanefx.wrapper.stage.StageWrapper
 import matt.json.prim.isValidJson
 import matt.lang.noExceptions
 import matt.lang.nullIfExceptions
+import matt.obs.bind.binding
 import matt.obs.bindings.bool.ObsB
 import matt.obs.bindings.bool.not
 import matt.obs.prop.BindableProperty
-import matt.obs.prop.ValProp
 import java.net.URI
 import java.util.WeakHashMap
 import kotlin.jvm.optionals.getOrNull
@@ -151,7 +150,6 @@ fun StageWrapper.bindHWToOwner() {
 
 inline fun <reified T> jsonEditor(json: String? = null) = dialog<T?> {
   val ta = textarea(json ?: "")
-
 
   val goodBind = ta.textProperty.binding {
 
