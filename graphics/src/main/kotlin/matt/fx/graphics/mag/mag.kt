@@ -23,7 +23,10 @@ data class RectSize(
 /*no idea if this will work*/
 fun Screen.isPrimary() = bounds.minX == 0.0 && bounds.minY == 0.0
 
-fun WindowWrapper<*>.extraMinY() = if (this.screen?.isPrimary() != false) NEW_MAC_NOTCH_ESTIMATE else 0.0
+fun WindowWrapper<*>.extraMinY() = when {
+  screen?.isPrimary() != false -> NEW_MAC_NOTCH_ESTIMATE
+  else                         -> 0.0
+}
 
 fun WindowWrapper<*>.maxsize() {
   screen?.let {
@@ -279,6 +282,7 @@ class VarJson(
 		}.save()
 	  }
   }
+
   fun save() {
 	VAR_JSON_FILE.save(toJson())
   }
