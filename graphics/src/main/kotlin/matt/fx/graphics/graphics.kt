@@ -1,5 +1,9 @@
 package matt.fx.graphics
 
+import javafx.scene.effect.Blend
+import javafx.scene.effect.BlendMode.DIFFERENCE
+import javafx.scene.effect.ColorInput
+import javafx.scene.paint.Color
 import javafx.scene.shape.Line
 import javafx.scene.text.Font
 import matt.async.schedule.MyTimerTask
@@ -15,6 +19,16 @@ import matt.math.Point
 import matt.math.unaryMinus
 import matt.time.dur.Duration
 
+
+val INVERSION_EFFECT by lazy {
+  val color = ColorInput()
+  color.paint = Color.WHITE
+  color.width = Double.MAX_VALUE
+  color.height = Double.MAX_VALUE
+  val blend = Blend(DIFFERENCE)
+  blend.bottomInput = color
+  blend
+}
 
 fun <T: NodeWrapper> T.refreshWhileInSceneEvery(
   refreshRate: Duration,

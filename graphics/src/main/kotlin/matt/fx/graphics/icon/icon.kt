@@ -4,12 +4,13 @@ package matt.fx.graphics.icon
 import com.kitfox.svg.SVGUniverse
 import com.kitfox.svg.animation.AnimationElement.AT_XML
 import javafx.scene.image.Image
+import matt.collect.map.lazyMap
 import matt.file.MFile
 import matt.file.commons.ICON_FOLDER
+import matt.fx.graphics.INVERSION_EFFECT
 import matt.fx.image.toFXImage
 import matt.hurricanefx.wrapper.imageview.ImageViewWrapper
 import matt.hurricanefx.wrapper.node.NodeWrapper
-import matt.collect.map.lazyMap
 import java.awt.RenderingHints.KEY_ALPHA_INTERPOLATION
 import java.awt.RenderingHints.KEY_ANTIALIASING
 import java.awt.RenderingHints.KEY_COLOR_RENDERING
@@ -35,11 +36,11 @@ import java.awt.image.BufferedImage.TYPE_INT_ARGB
 const val ICON_WIDTH = 20.0
 const val ICON_HEIGHT = 20.0
 
-fun NodeWrapper.icon(file: MFile) = add(Icon(file))
+fun NodeWrapper.icon(file: MFile, invert: Boolean = false) = add(Icon(file, invert = invert))
 
-fun NodeWrapper.icon(image: Image) = add(Icon(image))
+fun NodeWrapper.icon(image: Image, invert: Boolean = false) = add(Icon(image, invert = invert))
 
-fun NodeWrapper.icon(file: String) = add(Icon(file))
+fun NodeWrapper.icon(file: String, invert: Boolean = false) = add(Icon(file, invert = invert))
 
 
 private val FALLBACK_FILE = (ICON_FOLDER + "chunk.png").apply { //  SvgImageLoaderFactory.install();
@@ -47,19 +48,20 @@ private val FALLBACK_FILE = (ICON_FOLDER + "chunk.png").apply { //  SvgImageLoad
 
 fun matt.file.icongen.Icon.view() = Icon(name)
 
-fun Icon(file: String) = Icon(ICON_FOLDER[file])
+fun Icon(file: String, invert: Boolean = false) = Icon(ICON_FOLDER[file], invert = invert)
 fun IconImage(file: String) = IconImage(ICON_FOLDER[file])
-fun Icon(file: MFile): ImageViewWrapper = Icon(IconImage(file))
+fun Icon(file: MFile, invert: Boolean = false): ImageViewWrapper = Icon(IconImage(file), invert = invert)
 
 /*private val SVG_PARAMS = LoaderParameters().apply {
   this.width = ICON_WIDTH
   this.
 }*/
 
-fun Icon(image: Image): ImageViewWrapper = ImageViewWrapper(image).apply {
+fun Icon(image: Image, invert: Boolean = false): ImageViewWrapper = ImageViewWrapper(image).apply {
   isPreserveRatio = false
   fitWidth = ICON_WIDTH
   fitHeight = ICON_HEIGHT
+  if (invert) effect = INVERSION_EFFECT
 }
 
 
@@ -126,13 +128,15 @@ private val images = lazyMap<MFile, Image> { file ->
 
 fun IconImage(file: MFile): Image = images[file]
 
-private val RENDERING_HINTS: MutableMap<Key, Any> = java.util.Map.of(
-  KEY_ANTIALIASING, VALUE_ANTIALIAS_ON, KEY_ALPHA_INTERPOLATION, VALUE_ALPHA_INTERPOLATION_QUALITY, KEY_COLOR_RENDERING,
-  VALUE_COLOR_RENDER_QUALITY, KEY_DITHERING, VALUE_DITHER_DISABLE, KEY_FRACTIONALMETRICS, VALUE_FRACTIONALMETRICS_ON,
-  KEY_INTERPOLATION, VALUE_INTERPOLATION_BICUBIC, KEY_RENDERING, VALUE_RENDER_QUALITY, KEY_STROKE_CONTROL,
-  VALUE_STROKE_PURE, KEY_TEXT_ANTIALIASING, VALUE_TEXT_ANTIALIAS_ON
-)
-
+private val RENDERING_HINTS: MutableMap<Key, Any> by lazy {
+  java.util.Map.of(
+	KEY_ANTIALIASING, VALUE_ANTIALIAS_ON, KEY_ALPHA_INTERPOLATION, VALUE_ALPHA_INTERPOLATION_QUALITY,
+	KEY_COLOR_RENDERING,
+	VALUE_COLOR_RENDER_QUALITY, KEY_DITHERING, VALUE_DITHER_DISABLE, KEY_FRACTIONALMETRICS, VALUE_FRACTIONALMETRICS_ON,
+	KEY_INTERPOLATION, VALUE_INTERPOLATION_BICUBIC, KEY_RENDERING, VALUE_RENDER_QUALITY, KEY_STROKE_CONTROL,
+	VALUE_STROKE_PURE, KEY_TEXT_ANTIALIASING, VALUE_TEXT_ANTIALIAS_ON
+  )
+}
 
 
 
