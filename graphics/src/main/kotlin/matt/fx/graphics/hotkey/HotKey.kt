@@ -256,7 +256,7 @@ class HotKeyEventHandler(
 
   init {    //        println("making handler ${this.hashCode()} with")
 	//        hotkeys.forEach {
-	//            tab(it)
+	//            matt.prim.str.build.tab(it)
 	//        }
 	hotkeys.flatMap { it.getHotkeys() }.forEach {
 	  if (it.code == KeyCode.H && it.isMeta && !it.isCtrl && !it.isOpt && !it.isShift) {
