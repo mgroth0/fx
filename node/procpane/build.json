@@ -5,6 +5,11 @@
             "type": "matt.mstruct.bj.BuildJsonLibDependency",
             "cfg": "api",
             "key": "kt-stdlib"
+        },
+        {
+            "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
+            "cfg" :  "implementation",
+            "path" : ":k:hurricanefx"
         }
     ]
 }
