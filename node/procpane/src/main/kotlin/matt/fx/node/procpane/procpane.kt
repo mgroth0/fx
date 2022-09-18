@@ -11,6 +11,8 @@ import matt.fx.graphics.lang.actionbutton
 import matt.fx.graphics.menu.context.mcontextmenu
 import matt.fx.node.console.Console
 import matt.fx.node.console.ProcessConsole
+import matt.fx.node.procpane.status.StatusFolderWatchPane
+import matt.fx.node.procpane.inspect.ProcessInspectPane
 import matt.hurricanefx.eye.lib.onChange
 import matt.hurricanefx.eye.prop.getValue
 import matt.hurricanefx.eye.prop.setValue
