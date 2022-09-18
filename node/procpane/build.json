@@ -1,15 +1,20 @@
 {
-    "type": "matt.mstruct.bj.APPLIBModule",
-    "dependencies": [
-        {
-            "type": "matt.mstruct.bj.BuildJsonLibDependency",
-            "cfg": "api",
-            "key": "kt-stdlib"
-        },
-        {
-            "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
-            "cfg" :  "implementation",
-            "path" : ":k:hurricanefx"
-        }
-    ]
+  "type" :         "matt.mstruct.bj.APPLIBModule",
+  "dependencies" : [
+	{
+	  "type" : "matt.mstruct.bj.BuildJsonLibDependency",
+	  "cfg" :  "api",
+	  "key" :  "kt-stdlib"
+	},
+	{
+	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
+	  "cfg" :  "implementation",
+	  "path" : ":k:hurricanefx"
+	},
+	{
+	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
+	  "cfg" :  "implementation",
+	  "path" : ":k:async"
+	}
+  ]
 }
