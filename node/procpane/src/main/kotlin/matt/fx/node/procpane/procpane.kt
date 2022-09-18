@@ -5,6 +5,7 @@ import javafx.application.Platform.runLater
 import javafx.beans.property.SimpleObjectProperty
 import javafx.scene.layout.Priority.ALWAYS
 import matt.async.thread.daemon
+import matt.auto.process.destroyNiceThenForceThenWait
 import matt.file.MFile
 import matt.file.commons.REGISTERED_FOLDER
 import matt.fx.graphics.lang.actionbutton
