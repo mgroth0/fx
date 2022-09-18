@@ -20,6 +20,11 @@
 	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
 	  "cfg" :  "api",
 	  "path" : ":k:fx:graphics"
+	},
+	{
+	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
+	  "cfg" :  "api",
+	  "path" : ":k:fx:node:console"
 	}
   ]
 }
