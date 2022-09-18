@@ -8,6 +8,7 @@ import matt.auto.process.ProcessOrHandleWrapper
 import matt.file.construct.mFile
 import matt.hurricanefx.eye.lib.onChange
 import matt.hurricanefx.tornadofx.item.treetableview
+import matt.hurricanefx.ts.nonBlockingFXWatcher
 import matt.hurricanefx.wrapper.control.treetable.populate
 import matt.hurricanefx.wrapper.label.LabelWrapper
 import matt.hurricanefx.wrapper.node.NodeWrapper
@@ -121,11 +122,8 @@ private class PropListLabel<T>(
   }
 
   private fun update(o: T?) {
-	debug("update o 1")
 	var s: ObsS = BindableProperty("")
-	debug("update o 2")
 	props.forEach { (name, v) ->
-	  debug("update o 3: $name")
 	  val value = if (o == null) {
 		""
 	  } else when (v) {
@@ -133,20 +131,15 @@ private class PropListLabel<T>(
 		is KProperty<*> -> v.getter.call(o)
 		else            -> v
 	  }
-	  s = if (value is MObservableROValBase<*,*,*>) {
-		s.plus("$name:\t").plus(value.binding { userString(it) }).plus("\n")
+	  s = if (value is MObservableROValBase<*, *, *>) {
+		s.plus("$name:\t").plus(value.nonBlockingFXWatcher().binding { userString(it) }).plus("\n")
 	  } else {
 		s.plus("$name:\t${userString(value)}\n")
 	  }
-	  debug("update o 4: $name")
 	}
-	debug("update o 5")
 	s = s.binding { it.trim() }
-	debug("update o 6")
 	textProperty.unbind()
-	debug("update o 7")
 	textProperty.bind(s)
-	debug("update o 8")
   }
 }
 
