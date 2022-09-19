@@ -30,7 +30,7 @@ fun NodeWrapperImpl<*>.setOnFocusGained(op: ()->Unit) {
   }
 }
 
-fun actionbutton(text: String, graphic: Node? = null, action: ButtonWrapper.(ActionEvent)->Unit) =
+fun actionbutton(text: String="", graphic: Node? = null, action: ButtonWrapper.(ActionEvent)->Unit) =
   ButtonWrapper(text, graphic).apply {
 	setOnAction {
 	  action(it)
