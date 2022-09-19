@@ -79,7 +79,7 @@ fun safe(s: String, op: ()->Unit): Boolean {
 
 class MDialog<R> internal constructor(): VBoxWrapper<NodeWrapper>() {
   val stg = MStage(wMode = CLOSE, EscClosable = true).apply {
-	scene = MScene(this@MDialog).node
+	scene = MScene(this@MDialog)
 	width = 400.0
 	height = 400.0
   }
