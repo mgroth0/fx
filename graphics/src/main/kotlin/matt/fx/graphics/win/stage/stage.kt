@@ -9,7 +9,6 @@ import matt.fx.graphics.win.stage.WMode.HIDE
 import matt.fx.graphics.win.stage.WMode.ICONIFY
 import matt.fx.graphics.win.stage.WMode.NOTHING
 import matt.hurricanefx.wrapper.stage.StageWrapper
-import matt.hurricanefx.wrapper.wrapped
 import matt.model.sys.GAMING_WINDOWS
 
 enum class WMode {
