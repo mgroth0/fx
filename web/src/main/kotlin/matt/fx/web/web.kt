@@ -19,7 +19,7 @@ import matt.file.construct.toMFile
 import matt.fx.graphics.clip.copyToClipboard
 import matt.fx.graphics.lang.actionbutton
 import matt.fx.graphics.menu.context.mcontextmenu
-import matt.fx.graphics.refreshWhileInSceneEvery
+import matt.fx.graphics.refresh.refreshWhileInSceneEvery
 import matt.fx.graphics.win.interact.openInNewWindow
 import matt.hurricanefx.async.runLaterReturn
 import matt.hurricanefx.eye.lang.DProp

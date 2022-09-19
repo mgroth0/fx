@@ -6,7 +6,7 @@ import javafx.scene.layout.HBox
 import javafx.scene.layout.Pane
 import javafx.scene.layout.Priority.ALWAYS
 import javafx.scene.layout.VBox
-import matt.fx.graphics.Inspectable
+import matt.fx.graphics.node.Inspectable
 import matt.hurricanefx.eye.collect.toObservable
 import matt.hurricanefx.wrapper.control.list.ListViewWrapper
 import matt.hurricanefx.wrapper.control.table.TableViewWrapper
