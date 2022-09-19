@@ -203,8 +203,8 @@ fun SceneWrapper<*>.iconify(icon: MFile) {
 	x = this@iconify.window!!.x + (this@iconify.window!!.width/2) - (ICON_WIDTH/2),
 	y = this@iconify.window!!.y + (this@iconify.window!!.height/2) - (ICON_HEIGHT/2),
   ), mScene = false, border = false, beforeShowing = {
-	scene!!.wrapped().reloadStyle(darkModeProp.value)
-	darkModeProp.onChangeWithWeak(this) { scene!!.wrapped().reloadStyle(darkModeProp.value) }
+	scene!!.reloadStyle(darkModeProp.value)
+	darkModeProp.onChangeWithWeak(this) { scene!!.reloadStyle(darkModeProp.value) }
   }).apply {
 	iconWindow = this
 	isAlwaysOnTop = true

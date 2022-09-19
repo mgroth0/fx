@@ -47,7 +47,7 @@ open class MStage(
 
 		ICONIFY -> {
 		  {
-			(this@MStage.scene?.wrapped() as? MScene<*>)?.iconify()
+			(this@MStage.scene as? MScene<*>)?.iconify()
 			Unit
 		  }
 		}
