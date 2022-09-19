@@ -16,7 +16,7 @@ import matt.fx.fxauto.actionitem
 import matt.fx.fxauto.fxActions
 import matt.fx.graphics.icon.view
 import matt.fx.graphics.menu.context.mcontextmenu
-import matt.fx.graphics.refreshWhileInSceneEvery
+import matt.fx.graphics.refresh.refreshWhileInSceneEvery
 import matt.fx.graphics.win.interact.WinGeom
 import matt.fx.graphics.win.interact.openInNewWindow
 import matt.fx.graphics.win.stage.WMode.CLOSE
