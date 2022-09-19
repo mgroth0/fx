@@ -48,6 +48,7 @@ import matt.hurricanefx.wrapper.region.RegionWrapper
 import matt.hurricanefx.wrapper.region.border.FXBorder
 import matt.hurricanefx.wrapper.region.border.solidBorder
 import matt.hurricanefx.wrapper.stage.StageWrapper
+import matt.hurricanefx.wrapper.wrapped
 import matt.json.prim.isValidJson
 import matt.lang.noExceptions
 import matt.lang.nullIfExceptions
@@ -360,7 +361,7 @@ fun ParentWrapper<*>.openInNewWindow(
 	  require(decorated)
 	  this.title = title
 	}
-	scene = if (mScene) MScene(this@openInNewWindow).node else Scene(this@openInNewWindow.node)
+	scene = if (mScene) MScene(this@openInNewWindow) else Scene(this@openInNewWindow.node).wrapped()
 	own.applyTo(this)
 	geom.applyTo(this)
 	if (border) {
