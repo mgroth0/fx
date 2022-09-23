@@ -282,6 +282,13 @@ sealed class WinGeom {
 	}
   }
 
+  object FullScreen: WinGeom() {
+	override fun applyTo(win: StageWrapper) {
+	  win.isFullScreen = true
+	}
+  }
+
+
   object CenteredMinWrapContent: WinGeom() {
 	override fun applyTo(win: StageWrapper) {
 	  require(win.owner != null) { "use initOwner first" }
