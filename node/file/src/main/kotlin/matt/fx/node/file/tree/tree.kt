@@ -218,7 +218,7 @@ private fun TreeLikeWrapper<*, MFile>.setupGUI() {
 		}.node
 	  }
 	  val nameCol = column("name", MFile::abspath) {
-		simpleCellFactory(SimpleFactory { value -> mFile(value).let { it.name to it.draggableIcon().node } })
+		simpleCellFactory(SimpleFactory { value -> mFile(value).let { it.name to it.draggableIcon() } })
 	  }
 	  column("ext", MFile::extension)
 
