@@ -8,6 +8,7 @@ import javafx.scene.Scene
 import javafx.scene.control.Control
 import matt.hurricanefx.eye.lib.onChange
 import matt.hurricanefx.wrapper.control.button.ButtonWrapper
+import matt.hurricanefx.wrapper.node.NodeWrapper
 import matt.hurricanefx.wrapper.node.NodeWrapperImpl
 import matt.lang.err
 import matt.lang.setAll
@@ -30,7 +31,7 @@ fun NodeWrapperImpl<*>.setOnFocusGained(op: ()->Unit) {
   }
 }
 
-fun actionbutton(text: String="", graphic: Node? = null, action: ButtonWrapper.(ActionEvent)->Unit) =
+fun actionbutton(text: String="", graphic: NodeWrapper? = null, action: ButtonWrapper.(ActionEvent)->Unit) =
   ButtonWrapper(text, graphic).apply {
 	setOnAction {
 	  action(it)
@@ -40,7 +41,7 @@ fun actionbutton(text: String="", graphic: Node? = null, action: ButtonWrapper.(
 
 fun NodeWrapperImpl<*>.actionbutton(
   text: String = "",
-  graphic: Node? = null,
+  graphic: NodeWrapper? = null,
   action: ButtonWrapper.(ActionEvent)->Unit
 ) = ButtonWrapper(text, graphic).apply {
   setOnAction {
