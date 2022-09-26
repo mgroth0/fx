@@ -1,19 +1,17 @@
 package matt.fx.graphics.lang
 
-import javafx.beans.property.StringProperty
 import javafx.event.ActionEvent
-import javafx.event.EventTarget
 import javafx.scene.Node
-import javafx.scene.Scene
 import javafx.scene.control.Control
 import matt.hurricanefx.eye.lib.onChange
 import matt.hurricanefx.wrapper.control.button.ButtonWrapper
 import matt.hurricanefx.wrapper.node.NodeWrapper
-import matt.hurricanefx.wrapper.node.NodeWrapperImpl
+import matt.hurricanefx.wrapper.scene.SceneWrapper
+import matt.hurricanefx.wrapper.target.EventTargetWrapper
 import matt.lang.err
 import matt.lang.setAll
 
-fun NodeWrapperImpl<*>.setOnFocusLost(op: ()->Unit) {
+fun NodeWrapper.setOnFocusLost(op: ()->Unit) {
   focusedProperty().onChange { it: Boolean? ->
 	if (it == null) err("here it is")
 	if (!it) {
@@ -22,7 +20,7 @@ fun NodeWrapperImpl<*>.setOnFocusLost(op: ()->Unit) {
   }
 }
 
-fun NodeWrapperImpl<*>.setOnFocusGained(op: ()->Unit) {
+fun NodeWrapper.setOnFocusGained(op: ()->Unit) {
   focusedProperty().onChange { it: Boolean? ->
 	if (it == null) err("here it is")
 	if (it) {
@@ -31,7 +29,7 @@ fun NodeWrapperImpl<*>.setOnFocusGained(op: ()->Unit) {
   }
 }
 
-fun actionbutton(text: String="", graphic: NodeWrapper? = null, action: ButtonWrapper.(ActionEvent)->Unit) =
+fun actionbutton(text: String = "", graphic: NodeWrapper? = null, action: ButtonWrapper.(ActionEvent)->Unit) =
   ButtonWrapper(text, graphic).apply {
 	setOnAction {
 	  action(it)
@@ -39,7 +37,7 @@ fun actionbutton(text: String="", graphic: NodeWrapper? = null, action: ButtonWr
 	}
   }
 
-fun NodeWrapperImpl<*>.actionbutton(
+fun NodeWrapper.actionbutton(
   text: String = "",
   graphic: NodeWrapper? = null,
   action: ButtonWrapper.(ActionEvent)->Unit
@@ -53,7 +51,7 @@ fun NodeWrapperImpl<*>.actionbutton(
 
 infix fun ButtonWrapper.withAction(newOp: ()->Unit) = this.apply { op = newOp }
 
-fun EventTarget.removecontextmenu() {
+fun EventTargetWrapper.removecontextmenu() {
   if (this is Control) {
 	contextMenu = null
   } else (this as? Node)?.apply {
@@ -61,22 +59,6 @@ fun EventTarget.removecontextmenu() {
 	}
   }
 }
-
-
-@Suppress("unused")
-fun StringProperty.appendln(s: String) {
-  append("\n" + s)
-}
-
-fun StringProperty.append(s: String) {
-  set(get() + s)
-}
-
-@Suppress("unused")
-fun StringProperty.append(c: Char) {
-  set(get() + c)
-}
-
 
 fun <T> MutableList<T>.setToSublist(start: Int, Stop: Int) {
   setAll(subList(start, Stop).toList())
@@ -89,8 +71,8 @@ fun <T> MutableList<T>.removeAllButLastN(num: Int) {
 
 
 @Suppress("unused")
-fun Scene.onDoubleClickConsume(action: ()->Unit) {
-  setOnMouseClicked {
+fun SceneWrapper<*>.onDoubleClickConsume(action: ()->Unit) {
+  node.setOnMouseClicked {
 	if (it.clickCount == 2) {
 	  action()
 	  it.consume()
