@@ -7,6 +7,11 @@
 	  "path" : ":k:css"
 	},
 	{
+	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
+	  "cfg" :  "api",
+	  "path" : ":k:kjlib:shell"
+	},
+	{
 	  "type" : "matt.mstruct.bj.BuildJsonLibDependency",
 	  "cfg" :  "api",
 	  "key" :  "fx-graphics"
