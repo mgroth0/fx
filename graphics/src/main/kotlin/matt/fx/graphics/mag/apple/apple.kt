@@ -1,5 +1,3 @@
-@file:Suppress("DEPRECATION")
-
 package matt.fx.graphics.mag.apple
 
 import javafx.application.Platform.runLater
@@ -7,7 +5,6 @@ import javafx.geometry.Rectangle2D
 import javafx.stage.Screen
 import javafx.stage.Stage
 import matt.auto.applescript.AppleScriptExpression
-import matt.auto.applescript.applescript
 import matt.auto.applescript.interactiveOsascript
 import matt.auto.applescript.runAppleScript
 import matt.auto.compileAndOrRunApplescript
