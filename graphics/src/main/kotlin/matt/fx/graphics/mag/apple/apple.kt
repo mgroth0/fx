@@ -6,11 +6,14 @@ import javafx.application.Platform.runLater
 import javafx.geometry.Rectangle2D
 import javafx.stage.Screen
 import javafx.stage.Stage
+import matt.auto.applescript.AppleScriptExpression
 import matt.auto.applescript.applescript
 import matt.auto.applescript.interactiveOsascript
+import matt.auto.applescript.runAppleScript
 import matt.auto.compileAndOrRunApplescript
 import matt.auto.macapp.JavaMacApp
 import matt.auto.macapp.MacApp.Companion.getFrontmostProcessFromKotlinNative
+import matt.auto.macapp.SystemEvents
 import matt.fx.graphics.mag.left
 import matt.hurricanefx.wrapper.stage.StageWrapper
 import matt.lang.err
@@ -30,20 +33,20 @@ fun moveFrontmostWindowByApplescript(x: Number, y: Number, width: Number, height
 }
 
 fun moveAppWindowByApplescript(app: String, x: Number, y: Number, width: Number, height: Number) {
-  applescript(
-	"""
-	tell application "System Events"
-		set frontmostProcess to first application process whose name is "$app"
-		tell frontmostProcess
-			tell (1st window whose value of attribute "AXMain" is true)
-				set windowTitle to value of attribute "AXTitle"
-				set position to {${x.toInt()}, ${y.toInt()}}
-				set size to {${width.toInt()}, ${height.toInt()}}
-			end tell
-		end tell
-	end tell
-  """.trimIndent()
-  )
+
+  runAppleScript {
+	tell(SystemEvents) {
+	  scriptLines += "frontmostProcess to first application process whose name is \"$app\""
+	  tell("frontmostProcess") {
+		tell("(1st window whose value of attribute \"AXMain\" is true)") {
+		  set("windowTitle", AppleScriptExpression("value of attribute \"AXTitle\""))
+		  set("position", AppleScriptExpression("{${x.toInt()}, ${y.toInt()}}"))
+		  set("size", AppleScriptExpression("{${width.toInt()}, ${height.toInt()}}"))
+		}
+	  }
+	}
+  }
+
 }
 
 fun getFrontmostWindowPositionAndSizeByApplescript(): Rectangle2D {
@@ -59,18 +62,16 @@ fun getFrontmostWindowPositionAndSizeByApplescript(): Rectangle2D {
 }
 
 fun getAppWindowPositionAndSizeByApplescript(app: String): Rectangle2D {
-  var s = applescript(
-	"""
-	tell application "System Events"
-		set frontmostProcess to first application process whose name is "$app"
-		tell frontmostProcess
-			tell (1st window whose value of attribute "AXMain" is true)
-				return {position, size}
-			end tell
-		end tell
-	end tell
-  """.trimIndent()
-  )
+  var s = runAppleScript {
+	tell(SystemEvents) {
+	  scriptLines += "frontmostProcess to first application process whose name is \"$app\""
+	  tell("frontmostProcess") {
+		tell("(1st window whose value of attribute \"AXMain\" is true)") {
+		  `return`(AppleScriptExpression("{position, size}"))
+		}
+	  }
+	}
+  }
   val x = s.substringBefore(",").trim().toInt()
   s = s.substringAfter(",")
   val y = s.substringBefore(",").trim().toInt()
