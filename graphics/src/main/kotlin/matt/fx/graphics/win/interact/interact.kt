@@ -404,7 +404,7 @@ fun NodeWrapper.textInput(
   default: String = "insert default here",
   prompt: String = "insert prompt here"
 ): String? = TextInputDialog(default).apply {
-  initOwner(stage)
+  initOwner(stage?.node)
   contentText = prompt
   initStyle(StageStyle.UTILITY)
 }.showAndWait().getOrNull()
