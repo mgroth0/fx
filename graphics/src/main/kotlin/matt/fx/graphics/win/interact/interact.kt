@@ -48,6 +48,7 @@ import matt.hurricanefx.wrapper.region.RegionWrapper
 import matt.hurricanefx.wrapper.region.border.FXBorder
 import matt.hurricanefx.wrapper.region.border.solidBorder
 import matt.hurricanefx.wrapper.stage.StageWrapper
+import matt.hurricanefx.wrapper.window.WindowWrapper
 import matt.hurricanefx.wrapper.wrapped
 import matt.json.prim.isValidJson
 import matt.lang.noExceptions
@@ -315,7 +316,7 @@ sealed class WinOwn {
 	}
   }
 
-  class Owner(val owner: Window): WinOwn() {
+  class Owner(val owner: WindowWrapper<*>): WinOwn() {
 	override fun applyTo(win: StageWrapper) {
 	  win.initOwner(owner)
 	}

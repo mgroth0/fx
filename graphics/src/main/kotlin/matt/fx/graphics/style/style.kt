@@ -78,6 +78,11 @@ class StyleClassDSL(val s: Node): MyStyleDsl() {
   val nodeTextField by StyleClass()
   val presentationMode by StyleClass()
   val flowablePresentationMode by StyleClass()
+  val eDatetag by StyleClass()
+  val rDatetag by StyleClass()
+  val datetag by StyleClass()
+  val flowTypeTag by StyleClass()
+  val specialTag by StyleClass()
 
   private fun styleMap() =
 	s.style.split(";").filter { it.isNotBlank() }.map { it.split(":") }.associate { it[0] to it[1] }.toMutableMap()

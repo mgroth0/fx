@@ -16,6 +16,7 @@ import matt.async.schedule.every
 import matt.async.thread.daemon
 import matt.css.Color.black
 import matt.css.sty
+import matt.file.Folder
 import matt.file.HTMLFile
 import matt.file.LogFile
 import matt.file.MFile
@@ -27,6 +28,7 @@ import matt.fx.graphics.win.interact.openImageInWindow
 import matt.fx.graphics.win.interact.openInNewWindow
 import matt.fx.graphics.win.interact.safe
 import matt.fx.graphics.win.stage.WMode.CLOSE
+import matt.fx.node.file.tree.fileTreeAndViewerPane
 import matt.fx.web.WebViewPane
 import matt.fx.web.WebViewWrapper
 import matt.fx.web.specialZooming
@@ -221,9 +223,9 @@ private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): RegionWrap
 			  scroll.isVisible = false
 			}
 		  }
-//		  childrenUnmodifiable.addListener(ListChangeListener<Any?> {
-//
-//		  })
+		  //		  childrenUnmodifiable.addListener(ListChangeListener<Any?> {
+		  //
+		  //		  })
 
 
 		  val cacheBreaker = "?${System.currentTimeMillis()}" /*omfg it works...*/
@@ -315,6 +317,14 @@ private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): RegionWrap
 		  }
 		}
 		root
+	  }
+
+	  is Folder   -> when {
+		extension != "app" -> fileTreeAndViewerPane(this).apply {
+		  prefWidth = 600.0
+		}
+
+		else               -> err("how to make node for files with extension:${extension}")
 	  }
 
 	  else        -> err("how to make node for files with extension:${extension}")
