@@ -5,6 +5,11 @@
 	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
 	  "cfg" :  "implementation",
 	  "path" : ":k:hurricanefx"
+	},
+	{
+	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
+	  "cfg" :  "implementation",
+	  "path" : ":k:fx:graphics"
 	}
   ]
 }
