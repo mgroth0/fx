@@ -14,6 +14,7 @@ import matt.auto.clip.AwtClipLink
 import matt.file.MFile
 import matt.file.commons.TEMP_DIR
 import matt.fx.image.save
+import matt.hurricanefx.wrapper.node.NodeWrapper
 import matt.hurricanefx.wrapper.node.NodeWrapperImpl
 import matt.lang.See
 
@@ -50,7 +51,7 @@ fun Clipboard.putFiles(files: MutableList<MFile>) = setContent { putFiles(files.
 fun Clipboard.put(dataFormat: DataFormat, value: Any) = setContent { put(dataFormat, value) }
 
 
-fun NodeWrapperImpl<*>.drags(file: MFile) {
+fun NodeWrapper.drags(file: MFile) {
   setOnDragDetected {
 	val db = startDragAndDrop(*TransferMode.ANY)
 	db.putFiles(mutableListOf(file))
@@ -59,7 +60,7 @@ fun NodeWrapperImpl<*>.drags(file: MFile) {
   }
 }
 
-fun NodeWrapperImpl<*>.dragsSnapshot(fill: Color = Color.BLACK) {
+fun NodeWrapper.dragsSnapshot(fill: Color = Color.BLACK) {
   addEventFilter(MouseEvent.DRAG_DETECTED) {
 	println("drag detected")
 	val params = SnapshotParameters()
@@ -77,10 +78,10 @@ fun NodeWrapperImpl<*>.dragsSnapshot(fill: Color = Color.BLACK) {
 var dummyDragBoard: Any? = null
 const val DUMMY_TEXT = "DUMMY TEXT"
 
-fun NodeWrapperImpl<*>.easyDrag(data: Any, getSnapshotNode: ()->NodeWrapperImpl<*>? = { null }) =
+fun NodeWrapper.easyDrag(data: Any, getSnapshotNode: ()->NodeWrapperImpl<*>? = { null }) =
   easyDrag({ true }, { data }, getSnapshotNode)
 
-fun NodeWrapperImpl<*>.easyDrag(
+fun NodeWrapper.easyDrag(
   condition: ()->Boolean = { true },
   getData: ()->Any,
   getSnapshotNode: ()->NodeWrapperImpl<*>? = { null }
@@ -106,7 +107,7 @@ fun NodeWrapperImpl<*>.easyDrag(
   }
 }
 
-fun NodeWrapperImpl<*>.easyDrop(handler: ((Any)->Unit)) {
+fun NodeWrapper.easyDrop(handler: ((Any)->Unit)) {
   this.cursor = Cursor.DEFAULT /*just never change it please*/
   setOnDragEntered {
 	this.cursor = Cursor.DEFAULT /*just never change it please*/
