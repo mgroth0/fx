@@ -2,12 +2,13 @@ package matt.fx.graphics.wrapper.node.line
 
 import javafx.scene.Parent
 import javafx.scene.shape.Line
+import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapperImpl
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.graphics.wrapper.node.shape.ShapeWrapper
 
-fun NodeWrapperImpl<Parent>.line(
+fun ET.line(
   startX: Number = 0.0,
   startY: Number = 0.0,
   endX: Number = 0.0,
