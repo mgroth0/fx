@@ -13,9 +13,9 @@ import javafx.stage.Window
 import matt.fx.graphics.service.WrapperServiceHub
 import matt.fx.graphics.wrapper.SingularEventTargetWrapper
 import matt.fx.graphics.wrapper.node.parent.ParentWrapper
-import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
 import matt.fx.graphics.wrapper.scenelike.SceneLikeWrapper
 import matt.fx.graphics.wrapper.stage.StageWrapper
+import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
 
 
 open class SceneWrapper<R: ParentWrapper<*>>(
@@ -46,6 +46,10 @@ open class SceneWrapper<R: ParentWrapper<*>>(
   val stage get() = WrapperServiceHub.get().wrapped(window!! as Stage) as StageWrapper
 
   override val properties get() = node.properties
+  override fun removeFromParent() {
+	(window as? Stage)?.let { it.scene = null }
+  }
+
   fun reloadStylesheets() {
 	val styles = stylesheets.toMutableList()
 	stylesheets.clear()

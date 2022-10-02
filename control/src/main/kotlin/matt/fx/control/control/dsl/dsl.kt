@@ -209,30 +209,7 @@ interface ControlDSL: GraphicsDSL {
 
   fun <C: NodeWrapper> textflow(op: TextFlowWrapper<C>.()->Unit = {}) = TextFlowWrapper<C>().attachTo(this, op)
 
-  fun text(op: TextWrapper.()->Unit = {}) = TextWrapper().attachTo(this, op)
 
-
-  fun <C: NodeWrapper> hbox(
-	spacing: Number? = null,
-	alignment: Pos? = null,
-	op: HBoxWrapper<C>.()->Unit = {}
-  ): HBoxWrapper<C> {
-	val hbox = HBoxWrapper<C>(HBox())
-	if (alignment != null) hbox.alignment = alignment
-	if (spacing != null) hbox.spacing = spacing.toDouble()
-	return attach(hbox, op)
-  }
-
-  fun <C: NodeWrapper> vbox(
-	spacing: Number? = null,
-	alignment: Pos? = null,
-	op: VBoxWrapper<C>.()->Unit = {}
-  ): VBoxWrapper<C> {
-	val vbox = VBoxWrapper<C>(VBox())
-	if (alignment != null) vbox.alignment = alignment
-	if (spacing != null) vbox.spacing = spacing.toDouble()
-	return attach(vbox, op)
-  }
 
 
   fun <P, N: NodeWrapper> swapper(
@@ -332,15 +309,6 @@ interface ControlDSL: GraphicsDSL {
   ) = StackedBarChartWrapper<X, Y>(x, y).attachTo(this, op) { it.title = title }
 
 
-  fun text(initialValue: String? = null, op: TextWrapper.()->Unit = {}) = TextWrapper().attachTo(this, op) {
-	if (initialValue != null) it.text = initialValue
-  }
-
-
-  fun text(observable: ObsS, op: TextWrapper.()->Unit = {}) = text().apply {
-	textProperty.bind(observable)
-	op(this)
-  }
 
 
   fun textfield(value: String? = null, op: TextFieldWrapper.()->Unit = {}) = TextFieldWrapper().attachTo(this, op) {

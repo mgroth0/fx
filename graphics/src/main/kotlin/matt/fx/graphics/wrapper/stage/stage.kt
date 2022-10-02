@@ -14,6 +14,7 @@ import matt.fx.graphics.wrapper.scene.SceneWrapper
 import matt.fx.graphics.wrapper.window.WindowWrapper
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.NullableFXBackedBindableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
+import matt.log.warn
 
 open class StageWrapper(override val node: Stage): WindowWrapper<Stage>(node), Titled {
 
@@ -68,6 +69,11 @@ open class StageWrapper(override val node: Stage): WindowWrapper<Stage>(node), T
 
   override fun addChild(child: NodeWrapper, index: Int?) {
 	TODO("Not yet implemented")
+  }
+
+  override fun removeFromParent() {
+	warn("removeFromParent used on a stage... closing stage")
+	close()
   }
 
 
