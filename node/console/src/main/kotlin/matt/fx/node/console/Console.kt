@@ -53,20 +53,20 @@ import java.io.PrintWriter
 fun ParentWrapper<NodeWrapper>.processConsole(
   name: String = "new console", op: ProcessConsole.()->Unit = {}
 ): ProcessConsole {
-  return addr(ProcessConsole(name).apply(op)) as ProcessConsole
+  return addr(ProcessConsole(name).apply(op))
 }
 
 fun ParentWrapper<NodeWrapper>.interceptConsole(
   name: String = "new console", op: SystemRedirectConsole.()->Unit = {}
 ): SystemRedirectConsole {
-  return addr(SystemRedirectConsole(name).apply(op)) as SystemRedirectConsole
+  return addr(SystemRedirectConsole(name).apply(op))
 }
 
 fun ParentWrapper<NodeWrapper>.customConsole(
   name: String = "new console", takesInput: Boolean = true, op: CustomConsole.()->Unit = {}
 ): CustomConsole {
 
-  return addr(CustomConsole(name, takesInput).apply(op)) as CustomConsole
+  return addr(CustomConsole(name, takesInput).apply(op))
 }
 
 val CONSOLE_MEM_FOLD = DATA_FOLDER + "ConsoleMemory"
