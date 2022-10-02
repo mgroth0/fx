@@ -2,6 +2,7 @@ package matt.fx.control.lang
 
 import javafx.event.ActionEvent
 import javafx.scene.Node
+import javafx.scene.control.Control
 import matt.fx.control.wrapper.control.button.ButtonWrapper
 import matt.fx.graphics.wrapper.EventTargetWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
