@@ -18,8 +18,6 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import matt.file.MFile
 import matt.file.construct.mFile
-import matt.fx.control.control.dsl.button
-import matt.fx.control.control.dsl.textarea
 import matt.fx.control.lang.actionbutton
 import matt.fx.control.mscene.MScene
 import matt.fx.control.mstage.MStage
@@ -35,8 +33,9 @@ import matt.fx.graphics.win.bindgeom.bindGeometry
 import matt.fx.control.win.interact.WinGeom.Centered
 import matt.fx.control.win.interact.WinOwn.Auto
 import matt.fx.control.wrapper.control.button.ButtonWrapper
+import matt.fx.control.wrapper.control.button.button
+import matt.fx.control.wrapper.control.text.area.textarea
 import matt.fx.control.wrapper.wrapped.wrapped
-import matt.fx.graphics.dsl.hbox
 import matt.fx.graphics.wrapper.imageview.ImageViewWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.disableWhen
@@ -47,6 +46,7 @@ import matt.hurricanefx.eye.mtofx.createROFXPropWrapper
 import matt.hurricanefx.eye.prop.doubleBinding
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
 import matt.fx.graphics.wrapper.pane.anchor.AnchorPaneWrapperImpl
+import matt.fx.graphics.wrapper.pane.hbox.hbox
 import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
 import matt.fx.graphics.wrapper.region.RegionWrapper
 import matt.fx.graphics.wrapper.region.border.FXBorder

@@ -9,6 +9,7 @@ import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.model.convert.MyNumberStringConverter
 import matt.model.convert.StringConverter
+import matt.obs.prop.Var
 
 
 fun ET.textfield(property: Var<String>, op: TextFieldWrapper.()->Unit = {}) =

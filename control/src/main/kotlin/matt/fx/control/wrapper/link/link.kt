@@ -2,9 +2,10 @@ package matt.fx.control.wrapper.link
 
 import javafx.scene.control.Hyperlink
 import matt.fx.control.wrapper.control.button.base.ButtonBaseWrapper
+import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
-import matt.fx.graphics.wrapper.ET
+import matt.obs.bindings.str.ObsS
 
 fun ET.hyperlink(text: String = "", graphic: NodeWrapper? = null, op: HyperlinkWrapper.()->Unit = {}) =
   HyperlinkWrapper().apply { this.text = text;this.graphic = graphic }.attachTo(this, op)

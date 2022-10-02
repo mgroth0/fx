@@ -9,6 +9,8 @@ import matt.fx.graphics.wrapper.node.attachTo
 import matt.hurricanefx.eye.mtofx.createROFXPropWrapper
 import matt.model.convert.StringConverter
 import matt.obs.bind.binding
+import matt.obs.prop.ObsVal
+import matt.obs.prop.ValProp
 
 
 inline fun <reified T> ET.label(
@@ -18,7 +20,7 @@ inline fun <reified T> ET.label(
   noinline op: LabelWrapper.()->Unit = {}
 ) = label().apply {
   if (converter == null) {
-	if (T::class == kotlin.String::class) {
+	if (T::class == String::class) {
 	  @Suppress("UNCHECKED_CAST")
 	  textProperty.bind(observable as ValProp<String>)
 	} else {

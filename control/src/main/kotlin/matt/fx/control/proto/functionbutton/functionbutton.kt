@@ -1,6 +1,6 @@
 package matt.fx.control.proto.functionbutton
 
-import matt.fx.control.control.dsl.button
+import matt.fx.control.wrapper.control.button.button
 import matt.fx.graphics.wrapper.ET
 import kotlin.reflect.KFunction
 

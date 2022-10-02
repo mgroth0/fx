@@ -3,6 +3,7 @@ package matt.fx.control.wrapper.button.toggle
 import javafx.beans.property.BooleanProperty
 import javafx.scene.control.ToggleButton
 import javafx.scene.control.ToggleGroup
+import matt.fx.control.toggle.getToggleGroup
 import matt.fx.control.wrapper.control.button.base.ButtonBaseWrapper
 import matt.fx.control.wrapper.control.value.HasWritableValue
 import matt.fx.graphics.wrapper.node.attachTo
@@ -10,6 +11,7 @@ import matt.hurricanefx.eye.lib.onChange
 import matt.lang.go
 import matt.obs.prop.BindableProperty
 import matt.fx.graphics.wrapper.ET
+import matt.obs.prop.VarProp
 
 /**
  * Create a togglebutton inside the current or given toggle group. The optional value parameter will be matched against

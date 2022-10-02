@@ -2,11 +2,11 @@ package matt.fx.control.wrapper.control.button
 
 import javafx.scene.control.Button
 import matt.fx.control.wrapper.control.button.base.ButtonBaseWrapper
+import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.lang.NEVER
-import matt.fx.graphics.wrapper.ET
-
+import matt.obs.prop.ValProp
 
 
 fun ET.button(
