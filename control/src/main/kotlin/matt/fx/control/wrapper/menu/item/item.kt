@@ -88,6 +88,8 @@ open class MenuItemWrapper<N: MenuItem>(
 	node.parentMenu.items.remove(node)
   }
 
+  override fun isInsideRow() = false
+
 }
 
 
