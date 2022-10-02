@@ -14,29 +14,20 @@ import javafx.scene.paint.Color
 import javafx.scene.paint.Paint
 import matt.file.MFile
 import matt.file.construct.toMFile
-import matt.hurricanefx.all
-import matt.hurricanefx.backgroundColor
-import matt.hurricanefx.copy
+import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.hurricanefx.eye.lib.proxypropDouble
 import matt.hurricanefx.eye.wrapper.obs.collect.createMutableWrapper
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
-import matt.hurricanefx.horizontal
-import matt.hurricanefx.insets
-import matt.hurricanefx.vertical
-import matt.hurricanefx.wrapper.node.NodeWrapper
-import matt.hurricanefx.wrapper.pane.scroll.ScrollPaneWrapper
 import matt.fx.graphics.wrapper.node.parent.ParentWrapper
 import matt.fx.graphics.wrapper.node.parent.ParentWrapperImpl
 import matt.fx.graphics.wrapper.node.parent.parent
 import matt.fx.graphics.wrapper.region.border.FXBorder
 import matt.fx.graphics.wrapper.sizeman.SizeManaged
-import matt.hurricanefx.wrapper.uncheckedWrapperConverter
 import matt.lang.NEVER
 import matt.lang.err
 import matt.obs.col.olist.mappedlist.toSyncedList
 import matt.obs.prop.BindableProperty
-import matt.reflect.access
 import kotlin.reflect.full.declaredMemberFunctions
 
 interface RegionWrapper<C: NodeWrapper>: ParentWrapper<C>, SizeManaged {

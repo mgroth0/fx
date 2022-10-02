@@ -4,9 +4,9 @@ import javafx.beans.property.ObjectProperty
 import javafx.scene.Parent
 import javafx.scene.SubScene
 import javafx.scene.paint.Paint
+import matt.fx.graphics.wrapper.node.NodeWrapperImpl
+import matt.fx.graphics.wrapper.node.parent.ParentWrapper
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
-import matt.hurricanefx.wrapper.node.NodeWrapperImpl
-import matt.hurricanefx.wrapper.parent.ParentWrapper
 import matt.fx.graphics.wrapper.scenelike.SceneLikeWrapper
 
 

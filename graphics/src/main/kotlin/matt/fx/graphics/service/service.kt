@@ -1,5 +1,6 @@
 package matt.fx.graphics.service
 
+import javafx.scene.Node
 import matt.fx.graphics.wrapper.EventTargetWrapper
 import matt.service.MattService
 import matt.service.ServiceHub
@@ -10,3 +11,6 @@ interface WrapperService: MattService {
 }
 
 object WrapperServiceHub: ServiceHub<WrapperService>()
+
+internal fun EventTarget.wrapped() = WrapperServiceHub.get().wrapped(this)
+internal fun Node.wrapped() = WrapperServiceHub.get().wrapped(this)

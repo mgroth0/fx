@@ -2,15 +2,15 @@ package matt.fx.graphics.wrapper.node.parent
 
 import javafx.beans.property.ReadOnlyObjectProperty
 import javafx.scene.Parent
+import matt.fx.graphics.wrapper.node.NodeWrapper
+import matt.fx.graphics.wrapper.node.NodeWrapperImpl
+import matt.fx.graphics.wrapper.node.attachTo
 import matt.hurricanefx.eye.wrapper.obs.collect.createImmutableWrapper
 import matt.fx.graphics.wrapper.node.line.poly.PolylineWrapper
 import matt.fx.graphics.wrapper.node.line.quad.QuadCurveWrapper
-import matt.hurricanefx.wrapper.node.NodeWrapper
-import matt.hurricanefx.wrapper.node.NodeWrapperImpl
-import matt.hurricanefx.wrapper.node.attachTo
 import matt.fx.graphics.wrapper.node.shape.poly.PolygonWrapper
-import matt.hurricanefx.wrapper.wrapped
 import matt.obs.col.olist.mappedlist.toMappedList
+import matt.fx.graphics.service.wrapped
 
 interface ParentWrapper<C: NodeWrapper>: NodeWrapper {
   override val node: Parent
@@ -49,14 +49,14 @@ abstract class ParentWrapperImpl<out N: Parent, C: NodeWrapper>(node: N): NodeWr
 
   val childrenUnmodifiable by lazy {
 	@Suppress("UNCHECKED_CAST")
-	node.childrenUnmodifiable.createImmutableWrapper().toMappedList {  it.wrapped() as C }
+	node.childrenUnmodifiable.createImmutableWrapper().toMappedList { it.wrapped() as C }
   }
 
   fun requestLayout() = node.requestLayout()
 
 }
 
-val NodeWrapper.parent get() : ParentWrapper<*>? = node.parent?.wrapped()
+val NodeWrapper.parent get() : ParentWrapper<*>? = node.parent?.wrapped() as ParentWrapper<*>?
 
 fun NodeWrapper.parentProperty(): ReadOnlyObjectProperty<Parent> = node.parentProperty()
 

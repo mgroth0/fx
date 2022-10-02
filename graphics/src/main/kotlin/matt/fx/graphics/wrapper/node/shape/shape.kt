@@ -5,10 +5,10 @@ import javafx.beans.property.ObjectProperty
 import javafx.scene.paint.Paint
 import javafx.scene.shape.Shape
 import javafx.scene.shape.StrokeType
+import matt.fx.graphics.wrapper.node.NodeWrapper
+import matt.fx.graphics.wrapper.node.NodeWrapperImpl
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.NonNullFXBackedBindableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
-import matt.hurricanefx.wrapper.node.NodeWrapper
-import matt.hurricanefx.wrapper.node.NodeWrapperImpl
 
 abstract class ShapeWrapper<N: Shape>(node: N): NodeWrapperImpl<N>(node) {
   var stroke: Paint?

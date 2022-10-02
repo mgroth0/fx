@@ -3,8 +3,8 @@ package matt.fx.graphics.wrapper.text.textlike
 import javafx.scene.paint.Color
 import javafx.scene.paint.Paint
 import javafx.scene.text.Font
-import matt.hurricanefx.font.fixed
-import matt.hurricanefx.wrapper.node.NodeWrapper
+import matt.fx.graphics.font.fixed
+import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.obs.prop.Var
 
 interface TextLike: NodeWrapper {

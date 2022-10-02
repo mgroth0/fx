@@ -32,6 +32,8 @@ import matt.log.tab
 import matt.stream.recurse.recurse
 import java.net.URL
 import kotlin.reflect.KClass
+import matt.fx.graphics.service.wrapped
+import matt.fx.graphics.wrapper.style.StyleableWrapper
 
 /*this is for when I have two monitors that are the scame brand and therefore mac is mixing up which side each is on I think*/
 const val NEED_REVERSED_DISPLAYS_FEATURE = false
@@ -128,8 +130,7 @@ open class MScene<R: ParentWrapper<*>>(
 			(it as? Parent)?.childrenUnmodifiable ?: listOf()
 		  }.forEach {
 			if (it::class !in classesPrinted) {
-			  WrapperServiceHub
-			  println(it.wrapped().styleInfo())
+			  println((it.wrapped() as StyleableWrapper).styleInfo())
 			  classesPrinted += it::class
 			}
 		  }

@@ -5,7 +5,6 @@ import javafx.event.EventTarget
 import javafx.scene.Node
 import matt.collect.weak.WeakMap
 import matt.fx.graphics.wrapper.node.NodeWrapper
-import sun.tools.jconsole.Tab
 
 @DslMarker annotation class FXNodeWrapperDSL
 

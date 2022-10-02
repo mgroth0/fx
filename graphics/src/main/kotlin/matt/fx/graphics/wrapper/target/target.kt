@@ -1,14 +1,8 @@
 package matt.fx.graphics.wrapper.target
 
 import javafx.beans.value.ObservableValue
-import javafx.collections.ObservableMap
-import javafx.event.EventTarget
-import javafx.scene.Node
-import javafx.scene.Scene
-import javafx.stage.Window
 import matt.fx.graphics.wrapper.EventTargetWrapper
 import matt.hurricanefx.eye.lib.onChange
-import sun.tools.jconsole.Tab
 
 
 fun <T: EventTargetWrapper> T.replaceChildren(op: T.()->Unit) {
