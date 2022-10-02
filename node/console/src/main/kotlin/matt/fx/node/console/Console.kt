@@ -22,6 +22,7 @@ import matt.fx.graphics.clip.copyToClipboard
 import matt.fx.graphics.hotkey.hotkeys
 import matt.fx.graphics.hotkey.plus
 import matt.fx.graphics.wrapper.node.NodeWrapper
+import matt.fx.graphics.wrapper.node.parent.ParentWrapper
 import matt.fx.node.console.Console.RefreshRate.NORMAL
 import matt.fx.node.console.mem.ConsoleMemory
 import matt.fx.node.console.text.ConsoleTextFlow
@@ -49,19 +50,19 @@ import java.io.PipedInputStream
 import java.io.PipedOutputStream
 import java.io.PrintWriter
 
-fun ParentWrapperImpl<*, NodeWrapper>.processConsole(
+fun ParentWrapper<NodeWrapper>.processConsole(
   name: String = "new console", op: ProcessConsole.()->Unit = {}
 ): ProcessConsole {
   return addr(ProcessConsole(name).apply(op)) as ProcessConsole
 }
 
-fun ParentWrapperImpl<*, NodeWrapper>.interceptConsole(
+fun ParentWrapper<NodeWrapper>.interceptConsole(
   name: String = "new console", op: SystemRedirectConsole.()->Unit = {}
 ): SystemRedirectConsole {
   return addr(SystemRedirectConsole(name).apply(op)) as SystemRedirectConsole
 }
 
-fun ParentWrapperImpl<*, NodeWrapper>.customConsole(
+fun ParentWrapper<NodeWrapper>.customConsole(
   name: String = "new console", takesInput: Boolean = true, op: CustomConsole.()->Unit = {}
 ): CustomConsole {
 
