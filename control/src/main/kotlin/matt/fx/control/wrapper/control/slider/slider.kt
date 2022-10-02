@@ -7,9 +7,30 @@ import javafx.geometry.Orientation
 import javafx.scene.control.Slider
 import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.graphics.wrapper.node.NodeWrapper
+import matt.fx.graphics.wrapper.node.attachTo
 import matt.hurricanefx.eye.bind.smartBind
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.obs.prop.ObsVal
+import matt.fx.graphics.wrapper.ET
+
+fun ET.slider(
+  min: Number? = null,
+  max: Number? = null,
+  value: Number? = null,
+  orientation: Orientation? = null,
+  op: SliderWrapper.()->Unit = {}
+) = SliderWrapper().attachTo(this, op) {
+  if (min != null) it.min = min.toDouble()
+  if (max != null) it.max = max.toDouble()
+  if (value != null) it.value = value.toDouble()
+  if (orientation != null) it.orientation = orientation
+}
+
+fun <T> ET.slider(
+  range: ClosedRange<T>, value: Number? = null, orientation: Orientation? = null, op: SliderWrapper.()->Unit = {}
+): SliderWrapper where T: Comparable<T>, T: Number {
+  return slider(range.start, range.endInclusive, value, orientation, op)
+}
 
 class SliderWrapper(
    node: Slider = Slider(),

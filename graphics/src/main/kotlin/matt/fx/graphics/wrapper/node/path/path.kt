@@ -1,6 +1,7 @@
 package matt.fx.graphics.wrapper.node.path
 
 import javafx.collections.ObservableList
+import javafx.scene.Parent
 import javafx.scene.shape.ArcTo
 import javafx.scene.shape.ClosePath
 import javafx.scene.shape.CubicCurveTo
@@ -11,7 +12,13 @@ import javafx.scene.shape.Path
 import javafx.scene.shape.PathElement
 import javafx.scene.shape.QuadCurveTo
 import javafx.scene.shape.VLineTo
+import matt.fx.graphics.wrapper.node.NodeWrapperImpl
+import matt.fx.graphics.wrapper.node.attachTo
 import matt.fx.graphics.wrapper.node.shape.ShapeWrapper
+
+fun NodeWrapperImpl<Parent>.path(vararg elements: PathElement, op: PathWrapper.()->Unit = {}) =
+  PathWrapper(*elements).attachTo(this, op)
+
 
 open class PathWrapper(
    node: Path = Path(),

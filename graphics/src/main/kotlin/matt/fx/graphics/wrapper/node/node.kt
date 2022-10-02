@@ -45,6 +45,7 @@ import matt.fx.graphics.wrapper.SingularEventTargetWrapper
 import matt.fx.graphics.wrapper.node.line.LineWrapper
 import matt.fx.graphics.wrapper.node.line.arc.ArcWrapper
 import matt.fx.graphics.wrapper.node.line.cubic.CubicCurveWrapper
+import matt.fx.graphics.wrapper.node.parent.ParentWrapper
 import matt.fx.graphics.wrapper.node.parent.parent
 import matt.fx.graphics.wrapper.node.path.PathWrapper
 import matt.fx.graphics.wrapper.node.shape.circle.CircleWrapper
@@ -779,80 +780,28 @@ fun NodeWrapper.onHover(onHover: (Boolean)->Unit) = apply {
 }
 
 
-fun NodeWrapperImpl<Parent>.arc(
-  centerX: Number = 0.0,
-  centerY: Number = 0.0,
-  radiusX: Number = 0.0,
-  radiusY: Number = 0.0,
-  startAngle: Number = 0.0,
-  length: Number = 0.0,
-  op: ArcWrapper.()->Unit = {}
-) =
-  ArcWrapper(
-	centerX.toDouble(), centerY.toDouble(), radiusX.toDouble(), radiusY.toDouble(), startAngle.toDouble(),
-	length.toDouble()
-  ).attachTo(this, op)
+fun NW.minYRelativeTo(ancestor: NodeWrapper): Double? { //  println("${this} minYRelative to ${ancestor}")
+  var p: ParentWrapper<*>? = parent
+  var y = boundsInParent.minY //  matt.prim.str.build.tab("y = ${y}")
+  while (true) {
+	when (p) {
+	  null     -> {
+		return null
+	  }
 
-fun NodeWrapperImpl<Parent>.circle(
-  centerX: Number = 0.0,
-  centerY: Number = 0.0,
-  radius: Number = 0.0,
-  op: CircleWrapper.()->Unit = {}
-) =
-  CircleWrapper(centerX.toDouble(), centerY.toDouble(), radius.toDouble()).attachTo(this, op)
+	  ancestor -> {
+		return y
+	  }
 
-fun NodeWrapperImpl<Parent>.cubiccurve(
-  startX: Number = 0.0,
-  startY: Number = 0.0,
-  controlX1: Number = 0.0,
-  controlY1: Number = 0.0,
-  controlX2: Number = 0.0,
-  controlY2: Number = 0.0,
-  endX: Number = 0.0,
-  endY: Number = 0.0,
-  op: CubicCurveWrapper.()->Unit = {}
-) =
-  CubicCurveWrapper(
-	startX.toDouble(), startY.toDouble(), controlX1.toDouble(), controlY1.toDouble(), controlX2.toDouble(),
-	controlY2.toDouble(), endX.toDouble(), endY.toDouble()
-  ).attachTo(this, op)
-
-fun NodeWrapperImpl<Parent>.ellipse(
-  centerX: Number = 0.0,
-  centerY: Number = 0.0,
-  radiusX: Number = 0.0,
-  radiusY: Number = 0.0,
-  op: EllipseWrapper.()->Unit = {}
-) =
-  EllipseWrapper(centerX.toDouble(), centerY.toDouble(), radiusX.toDouble(), radiusY.toDouble()).attachTo(this, op)
-
-fun NodeWrapperImpl<Parent>.line(
-  startX: Number = 0.0,
-  startY: Number = 0.0,
-  endX: Number = 0.0,
-  endY: Number = 0.0,
-  op: LineWrapper.()->Unit = {}
-) =
-  LineWrapper(startX.toDouble(), startY.toDouble(), endX.toDouble(), endY.toDouble()).attachTo(this, op)
-
-fun NodeWrapperImpl<Parent>.path(vararg elements: PathElement, op: PathWrapper.()->Unit = {}) =
-  PathWrapper(*elements).attachTo(this, op)
-
-
-fun NodeWrapperImpl<Parent>.rectangle(
-  x: Number = 0.0,
-  y: Number = 0.0,
-  width: Number = 0.0,
-  height: Number = 0.0,
-  op: RectangleWrapper.()->Unit = {}
-) =
-  RectangleWrapper(x.toDouble(), y.toDouble(), width.toDouble(), height.toDouble()).attachTo(this, op)
-
-fun NodeWrapperImpl<Parent>.svgpath(
-  content: String? = null,
-  fillRule: FillRule? = null,
-  op: SVGPathWrapper.()->Unit = {}
-) = SVGPathWrapper().attachTo(this, op) {
-  if (content != null) it.content = content
-  if (fillRule != null) it.fillRule = fillRule
+	  else     -> {
+		y += p.boundsInParent.minY
+		p = p.parent
+	  }
+	}
+  }
 }
+
+fun NW.maxYRelativeTo(ancestor: NodeWrapper): Double? {
+  return minYRelativeTo(ancestor)?.plus(boundsInParent.height)
+}
+

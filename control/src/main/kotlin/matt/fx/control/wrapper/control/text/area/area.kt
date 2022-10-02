@@ -4,8 +4,29 @@ import javafx.beans.property.BooleanProperty
 import javafx.scene.control.TextArea
 import matt.fx.control.wrapper.control.text.input.TextInputControlWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
+import matt.fx.graphics.wrapper.node.attachTo
 import matt.hurricanefx.eye.prop.getValue
 import matt.hurricanefx.eye.prop.setValue
+import matt.model.convert.StringConverter
+import matt.fx.graphics.wrapper.ET
+fun ET.textarea(value: String? = null, op: TextAreaWrapper.()->Unit = {}) = TextAreaWrapper().attachTo(this, op) {
+  if (value != null) it.text = value
+}
+
+
+fun ET.textarea(property: VarProp<String>, op: TextAreaWrapper.()->Unit = {}) = textarea().apply {
+  textProperty.bindBidirectional(property)
+  op(this)
+}
+
+
+fun <T> ET.textarea(
+  property: VarProp<T>, converter: StringConverter<T>, op: TextAreaWrapper.()->Unit = {}
+) = textarea().apply {
+  textProperty.bindBidirectional(property, converter)
+  op(this)
+}
+
 
 open class TextAreaWrapper(
   node: TextArea = TextArea(),

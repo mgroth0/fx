@@ -5,9 +5,19 @@ import javafx.scene.control.Accordion
 import javafx.scene.control.TitledPane
 import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.control.wrapper.titled.TitledPaneWrapper
+import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
+import matt.fx.graphics.wrapper.node.attach
 import matt.fx.graphics.wrapper.pane.PaneWrapper
 import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
+
+
+fun ET.accordion(vararg panes: TitledPane, op: AccordionWrapper.()->Unit = {}): AccordionWrapper {
+  val accordion = AccordionWrapper()
+  if (panes.isNotEmpty()) accordion.panes.addAll(panes)
+  attach(accordion, op)
+  return accordion
+}
 
 class AccordionWrapper(node: Accordion = Accordion()): ControlWrapperImpl<Accordion>(node) {
   val panes: ObservableList<TitledPane> get() = node.panes

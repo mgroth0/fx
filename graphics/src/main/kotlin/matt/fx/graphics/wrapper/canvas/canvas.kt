@@ -4,14 +4,18 @@ import javafx.scene.canvas.Canvas
 import javafx.scene.canvas.GraphicsContext
 import javafx.scene.image.PixelWriter
 import javafx.scene.paint.Color
+import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapperImpl
+import matt.fx.graphics.wrapper.node.attach
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.graphics.wrapper.sizeman.HasHeight
 import matt.fx.graphics.wrapper.sizeman.HasWidth
 import matt.lang.NOT_IMPLEMENTED
 import matt.obs.bindings.math.ObsD
 import matt.obs.bindings.math.times
+fun ET.canvas(width: Double = 0.0, height: Double = 0.0, op: CanvasWrapper.()->Unit = {}) =
+  attach(CanvasWrapper(width, height), op)
 
 interface Canv {
 

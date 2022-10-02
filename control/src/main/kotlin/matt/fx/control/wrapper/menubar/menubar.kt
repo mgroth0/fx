@@ -7,6 +7,10 @@ import javafx.scene.control.MenuBar
 import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.control.wrapper.menu.MenuWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
+import matt.fx.graphics.wrapper.node.attachTo
+import matt.fx.graphics.wrapper.ET
+
+fun ET.menubar(op: MenuBarWrapper.()->Unit = {}) = MenuBarWrapper().attachTo(this, op)
 
 open class MenuBarWrapper(
   node: MenuBar = MenuBar(),

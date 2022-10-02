@@ -9,12 +9,45 @@ import javafx.scene.layout.VBox
 import javafx.util.StringConverter
 import matt.fx.control.wrapper.labeled.LabeledWrapper
 import matt.fx.control.wrapper.wrapped.wrapped
+import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.inter.titled.Titled
 import matt.fx.graphics.wrapper.node.NodeWrapper
+import matt.fx.graphics.wrapper.node.attach
 import matt.lang.err
 import matt.obs.prop.MObservableValNewAndOld
+import matt.obs.prop.ValProp
 import java.text.Format
 
+
+
+
+
+
+
+
+
+
+fun ET.titledpane(
+  title: String? = null, node: NodeWrapper? = null, collapsible: Boolean = true, op: (TitledPaneWrapper).()->Unit = {}
+): TitledPaneWrapper {
+  val titledPane = TitledPaneWrapper().apply { text = title!!; graphic = node }
+  titledPane.isCollapsible = collapsible
+  attach(titledPane, op)
+  return titledPane
+}
+
+fun ET.titledpane(
+  title: ValProp<String>,
+  node: NodeWrapper? = null,
+  collapsible: Boolean = true,
+  op: (TitledPaneWrapper).()->Unit = {}
+): TitledPaneWrapper {
+  val titledPane = TitledPaneWrapper().apply { text = ""; graphic = node }
+  titledPane.textProperty.bind(title)
+  titledPane.isCollapsible = collapsible
+  attach(titledPane, op)
+  return titledPane
+}
 open class TitledPaneWrapper(
   node: TitledPane = TitledPane(),
 ): LabeledWrapper<TitledPane>(node), Titled {

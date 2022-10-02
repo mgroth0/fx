@@ -4,6 +4,7 @@ import javafx.collections.ObservableList
 import javafx.scene.Node
 import javafx.scene.control.CheckMenuItem
 import javafx.scene.control.ContextMenu
+import javafx.scene.control.Control
 import javafx.scene.control.CustomMenuItem
 import javafx.scene.control.Menu
 import javafx.scene.control.MenuItem
@@ -14,12 +15,49 @@ import matt.fx.control.wrapper.menu.item.MenuItemWrapper
 import matt.fx.control.wrapper.menu.item.SimpleMenuItem
 import matt.fx.control.wrapper.menu.item.action
 import matt.fx.control.wrapper.menu.radioitem.ValuedRadioMenuItem
+import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.hurricanefx.eye.prop.getValue
 import matt.hurricanefx.eye.prop.setValue
 import matt.fx.graphics.wrapper.window.WindowWrapper
 import matt.obs.bindings.str.ObsS
 import kotlin.concurrent.thread
+
+
+
+fun ET.contextmenu(op: ContextMenu.()->Unit = {}): ContextMenu {
+  val menu = (this as? Control)?.contextMenu ?: ContextMenu()
+  op(menu)
+  if (this is Control) {
+	contextMenu = menu
+  } else (this as? Node)?.apply {
+	setOnContextMenuRequested { event ->
+	  menu.show(this, event.screenX, event.screenY)
+	  event.consume()
+	}
+  }
+  return menu
+}
+
+
+
+
+
+/**
+ * Add a context menu to the target which will be created on demand.
+ */
+fun ET.lazyContextmenu(op: ContextMenu.()->Unit = {}) = apply {
+  var currentMenu: ContextMenu? = null
+  (this as? Node)?.setOnContextMenuRequested { event ->
+	currentMenu?.hide()
+	currentMenu = ContextMenu().also {
+	  it.setOnCloseRequest { currentMenu = null }
+	  op(it)
+	  it.show(this, event.screenX, event.screenY)
+	}
+	event.consume()
+  }
+}
 
 
 class ContextMenuWrapper(node: ContextMenu = ContextMenu()): WindowWrapper<ContextMenu>(node) {

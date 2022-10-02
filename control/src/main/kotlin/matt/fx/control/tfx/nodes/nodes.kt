@@ -8,6 +8,11 @@ import javafx.scene.control.TreeTableCell
 import javafx.scene.control.TreeTableColumn
 import javafx.util.Callback
 import matt.fx.graphics.wrapper.node.NodeWrapper
+inline fun <T: NodeWrapper> T.splitpaneConstraints(op: SplitPaneConstraint.()->Unit): T {
+  val c = SplitPaneConstraint()
+  c.op()
+  return c.applyToNode(this)
+}
 
 
 class TableColumnCellCache<T>(private val cacheProvider: (T)->Node) {

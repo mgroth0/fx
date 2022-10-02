@@ -2,10 +2,22 @@ package matt.fx.graphics.wrapper.pane.anchor
 
 import javafx.scene.layout.AnchorPane
 import matt.collect.itr.mapToArray
+import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
+import matt.fx.graphics.wrapper.node.attach
 import matt.fx.graphics.wrapper.pane.PaneWrapper
 import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
 import matt.lang.NOT_IMPLEMENTED
+
+fun <C: NodeWrapper> ET.anchorpane(
+  vararg nodes: C,
+  op: AnchorPaneWrapperImpl<C>.()->Unit = {}
+): AnchorPaneWrapperImpl<C> {
+  val anchorpane = AnchorPaneWrapperImpl<C>()
+  if (nodes.isNotEmpty()) anchorpane.children.addAll(nodes)
+  attach(anchorpane, op)
+  return anchorpane
+}
 
 interface AnchorPaneWrapper<C: NodeWrapper>: PaneWrapper<C> {
   override val node: AnchorPane

@@ -1,17 +1,24 @@
 package matt.fx.control.wrapper.toolbar
 
 import javafx.collections.ObservableList
-import javafx.geometry.Orientation
 import javafx.scene.Node
 import javafx.scene.control.ToolBar
 import javafx.scene.layout.Priority
 import matt.fx.control.wrapper.control.ControlWrapperImpl
-import matt.fx.control.wrapper.control.button.ButtonWrapper
-import matt.fx.control.wrapper.sep.SeparatorWrapper
+import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
+import matt.fx.graphics.wrapper.node.attachTo
 import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
 import matt.fx.graphics.wrapper.pane.SimplePaneWrapper
-import matt.obs.prop.ValProp
+
+
+fun ET.toolbar(vararg nodes: Node, op: ToolBarWrapper.()->Unit = {}): ToolBarWrapper {
+  val toolbar = ToolBarWrapper()
+  if (nodes.isNotEmpty()) toolbar.items.addAll(nodes)
+  toolbar.attachTo(this, op)
+  return toolbar
+}
+
 
 class ToolBarWrapper(
   node: ToolBar = ToolBar(),

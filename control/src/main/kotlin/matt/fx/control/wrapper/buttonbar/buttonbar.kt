@@ -7,8 +7,14 @@ import matt.css.Cursor
 import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.control.wrapper.control.button.ButtonWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
+import matt.fx.graphics.wrapper.node.attachTo
 import matt.obs.bindings.str.ObsS
 import matt.obs.prop.ValProp
+import matt.fx.graphics.wrapper.ET
+
+fun ET.buttonbar(buttonOrder: String? = null, op: (ButtonBarWrapper.()->Unit)) = ButtonBarWrapper().attachTo(this, op) {
+  if (buttonOrder != null) it.buttonOrder = buttonOrder
+}
 
 class ButtonBarWrapper(
   node: ButtonBar = ButtonBar(),

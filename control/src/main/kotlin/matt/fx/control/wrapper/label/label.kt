@@ -3,7 +3,40 @@ package matt.fx.control.wrapper.label
 import javafx.scene.Node
 import javafx.scene.control.Label
 import matt.fx.control.wrapper.labeled.LabeledWrapper
+import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
+import matt.fx.graphics.wrapper.node.attachTo
+import matt.hurricanefx.eye.mtofx.createROFXPropWrapper
+import matt.model.convert.StringConverter
+import matt.obs.bind.binding
+
+
+inline fun <reified T> ET.label(
+  observable: ObsVal<T>,
+  graphicProperty: ValProp<Node>? = null,
+  converter: StringConverter<T>? = null,
+  noinline op: LabelWrapper.()->Unit = {}
+) = label().apply {
+  if (converter == null) {
+	if (T::class == kotlin.String::class) {
+	  @Suppress("UNCHECKED_CAST")
+	  textProperty.bind(observable as ValProp<String>)
+	} else {
+	  textProperty.bind(observable.binding { it?.toString() })
+	}
+  } else {
+	textProperty.bind(observable.binding { converter.toString(it) })
+  }
+  if (graphic != null) graphicProperty().bind(graphicProperty?.createROFXPropWrapper())
+  op(this)
+}
+
+fun ET.label(text: String = "", graphic: NodeWrapper? = null, wrap: Boolean? = null, op: LabelWrapper.()->Unit = {}) =
+  LabelWrapper().apply { this.text = text }.attachTo(this, op) {
+	if (graphic != null) it.graphic = graphic
+	if (wrap != null) it.isWrapText = wrap
+  }
+
 
 open class LabelWrapper(
   node: Label = Label(),

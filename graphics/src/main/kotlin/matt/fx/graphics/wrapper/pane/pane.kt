@@ -6,7 +6,9 @@ import javafx.scene.input.MouseEvent
 import javafx.scene.layout.Pane
 import javafx.scene.paint.Color
 import matt.fx.graphics.service.uncheckedWrapperConverter
+import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
+import matt.fx.graphics.wrapper.node.attach
 import matt.fx.graphics.wrapper.node.shape.rect.RectangleWrapper
 import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
 import matt.fx.graphics.wrapper.region.RegionWrapper
@@ -19,6 +21,8 @@ import matt.model.corner.Corner.NW
 import matt.model.corner.Corner.SE
 import matt.model.corner.Corner.SW
 import matt.obs.col.olist.mappedlist.toSyncedList
+
+fun <C: NodeWrapper> ET.pane(op: PaneWrapperImpl<*, C>.()->Unit = {}) = attach(SimplePaneWrapper(), op)
 
 interface PaneWrapper<C: NodeWrapper>: RegionWrapper<C> {
 

@@ -1,11 +1,22 @@
 package matt.fx.graphics.wrapper.node.shape.circle
 
+import javafx.scene.Parent
 import javafx.scene.paint.Paint
 import javafx.scene.shape.Circle
+import matt.fx.graphics.wrapper.node.NodeWrapperImpl
+import matt.fx.graphics.wrapper.node.attachTo
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.graphics.wrapper.node.shape.ShapeWrapper
 import matt.obs.prop.BindableProperty
 import matt.obs.prop.ObsVal
+
+fun NodeWrapperImpl<Parent>.circle(
+  centerX: Number = 0.0,
+  centerY: Number = 0.0,
+  radius: Number = 0.0,
+  op: CircleWrapper.()->Unit = {}
+) =
+  CircleWrapper(centerX.toDouble(), centerY.toDouble(), radius.toDouble()).attachTo(this, op)
 
 open class CircleWrapper(
   node: Circle = Circle(),

@@ -7,10 +7,16 @@ import matt.fx.control.wrapper.control.tab.TabWrapper
 import matt.fx.control.wrapper.selects.SelectionModelWrapper
 import matt.fx.control.wrapper.selects.Selects
 import matt.fx.graphics.service.uncheckedWrapperConverter
+import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
+import matt.fx.graphics.wrapper.node.attachTo
 import matt.hurricanefx.eye.wrapper.obs.collect.createMutableWrapper
 import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
 import matt.obs.col.olist.mappedlist.toSyncedList
+
+
+fun <T: TabWrapper<*>> ET.tabpane(op: TabPaneWrapper<T>.()->Unit = {}) = TabPaneWrapper<T>().attachTo(this, op)
+
 
 open class TabPaneWrapper<T: TabWrapper<*>>(
   node: TabPane = TabPane(),

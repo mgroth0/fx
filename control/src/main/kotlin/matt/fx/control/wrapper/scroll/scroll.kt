@@ -5,13 +5,50 @@ import javafx.beans.property.DoubleProperty
 import javafx.geometry.Bounds
 import javafx.scene.control.ScrollPane
 import javafx.scene.control.ScrollPane.ScrollBarPolicy
-import matt.fx.control.control.nodedsl.minYRelativeTo
 import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.control.wrapper.wrapped.wrapped
+import matt.fx.graphics.wrapper.ET
+import matt.fx.graphics.wrapper.node.NW
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapperImpl
+import matt.fx.graphics.wrapper.node.attach
+import matt.fx.graphics.wrapper.node.maxYRelativeTo
+import matt.fx.graphics.wrapper.node.minYRelativeTo
+import matt.fx.graphics.wrapper.node.parent.parent
+import matt.fx.graphics.wrapper.region.RegionWrapper
 import matt.hurricanefx.eye.prop.getValue
 import matt.hurricanefx.eye.prop.setValue
+import matt.stream.recurse.chain
+
+
+fun NW.isFullyVisibleIn(sp: ScrollPaneWrapper<*>): Boolean {
+  require(sp.vmin == 0.0)
+  require(sp.vmax == 1.0)
+  if (this.parent!!.chain { it.parent }.none { it == sp }) return false
+  if (!this.isVisible) return false
+  if (!this.isManaged) return false
+  val minY = this.minYRelativeTo(sp.content)
+  val maxY =
+	this.maxYRelativeTo(
+	  sp.content
+	) // /* println("vValueConverted=${sp.vValueConverted},vValueConvertedMax=${sp.vValueConvertedMax},minY=${minY},maxY=${maxY}")*/ /*,boundsInParent.height=${boundsInParent.height},boundsInLocal.height=${boundsInLocal.height},boundsInScene.height=${boundsInScene.height}*/
+  require(minY != null && maxY != null)
+  return minY >= sp.vValueConverted && maxY <= sp.vValueConvertedMax
+}
+
+
+
+
+
+infix fun RegionWrapper<*>.wrappedIn(sp: ScrollPaneWrapper<in NodeWrapper>): ScrollPaneWrapper<out NodeWrapper> {
+  this minBind sp
+  sp.backgroundProperty.bindBidirectional(backgroundProperty)
+  return sp.apply {
+	content = this@wrappedIn
+  }
+}
+
+
 
 
 //fun <C: NodeWrapper> ScrollPaneNoBars(content: C? = null): ScrollPaneWrapper<C> {
@@ -21,6 +58,16 @@ import matt.hurricanefx.eye.prop.setValue
 //  }
 //}
 
+
+fun <C: NodeWrapper> ET.scrollpane(
+  content: C, fitToWidth: Boolean = false, fitToHeight: Boolean = false, op: ScrollPaneWrapper<C>.()->Unit = {}
+): ScrollPaneWrapper<C> {
+  val pane = ScrollPaneWrapper(content)
+  pane.isFitToWidth = fitToWidth
+  pane.isFitToHeight = fitToHeight
+  attach(pane, op)
+  return pane
+}
 
 
 open class ScrollPaneWrapper<C: NodeWrapper>(node: ScrollPane = ScrollPane()): ControlWrapperImpl<ScrollPane>(node) {

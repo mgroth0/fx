@@ -4,6 +4,21 @@ import javafx.collections.ObservableList
 import javafx.scene.chart.PieChart
 import javafx.scene.chart.PieChart.Data
 import matt.fx.control.wrapper.chart.ChartWrapper
+import matt.fx.graphics.wrapper.ET
+import matt.fx.graphics.wrapper.node.attach
+
+
+/**
+ * Create a PieChart with optional title data and add to the parent pane. The optional op will be performed on the new instance.
+ */
+fun ET.piechart(
+  title: String? = null, data: ObservableList<Data>? = null, op: PieChartWrapper.()->Unit = {}
+): PieChartWrapper {
+  val chart = if (data != null) PieChartWrapper(data) else PieChartWrapper()
+  chart.title = title
+  return attach(chart, op)
+}
+
 
 open class PieChartWrapper(
    node: PieChart = PieChart(),

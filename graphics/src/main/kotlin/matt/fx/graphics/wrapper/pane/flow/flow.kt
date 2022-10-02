@@ -7,9 +7,13 @@ import javafx.geometry.Orientation
 import javafx.geometry.Pos
 import javafx.geometry.VPos
 import javafx.scene.layout.FlowPane
+import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
+import matt.fx.graphics.wrapper.node.attach
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
+
+fun <C: NodeWrapper> ET.flowpane(op: FlowPaneWrapper<C>.()->Unit = {}) = attach(FlowPaneWrapper(), op)
 
 open class FlowPaneWrapper<C: NodeWrapper>(node: FlowPane = FlowPane()): PaneWrapperImpl<FlowPane, C>(node) {
 

@@ -5,7 +5,20 @@ import javafx.beans.value.ObservableValue
 import javafx.scene.control.ProgressBar
 import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.graphics.wrapper.node.NodeWrapper
+import matt.fx.graphics.wrapper.node.attachTo
 import matt.hurricanefx.eye.bind.smartBind
+import matt.fx.graphics.wrapper.ET
+
+
+fun ET.progressbar(initialValue: Double? = null, op: ProgressBarWrapper.()->Unit = {}) =
+  ProgressBarWrapper().attachTo(this, op) {
+	if (initialValue != null) it.progress = initialValue
+  }
+
+fun ET.progressbar(property: ObservableValue<Number>, op: ProgressBarWrapper.()->Unit = {}) = progressbar().apply {
+  bind(property)
+  op(this)
+}
 
 class ProgressBarWrapper(
    node: ProgressBar = ProgressBar(),

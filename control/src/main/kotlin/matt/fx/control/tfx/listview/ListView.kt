@@ -4,16 +4,13 @@ package matt.fx.control.tfx.listview
 
 import javafx.beans.property.Property
 import javafx.scene.Node
-import javafx.scene.control.ListView
 import javafx.scene.control.SelectionMode
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
 import javafx.scene.input.MouseEvent
-import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.control.wrapper.control.list.ListViewWrapper
 import matt.fx.control.wrapper.wrapped.wrapped
 import matt.fx.graphics.wrapper.node.NodeWrapper
-import matt.fx.graphics.wrapper.node.NodeWrapperImpl
 import matt.hurricanefx.eye.lib.onChange
 
 
