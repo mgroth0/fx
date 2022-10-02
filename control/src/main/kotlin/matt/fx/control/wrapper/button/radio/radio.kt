@@ -2,11 +2,12 @@ package matt.fx.control.wrapper.button.radio
 
 import javafx.scene.control.RadioButton
 import javafx.scene.control.ToggleGroup
+import matt.fx.control.toggle.getToggleGroup
 import matt.fx.control.wrapper.button.toggle.ToggleButtonWrapper
 import matt.fx.control.wrapper.control.value.HasWritableValue
+import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.obs.prop.BindableProperty
-import matt.fx.graphics.wrapper.ET
 
 
 
