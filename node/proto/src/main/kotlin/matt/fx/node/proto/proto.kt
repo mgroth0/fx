@@ -8,12 +8,12 @@ import matt.fx.graphics.icon.IconImage
 import matt.fx.graphics.wrapper.canvas.CanvasWrapper
 import matt.hurricanefx.wrapper.node.NodeWrapper
 import matt.hurricanefx.wrapper.node.NodeWrapperImpl
-import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapper
+import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
 import matt.model.dir.Direction
 import matt.model.dir.Direction.BACKWARD
 import matt.model.dir.Direction.FORWARD
 
-fun iconSpacer() = VBoxWrapper<NodeWrapper>().apply {
+fun iconSpacer() = VBoxWrapperImpl<NodeWrapper>().apply {
   exactHeight = 20.0
   exactWidth = 5.0
 }

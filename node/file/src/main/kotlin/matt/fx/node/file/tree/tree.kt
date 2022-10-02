@@ -36,8 +36,7 @@ import matt.hurricanefx.wrapper.control.treetable.TreeTableViewWrapper
 import matt.hurricanefx.wrapper.node.NodeWrapper
 import matt.hurricanefx.wrapper.node.setOnDoubleClick
 import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
-import matt.fx.graphics.wrapper.pane.hbox.HBoxWrapper
-import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapper
+import matt.fx.graphics.wrapper.pane.hbox.HBoxWrapperImpl
 import matt.lang.inList
 import matt.log.taball
 import matt.log.todo
@@ -53,7 +52,7 @@ private const val HEIGHT = 300.0
 
 fun fileTreeAndViewerPane(
   rootFile: MFile, doubleClickInsteadOfSelect: Boolean = false
-) = HBoxWrapper<NodeWrapper>().apply {
+) = HBoxWrapperImpl<NodeWrapper>().apply {
   val hBox = this
   alignment = CENTER_LEFT
   val treeTableView = fileTableTree(rootFile).apply {

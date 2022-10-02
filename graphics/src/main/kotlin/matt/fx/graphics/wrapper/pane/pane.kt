@@ -8,7 +8,7 @@ import javafx.scene.paint.Color
 import matt.fx.graphics.service.uncheckedWrapperConverter
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.shape.rect.RectangleWrapper
-import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapper
+import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
 import matt.fx.graphics.wrapper.region.RegionWrapper
 import matt.fx.graphics.wrapper.region.RegionWrapperImpl
 import matt.hurricanefx.eye.wrapper.obs.collect.createMutableWrapper
@@ -132,7 +132,7 @@ interface PaneWrapper<C: NodeWrapper>: RegionWrapper<C> {
 fun <C: NodeWrapper> PaneWrapper<C>.spacer(size: Double = 20.0) {
   warnOnce("UNCHECKED ADD C SPACER")
   @Suppress("UNCHECKED_CAST")
-  this.children.add(SimplePaneWrapper<VBoxWrapper<*>>().apply {
+  this.children.add(SimplePaneWrapper<VBoxWrapperImpl<*>>().apply {
 	minWidth = size
 	minHeight = size
   } as C)

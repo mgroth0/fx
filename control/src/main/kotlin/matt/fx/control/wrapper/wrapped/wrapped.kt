@@ -115,10 +115,10 @@ import matt.fx.graphics.wrapper.pane.anchor.AnchorPaneWrapperImpl
 import matt.fx.graphics.wrapper.pane.border.BorderPaneWrapper
 import matt.fx.graphics.wrapper.pane.flow.FlowPaneWrapper
 import matt.fx.graphics.wrapper.pane.grid.GridPaneWrapper
-import matt.fx.graphics.wrapper.pane.hbox.HBoxWrapper
+import matt.fx.graphics.wrapper.pane.hbox.HBoxWrapperImpl
 import matt.fx.graphics.wrapper.pane.stack.StackPaneWrapper
 import matt.fx.graphics.wrapper.pane.tile.TilePaneWrapper
-import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapper
+import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
 import matt.fx.graphics.wrapper.region.RegionWrapper
 import matt.fx.graphics.wrapper.region.RegionWrapperImpl
 import matt.fx.graphics.wrapper.scene.SceneWrapper
@@ -156,8 +156,8 @@ fun FlowPane.wrapped(): FlowPaneWrapper<*> = findWrapper() ?: FlowPaneWrapper<No
 fun BorderPane.wrapped(): BorderPaneWrapper<*> = findWrapper() ?: BorderPaneWrapper<NodeWrapper>(this@wrapped)
 fun SplitPane.wrapped(): SplitPaneWrapper = findWrapper() ?: SplitPaneWrapper(this@wrapped)
 fun TextFlow.wrapped(): TextFlowWrapper<*> = findWrapper() ?: TextFlowWrapper<NodeWrapper>(this@wrapped)
-fun VBox.wrapped(): VBoxWrapper<*> = findWrapper() ?: VBoxWrapper<NodeWrapper>(this@wrapped)
-fun HBox.wrapped(): HBoxWrapper<*> = findWrapper() ?: HBoxWrapper<NodeWrapper>(this@wrapped)
+fun VBox.wrapped(): VBoxWrapperImpl<*> = findWrapper() ?: VBoxWrapperImpl<NodeWrapper>(this@wrapped)
+fun HBox.wrapped(): HBoxWrapperImpl<*> = findWrapper() ?: HBoxWrapperImpl<NodeWrapper>(this@wrapped)
 fun TabPane.wrapped(): TabPaneWrapper<TabWrapper<NodeWrapper>> = findWrapper() ?: TabPaneWrapper(this@wrapped)
 fun TitledPane.wrapped(): TitledPaneWrapper = findWrapper() ?: TitledPaneWrapper(this@wrapped)
 fun TilePane.wrapped(): TilePaneWrapper<*> = findWrapper() ?: TilePaneWrapper<NodeWrapper>(this@wrapped)

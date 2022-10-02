@@ -8,13 +8,13 @@ import matt.hurricanefx.eye.prop.math.minus
 import matt.hurricanefx.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
 import matt.hurricanefx.wrapper.pane.scroll.ScrollPaneWrapper
-import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapper
+import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
 import matt.lang.applyIt
 import matt.obs.bindings.math.minus
 
 abstract class ScrollVBox(
-  scrollpane: ScrollPaneWrapper<VBoxWrapper<*>> = ScrollPaneWrapper(),
-  val vbox: VBoxWrapper<NodeWrapper> = VBoxWrapper()
+  scrollpane: ScrollPaneWrapper<VBoxWrapperImpl<*>> = ScrollPaneWrapper(),
+  val vbox: VBoxWrapperImpl<NodeWrapper> = VBoxWrapperImpl()
 ): PaneWrapperImpl<Pane, NodeWrapper>(Pane()), Scrolls { //Refreshable
   override val scrollPane = scrollpane
 

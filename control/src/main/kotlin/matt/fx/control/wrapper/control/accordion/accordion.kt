@@ -7,7 +7,7 @@ import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.control.wrapper.titled.TitledPaneWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.pane.PaneWrapper
-import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapper
+import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
 
 class AccordionWrapper(node: Accordion = Accordion()): ControlWrapperImpl<Accordion>(node) {
   val panes: ObservableList<TitledPane> get() = node.panes
@@ -34,7 +34,7 @@ class AccordionWrapper(node: Accordion = Accordion()): ControlWrapperImpl<Accord
 	DeprecationLevel.WARNING
   )
   fun fold(title: String = "", op: PaneWrapper<NodeWrapper>.()->Unit = {}): TitledPaneWrapper {
-	val vbox = VBoxWrapper<NodeWrapper>().also(op)
+	val vbox = VBoxWrapperImpl<NodeWrapper>().also(op)
 	val fold =
 	  TitledPaneWrapper().apply {
 		text = title; graphic = if (vbox.children.size == 1) vbox.children[0] else vbox

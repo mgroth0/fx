@@ -19,6 +19,8 @@ import kotlinx.serialization.json.Json
 import matt.file.MFile
 import matt.file.construct.mFile
 import matt.fx.control.control.dsl.ControlDSL
+import matt.fx.control.control.nodedsl.testExtension1
+import matt.fx.control.control.nodedsl.testExtension2
 import matt.fx.control.lang.actionbutton
 import matt.fx.control.mscene.MScene
 import matt.fx.control.mstage.MStage
@@ -35,6 +37,7 @@ import matt.fx.control.win.interact.WinGeom.Centered
 import matt.fx.control.win.interact.WinOwn.Auto
 import matt.fx.control.wrapper.control.button.ButtonWrapper
 import matt.fx.control.wrapper.wrapped.wrapped
+import matt.fx.graphics.dsl.hbox
 import matt.fx.graphics.wrapper.imageview.ImageViewWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.parent.ParentWrapper
@@ -44,7 +47,7 @@ import matt.hurricanefx.eye.mtofx.createROFXPropWrapper
 import matt.hurricanefx.eye.prop.doubleBinding
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
 import matt.fx.graphics.wrapper.pane.anchor.AnchorPaneWrapperImpl
-import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapper
+import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
 import matt.fx.graphics.wrapper.region.RegionWrapper
 import matt.fx.graphics.wrapper.region.border.FXBorder
 import matt.fx.graphics.wrapper.region.border.solidBorder
@@ -79,7 +82,7 @@ fun safe(s: String, op: ()->Unit): Boolean {
   return r
 }
 
-class MDialog<R> internal constructor(): VBoxWrapper<NodeWrapper>(), ControlDSL {
+class MDialog<R> internal constructor(): VBoxWrapperImpl<NodeWrapper>(), ControlDSL {
   val stg = MStage(wMode = CLOSE, EscClosable = true).apply {
 	scene = MScene(this@MDialog)
 	width = 400.0
@@ -117,12 +120,14 @@ fun StageWrapper.bindXYToOwnerCenter() {
   require(owner != null) {
 	"must use initOwner before bindXYToOwnerCenter"
   }
-  val xBinding = owner!!.xProperty().doubleBinding(owner!!.widthProperty(), this.widthProperty.createROFXPropWrapper()) {
-	(owner!!.x + (owner!!.width/2)) - width/2
-  }
-  val yBinding = owner!!.yProperty().doubleBinding(owner!!.heightProperty(), this.heightProperty.createROFXPropWrapper()) {
-	(owner!!.y + (owner!!.height/2)) - height/2
-  }
+  val xBinding =
+	owner!!.xProperty().doubleBinding(owner!!.widthProperty(), this.widthProperty.createROFXPropWrapper()) {
+	  (owner!!.x + (owner!!.width/2)) - width/2
+	}
+  val yBinding =
+	owner!!.yProperty().doubleBinding(owner!!.heightProperty(), this.heightProperty.createROFXPropWrapper()) {
+	  (owner!!.y + (owner!!.height/2)) - height/2
+	}
   aXBindingStrengthener[this.node] = xBinding
   aYBindingStrengthener[this.node] = yBinding
   x = xBinding.value
@@ -178,9 +183,13 @@ fun <R> dialog(
   d.stg.initOwner(d.owner ?: if (d.autoOwner) Window.getWindows().firstOrNull() else null)
   if (d.stg.owner != null) {
 	Centered().applyTo(d.stg)
-  } // d.stage.initAndCenterToOwner(own)
+  } // d.stage„.initAndCenterToOwner(own)
   var r: R? = null
   d.hbox<NodeWrapper> {
+
+
+
+
 	prefWidthProperty.bind(d.widthProperty)
 	alignment = Pos.CENTER
 	actionbutton("cancel") {

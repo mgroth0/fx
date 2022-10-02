@@ -12,7 +12,7 @@ import matt.fx.graphics.fxthread.ts.nonBlockingFXWatcher
 import matt.hurricanefx.wrapper.control.treetable.populate
 import matt.hurricanefx.wrapper.label.LabelWrapper
 import matt.hurricanefx.wrapper.node.NodeWrapper
-import matt.fx.graphics.wrapper.pane.hbox.HBoxWrapper
+import matt.fx.graphics.wrapper.pane.hbox.HBoxWrapperImpl
 import matt.log.debug
 import matt.obs.bind.binding
 import matt.obs.bindings.math.div
@@ -27,7 +27,7 @@ import kotlin.reflect.KProperty
 
 
 @ExperimentalContracts
-class ProcessInspectPane(initialValue: Process?): HBoxWrapper<NodeWrapper>() {
+class ProcessInspectPane(initialValue: Process?): HBoxWrapperImpl<NodeWrapper>() {
   val procProp = SimpleObjectProperty<Process>(initialValue).apply {
 	addListener { _, oldValue, newValue ->
 	  if (newValue != oldValue) {

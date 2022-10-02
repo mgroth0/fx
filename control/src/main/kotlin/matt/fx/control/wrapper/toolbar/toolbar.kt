@@ -36,34 +36,11 @@ class ToolBarWrapper(
   }
 
   override fun addChild(child: NodeWrapper, index: Int?) {
-	TODO("Not yet implemented")
-  }
-
-
-  override fun separator(
-	orientation: Orientation,
-	op: SeparatorWrapper.()->Unit
-  ): SeparatorWrapper {
-	val separator = SeparatorWrapper(orientation).also(op)
-	add(separator)
-	return separator
-  }
-
-
-  override fun button(text: String, graphic: NodeWrapper?, op: ButtonWrapper.()->Unit) =
-	ButtonWrapper().apply { this.text = text }.also {
-	  if (graphic != null) it.graphic = graphic
-	  this.items += it.node
-	  op(it)
+	if (index != null) {
+	  items.add(index, child.node)
+	} else {
+	  items.add(child.node)
 	}
-
-  override fun button(text: ValProp<String>, graphic: NodeWrapper?, op: ButtonWrapper.()->Unit) =
-	ButtonWrapper().also {
-	  it.textProperty.bind(text)
-	  if (graphic != null) it.graphic = graphic
-	  this.items += it.node
-	  op(it)
-	}
-
+  }
 
 }

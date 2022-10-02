@@ -38,7 +38,7 @@ import matt.hurricanefx.tornadofx.item.spinner
 import matt.hurricanefx.wrapper.node.NodeWrapper
 import matt.hurricanefx.wrapper.node.disableWhen
 import matt.fx.graphics.wrapper.pane.SimplePaneWrapper
-import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapper
+import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
 import matt.fx.graphics.wrapper.region.RegionWrapper
 import matt.fx.graphics.wrapper.text.TextWrapper
 import matt.lang.err
@@ -139,7 +139,7 @@ private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): RegionWrap
 
 
 	return when (this) {
-	  is LogFile  -> VBoxWrapper<NodeWrapper>().apply {
+	  is LogFile  -> VBoxWrapperImpl<NodeWrapper>().apply {
 		val lineLimit = BindableProperty(1000)
 		val infiniteLines = BindableProperty(false)
 		hbox<NodeWrapper> {
@@ -261,7 +261,7 @@ private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): RegionWrap
 		val weakRef = WeakReference(wv)
 
 		/*areas around for right clicking!*/
-		val root = VBoxWrapper<NodeWrapper>().apply {
+		val root = VBoxWrapperImpl<NodeWrapper>().apply {
 		  mcontextmenu {
 			"refresh" does {
 
@@ -329,7 +329,7 @@ private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): RegionWrap
 
 	  else        -> err("how to make node for files with extension:${extension}")
 	}
-  } else return VBoxWrapper(TextWrapper("file $this does not exist"))
+  } else return VBoxWrapperImpl(TextWrapper("file $this does not exist"))
 }
 
 

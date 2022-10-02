@@ -15,12 +15,12 @@ import matt.fx.graphics.win.winfun.noDocking
 import matt.fx.graphics.wrapper.node.setOnDoubleClick
 import matt.fx.graphics.wrapper.scene.SceneWrapper
 import matt.fx.graphics.wrapper.stage.StageWrapper
-import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapper
+import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
 
 fun SceneWrapper<*>.iconify(icon: MFile) {
   var iconWindow: StageWrapper? = null
   println("making icon with $icon")
-  VBoxWrapper(Icon(icon)).apply {
+  VBoxWrapperImpl(Icon(icon)).apply {
 	var xOffset: Double? = null
 	var yOffset: Double? = null
 	setOnMousePressed { e ->

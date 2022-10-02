@@ -39,6 +39,7 @@ import javafx.scene.shape.PathElement
 import javafx.stage.FileChooser
 import matt.file.MFile
 import matt.file.construct.toMFile
+import matt.fx.graphics.dsl.GraphicsDSL
 import matt.fx.graphics.service.wrapped
 import matt.fx.graphics.wrapper.EventTargetWrapper
 import matt.fx.graphics.wrapper.SingularEventTargetWrapper
@@ -70,9 +71,9 @@ import kotlin.contracts.InvocationKind.EXACTLY_ONCE
 import kotlin.contracts.contract
 
 
-private typealias NW = NodeWrapper
+typealias NW = NodeWrapper
 
-interface NodeWrapper: EventTargetWrapper, StyleableWrapper {
+interface NodeWrapper: EventTargetWrapper, StyleableWrapper, GraphicsDSL {
 
   override fun isInsideRow(): Boolean = parent?.isInsideRow() ?: false
 
@@ -440,7 +441,6 @@ interface NodeWrapper: EventTargetWrapper, StyleableWrapper {
 	get() = localToScreen(boundsInLocal)!!
 
 
-
   var visibleAndManaged: Boolean
 	get() = node.isVisible && node.isManaged
 	set(value) {
@@ -449,7 +449,7 @@ interface NodeWrapper: EventTargetWrapper, StyleableWrapper {
 	}
 
 
-  val stage get() =  scene?.window?.wrapped() as? StageWrapper/*   node.stage.wrapped() as? StageWrapper*/
+  val stage get() = scene?.window?.wrapped() as? StageWrapper/*   node.stage.wrapped() as? StageWrapper*/
 
   fun onDoubleClickConsume(action: ()->Unit) {
 	node.setOnMouseClicked {
@@ -471,7 +471,6 @@ interface NodeWrapper: EventTargetWrapper, StyleableWrapper {
   override fun removeFromParent() {
 	node.parent?.wrapped()?.childList?.remove(node)
   }
-
 
 
 }
@@ -630,7 +629,6 @@ fun NodeWrapper.onRightClick(clickCount: Int = 1, filter: Boolean = false, actio
 	}
   }
 }
-
 
 
 const val TRANSITIONING_PROPERTY = "tornadofx.transitioning"

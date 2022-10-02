@@ -9,7 +9,7 @@ import matt.fx.control.wrapper.selects.Selects
 import matt.fx.graphics.service.uncheckedWrapperConverter
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.hurricanefx.eye.wrapper.obs.collect.createMutableWrapper
-import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapper
+import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
 import matt.obs.col.olist.mappedlist.toSyncedList
 
 open class TabPaneWrapper<T: TabWrapper<*>>(
@@ -76,9 +76,9 @@ fun <W: NodeWrapper> TabPaneWrapper<TabWrapper<*>>.staticTab(
 
 fun <C: NodeWrapper> TabPaneWrapper<TabWrapper<*>>.vtab(
   s: String = "",
-  op: VBoxWrapper<C>.()->Unit = {}
+  op: VBoxWrapperImpl<C>.()->Unit = {}
 ): TabWrapper<*> {
-  return staticTab(s, VBoxWrapper<C>()) {
+  return staticTab(s, VBoxWrapperImpl<C>()) {
 	op()
   }
 }

@@ -8,13 +8,16 @@ import matt.fx.graphics.wrapper.pane.PaneWrapper
 import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
 import matt.fx.graphics.wrapper.pane.SimplePaneWrapper
 import matt.fx.graphics.wrapper.pane.box.BoxWrapper
+import matt.fx.graphics.wrapper.pane.box.BoxWrapperImpl
 
-typealias VBoxW = VBoxWrapper<NodeWrapper>
+typealias VBoxW = VBoxWrapperImpl<NodeWrapper>
 
-open class VBoxWrapper<C: NodeWrapper>(node: VBox = VBox()): BoxWrapper<VBox, C>(node) {
+interface VBoxWrapper<C: NodeWrapper>: BoxWrapper<C>
+
+open class VBoxWrapperImpl<C: NodeWrapper>(node: VBox = VBox()): BoxWrapperImpl<VBox, C>(node), VBoxWrapper<C> {
   constructor(vararg nodes: C): this(VBox(*nodes.map { it.node }.toTypedArray()))
 
 }
 
-fun VBoxWrapper<PaneWrapper<*>>.spacer(prio: Priority = Priority.ALWAYS, op: PaneWrapperImpl<*, *>.()->Unit = {}) =
+fun VBoxWrapperImpl<PaneWrapper<*>>.spacer(prio: Priority = Priority.ALWAYS, op: PaneWrapperImpl<*, *>.()->Unit = {}) =
   attach(SimplePaneWrapper<NodeWrapper>().apply { vGrow = prio }, op)

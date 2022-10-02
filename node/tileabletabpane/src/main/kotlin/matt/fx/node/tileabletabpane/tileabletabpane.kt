@@ -15,7 +15,7 @@ import matt.hurricanefx.wrapper.control.tab.TabWrapper
 import matt.hurricanefx.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
 import matt.fx.graphics.wrapper.pane.tab.TabPaneWrapper
-import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapper
+import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
 import matt.fx.graphics.wrapper.region.RegionWrapper
 import matt.obs.bindings.math.div
 import java.util.concurrent.Semaphore
@@ -23,7 +23,7 @@ import java.util.concurrent.Semaphore
 open class TileableTabPane(
   protected vararg var panes: Pair<String, RegionWrapper<NodeWrapper>>,
   orientation: Orientation = VERTICAL
-): VBoxWrapper<NodeWrapper>() {
+): VBoxWrapperImpl<NodeWrapper>() {
   private val mysem = Semaphore(1)
   var lastSelected: Int? = null
   val istabmodeprop = SimpleBooleanProperty(true).apply {

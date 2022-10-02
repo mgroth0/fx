@@ -19,7 +19,7 @@ import matt.hurricanefx.eye.prop.getValue
 import matt.hurricanefx.eye.prop.setValue
 import matt.hurricanefx.wrapper.control.button.ButtonWrapper
 import matt.hurricanefx.wrapper.node.NodeWrapper
-import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapper
+import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
 import matt.log.logInvokation
 import matt.obs.bindings.bool.not
 import matt.obs.bindings.math.times
@@ -46,7 +46,7 @@ class ProcessConsolePane(
   override val name: String,
   private val processBuilder: ProcessBuilder,
   val statusFolder: MFile? = null,
-): VBoxWrapper<NodeWrapper>(), ProcessNode {
+): VBoxWrapperImpl<NodeWrapper>(), ProcessNode {
 
   fun clone() = ProcessConsolePane(
 	name = name,

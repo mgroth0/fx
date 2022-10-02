@@ -4,10 +4,12 @@ import javafx.collections.ObservableMap
 import javafx.event.EventTarget
 import javafx.scene.Node
 import matt.collect.weak.WeakMap
+import matt.fx.graphics.dsl.GraphicsDSL
 import matt.fx.graphics.wrapper.node.NodeWrapper
 
 @DslMarker annotation class FXNodeWrapperDSL
 
+typealias ET = EventTargetWrapper
 
 @FXNodeWrapperDSL
 interface EventTargetWrapper {
@@ -49,7 +51,7 @@ interface EventTargetWrapper {
 
 }
 
-abstract class EventTargetWrapperImpl<out N: EventTarget>: EventTargetWrapper {
+abstract class EventTargetWrapperImpl<out N: EventTarget>: EventTargetWrapper, GraphicsDSL {
   abstract override val node: N
 
 

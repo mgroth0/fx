@@ -31,7 +31,7 @@ import matt.hurricanefx.wrapper.node.NodeWrapperImpl
 import matt.hurricanefx.wrapper.node.attachTo
 import matt.hurricanefx.wrapper.node.setOnDoubleClick
 import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
-import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapper
+import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
 import matt.fx.graphics.wrapper.node.parent.ParentWrapperImpl
 import matt.fx.graphics.wrapper.region.RegionWrapper
 import matt.fx.graphics.wrapper.stage.StageWrapper
@@ -281,7 +281,7 @@ fun RegionWrapper<*>.specialTransferingToWindowAndBack(par: PaneWrapperImpl<*, *
 
 
 @ExperimentalContracts
-open class WebViewPane private constructor(file: MFile? = null, html: String? = null): VBoxWrapper<NodeWrapper>() {
+open class WebViewPane private constructor(file: MFile? = null, html: String? = null): VBoxWrapperImpl<NodeWrapper>() {
 
   constructor(file: MFile): this(file = file, html = null)
 

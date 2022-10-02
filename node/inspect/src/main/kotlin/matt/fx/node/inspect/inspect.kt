@@ -13,9 +13,9 @@ import matt.fx.graphics.node.Inspectable
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.hurricanefx.eye.collect.toObservable
 import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
-import matt.fx.graphics.wrapper.pane.box.BoxWrapper
-import matt.fx.graphics.wrapper.pane.hbox.HBoxWrapper
-import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapper
+import matt.fx.graphics.wrapper.pane.box.BoxWrapperImpl
+import matt.fx.graphics.wrapper.pane.hbox.HBoxWrapperImpl
+import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
 
 
 class InspectionView<N: PaneWrapperImpl<*, *>, T: Inspectable<N>>(
@@ -23,7 +23,7 @@ class InspectionView<N: PaneWrapperImpl<*, *>, T: Inspectable<N>>(
   dir: Orientation = Orientation.HORIZONTAL,
   table: Boolean = false,
   wrap_lv: PaneWrapperImpl<*, *>? = null
-): BoxWrapper<Pane, NodeWrapper>(if (dir == Orientation.HORIZONTAL) HBox() else VBox()) {
+): BoxWrapperImpl<Pane, NodeWrapper>(if (dir == Orientation.HORIZONTAL) HBox() else VBox()) {
 
   private val oitems = if (items is ObservableList) items else items.toObservable()
   val lv: SelectingControl<T> = if (table) TableViewWrapper(oitems) else ListViewWrapper(oitems)
@@ -33,8 +33,8 @@ class InspectionView<N: PaneWrapperImpl<*, *>, T: Inspectable<N>>(
 	  lv.vgrow = ALWAYS
 	  lv.hgrow = ALWAYS
 	})
-	val inspectHolder: BoxWrapper<*, *> =
-	  if (dir == Orientation.HORIZONTAL) HBoxWrapper<NodeWrapper>() else VBoxWrapper<NodeWrapper>()
+	val inspectHolder: BoxWrapperImpl<*, *> =
+	  if (dir == Orientation.HORIZONTAL) HBoxWrapperImpl<NodeWrapper>() else VBoxWrapperImpl<NodeWrapper>()
 	inspectHolder.vgrow = ALWAYS
 	inspectHolder.hgrow = ALWAYS
 	add(inspectHolder)
