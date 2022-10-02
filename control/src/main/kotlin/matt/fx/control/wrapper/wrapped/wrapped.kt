@@ -98,6 +98,7 @@ import matt.fx.control.wrapper.virtualflow.FlowLessVirtualFlowWrapper
 import matt.fx.control.wrapper.virtualflow.VirtualFlowWrapper
 import matt.fx.control.wrapper.virtualflow.clip.CLIPPED_CONTAINER_QNAME
 import matt.fx.control.wrapper.virtualflow.clip.ClippedContainerWrapper
+import matt.fx.graphics.service.WrapperService
 import matt.fx.graphics.wrapper.EventTargetWrapper
 import matt.fx.graphics.wrapper.EventTargetWrapperImpl
 import matt.fx.graphics.wrapper.SingularEventTargetWrapper
@@ -130,6 +131,11 @@ import matt.fx.graphics.wrapper.window.WindowWrapper
 import matt.lang.NEVER
 import matt.lang.err
 
+object WrapperServiceImpl: WrapperService{
+  override fun <E: EventTarget> wrapped(e: E): EventTargetWrapper {
+	return e.wrapped()
+  }
+}
 
 inline fun <reified W: EventTargetWrapper> EventTarget.findWrapper(): W? {
   val w = SingularEventTargetWrapper.wrappers[this]
