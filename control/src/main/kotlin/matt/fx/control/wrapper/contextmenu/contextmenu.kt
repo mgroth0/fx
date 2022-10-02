@@ -50,7 +50,9 @@ class ContextMenuWrapper(node: ContextMenu = ContextMenu()): WindowWrapper<Conte
   )
   fun menuitem(
 	name: String, keyCombination: String, graphic: Node? = null, onAction: ()->Unit = {}
-  ): MenuItemWrapper<*> = item(name, KeyCombination.valueOf(keyCombination), graphic).apply { action(onAction) }
+  ): MenuItemWrapper<*> = item(name, KeyCombination.valueOf(keyCombination), graphic).apply {
+	action(onAction)
+  }
 
   fun checkmenuitem(
 	name: String, keyCombination: KeyCombination? = null, graphic: Node? = null, op: CheckMenuItem.()->Unit = {}

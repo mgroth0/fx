@@ -1,6 +1,7 @@
 package matt.fx.control.wrapper.control.colbase
 
 import javafx.beans.property.ReadOnlyDoubleProperty
+import javafx.collections.ObservableMap
 import javafx.scene.control.TableColumn
 import javafx.scene.control.TableColumnBase
 import matt.fx.control.wrapper.control.tablelike.TableLikeWrapper
@@ -24,6 +25,8 @@ abstract class TableColumnBaseWrapper<E, P, F: TableColumnBase<E, P>>(
   override val minWidthProperty get() = node.minWidthProperty().toNonNullableProp().cast<Double>()
   override val maxWidthProperty get() = node.maxWidthProperty().toNonNullableProp().cast<Double>()
 
+  override val properties: ObservableMap<Any, Any?>
+    get() = node.properties
 
   abstract val tableView: TableLikeWrapper<E>?
 

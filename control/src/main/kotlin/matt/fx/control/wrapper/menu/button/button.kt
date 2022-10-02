@@ -8,7 +8,10 @@ import javafx.scene.control.ToggleGroup
 import javafx.scene.input.KeyCombination
 import matt.fx.control.wrapper.control.button.base.ButtonBaseWrapper
 import matt.fx.control.wrapper.menu.MenuWrapper
+import matt.fx.control.wrapper.menu.checkitem.CheckMenuItemWrapper
+import matt.fx.control.wrapper.menu.item.MenuItemWrapper
 import matt.fx.control.wrapper.menu.item.custom.CustomMenuItemWrapper
+import matt.fx.control.wrapper.menu.radioitem.ValuedRadioMenuItem
 
 open class MenuButtonWrapper(
   node: MenuButton = MenuButton(),

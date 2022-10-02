@@ -46,6 +46,11 @@ class TableColumnWrapper<E, P>(
 	TODO("Not yet implemented")
   }
 
+  override fun removeFromParent() {
+	node.tableView.columns.remove(this.node)
+  }
+
+
   override val columns: ObservableList<TableColumn<E, *>> = node.columns
 
   override val cellFactoryProperty: ObjectProperty<Callback<TableColumn<E, P>, TableCell<E, P>>> get() = node.cellFactoryProperty()

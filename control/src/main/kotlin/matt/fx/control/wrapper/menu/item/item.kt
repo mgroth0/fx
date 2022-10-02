@@ -84,6 +84,10 @@ open class MenuItemWrapper<N: MenuItem>(
 	graphic = child.node
   }
 
+  override fun removeFromParent() {
+	node.parentMenu.items.remove(node)
+  }
+
 }
 
 

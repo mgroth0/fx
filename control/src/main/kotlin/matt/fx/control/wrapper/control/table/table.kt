@@ -25,6 +25,7 @@ import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.control.wrapper.control.column.TableColumnWrapper
 import matt.fx.control.wrapper.control.tablelike.TableLikeWrapper
 import matt.fx.control.wrapper.wrapped.wrapped
+import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.hurricanefx.eye.lib.onChange
 import matt.hurricanefx.eye.prop.getValue
 import matt.hurricanefx.eye.prop.observable

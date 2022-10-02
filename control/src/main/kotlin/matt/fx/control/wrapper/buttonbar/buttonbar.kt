@@ -39,7 +39,7 @@ class ButtonBarWrapper(
 	type: ButtonBar.ButtonData? = null,
 	graphic: NodeWrapper? = null,
 	op: ButtonWrapper.()->Unit = {}
-  ) = ButtonWrapper().apply { Cursor.text = text }.also {
+  ) = ButtonWrapper().apply { this.text = text }.also {
 	if (type != null) ButtonBar.setButtonData(it.node, type)
 	if (graphic != null) it.graphic = graphic
 	buttons += it.node
