@@ -36,7 +36,7 @@ interface ParentWrapper<C: NodeWrapper>: NodeWrapper {
 
 
 
-  fun addr(child: C, op: (C.()->Unit)? = null): C {
+  fun <CC: C> addr(child: CC, op: (CC.()->Unit)? = null): CC {
 	op?.invoke(child)
 	add(child)
 	return child
