@@ -8,8 +8,12 @@ import matt.async.thread.daemon
 import matt.auto.process.destroyNiceThenForceThenWait
 import matt.file.MFile
 import matt.file.commons.REGISTERED_FOLDER
-import matt.fx.graphics.lang.actionbutton
-import matt.fx.graphics.menu.context.mcontextmenu
+import matt.fx.control.lang.actionbutton
+import matt.fx.control.menu.context.mcontextmenu
+import matt.fx.control.wrapper.control.button.ButtonWrapper
+import matt.fx.control.wrapper.control.button.button
+import matt.fx.graphics.wrapper.node.NodeWrapper
+import matt.fx.graphics.wrapper.pane.hbox.hbox
 import matt.fx.node.console.Console
 import matt.fx.node.console.ProcessConsole
 import matt.fx.node.procpane.inspect.ProcessInspectPane
@@ -17,8 +21,6 @@ import matt.fx.node.procpane.status.StatusFolderWatchPane
 import matt.hurricanefx.eye.lib.onChange
 import matt.hurricanefx.eye.prop.getValue
 import matt.hurricanefx.eye.prop.setValue
-import matt.hurricanefx.wrapper.control.button.ButtonWrapper
-import matt.hurricanefx.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
 import matt.log.logInvokation
 import matt.obs.bindings.bool.not
