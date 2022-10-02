@@ -4,6 +4,7 @@ import javafx.beans.property.ObjectProperty
 import javafx.scene.control.Control
 import javafx.scene.control.Tooltip
 import matt.fx.control.control.dsl.ControlDSL
+import matt.fx.control.control.nodedsl.NodeControlDSL
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.region.RegionWrapper
 import matt.fx.graphics.wrapper.region.RegionWrapperImpl
@@ -16,4 +17,6 @@ interface ControlWrapper: RegionWrapper<NodeWrapper> {
 	set(value) = tooltipProp.setValue(value)
 }
 
-abstract class ControlWrapperImpl<N: Control>(node: N): RegionWrapperImpl<N, NodeWrapper>(node), ControlWrapper, ControlDSL
+abstract class ControlWrapperImpl<N: Control>(node: N): RegionWrapperImpl<N, NodeWrapper>(node),
+														ControlWrapper,
+														NodeControlDSL
