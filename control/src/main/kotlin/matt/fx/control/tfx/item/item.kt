@@ -4,7 +4,6 @@
 
 package matt.fx.control.tfx.item
 
-import javafx.beans.binding.Bindings.bindBidirectional
 import javafx.beans.property.Property
 import javafx.beans.property.ReadOnlyListProperty
 import javafx.beans.value.ObservableValue
@@ -17,7 +16,9 @@ import javafx.scene.control.TreeTableColumn
 import javafx.scene.control.TreeTablePosition
 import javafx.scene.input.MouseEvent
 import matt.fx.control.wrapper.control.choice.ChoiceBoxWrapper
+import matt.fx.control.wrapper.control.choice.bind
 import matt.fx.control.wrapper.control.combo.ComboBoxWrapper
+import matt.fx.control.wrapper.control.combo.bind
 import matt.fx.control.wrapper.control.list.ListViewWrapper
 import matt.fx.control.wrapper.control.spinner.SpinnerWrapper
 import matt.fx.control.wrapper.control.table.TableViewWrapper
@@ -25,6 +26,7 @@ import matt.fx.control.wrapper.control.tree.TreeViewWrapper
 import matt.fx.control.wrapper.control.treetable.TreeTableViewWrapper
 import matt.fx.graphics.wrapper.EventTargetWrapper
 import matt.fx.graphics.wrapper.EventTargetWrapperImpl
+import matt.fx.graphics.wrapper.node.attachTo
 import matt.hurricanefx.eye.collect.asObservable
 import matt.hurricanefx.eye.lib.onChange
 import matt.hurricanefx.eye.mtofx.createWritableFXPropWrapper

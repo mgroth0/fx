@@ -3,7 +3,6 @@ package matt.fx.control.wrapper.control
 import javafx.beans.property.ObjectProperty
 import javafx.scene.control.Control
 import javafx.scene.control.Tooltip
-import matt.fx.control.control.dsl.ControlDSL
 import matt.fx.control.control.nodedsl.NodeControlDSL
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.region.RegionWrapper

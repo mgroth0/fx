@@ -12,6 +12,7 @@ import javafx.scene.control.ToggleGroup
 import javafx.scene.input.KeyCombination
 import matt.fx.control.wrapper.menu.item.MenuItemWrapper
 import matt.fx.control.wrapper.menu.item.SimpleMenuItem
+import matt.fx.control.wrapper.menu.item.action
 import matt.fx.control.wrapper.menu.radioitem.ValuedRadioMenuItem
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.hurricanefx.eye.prop.getValue
