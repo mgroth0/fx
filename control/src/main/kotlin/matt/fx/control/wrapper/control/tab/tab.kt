@@ -8,14 +8,13 @@ import javafx.beans.value.ObservableValue
 import javafx.scene.Node
 import javafx.scene.control.Tab
 import javafx.scene.control.TabPane
+import matt.fx.graphics.wrapper.SingularEventTargetWrapper
+import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.hurricanefx.eye.bind.toBinding
 import matt.hurricanefx.eye.lib.onChange
 import matt.hurricanefx.eye.prop.cleanBind
 import matt.hurricanefx.eye.prop.getValue
 import matt.hurricanefx.eye.prop.setValue
-import matt.hurricanefx.wrapper.SingularEventTargetWrapper
-import matt.hurricanefx.wrapper.node.NodeWrapper
-import matt.hurricanefx.wrapper.wrapped
 
 open class TabWrapper<C: NodeWrapper>(
   node: Tab = Tab()
@@ -29,6 +28,10 @@ open class TabWrapper<C: NodeWrapper>(
   var isClosable by node.closableProperty()
 
   override val properties get() = node.properties
+
+  override fun removeFromParent() {
+	node.tabPane?.tabs?.remove(node)
+  }
 
   val contentProperty: ObjectProperty<Node> get() = node.contentProperty()
 

@@ -600,19 +600,6 @@ interface ControlDSL: GraphicsDSL {
   }
 
 
-  override fun removeFromParent() {
-	val n = node
-	when (n) {
-	  is Tab  -> n.tabPane?.tabs?.remove(n)
-	  is Node -> {
-		(n.parent?.parent as? ToolBar)?.items?.remove(n) ?: n.parent?.wrapped()?.childList?.remove(n)
-	  }
-
-	  is TreeItem<*> -> n.parent.children.remove(n)
-	}
-  }
-
-
 }
 
 inline fun <reified T> ControlDSL.label(

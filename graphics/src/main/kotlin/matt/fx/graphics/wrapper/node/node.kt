@@ -40,6 +40,7 @@ import javafx.stage.FileChooser
 import javafx.stage.Stage
 import matt.file.MFile
 import matt.file.construct.toMFile
+import matt.fx.graphics.service.wrapped
 import matt.fx.graphics.wrapper.EventTargetWrapper
 import matt.fx.graphics.wrapper.SingularEventTargetWrapper
 import matt.fx.graphics.wrapper.node.line.LineWrapper
@@ -466,6 +467,10 @@ interface NodeWrapper: EventTargetWrapper, StyleableWrapper {
   fun setAsBottomAnchor(offset: Double) = AnchorPane.setBottomAnchor(node, offset)
   fun setAsLeftAnchor(offset: Double) = AnchorPane.setLeftAnchor(node, offset)
   fun setAsRightAnchor(offset: Double) = AnchorPane.setRightAnchor(node, offset)
+
+  override fun removeFromParent() {
+	node.parent?.wrapped()?.childList?.remove(node)
+  }
 
 }
 
