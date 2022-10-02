@@ -139,7 +139,7 @@ class TreeTableViewWrapper<E>(
 
 
   /**
-   * Create a matt.hurricanefx.tableview.coolColumn holding children columns
+   * Create a matt.hurricanefx.tableview.coolColumn holding matt.fx.control.layout.children columns
    */
   @Suppress("UNCHECKED_CAST")
   fun nestedColumn(

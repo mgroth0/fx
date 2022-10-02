@@ -69,7 +69,7 @@ class ProcessInspectPane(initialValue: Process?): HBoxWrapper<NodeWrapper>() {
 		}).apply {
 		  prefWidth = 100.0
 		}
-		sortOrder.setAll(col.node) // not working for children?
+		sortOrder.setAll(col.node) // not working for matt.fx.control.layout.children?
 		debug("update4")
 		(column("main program") { cdf: TreeTableColumn.CellDataFeatures<ProcessOrHandleWrapper, String> ->
 		  cdf.value?.value?.command()?.let { com ->

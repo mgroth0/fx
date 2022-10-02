@@ -1,10 +1,10 @@
 package matt.fx.graphics.line
 
 import javafx.scene.shape.Line
-import matt.hurricanefx.wrapper.line.LineWrapper
-import matt.hurricanefx.wrapper.node.line
+import matt.fx.graphics.wrapper.node.line
+import matt.fx.graphics.wrapper.node.line.LineWrapper
 import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
-import matt.hurricanefx.wrapper.style.FXColor
+import matt.fx.graphics.wrapper.style.FXColor
 import matt.math.BasicPoint
 import matt.math.Point
 import matt.math.unaryMinus

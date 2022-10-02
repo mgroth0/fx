@@ -1,13 +1,12 @@
 @file:OptIn(ExperimentalStdlibApi::class)
 
-package matt.fx.graphics.win.interact
+package matt.fx.control.win.interact
 
 import javafx.application.Platform.runLater
 import javafx.beans.binding.DoubleBinding
 import javafx.geometry.Pos
 import javafx.scene.Scene
 import javafx.scene.control.Alert
-import javafx.scene.control.TextInputDialog
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
 import javafx.scene.paint.Color
@@ -19,10 +18,10 @@ import kotlinx.serialization.json.Json
 import matt.file.MFile
 import matt.file.construct.mFile
 import matt.fx.graphics.core.scene.MScene
-import matt.fx.graphics.lang.actionbutton
 import matt.fx.graphics.win.bindgeom.bindGeometry
-import matt.fx.graphics.win.interact.WinGeom.Centered
-import matt.fx.graphics.win.interact.WinOwn.Auto
+import matt.fx.control.win.interact.WinGeom.Centered
+import matt.fx.control.win.interact.WinOwn.Auto
+import matt.fx.control.wrapper.control.button.ButtonWrapper
 import matt.fx.graphics.win.stage.MStage
 import matt.fx.graphics.win.stage.ShowMode
 import matt.fx.graphics.win.stage.ShowMode.DO_NOT_SHOW
@@ -31,25 +30,16 @@ import matt.fx.graphics.win.stage.ShowMode.SHOW_AND_WAIT
 import matt.fx.graphics.win.stage.WMode
 import matt.fx.graphics.win.stage.WMode.CLOSE
 import matt.fx.graphics.win.stage.WMode.NOTHING
+import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.hurricanefx.eye.lib.onChange
 import matt.hurricanefx.eye.mtofx.createROFXPropWrapper
 import matt.hurricanefx.eye.prop.doubleBinding
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
-import matt.hurricanefx.tornadofx.dialog.alert
-import matt.hurricanefx.wrapper.control.button.ButtonWrapper
-import matt.hurricanefx.wrapper.imageview.ImageViewWrapper
-import matt.hurricanefx.wrapper.node.NodeWrapper
-import matt.hurricanefx.wrapper.node.disableWhen
-import matt.hurricanefx.wrapper.node.setOnDoubleClick
 import matt.fx.graphics.wrapper.pane.anchor.AnchorPaneWrapperImpl
 import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapper
-import matt.hurricanefx.wrapper.parent.ParentWrapper
-import matt.hurricanefx.wrapper.region.RegionWrapper
-import matt.hurricanefx.wrapper.region.border.FXBorder
-import matt.hurricanefx.wrapper.region.border.solidBorder
-import matt.hurricanefx.wrapper.stage.StageWrapper
-import matt.hurricanefx.wrapper.window.WindowWrapper
-import matt.hurricanefx.wrapper.wrapped
+import matt.fx.graphics.wrapper.region.border.FXBorder
+import matt.fx.graphics.wrapper.region.border.solidBorder
+import matt.fx.graphics.wrapper.stage.StageWrapper
 import matt.json.prim.isValidJson
 import matt.lang.noExceptions
 import matt.lang.nullIfExceptions

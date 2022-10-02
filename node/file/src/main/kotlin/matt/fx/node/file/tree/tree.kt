@@ -17,8 +17,8 @@ import matt.fx.fxauto.fxActions
 import matt.fx.graphics.icon.view
 import matt.fx.graphics.menu.context.mcontextmenu
 import matt.fx.graphics.refresh.refreshWhileInSceneEvery
-import matt.fx.graphics.win.interact.WinGeom
-import matt.fx.graphics.win.interact.openInNewWindow
+import matt.fx.control.win.interact.WinGeom
+import matt.fx.control.win.interact.openInNewWindow
 import matt.fx.graphics.win.stage.WMode.CLOSE
 import matt.fx.node.file.createNode
 import matt.fx.node.file.tree.FileTreePopulationStrategy.AUTOMATIC
@@ -332,7 +332,7 @@ private fun TreeLikeWrapper<*, MFile>.setupPopulating(strategy: FileTreePopulati
 	setOnSelectionChange { v ->
 	  if (v != null) {
 		(v as FileTreeItem).refreshChilds()
-		v.children.forEach { (it as FileTreeItem).refreshChilds() } /*so i can always see which have children*/
+		v.children.forEach { (it as FileTreeItem).refreshChilds() } /*so i can always see which have matt.fx.control.layout.children*/
 	  }
 	}
   }

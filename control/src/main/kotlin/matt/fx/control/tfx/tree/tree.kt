@@ -61,7 +61,7 @@ fun <T> TreeTableView<T>.multiSelect(enable: Boolean = true) {
 
 // -- TreeItem helpers
 /**
- * Expand this [TreeItem] and children down to `depth`.
+ * Expand this [TreeItem] and matt.fx.control.layout.children down to `depth`.
  */
 fun <T> TreeItem<T>.expandTo(depth: Int) {
     if (depth > 0) {
@@ -71,12 +71,12 @@ fun <T> TreeItem<T>.expandTo(depth: Int) {
 }
 
 /**
- * Expand this `[TreeItem] and all it's children.
+ * Expand this `[TreeItem] and all it's matt.fx.control.layout.children.
  */
 fun <T> TreeItem<T>.expandAll() = expandTo(Int.MAX_VALUE)
 
 /**
- * Collapse this [TreeItem] and all it's children.
+ * Collapse this [TreeItem] and all it's matt.fx.control.layout.children.
  */
 
 fun <T> TreeItem<T>.collapseAll() {

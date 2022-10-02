@@ -10,9 +10,9 @@ import matt.file.MFile
 import matt.file.commons.TEMP_DIR
 import matt.fx.graphics.clip.put
 import matt.fx.graphics.clip.putFiles
+import matt.fx.graphics.wrapper.node.NodeWrapper
+import matt.fx.graphics.wrapper.node.NodeWrapperImpl
 import matt.fx.image.save
-import matt.hurricanefx.wrapper.node.NodeWrapper
-import matt.hurricanefx.wrapper.node.NodeWrapperImpl
 
 fun NodeWrapper.drags(file: MFile) {
   setOnDragDetected {

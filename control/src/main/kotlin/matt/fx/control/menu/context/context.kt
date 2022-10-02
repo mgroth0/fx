@@ -1,4 +1,4 @@
-package matt.fx.graphics.menu.context
+package matt.fx.control.menu.context
 
 import javafx.application.Platform.runLater
 import javafx.collections.ListChangeListener.Change
@@ -8,7 +8,6 @@ import javafx.scene.Parent
 import javafx.scene.Scene
 import javafx.scene.canvas.Canvas
 import javafx.scene.control.ContextMenu
-import javafx.scene.control.MenuItem
 import javafx.scene.shape.Shape
 import matt.auto.jumpToKotlinSourceString
 import matt.auto.openInIntelliJ
@@ -17,25 +16,23 @@ import matt.collect.dmap.withStoringDefault
 import matt.collect.map.lazyMap
 import matt.fx.graphics.hotkey.filters
 import matt.fx.graphics.hotkey.handlers
-import matt.fx.graphics.menu.context.EventHandlerType.Filter
-import matt.fx.graphics.menu.context.EventHandlerType.Handler
-import matt.hurricanefx.wrapper.contextmenu.ContextMenuWrapper
-import matt.hurricanefx.wrapper.menu.MenuWrapper
-import matt.hurricanefx.wrapper.menu.checkitem.CheckMenuItemWrapper
-import matt.hurricanefx.wrapper.menu.item.MenuItemWrapper
-import matt.hurricanefx.wrapper.menu.item.SimpleMenuItem
-import matt.hurricanefx.wrapper.node.NodeWrapper
-import matt.hurricanefx.wrapper.node.NodeWrapperImpl
-import matt.hurricanefx.wrapper.parent.parent
-import matt.hurricanefx.wrapper.scene.SceneWrapper
-import matt.hurricanefx.wrapper.target.EventTargetWrapper
-import matt.hurricanefx.wrapper.wrapped
+import matt.fx.control.menu.context.EventHandlerType.Filter
+import matt.fx.control.menu.context.EventHandlerType.Handler
+import matt.fx.control.wrapper.contextmenu.ContextMenuWrapper
+import matt.fx.control.wrapper.menu.MenuWrapper
+import matt.fx.control.wrapper.menu.checkitem.CheckMenuItemWrapper
+import matt.fx.control.wrapper.menu.item.MenuItemWrapper
+import matt.fx.control.wrapper.menu.item.SimpleMenuItem
+import matt.fx.control.wrapper.wrapped.wrapped
+import matt.fx.graphics.wrapper.EventTargetWrapper
+import matt.fx.graphics.wrapper.node.NodeWrapper
+import matt.fx.graphics.wrapper.node.NodeWrapperImpl
+import matt.fx.graphics.wrapper.scene.SceneWrapper
 import matt.log.profile.tic
 import matt.log.tab
 import matt.log.warn
 import matt.obs.prop.BindableProperty
 import matt.obs.prop.Var
-import matt.obs.prop.WritableMObservableVal
 import matt.stream.recurse.chain
 import java.lang.Thread.sleep
 import java.util.WeakHashMap
@@ -161,7 +158,7 @@ class CmFix: RunOnce() {
   }
 }
 
-val contextMenus = lazyMap<Scene, ContextMenuWrapper> {
+val contextMenus = lazyMap<Scene, „ContextMenuWrapper> {
   ContextMenuWrapper().apply {
 	isAutoHide = true
 	isAutoFix = true
@@ -292,7 +289,7 @@ private fun KClass<*>.jumpToSource() {
   }
 }
 
-private fun NodeWrapper.hotkeyInfoMenu() = MenuWrapper("Click For Hotkey Info").apply {
+private fun „NodeWrapper.hotkeyInfoMenu() = MenuWrapper("Click For Hotkey Info").apply {
   val node = this@hotkeyInfoMenu
   fun addInfo(type: EventHandlerType) {
 	menu(

@@ -4,7 +4,7 @@ import javafx.scene.paint.Paint
 import javafx.scene.shape.Rectangle
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.graphics.wrapper.node.shape.ShapeWrapper
-import matt.hurricanefx.wrapper.sizeman.SizeControlled
+import matt.fx.graphics.wrapper.sizeman.SizeControlled
 
 open class RectangleWrapper(
   node: Rectangle = Rectangle(),

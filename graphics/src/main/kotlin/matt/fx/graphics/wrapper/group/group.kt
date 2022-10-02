@@ -1,10 +1,10 @@
 package matt.fx.graphics.wrapper.group
 
 import javafx.scene.Group
+import matt.fx.graphics.service.uncheckedWrapperConverter
+import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.hurricanefx.eye.wrapper.obs.collect.createMutableWrapper
-import matt.hurricanefx.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.parent.ParentWrapperImpl
-import matt.hurricanefx.wrapper.uncheckedWrapperConverter
 import matt.log.warn
 import matt.obs.col.olist.mappedlist.toSyncedList
 

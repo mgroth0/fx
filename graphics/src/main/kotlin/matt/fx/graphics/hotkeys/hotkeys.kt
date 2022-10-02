@@ -31,6 +31,7 @@ import matt.lang.go
 import java.lang.Thread.sleep
 import kotlin.concurrent.thread
 import kotlin.contracts.ExperimentalContracts
+import matt.fx.graphics.service.wrapped
 
 
 @ExperimentalContracts fun MScene<*>.addDefaultHotkeys() {

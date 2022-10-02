@@ -19,16 +19,16 @@ import javafx.scene.paint.Paint
 import javafx.scene.shape.Shape
 import javafx.scene.transform.Rotate
 import javafx.util.Duration
+import matt.fx.graphics.service.wrapped
 import matt.fx.graphics.tfx.animation.ViewTransition.Direction.DOWN
 import matt.fx.graphics.tfx.animation.ViewTransition.Direction.LEFT
 import matt.fx.graphics.tfx.animation.ViewTransition.Direction.RIGHT
 import matt.fx.graphics.tfx.animation.ViewTransition.Direction.UP
-import matt.hurricanefx.tornadofx.nodes.point
-import matt.hurricanefx.wrapper.node.NodeWrapper
-import matt.hurricanefx.wrapper.node.isTransitioning
+import matt.fx.graphics.tfx.nodes.point
+import matt.fx.graphics.wrapper.node.NodeWrapper
+import matt.fx.graphics.wrapper.node.isTransitioning
 import matt.fx.graphics.wrapper.pane.SimplePaneWrapper
 import matt.fx.graphics.wrapper.pane.stack.StackPaneWrapper
-import matt.hurricanefx.wrapper.wrapped
 
 operator fun Timeline.plusAssign(keyFrame: KeyFrame) {
   keyFrames.add(keyFrame)

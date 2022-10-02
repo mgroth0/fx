@@ -2,6 +2,10 @@ package matt.fx.media.dsl
 
 import javafx.beans.value.ObservableValue
 import javafx.scene.image.Image
+import matt.fx.control.control.dsl.ControlDSL
+import matt.fx.graphics.wrapper.imageview.ImageViewWrapper
+import matt.fx.graphics.wrapper.node.attach
+import matt.fx.graphics.wrapper.node.attachTo
 
 interface MediaDSL: ControlDSL {
 

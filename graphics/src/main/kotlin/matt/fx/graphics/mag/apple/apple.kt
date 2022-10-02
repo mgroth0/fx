@@ -12,7 +12,7 @@ import matt.auto.macapp.JavaMacApp
 import matt.auto.macapp.MacApp.Companion.getFrontmostProcessFromKotlinNative
 import matt.auto.macapp.SystemEvents
 import matt.fx.graphics.mag.left
-import matt.hurricanefx.wrapper.stage.StageWrapper
+import matt.fx.graphics.wrapper.stage.StageWrapper
 import matt.lang.err
 import matt.log.profile.tic
 import kotlin.concurrent.thread

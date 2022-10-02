@@ -22,7 +22,7 @@ interface TreeLikeWrapper<N: Region, T>: RegionWrapper<NodeWrapper>, SelectingCo
 
 
 /**
- * Add children to the given item by invoking the supplied childFactory function, which converts
+ * Add matt.fx.control.layout.children to the given item by invoking the supplied childFactory function, which converts
  * a TreeItem&matt.hurricanefx.eye.prop.str.matt.lang.`when`.lt;T> to a List&matt.hurricanefx.eye.prop.str.matt.lang.`when`.lt;T>?.
  *
  * If the childFactory returns a non-empty list, each entry in the list is converted to a TreeItem&matt.hurricanefx.eye.prop.str.matt.lang.`when`.lt;T>

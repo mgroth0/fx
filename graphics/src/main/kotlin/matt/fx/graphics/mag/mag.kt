@@ -3,7 +3,7 @@ package matt.fx.graphics.mag
 import javafx.stage.Screen
 import kotlinx.serialization.Serializable
 import matt.file.commons.VAR_JSON_FILE
-import matt.hurricanefx.wrapper.window.WindowWrapper
+import matt.fx.graphics.wrapper.window.WindowWrapper
 import matt.json.prim.loadJson
 import matt.json.prim.save
 import matt.json.toJson

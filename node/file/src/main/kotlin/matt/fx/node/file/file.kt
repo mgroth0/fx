@@ -24,10 +24,10 @@ import matt.file.SvgFile
 import matt.fx.graphics.fxthread.runLaterReturn
 import matt.fx.graphics.lang.actionbutton
 import matt.fx.graphics.menu.context.mcontextmenu
-import matt.fx.graphics.win.interact.doubleClickToOpenInWindow
-import matt.fx.graphics.win.interact.openImageInWindow
-import matt.fx.graphics.win.interact.openInNewWindow
-import matt.fx.graphics.win.interact.safe
+import matt.fx.control.win.interact.doubleClickToOpenInWindow
+import matt.fx.control.win.interact.openImageInWindow
+import matt.fx.control.win.interact.openInNewWindow
+import matt.fx.control.win.interact.safe
 import matt.fx.graphics.win.stage.WMode.CLOSE
 import matt.fx.node.file.tree.fileTreeAndViewerPane
 import matt.fx.web.WebViewPane

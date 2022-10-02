@@ -2,8 +2,8 @@ package matt.fx.graphics.refresh
 
 import matt.async.schedule.MyTimerTask
 import matt.async.schedule.every
+import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.hurricanefx.eye.lib.onChange
-import matt.hurricanefx.wrapper.node.NodeWrapper
 import matt.time.dur.Duration
 
 fun <T: NodeWrapper> T.refreshWhileInSceneEvery(

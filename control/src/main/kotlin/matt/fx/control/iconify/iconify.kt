@@ -7,8 +7,8 @@ import matt.fx.graphics.icon.ICON_HEIGHT
 import matt.fx.graphics.icon.ICON_WIDTH
 import matt.fx.graphics.icon.Icon
 import matt.fx.graphics.style.DarkModeController
-import matt.fx.graphics.win.interact.WinGeom
-import matt.fx.graphics.win.interact.WinOwn
+import matt.fx.control.win.interact.WinGeom
+import matt.fx.control.win.interact.WinOwn
 import matt.fx.graphics.win.winfun.noDocking
 import matt.fx.graphics.wrapper.node.setOnDoubleClick
 import matt.fx.graphics.wrapper.scene.SceneWrapper

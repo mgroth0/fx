@@ -6,8 +6,6 @@ import javafx.collections.ObservableList
 import javafx.geometry.Bounds
 import javafx.geometry.Rectangle2D
 import javafx.scene.Node
-import javafx.scene.control.Label
-import javafx.scene.control.ToolBar
 import javafx.scene.layout.ColumnConstraints
 import javafx.scene.layout.ConstraintsBase
 import javafx.scene.layout.GridPane
@@ -16,9 +14,9 @@ import javafx.scene.layout.Pane
 import javafx.scene.layout.Priority
 import javafx.scene.layout.RowConstraints
 import javafx.scene.layout.VBox
+import javafx.scene.text.Text
+import matt.fx.graphics.wrapper.node.parent.ParentWrapper
 import matt.fx.graphics.wrapper.pane.grid.GridPaneWrapper
-import matt.hurricanefx.wrapper.parent.ParentWrapper
-import matt.hurricanefx.wrapper.parent.parent
 
 
 fun Bounds.toRect() = Rectangle2D(minX, minY, width, height)
@@ -47,7 +45,7 @@ fun GridPane.row(title: String? = null, op: Pane.()->Unit = {}) {
   // Allow the caller to add children to a fake pane
   val fake = Pane()
   fake.properties[GridPaneParentObjectKey] = this
-  if (title != null) fake.children.add(Label(title))
+  if (title != null) fake.children.add(Text(title))
 
   op(fake)
 
@@ -121,7 +119,7 @@ val ParentWrapper<*>.gridpaneColumnConstraints: ColumnConstraints?
 		  it to next!!.getChildList()?.indexOf(cursor)
 		}
 
-		else                -> null
+		else                    -> null
 	  }
 
 	  if (gridReference != null) {
@@ -134,17 +132,11 @@ val ParentWrapper<*>.gridpaneColumnConstraints: ColumnConstraints?
 	return null
   }
 
-fun ParentWrapper<*>.gridpaneColumnConstraints(op: ColumnConstraints.()->Unit) = gridpaneColumnConstraints?.apply { op() }
+fun ParentWrapper<*>.gridpaneColumnConstraints(op: ColumnConstraints.()->Unit) =
+  gridpaneColumnConstraints?.apply { op() }
 
 
 
-
-@Deprecated(
-  "No need to wrap ToolBar children in children{} anymore. Remove the wrapper and all builder items will still be added as before.",
-  ReplaceWith("no children{} wrapper"),
-  DeprecationLevel.WARNING
-)
-fun ToolBar.children(op: ToolBar.()->Unit) = apply { op() }
 
 
 

@@ -449,7 +449,7 @@ interface NodeWrapper: EventTargetWrapper, StyleableWrapper {
 	}
 
 
-  val stage: StageWrapper
+  val stage get() = node.stage.wrapped() as? StageWrapper
 
   fun onDoubleClickConsume(action: ()->Unit) {
 	node.setOnMouseClicked {
