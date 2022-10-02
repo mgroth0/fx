@@ -1,8 +1,8 @@
 package matt.fx.graphics.line
 
 import javafx.scene.shape.Line
-import matt.fx.graphics.wrapper.node.line
 import matt.fx.graphics.wrapper.node.line.LineWrapper
+import matt.fx.graphics.wrapper.node.line.line
 import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
 import matt.fx.graphics.wrapper.style.FXColor
 import matt.math.BasicPoint
