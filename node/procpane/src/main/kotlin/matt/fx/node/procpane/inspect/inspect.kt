@@ -8,7 +8,7 @@ import matt.auto.process.ProcessOrHandleWrapper
 import matt.file.construct.mFile
 import matt.hurricanefx.eye.lib.onChange
 import matt.hurricanefx.tornadofx.item.treetableview
-import matt.hurricanefx.ts.nonBlockingFXWatcher
+import matt.fx.graphics.fxthread.ts.nonBlockingFXWatcher
 import matt.hurricanefx.wrapper.control.treetable.populate
 import matt.hurricanefx.wrapper.label.LabelWrapper
 import matt.hurricanefx.wrapper.node.NodeWrapper
