@@ -10,6 +10,8 @@ import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.value.ObservableValue
 import javafx.scene.Node
 import javafx.scene.control.ToggleGroup
+import matt.fx.control.wrapper.control.value.constval.HasConstValue
+import matt.fx.control.wrapper.wrapped.wrapped
 import matt.hurricanefx.eye.lib.onChange
 import matt.obs.prop.Var
 

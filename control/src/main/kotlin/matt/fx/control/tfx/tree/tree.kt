@@ -7,6 +7,7 @@ import javafx.scene.control.SelectionMode
 import javafx.scene.control.TreeItem
 import javafx.scene.control.TreeTableView
 import javafx.scene.control.TreeView
+import matt.fx.control.wrapper.control.tree.like.populateTree
 import matt.hurricanefx.eye.lib.onChange
 
 

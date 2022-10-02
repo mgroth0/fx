@@ -8,6 +8,7 @@ import javafx.scene.Parent
 import javafx.scene.Scene
 import javafx.scene.canvas.Canvas
 import javafx.scene.control.ContextMenu
+import javafx.scene.control.MenuItem
 import javafx.scene.shape.Shape
 import matt.auto.jumpToKotlinSourceString
 import matt.auto.openInIntelliJ
@@ -27,6 +28,7 @@ import matt.fx.control.wrapper.wrapped.wrapped
 import matt.fx.graphics.wrapper.EventTargetWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapperImpl
+import matt.fx.graphics.wrapper.node.parent.parent
 import matt.fx.graphics.wrapper.scene.SceneWrapper
 import matt.log.profile.tic
 import matt.log.tab
@@ -158,7 +160,7 @@ class CmFix: RunOnce() {
   }
 }
 
-val contextMenus = lazyMap<Scene, „ContextMenuWrapper> {
+val contextMenus = lazyMap<Scene, ContextMenuWrapper> {
   ContextMenuWrapper().apply {
 	isAutoHide = true
 	isAutoFix = true
@@ -289,7 +291,7 @@ private fun KClass<*>.jumpToSource() {
   }
 }
 
-private fun „NodeWrapper.hotkeyInfoMenu() = MenuWrapper("Click For Hotkey Info").apply {
+private fun NodeWrapper.hotkeyInfoMenu() = MenuWrapper("Click For Hotkey Info").apply {
   val node = this@hotkeyInfoMenu
   fun addInfo(type: EventHandlerType) {
 	menu(

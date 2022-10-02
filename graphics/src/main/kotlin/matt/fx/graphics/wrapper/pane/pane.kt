@@ -7,11 +7,11 @@ import javafx.scene.layout.Pane
 import javafx.scene.paint.Color
 import matt.fx.graphics.service.uncheckedWrapperConverter
 import matt.fx.graphics.wrapper.node.NodeWrapper
-import matt.hurricanefx.eye.wrapper.obs.collect.createMutableWrapper
+import matt.fx.graphics.wrapper.node.shape.rect.RectangleWrapper
 import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapper
 import matt.fx.graphics.wrapper.region.RegionWrapper
 import matt.fx.graphics.wrapper.region.RegionWrapperImpl
-import matt.fx.graphics.wrapper.node.shape.rect.RectangleWrapper
+import matt.hurricanefx.eye.wrapper.obs.collect.createMutableWrapper
 import matt.log.warnOnce
 import matt.model.corner.Corner
 import matt.model.corner.Corner.NE

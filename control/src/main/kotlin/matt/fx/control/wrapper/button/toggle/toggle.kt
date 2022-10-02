@@ -2,12 +2,13 @@ package matt.fx.control.wrapper.button.toggle
 
 import javafx.beans.property.BooleanProperty
 import javafx.scene.control.ToggleButton
+import matt.fx.control.wrapper.control.button.base.ButtonBaseWrapper
+import matt.fx.control.wrapper.control.value.HasWritableValue
 import matt.hurricanefx.eye.lib.onChange
-import matt.hurricanefx.wrapper.control.button.base.ButtonBaseWrapper
-import matt.hurricanefx.wrapper.control.value.HasWritableValue
 import matt.obs.prop.BindableProperty
 
-class ValuedToggleButton<V>(value: V): matt.fx.control.wrapper.button.toggle.ToggleButtonWrapper(ToggleButton()), HasWritableValue<V> {
+class ValuedToggleButton<V>(value: V): matt.fx.control.wrapper.button.toggle.ToggleButtonWrapper(ToggleButton()),
+									   HasWritableValue<V> {
   override val valueProperty = BindableProperty(value)
 }
 

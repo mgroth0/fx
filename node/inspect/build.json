@@ -3,8 +3,8 @@
   "dependencies" : [
 	{
 	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
-	  "cfg" :  "implementation",
-	  "path" : ":k:fx:graphics"
+	  "cfg" :  "api",
+	  "path" : ":k:fx:control"
 	}
   ],
   "note" :         null

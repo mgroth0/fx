@@ -7,10 +7,13 @@ import javafx.scene.input.ContextMenuEvent
 import javafx.scene.layout.ColumnConstraints
 import javafx.scene.layout.Pane
 import javafx.scene.layout.RowConstraints
+import matt.fx.control.wrapper.checkbox.CheckBoxWrapper
+import matt.fx.control.wrapper.control.tab.TabWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapperImpl
 import matt.hurricanefx.eye.lang.DProp
 import matt.fx.control.wrapper.scroll.ScrollPaneWrapper
+import matt.hurricanefx.eye.lib.onChangeUntilAfterFirst
 import matt.lang.NEVER
 import matt.log.warn
 import matt.obs.prop.Var

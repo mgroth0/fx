@@ -4,7 +4,7 @@
 	{
 	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
 	  "cfg" :  "api",
-	  "path" : ":k:fx:graphics"
+	  "path" : ":k:fx:control"
 	}
   ],
   "note" :         null

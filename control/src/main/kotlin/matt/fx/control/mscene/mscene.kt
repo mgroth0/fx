@@ -10,12 +10,12 @@ import matt.color.name.ColorUtils
 import matt.file.MFile
 import matt.file.commons.ICON_FOLDER
 import matt.file.construct.mFile
+import matt.fx.control.hotkeys.addDefaultHotkeys
 import matt.fx.control.menu.context.mcontextmenu
 import matt.fx.control.menu.context.showMContextMenu
 import matt.fx.control.wrapper.wrapped.wrapped
 import matt.fx.graphics.core.scene.NEED_REVERSED_DISPLAYS_FEATURE
 import matt.fx.graphics.core.scene.reloadStyle
-import matt.fx.graphics.hotkeys.addDefaultHotkeys
 import matt.fx.graphics.mag.VarJson
 import matt.fx.graphics.style.CUSTOM_CSS
 import matt.fx.graphics.style.DARK_MODENA_CSS

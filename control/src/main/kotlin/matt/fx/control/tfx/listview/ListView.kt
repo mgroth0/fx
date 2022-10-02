@@ -9,8 +9,8 @@ import javafx.scene.control.SelectionMode
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
 import javafx.scene.input.MouseEvent
+import matt.fx.control.wrapper.wrapped.wrapped
 import matt.hurricanefx.eye.lib.onChange
-import matt.hurricanefx.wrapper.wrapped
 
 
 /**

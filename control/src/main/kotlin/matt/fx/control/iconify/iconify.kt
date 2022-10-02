@@ -2,7 +2,7 @@ package matt.fx.control.iconify
 
 import javafx.stage.Stage
 import matt.file.MFile
-import matt.fx.graphics.core.scene.MScene
+import matt.fx.control.mscene.MScene
 import matt.fx.graphics.icon.ICON_HEIGHT
 import matt.fx.graphics.icon.ICON_WIDTH
 import matt.fx.graphics.icon.Icon

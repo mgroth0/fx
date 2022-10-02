@@ -1,10 +1,10 @@
 package matt.fx.control.tsprogressbar
 
-import matt.hurricanefx.wrapper.node.NodeWrapperImpl
 import javafx.application.Platform.runLater
 import javafx.scene.Node
 import javafx.scene.control.ProgressBar
-import matt.hurricanefx.wrapper.node.NodeWrapper
+import matt.fx.graphics.wrapper.node.NodeWrapper
+import matt.fx.graphics.wrapper.node.NodeWrapperImpl
 import matt.lang.NOT_IMPLEMENTED
 import matt.log.warn
 
