@@ -5,7 +5,6 @@ import javafx.beans.property.Property
 import javafx.beans.value.ObservableValue
 import javafx.collections.ObservableList
 import javafx.geometry.Orientation
-import javafx.geometry.Pos
 import javafx.scene.Node
 import javafx.scene.chart.PieChart.Data
 import javafx.scene.control.ContextMenu
@@ -14,7 +13,6 @@ import javafx.scene.control.TitledPane
 import javafx.scene.control.ToggleGroup
 import javafx.scene.paint.Color
 import javafx.util.StringConverter
-import matt.fx.control.control.nodedsl.NodeControlDSL
 import matt.fx.control.wrapper.button.radio.ValuedRadioButton
 import matt.fx.control.wrapper.button.toggle.ValuedToggleButton
 import matt.fx.control.wrapper.buttonbar.ButtonBarWrapper
@@ -68,7 +66,6 @@ import matt.fx.graphics.wrapper.pane.anchor.swapper.Swapper
 import matt.fx.graphics.wrapper.pane.border.BorderPaneWrapper
 import matt.fx.graphics.wrapper.pane.flow.FlowPaneWrapper
 import matt.fx.graphics.wrapper.pane.grid.GridPaneWrapper
-import matt.fx.graphics.wrapper.pane.hbox.HBoxWrapper
 import matt.fx.graphics.wrapper.pane.stack.StackPaneWrapper
 import matt.fx.graphics.wrapper.pane.tile.TilePaneWrapper
 import matt.fx.graphics.wrapper.textflow.TextFlowWrapper

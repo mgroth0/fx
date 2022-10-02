@@ -18,9 +18,6 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import matt.file.MFile
 import matt.file.construct.mFile
-import matt.fx.control.control.dsl.ControlDSL
-import matt.fx.control.control.nodedsl.testExtension1
-import matt.fx.control.control.nodedsl.testExtension2
 import matt.fx.control.lang.actionbutton
 import matt.fx.control.mscene.MScene
 import matt.fx.control.mstage.MStage
@@ -82,7 +79,7 @@ fun safe(s: String, op: ()->Unit): Boolean {
   return r
 }
 
-class MDialog<R> internal constructor(): VBoxWrapperImpl<NodeWrapper>(), ControlDSL {
+class MDialog<R> internal constructor(): VBoxWrapperImpl<NodeWrapper>() {
   val stg = MStage(wMode = CLOSE, EscClosable = true).apply {
 	scene = MScene(this@MDialog)
 	width = 400.0

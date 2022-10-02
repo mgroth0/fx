@@ -6,7 +6,6 @@ import javafx.event.EventHandler
 import javafx.scene.Node
 import javafx.scene.control.MenuItem
 import javafx.scene.input.KeyCombination
-import matt.fx.control.control.dsl.ControlDSL
 import matt.fx.graphics.wrapper.SingularEventTargetWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
@@ -20,7 +19,7 @@ fun SimpleMenuItem(text: String?, g: Node? = null) = MenuItemWrapper(MenuItem(te
 
 open class MenuItemWrapper<N: MenuItem>(
   node: N
-): SingularEventTargetWrapper<N>(node), ControlDSL {
+): SingularEventTargetWrapper<N>(node) {
 
   companion object {
 	fun construct(text: String, graphic: Node? = null) = MenuItemWrapper(MenuItem(text, graphic))
