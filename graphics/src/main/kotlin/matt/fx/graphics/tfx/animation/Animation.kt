@@ -25,6 +25,7 @@ import matt.fx.graphics.tfx.animation.ViewTransition.Direction.LEFT
 import matt.fx.graphics.tfx.animation.ViewTransition.Direction.RIGHT
 import matt.fx.graphics.tfx.animation.ViewTransition.Direction.UP
 import matt.fx.graphics.tfx.nodes.point
+import matt.fx.graphics.wrapper.canvas.CanvasWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.isTransitioning
 import matt.fx.graphics.wrapper.pane.SimplePaneWrapper
@@ -879,7 +880,7 @@ abstract class ViewTransition {
    */
   class Wipe(val duration: Duration, val direction: Direction = LEFT): ReversibleViewTransition<Wipe>() {
 	override fun stack(current: NodeWrapper, replacement: NodeWrapper) =
-		StackPaneWrapper<NodeWrapper>(replacement, current.snapshot(null, null).toCanvas().wrapped())
+		StackPaneWrapper<NodeWrapper>(replacement, current.snapshot(null, null).toCanvas().wrapped() as CanvasWrapper)
 
 	override fun create(current: NodeWrapper, replacement: NodeWrapper, stack: StackPaneWrapper<NodeWrapper>): Animation {
 	  val canvas = stack.children[1] as Canvas
@@ -922,7 +923,7 @@ abstract class ViewTransition {
    */
   class Dissolve(val duration: Duration, val hChunks: Int = 50, val vChunks: Int = 50): ViewTransition() {
 	override fun stack(current: NodeWrapper, replacement: NodeWrapper) =
-		StackPaneWrapper(replacement, current.snapshot(null, null).toCanvas().wrapped())
+		StackPaneWrapper(replacement, current.snapshot(null, null).toCanvas().wrapped() as CanvasWrapper)
 
 	override fun create(current: NodeWrapper, replacement: NodeWrapper, stack: StackPaneWrapper<NodeWrapper>): Animation {
 	  val canvas = stack.children[1] as Canvas

@@ -182,7 +182,7 @@ interface NodeWrapper: EventTargetWrapper, StyleableWrapper {
   val rotationAxisProperty: ObjectProperty<Point3D> get() = node.rotationAxisProperty()
 
 
-  override val properties: ObservableMap<Any, Any> get() = node.properties
+  override val properties: ObservableMap<Any, Any?> get() = node.properties
 
   var isCache
 	get() = node.isCache

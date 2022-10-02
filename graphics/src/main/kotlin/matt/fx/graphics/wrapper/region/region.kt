@@ -14,6 +14,7 @@ import javafx.scene.paint.Color
 import javafx.scene.paint.Paint
 import matt.file.MFile
 import matt.file.construct.toMFile
+import matt.fx.graphics.service.uncheckedWrapperConverter
 import matt.fx.graphics.style.all
 import matt.fx.graphics.style.backgroundColor
 import matt.fx.graphics.style.copy
@@ -30,11 +31,11 @@ import matt.fx.graphics.wrapper.node.parent.ParentWrapperImpl
 import matt.fx.graphics.wrapper.node.parent.parent
 import matt.fx.graphics.wrapper.region.border.FXBorder
 import matt.fx.graphics.wrapper.sizeman.SizeManaged
-import matt.hurricanefx.wrapper.pane.scroll.ScrollPaneWrapper
 import matt.lang.NEVER
 import matt.lang.err
 import matt.obs.col.olist.mappedlist.toSyncedList
 import matt.obs.prop.BindableProperty
+import matt.reflect.access
 import kotlin.reflect.full.declaredMemberFunctions
 
 interface RegionWrapper<C: NodeWrapper>: ParentWrapper<C>, SizeManaged {

@@ -12,6 +12,11 @@
 	  "path" : ":k:service"
 	},
 	{
+	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
+	  "cfg" :  "api",
+	  "path" : ":k:reflect"
+	},
+	{
 	  "type" : "matt.mstruct.bj.BuildJsonLibDependency",
 	  "cfg" :  "api",
 	  "key" :  "fx-graphics"
@@ -71,11 +76,6 @@
 	  "type" : "matt.mstruct.bj.BuildJsonLibDependency",
 	  "cfg" :  "implementation",
 	  "key" :  "svgsalamander"
-	},
-	{
-	  "type" : "matt.mstruct.bj.BuildJsonLibDependency",
-	  "cfg" :  "implementation",
-	  "key" :  "kt-reflect"
 	}
   ],
   "note" :         null

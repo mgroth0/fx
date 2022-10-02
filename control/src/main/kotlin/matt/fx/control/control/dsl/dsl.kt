@@ -10,8 +10,10 @@ import javafx.scene.Node
 import javafx.scene.chart.PieChart.Data
 import javafx.scene.control.ContextMenu
 import javafx.scene.control.Control
+import javafx.scene.control.Tab
 import javafx.scene.control.TitledPane
 import javafx.scene.control.ToggleGroup
+import javafx.scene.control.TreeItem
 import javafx.scene.layout.HBox
 import javafx.scene.layout.VBox
 import javafx.scene.paint.Color
@@ -48,8 +50,10 @@ import matt.fx.control.wrapper.progressindicator.ProgressIndicatorWrapper
 import matt.fx.control.wrapper.scroll.ScrollPaneWrapper
 import matt.fx.control.wrapper.sep.SeparatorWrapper
 import matt.fx.control.wrapper.split.SplitPaneWrapper
+import matt.fx.control.wrapper.tab.TabPaneWrapper
 import matt.fx.control.wrapper.titled.TitledPaneWrapper
 import matt.fx.control.wrapper.toolbar.ToolBarWrapper
+import matt.fx.control.wrapper.wrapped.wrapped
 import matt.fx.graphics.dsl.GraphicsDSL
 import matt.fx.graphics.wrapper.canvas.CanvasWrapper
 import matt.fx.graphics.wrapper.group.GroupWrapper
@@ -593,6 +597,19 @@ interface ControlDSL: GraphicsDSL {
 	if (n.parent != null) return n.parent.wrapped().isInsideRow()
 
 	return false
+  }
+
+
+  override fun removeFromParent() {
+	val n = node
+	when (n) {
+	  is Tab  -> n.tabPane?.tabs?.remove(n)
+	  is Node -> {
+		(n.parent?.parent as? ToolBar)?.items?.remove(n) ?: n.parent?.wrapped()?.childList?.remove(n)
+	  }
+
+	  is TreeItem<*> -> n.parent.children.remove(n)
+	}
   }
 
 

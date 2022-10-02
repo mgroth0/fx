@@ -6,6 +6,7 @@ import javafx.scene.Scene
 import javafx.stage.Screen
 import javafx.stage.Window
 import javafx.stage.WindowEvent
+import matt.fx.graphics.service.wrapped
 import matt.fx.graphics.wrapper.EventTargetWrapperImpl
 import matt.hurricanefx.eye.wrapper.obs.obsval.NonNullFXBackedReadOnlyBindableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
@@ -79,7 +80,7 @@ abstract class WindowWrapper<W: Window>(override val node: W): EventTargetWrappe
   fun hide() = node.hide()
 
 
-  open val scene: SceneWrapper<*>? get() = node.scene?.wrapped()
+  open val scene: SceneWrapper<*>? get() = node.scene?.wrapped() as SceneWrapper<*>?
 
   fun sceneProperty(): ReadOnlyObjectProperty<Scene> = node.sceneProperty()
 

@@ -3,12 +3,16 @@ package matt.fx.graphics.wrapper.imageview
 import javafx.beans.property.BooleanProperty
 import javafx.beans.property.DoubleProperty
 import javafx.beans.property.ObjectProperty
+import javafx.beans.property.SimpleDoubleProperty
 import javafx.scene.image.Image
 import javafx.scene.image.ImageView
+import matt.collect.dmap.DefaultStoringMap
+import matt.collect.dmap.withStoringDefault
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapperImpl
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.graphics.wrapper.region.RegionWrapperImpl
+import java.util.WeakHashMap
 
 class ImageViewWrapper(
    node: ImageView = ImageView(),
@@ -79,3 +83,11 @@ class ImageViewWrapper(
   }
 
 }
+
+val fitBothProps: DefaultStoringMap<ImageView, DoubleProperty> =
+  WeakHashMap<ImageView, DoubleProperty>().withStoringDefault {
+	SimpleDoubleProperty().apply {
+	  it.fitWidthProperty().bind(this)
+	  it.fitWidthProperty().bind(this)
+	}
+  }
