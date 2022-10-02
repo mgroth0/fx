@@ -38,6 +38,7 @@ import javafx.scene.control.TreeTableColumn
 import javafx.scene.control.TreeTableRow
 import javafx.scene.control.TreeTableView
 import javafx.scene.control.TreeView
+import javafx.scene.control.skin.TableColumnHeader
 import javafx.scene.control.skin.VirtualFlow
 import javafx.scene.layout.AnchorPane
 import javafx.scene.layout.BorderPane
@@ -77,6 +78,7 @@ import matt.fx.control.wrapper.control.row.TreeTableRowWrapper
 import matt.fx.control.wrapper.control.spinner.SpinnerWrapper
 import matt.fx.control.wrapper.control.tab.TabWrapper
 import matt.fx.control.wrapper.control.table.TableViewWrapper
+import matt.fx.control.wrapper.control.table.colhead.TableColumnHeaderWrapper
 import matt.fx.control.wrapper.control.text.area.TextAreaWrapper
 import matt.fx.control.wrapper.control.text.field.FakeFocusTextFieldWrapper
 import matt.fx.control.wrapper.control.text.field.TextFieldWrapper
@@ -196,6 +198,8 @@ fun ScrollPane.wrapped(): ScrollPaneWrapper<NodeWrapper> = findWrapper() ?: Scro
 
 fun Hyperlink.wrapped(): HyperlinkWrapper = findWrapper() ?: HyperlinkWrapper(this@wrapped)
 
+fun TableColumnHeader.wrapped(): TableColumnHeaderWrapper = findWrapper() ?: TableColumnHeaderWrapper(this@wrapped)
+
 
 fun <X, Y> LineChart<X, Y>.wrapped(): LineChartWrapper<X, Y> = findWrapper() ?: LineChartWrapper(this@wrapped)
 
@@ -274,18 +278,19 @@ fun Control.wrapped(): ControlWrapper = findWrapper() ?: when (this) {
 
 
 fun Region.wrapped(): RegionWrapper<*> = findWrapper() ?: when (this) {
-  is GridPane       -> wrapped()
-  is FlowPane       -> wrapped()
-  is VBox           -> wrapped()
-  is HBox           -> wrapped()
-  is AnchorPane     -> wrapped()
-  is StackPane      -> wrapped()
-  is TilePane       -> wrapped()
-  is Pane           -> wrapped()
-  is Control        -> wrapped()
-  is VirtualFlow<*> -> wrapped()
-  is Axis<*>        -> wrapped()
-  else              -> when (this::class.qualifiedName) {
+  is GridPane          -> wrapped()
+  is FlowPane          -> wrapped()
+  is VBox              -> wrapped()
+  is HBox              -> wrapped()
+  is AnchorPane        -> wrapped()
+  is StackPane         -> wrapped()
+  is TilePane          -> wrapped()
+  is Pane              -> wrapped()
+  is TableColumnHeader -> wrapped()
+  is Control           -> wrapped()
+  is VirtualFlow<*>    -> wrapped()
+  is Axis<*>           -> wrapped()
+  else                 -> when (this::class.qualifiedName) {
 	CLIPPED_CONTAINER_QNAME                                              -> ClippedContainerWrapper(this@wrapped)
 	"org.fxmisc.richtext.ParagraphBox"                                   -> ParagraphBoxWrapper(this@wrapped)
 	"org.fxmisc.flowless.Navigator"                                      -> NavigatorWrapper(this@wrapped)

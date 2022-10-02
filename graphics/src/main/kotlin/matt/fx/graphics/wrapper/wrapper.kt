@@ -41,6 +41,12 @@ interface EventTargetWrapper {
   fun removeFromParent()
 
 
+  /**
+   * Did the event occur inside a TableRow, TreeTableRow or ListCell?
+   */
+  fun isInsideRow(): Boolean
+
+
 }
 
 abstract class EventTargetWrapperImpl<out N: EventTarget>: EventTargetWrapper {

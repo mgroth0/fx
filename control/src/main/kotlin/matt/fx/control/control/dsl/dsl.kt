@@ -551,21 +551,6 @@ interface ControlDSL: GraphicsDSL {
   fun <T: TabWrapper<*>> tabpane(op: TabPaneWrapper<T>.()->Unit = {}) = TabPaneWrapper<T>().attachTo(this, op)
 
 
-  /**
-   * Did the event occur inside a TableRow, TreeTableRow or ListCell?
-   */
-  fun isInsideRow(): Boolean {
-	val n = node
-	if (n !is Node) return false
-
-	if (n is TableColumnHeader) return false
-
-	if (n is TableRow<*> || n is TableView<*> || n is TreeTableRow<*> || n is TreeTableView<*> || n is ListCell<*>) return true
-
-	if (n.parent != null) return n.parent.wrapped().isInsideRow()
-
-	return false
-  }
 
 
 }

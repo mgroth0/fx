@@ -24,12 +24,14 @@ class TreeTableRowWrapper<E>(
 ): IndexedCellWrapper<E, TreeTableRow<E>>(node) {
   val item: E get() = node.item
   val treeItem: TreeItem<E>? get() = node.treeItem
+  override fun isInsideRow() = true
 }
 
 class TableRowWrapper<E>(
   node: TableRow<E> = TableRow()
 ): IndexedCellWrapper<E, TableRow<E>>(node) {
   val item: E? get() = node.item
+  override fun isInsideRow() = true
 }
 
 class TreeCellOverride<T>(var updateItemOv: (item: T, empty: Boolean)->Unit = { _, _ -> Unit }): TreeCell<T>() {
@@ -59,6 +61,7 @@ class ListCellWrapper<E>(
 ): IndexedCellWrapper<E, ListCellOverride<E>>(node) {
   val item: E? get() = node.item
   var updateItemOv by node::updateItemOv
+  override fun isInsideRow() = true
 }
 
 class TableCellOverride<E, P>(var updateItemOv: (item: P, empty: Boolean)->Unit = { _, _ -> Unit }): TableCell<E, P>() {

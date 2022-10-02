@@ -36,7 +36,7 @@ class TreeTableViewWrapper<E>(
 ): ControlWrapperImpl<TreeTableView<E>>(node),
    TreeLikeWrapper<TreeTableView<E>, E>,
    TableLikeWrapper<TreeItem<E>> {
-
+  override fun isInsideRow() = true
 
   fun editableProperty(): BooleanProperty = node.editableProperty()
 

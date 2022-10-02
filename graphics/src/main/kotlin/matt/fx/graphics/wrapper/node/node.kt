@@ -46,6 +46,7 @@ import matt.fx.graphics.wrapper.SingularEventTargetWrapper
 import matt.fx.graphics.wrapper.node.line.LineWrapper
 import matt.fx.graphics.wrapper.node.line.arc.ArcWrapper
 import matt.fx.graphics.wrapper.node.line.cubic.CubicCurveWrapper
+import matt.fx.graphics.wrapper.node.parent.parent
 import matt.fx.graphics.wrapper.node.path.PathWrapper
 import matt.fx.graphics.wrapper.node.shape.circle.CircleWrapper
 import matt.fx.graphics.wrapper.node.shape.ellipse.EllipseWrapper
@@ -73,11 +74,11 @@ import kotlin.contracts.contract
 private typealias NW = NodeWrapper
 
 interface NodeWrapper: EventTargetWrapper, StyleableWrapper {
+
+  override fun isInsideRow(): Boolean = parent?.isInsideRow() ?: false
+
   override val node: Node
   val visibleAndManagedProp: BindableProperty<Boolean>
-
-
-
 
   val hoverProperty: ObsVal<Boolean>
 
@@ -471,6 +472,8 @@ interface NodeWrapper: EventTargetWrapper, StyleableWrapper {
   override fun removeFromParent() {
 	node.parent?.wrapped()?.childList?.remove(node)
   }
+
+
 
 }
 

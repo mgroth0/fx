@@ -9,7 +9,11 @@ import javafx.scene.control.SelectionMode
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
 import javafx.scene.input.MouseEvent
+import matt.fx.control.wrapper.control.ControlWrapperImpl
+import matt.fx.control.wrapper.control.list.ListViewWrapper
 import matt.fx.control.wrapper.wrapped.wrapped
+import matt.fx.graphics.wrapper.node.NodeWrapper
+import matt.fx.graphics.wrapper.node.NodeWrapperImpl
 import matt.hurricanefx.eye.lib.onChange
 
 
@@ -18,10 +22,12 @@ import matt.hurricanefx.eye.lib.onChange
  * @param clickCount The number of mouse clicks to trigger the action
  * @param action The runnable to execute on select
  */
-fun <T> ListView<T>.onUserSelect(clickCount: Int = 2, action: (T) -> Unit) {
+fun <T> ListViewWrapper<T>.onUserSelect(clickCount: Int = 2, action: (T) -> Unit) {
     addEventFilter(MouseEvent.MOUSE_CLICKED) { event ->
         val selectedItem = this.selectedItem
-        if (event.clickCount == clickCount && selectedItem != null && event.target.wrapped().isInsideRow())
+        if (event.clickCount == clickCount && selectedItem != null && event.target.wrapped().let{
+            it is NodeWrapper && it.isInsideRow()
+            })
             action(selectedItem)
     }
 
@@ -32,11 +38,11 @@ fun <T> ListView<T>.onUserSelect(clickCount: Int = 2, action: (T) -> Unit) {
     }
 }
 
-val <T> ListView<T>.selectedItem: T?
+val <T> ListViewWrapper<T>.selectedItem: T?
     get() = selectionModel.selectedItem
 
 
-fun <T> ListView<T>.onUserDelete(action: (T) -> Unit) {
+fun <T> ListViewWrapper<T>.onUserDelete(action: (T) -> Unit) {
     addEventFilter(KeyEvent.KEY_PRESSED) { event ->
         val selectedItem = this.selectedItem
         if (event.code == KeyCode.BACK_SPACE && selectedItem != null)
@@ -53,12 +59,12 @@ class ListCellCache<T>(private val cacheProvider: (T) -> Node) {
 
 
 
-fun <T> ListView<T>.bindSelected(property: Property<T>) {
+fun <T> ListViewWrapper<T>.bindSelected(property: Property<T>) {
     selectionModel.selectedItemProperty().onChange {
         property.value = it
     }
 }
 
-fun <T> ListView<T>.multiSelect(enable: Boolean = true) {
+fun <T> ListViewWrapper<T>.multiSelect(enable: Boolean = true) {
     selectionModel.selectionMode = if (enable) SelectionMode.MULTIPLE else SelectionMode.SINGLE
 }

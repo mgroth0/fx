@@ -43,6 +43,7 @@ open class TableViewWrapper<E>(
 
   constructor(items: ObservableList<E>): this(TableView(items))
 
+  override fun isInsideRow() = true
 
   fun editableProperty(): BooleanProperty = node.editableProperty()
 
