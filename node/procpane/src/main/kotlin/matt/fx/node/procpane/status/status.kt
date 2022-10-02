@@ -14,11 +14,12 @@ import matt.fx.control.wrapper.scroll.ScrollPaneWrapper
 import matt.fx.control.wrapper.wrapped.wrapped
 import matt.fx.graphics.fxthread.runLaterReturn
 import matt.fx.graphics.wrapper.node.NodeWrapper
-import matt.fx.node.tileabletabpane.TileableTabPane
 import matt.fx.graphics.wrapper.region.RegionWrapper
 import matt.fx.graphics.wrapper.text.TextWrapper
+import matt.fx.graphics.wrapper.text.text
 import matt.fx.graphics.wrapper.text.textlike.applyConsoleStyle
 import matt.fx.graphics.wrapper.textflow.TextFlowWrapper
+import matt.fx.node.tileabletabpane.TileableTabPane
 import matt.log.debug
 import matt.log.profile.println_withtime
 import java.util.concurrent.Semaphore

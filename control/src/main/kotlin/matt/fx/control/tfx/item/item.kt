@@ -24,6 +24,7 @@ import matt.fx.control.wrapper.control.spinner.SpinnerWrapper
 import matt.fx.control.wrapper.control.table.TableViewWrapper
 import matt.fx.control.wrapper.control.tree.TreeViewWrapper
 import matt.fx.control.wrapper.control.treetable.TreeTableViewWrapper
+import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.EventTargetWrapper
 import matt.fx.graphics.wrapper.EventTargetWrapperImpl
 import matt.fx.graphics.wrapper.node.attachTo
@@ -67,7 +68,7 @@ fun <T> EventTargetWrapper.spinner(
   }
 }
 
-inline fun <reified T: Number> EventTargetWrapperImpl<*>.spinner(
+inline fun <reified T: Number> ET.spinner(
   min: T? = null,
   max: T? = null,
   initialValue: T? = null,
