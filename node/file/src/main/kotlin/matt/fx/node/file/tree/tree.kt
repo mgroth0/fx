@@ -38,6 +38,7 @@ import matt.hurricanefx.eye.wrapper.obs.collect.createMutableWrapper
 import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
 import matt.fx.graphics.wrapper.pane.hbox.HBoxWrapperImpl
 import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapper
+import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
 import matt.fx.graphics.wrapper.pane.vbox.vbox
 import matt.lang.inList
 import matt.log.taball
