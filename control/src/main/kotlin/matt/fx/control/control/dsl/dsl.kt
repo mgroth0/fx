@@ -525,7 +525,7 @@ fun ET.textfield(property: Var<String>, op: TextFieldWrapper.()->Unit = {}) =
 	op(this)
   }
 
-/*@JvmName("textfieldNumber") */fun textfield(
+/*@JvmName("textfieldNumber") */fun ET.textfield(
   property: Var<Number>,
   op: TextFieldWrapper.()->Unit = {}
 ): TextFieldWrapper = textfield().apply {
