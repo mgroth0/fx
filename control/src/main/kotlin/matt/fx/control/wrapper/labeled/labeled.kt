@@ -7,13 +7,13 @@ import javafx.scene.Node
 import javafx.scene.control.ContentDisplay
 import javafx.scene.control.Labeled
 import javafx.scene.text.TextAlignment
+import matt.fx.control.wrapper.control.ControlWrapperImpl
+import matt.fx.control.wrapper.wrapped.wrapped
+import matt.fx.graphics.wrapper.node.NodeWrapper
+import matt.fx.graphics.wrapper.text.textlike.TextLike
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.NullableFXBackedBindableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
-import matt.hurricanefx.wrapper.control.ControlWrapperImpl
-import matt.hurricanefx.wrapper.node.NodeWrapper
-import matt.fx.graphics.wrapper.text.textlike.TextLike
-import matt.hurricanefx.wrapper.wrapped
 
 open class LabeledWrapper<N: Labeled>(node: N): ControlWrapperImpl<N>(node), TextLike {
 
