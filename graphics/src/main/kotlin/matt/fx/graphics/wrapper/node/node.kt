@@ -39,7 +39,6 @@ import javafx.scene.shape.PathElement
 import javafx.stage.FileChooser
 import matt.file.MFile
 import matt.file.construct.toMFile
-import matt.fx.graphics.dsl.GraphicsDSL
 import matt.fx.graphics.service.wrapped
 import matt.fx.graphics.wrapper.EventTargetWrapper
 import matt.fx.graphics.wrapper.SingularEventTargetWrapper
@@ -73,7 +72,7 @@ import kotlin.contracts.contract
 
 typealias NW = NodeWrapper
 
-interface NodeWrapper: EventTargetWrapper, StyleableWrapper, GraphicsDSL {
+interface NodeWrapper: EventTargetWrapper, StyleableWrapper {
 
   override fun isInsideRow(): Boolean = parent?.isInsideRow() ?: false
 
