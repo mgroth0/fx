@@ -49,6 +49,7 @@ import matt.fx.graphics.wrapper.region.RegionWrapper
 import matt.fx.graphics.wrapper.region.border.FXBorder
 import matt.fx.graphics.wrapper.region.border.solidBorder
 import matt.fx.graphics.wrapper.stage.StageWrapper
+import matt.fx.graphics.wrapper.window.WindowWrapper
 import matt.json.prim.isValidJson
 import matt.lang.noExceptions
 import matt.lang.nullIfExceptions
