@@ -6,8 +6,8 @@ import matt.fx.graphics.icon.ICON_WIDTH
 import matt.fx.graphics.icon.Icon
 import matt.fx.graphics.icon.IconImage
 import matt.fx.graphics.wrapper.canvas.CanvasWrapper
-import matt.hurricanefx.wrapper.node.NodeWrapper
-import matt.hurricanefx.wrapper.node.NodeWrapperImpl
+import matt.fx.graphics.wrapper.node.NodeWrapper
+import matt.fx.graphics.wrapper.node.NodeWrapperImpl
 import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
 import matt.model.dir.Direction
 import matt.model.dir.Direction.BACKWARD

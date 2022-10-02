@@ -7,16 +7,16 @@ import javafx.scene.paint.Color
 import javafx.scene.text.Text
 import javafx.stage.Window
 import matt.async.schedule.AccurateTimer
+import matt.fx.graphics.font.fixed
 import matt.fx.graphics.lang.removeAllButLastN
-import matt.hurricanefx.eye.mtofx.createWritableFXPropWrapper
-import matt.hurricanefx.font.fixed
-import matt.hurricanefx.toFXDuration
 import matt.fx.graphics.tfx.animation.keyframe
 import matt.fx.graphics.tfx.animation.timeline
-import matt.hurricanefx.wrapper.node.NodeWrapper
+import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.text.TextWrapper
 import matt.fx.graphics.wrapper.text.textlike.applyConsoleStyle
 import matt.fx.graphics.wrapper.textflow.TextFlowWrapper
+import matt.hurricanefx.eye.mtofx.createWritableFXPropWrapper
+import matt.hurricanefx.eye.time.toFXDuration
 import matt.lang.ifTrueOrNull
 import matt.time.dur.ms
 

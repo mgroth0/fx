@@ -2,6 +2,8 @@ package matt.fx.media
 
 import javafx.scene.media.Media
 import javafx.scene.media.MediaPlayer
+import matt.fx.graphics.wrapper.node.NodeWrapper
+import matt.fx.graphics.wrapper.pane.grid.GridPaneWrapper
 
 fun Media.play(): java.lang.Exception {
   MediaPlayer(this).play()
@@ -17,6 +19,11 @@ class MediaViewWrapper(
   }
 
 }*/
+
+
+fun yesIWillUseGraphics() {
+  println(GridPaneWrapper<NodeWrapper>())
+}
 
 
 

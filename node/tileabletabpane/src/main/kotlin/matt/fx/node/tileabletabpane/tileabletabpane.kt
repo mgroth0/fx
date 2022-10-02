@@ -7,14 +7,16 @@ import javafx.geometry.Orientation.HORIZONTAL
 import javafx.geometry.Orientation.VERTICAL
 import javafx.scene.layout.Priority.ALWAYS
 import matt.async.safe.with
-import matt.fx.graphics.menu.context.mcontextmenu
+import matt.fx.control.menu.context.mcontextmenu
+import matt.fx.control.wrapper.control.tab.TabWrapper
+import matt.fx.control.wrapper.tab.TabPaneWrapper
+import matt.fx.graphics.wrapper.node.NodeWrapper
+import matt.fx.graphics.wrapper.pane.PaneWrapper
 import matt.hurricanefx.eye.lib.onChange
 import matt.hurricanefx.eye.prop.getValue
 import matt.hurricanefx.eye.prop.setValue
-import matt.hurricanefx.wrapper.control.tab.TabWrapper
-import matt.hurricanefx.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
-import matt.fx.graphics.wrapper.pane.tab.TabPaneWrapper
+import matt.fx.graphics.wrapper.pane.hbox.hbox
 import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
 import matt.fx.graphics.wrapper.region.RegionWrapper
 import matt.obs.bindings.math.div
@@ -86,7 +88,7 @@ open class TileableTabPane(
 
   private fun tilemode() {
 	clear()
-	var root: PaneWrapperImpl<*, *> = this
+	var root: PaneWrapper<*> = this
 	if (orientation == HORIZONTAL) {
 	  root = root.hbox<NodeWrapper> {
 		vgrow = ALWAYS

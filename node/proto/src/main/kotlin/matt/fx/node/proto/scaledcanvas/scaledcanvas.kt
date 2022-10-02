@@ -1,6 +1,7 @@
 package matt.fx.node.proto.scaledcanvas
 
 import javafx.scene.layout.Pane
+import matt.fx.graphics.wrapper.EventTargetWrapper
 import matt.hurricanefx.eye.lang.DProp
 import matt.hurricanefx.eye.prop.math.div
 import matt.hurricanefx.eye.prop.math.minus
@@ -8,10 +9,9 @@ import matt.hurricanefx.eye.prop.math.times
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
 import matt.fx.graphics.wrapper.canvas.Canv
 import matt.fx.graphics.wrapper.canvas.CanvasWrapper
-import matt.hurricanefx.wrapper.node.NodeWrapper
-import matt.hurricanefx.wrapper.node.attach
+import matt.fx.graphics.wrapper.node.NodeWrapper
+import matt.fx.graphics.wrapper.node.attach
 import matt.fx.graphics.wrapper.region.RegionWrapperImpl
-import matt.hurricanefx.wrapper.target.EventTargetWrapper
 import matt.lang.NEVER
 import matt.obs.bindings.math.div
 import matt.obs.bindings.math.minus

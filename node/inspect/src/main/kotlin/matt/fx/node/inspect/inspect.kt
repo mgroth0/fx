@@ -8,14 +8,15 @@ import javafx.scene.layout.Priority.ALWAYS
 import javafx.scene.layout.VBox
 import matt.fx.control.wrapper.control.list.ListViewWrapper
 import matt.fx.control.wrapper.control.table.TableViewWrapper
+import matt.fx.control.wrapper.label.label
 import matt.fx.control.wrapper.selects.SelectingControl
 import matt.fx.graphics.node.Inspectable
 import matt.fx.graphics.wrapper.node.NodeWrapper
-import matt.hurricanefx.eye.collect.toObservable
 import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
 import matt.fx.graphics.wrapper.pane.box.BoxWrapperImpl
 import matt.fx.graphics.wrapper.pane.hbox.HBoxWrapperImpl
 import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
+import matt.hurricanefx.eye.collect.toObservable
 
 
 class InspectionView<N: PaneWrapperImpl<*, *>, T: Inspectable<N>>(

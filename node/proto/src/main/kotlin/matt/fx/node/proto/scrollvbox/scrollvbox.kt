@@ -3,11 +3,10 @@ package matt.fx.node.proto.scrollvbox
 import javafx.scene.control.ScrollPane.ScrollBarPolicy.AS_NEEDED
 import javafx.scene.control.ScrollPane.ScrollBarPolicy.NEVER
 import javafx.scene.layout.Pane
-import matt.hurricanefx.Scrolls
-import matt.hurricanefx.eye.prop.math.minus
-import matt.hurricanefx.wrapper.node.NodeWrapper
+import matt.fx.control.Scrolls
+import matt.fx.control.wrapper.scroll.ScrollPaneWrapper
+import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
-import matt.hurricanefx.wrapper.pane.scroll.ScrollPaneWrapper
 import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
 import matt.lang.applyIt
 import matt.obs.bindings.math.minus
