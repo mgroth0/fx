@@ -50,6 +50,8 @@ open class SceneWrapper<R: ParentWrapper<*>>(
 	(window as? Stage)?.let { it.scene = null }
   }
 
+  override fun isInsideRow() = false
+
   fun reloadStylesheets() {
 	val styles = stylesheets.toMutableList()
 	stylesheets.clear()

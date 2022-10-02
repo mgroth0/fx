@@ -76,6 +76,8 @@ open class StageWrapper(override val node: Stage): WindowWrapper<Stage>(node), T
 	close()
   }
 
+  override fun isInsideRow() = false
+
 
   fun <T: Event> addEventFilter(eventType: EventType<T>, handler: EventHandler<T>) =
 	node.addEventFilter(eventType, handler)

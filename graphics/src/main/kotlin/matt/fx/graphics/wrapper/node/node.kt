@@ -37,7 +37,6 @@ import javafx.scene.layout.VBox
 import javafx.scene.shape.FillRule
 import javafx.scene.shape.PathElement
 import javafx.stage.FileChooser
-import javafx.stage.Stage
 import matt.file.MFile
 import matt.file.construct.toMFile
 import matt.fx.graphics.service.wrapped
