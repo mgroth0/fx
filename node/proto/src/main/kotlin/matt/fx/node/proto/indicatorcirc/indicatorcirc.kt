@@ -1,7 +1,7 @@
 package matt.fx.node.proto.indicatorcirc
 
 import javafx.scene.paint.Color
-import matt.hurricanefx.wrapper.shape.circle.CircleWrapper
+import matt.fx.graphics.wrapper.node.shape.circle.CircleWrapper
 import matt.obs.prop.ValProp
 import matt.obs.bind.binding
 

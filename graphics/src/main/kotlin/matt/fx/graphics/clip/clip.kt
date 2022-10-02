@@ -2,20 +2,11 @@
 
 package matt.fx.graphics.clip
 
-import javafx.scene.Cursor
-import javafx.scene.SnapshotParameters
 import javafx.scene.input.Clipboard
 import javafx.scene.input.ClipboardContent
 import javafx.scene.input.DataFormat
-import javafx.scene.input.MouseEvent
-import javafx.scene.input.TransferMode
-import javafx.scene.paint.Color
 import matt.auto.clip.AwtClipLink
 import matt.file.MFile
-import matt.file.commons.TEMP_DIR
-import matt.fx.image.save
-import matt.hurricanefx.wrapper.node.NodeWrapper
-import matt.hurricanefx.wrapper.node.NodeWrapperImpl
 import matt.lang.See
 
 

@@ -34,7 +34,7 @@ import matt.hurricanefx.wrapper.pane.PaneWrapperImpl
 import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
 import matt.hurricanefx.wrapper.parent.ParentWrapperImpl
 import matt.hurricanefx.wrapper.region.RegionWrapper
-import matt.hurricanefx.wrapper.stage.StageWrapper
+import matt.fx.graphics.wrapper.stage.StageWrapper
 import matt.hurricanefx.wrapper.wrapped
 import matt.lang.NEVER
 import matt.time.dur.sec

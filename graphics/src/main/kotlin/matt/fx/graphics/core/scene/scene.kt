@@ -32,15 +32,6 @@ import matt.fx.graphics.win.interact.WinGeom
 import matt.fx.graphics.win.interact.WinOwn
 import matt.fx.graphics.win.interact.openInNewWindow
 import matt.fx.graphics.win.winfun.noDocking
-import matt.hurricanefx.wrapper.node.setOnDoubleClick
-import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
-import matt.hurricanefx.wrapper.parent.ParentWrapper
-import matt.hurricanefx.wrapper.region.RegionWrapper
-import matt.hurricanefx.wrapper.region.border.FXBorder
-import matt.hurricanefx.wrapper.scene.SceneWrapper
-import matt.hurricanefx.wrapper.stage.StageWrapper
-import matt.hurricanefx.wrapper.style.toAwtColor
-import matt.hurricanefx.wrapper.wrapped
 import matt.log.tab
 import matt.stream.recurse.recurse
 import java.net.URL

@@ -1,0 +1,20 @@
+{
+  "type" :         "matt.mstruct.bj.LIBModule",
+  "dependencies" : [
+	{
+	  "type" : "matt.mstruct.bj.BuildJsonLibDependency",
+	  "cfg" :  "api",
+	  "key" :  "kt-stdlib"
+	},
+	{
+	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
+	  "cfg" :  "api",
+	  "path" : ":k:fx:graphics"
+	},
+	{
+	  "type" : "matt.mstruct.bj.BuildJsonLibDependency",
+	  "cfg" :  "api",
+	  "key" :  "fx-controls"
+	}
+  ]
+}
