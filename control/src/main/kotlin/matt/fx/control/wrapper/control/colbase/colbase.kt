@@ -19,6 +19,7 @@ abstract class TableColumnBaseWrapper<E, P, F: TableColumnBase<E, P>>(
   WidthManaged {
   fun widthProperty(): ReadOnlyDoubleProperty = node.widthProperty()
 
+  override fun isInsideRow() = false
 
   override val widthProperty get() = node.widthProperty().toNonNullableROProp().cast<Double>()
   override val prefWidthProperty get() = node.prefWidthProperty().toNonNullableProp().cast<Double>()
