@@ -322,8 +322,8 @@ sealed class WinOwn {
 }
 
 //fun NodeWrapperImpl<Parent>.openInNewWindow(
-//  showMode: ShowMode = SHOW,
-//  wMode: WMode = NOTHING,
+//  showMode: matt.fx.control.mstage.ShowMode = SHOW,
+//  wMode: matt.fx.control.mstage.WMode = NOTHING,
 //  EscClosable: Boolean = false,
 //  EnterClosable: Boolean = false,
 //  own: WinOwn = Auto,

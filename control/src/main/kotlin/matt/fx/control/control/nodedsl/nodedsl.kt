@@ -5,7 +5,6 @@ import javafx.scene.Node
 import javafx.scene.control.ToggleGroup
 import javafx.scene.control.Tooltip
 import javafx.stage.Stage
-import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.control.control.dsl.ControlDSL
 import matt.fx.control.tfx.control.bind
 import matt.fx.control.tfx.nodes.SplitPaneConstraint
@@ -13,8 +12,10 @@ import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.control.wrapper.scroll.ScrollPaneWrapper
 import matt.fx.control.wrapper.wrapped.wrapped
 import matt.fx.graphics.tfx.nodes.GridPaneConstraint
+import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.parent.ParentWrapper
 import matt.fx.graphics.wrapper.node.parent.parent
+import matt.fx.graphics.wrapper.region.RegionWrapper
 import matt.stream.recurse.chain
 
 interface NodeControlDSL: ControlDSL, NodeWrapper {
@@ -90,6 +91,7 @@ interface NodeControlDSL: ControlDSL, NodeWrapper {
 	}
 
 
+
 }
 
 
@@ -98,4 +100,13 @@ inline fun <T: NodeWrapper> T.splitpaneConstraints(op: SplitPaneConstraint.()->U
   c.op()
   return c.applyToNode(this)
 }
+
+infix fun RegionWrapper<*>.wrappedIn(sp: ScrollPaneWrapper<in NodeWrapper>): ScrollPaneWrapper<out NodeWrapper> {
+  this minBind sp
+  sp.backgroundProperty.bindBidirectional(backgroundProperty)
+  return sp.apply {
+	content = this@wrappedIn
+  }
+}
+
 

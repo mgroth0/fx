@@ -1,13 +1,14 @@
-package matt.fx.graphics.win.stage
+package matt.fx.control.mstage
 
+import matt.fx.control.mstage.WMode.CLOSE
+import matt.fx.control.mstage.WMode.HIDE
+import matt.fx.control.mstage.WMode.ICONIFY
+import matt.fx.control.mstage.WMode.NOTHING
 import javafx.stage.StageStyle
 import matt.file.thismachine.thisMachine
-import matt.fx.graphics.core.scene.MScene
+import matt.fx.control.iconify.iconify
+import matt.fx.control.mscene.MScene
 import matt.fx.graphics.hotkey.hotkeys
-import matt.fx.graphics.win.stage.WMode.CLOSE
-import matt.fx.graphics.win.stage.WMode.HIDE
-import matt.fx.graphics.win.stage.WMode.ICONIFY
-import matt.fx.graphics.win.stage.WMode.NOTHING
 import matt.fx.graphics.wrapper.stage.StageWrapper
 import matt.model.sys.GAMING_WINDOWS
 

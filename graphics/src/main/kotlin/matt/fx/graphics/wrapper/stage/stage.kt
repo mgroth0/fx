@@ -9,10 +9,11 @@ import javafx.stage.Stage
 import javafx.stage.StageStyle
 import javafx.stage.Window
 import matt.fx.graphics.wrapper.inter.titled.Titled
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.NullableFXBackedBindableProp
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
+import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.scene.SceneWrapper
 import matt.fx.graphics.wrapper.window.WindowWrapper
+import matt.hurricanefx.eye.wrapper.obs.obsval.prop.NullableFXBackedBindableProp
+import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
 
 open class StageWrapper(override val node: Stage): WindowWrapper<Stage>(node), Titled {
 

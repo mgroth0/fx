@@ -14,6 +14,12 @@ import javafx.scene.paint.Color
 import javafx.scene.paint.Paint
 import matt.file.MFile
 import matt.file.construct.toMFile
+import matt.fx.graphics.style.all
+import matt.fx.graphics.style.backgroundColor
+import matt.fx.graphics.style.copy
+import matt.fx.graphics.style.horizontal
+import matt.fx.graphics.style.insets
+import matt.fx.graphics.style.vertical
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.hurricanefx.eye.lib.proxypropDouble
 import matt.hurricanefx.eye.wrapper.obs.collect.createMutableWrapper
@@ -316,13 +322,7 @@ interface RegionWrapper<C: NodeWrapper>: ParentWrapper<C>, SizeManaged {
 	} as DoubleProperty
 
 
-  infix fun wrappedIn(sp: ScrollPaneWrapper<in NodeWrapper>): ScrollPaneWrapper<out NodeWrapper> {
-	this minBind sp
-	sp.backgroundProperty.bindBidirectional(backgroundProperty)
-	return sp.apply {
-	  content = this@RegionWrapper
-	}
-  }
+
 
 }
 

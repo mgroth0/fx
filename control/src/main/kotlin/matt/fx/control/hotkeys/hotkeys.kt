@@ -1,9 +1,11 @@
-package matt.fx.graphics.hotkeys
+package matt.fx.control.hotkeys
 
 import javafx.application.Platform.runLater
 import javafx.scene.paint.Color
 import javafx.stage.Stage
-import matt.fx.graphics.core.scene.MScene
+import matt.fx.control.iconify.iconify
+import matt.fx.control.mscene.MScene
+import matt.fx.control.wrapper.wrapped.wrapped
 import matt.fx.graphics.hotkey.HotKey
 import matt.fx.graphics.hotkey.hotkeys
 import matt.fx.graphics.mag.VarJson
@@ -27,11 +29,13 @@ import matt.fx.graphics.mag.right
 import matt.fx.graphics.mag.top
 import matt.fx.graphics.mag.topleft
 import matt.fx.graphics.mag.topright
+import matt.fx.graphics.wrapper.region.RegionWrapper
+import matt.fx.graphics.wrapper.region.RegionWrapperImpl
+import matt.fx.graphics.wrapper.region.border.FXBorder
 import matt.lang.go
 import java.lang.Thread.sleep
 import kotlin.concurrent.thread
 import kotlin.contracts.ExperimentalContracts
-import matt.fx.graphics.service.wrapped
 
 
 @ExperimentalContracts fun MScene<*>.addDefaultHotkeys() {
@@ -117,7 +121,7 @@ import matt.fx.graphics.service.wrapped
 		val reg = (scene.root as? RegionWrapper)
 		reg?.border = FXBorder.solid(Color.YELLOW)
 		it()
-		(reg as? RegionWrapperImpl<*,*>)?.go {
+		(reg as? RegionWrapperImpl<*, *>)?.go {
 		  thread {
 			sleep(750)
 			runLater {

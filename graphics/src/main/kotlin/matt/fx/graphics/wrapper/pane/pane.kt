@@ -5,6 +5,7 @@ import javafx.scene.Node
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.Pane
 import javafx.scene.paint.Color
+import matt.fx.graphics.service.uncheckedWrapperConverter
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.hurricanefx.eye.wrapper.obs.collect.createMutableWrapper
 import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapper

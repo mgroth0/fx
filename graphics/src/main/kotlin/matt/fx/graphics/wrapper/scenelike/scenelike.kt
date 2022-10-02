@@ -4,6 +4,7 @@ import javafx.beans.property.ObjectProperty
 import javafx.event.EventTarget
 import javafx.scene.Parent
 import javafx.scene.paint.Paint
+import matt.fx.graphics.service.wrapped
 import matt.fx.graphics.wrapper.EventTargetWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.parent.ParentWrapper
