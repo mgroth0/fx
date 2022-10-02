@@ -38,10 +38,6 @@ fun <T> ListViewWrapper<T>.onUserSelect(clickCount: Int = 2, action: (T) -> Unit
     }
 }
 
-val <T> ListViewWrapper<T>.selectedItem: T?
-    get() = selectionModel.selectedItem
-
-
 fun <T> ListViewWrapper<T>.onUserDelete(action: (T) -> Unit) {
     addEventFilter(KeyEvent.KEY_PRESSED) { event ->
         val selectedItem = this.selectedItem
