@@ -17,7 +17,7 @@ import matt.hurricanefx.wrapper.pane.scroll.ScrollPaneWrapper
 import matt.fx.graphics.wrapper.region.RegionWrapper
 import matt.fx.graphics.wrapper.text.TextWrapper
 import matt.fx.graphics.wrapper.text.textlike.applyConsoleStyle
-import matt.hurricanefx.wrapper.textflow.TextFlowWrapper
+import matt.fx.graphics.wrapper.textflow.TextFlowWrapper
 import matt.hurricanefx.wrapper.wrapped
 import matt.log.debug
 import matt.log.profile.println_withtime

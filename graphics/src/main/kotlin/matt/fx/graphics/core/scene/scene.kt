@@ -162,6 +162,6 @@ open class MScene<R: ParentWrapper<*>>(
 	}
   }
 
-  fun iconify() = iconify(icon)
+
 }
 

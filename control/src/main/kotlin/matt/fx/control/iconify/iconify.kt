@@ -2,6 +2,7 @@ package matt.fx.control.iconify
 
 import javafx.stage.Stage
 import matt.file.MFile
+import matt.fx.graphics.core.scene.MScene
 import matt.fx.graphics.icon.ICON_HEIGHT
 import matt.fx.graphics.icon.ICON_WIDTH
 import matt.fx.graphics.icon.Icon
@@ -9,8 +10,10 @@ import matt.fx.graphics.style.DarkModeController
 import matt.fx.graphics.win.interact.WinGeom
 import matt.fx.graphics.win.interact.WinOwn
 import matt.fx.graphics.win.winfun.noDocking
+import matt.fx.graphics.wrapper.node.setOnDoubleClick
 import matt.fx.graphics.wrapper.scene.SceneWrapper
 import matt.fx.graphics.wrapper.stage.StageWrapper
+import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapper
 
 fun SceneWrapper<*>.iconify(icon: MFile) {
   var iconWindow: StageWrapper? = null
@@ -47,3 +50,5 @@ fun SceneWrapper<*>.iconify(icon: MFile) {
   }
   window!!.hide()
 }
+
+fun MScene<*>.iconify() = iconify(icon)

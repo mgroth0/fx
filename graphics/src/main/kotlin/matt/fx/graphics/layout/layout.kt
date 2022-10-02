@@ -16,7 +16,7 @@ import javafx.scene.layout.Pane
 import javafx.scene.layout.Priority
 import javafx.scene.layout.RowConstraints
 import javafx.scene.layout.VBox
-import matt.hurricanefx.wrapper.pane.grid.GridPaneWrapper
+import matt.fx.graphics.wrapper.pane.grid.GridPaneWrapper
 import matt.hurricanefx.wrapper.parent.ParentWrapper
 import matt.hurricanefx.wrapper.parent.parent
 
@@ -115,9 +115,9 @@ val ParentWrapper<*>.gridpaneColumnConstraints: ColumnConstraints?
 	var next = parent
 	while (next != null) {
 	  val gridReference = when {
-		next is GridPaneWrapper    -> next to GridPane.getColumnIndex(cursor)?.let { it }
+		next is GridPaneWrapper -> next to GridPane.getColumnIndex(cursor)?.let { it }
 		// perhaps we're still in the row builder
-		next.parent == null -> (next.properties[GridPaneParentObjectKey] as? GridPaneWrapper<*>)?.let {
+		next.parent == null     -> (next.properties[GridPaneParentObjectKey] as? GridPaneWrapper<*>)?.let {
 		  it to next!!.getChildList()?.indexOf(cursor)
 		}
 

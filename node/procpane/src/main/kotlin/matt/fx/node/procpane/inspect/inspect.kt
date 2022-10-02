@@ -12,7 +12,7 @@ import matt.fx.graphics.fxthread.ts.nonBlockingFXWatcher
 import matt.hurricanefx.wrapper.control.treetable.populate
 import matt.hurricanefx.wrapper.label.LabelWrapper
 import matt.hurricanefx.wrapper.node.NodeWrapper
-import matt.hurricanefx.wrapper.pane.hbox.HBoxWrapper
+import matt.fx.graphics.wrapper.pane.hbox.HBoxWrapper
 import matt.log.debug
 import matt.obs.bind.binding
 import matt.obs.bindings.math.div

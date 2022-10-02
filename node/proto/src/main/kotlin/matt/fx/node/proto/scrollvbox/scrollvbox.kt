@@ -6,9 +6,9 @@ import javafx.scene.layout.Pane
 import matt.hurricanefx.Scrolls
 import matt.hurricanefx.eye.prop.math.minus
 import matt.hurricanefx.wrapper.node.NodeWrapper
-import matt.hurricanefx.wrapper.pane.PaneWrapperImpl
+import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
 import matt.hurricanefx.wrapper.pane.scroll.ScrollPaneWrapper
-import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
+import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapper
 import matt.lang.applyIt
 import matt.obs.bindings.math.minus
 

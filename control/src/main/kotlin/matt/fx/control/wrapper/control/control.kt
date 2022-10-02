@@ -3,7 +3,7 @@ package matt.fx.control.wrapper.control
 import javafx.beans.property.ObjectProperty
 import javafx.scene.control.Control
 import javafx.scene.control.Tooltip
-import matt.hurricanefx.wrapper.node.NodeWrapper
+import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.region.RegionWrapper
 import matt.fx.graphics.wrapper.region.RegionWrapperImpl
 

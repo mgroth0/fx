@@ -11,10 +11,10 @@ import matt.hurricanefx.eye.collect.toObservable
 import matt.hurricanefx.wrapper.control.list.ListViewWrapper
 import matt.hurricanefx.wrapper.control.table.TableViewWrapper
 import matt.hurricanefx.wrapper.node.NodeWrapper
-import matt.hurricanefx.wrapper.pane.PaneWrapperImpl
-import matt.hurricanefx.wrapper.pane.box.BoxWrapper
-import matt.hurricanefx.wrapper.pane.hbox.HBoxWrapper
-import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
+import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
+import matt.fx.graphics.wrapper.pane.box.BoxWrapper
+import matt.fx.graphics.wrapper.pane.hbox.HBoxWrapper
+import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapper
 import matt.hurricanefx.wrapper.selects.SelectingControl
 
 

@@ -24,6 +24,7 @@ import matt.fx.graphics.wrapper.node.parent.ParentWrapperImpl
 import matt.fx.graphics.wrapper.node.parent.parent
 import matt.fx.graphics.wrapper.region.border.FXBorder
 import matt.fx.graphics.wrapper.sizeman.SizeManaged
+import matt.hurricanefx.wrapper.pane.scroll.ScrollPaneWrapper
 import matt.lang.NEVER
 import matt.lang.err
 import matt.obs.col.olist.mappedlist.toSyncedList

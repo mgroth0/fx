@@ -35,9 +35,9 @@ import matt.hurricanefx.wrapper.control.tree.like.populateTree
 import matt.hurricanefx.wrapper.control.treetable.TreeTableViewWrapper
 import matt.hurricanefx.wrapper.node.NodeWrapper
 import matt.hurricanefx.wrapper.node.setOnDoubleClick
-import matt.hurricanefx.wrapper.pane.PaneWrapperImpl
-import matt.hurricanefx.wrapper.pane.hbox.HBoxWrapper
-import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
+import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
+import matt.fx.graphics.wrapper.pane.hbox.HBoxWrapper
+import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapper
 import matt.lang.inList
 import matt.log.taball
 import matt.log.todo

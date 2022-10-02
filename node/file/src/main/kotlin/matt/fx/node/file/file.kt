@@ -37,8 +37,8 @@ import matt.gui.draggableIcon
 import matt.hurricanefx.tornadofx.item.spinner
 import matt.hurricanefx.wrapper.node.NodeWrapper
 import matt.hurricanefx.wrapper.node.disableWhen
-import matt.hurricanefx.wrapper.pane.SimplePaneWrapper
-import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
+import matt.fx.graphics.wrapper.pane.SimplePaneWrapper
+import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapper
 import matt.fx.graphics.wrapper.region.RegionWrapper
 import matt.fx.graphics.wrapper.text.TextWrapper
 import matt.lang.err

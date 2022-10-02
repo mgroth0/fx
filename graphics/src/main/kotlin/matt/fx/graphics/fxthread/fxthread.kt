@@ -1,8 +1,12 @@
 package matt.fx.graphics.fxthread
 
+import com.sun.javafx.application.PlatformImpl
 import javafx.application.Platform
 import javafx.application.Platform.runLater
+import matt.fx.graphics.wrapper.node.NodeWrapper
+import matt.lang.function.MetaFunction
 import matt.model.latch.SimpleLatch
+import matt.service.scheduler.Scheduler
 import matt.time.dur.Duration
 import kotlin.concurrent.thread
 
@@ -41,5 +45,35 @@ fun runMuchLater(d: Duration, op: ()->Unit) {
 	runLater {
 	  op()
 	}
+  }
+}
+
+
+inline fun <T: Any, V> inRunLater(crossinline op: T.(V)->Unit): T.(V)->Unit {
+  return {
+	runLater {
+	  op(it)
+	}
+  }
+}
+
+
+
+
+
+
+
+fun <N: NodeWrapper> N.runLater(op: N.()->Unit) = PlatformImpl.runLater { op() }
+
+
+
+
+val runLaterOp: MetaFunction = {
+  PlatformImpl.runLater(it)
+}
+
+object FXScheduler: Scheduler {
+  override fun schedule(op: ()->Unit) {
+	PlatformImpl.runLater(op)
   }
 }

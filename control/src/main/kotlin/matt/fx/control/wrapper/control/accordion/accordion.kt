@@ -5,9 +5,9 @@ import javafx.scene.control.Accordion
 import javafx.scene.control.TitledPane
 import matt.hurricanefx.wrapper.control.ControlWrapperImpl
 import matt.hurricanefx.wrapper.node.NodeWrapper
-import matt.hurricanefx.wrapper.pane.PaneWrapper
-import matt.hurricanefx.wrapper.pane.titled.TitledPaneWrapper
-import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
+import matt.fx.graphics.wrapper.pane.PaneWrapper
+import matt.fx.graphics.wrapper.pane.titled.TitledPaneWrapper
+import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapper
 
 class AccordionWrapper(node: Accordion = Accordion()): ControlWrapperImpl<Accordion>(node) {
   val panes: ObservableList<TitledPane> get() = node.panes

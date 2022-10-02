@@ -155,7 +155,7 @@ open class TableViewWrapper<E>(
 
   /**
    * Add a global edit start handler to the TableView. You can use this callback
-   * to matt.hurricanefx.wrapper.control.column.matt.hurricanefx.wrapper.control.colbase.cancel the edit request by calling matt.hurricanefx.wrapper.control.column.matt.hurricanefx.wrapper.control.colbase.cancel()
+   * to matt.hurricanefx.matt.fx.control.wrapper.wrapped.getWrapper.control.column.matt.hurricanefx.matt.fx.control.wrapper.wrapped.getWrapper.control.colbase.cancel the edit request by calling matt.hurricanefx.matt.fx.control.wrapper.wrapped.getWrapper.control.column.matt.hurricanefx.matt.fx.control.wrapper.wrapped.getWrapper.control.colbase.cancel()
    */
   fun onEditStart(onEditStart: TableColumn.CellEditEvent<E, Any?>.(E)->Unit) {
 	fun addEventHandlerForColumn(column: TableColumn<E, *>) {
