@@ -10,8 +10,8 @@ import javafx.scene.text.TextFlow
 import matt.async.safe.with
 import matt.async.thread.daemon
 import matt.file.MFile
+import matt.fx.graphics.fxthread.runLaterReturn
 import matt.fx.node.tileabletabpane.TileableTabPane
-import matt.hurricanefx.async.runLaterReturn
 import matt.hurricanefx.wrapper.node.NodeWrapper
 import matt.hurricanefx.wrapper.pane.scroll.ScrollPaneWrapper
 import matt.hurricanefx.wrapper.region.RegionWrapper

@@ -17,11 +17,11 @@ import matt.async.thread.daemon
 import matt.file.MFile
 import matt.file.construct.toMFile
 import matt.fx.graphics.clip.copyToClipboard
+import matt.fx.graphics.fxthread.runLaterReturn
 import matt.fx.graphics.lang.actionbutton
 import matt.fx.graphics.menu.context.mcontextmenu
 import matt.fx.graphics.refresh.refreshWhileInSceneEvery
 import matt.fx.graphics.win.interact.openInNewWindow
-import matt.hurricanefx.async.runLaterReturn
 import matt.hurricanefx.eye.lang.DProp
 import matt.hurricanefx.eye.mtofx.createROFXPropWrapper
 import matt.hurricanefx.runLater
