@@ -12,13 +12,13 @@ import matt.model.convert.StringConverter
 import matt.obs.prop.Var
 
 
-fun ET.textfield(property: Var<String>, op: TextFieldWrapper.()->Unit = {}) =
+inline fun ET.textfield(property: Var<String>, op: TextFieldWrapper.()->Unit = {}) =
   textfield().apply {
-    textProperty.bindBidirectional(property)
-    op(this)
+	textProperty.bindBidirectional(property)
+	op(this)
   }
 
-/*@JvmName("textfieldNumber") */fun ET.textfield(
+/*@JvmName("textfieldNumber") */inline fun ET.textfield(
   property: Var<Number>,
   op: TextFieldWrapper.()->Unit = {}
 ): TextFieldWrapper = textfield().apply {
@@ -58,8 +58,8 @@ open class TextFieldWrapper(
   override val valueProperty by lazy { textProperty }
 
   infix fun withPrompt(s: String): TextFieldWrapper {
-    promptText = s
-    return this
+	promptText = s
+	return this
   }
 }
 
