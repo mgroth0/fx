@@ -39,6 +39,7 @@ import matt.fx.control.wrapper.wrapped.wrapped
 import matt.fx.graphics.dsl.hbox
 import matt.fx.graphics.wrapper.imageview.ImageViewWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
+import matt.fx.graphics.wrapper.node.disableWhen
 import matt.fx.graphics.wrapper.node.parent.ParentWrapper
 import matt.fx.graphics.wrapper.node.setOnDoubleClick
 import matt.hurricanefx.eye.lib.onChange
