@@ -204,7 +204,7 @@ fun ET.colorpicker(
   colorProperty: ObjectProperty<Color>, op: ColorPickerWrapper.()->Unit = {}
 ) = ColorPickerWrapper().apply { bind(colorProperty) }.attachTo(this, op) {}
 
-fun <C: NodeWrapper> textflow(op: TextFlowWrapper<C>.()->Unit = {}) = TextFlowWrapper<C>().attachTo(this, op)
+fun <C: NodeWrapper> ET.textflow(op: TextFlowWrapper<C>.()->Unit = {}) = TextFlowWrapper<C>().attachTo(this, op)
 
 
 fun <P, N: NodeWrapper> ET.swapper(

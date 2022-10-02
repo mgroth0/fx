@@ -5,6 +5,7 @@ import javafx.beans.property.DoubleProperty
 import javafx.geometry.Bounds
 import javafx.scene.control.ScrollPane
 import javafx.scene.control.ScrollPane.ScrollBarPolicy
+import matt.fx.control.control.nodedsl.minYRelativeTo
 import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.control.wrapper.wrapped.wrapped
 import matt.fx.graphics.wrapper.node.NodeWrapper
