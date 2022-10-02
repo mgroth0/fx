@@ -108,7 +108,8 @@ open class ScrollPaneWrapper<C: NodeWrapper>(node: ScrollPane = ScrollPane()): C
 	}
 
   fun scrollToMinYOf(node: NodeWrapperImpl<*>): Boolean {/*scrolling values range from 0 to 1*/
-	minYRelativeTo(content)?.let {
+	minYRelativeTo(node)?.let {
+	  /*there was an issue with this code. no idea if in "it/content" below, "content" is supposed to be "content" or "node"*/
 	  vvalue =
 		(it/content.boundsInLocal.height)*1.1 /*IDK why, but y is always coming up a bit short, but this fixes it*/
 	  return true

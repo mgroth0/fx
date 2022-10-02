@@ -12,7 +12,6 @@ import javafx.scene.control.Control
 import javafx.scene.control.TitledPane
 import javafx.scene.control.ToggleGroup
 import javafx.scene.paint.Color
-import javafx.util.StringConverter
 import matt.fx.control.wrapper.button.radio.ValuedRadioButton
 import matt.fx.control.wrapper.button.toggle.ValuedToggleButton
 import matt.fx.control.wrapper.buttonbar.ButtonBarWrapper
@@ -70,9 +69,9 @@ import matt.fx.graphics.wrapper.pane.stack.StackPaneWrapper
 import matt.fx.graphics.wrapper.pane.tile.TilePaneWrapper
 import matt.fx.graphics.wrapper.textflow.TextFlowWrapper
 import matt.hurricanefx.eye.mtofx.createROFXPropWrapper
-import matt.lang.err
 import matt.lang.go
 import matt.model.convert.MyNumberStringConverter
+import matt.model.convert.StringConverter
 import matt.obs.bind.binding
 import matt.obs.bindings.str.ObsS
 import matt.obs.prop.ObsVal
@@ -322,8 +321,7 @@ fun ET.passwordfield(property: VarProp<String>, op: PasswordFieldWrapper.()->Uni
 fun <T> ET.textfield(
   property: Var<T>, converter: StringConverter<T>, op: TextFieldWrapper.()->Unit = {}
 ) = textfield().apply {
-  err("textProperty.bindBidirectional(property, converter)")
-  @Suppress("UNREACHABLE_CODE")
+  textProperty.bindBidirectional(property, converter)
   op(this)
 }
 
@@ -347,8 +345,7 @@ fun ET.textarea(property: VarProp<String>, op: TextAreaWrapper.()->Unit = {}) = 
 fun <T> ET.textarea(
   property: VarProp<T>, converter: StringConverter<T>, op: TextAreaWrapper.()->Unit = {}
 ) = textarea().apply {
-  err("textProperty.bindBidirectional(property, converter)")
-  @Suppress("UNREACHABLE_CODE")
+  textProperty.bindBidirectional(property, converter)
   op(this)
 }
 
@@ -547,7 +544,7 @@ fun <T: TabWrapper<*>> ET.tabpane(op: TabPaneWrapper<T>.()->Unit = {}) = TabPane
 inline fun <reified T> ET.label(
   observable: ObsVal<T>,
   graphicProperty: ValProp<Node>? = null,
-  converter: StringConverter<in T>? = null,
+  converter: StringConverter<T>? = null,
   noinline op: LabelWrapper.()->Unit = {}
 ) = label().apply {
   if (converter == null) {
