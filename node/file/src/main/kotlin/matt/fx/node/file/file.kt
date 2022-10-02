@@ -21,6 +21,7 @@ import matt.file.HTMLFile
 import matt.file.LogFile
 import matt.file.MFile
 import matt.file.SvgFile
+import matt.fx.graphics.fxthread.runLaterReturn
 import matt.fx.graphics.lang.actionbutton
 import matt.fx.graphics.menu.context.mcontextmenu
 import matt.fx.graphics.win.interact.doubleClickToOpenInWindow
@@ -33,7 +34,6 @@ import matt.fx.web.WebViewPane
 import matt.fx.web.WebViewWrapper
 import matt.fx.web.specialZooming
 import matt.gui.draggableIcon
-import matt.hurricanefx.async.runLaterReturn
 import matt.hurricanefx.tornadofx.item.spinner
 import matt.hurricanefx.wrapper.node.NodeWrapper
 import matt.hurricanefx.wrapper.node.disableWhen
