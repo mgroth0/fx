@@ -12,11 +12,15 @@ import matt.hurricanefx.eye.wrapper.obs.obsval.NonNullFXBackedReadOnlyBindablePr
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
 import matt.fx.graphics.wrapper.scene.SceneWrapper
 import matt.fx.graphics.wrapper.sizeman.SizeControlled
+import matt.lang.NOT_IMPLEMENTED
 
 abstract class WindowWrapper<W: Window>(override val node: W): EventTargetWrapperImpl<W>(), SizeControlled {
 
-  var pullBackWhenOffScreen = true
+  override fun removeFromParent() = NOT_IMPLEMENTED
 
+  override fun isInsideRow() = false
+
+  var pullBackWhenOffScreen = true
 
 
   override val properties get() = node.properties
@@ -75,7 +79,9 @@ abstract class WindowWrapper<W: Window>(override val node: W): EventTargetWrappe
   fun setOnShowing(value: EventHandler<WindowEvent>) = node.setOnShowing(value)
 
   val isShowing get() = node.isShowing
-  val showingProperty: NonNullFXBackedReadOnlyBindableProp<Boolean> by lazy { node.showingProperty().toNonNullableROProp() }
+  val showingProperty: NonNullFXBackedReadOnlyBindableProp<Boolean> by lazy {
+	node.showingProperty().toNonNullableROProp()
+  }
 
   fun hide() = node.hide()
 
