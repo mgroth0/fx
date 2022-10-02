@@ -4,11 +4,10 @@ import javafx.beans.property.ObjectProperty
 import javafx.event.EventTarget
 import javafx.scene.Parent
 import javafx.scene.paint.Paint
-import matt.hurricanefx.wrapper.node.NodeWrapper
-import matt.hurricanefx.wrapper.parent.ParentWrapper
-import matt.hurricanefx.wrapper.sizeman.Sized
-import matt.hurricanefx.wrapper.target.EventTargetWrapper
-import matt.hurricanefx.wrapper.wrapped
+import matt.fx.graphics.wrapper.EventTargetWrapper
+import matt.fx.graphics.wrapper.node.NodeWrapper
+import matt.fx.graphics.wrapper.node.parent.ParentWrapper
+import matt.fx.graphics.wrapper.sizeman.Sized
 
 interface SceneLikeWrapper<N: EventTarget, R: ParentWrapper<*>>:
   EventTargetWrapper,

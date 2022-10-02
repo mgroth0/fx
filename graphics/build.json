@@ -6,7 +6,11 @@
 	  "cfg" :  "api",
 	  "path" : ":k:css"
 	},
-
+	{
+	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
+	  "cfg" :  "api",
+	  "path" : ":k:service"
+	},
 	{
 	  "type" : "matt.mstruct.bj.BuildJsonLibDependency",
 	  "cfg" :  "api",

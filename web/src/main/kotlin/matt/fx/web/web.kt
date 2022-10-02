@@ -32,7 +32,7 @@ import matt.hurricanefx.wrapper.node.attachTo
 import matt.hurricanefx.wrapper.node.setOnDoubleClick
 import matt.hurricanefx.wrapper.pane.PaneWrapperImpl
 import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
-import matt.hurricanefx.wrapper.parent.ParentWrapperImpl
+import matt.fx.graphics.wrapper.node.parent.ParentWrapperImpl
 import matt.hurricanefx.wrapper.region.RegionWrapper
 import matt.fx.graphics.wrapper.stage.StageWrapper
 import matt.hurricanefx.wrapper.wrapped

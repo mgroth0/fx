@@ -10,18 +10,17 @@ import javafx.scene.Scene
 import javafx.scene.paint.Paint
 import javafx.stage.Stage
 import javafx.stage.Window
+import matt.fx.graphics.service.WrapperServiceHub
+import matt.fx.graphics.wrapper.SingularEventTargetWrapper
+import matt.fx.graphics.wrapper.node.parent.ParentWrapper
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
-import matt.hurricanefx.wrapper.SingularEventTargetWrapper
-import matt.hurricanefx.wrapper.parent.ParentWrapper
 import matt.fx.graphics.wrapper.scenelike.SceneLikeWrapper
-import matt.hurricanefx.wrapper.wrapped
+import matt.fx.graphics.wrapper.stage.StageWrapper
 
 
 open class SceneWrapper<R: ParentWrapper<*>>(
   node: Scene
 ): SingularEventTargetWrapper<Scene>(node), SceneLikeWrapper<Scene, R> {
-
-
 
 
   constructor(root: ParentWrapper<*>): this(Scene(root.node))
@@ -44,7 +43,7 @@ open class SceneWrapper<R: ParentWrapper<*>>(
 
 
   val window: Window? get() = node.window
-  val stage get() = (window as Stage).wrapped()
+  val stage get() = WrapperServiceHub.get().wrapped(window!! as Stage) as StageWrapper
 
 
   fun reloadStylesheets() {

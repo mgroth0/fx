@@ -26,7 +26,7 @@ import matt.fx.node.console.text.ConsoleTextFlow
 import matt.hurricanefx.eye.mtofx.createROFXPropWrapper
 import matt.hurricanefx.wrapper.node.NodeWrapper
 import matt.hurricanefx.wrapper.pane.scroll.ScrollPaneWrapper
-import matt.hurricanefx.wrapper.parent.ParentWrapperImpl
+import matt.fx.graphics.wrapper.node.parent.ParentWrapperImpl
 import matt.kjlib.shell.forEachErrChar
 import matt.kjlib.shell.forEachOutChar
 import matt.lang.err
