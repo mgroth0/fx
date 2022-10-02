@@ -208,9 +208,9 @@ fun WebViewWrapper.specialZooming(par: RegionWrapper<*>? = null) {
 		par.widthProperty.onChange {
 		  zoom = perfectZoom(it.toDouble())
 		}.removeAfterInvocation = true
-//		par.widthProperty.onChangeOnce(NewListener {
-//		  zoom = perfectZoom(it.toDouble())
-//		})
+		//		par.widthProperty.onChangeOnce(NewListener {
+		//		  zoom = perfectZoom(it.toDouble())
+		//		})
 	  }
 	}
   }
@@ -241,7 +241,7 @@ fun WebViewWrapper.scrollMult(factor: Double) {
 }
 
 
-fun RegionWrapper<*>.specialTransferingToWindowAndBack(par: PaneWrapperImpl<*, *>) {
+fun RegionWrapper<*>.specialTransferingToWindowAndBack(par: PaneWrapper<*>) {
   val vb = this
   this.setOnKeyPressed { k ->
 	if (k.code == KeyCode.W && k.isMetaDown) {

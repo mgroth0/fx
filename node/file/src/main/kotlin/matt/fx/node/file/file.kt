@@ -24,7 +24,6 @@ import matt.file.SvgFile
 import matt.fx.control.lang.actionbutton
 import matt.fx.control.menu.context.mcontextmenu
 import matt.fx.control.mstage.WMode.CLOSE
-import matt.fx.control.tfx.item.spinner
 import matt.fx.graphics.fxthread.runLaterReturn
 import matt.fx.control.win.interact.doubleClickToOpenInWindow
 import matt.fx.control.win.interact.openImageInWindow
