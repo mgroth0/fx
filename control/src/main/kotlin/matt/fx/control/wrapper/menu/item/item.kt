@@ -27,6 +27,8 @@ open class MenuItemWrapper<N: MenuItem>(
   }
 
 
+
+
   override val properties get() = node.properties
 
   val visibleProperty by lazy { node.visibleProperty().toNonNullableProp() }

@@ -10,6 +10,7 @@ import javafx.scene.control.MenuItem
 import javafx.scene.control.SeparatorMenuItem
 import javafx.scene.control.ToggleGroup
 import javafx.scene.input.KeyCombination
+import javafx.scene.input.MouseEvent
 import matt.fx.control.wrapper.menu.item.MenuItemWrapper
 import matt.fx.control.wrapper.menu.item.SimpleMenuItem
 import matt.fx.control.wrapper.menu.radioitem.ValuedRadioMenuItem
@@ -26,6 +27,8 @@ class MenuWrapper(node: Menu): MenuItemWrapper<Menu>(node) {
   operator fun <T: MenuItem> plusAssign(menuItem: T) {
 	this.items += menuItem
   }
+
+
 
 
   fun menu(

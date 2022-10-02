@@ -316,11 +316,15 @@ private fun NodeWrapper.hotkeyInfoMenu() = MenuWrapper("Click For Hotkey Info").
 	}
   }
 
-  setOnMouseClicked {
+
+  setOnAction {
 	items.clear()
 	addInfo(Handler)
 	addInfo(Filter)
   }
+//  setOnMouseClicked {
+//
+//  }
 
 }
 
