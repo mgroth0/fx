@@ -13,9 +13,9 @@ import javafx.scene.control.TreeTableCell
 import javafx.scene.control.cell.CheckBoxListCell
 import javafx.util.Callback
 import javafx.util.StringConverter
+import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.hurricanefx.eye.lang.Prop
 import matt.hurricanefx.eye.prop.objectBindingN
-import matt.hurricanefx.wrapper.node.NodeWrapper
 import kotlin.reflect.KProperty1
 
 interface CellFactory<N, T, C: Cell<T>> {

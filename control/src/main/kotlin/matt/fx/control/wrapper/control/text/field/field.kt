@@ -3,8 +3,8 @@ package matt.fx.control.wrapper.control.text.field
 import com.sun.javafx.scene.control.FakeFocusTextField
 import javafx.event.ActionEvent
 import javafx.scene.control.TextField
-import matt.hurricanefx.wrapper.control.text.input.TextInputControlWrapper
-import matt.hurricanefx.wrapper.control.value.HasWritableValue
+import matt.fx.control.wrapper.control.text.input.TextInputControlWrapper
+import matt.fx.control.wrapper.control.value.HasWritableValue
 
 
 open class TextFieldWrapper(

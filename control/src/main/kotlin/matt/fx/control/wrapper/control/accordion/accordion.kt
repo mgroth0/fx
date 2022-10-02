@@ -3,10 +3,10 @@ package matt.fx.control.wrapper.control.accordion
 import javafx.collections.ObservableList
 import javafx.scene.control.Accordion
 import javafx.scene.control.TitledPane
-import matt.hurricanefx.wrapper.control.ControlWrapperImpl
-import matt.hurricanefx.wrapper.node.NodeWrapper
+import matt.fx.control.wrapper.control.ControlWrapperImpl
+import matt.fx.control.wrapper.titled.TitledPaneWrapper
+import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.pane.PaneWrapper
-import matt.fx.graphics.wrapper.pane.titled.TitledPaneWrapper
 import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapper
 
 class AccordionWrapper(node: Accordion = Accordion()): ControlWrapperImpl<Accordion>(node) {

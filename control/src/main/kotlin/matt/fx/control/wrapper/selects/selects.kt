@@ -4,9 +4,9 @@ import javafx.beans.property.ReadOnlyObjectProperty
 import javafx.beans.value.ObservableValue
 import javafx.event.EventTarget
 import javafx.scene.control.SelectionModel
+import matt.fx.control.wrapper.control.ControlWrapper
+import matt.fx.graphics.wrapper.EventTargetWrapperImpl
 import matt.hurricanefx.eye.lib.onChange
-import matt.hurricanefx.wrapper.control.ControlWrapper
-import matt.hurricanefx.wrapper.target.EventTargetWrapperImpl
 import matt.model.convert.Converter
 
 interface Selects<T> {

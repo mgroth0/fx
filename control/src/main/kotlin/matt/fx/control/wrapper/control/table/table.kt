@@ -1,6 +1,5 @@
 package matt.fx.control.wrapper.control.table
 
-import matt.hurricanefx.wrapper.control.tablelike.TableLikeWrapper
 import javafx.application.Platform
 import javafx.beans.property.BooleanProperty
 import javafx.beans.property.ObjectProperty
@@ -22,14 +21,14 @@ import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
 import javafx.scene.input.MouseEvent
 import javafx.util.Callback
+import matt.fx.control.wrapper.control.ControlWrapperImpl
+import matt.fx.control.wrapper.control.column.TableColumnWrapper
+import matt.fx.control.wrapper.control.tablelike.TableLikeWrapper
+import matt.fx.control.wrapper.wrapped.wrapped
 import matt.hurricanefx.eye.lib.onChange
 import matt.hurricanefx.eye.prop.getValue
 import matt.hurricanefx.eye.prop.observable
 import matt.hurricanefx.eye.prop.setValue
-import matt.hurricanefx.wrapper.control.ControlWrapperImpl
-import matt.hurricanefx.wrapper.control.column.TableColumnWrapper
-import matt.hurricanefx.wrapper.node.NodeWrapper
-import matt.hurricanefx.wrapper.wrapped
 import matt.lang.decap
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction

@@ -2,8 +2,8 @@ package matt.fx.control.wrapper.label
 
 import javafx.scene.Node
 import javafx.scene.control.Label
-import matt.hurricanefx.wrapper.labeled.LabeledWrapper
-import matt.hurricanefx.wrapper.node.NodeWrapper
+import matt.fx.control.wrapper.labeled.LabeledWrapper
+import matt.fx.graphics.wrapper.node.NodeWrapper
 
 open class LabelWrapper(
   node: Label = Label(),

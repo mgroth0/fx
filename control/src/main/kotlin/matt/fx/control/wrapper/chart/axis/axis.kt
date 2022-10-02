@@ -1,8 +1,8 @@
 package matt.fx.control.wrapper.chart.axis
 
 import javafx.scene.chart.Axis
+import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
-import matt.hurricanefx.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.region.RegionWrapperImpl
 
 typealias MAxis<T> = AxisWrapper<T, out Axis<T>>

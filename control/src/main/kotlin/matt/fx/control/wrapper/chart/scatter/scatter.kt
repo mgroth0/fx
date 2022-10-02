@@ -1,8 +1,8 @@
 package matt.fx.control.wrapper.chart.scatter
 
 import javafx.scene.chart.ScatterChart
-import matt.hurricanefx.wrapper.chart.axis.MAxis
-import matt.hurricanefx.wrapper.chart.xy.XYChartWrapper
+import matt.fx.control.wrapper.chart.axis.MAxis
+import matt.fx.control.wrapper.chart.xy.XYChartWrapper
 
 open class ScatterChartWrapper<X, Y>(
   node: ScatterChart<X, Y>

@@ -1,8 +1,8 @@
 package matt.fx.control.wrapper.control.page
 
 import javafx.scene.control.Pagination
-import matt.hurricanefx.wrapper.control.ControlWrapperImpl
-import matt.hurricanefx.wrapper.node.NodeWrapper
+import matt.fx.control.wrapper.control.ControlWrapperImpl
+import matt.fx.graphics.wrapper.node.NodeWrapper
 
 class PaginationWrapper( node: Pagination = Pagination()): ControlWrapperImpl<Pagination>(node) {
   var pageCount

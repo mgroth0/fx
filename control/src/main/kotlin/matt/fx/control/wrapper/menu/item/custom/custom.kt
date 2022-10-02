@@ -3,6 +3,7 @@ package matt.fx.control.wrapper.menu.item.custom
 import javafx.scene.Node
 import javafx.scene.control.CustomMenuItem
 import matt.fx.control.wrapper.menu.item.MenuItemWrapper
+import matt.fx.graphics.wrapper.node.NodeWrapper
 
 open class CustomMenuItemWrapper(
   node: CustomMenuItem = CustomMenuItem(),

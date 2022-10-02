@@ -8,6 +8,7 @@ import javafx.beans.value.ObservableValue
 import javafx.scene.Node
 import javafx.scene.control.Tab
 import javafx.scene.control.TabPane
+import matt.fx.control.wrapper.wrapped.wrapped
 import matt.fx.graphics.wrapper.SingularEventTargetWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.hurricanefx.eye.bind.toBinding

@@ -8,12 +8,12 @@ import javafx.scene.control.TreeTableCell
 import javafx.scene.control.TreeTableColumn
 import javafx.scene.control.TreeTableColumn.CellDataFeatures
 import javafx.util.Callback
-import matt.hurricanefx.wrapper.cellfact.TreeTableCellFactory
-import matt.hurricanefx.wrapper.cellfact.cellvalfact.CellValueFactory
-import matt.hurricanefx.wrapper.control.colbase.TableColumnBaseWrapper
-import matt.hurricanefx.wrapper.control.hascols.HasCols
-import matt.hurricanefx.wrapper.control.treetable.TreeTableViewWrapper
-import matt.hurricanefx.wrapper.wrapped
+import matt.fx.control.wrapper.cellfact.TreeTableCellFactory
+import matt.fx.control.wrapper.cellfact.cellvalfact.CellValueFactory
+import matt.fx.control.wrapper.control.colbase.TableColumnBaseWrapper
+import matt.fx.control.wrapper.control.hascols.HasCols
+import matt.fx.control.wrapper.control.treetable.TreeTableViewWrapper
+import matt.fx.control.wrapper.wrapped.wrapped
 
 
 class TreeTableColumnWrapper<E, P>(

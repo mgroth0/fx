@@ -1,8 +1,8 @@
 package matt.fx.control.wrapper.chart.stackedbar
 
 import javafx.scene.chart.StackedBarChart
-import matt.hurricanefx.wrapper.chart.axis.MAxis
-import matt.hurricanefx.wrapper.chart.xy.XYChartWrapper
+import matt.fx.control.wrapper.chart.axis.MAxis
+import matt.fx.control.wrapper.chart.xy.XYChartWrapper
 
 open class StackedBarChartWrapper<X, Y>(
   node: StackedBarChart<X, Y>,

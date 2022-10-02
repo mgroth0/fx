@@ -1,7 +1,7 @@
 package matt.fx.control.wrapper.control.text.field.pass
 
 import javafx.scene.control.PasswordField
-import matt.hurricanefx.wrapper.control.text.field.TextFieldWrapper
+import matt.fx.control.wrapper.control.text.field.TextFieldWrapper
 
 class PasswordFieldWrapper(
    node: PasswordField = PasswordField(),

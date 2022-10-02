@@ -3,11 +3,11 @@ package matt.fx.control.wrapper.chart
 import javafx.beans.property.BooleanProperty
 import javafx.beans.property.StringProperty
 import javafx.scene.chart.Chart
+import matt.fx.graphics.wrapper.node.NodeWrapper
+import matt.fx.graphics.wrapper.region.RegionWrapperImpl
 import matt.hurricanefx.eye.prop.getValue
 import matt.hurricanefx.eye.prop.setValue
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
-import matt.hurricanefx.wrapper.node.NodeWrapper
-import matt.fx.graphics.wrapper.region.RegionWrapperImpl
 import matt.lang.NOT_IMPLEMENTED
 
 open class ChartWrapper<N: Chart>(node: N): RegionWrapperImpl<N, NodeWrapper>(node) {

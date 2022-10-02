@@ -3,9 +3,9 @@ package matt.fx.control.wrapper.progressindicator
 import javafx.beans.property.DoubleProperty
 import javafx.beans.value.ObservableValue
 import javafx.scene.control.ProgressIndicator
+import matt.fx.control.wrapper.control.ControlWrapperImpl
+import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.hurricanefx.eye.bind.smartBind
-import matt.hurricanefx.wrapper.control.ControlWrapperImpl
-import matt.hurricanefx.wrapper.node.NodeWrapper
 
 class ProgressIndicatorWrapper(
   node: ProgressIndicator = ProgressIndicator(),

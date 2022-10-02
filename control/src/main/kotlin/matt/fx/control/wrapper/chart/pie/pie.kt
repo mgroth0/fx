@@ -3,7 +3,7 @@ package matt.fx.control.wrapper.chart.pie
 import javafx.collections.ObservableList
 import javafx.scene.chart.PieChart
 import javafx.scene.chart.PieChart.Data
-import matt.hurricanefx.wrapper.chart.ChartWrapper
+import matt.fx.control.wrapper.chart.ChartWrapper
 
 open class PieChartWrapper(
    node: PieChart = PieChart(),

@@ -1,8 +1,8 @@
 package matt.fx.control.wrapper.chart.bar
 
 import javafx.scene.chart.BarChart
-import matt.hurricanefx.wrapper.chart.axis.MAxis
-import matt.hurricanefx.wrapper.chart.xy.XYChartWrapper
+import matt.fx.control.wrapper.chart.axis.MAxis
+import matt.fx.control.wrapper.chart.xy.XYChartWrapper
 
 open class BarChartWrapper<X, Y>(
   node: BarChart<X, Y>,

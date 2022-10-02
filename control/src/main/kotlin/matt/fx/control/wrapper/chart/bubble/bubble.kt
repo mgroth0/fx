@@ -1,8 +1,8 @@
 package matt.fx.control.wrapper.chart.bubble
 
 import javafx.scene.chart.BubbleChart
-import matt.hurricanefx.wrapper.chart.axis.MAxis
-import matt.hurricanefx.wrapper.chart.xy.XYChartWrapper
+import matt.fx.control.wrapper.chart.axis.MAxis
+import matt.fx.control.wrapper.chart.xy.XYChartWrapper
 
 open class BubbleChartWrapper<X, Y>(
   node: BubbleChart<X, Y>,

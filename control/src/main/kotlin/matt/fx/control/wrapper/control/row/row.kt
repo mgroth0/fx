@@ -8,7 +8,7 @@ import javafx.scene.control.TableRow
 import javafx.scene.control.TreeCell
 import javafx.scene.control.TreeItem
 import javafx.scene.control.TreeTableRow
-import matt.hurricanefx.wrapper.labeled.LabeledWrapper
+import matt.fx.control.wrapper.labeled.LabeledWrapper
 
 open class CellWrapper<E, N: Cell<E>>(
   node: N

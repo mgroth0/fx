@@ -1,9 +1,8 @@
 package matt.fx.control.wrapper.control.button
 
-import javafx.scene.Node
 import javafx.scene.control.Button
-import matt.hurricanefx.wrapper.control.button.base.ButtonBaseWrapper
-import matt.hurricanefx.wrapper.node.NodeWrapper
+import matt.fx.control.wrapper.control.button.base.ButtonBaseWrapper
+import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.lang.NEVER
 
 open class ButtonWrapper(

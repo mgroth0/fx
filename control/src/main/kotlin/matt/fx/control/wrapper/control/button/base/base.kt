@@ -4,6 +4,7 @@ import javafx.event.ActionEvent
 import javafx.scene.control.ButtonBase
 import matt.fx.control.wrapper.labeled.LabeledWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
+import matt.http.url.MURL
 import java.awt.Desktop
 import java.net.URI
 import java.net.URL

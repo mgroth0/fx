@@ -2,8 +2,8 @@ package matt.fx.control.wrapper.sep
 
 import javafx.geometry.Orientation
 import javafx.scene.control.Separator
-import matt.hurricanefx.wrapper.control.ControlWrapperImpl
-import matt.hurricanefx.wrapper.node.NodeWrapper
+import matt.fx.control.wrapper.control.ControlWrapperImpl
+import matt.fx.graphics.wrapper.node.NodeWrapper
 
 open class SeparatorWrapper(
    node: Separator = Separator(),

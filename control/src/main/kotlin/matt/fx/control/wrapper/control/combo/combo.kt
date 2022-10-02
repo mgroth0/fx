@@ -12,11 +12,11 @@ import javafx.scene.control.ListView
 import javafx.scene.control.SingleSelectionModel
 import javafx.util.Callback
 import javafx.util.StringConverter
+import matt.fx.control.wrapper.cellfact.ListCellFactory
+import matt.fx.control.wrapper.control.ControlWrapperImpl
+import matt.fx.control.wrapper.selects.SelectingControl
+import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.hurricanefx.eye.bind.smartBind
-import matt.hurricanefx.wrapper.cellfact.ListCellFactory
-import matt.hurricanefx.wrapper.control.ControlWrapperImpl
-import matt.hurricanefx.wrapper.node.NodeWrapper
-import matt.hurricanefx.wrapper.selects.SelectingControl
 
 class ComboBoxWrapper<E>(
   node: ComboBox<E> = ComboBox<E>(),

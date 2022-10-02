@@ -19,14 +19,14 @@ import javafx.scene.control.cell.TextFieldTableCell
 import javafx.scene.text.Text
 import javafx.util.Callback
 import javafx.util.StringConverter
+import matt.fx.control.wrapper.cellfact.TableCellFactory
+import matt.fx.control.wrapper.cellfact.cellvalfact.CellValueFactory
+import matt.fx.control.wrapper.control.colbase.TableColumnBaseWrapper
+import matt.fx.control.wrapper.control.hascols.HasCols
+import matt.fx.control.wrapper.control.table.TableViewWrapper
+import matt.fx.control.wrapper.wrapped.wrapped
+import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.hurricanefx.eye.prop.stringBinding
-import matt.hurricanefx.wrapper.cellfact.TableCellFactory
-import matt.hurricanefx.wrapper.cellfact.cellvalfact.CellValueFactory
-import matt.hurricanefx.wrapper.control.colbase.TableColumnBaseWrapper
-import matt.hurricanefx.wrapper.control.hascols.HasCols
-import matt.hurricanefx.wrapper.control.table.TableViewWrapper
-import matt.hurricanefx.wrapper.node.NodeWrapper
-import matt.hurricanefx.wrapper.wrapped
 
 private typealias CellValFact<E, P> = Callback<CellDataFeatures<E, P>, ObservableValue<P>?>
 

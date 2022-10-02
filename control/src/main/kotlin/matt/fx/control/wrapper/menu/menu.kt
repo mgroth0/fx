@@ -10,9 +10,9 @@ import javafx.scene.control.MenuItem
 import javafx.scene.control.SeparatorMenuItem
 import javafx.scene.control.ToggleGroup
 import javafx.scene.input.KeyCombination
-import matt.hurricanefx.wrapper.menu.item.MenuItemWrapper
-import matt.hurricanefx.wrapper.menu.item.SimpleMenuItem
-import matt.hurricanefx.wrapper.menu.radioitem.ValuedRadioMenuItem
+import matt.fx.control.wrapper.menu.item.MenuItemWrapper
+import matt.fx.control.wrapper.menu.item.SimpleMenuItem
+import matt.fx.control.wrapper.menu.radioitem.ValuedRadioMenuItem
 import matt.obs.bindings.str.ObsS
 import kotlin.concurrent.thread
 

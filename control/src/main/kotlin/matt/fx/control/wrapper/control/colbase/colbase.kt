@@ -3,12 +3,12 @@ package matt.fx.control.wrapper.control.colbase
 import javafx.beans.property.ReadOnlyDoubleProperty
 import javafx.scene.control.TableColumn
 import javafx.scene.control.TableColumnBase
+import matt.fx.control.wrapper.control.tablelike.TableLikeWrapper
+import matt.fx.graphics.wrapper.EventTargetWrapperImpl
+import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
-import matt.hurricanefx.wrapper.control.tablelike.TableLikeWrapper
-import matt.hurricanefx.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.sizeman.WidthManaged
-import matt.hurricanefx.wrapper.target.EventTargetWrapperImpl
 
 
 abstract class TableColumnBaseWrapper<E, P, F: TableColumnBase<E, P>>(

@@ -1,9 +1,9 @@
 package matt.fx.control.wrapper.chart.axis.value
 
 import javafx.scene.chart.ValueAxis
+import matt.fx.control.wrapper.chart.axis.AxisWrapper
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
-import matt.hurricanefx.wrapper.chart.axis.AxisWrapper
 
 
 abstract class ValueAxisWrapper<T: Number>(node: ValueAxis<T>): AxisWrapper<T, ValueAxis<T>>(node) {

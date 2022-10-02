@@ -2,10 +2,10 @@ package matt.fx.control.wrapper.control.text.area
 
 import javafx.beans.property.BooleanProperty
 import javafx.scene.control.TextArea
+import matt.fx.control.wrapper.control.text.input.TextInputControlWrapper
+import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.hurricanefx.eye.prop.getValue
 import matt.hurricanefx.eye.prop.setValue
-import matt.hurricanefx.wrapper.control.text.input.TextInputControlWrapper
-import matt.hurricanefx.wrapper.node.NodeWrapper
 
 open class TextAreaWrapper(
   node: TextArea = TextArea(),

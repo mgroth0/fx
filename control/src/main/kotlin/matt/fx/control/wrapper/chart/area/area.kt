@@ -1,9 +1,8 @@
 package matt.fx.control.wrapper.chart.area
 
 import javafx.scene.chart.AreaChart
-import javafx.scene.chart.Axis
-import matt.hurricanefx.wrapper.chart.axis.MAxis
-import matt.hurricanefx.wrapper.chart.xy.XYChartWrapper
+import matt.fx.control.wrapper.chart.axis.MAxis
+import matt.fx.control.wrapper.chart.xy.XYChartWrapper
 
 open class AreaChartWrapper<X, Y>(
   node: AreaChart<X, Y>,

@@ -3,9 +3,10 @@ package matt.fx.control.wrapper.buttonbar
 import javafx.collections.ObservableList
 import javafx.scene.Node
 import javafx.scene.control.ButtonBar
-import matt.hurricanefx.wrapper.control.ControlWrapperImpl
-import matt.hurricanefx.wrapper.control.button.ButtonWrapper
-import matt.hurricanefx.wrapper.node.NodeWrapper
+import matt.css.Cursor
+import matt.fx.control.wrapper.control.ControlWrapperImpl
+import matt.fx.control.wrapper.control.button.ButtonWrapper
+import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.obs.bindings.str.ObsS
 import matt.obs.prop.ValProp
 
@@ -38,7 +39,7 @@ class ButtonBarWrapper(
 	type: ButtonBar.ButtonData? = null,
 	graphic: NodeWrapper? = null,
 	op: ButtonWrapper.()->Unit = {}
-  ) = ButtonWrapper().apply { this.text = text }.also {
+  ) = ButtonWrapper().apply { Cursor.text = text }.also {
 	if (type != null) ButtonBar.setButtonData(it.node, type)
 	if (graphic != null) it.graphic = graphic
 	buttons += it.node

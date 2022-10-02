@@ -6,12 +6,9 @@ import javafx.scene.control.MenuButton
 import javafx.scene.control.MenuItem
 import javafx.scene.control.ToggleGroup
 import javafx.scene.input.KeyCombination
-import matt.hurricanefx.wrapper.control.button.base.ButtonBaseWrapper
+import matt.fx.control.wrapper.control.button.base.ButtonBaseWrapper
 import matt.fx.control.wrapper.menu.MenuWrapper
-import matt.hurricanefx.wrapper.menu.checkitem.CheckMenuItemWrapper
-import matt.hurricanefx.wrapper.menu.item.MenuItemWrapper
 import matt.fx.control.wrapper.menu.item.custom.CustomMenuItemWrapper
-import matt.hurricanefx.wrapper.menu.radioitem.ValuedRadioMenuItem
 
 open class MenuButtonWrapper(
   node: MenuButton = MenuButton(),

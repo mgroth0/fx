@@ -1,8 +1,8 @@
 package matt.fx.control.wrapper.chart.axis.value.number
 
 import javafx.scene.chart.NumberAxis
+import matt.fx.control.wrapper.chart.axis.value.ValueAxisWrapper
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
-import matt.hurricanefx.wrapper.chart.axis.value.ValueAxisWrapper
 
 fun minimalNumberAxis() = NumberAxisWrapper().apply {
   minorTickCount = 0

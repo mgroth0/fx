@@ -7,10 +7,10 @@ import javafx.scene.control.TreeCell
 import javafx.scene.control.TreeItem
 import javafx.scene.control.TreeView
 import javafx.util.Callback
-import matt.hurricanefx.wrapper.cellfact.TreeCellFactory
-import matt.hurricanefx.wrapper.control.ControlWrapperImpl
-import matt.hurricanefx.wrapper.control.tree.like.TreeLikeWrapper
-import matt.hurricanefx.wrapper.node.NodeWrapper
+import matt.fx.control.wrapper.cellfact.TreeCellFactory
+import matt.fx.control.wrapper.control.ControlWrapperImpl
+import matt.fx.control.wrapper.control.tree.like.TreeLikeWrapper
+import matt.fx.graphics.wrapper.node.NodeWrapper
 
 class TreeViewWrapper<T>( node: TreeView<T> = TreeView(), op: TreeViewWrapper<T>.()->Unit = {}):
   ControlWrapperImpl<TreeView<T>>(node),

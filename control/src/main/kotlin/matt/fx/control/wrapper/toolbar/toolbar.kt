@@ -5,12 +5,12 @@ import javafx.geometry.Orientation
 import javafx.scene.Node
 import javafx.scene.control.ToolBar
 import javafx.scene.layout.Priority
-import matt.hurricanefx.wrapper.control.ControlWrapperImpl
-import matt.hurricanefx.wrapper.control.button.ButtonWrapper
-import matt.hurricanefx.wrapper.node.NodeWrapper
+import matt.fx.control.wrapper.control.ControlWrapperImpl
+import matt.fx.control.wrapper.control.button.ButtonWrapper
+import matt.fx.control.wrapper.sep.SeparatorWrapper
+import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
 import matt.fx.graphics.wrapper.pane.SimplePaneWrapper
-import matt.hurricanefx.wrapper.sep.SeparatorWrapper
 import matt.obs.prop.ValProp
 
 class ToolBarWrapper(

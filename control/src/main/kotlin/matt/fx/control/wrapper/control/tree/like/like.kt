@@ -5,9 +5,9 @@ import javafx.collections.ObservableList
 import javafx.scene.control.MultipleSelectionModel
 import javafx.scene.control.TreeItem
 import javafx.scene.layout.Region
-import matt.hurricanefx.wrapper.node.NodeWrapper
+import matt.fx.control.wrapper.selects.SelectingControl
+import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.region.RegionWrapper
-import matt.hurricanefx.wrapper.selects.SelectingControl
 import matt.fx.graphics.wrapper.sizeman.SizeManaged
 
 interface TreeLikeWrapper<N: Region, T>: RegionWrapper<NodeWrapper>, SelectingControl<TreeItem<T>>, SizeManaged {

@@ -1,16 +1,9 @@
 package matt.fx.control.wrapper.chart.line
 
 import javafx.scene.chart.LineChart
-import javafx.scene.chart.NumberAxis
-import javafx.scene.chart.XYChart.Data
-import javafx.scene.chart.XYChart.Series
-import matt.collect.itr.applyEach
+import matt.fx.control.wrapper.chart.axis.MAxis
+import matt.fx.control.wrapper.chart.xy.XYChartWrapper
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
-import matt.hurricanefx.wrapper.chart.axis.MAxis
-import matt.hurricanefx.wrapper.chart.axis.value.number.NumberAxisWrapper
-import matt.hurricanefx.wrapper.chart.xy.XYChartWrapper
-
-
 
 
 open class LineChartWrapper<X, Y>(

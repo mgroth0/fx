@@ -5,10 +5,10 @@ import javafx.beans.property.DoubleProperty
 import javafx.beans.property.IntegerProperty
 import javafx.geometry.Orientation
 import javafx.scene.control.Slider
+import matt.fx.control.wrapper.control.ControlWrapperImpl
+import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.hurricanefx.eye.bind.smartBind
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
-import matt.hurricanefx.wrapper.control.ControlWrapperImpl
-import matt.hurricanefx.wrapper.node.NodeWrapper
 import matt.obs.prop.ObsVal
 
 class SliderWrapper(

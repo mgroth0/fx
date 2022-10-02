@@ -6,9 +6,9 @@ import javafx.beans.value.ObservableValue
 import javafx.collections.ObservableList
 import javafx.scene.control.Spinner
 import javafx.scene.control.SpinnerValueFactory
+import matt.fx.control.wrapper.control.ControlWrapperImpl
+import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.hurricanefx.eye.bind.smartBind
-import matt.hurricanefx.wrapper.control.ControlWrapperImpl
-import matt.hurricanefx.wrapper.node.NodeWrapper
 
 class SpinnerWrapper<T>(
    node: Spinner<T> = Spinner<T>(),

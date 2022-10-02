@@ -4,11 +4,11 @@ import javafx.scene.chart.XYChart.Data
 import javafx.scene.chart.XYChart.Series
 import javafx.scene.paint.Color
 import matt.collect.weak.WeakMap
+import matt.fx.control.wrapper.chart.xy.series.SeriesWrapper.Companion.wrappers
 import matt.hurricanefx.eye.wrapper.obs.collect.mfxMutableListConverter
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNullableROProp
-import matt.hurricanefx.wrapper.chart.xy.series.SeriesWrapper.Companion.wrappers
 import matt.fx.graphics.wrapper.style.hex
 import matt.lang.NOT_IMPLEMENTED
 import matt.model.convert.NullToBlankStringConverter
