@@ -7,14 +7,14 @@ import javafx.scene.control.Tooltip
 import javafx.stage.Stage
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.control.control.dsl.ControlDSL
-import matt.hurricanefx.tornadofx.control.bind
-import matt.hurricanefx.tornadofx.nodes.GridPaneConstraint
-import matt.hurricanefx.tornadofx.nodes.SplitPaneConstraint
-import matt.hurricanefx.wrapper.control.ControlWrapperImpl
+import matt.fx.control.tfx.control.bind
+import matt.fx.control.tfx.nodes.SplitPaneConstraint
+import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.control.wrapper.scroll.ScrollPaneWrapper
+import matt.fx.control.wrapper.wrapped.wrapped
+import matt.fx.graphics.tfx.nodes.GridPaneConstraint
 import matt.fx.graphics.wrapper.node.parent.ParentWrapper
 import matt.fx.graphics.wrapper.node.parent.parent
-import matt.hurricanefx.wrapper.wrapped
 import matt.stream.recurse.chain
 
 interface NodeControlDSL: ControlDSL, NodeWrapper {

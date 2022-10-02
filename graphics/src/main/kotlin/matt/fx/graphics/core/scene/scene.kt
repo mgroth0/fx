@@ -19,21 +19,18 @@ import matt.file.commons.ICON_FOLDER
 import matt.file.construct.mFile
 import matt.fx.graphics.hotkeys.addDefaultHotkeys
 import matt.fx.graphics.mag.VarJson
-import matt.fx.graphics.menu.context.mcontextmenu
-import matt.fx.graphics.menu.context.showMContextMenu
-import matt.fx.graphics.service.WrapperServiceHub
+import matt.fx.graphics.service.wrapped
 import matt.fx.graphics.style.CUSTOM_CSS
 import matt.fx.graphics.style.DARK_MODENA_CSS
 import matt.fx.graphics.style.DarkModeController.darkModeProp
 import matt.fx.graphics.wrapper.node.parent.ParentWrapper
 import matt.fx.graphics.wrapper.region.RegionWrapper
 import matt.fx.graphics.wrapper.scene.SceneWrapper
+import matt.fx.graphics.wrapper.style.StyleableWrapper
 import matt.log.tab
 import matt.stream.recurse.recurse
 import java.net.URL
 import kotlin.reflect.KClass
-import matt.fx.graphics.service.wrapped
-import matt.fx.graphics.wrapper.style.StyleableWrapper
 
 /*this is for when I have two monitors that are the scame brand and therefore mac is mixing up which side each is on I think*/
 const val NEED_REVERSED_DISPLAYS_FEATURE = false

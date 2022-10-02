@@ -76,7 +76,6 @@ interface NodeWrapper: EventTargetWrapper, StyleableWrapper {
   val visibleAndManagedProp: BindableProperty<Boolean>
 
 
-  override val properties get() = node.properties
 
 
   val hoverProperty: ObsVal<Boolean>
@@ -183,7 +182,7 @@ interface NodeWrapper: EventTargetWrapper, StyleableWrapper {
   val rotationAxisProperty: ObjectProperty<Point3D> get() = node.rotationAxisProperty()
 
 
-  val properties: ObservableMap<Any, Any> get() = node.properties
+  override val properties: ObservableMap<Any, Any> get() = node.properties
 
   var isCache
 	get() = node.isCache
