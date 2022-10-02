@@ -7,24 +7,38 @@ import matt.fx.control.wrapper.control.text.input.TextInputControlWrapper
 import matt.fx.control.wrapper.control.value.HasWritableValue
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.attachTo
+import matt.model.convert.Converter
 import matt.model.convert.MyNumberStringConverter
 import matt.model.convert.StringConverter
 import matt.obs.prop.Var
+import kotlin.reflect.KClass
 
 
-inline fun ET.textfield(property: Var<String>, op: TextFieldWrapper.()->Unit = {}) =
+val converters = mapOf<KClass<*>, StringConverter<*>>(
+  Number::class to MyNumberStringConverter
+)
+
+
+inline fun <reified T: Any> ET.textfield(property: Var<T>, op: TextFieldWrapper.()->Unit = {}) =
   textfield().apply {
-	textProperty.bindBidirectional(property)
+	if (T::class == String::class) {
+	  @Suppress("UNCHECKED_CAST")
+	  textProperty.bindBidirectional(property as Var<String>)
+	} else {
+	  @Suppress("UNCHECKED_CAST")
+	  textProperty.bindBidirectional(property, converters[T::class]!! as Converter<String, T>)
+	}
+
 	op(this)
   }
 
-/*@JvmName("textfieldNumber") */inline fun ET.textfield(
-  property: Var<Number>,
-  op: TextFieldWrapper.()->Unit = {}
-): TextFieldWrapper = textfield().apply {
-  textProperty.bindBidirectional(property, MyNumberStringConverter)
-  op(this)
-}
+///*@JvmName("textfieldNumber") */inline fun ET.textfield(
+//  property: Var<Number>,
+//  op: TextFieldWrapper.()->Unit = {}
+//): TextFieldWrapper = textfield().apply {
+//  textProperty.bindBidirectional(property, MyNumberStringConverter)
+//  op(this)
+//}
 
 //@JvmName("textfieldInt") fun EventTargetWrapper.textfield(
 //  property: ValProp<Int>,
