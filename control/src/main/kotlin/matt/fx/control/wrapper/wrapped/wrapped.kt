@@ -123,7 +123,6 @@ import matt.fx.graphics.wrapper.textflow.TextFlowWrapper
 import matt.fx.graphics.wrapper.window.WindowWrapper
 import matt.lang.NEVER
 import matt.lang.err
-import matt.model.convert.Converter
 
 
 inline fun <reified W: EventTargetWrapper> EventTarget.findWrapper(): W? {

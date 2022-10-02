@@ -2,11 +2,6 @@ package matt.fx.media.dsl
 
 import javafx.beans.value.ObservableValue
 import javafx.scene.image.Image
-import matt.hurricanefx.control.dsl.ControlDSL
-import matt.hurricanefx.eye.prop.objectBindingN
-import matt.fx.graphics.wrapper.imageview.ImageViewWrapper
-import matt.hurricanefx.wrapper.node.attach
-import matt.hurricanefx.wrapper.node.attachTo
 
 interface MediaDSL: ControlDSL {
 
