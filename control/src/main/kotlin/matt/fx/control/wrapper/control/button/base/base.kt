@@ -2,9 +2,8 @@ package matt.fx.control.wrapper.control.button.base
 
 import javafx.event.ActionEvent
 import javafx.scene.control.ButtonBase
-import matt.http.url.MURL
-import matt.hurricanefx.wrapper.labeled.LabeledWrapper
-import matt.hurricanefx.wrapper.node.NodeWrapper
+import matt.fx.control.wrapper.labeled.LabeledWrapper
+import matt.fx.graphics.wrapper.node.NodeWrapper
 import java.awt.Desktop
 import java.net.URI
 import java.net.URL

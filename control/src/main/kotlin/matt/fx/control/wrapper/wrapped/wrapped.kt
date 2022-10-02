@@ -112,8 +112,10 @@ import matt.fx.graphics.wrapper.pane.flow.FlowPaneWrapper
 import matt.fx.graphics.wrapper.pane.grid.GridPaneWrapper
 import matt.fx.graphics.wrapper.pane.hbox.HBoxWrapper
 import matt.fx.control.wrapper.scroll.ScrollPaneWrapper
+import matt.fx.control.wrapper.split.SplitPaneWrapper
+import matt.fx.control.wrapper.tab.TabPaneWrapper
+import matt.fx.control.wrapper.titled.TitledPaneWrapper
 import matt.fx.graphics.wrapper.pane.stack.StackPaneWrapper
-import matt.fx.graphics.wrapper.pane.tab.TabPaneWrapper
 import matt.fx.graphics.wrapper.pane.tile.TilePaneWrapper
 import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapper
 import matt.fx.graphics.wrapper.region.RegionWrapper

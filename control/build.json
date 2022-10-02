@@ -12,6 +12,11 @@
 	  "path" : ":k:fx:graphics"
 	},
 	{
+	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
+	  "cfg" :  "api",
+	  "path" : ":k:http"
+	},
+	{
 	  "type" : "matt.mstruct.bj.BuildJsonLibDependency",
 	  "cfg" :  "api",
 	  "key" :  "fx-controls"

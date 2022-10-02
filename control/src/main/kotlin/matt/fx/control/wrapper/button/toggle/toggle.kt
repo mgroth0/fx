@@ -7,7 +7,7 @@ import matt.fx.control.wrapper.control.value.HasWritableValue
 import matt.hurricanefx.eye.lib.onChange
 import matt.obs.prop.BindableProperty
 
-class ValuedToggleButton<V>(value: V): matt.fx.control.wrapper.button.toggle.ToggleButtonWrapper(ToggleButton()),
+class ValuedToggleButton<V>(value: V): ToggleButtonWrapper(ToggleButton()),
 									   HasWritableValue<V> {
   override val valueProperty = BindableProperty(value)
 }

@@ -1,12 +1,11 @@
 package matt.fx.control.wrapper.menu.checkitem
 
-import javafx.beans.value.ObservableValue
 import javafx.scene.Node
 import javafx.scene.control.CheckMenuItem
+import matt.fx.control.wrapper.menu.item.MenuItemWrapper
 import matt.hurricanefx.eye.bind.smartBind
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.NonNullFXBackedBindableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
-import matt.hurricanefx.wrapper.menu.item.MenuItemWrapper
 import matt.obs.prop.ValProp
 
 class CheckMenuItemWrapper(

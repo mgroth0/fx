@@ -1,7 +1,7 @@
 package matt.fx.control.wrapper.virtualflow.clip
 
 import javafx.scene.layout.Region
-import matt.hurricanefx.wrapper.node.NodeWrapper
+import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.region.RegionWrapperImpl
 
 const val CLIPPED_CONTAINER_QNAME = "javafx.scene.control.skin.VirtualFlow.ClippedContainer"
