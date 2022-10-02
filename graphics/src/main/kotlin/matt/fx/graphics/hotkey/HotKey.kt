@@ -15,8 +15,8 @@ import matt.collect.itr.duplicates
 import matt.hotkey.Hotkey
 import matt.hotkey.HotkeyDSL
 import matt.hurricanefx.eye.prop.toggle
-import matt.hurricanefx.wrapper.target.EventTargetWrapper
 import matt.file.thismachine.thisMachine
+import matt.fx.graphics.wrapper.EventTargetWrapper
 import matt.lang.NEVER
 import matt.lang.err
 import matt.lang.go

@@ -5,7 +5,7 @@ import matt.fx.graphics.icon.ICON_HEIGHT
 import matt.fx.graphics.icon.ICON_WIDTH
 import matt.fx.graphics.icon.Icon
 import matt.fx.graphics.icon.IconImage
-import matt.hurricanefx.wrapper.canvas.CanvasWrapper
+import matt.fx.graphics.wrapper.canvas.CanvasWrapper
 import matt.hurricanefx.wrapper.node.NodeWrapper
 import matt.hurricanefx.wrapper.node.NodeWrapperImpl
 import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper

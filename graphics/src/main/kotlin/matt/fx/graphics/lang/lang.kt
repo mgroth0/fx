@@ -2,12 +2,8 @@ package matt.fx.graphics.lang
 
 import javafx.event.ActionEvent
 import javafx.scene.Node
-import javafx.scene.control.Control
+import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.hurricanefx.eye.lib.onChange
-import matt.hurricanefx.wrapper.control.button.ButtonWrapper
-import matt.hurricanefx.wrapper.node.NodeWrapper
-import matt.hurricanefx.wrapper.scene.SceneWrapper
-import matt.hurricanefx.wrapper.target.EventTargetWrapper
 import matt.lang.err
 import matt.lang.setAll
 
@@ -29,36 +25,6 @@ fun NodeWrapper.setOnFocusGained(op: ()->Unit) {
   }
 }
 
-fun actionbutton(text: String = "", graphic: NodeWrapper? = null, action: ButtonWrapper.(ActionEvent)->Unit) =
-  ButtonWrapper(text, graphic).apply {
-	setOnAction {
-	  action(it)
-	  it.consume()
-	}
-  }
-
-fun NodeWrapper.actionbutton(
-  text: String = "",
-  graphic: NodeWrapper? = null,
-  action: ButtonWrapper.(ActionEvent)->Unit
-) = ButtonWrapper(text, graphic).apply {
-  setOnAction {
-	action(it)
-	it.consume()
-  }
-  this@actionbutton.addChild(this)
-}
-
-infix fun ButtonWrapper.withAction(newOp: ()->Unit) = this.apply { op = newOp }
-
-fun EventTargetWrapper.removecontextmenu() {
-  if (this is Control) {
-	contextMenu = null
-  } else (this as? Node)?.apply {
-	setOnContextMenuRequested {
-	}
-  }
-}
 
 fun <T> MutableList<T>.setToSublist(start: Int, Stop: Int) {
   setAll(subList(start, Stop).toList())

@@ -6,8 +6,8 @@ import matt.hurricanefx.eye.prop.math.div
 import matt.hurricanefx.eye.prop.math.minus
 import matt.hurricanefx.eye.prop.math.times
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
-import matt.hurricanefx.wrapper.canvas.Canv
-import matt.hurricanefx.wrapper.canvas.CanvasWrapper
+import matt.fx.graphics.wrapper.canvas.Canv
+import matt.fx.graphics.wrapper.canvas.CanvasWrapper
 import matt.hurricanefx.wrapper.node.NodeWrapper
 import matt.hurricanefx.wrapper.node.attach
 import matt.fx.graphics.wrapper.region.RegionWrapperImpl

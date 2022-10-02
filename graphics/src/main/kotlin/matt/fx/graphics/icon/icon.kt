@@ -8,9 +8,9 @@ import matt.collect.map.lazyMap
 import matt.file.MFile
 import matt.file.commons.ICON_FOLDER
 import matt.fx.graphics.effect.INVERSION_EFFECT
+import matt.fx.graphics.wrapper.imageview.ImageViewWrapper
+import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.image.toFXImage
-import matt.hurricanefx.wrapper.imageview.ImageViewWrapper
-import matt.hurricanefx.wrapper.node.NodeWrapper
 import java.awt.RenderingHints.KEY_ALPHA_INTERPOLATION
 import java.awt.RenderingHints.KEY_ANTIALIASING
 import java.awt.RenderingHints.KEY_COLOR_RENDERING

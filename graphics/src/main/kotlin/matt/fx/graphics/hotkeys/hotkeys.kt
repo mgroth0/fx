@@ -4,7 +4,6 @@ import javafx.application.Platform.runLater
 import javafx.scene.paint.Color
 import javafx.stage.Stage
 import matt.fx.graphics.core.scene.MScene
-import matt.fx.graphics.core.scene.iconify
 import matt.fx.graphics.hotkey.HotKey
 import matt.fx.graphics.hotkey.hotkeys
 import matt.fx.graphics.mag.VarJson
@@ -28,10 +27,6 @@ import matt.fx.graphics.mag.right
 import matt.fx.graphics.mag.top
 import matt.fx.graphics.mag.topleft
 import matt.fx.graphics.mag.topright
-import matt.hurricanefx.wrapper.region.RegionWrapper
-import matt.hurricanefx.wrapper.region.RegionWrapperImpl
-import matt.hurricanefx.wrapper.region.border.FXBorder
-import matt.hurricanefx.wrapper.wrapped
 import matt.lang.go
 import java.lang.Thread.sleep
 import kotlin.concurrent.thread
