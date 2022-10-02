@@ -61,11 +61,6 @@
 	  "cfg" :  "api",
 	  "path" : ":k:fx:image"
 	},
-	{
-	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
-	  "cfg" :  "api",
-	  "path" : ":k:stream"
-	},
 
 	{
 	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
