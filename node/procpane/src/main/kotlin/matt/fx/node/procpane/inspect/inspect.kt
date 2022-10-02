@@ -6,8 +6,8 @@ import javafx.scene.control.TreeItem
 import javafx.scene.control.TreeTableColumn
 import matt.auto.process.ProcessOrHandleWrapper
 import matt.file.construct.mFile
-import matt.fx.control.tfx.item.treetableview
 import matt.fx.control.wrapper.control.treetable.populate
+import matt.fx.control.wrapper.control.treetable.treetableview
 import matt.fx.control.wrapper.label.LabelWrapper
 import matt.fx.control.wrapper.scroll.scrollpane
 import matt.fx.graphics.fxthread.ts.nonBlockingFXWatcher

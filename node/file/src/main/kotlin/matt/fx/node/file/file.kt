@@ -32,6 +32,7 @@ import matt.fx.control.win.interact.openInNewWindow
 import matt.fx.control.win.interact.safe
 import matt.fx.control.wrapper.checkbox.checkbox
 import matt.fx.control.wrapper.control.button.button
+import matt.fx.control.wrapper.control.spinner.spinner
 import matt.fx.control.wrapper.control.text.area.textarea
 import matt.fx.graphics.wrapper.imageview.imageview
 import matt.fx.graphics.wrapper.node.NodeWrapper

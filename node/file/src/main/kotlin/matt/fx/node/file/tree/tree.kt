@@ -84,7 +84,7 @@ fun fileTreeAndViewerPane(
 	  if (file != null) {
 		viewBox.add(file.value.createNode(renderHTMLAndSVG = true).apply {
 		  perfectBind(viewBox)
-		  specialTransferingToWindowAn„dBack(viewBox)
+		  specialTransferingToWindowAndBack(viewBox)
 		})
 	  }
 	}
@@ -256,7 +256,7 @@ private fun TreeLikeWrapper<*, MFile>.setupGUI() {
 		1    -> {
 		  "open in new window" does {
 			selectedValue?.let {
-			  VBoxWrapper<NodeWrapper>().apply {
+			  VBoxWrapperImpl<NodeWrapper>().apply {
 				val container = this
 				add(it.createNode(renderHTMLAndSVG = true).apply {
 				  perfectBind(container)
