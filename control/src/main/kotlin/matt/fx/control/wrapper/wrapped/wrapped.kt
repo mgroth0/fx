@@ -90,11 +90,18 @@ import matt.fx.control.wrapper.labeled.LabeledWrapper
 import matt.fx.control.wrapper.link.HyperlinkWrapper
 import matt.fx.control.wrapper.menu.checkitem.CheckMenuItemWrapper
 import matt.fx.control.wrapper.menu.radioitem.RadioMenuItemWrapper
+import matt.fx.control.wrapper.scroll.ScrollPaneWrapper
+import matt.fx.control.wrapper.split.SplitPaneWrapper
+import matt.fx.control.wrapper.tab.TabPaneWrapper
+import matt.fx.control.wrapper.titled.TitledPaneWrapper
+import matt.fx.control.wrapper.virtualflow.FlowLessVirtualFlowWrapper
+import matt.fx.control.wrapper.virtualflow.VirtualFlowWrapper
 import matt.fx.control.wrapper.virtualflow.clip.CLIPPED_CONTAINER_QNAME
 import matt.fx.control.wrapper.virtualflow.clip.ClippedContainerWrapper
 import matt.fx.graphics.wrapper.EventTargetWrapper
 import matt.fx.graphics.wrapper.EventTargetWrapperImpl
 import matt.fx.graphics.wrapper.SingularEventTargetWrapper
+import matt.fx.graphics.wrapper.group.GroupWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.line.arc.ArcWrapper
 import matt.fx.graphics.wrapper.node.parent.ParentWrapper
@@ -103,25 +110,20 @@ import matt.fx.graphics.wrapper.node.shape.ShapeWrapper
 import matt.fx.graphics.wrapper.node.shape.circle.CircleWrapper
 import matt.fx.graphics.wrapper.node.shape.ellipse.EllipseWrapper
 import matt.fx.graphics.wrapper.node.shape.rect.RectangleWrapper
-import matt.fx.graphics.wrapper.scene.SceneWrapper
-import matt.fx.graphics.wrapper.stage.StageWrapper
-import matt.fx.graphics.wrapper.subscene.SubSceneWrapper
-import matt.fx.graphics.wrapper.group.GroupWrapper
 import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
 import matt.fx.graphics.wrapper.pane.anchor.AnchorPaneWrapperImpl
 import matt.fx.graphics.wrapper.pane.border.BorderPaneWrapper
 import matt.fx.graphics.wrapper.pane.flow.FlowPaneWrapper
 import matt.fx.graphics.wrapper.pane.grid.GridPaneWrapper
 import matt.fx.graphics.wrapper.pane.hbox.HBoxWrapper
-import matt.fx.control.wrapper.scroll.ScrollPaneWrapper
-import matt.fx.control.wrapper.split.SplitPaneWrapper
-import matt.fx.control.wrapper.tab.TabPaneWrapper
-import matt.fx.control.wrapper.titled.TitledPaneWrapper
 import matt.fx.graphics.wrapper.pane.stack.StackPaneWrapper
 import matt.fx.graphics.wrapper.pane.tile.TilePaneWrapper
 import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapper
 import matt.fx.graphics.wrapper.region.RegionWrapper
 import matt.fx.graphics.wrapper.region.RegionWrapperImpl
+import matt.fx.graphics.wrapper.scene.SceneWrapper
+import matt.fx.graphics.wrapper.stage.StageWrapper
+import matt.fx.graphics.wrapper.subscene.SubSceneWrapper
 import matt.fx.graphics.wrapper.text.TextWrapper
 import matt.fx.graphics.wrapper.textflow.TextFlowWrapper
 import matt.fx.graphics.wrapper.window.WindowWrapper
@@ -267,12 +269,18 @@ fun Control.wrapped(): ControlWrapper = findWrapper() ?: when (this) {
   is FakeFocusTextField -> wrapped()
   is TextField          -> wrapped()
   is Spinner<*>         -> wrapped()
-  else                  -> when {
-	this::class.simpleName == "ScrollBarWidget" -> object: ControlWrapperImpl<Control>(this) {
-	  override fun addChild(child: NodeWrapper, index: Int?) = NEVER
-	}
+  else                  -> {
 
-	else                                        -> cannotFindWrapper()
+	when {
+	  this::class.simpleName == "ScrollBarWidget" -> {
+		val contrl: Control = this
+		object: ControlWrapperImpl<Control>(contrl) {
+		  override fun addChild(child: NodeWrapper, index: Int?) = NEVER
+		}
+	  }
+
+	  else                                        -> cannotFindWrapper()
+	}
   }
 }
 
@@ -294,7 +302,7 @@ fun Region.wrapped(): RegionWrapper<*> = findWrapper() ?: when (this) {
 	CLIPPED_CONTAINER_QNAME                                              -> ClippedContainerWrapper(this@wrapped)
 	"org.fxmisc.richtext.ParagraphBox"                                   -> ParagraphBoxWrapper(this@wrapped)
 	"org.fxmisc.flowless.Navigator"                                      -> NavigatorWrapper(this@wrapped)
-	"org.fxmisc.flowless.VirtualFlow"                                    -> VirtualFlowWrapper(this@wrapped)
+	"org.fxmisc.flowless.VirtualFlow"                                    -> FlowLessVirtualFlowWrapper(this@wrapped)
 	"eu.hansolo.fx.charts.CoxcombChart"                                  -> CoxCombWrapper(this@wrapped)
 	"eu.hansolo.fx.charts.matt.fx.control.wrapper.wrapped.SunburstChart" -> SunburstChart(this@wrapped)
 	else                                                                 -> cannotFindWrapper()
@@ -332,12 +340,6 @@ class NavigatorWrapper(val navigator: Region): RegionWrapperImpl<Region, NodeWra
   }
 }
 
-/*FlowLess*/
-class VirtualFlowWrapper(val vflow: Region): RegionWrapperImpl<Region, NodeWrapper>(vflow) {
-  override fun addChild(child: NodeWrapper, index: Int?) {
-	TODO("Not yet implemented")
-  }
-}
 
 fun Parent.wrapped(): ParentWrapper<*> = findWrapper() ?: when (this) {
   is Region -> wrapped()
