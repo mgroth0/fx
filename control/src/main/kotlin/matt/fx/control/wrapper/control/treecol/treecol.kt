@@ -32,6 +32,9 @@ class TreeTableColumnWrapper<E, P>(
   override val columns: ObservableList<TreeTableColumn<E, *>> = node.columns
 
   override val tableView: TreeTableViewWrapper<E>? get() = node.treeTableView?.wrapped()
+  override fun removeFromParent() {
+    node.treeTableView.columns.remove(node)
+  }
 
 
 }

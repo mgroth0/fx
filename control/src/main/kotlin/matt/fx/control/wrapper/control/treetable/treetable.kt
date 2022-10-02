@@ -21,6 +21,7 @@ import javafx.util.Callback
 import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.control.wrapper.control.tablelike.TableLikeWrapper
 import matt.fx.control.wrapper.control.tree.like.TreeLikeWrapper
+import matt.fx.control.wrapper.control.tree.like.populateTree
 import matt.fx.control.wrapper.control.treecol.TreeTableColumnWrapper
 import matt.fx.control.wrapper.wrapped.wrapped
 import matt.fx.graphics.wrapper.node.NodeWrapper

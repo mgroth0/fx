@@ -21,6 +21,8 @@ open class TabWrapper<C: NodeWrapper>(
   node: Tab = Tab()
 ): SingularEventTargetWrapper<Tab>(node) {
 
+  override fun isInsideRow() = false
+
   constructor(
 	text: String?,
 	content: C? = null

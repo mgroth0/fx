@@ -7,9 +7,9 @@ import javafx.scene.control.TableColumnBase
 import matt.fx.control.wrapper.control.tablelike.TableLikeWrapper
 import matt.fx.graphics.wrapper.EventTargetWrapperImpl
 import matt.fx.graphics.wrapper.node.NodeWrapper
+import matt.fx.graphics.wrapper.sizeman.WidthManaged
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
-import matt.fx.graphics.wrapper.sizeman.WidthManaged
 
 
 abstract class TableColumnBaseWrapper<E, P, F: TableColumnBase<E, P>>(
