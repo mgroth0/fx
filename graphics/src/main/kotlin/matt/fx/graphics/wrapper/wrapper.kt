@@ -16,7 +16,7 @@ interface EventTargetWrapper {
   val node: EventTarget
 
 
-  val properties: ObservableMap<Any, Any>
+  val properties: ObservableMap<Any, Any?>
 
   val childList: MutableList<Node>? get() = null
 

@@ -16,6 +16,7 @@ import javafx.scene.layout.RowConstraints
 import javafx.scene.layout.VBox
 import javafx.scene.text.Text
 import matt.fx.graphics.wrapper.node.parent.ParentWrapper
+import matt.fx.graphics.wrapper.node.parent.parent
 import matt.fx.graphics.wrapper.pane.grid.GridPaneWrapper
 
 
@@ -113,10 +114,10 @@ val ParentWrapper<*>.gridpaneColumnConstraints: ColumnConstraints?
 	var next = parent
 	while (next != null) {
 	  val gridReference = when {
-		next is GridPaneWrapper -> next to GridPane.getColumnIndex(cursor)?.let { it }
+		next is GridPaneWrapper -> next to GridPane.getColumnIndex(cursor)
 		// perhaps we're still in the row builder
 		next.parent == null     -> (next.properties[GridPaneParentObjectKey] as? GridPaneWrapper<*>)?.let {
-		  it to next!!.getChildList()?.indexOf(cursor)
+		  it to next!!.childList?.indexOf(cursor)
 		}
 
 		else                    -> null

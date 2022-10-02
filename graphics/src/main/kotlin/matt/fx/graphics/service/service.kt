@@ -1,11 +1,11 @@
 package matt.fx.graphics.service
 
+import javafx.event.EventTarget
 import javafx.scene.Node
 import matt.fx.graphics.wrapper.EventTargetWrapper
 import matt.model.convert.Converter
 import matt.service.MattService
 import matt.service.ServiceHub
-import org.w3c.dom.events.EventTarget
 
 interface WrapperService: MattService {
   fun <E: EventTarget> wrapped(e: E): EventTargetWrapper

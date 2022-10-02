@@ -16,43 +16,45 @@ import javafx.scene.layout.HBox
 import javafx.scene.layout.VBox
 import javafx.scene.paint.Color
 import javafx.util.StringConverter
-import matt.fx.graphics.wrapper.EventTargetWrapper
-import matt.hurricanefx.eye.mtofx.createROFXPropWrapper
-import matt.hurricanefx.wrapper.button.radio.ValuedRadioButton
-import matt.hurricanefx.wrapper.button.toggle.ValuedToggleButton
-import matt.hurricanefx.wrapper.buttonbar.ButtonBarWrapper
+import matt.fx.control.wrapper.button.radio.ValuedRadioButton
+import matt.fx.control.wrapper.button.toggle.ValuedToggleButton
+import matt.fx.control.wrapper.buttonbar.ButtonBarWrapper
+import matt.fx.control.wrapper.chart.area.AreaChartWrapper
+import matt.fx.control.wrapper.chart.axis.MAxis
+import matt.fx.control.wrapper.chart.bar.BarChartWrapper
+import matt.fx.control.wrapper.chart.bubble.BubbleChartWrapper
+import matt.fx.control.wrapper.chart.line.LineChartWrapper
+import matt.fx.control.wrapper.chart.pie.PieChartWrapper
+import matt.fx.control.wrapper.chart.scatter.ScatterChartWrapper
+import matt.fx.control.wrapper.chart.stackedbar.StackedBarChartWrapper
+import matt.fx.control.wrapper.checkbox.CheckBoxWrapper
+import matt.fx.control.wrapper.control.accordion.AccordionWrapper
+import matt.fx.control.wrapper.control.button.ButtonWrapper
+import matt.fx.control.wrapper.control.colorpick.ColorPickerWrapper
+import matt.fx.control.wrapper.control.datepick.DatePickerWrapper
+import matt.fx.control.wrapper.control.page.PaginationWrapper
+import matt.fx.control.wrapper.control.slider.SliderWrapper
+import matt.fx.control.wrapper.control.tab.TabWrapper
+import matt.fx.control.wrapper.control.text.area.TextAreaWrapper
+import matt.fx.control.wrapper.control.text.field.TextFieldWrapper
+import matt.fx.control.wrapper.control.text.field.pass.PasswordFieldWrapper
+import matt.fx.control.wrapper.label.LabelWrapper
+import matt.fx.control.wrapper.link.HyperlinkWrapper
+import matt.fx.control.wrapper.menu.button.MenuButtonWrapper
+import matt.fx.control.wrapper.menu.splitbutton.SplitMenuButtonWrapper
+import matt.fx.control.wrapper.menubar.MenuBarWrapper
+import matt.fx.control.wrapper.progressbar.ProgressBarWrapper
+import matt.fx.control.wrapper.progressindicator.ProgressIndicatorWrapper
+import matt.fx.control.wrapper.scroll.ScrollPaneWrapper
+import matt.fx.control.wrapper.sep.SeparatorWrapper
+import matt.fx.control.wrapper.split.SplitPaneWrapper
+import matt.fx.control.wrapper.titled.TitledPaneWrapper
+import matt.fx.control.wrapper.toolbar.ToolBarWrapper
+import matt.fx.graphics.dsl.GraphicsDSL
 import matt.fx.graphics.wrapper.canvas.CanvasWrapper
-import matt.hurricanefx.wrapper.chart.area.AreaChartWrapper
-import matt.hurricanefx.wrapper.chart.axis.MAxis
-import matt.hurricanefx.wrapper.chart.bar.BarChartWrapper
-import matt.hurricanefx.wrapper.chart.bubble.BubbleChartWrapper
-import matt.hurricanefx.wrapper.chart.line.LineChartWrapper
-import matt.hurricanefx.wrapper.chart.pie.PieChartWrapper
-import matt.hurricanefx.wrapper.chart.scatter.ScatterChartWrapper
-import matt.hurricanefx.wrapper.chart.stackedbar.StackedBarChartWrapper
-import matt.hurricanefx.wrapper.checkbox.CheckBoxWrapper
-import matt.hurricanefx.wrapper.checkbox.bind
-import matt.hurricanefx.wrapper.control.accordion.AccordionWrapper
-import matt.hurricanefx.wrapper.control.button.ButtonWrapper
-import matt.hurricanefx.wrapper.control.colorpick.ColorPickerWrapper
-import matt.hurricanefx.wrapper.control.colorpick.bind
-import matt.hurricanefx.wrapper.control.datepick.DatePickerWrapper
-import matt.hurricanefx.wrapper.control.datepick.bind
-import matt.hurricanefx.wrapper.control.page.PaginationWrapper
-import matt.hurricanefx.wrapper.control.slider.SliderWrapper
-import matt.hurricanefx.wrapper.control.tab.TabWrapper
-import matt.hurricanefx.wrapper.control.text.area.TextAreaWrapper
-import matt.hurricanefx.wrapper.control.text.field.TextFieldWrapper
-import matt.hurricanefx.wrapper.control.text.field.pass.PasswordFieldWrapper
 import matt.fx.graphics.wrapper.group.GroupWrapper
-import matt.hurricanefx.wrapper.label.LabelWrapper
-import matt.hurricanefx.wrapper.link.HyperlinkWrapper
-import matt.hurricanefx.wrapper.menu.button.MenuButtonWrapper
-import matt.hurricanefx.wrapper.menu.splitbutton.SplitMenuButtonWrapper
-import matt.hurricanefx.wrapper.menubar.MenuBarWrapper
-import matt.hurricanefx.wrapper.node.NodeWrapper
-import matt.hurricanefx.wrapper.node.attach
-import matt.hurricanefx.wrapper.node.attachTo
+import matt.fx.graphics.wrapper.node.NodeWrapper
+import matt.fx.graphics.wrapper.node.attach
 import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
 import matt.fx.graphics.wrapper.pane.SimplePaneWrapper
 import matt.fx.graphics.wrapper.pane.anchor.AnchorPaneWrapperImpl
@@ -61,22 +63,12 @@ import matt.fx.graphics.wrapper.pane.border.BorderPaneWrapper
 import matt.fx.graphics.wrapper.pane.flow.FlowPaneWrapper
 import matt.fx.graphics.wrapper.pane.grid.GridPaneWrapper
 import matt.fx.graphics.wrapper.pane.hbox.HBoxWrapper
-import matt.fx.control.wrapper.scroll.ScrollPaneWrapper
-import matt.fx.graphics.wrapper.pane.split.SplitPaneWrapper
 import matt.fx.graphics.wrapper.pane.stack.StackPaneWrapper
-import matt.fx.graphics.wrapper.pane.tab.TabPaneWrapper
 import matt.fx.graphics.wrapper.pane.tile.TilePaneWrapper
-import matt.fx.graphics.wrapper.pane.titled.TitledPaneWrapper
 import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapper
-import matt.hurricanefx.wrapper.progressbar.ProgressBarWrapper
-import matt.hurricanefx.wrapper.progressbar.bind
-import matt.hurricanefx.wrapper.progressindicator.ProgressIndicatorWrapper
-import matt.hurricanefx.wrapper.progressindicator.bind
-import matt.hurricanefx.wrapper.sep.SeparatorWrapper
-import matt.fx.graphics.wrapper.target.properties
 import matt.fx.graphics.wrapper.text.TextWrapper
 import matt.fx.graphics.wrapper.textflow.TextFlowWrapper
-import matt.hurricanefx.wrapper.toolbar.ToolBarWrapper
+import matt.hurricanefx.eye.mtofx.createROFXPropWrapper
 import matt.lang.err
 import matt.lang.go
 import matt.model.convert.MyNumberStringConverter
@@ -89,8 +81,8 @@ import matt.obs.prop.VarProp
 import java.time.LocalDate
 import kotlin.reflect.KFunction
 
-interface ControlDSL: EventTargetWrapper {
-  fun getToggleGroup(): ToggleGroup? = node.properties["tornadofx.togglegroup"] as ToggleGroup?
+interface ControlDSL: GraphicsDSL {
+  fun getToggleGroup(): ToggleGroup? = properties["tornadofx.togglegroup"] as ToggleGroup?
 
 
   fun functionButton(func: KFunction<Unit>) {
