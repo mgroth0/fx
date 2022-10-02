@@ -3,6 +3,8 @@ package matt.fx.control.wrapper.control.table
 import javafx.application.Platform
 import javafx.beans.property.BooleanProperty
 import javafx.beans.property.ObjectProperty
+import javafx.beans.property.Property
+import javafx.beans.property.ReadOnlyListProperty
 import javafx.beans.property.ReadOnlyObjectProperty
 import javafx.beans.property.ReadOnlyObjectWrapper
 import javafx.beans.property.SimpleObjectProperty
@@ -10,6 +12,7 @@ import javafx.beans.value.ObservableValue
 import javafx.collections.ListChangeListener
 import javafx.collections.ObservableList
 import javafx.scene.control.SelectionMode
+import javafx.scene.control.TableCell
 import javafx.scene.control.TableColumn
 import javafx.scene.control.TablePosition
 import javafx.scene.control.TableView
@@ -25,17 +28,84 @@ import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.control.wrapper.control.column.TableColumnWrapper
 import matt.fx.control.wrapper.control.tablelike.TableLikeWrapper
 import matt.fx.control.wrapper.wrapped.wrapped
+import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
+import matt.fx.graphics.wrapper.node.attachTo
 import matt.hurricanefx.eye.lib.onChange
 import matt.hurricanefx.eye.prop.getValue
 import matt.hurricanefx.eye.prop.observable
 import matt.hurricanefx.eye.prop.setValue
+import matt.hurricanefx.eye.wrapper.obs.collect.createFXWrapper
 import matt.lang.decap
+import matt.obs.col.olist.ObsList
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 import kotlin.reflect.KMutableProperty1
 import kotlin.reflect.KProperty1
 
+
+fun <T> TableViewWrapper<T>.selectOnDrag() {
+  var startRow = 0
+  var startColumn = columns.first()
+
+  // Record start position and clear selection unless Control is down
+  addEventFilter(MouseEvent.MOUSE_PRESSED) {
+	startRow = 0
+
+	(it.pickResult.intersectedNode as? TableCell<*, *>)?.apply {
+	  startRow = index
+	  @Suppress("UNCHECKED_CAST")
+	  startColumn = tableColumn as TableColumn<T, *>?
+
+	  if (selectionModel.isCellSelectionEnabled) {
+		selectionModel.clearAndSelect(startRow, startColumn)
+	  } else {
+		selectionModel.clearAndSelect(startRow)
+	  }
+	}
+  }
+
+  // Select items while dragging
+  addEventFilter(MouseEvent.MOUSE_DRAGGED) {
+	(it.pickResult.intersectedNode as? TableCell<*, *>)?.apply {
+	  if (items.size > index) {
+		if (selectionModel.isCellSelectionEnabled) {
+		  @Suppress("UNCHECKED_CAST")
+		  selectionModel.selectRange(startRow, startColumn, index, tableColumn as TableColumn<T, *>?)
+		} else {
+		  selectionModel.selectRange(startRow, index)
+		}
+	  }
+	}
+  }
+}
+
+
+
+fun <T> TableViewWrapper<T>.bindSelected(property: Property<T>) {
+  selectionModel.selectedItemProperty().onChange {
+	property.value = it
+  }
+}
+
+
+fun <T> ET.tableview(items: ObsList<T>? = null, op: TableViewWrapper<T>.()->Unit = {}) =
+  TableViewWrapper<T>().attachTo(this, op) {
+	if (items != null) {
+	  it.items = items.createFXWrapper()
+	}
+  }
+
+fun <T> ET.tableview(items: ReadOnlyListProperty<T>, op: TableViewWrapper<T>.()->Unit = {}) =
+  tableview(items as ObservableValue<ObservableList<T>>, op)
+
+fun <T> ET.tableview(
+  items: ObservableValue<out ObservableList<T>>,
+  op: TableViewWrapper<T>.()->Unit = {}
+) =
+  TableViewWrapper<T>().attachTo(this, op) {
+	it.itemsProperty().bind(items)
+  }
 
 open class TableViewWrapper<E>(
   node: TableView<E> = TableView<E>(),

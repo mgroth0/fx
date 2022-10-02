@@ -10,7 +10,16 @@ import javafx.util.Callback
 import matt.fx.control.wrapper.cellfact.TreeCellFactory
 import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.control.wrapper.control.tree.like.TreeLikeWrapper
+import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
+import matt.fx.graphics.wrapper.node.attachTo
+
+
+fun <T> ET.treeview(root: TreeItem<T>? = null, op: TreeViewWrapper<T>.()->Unit = {}) =
+  TreeViewWrapper<T>().attachTo(this, op) {
+	if (root != null) it.root = root
+  }
+
 
 class TreeViewWrapper<T>( node: TreeView<T> = TreeView(), op: TreeViewWrapper<T>.()->Unit = {}):
   ControlWrapperImpl<TreeView<T>>(node),

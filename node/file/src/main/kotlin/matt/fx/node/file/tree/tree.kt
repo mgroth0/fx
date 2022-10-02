@@ -84,7 +84,7 @@ fun fileTreeAndViewerPane(
 	  if (file != null) {
 		viewBox.add(file.value.createNode(renderHTMLAndSVG = true).apply {
 		  perfectBind(viewBox)
-		  specialTransferingToWindowAndBack(viewBox)
+		  specialTransferingToWindowAn„dBack(viewBox)
 		})
 	  }
 	}

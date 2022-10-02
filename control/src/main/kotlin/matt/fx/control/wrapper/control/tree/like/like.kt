@@ -9,6 +9,16 @@ import matt.fx.control.wrapper.selects.SelectingControl
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.region.RegionWrapper
 import matt.fx.graphics.wrapper.sizeman.SizeManaged
+fun <T> TreeItem<T>.treeitem(value: T? = null, op: TreeItem<T>.()->Unit = {}): TreeItem<T> {
+  val treeItem = value?.let { TreeItem<T>(it) } ?: TreeItem<T>()
+  treeItem.op()
+  this += treeItem
+  return treeItem
+}
+
+operator fun <T> TreeItem<T>.plusAssign(treeItem: TreeItem<T>) {
+  this.children.add(treeItem)
+}
 
 interface TreeLikeWrapper<N: Region, T>: RegionWrapper<NodeWrapper>, SelectingControl<TreeItem<T>>, SizeManaged {
   var root: TreeItem<T>

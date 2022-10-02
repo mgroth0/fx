@@ -2,6 +2,7 @@ package matt.fx.control.wrapper.control.combo
 
 import javafx.beans.property.BooleanProperty
 import javafx.beans.property.ObjectProperty
+import javafx.beans.property.Property
 import javafx.beans.property.StringProperty
 import javafx.beans.value.ObservableValue
 import javafx.collections.ObservableList
@@ -15,8 +16,27 @@ import javafx.util.StringConverter
 import matt.fx.control.wrapper.cellfact.ListCellFactory
 import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.control.wrapper.selects.SelectingControl
+import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
+import matt.fx.graphics.wrapper.node.attachTo
 import matt.hurricanefx.eye.bind.smartBind
+import matt.hurricanefx.eye.collect.asObservable
+import matt.hurricanefx.eye.lib.onChange
+
+fun <T> ComboBoxWrapper<T>.bindSelected(property: Property<T>) {
+  selectionModel.selectedItemProperty().onChange {
+	property.value = it
+  }
+}
+fun <T> ET.combobox(
+  property: Property<T>? = null,
+  values: List<T>? = null,
+  op: ComboBoxWrapper<T>.()->Unit = {}
+) =
+  ComboBoxWrapper<T>().attachTo(this, op) {
+	if (values != null) it.items = values as? ObservableList<T> ?: values.asObservable()
+	if (property != null) it.bind(property)
+  }
 
 class ComboBoxWrapper<E>(
   node: ComboBox<E> = ComboBox<E>(),

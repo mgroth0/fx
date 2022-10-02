@@ -12,15 +12,58 @@ import javafx.util.StringConverter
 import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.control.wrapper.control.value.HasWritableValue
 import matt.fx.control.wrapper.selects.SelectingControl
+import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
+import matt.fx.graphics.wrapper.node.attachTo
 import matt.hurricanefx.eye.bind.smartBind
+import matt.hurricanefx.eye.collect.asObservable
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.NullableFXBackedBindableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
 import matt.lang.go
+import matt.obs.prop.BindableProperty
 import matt.obs.prop.ValProp
 import matt.prim.str.upper
 import matt.time.dur.sec
 import java.lang.System.currentTimeMillis
+import kotlin.contracts.InvocationKind.EXACTLY_ONCE
+import kotlin.contracts.contract
+
+inline fun <T> ET.choicebox(
+  property: BindableProperty<T?>? = null,
+  values: List<T>? = null,
+  op: ChoiceBoxWrapper<T>.()->Unit = {}
+): ChoiceBoxWrapper<T> {
+  contract {
+	callsInPlace(op, kotlin.contracts.InvocationKind.EXACTLY_ONCE)
+  }
+  return ChoiceBoxWrapper<T>().attachTo(this, op) {
+	if (values != null) it.items = (values as? ObservableList<T>) ?: values.asObservable()
+	if (property != null) it.bind(property)
+  }
+}
+
+inline fun <T> ET.choicebox(
+  property: BindableProperty<T?>? = null,
+  values: Array<T>? = null,
+  op: ChoiceBoxWrapper<T>.()->Unit = {}
+) = choicebox(property, values?.toList(), op)
+
+
+inline fun <T> choicebox(
+  property: BindableProperty<T>? = null,
+  values: List<T>? = null,
+  op: ChoiceBoxWrapper<T>.()->Unit = {}
+): ChoiceBoxWrapper<T> {
+  contract {
+	callsInPlace(op, EXACTLY_ONCE)
+  }
+  return ChoiceBoxWrapper<T>().also {
+	it.op()
+	if (values != null) it.items = (values as? ObservableList<T>) ?: values.asObservable()
+	if (property != null) it.bind(property)
+  }
+}
+
 
 class ChoiceBoxWrapper<T>(
   node: ChoiceBox<T> = ChoiceBox(),

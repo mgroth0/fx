@@ -8,6 +8,7 @@ import javafx.collections.ObservableList
 import javafx.scene.control.TableColumn
 import javafx.scene.control.TreeItem
 import javafx.scene.control.TreeTableColumn
+import javafx.scene.control.TreeTablePosition
 import javafx.scene.control.TreeTableRow
 import javafx.scene.control.TreeTableView
 import javafx.scene.control.TreeTableView.ResizeFeatures
@@ -24,13 +25,29 @@ import matt.fx.control.wrapper.control.tree.like.TreeLikeWrapper
 import matt.fx.control.wrapper.control.tree.like.populateTree
 import matt.fx.control.wrapper.control.treecol.TreeTableColumnWrapper
 import matt.fx.control.wrapper.wrapped.wrapped
+import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
+import matt.fx.graphics.wrapper.node.attachTo
 import matt.hurricanefx.eye.lib.onChange
 import matt.hurricanefx.eye.prop.observable
 import matt.lang.decap
 import kotlin.reflect.KFunction
 import kotlin.reflect.KMutableProperty1
 import kotlin.reflect.KProperty1
+
+val <T> TreeTableViewWrapper<T>.selectedCell: TreeTablePosition<T, *>?
+  get() = selectionModel.selectedCells.firstOrNull()
+
+val <T> TreeTableViewWrapper<T>.selectedColumn: TreeTableColumn<T, *>?
+  get() = selectedCell?.tableColumn
+
+//val <T> TreeTableViewWrapper<T>.selectedValue: Any?
+//  get() = selectedColumn?.getCellObservableValue(selectionModel.selectedItem)?.value
+
+fun <T> ET.treetableview(root: TreeItem<T>? = null, op: TreeTableViewWrapper<T>.()->Unit = {}) =
+  TreeTableViewWrapper<T>().attachTo(this, op) {
+	if (root != null) it.root = root
+  }
 
 class TreeTableViewWrapper<E>(
   node: TreeTableView<E> = TreeTableView(),

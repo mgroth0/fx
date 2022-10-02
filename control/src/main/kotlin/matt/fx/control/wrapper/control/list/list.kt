@@ -2,6 +2,7 @@ package matt.fx.control.wrapper.control.list
 
 import javafx.beans.property.BooleanProperty
 import javafx.beans.property.ObjectProperty
+import javafx.beans.property.ReadOnlyListProperty
 import javafx.beans.value.ObservableValue
 import javafx.collections.ObservableList
 import javafx.scene.control.ListCell
@@ -11,9 +12,28 @@ import javafx.util.Callback
 import matt.fx.control.wrapper.cellfact.ListCellFactory
 import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.control.wrapper.selects.SelectingControl
+import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
+import matt.fx.graphics.wrapper.node.attachTo
 
 
+fun <T> ET.listview(values: ObservableList<T>? = null, op: ListViewWrapper<T>.()->Unit = {}) =
+  ListViewWrapper<T>().attachTo(this, op) {
+	if (values != null) {
+	  it.items = values
+	}
+  }
+
+fun <T> ET.listview(values: ReadOnlyListProperty<T>, op: ListViewWrapper<T>.()->Unit = {}) =
+  listview(values as ObservableValue<ObservableList<T>>, op)
+
+fun <T> ET.listview(
+  values: ObservableValue<ObservableList<T>>,
+  op: ListViewWrapper<T>.()->Unit = {}
+) =
+  ListViewWrapper<T>().attachTo(this, op) {
+	it.itemsProperty().bind(values)
+  }
 open class ListViewWrapper<E>(
    node: ListView<E> = ListView<E>(),
 ): ControlWrapperImpl<ListView<E>>(node), SelectingControl<E>, ListCellFactory<ListView<E>, E> {
