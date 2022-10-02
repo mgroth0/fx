@@ -76,6 +76,8 @@ interface NodeWrapper: EventTargetWrapper, StyleableWrapper {
   val visibleAndManagedProp: BindableProperty<Boolean>
 
 
+  override val properties get() = node.properties
+
 
   val hoverProperty: ObsVal<Boolean>
 

@@ -10,7 +10,7 @@ import matt.hurricanefx.wrapper.canvas.Canv
 import matt.hurricanefx.wrapper.canvas.CanvasWrapper
 import matt.hurricanefx.wrapper.node.NodeWrapper
 import matt.hurricanefx.wrapper.node.attach
-import matt.hurricanefx.wrapper.region.RegionWrapperImpl
+import matt.fx.graphics.wrapper.region.RegionWrapperImpl
 import matt.hurricanefx.wrapper.target.EventTargetWrapper
 import matt.lang.NEVER
 import matt.obs.bindings.math.div

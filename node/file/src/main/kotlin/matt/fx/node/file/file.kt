@@ -39,8 +39,8 @@ import matt.hurricanefx.wrapper.node.NodeWrapper
 import matt.hurricanefx.wrapper.node.disableWhen
 import matt.hurricanefx.wrapper.pane.SimplePaneWrapper
 import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
-import matt.hurricanefx.wrapper.region.RegionWrapper
-import matt.hurricanefx.wrapper.text.TextWrapper
+import matt.fx.graphics.wrapper.region.RegionWrapper
+import matt.fx.graphics.wrapper.text.TextWrapper
 import matt.lang.err
 import matt.obs.prop.BindableProperty
 import matt.time.dur.sec

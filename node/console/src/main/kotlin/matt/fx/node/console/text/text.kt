@@ -14,8 +14,8 @@ import matt.hurricanefx.toFXDuration
 import matt.hurricanefx.tornadofx.animation.keyframe
 import matt.hurricanefx.tornadofx.animation.timeline
 import matt.hurricanefx.wrapper.node.NodeWrapper
-import matt.hurricanefx.wrapper.text.TextWrapper
-import matt.hurricanefx.wrapper.text.textlike.applyConsoleStyle
+import matt.fx.graphics.wrapper.text.TextWrapper
+import matt.fx.graphics.wrapper.text.textlike.applyConsoleStyle
 import matt.hurricanefx.wrapper.textflow.TextFlowWrapper
 import matt.lang.ifTrueOrNull
 import matt.time.dur.ms

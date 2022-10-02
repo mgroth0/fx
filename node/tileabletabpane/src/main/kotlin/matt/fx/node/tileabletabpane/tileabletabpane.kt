@@ -16,7 +16,7 @@ import matt.hurricanefx.wrapper.node.NodeWrapper
 import matt.hurricanefx.wrapper.pane.PaneWrapperImpl
 import matt.hurricanefx.wrapper.pane.tab.TabPaneWrapper
 import matt.hurricanefx.wrapper.pane.vbox.VBoxWrapper
-import matt.hurricanefx.wrapper.region.RegionWrapper
+import matt.fx.graphics.wrapper.region.RegionWrapper
 import matt.obs.bindings.math.div
 import java.util.concurrent.Semaphore
 

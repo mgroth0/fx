@@ -45,7 +45,7 @@ open class SceneWrapper<R: ParentWrapper<*>>(
   val window: Window? get() = node.window
   val stage get() = WrapperServiceHub.get().wrapped(window!! as Stage) as StageWrapper
 
-
+  override val properties get() = node.properties
   fun reloadStylesheets() {
 	val styles = stylesheets.toMutableList()
 	stylesheets.clear()

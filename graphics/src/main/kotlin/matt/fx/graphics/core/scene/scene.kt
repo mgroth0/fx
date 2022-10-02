@@ -25,6 +25,7 @@ import matt.fx.graphics.icon.Icon
 import matt.fx.graphics.mag.VarJson
 import matt.fx.graphics.menu.context.mcontextmenu
 import matt.fx.graphics.menu.context.showMContextMenu
+import matt.fx.graphics.service.WrapperServiceHub
 import matt.fx.graphics.style.CUSTOM_CSS
 import matt.fx.graphics.style.DARK_MODENA_CSS
 import matt.fx.graphics.style.DarkModeController.darkModeProp
@@ -32,6 +33,10 @@ import matt.fx.graphics.win.interact.WinGeom
 import matt.fx.graphics.win.interact.WinOwn
 import matt.fx.graphics.win.interact.openInNewWindow
 import matt.fx.graphics.win.winfun.noDocking
+import matt.fx.graphics.wrapper.node.parent.ParentWrapper
+import matt.fx.graphics.wrapper.region.RegionWrapper
+import matt.fx.graphics.wrapper.scene.SceneWrapper
+import matt.fx.graphics.wrapper.stage.StageWrapper
 import matt.log.tab
 import matt.stream.recurse.recurse
 import java.net.URL
@@ -132,6 +137,7 @@ open class MScene<R: ParentWrapper<*>>(
 			(it as? Parent)?.childrenUnmodifiable ?: listOf()
 		  }.forEach {
 			if (it::class !in classesPrinted) {
+			  WrapperServiceHub
 			  println(it.wrapped().styleInfo())
 			  classesPrinted += it::class
 			}
@@ -167,39 +173,3 @@ open class MScene<R: ParentWrapper<*>>(
   fun iconify() = iconify(icon)
 }
 
-
-fun SceneWrapper<*>.iconify(icon: MFile) {
-  var iconWindow: StageWrapper? = null
-  println("making icon with $icon")
-  VBoxWrapper(Icon(icon)).apply {
-	var xOffset: Double? = null
-	var yOffset: Double? = null
-	setOnMousePressed { e ->
-	  iconWindow?.let {
-		xOffset = it.x - e.screenX
-		yOffset = it.y - e.screenY
-	  }
-	}
-	setOnMouseDragged {
-	  iconWindow?.x = it.screenX + (xOffset ?: 0.0)
-	  iconWindow?.y = it.screenY + (yOffset ?: 0.0)
-	}
-	setOnDoubleClick {
-	  (this@iconify.window as Stage).show()
-	  (scene!!.window as Stage).close()
-	}
-  }.openInNewWindow(own = WinOwn.None, geom = WinGeom.ManualOr0(
-	width = ICON_WIDTH,
-	height = ICON_HEIGHT,
-	x = this@iconify.window!!.x + (this@iconify.window!!.width/2) - (ICON_WIDTH/2),
-	y = this@iconify.window!!.y + (this@iconify.window!!.height/2) - (ICON_HEIGHT/2),
-  ), mScene = false, border = false, beforeShowing = {
-	scene!!.reloadStyle(darkModeProp.value)
-	darkModeProp.onChangeWithWeak(this) { scene!!.reloadStyle(darkModeProp.value) }
-  }).apply {
-	iconWindow = this
-	isAlwaysOnTop = true
-	noDocking()
-  }
-  window!!.hide()
-}

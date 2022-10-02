@@ -14,9 +14,9 @@ import matt.fx.graphics.fxthread.runLaterReturn
 import matt.fx.node.tileabletabpane.TileableTabPane
 import matt.hurricanefx.wrapper.node.NodeWrapper
 import matt.hurricanefx.wrapper.pane.scroll.ScrollPaneWrapper
-import matt.hurricanefx.wrapper.region.RegionWrapper
-import matt.hurricanefx.wrapper.text.TextWrapper
-import matt.hurricanefx.wrapper.text.textlike.applyConsoleStyle
+import matt.fx.graphics.wrapper.region.RegionWrapper
+import matt.fx.graphics.wrapper.text.TextWrapper
+import matt.fx.graphics.wrapper.text.textlike.applyConsoleStyle
 import matt.hurricanefx.wrapper.textflow.TextFlowWrapper
 import matt.hurricanefx.wrapper.wrapped
 import matt.log.debug
