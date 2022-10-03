@@ -103,7 +103,7 @@ class ChoiceBoxWrapper<T>(
 	  if (e.code !in listOf(ESCAPE, SPACE, ENTER)) {
 		e.character.go { letter ->
 		  val now = currentTimeMillis()
-		  if (lastKey != null && (now - lastKey!! > timer.inMilliseconds)) recent = ""
+		  if (lastKey != null && (now - lastKey!! > timer.inWholeMilliseconds)) recent = ""
 		  lastKey = now
 
 		  recent += letter.upper()
