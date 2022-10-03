@@ -36,7 +36,7 @@ import matt.hurricanefx.eye.prop.getValue
 import matt.hurricanefx.eye.prop.observable
 import matt.hurricanefx.eye.prop.setValue
 import matt.hurricanefx.eye.wrapper.obs.collect.createFXWrapper
-import matt.lang.decap
+import matt.prim.str.decap
 import matt.obs.col.olist.ObsList
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction

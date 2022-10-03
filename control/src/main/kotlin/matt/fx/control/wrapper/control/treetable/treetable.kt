@@ -30,7 +30,7 @@ import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.hurricanefx.eye.lib.onChange
 import matt.hurricanefx.eye.prop.observable
-import matt.lang.decap
+import matt.prim.str.decap
 import kotlin.reflect.KFunction
 import kotlin.reflect.KMutableProperty1
 import kotlin.reflect.KProperty1
