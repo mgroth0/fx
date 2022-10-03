@@ -21,7 +21,7 @@ import matt.fx.graphics.wrapper.text.textlike.applyConsoleStyle
 import matt.fx.graphics.wrapper.textflow.TextFlowWrapper
 import matt.fx.node.tileabletabpane.TileableTabPane
 import matt.log.debug
-import matt.log.profile.println_withtime
+import matt.log.profile.printlnWithTime
 import java.util.concurrent.Semaphore
 
 class StatusFolderWatchPane(val folder: MFile): TileableTabPane(
@@ -106,7 +106,7 @@ class StatusFolderWatchPane(val folder: MFile): TileableTabPane(
 	  panes = folder.listFiles()!!.filter { it.extension == "status" }.map {
 		it.nameWithoutExtension to filenode(it).apply {
 		  if (false) {
-			println_withtime("DEBUG:${(this.content as TextFlow).children.joinToString { t -> (t as Text).text }}")
+			printlnWithTime("DEBUG:${(this.content as TextFlow).children.joinToString { t -> (t as Text).text }}")
 		  }
 		}
 
