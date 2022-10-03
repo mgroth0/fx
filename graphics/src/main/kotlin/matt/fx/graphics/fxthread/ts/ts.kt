@@ -3,6 +3,9 @@ package matt.fx.graphics.fxthread.ts
 import javafx.application.Platform.runLater
 import matt.fx.graphics.fxthread.ensureInFXThreadInPlace
 import matt.fx.graphics.fxthread.ensureInFXThreadOrRunLater
+import matt.obs.col.change.mirror
+import matt.obs.col.olist.ObsList
+import matt.obs.col.olist.toBasicObservableList
 import matt.obs.prop.BindableProperty
 import matt.obs.prop.ObsVal
 
@@ -35,3 +38,24 @@ class ThreadSafeProp<T>(value: T): BindableProperty<T>(value) {
 	  }
 	}
 }
+
+fun <E> ObsList<E>.nonBlockingFXWatcher(): ObsList<E> {
+  val fxList = this.toList().toBasicObservableList()
+  onChange {
+	ensureInFXThreadOrRunLater {
+	  fxList.mirror(it)
+	}
+  }
+  return fxList
+}
+
+fun <E> ObsList<E>.blockingFXWatcher(): ObsList<E> {
+  val fxList = this.toList().toBasicObservableList()
+  onChange {
+	ensureInFXThreadInPlace {
+	  fxList.mirror(it)
+	}
+  }
+  return fxList
+}
+

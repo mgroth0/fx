@@ -14,6 +14,7 @@ import matt.model.convert.Converter
 import matt.obs.col.olist.MutableObsList
 import matt.obs.col.olist.mappedlist.toSyncedList
 
+fun <X, Y> MutableList<Data<X, Y>>.add(x: X, y: Y) = add(Data(x, y))
 
 open class XYChartWrapper<X, Y, N: XYChart<X, Y>>(node: N): ChartWrapper<N>(node) {
 

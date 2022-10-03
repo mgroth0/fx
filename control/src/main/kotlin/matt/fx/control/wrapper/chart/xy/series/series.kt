@@ -25,7 +25,7 @@ class SeriesWrapper<X, Y>(internal val series: Series<X, Y> = Series<X, Y>()) {
 	wrappers[series] = this
   }
 
-  val nameProperty by lazy { series.nameProperty().toNullableProp().proxy(NullToBlankStringConverter.inverted) }
+  val nameProperty by lazy { series.nameProperty().toNullableProp().proxyInv(NullToBlankStringConverter) }
   var name by nameProperty
 
   val dataProperty by lazy {

@@ -57,7 +57,7 @@ open class MenuItemWrapper<N: MenuItem>(
 	  node.text = value
 	}
 
-  val textProperty by lazy { node.textProperty().toNullableProp().proxy(NullToBlankStringConverter.inverted) }
+  val textProperty by lazy { node.textProperty().toNullableProp().proxyInv(NullToBlankStringConverter) }
 
 
   var graphic: Node?
