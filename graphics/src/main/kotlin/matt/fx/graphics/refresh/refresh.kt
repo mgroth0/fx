@@ -4,7 +4,7 @@ import matt.async.schedule.MyTimerTask
 import matt.async.schedule.every
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.hurricanefx.eye.lib.onChange
-import matt.time.dur.Duration
+import kotlin.time.Duration
 
 fun <T: NodeWrapper> T.refreshWhileInSceneEvery(
   refreshRate: Duration,

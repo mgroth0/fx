@@ -7,8 +7,8 @@ import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.lang.function.MetaFunction
 import matt.model.latch.SimpleLatch
 import matt.service.scheduler.Scheduler
-import matt.time.dur.Duration
 import kotlin.concurrent.thread
+import kotlin.time.Duration
 
 fun <T> runLaterReturn(op: ()->T): T {
   /*todo: can check if this is application thread and if so just run op in place*/
@@ -41,7 +41,7 @@ inline fun ensureInFXThreadOrRunLater(crossinline op: ()->Unit) {
 
 fun runMuchLater(d: Duration, op: ()->Unit) {
   thread {
-	Thread.sleep(d.inMilliseconds.toLong())
+	Thread.sleep(d.inWholeMilliseconds)
 	runLater {
 	  op()
 	}
