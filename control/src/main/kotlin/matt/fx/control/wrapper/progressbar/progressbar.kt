@@ -1,13 +1,14 @@
 package matt.fx.control.wrapper.progressbar
 
 import javafx.beans.property.DoubleProperty
-import javafx.beans.value.ObservableValue
 import javafx.scene.control.ProgressBar
 import matt.fx.control.wrapper.control.ControlWrapperImpl
+import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.hurricanefx.eye.bind.smartBind
-import matt.fx.graphics.wrapper.ET
+import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.obs.prop.ObsVal
 
 
 fun ET.progressbar(initialValue: Double? = null, op: ProgressBarWrapper.()->Unit = {}) =
@@ -15,13 +16,13 @@ fun ET.progressbar(initialValue: Double? = null, op: ProgressBarWrapper.()->Unit
 	if (initialValue != null) it.progress = initialValue
   }
 
-fun ET.progressbar(property: ObservableValue<Number>, op: ProgressBarWrapper.()->Unit = {}) = progressbar().apply {
+fun ET.progressbar(property: ObsVal<Number>, op: ProgressBarWrapper.()->Unit = {}) = progressbar().apply {
   bind(property)
   op(this)
 }
 
 class ProgressBarWrapper(
-   node: ProgressBar = ProgressBar(),
+  node: ProgressBar = ProgressBar(),
 ): ControlWrapperImpl<ProgressBar>(node) {
   companion object {
 	fun ProgressBar.wrapped() = ProgressBarWrapper(this)
@@ -34,11 +35,11 @@ class ProgressBarWrapper(
 	  node.progress = value
 	}
 
-  fun progressProperty(): DoubleProperty = node.progressProperty()
+  val progressProperty by lazy { node.progressProperty().toNonNullableProp() }
   override fun addChild(child: NodeWrapper, index: Int?) {
 	TODO("Not yet implemented")
   }
 }
 
-fun ProgressBarWrapper.bind(property: ObservableValue<Number>, readonly: Boolean = false) =
-  progressProperty().smartBind(property, readonly)
+fun ProgressBarWrapper.bind(property: ObsVal<Number>, readonly: Boolean = false) =
+  progressProperty.smartBind(property, readonly)

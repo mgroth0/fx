@@ -2,7 +2,6 @@ package matt.fx.control.wrapper.labeled
 
 import javafx.beans.property.BooleanProperty
 import javafx.beans.property.ObjectProperty
-import javafx.beans.property.ReadOnlyDoubleProperty
 import javafx.scene.Node
 import javafx.scene.control.ContentDisplay
 import javafx.scene.control.Labeled
@@ -16,8 +15,6 @@ import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
 
 open class LabeledWrapper<N: Labeled>(node: N): ControlWrapperImpl<N>(node), TextLike {
-
-  fun heightProperty(): ReadOnlyDoubleProperty = node.heightProperty()
 
   var textAlignment: TextAlignment
 	get() = node.textAlignment

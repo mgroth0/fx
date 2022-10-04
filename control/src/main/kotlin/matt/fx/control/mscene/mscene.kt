@@ -26,6 +26,7 @@ import matt.fx.graphics.wrapper.region.border.FXBorder
 import matt.fx.graphics.wrapper.scene.SceneWrapper
 import matt.fx.graphics.wrapper.style.StyleableWrapper
 import matt.fx.graphics.wrapper.style.toAwtColor
+import matt.log.profile.tic
 import matt.log.tab
 import matt.stream.recurse.recurse
 import java.net.URL
@@ -56,19 +57,27 @@ open class MScene<R: ParentWrapper<*>>(
 
 
   init {
+	val t = tic("creating mscene", enabled = false)
 	addDefaultHotkeys()
+	t.toc("added default hotkeys")
 
 
-
-
-	reloadStyle(DarkModeController.darkModeProp.value)
+	val dark = DarkModeController.darkModeProp.value
+	t.toc("finished DarkModeController 0")
+	reloadStyle(dark)
+	t.toc("finished DarkModeController 1")
 	var old = DarkModeController.darkModeProp.value
+	t.toc("finished DarkModeController 2")
 	DarkModeController.darkModeProp.onChangeWithWeak(this) {
 	  if (it != old) {
 		reloadStyle(DarkModeController.darkModeProp.value)
 		old = it
 	  }
 	}
+	t.toc("finished DarkModeController 3")
+
+
+
 
 
 
@@ -137,9 +146,11 @@ open class MScene<R: ParentWrapper<*>>(
 	  }
 
 	}
+	t.toc("finished main mcontextmenu")
 	addEventHandler(ContextMenuEvent.CONTEXT_MENU_REQUESTED) { e ->
 	  handleContextMenuReq(e)
 	}
+	t.toc("finished mscene init")
   }
 
 
