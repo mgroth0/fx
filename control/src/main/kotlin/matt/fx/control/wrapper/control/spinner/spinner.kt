@@ -10,7 +10,6 @@ import matt.fx.graphics.wrapper.node.attachTo
 import matt.hurricanefx.eye.bind.smartBind
 import matt.hurricanefx.eye.wrapper.obs.collect.createFXWrapper
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
 import matt.lang.err
 import matt.obs.col.olist.ObsList
@@ -50,7 +49,7 @@ inline fun <reified T: Number> ET.spinner(
   initialValue: T? = null,
   amountToStepBy: T? = null,
   editable: Boolean = false,
-  property: BindableProperty<T?>? = null,
+  property: BindableProperty<T>? = null,
   enableScroll: Boolean = false,
   noinline op: SpinnerWrapper<T>.()->Unit = {}
 ): SpinnerWrapper<T> {
@@ -71,7 +70,7 @@ inline fun <reified T: Number> ET.spinner(
 	)
   }
   if (property != null) {
-	spinner.valueFactory!!.valueProperty().toNullableProp().bindBidirectional(property)
+	spinner.valueFactory!!.valueProperty().toNonNullableProp().bindBidirectional(property)
   }
   spinner.initialConfig(
 	editable = editable,
