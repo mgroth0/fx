@@ -197,7 +197,7 @@ fun Text.wrapped(): TextWrapper = findWrapper() ?: TextWrapper(this@wrapped)
 fun Label.wrapped(): LabelWrapper = findWrapper() ?: LabelWrapper(this@wrapped)
 
 fun TextArea.wrapped(): TextAreaWrapper = findWrapper() ?: TextAreaWrapper(this@wrapped)
-fun <T> Spinner<T>.wrapped(): SpinnerWrapper<T> = findWrapper() ?: SpinnerWrapper(this@wrapped)
+fun <T: Any> Spinner<T>.wrapped(): SpinnerWrapper<T> = findWrapper() ?: SpinnerWrapper(this@wrapped)
 fun <T> ChoiceBox<T>.wrapped(): ChoiceBoxWrapper<T> = findWrapper() ?: ChoiceBoxWrapper(this@wrapped)
 fun FakeFocusTextField.wrapped(): FakeFocusTextFieldWrapper = findWrapper() ?: FakeFocusTextFieldWrapper(this@wrapped)
 fun TextField.wrapped(): TextFieldWrapper = findWrapper() ?: TextFieldWrapper(this@wrapped)
