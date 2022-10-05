@@ -8,6 +8,7 @@ import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attach
 import matt.fx.graphics.wrapper.region.RegionWrapperImpl
 import matt.lang.NEVER
+import matt.obs.math.double.op.div
 import matt.obs.math.double.op.minus
 import matt.obs.math.double.op.times
 import matt.obs.prop.BindableProperty
@@ -49,8 +50,8 @@ open class ScaledCanvas(
 
   init {
 	canvas.apply {
-	  layoutXProperty.bind((widthProperty*this@ScaledCanvas.scale - widthProperty)/2)
-	  layoutYProperty.bind((heightProperty*this@ScaledCanvas.scale - heightProperty)/2)
+	  layoutXProperty.bind((widthProperty*this@ScaledCanvas.scale - widthProperty)/2.0)
+	  layoutYProperty.bind((heightProperty*this@ScaledCanvas.scale - heightProperty)/2.0)
 	  scaleXProperty.bind(this@ScaledCanvas.scale)
 	  scaleYProperty.bind(this@ScaledCanvas.scale)
 	  this@ScaledCanvas.regionChildren.add(this)
