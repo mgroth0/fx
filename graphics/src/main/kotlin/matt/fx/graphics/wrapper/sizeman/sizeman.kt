@@ -1,6 +1,6 @@
 package matt.fx.graphics.wrapper.sizeman
 
-import matt.obs.bindings.math.ObsD
+import matt.obs.math.double.ObsD
 import matt.obs.prop.Var
 
 interface SizeControlled: HeightControlled, WidthControlled, Sized

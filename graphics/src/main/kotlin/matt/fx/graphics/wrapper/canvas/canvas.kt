@@ -12,6 +12,8 @@ import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.graphics.wrapper.sizeman.HasHeight
 import matt.fx.graphics.wrapper.sizeman.HasWidth
 import matt.lang.NOT_IMPLEMENTED
+import matt.obs.math.double.ObsD
+
 fun ET.canvas(width: Double = 0.0, height: Double = 0.0, op: CanvasWrapper.()->Unit = {}) =
   attach(CanvasWrapper(width, height), op)
 
