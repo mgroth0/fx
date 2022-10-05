@@ -15,17 +15,19 @@ import matt.fx.control.wrapper.selects.SelectingControl
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
+import matt.hurricanefx.eye.wrapper.obs.collect.createFXWrapper
+import matt.obs.col.olist.ObsList
 
 
-fun <T> ET.listview(values: ObservableList<T>? = null, op: ListViewWrapper<T>.()->Unit = {}) =
+fun <T> ET.listview(values: ObsList<T>? = null, op: ListViewWrapper<T>.()->Unit = {}) =
   ListViewWrapper<T>().attachTo(this, op) {
 	if (values != null) {
-	  it.items = values
+	  it.items = values.createFXWrapper()
 	}
   }
 
-fun <T> ET.listview(values: ReadOnlyListProperty<T>, op: ListViewWrapper<T>.()->Unit = {}) =
-  listview(values as ObservableValue<ObservableList<T>>, op)
+//fun <T> ET.listview(values: ReadOnlyListProperty<T>, op: ListViewWrapper<T>.()->Unit = {}) =
+//  listview(values as ObservableValue<ObservableList<T>>, op)
 
 fun <T> ET.listview(
   values: ObservableValue<ObservableList<T>>,
