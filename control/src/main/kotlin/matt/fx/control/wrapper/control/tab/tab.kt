@@ -1,21 +1,17 @@
 package matt.fx.control.wrapper.control.tab
 
-import javafx.beans.binding.BooleanBinding
-import javafx.beans.property.BooleanProperty
-import javafx.beans.property.ObjectProperty
-import javafx.beans.property.ReadOnlyBooleanProperty
-import javafx.beans.value.ObservableValue
-import javafx.scene.Node
 import javafx.scene.control.Tab
 import javafx.scene.control.TabPane
 import matt.fx.control.wrapper.wrapped.wrapped
 import matt.fx.graphics.wrapper.SingularEventTargetWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
-import matt.hurricanefx.eye.bind.toBinding
-import matt.hurricanefx.eye.lib.onChange
-import matt.hurricanefx.eye.prop.cleanBind
 import matt.hurricanefx.eye.prop.getValue
 import matt.hurricanefx.eye.prop.setValue
+import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
+import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
+import matt.obs.bindings.bool.ObsB
+import matt.obs.bindings.bool.not
 
 open class TabWrapper<C: NodeWrapper>(
   node: Tab = Tab()
@@ -36,34 +32,33 @@ open class TabWrapper<C: NodeWrapper>(
 	node.tabPane?.tabs?.remove(node)
   }
 
-  val contentProperty: ObjectProperty<Node> get() = node.contentProperty()
+  val contentProperty by lazy { node.contentProperty().toNullableProp() }
 
   open var content: C
 	@Suppress("UNCHECKED_CAST")
 	get() = node.content.wrapped() as C
-	set(value) = contentProperty.set(value.node)
+	set(value) = contentProperty v (value.node)
 
   var graphic by node.graphicProperty()
-  val disabledProperty: ReadOnlyBooleanProperty get() = node.disabledProperty()
-  val disableProperty: BooleanProperty get() = node.disableProperty()
-  val closableProperty: BooleanProperty get() = node.closableProperty()
-  val selectedProperty: ReadOnlyBooleanProperty get() = node.selectedProperty()
+  val disabledProperty by lazy { node.disabledProperty().toNonNullableROProp() }
+  val disableProperty by lazy { node.disableProperty().toNonNullableProp() }
+  val closableProperty by lazy { node.closableProperty().toNonNullableProp() }
+  val selectedProperty by lazy { node.selectedProperty().toNonNullableROProp() }
   val isSelected by selectedProperty
   val tabPane: TabPane? get() = node.tabPane
 
 
-  fun disableWhen(predicate: ObservableValue<Boolean>) = disableProperty.cleanBind(predicate)
+  fun disableWhen(predicate: ObsB) = disableProperty.bind(predicate)
 
-  fun enableWhen(predicate: ObservableValue<Boolean>) {
-	val binding = if (predicate is BooleanBinding) predicate.not() else predicate.toBinding().not()
-	disableProperty.cleanBind(binding)
+  fun enableWhen(predicate: ObsB) {
+	disableProperty.bind(predicate.not())
   }
 
-  fun closeableWhen(predicate: ObservableValue<Boolean>) {
+  fun closeableWhen(predicate: ObsB) {
 	closableProperty.bind(predicate)
   }
 
-  fun visibleWhen(predicate: ObservableValue<Boolean>) {
+  fun visibleWhen(predicate: ObsB) {
 	val localTabPane = tabPane
 	fun updateState() {
 	  if (predicate.value.not()) localTabPane!!.tabs.remove(this.node)
@@ -90,6 +85,6 @@ open class TabWrapper<C: NodeWrapper>(
 
   override fun addChild(child: NodeWrapper, index: Int?) {
 	require(index == null)
-	contentProperty.set(child.node)
+	contentProperty v (child.node)
   }
 }
