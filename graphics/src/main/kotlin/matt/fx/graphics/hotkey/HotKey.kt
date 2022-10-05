@@ -1,7 +1,6 @@
 package matt.fx.graphics.hotkey
 
 import javafx.application.Platform.runLater
-import javafx.beans.property.SimpleBooleanProperty
 import javafx.event.EventHandler
 import javafx.event.EventTarget
 import javafx.scene.Node
@@ -12,21 +11,21 @@ import javafx.stage.Stage
 import matt.collect.itr.allUnique
 import matt.collect.itr.applyEach
 import matt.collect.itr.duplicates
-import matt.hotkey.Hotkey
-import matt.hotkey.HotkeyDSL
-import matt.hurricanefx.eye.prop.toggle
 import matt.file.thismachine.thisMachine
 import matt.fx.graphics.wrapper.EventTargetWrapper
+import matt.hotkey.Hotkey
+import matt.hotkey.HotkeyDSL
 import matt.lang.NEVER
 import matt.lang.err
 import matt.lang.go
 import matt.log.Logger
 import matt.log.NOPLogger
 import matt.log.SystemOutLogger
-import matt.prim.str.joinWithNewLinesAndTabs
 import matt.model.sys.Mac
 import matt.obs.prop.BindableProperty
+import matt.obs.prop.VarProp
 import matt.obs.prop.toggle
+import matt.prim.str.joinWithNewLinesAndTabs
 import java.lang.System.currentTimeMillis
 import java.util.WeakHashMap
 import kotlin.contracts.InvocationKind.EXACTLY_ONCE
@@ -433,7 +432,7 @@ fun EventTarget.register(
 	hotkeys.add(this)
   }
 
-  infix fun HotKeySet.toggles(b: SimpleBooleanProperty) = op { b.toggle() }
+  infix fun HotKeySet.toggles(b: VarProp<Boolean>) = op { b.toggle() }
 
   infix fun HotKeySet.handle(setHandler: (KeyEvent)->Unit) = apply {
 	keys.applyEach {
