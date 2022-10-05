@@ -32,12 +32,14 @@ import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.hurricanefx.eye.lib.onChange
+import matt.hurricanefx.eye.mtofx.createROFXPropWrapper
 import matt.hurricanefx.eye.prop.getValue
 import matt.hurricanefx.eye.prop.observable
 import matt.hurricanefx.eye.prop.setValue
 import matt.hurricanefx.eye.wrapper.obs.collect.createFXWrapper
 import matt.prim.str.decap
 import matt.obs.col.olist.ObsList
+import matt.obs.prop.ObsVal
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 import kotlin.reflect.KMutableProperty1
@@ -269,10 +271,10 @@ open class TableViewWrapper<E>(
   fun <P> column(
 	title: String,
 	prefWidth: Double? = null,
-	valueProvider: (TableColumn.CellDataFeatures<E, P>)->ObservableValue<P>,
+	valueProvider: (TableColumn.CellDataFeatures<E, P>)->ObsVal<P>,
   ): TableColumnWrapper<E, P> {
 	val column = TableColumnWrapper<E, P>(title)
-	column.cellValueFactory = Callback { valueProvider(it) }
+	column.cellValueFactory = Callback { valueProvider(it).createROFXPropWrapper() }
 	prefWidth?.let { column.prefWidth = it }
 	addColumnInternal(column)
 	return column
