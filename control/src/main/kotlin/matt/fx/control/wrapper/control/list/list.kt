@@ -2,7 +2,6 @@ package matt.fx.control.wrapper.control.list
 
 import javafx.beans.property.BooleanProperty
 import javafx.beans.property.ObjectProperty
-import javafx.beans.property.ReadOnlyListProperty
 import javafx.beans.value.ObservableValue
 import javafx.collections.ObservableList
 import javafx.scene.control.ListCell
