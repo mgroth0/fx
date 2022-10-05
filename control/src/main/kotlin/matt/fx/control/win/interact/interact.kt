@@ -29,22 +29,18 @@ import matt.fx.control.mstage.WMode
 import matt.fx.control.mstage.WMode.CLOSE
 import matt.fx.control.mstage.WMode.NOTHING
 import matt.fx.control.tfx.dialog.alert
-import matt.fx.graphics.win.bindgeom.bindGeometry
 import matt.fx.control.win.interact.WinGeom.Centered
 import matt.fx.control.win.interact.WinOwn.Auto
 import matt.fx.control.wrapper.control.button.ButtonWrapper
 import matt.fx.control.wrapper.control.button.button
 import matt.fx.control.wrapper.control.text.area.textarea
 import matt.fx.control.wrapper.wrapped.wrapped
+import matt.fx.graphics.win.bindgeom.bindGeometry
 import matt.fx.graphics.wrapper.imageview.ImageViewWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.disableWhen
 import matt.fx.graphics.wrapper.node.parent.ParentWrapper
 import matt.fx.graphics.wrapper.node.setOnDoubleClick
-import matt.hurricanefx.eye.lib.onChange
-import matt.hurricanefx.eye.mtofx.createROFXPropWrapper
-import matt.hurricanefx.eye.prop.doubleBinding
-import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
 import matt.fx.graphics.wrapper.pane.anchor.AnchorPaneWrapperImpl
 import matt.fx.graphics.wrapper.pane.hbox.hbox
 import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
@@ -53,6 +49,9 @@ import matt.fx.graphics.wrapper.region.border.FXBorder
 import matt.fx.graphics.wrapper.region.border.solidBorder
 import matt.fx.graphics.wrapper.stage.StageWrapper
 import matt.fx.graphics.wrapper.window.WindowWrapper
+import matt.hurricanefx.eye.lib.onChange
+import matt.hurricanefx.eye.mtofx.createROFXPropWrapper
+import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
 import matt.json.prim.isValidJson
 import matt.lang.noExceptions
 import matt.lang.nullIfExceptions
@@ -121,11 +120,11 @@ fun StageWrapper.bindXYToOwnerCenter() {
 	"must use initOwner before bindXYToOwnerCenter"
   }
   val xBinding =
-	owner!!.xProperty().doubleBinding(owner!!.widthProperty(), this.widthProperty.createROFXPropWrapper()) {
+	owner!!.xProperty().toNonNullableROProp().doubleBinding(owner!!.widthProperty(), this.widthProperty.createROFXPropWrapper()) {
 	  (owner!!.x + (owner!!.width/2)) - width/2
 	}
   val yBinding =
-	owner!!.yProperty().doubleBinding(owner!!.heightProperty(), this.heightProperty.createROFXPropWrapper()) {
+	owner!!.yProperty().toNonNullableROProp().doubleBinding(owner!!.heightProperty(), this.heightProperty.createROFXPropWrapper()) {
 	  (owner!!.y + (owner!!.height/2)) - height/2
 	}
   aXBindingStrengthener[this.node] = xBinding
