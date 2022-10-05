@@ -1,11 +1,7 @@
 package matt.fx.control.wrapper.cellfact
 
 import javafx.beans.property.ObjectProperty
-import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.property.SimpleStringProperty
-import javafx.beans.value.ObservableObjectValue
-import javafx.beans.value.ObservableStringValue
-import javafx.beans.value.ObservableValue
 import javafx.scene.control.Cell
 import javafx.scene.control.ListCell
 import javafx.scene.control.TableCell
@@ -15,7 +11,12 @@ import javafx.scene.control.cell.CheckBoxListCell
 import javafx.util.Callback
 import javafx.util.StringConverter
 import matt.fx.graphics.wrapper.node.NodeWrapper
-import matt.hurricanefx.eye.prop.objectBindingN
+import matt.hurricanefx.eye.mtofx.createROFXPropWrapper
+import matt.obs.bind.binding
+import matt.obs.bindings.bool.ObsB
+import matt.obs.bindings.str.ObsS
+import matt.obs.prop.BindableProperty
+import matt.obs.prop.ObsVal
 import kotlin.reflect.KProperty1
 
 interface CellFactory<N, T, C: Cell<T>> {
@@ -33,38 +34,38 @@ interface CellFactory<N, T, C: Cell<T>> {
   }
 
 
-  fun simpleCellFactoryFromProps(op: (T)->Pair<ObservableStringValue, ObservableObjectValue<NodeWrapper>>)
+  fun simpleCellFactoryFromProps(op: (T)->Pair<ObsS, ObsVal<NodeWrapper?>>)
 
-  fun simpleCellFactory(prop: KProperty1<T, ObservableStringValue>) {
-	simpleCellFactoryFromProps { prop.get(it) to SimpleObjectProperty<NodeWrapper>() }
+  fun simpleCellFactory(prop: KProperty1<T, ObsS>) {
+	simpleCellFactoryFromProps { prop.get(it) to BindableProperty<NodeWrapper?>(null) }
   }
 
   fun simpleCellFactory(op: SimpleFactory<T>) {
-	val op2: (T)->Pair<ObservableStringValue, ObservableObjectValue<NodeWrapper>> = {
+	val op2: (T)->Pair<ObsS, ObsVal<NodeWrapper?>> = {
 	  val pair = op.call(it)
-	  SimpleStringProperty(pair.first) to SimpleObjectProperty(pair.second)
+	  BindableProperty(pair.first) to BindableProperty(pair.second)
 	}
 	simpleCellFactoryFromProps(op2)
   }
 
   fun simpleCellFactory(op: FirstPropFactory<T>) {
-	val op2: (T)->Pair<ObservableStringValue, ObservableObjectValue<NodeWrapper>> = {
+	val op2: (T)->Pair<ObsS, ObsVal<NodeWrapper?>> = {
 	  val pair = op.call(it)
-	  pair.first to SimpleObjectProperty(pair.second)
+	  pair.first to BindableProperty(pair.second)
 	}
 	simpleCellFactoryFromProps(op2)
   }
 
   fun simpleCellFactory(op: SecondPropFactory<T>) {
-	val op2: (T)->Pair<ObservableStringValue, ObservableObjectValue<NodeWrapper>> = {
+	val op2: (T)->Pair<ObsS, ObsVal<NodeWrapper?>> = {
 	  val pair = op.call(it)
-	  SimpleStringProperty(pair.first) to pair.second
+	  BindableProperty(pair.first) to pair.second
 	}
 	simpleCellFactoryFromProps(op2)
   }
 
   fun simpleCellFactory(op: BothPropFactory<T>) {
-	val op2: (T)->Pair<ObservableStringValue, ObservableObjectValue<NodeWrapper>> = {
+	val op2: (T)->Pair<ObsS, ObsVal<NodeWrapper?>> = {
 	  val pair = op.call(it)
 	  pair.first to pair.second
 	}
@@ -73,24 +74,24 @@ interface CellFactory<N, T, C: Cell<T>> {
 }
 
 fun interface SimpleFactory<P> {
-  fun call(p: P): Pair<String?, NodeWrapper?>
+  fun call(p: P): Pair<String, NodeWrapper?>
 }
 
 fun interface FirstPropFactory<P> {
-  fun call(p: P): Pair<ObservableStringValue, NodeWrapper?>
+  fun call(p: P): Pair<ObsS, NodeWrapper?>
 }
 
 fun interface SecondPropFactory<P> {
-  fun call(p: P): Pair<String?, ObservableObjectValue<NodeWrapper>>
+  fun call(p: P): Pair<String, ObsVal<NodeWrapper?>>
 }
 
 fun interface BothPropFactory<P> {
-  fun call(p: P): Pair<ObservableStringValue, ObservableObjectValue<NodeWrapper>>
+  fun call(p: P): Pair<ObsS, ObsVal<NodeWrapper?>>
 }
 
 
 interface ListCellFactory<N, T>: CellFactory<N, T, ListCell<T>> {
-  override fun simpleCellFactoryFromProps(op: (T)->Pair<ObservableStringValue, ObservableObjectValue<NodeWrapper>>) {
+  override fun simpleCellFactoryFromProps(op: (T)->Pair<ObsS, ObsVal<NodeWrapper?>>) {
 	setCellFact {
 	  object: ListCell<T>() {
 		override fun updateItem(item: T, empty: Boolean) {
@@ -101,13 +102,13 @@ interface ListCellFactory<N, T>: CellFactory<N, T, ListCell<T>> {
 	}
   }
 
-  fun useCheckbox(converter: StringConverter<T>? = null, getter: (T)->ObservableValue<Boolean>) {
-	setCellFact { CheckBoxListCell(getter, converter) }
+  fun useCheckbox(converter: StringConverter<T>? = null, getter: (T)->ObsB) {
+	setCellFact { CheckBoxListCell({ getter(it).createROFXPropWrapper() }, converter) }
   }
 }
 
 interface TreeCellFactory<N, T>: CellFactory<N, T, TreeCell<T>> {
-  override fun simpleCellFactoryFromProps(op: (T)->Pair<ObservableStringValue, ObservableObjectValue<NodeWrapper>>) {
+  override fun simpleCellFactoryFromProps(op: (T)->Pair<ObsS, ObsVal<NodeWrapper?>>) {
 	setCellFact {
 	  object: TreeCell<T>() {
 		override fun updateItem(item: T, empty: Boolean) {
@@ -121,7 +122,7 @@ interface TreeCellFactory<N, T>: CellFactory<N, T, TreeCell<T>> {
 
 
 interface TreeTableCellFactory<N, E, P>: CellFactory<N, P, TreeTableCell<E, P>> {
-  override fun simpleCellFactoryFromProps(op: (P)->Pair<ObservableStringValue, ObservableObjectValue<NodeWrapper>>) {
+  override fun simpleCellFactoryFromProps(op: (P)->Pair<ObsS, ObsVal<NodeWrapper?>>) {
 	setCellFact {
 	  object: TreeTableCell<E, P>() {
 		override fun updateItem(item: P, empty: Boolean) {
@@ -134,7 +135,7 @@ interface TreeTableCellFactory<N, E, P>: CellFactory<N, P, TreeTableCell<E, P>> 
 }
 
 interface TableCellFactory<N, E, P>: CellFactory<N, P, TableCell<E, P>> {
-  override fun simpleCellFactoryFromProps(op: (P)->Pair<ObservableStringValue, ObservableObjectValue<NodeWrapper>>) {
+  override fun simpleCellFactoryFromProps(op: (P)->Pair<ObsS, ObsVal<NodeWrapper?>>) {
 	setCellFact {
 	  object: TableCell<E, P>() {
 		override fun updateItem(item: P, empty: Boolean) {
@@ -171,13 +172,13 @@ private fun Cell<*>.clear() {
 private fun <T> Cell<T>.simpleUpdateLogic(
   item: T,
   empty: Boolean,
-  op: (T)->Pair<ObservableStringValue, ObservableObjectValue<NodeWrapper>>
+  op: (T)->Pair<ObsS, ObsVal<NodeWrapper?>>
 ) {
   if (empty || item == null) clear()
   else {
 	op(item).let {
-	  textProperty().bind(it.first)
-	  graphicProperty().bind(it.second.objectBindingN { it?.node })
+	  textProperty().bind(it.first.createROFXPropWrapper())
+	  graphicProperty().bind(it.second.binding { it?.node }.createROFXPropWrapper())
 	}
   }
 }
