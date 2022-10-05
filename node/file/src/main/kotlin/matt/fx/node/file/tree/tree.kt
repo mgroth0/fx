@@ -8,16 +8,14 @@ import javafx.scene.layout.Priority.ALWAYS
 import matt.auto.actions
 import matt.auto.moveToTrash
 import matt.auto.open
+import matt.collect.itr.recurse.chain
+import matt.collect.itr.recurse.recurse
 import matt.collect.itr.sameContentsAnyOrder
 import matt.collect.map.lazyMap
 import matt.file.MFile
 import matt.file.construct.mFile
 import matt.fx.control.menu.context.mcontextmenu
 import matt.fx.control.mstage.WMode.CLOSE
-import matt.fx.fxauto.actionitem
-import matt.fx.fxauto.fxActions
-import matt.fx.graphics.icon.view
-import matt.fx.graphics.refresh.refreshWhileInSceneEvery
 import matt.fx.control.win.interact.WinGeom
 import matt.fx.control.win.interact.openInNewWindow
 import matt.fx.control.wrapper.cellfact.SimpleFactory
@@ -27,19 +25,22 @@ import matt.fx.control.wrapper.control.tree.TreeViewWrapper
 import matt.fx.control.wrapper.control.tree.like.TreeLikeWrapper
 import matt.fx.control.wrapper.control.tree.like.populateTree
 import matt.fx.control.wrapper.control.treetable.TreeTableViewWrapper
+import matt.fx.fxauto.actionitem
+import matt.fx.fxauto.fxActions
+import matt.fx.graphics.icon.view
+import matt.fx.graphics.refresh.refreshWhileInSceneEvery
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.setOnDoubleClick
+import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
+import matt.fx.graphics.wrapper.pane.hbox.HBoxWrapperImpl
+import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
+import matt.fx.graphics.wrapper.pane.vbox.vbox
 import matt.fx.node.file.createNode
 import matt.fx.node.file.tree.FileTreePopulationStrategy.AUTOMATIC
 import matt.fx.web.specialTransferingToWindowAndBack
 import matt.gui.draggableIcon
 import matt.gui.setview.autoResizeColumns
 import matt.hurricanefx.eye.wrapper.obs.collect.createMutableWrapper
-import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
-import matt.fx.graphics.wrapper.pane.hbox.HBoxWrapperImpl
-import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapper
-import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
-import matt.fx.graphics.wrapper.pane.vbox.vbox
 import matt.lang.inList
 import matt.log.taball
 import matt.log.todo
@@ -47,8 +48,6 @@ import matt.obs.bindings.math.div
 import matt.obs.col.olist.BasicObservableListImpl
 import matt.obs.col.olist.toBasicObservableList
 import matt.obs.prop.BindableProperty
-import matt.collect.itr.recurse.chain
-import matt.stream.recurse.recurse
 import matt.time.dur.sec
 
 private const val HEIGHT = 300.0
