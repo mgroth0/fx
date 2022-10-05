@@ -18,7 +18,7 @@ import matt.fx.graphics.wrapper.node.parent.parent
 import matt.fx.graphics.wrapper.region.RegionWrapper
 import matt.hurricanefx.eye.prop.getValue
 import matt.hurricanefx.eye.prop.setValue
-import matt.stream.recurse.chain
+import matt.collect.itr.recurse.chain
 
 
 fun NW.isFullyVisibleIn(sp: ScrollPaneWrapper<*>): Boolean {

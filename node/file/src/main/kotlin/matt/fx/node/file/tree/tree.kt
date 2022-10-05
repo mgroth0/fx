@@ -47,7 +47,7 @@ import matt.obs.bindings.math.div
 import matt.obs.col.olist.BasicObservableListImpl
 import matt.obs.col.olist.toBasicObservableList
 import matt.obs.prop.BindableProperty
-import matt.stream.recurse.chain
+import matt.collect.itr.recurse.chain
 import matt.stream.recurse.recurse
 import matt.time.dur.sec
 

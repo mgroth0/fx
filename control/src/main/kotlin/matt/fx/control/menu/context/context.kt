@@ -35,7 +35,7 @@ import matt.log.tab
 import matt.log.warn
 import matt.obs.prop.BindableProperty
 import matt.obs.prop.Var
-import matt.stream.recurse.chain
+import matt.collect.itr.recurse.chain
 import java.lang.Thread.sleep
 import java.util.WeakHashMap
 import kotlin.concurrent.thread
