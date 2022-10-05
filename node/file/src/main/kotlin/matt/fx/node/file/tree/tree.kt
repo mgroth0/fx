@@ -44,9 +44,9 @@ import matt.hurricanefx.eye.wrapper.obs.collect.createMutableWrapper
 import matt.lang.inList
 import matt.log.taball
 import matt.log.todo
-import matt.obs.bindings.math.div
 import matt.obs.col.olist.BasicObservableListImpl
 import matt.obs.col.olist.toBasicObservableList
+import matt.obs.math.double.op.div
 import matt.obs.prop.BindableProperty
 import matt.time.dur.sec
 
@@ -59,11 +59,11 @@ fun fileTreeAndViewerPane(
   alignment = CENTER_LEFT
   val treeTableView = fileTableTree(rootFile).apply {
 	prefHeightProperty.value = HEIGHT
-	maxWidthProperty.bind(hBox.widthProperty/2)
+	maxWidthProperty.bind(hBox.widthProperty / 2.0)
 	hgrow = ALWAYS
   }
   val viewBox = vbox<NodeWrapper> {
-	prefWidthProperty.bind(hBox.widthProperty/2) /*less aggressive to solve these issues?*/
+	prefWidthProperty.bind(hBox.widthProperty / 2.0) /*less aggressive to solve these issues?*/
 	prefHeightProperty.bind(hBox.heightProperty)
 	hgrow = ALWAYS
   }
