@@ -39,6 +39,7 @@ import matt.hurricanefx.eye.prop.setValue
 import matt.hurricanefx.eye.wrapper.obs.collect.createFXWrapper
 import matt.prim.str.decap
 import matt.obs.col.olist.ObsList
+import matt.obs.prop.BindableProperty
 import matt.obs.prop.ObsVal
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
@@ -380,8 +381,8 @@ open class TableViewWrapper<E>(
    */
   @JvmName("coolColumn")
   fun <P> column(getter: KFunction<P>, op: TableColumnWrapper<E, P>.()->Unit = {}): TableColumnWrapper<E, P> {
-	return column(getter.name) {
-	  SimpleObjectProperty(getter.call(it.value))
+	return column<P>(getter.name) {
+	  BindableProperty<P>(getter.call(it.value))
 	}.apply(op)
   }
 
@@ -394,8 +395,8 @@ open class TableViewWrapper<E>(
 	getter: KProperty1<E, P>,
 	op: TableColumnWrapper<E, P>.()->Unit = {}
   ): TableColumnWrapper<E, P> {
-	return column(getter.name) {
-	  SimpleObjectProperty(getter.call(it.value))
+	return column<P>(getter.name) {
+	  BindableProperty<P>(getter.call(it.value))
 	}.apply(op)
   }
 
