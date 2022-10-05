@@ -11,7 +11,6 @@ import matt.fx.control.wrapper.control.tab.TabWrapper
 import matt.fx.control.wrapper.scroll.ScrollPaneWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapperImpl
-import matt.hurricanefx.eye.lib.onChangeUntilAfterFirst
 import matt.hurricanefx.eye.mtofx.createROFXPropWrapper
 import matt.lang.NEVER
 import matt.log.warn
@@ -51,27 +50,24 @@ var RowConstraints.exactHeight: Number
   get() = NEVER
 
 
-
 fun lazyTab(name: String, nodeOp: ()->NodeWrapper) = TabWrapper<NodeWrapper>(name).apply {
   if (isSelected) {
-    content = nodeOp()
+	content = nodeOp()
   } else {
-    selectedProperty.onChangeUntilAfterFirst(true) {
-      if (it == true) {
-        content = nodeOp()
-      }
-    }
+	selectedProperty.onChangeUntilInclusive({ true }) {
+	  if (it == true) {
+		content = nodeOp()
+	  }
+	}
   }
 }
 
 
 fun Node.disableContextMenu() {
   addEventFilter(ContextMenuEvent.ANY) {
-    it.consume()
+	it.consume()
   }
 }
-
-
 
 
 //fun BooleanProperty.checkbox() = CheckBoxWrapper(name).also {
@@ -83,16 +79,15 @@ fun Var<Boolean>.checkbox(name: String? = null) = CheckBoxWrapper(name).also {
 }
 
 
-
 class TreeTableTreeView<T>(val table: Boolean): TreeTableView<T>() {
   override fun resize(width: Double, height: Double) {
-    super.resize(width, height)
-    if (!table) {
-      val header = lookup("TableHeaderRow") as Pane
-      header.minHeight = 0.0
-      header.prefHeight = 0.0
-      header.maxHeight = 0.0
-      header.isVisible = false
-    }
+	super.resize(width, height)
+	if (!table) {
+	  val header = lookup("TableHeaderRow") as Pane
+	  header.minHeight = 0.0
+	  header.prefHeight = 0.0
+	  header.maxHeight = 0.0
+	  header.isVisible = false
+	}
   }
 }
