@@ -9,7 +9,7 @@ import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
 import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
 import matt.lang.applyIt
-import matt.obs.bindings.math.minus
+import matt.obs.math.double.op.minus
 
 abstract class ScrollVBox(
   scrollpane: ScrollPaneWrapper<VBoxWrapperImpl<*>> = ScrollPaneWrapper(),

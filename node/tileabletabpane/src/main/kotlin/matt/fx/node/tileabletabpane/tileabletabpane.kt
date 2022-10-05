@@ -12,14 +12,13 @@ import matt.fx.control.wrapper.control.tab.TabWrapper
 import matt.fx.control.wrapper.tab.TabPaneWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.pane.PaneWrapper
-import matt.hurricanefx.eye.lib.onChange
-import matt.hurricanefx.eye.prop.getValue
-import matt.hurricanefx.eye.prop.setValue
-import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
 import matt.fx.graphics.wrapper.pane.hbox.hbox
 import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
 import matt.fx.graphics.wrapper.region.RegionWrapper
-import matt.obs.bindings.math.div
+import matt.hurricanefx.eye.lib.onChange
+import matt.hurricanefx.eye.prop.getValue
+import matt.hurricanefx.eye.prop.setValue
+import matt.obs.math.double.op.div
 import java.util.concurrent.Semaphore
 
 open class TileableTabPane(
@@ -97,7 +96,7 @@ open class TileableTabPane(
 	for (pane in panes) {
 	  root.add(pane.second)
 	}
-	val nchildren = panes.size
+	val nchildren = panes.size.toDouble()
 	panes.map { it.second }.forEach {
 	  if (orientation == VERTICAL) {
 		it.minHeightProperty.bind(root.heightProperty/(nchildren))

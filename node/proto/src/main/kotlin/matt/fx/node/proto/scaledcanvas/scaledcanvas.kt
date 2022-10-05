@@ -8,9 +8,8 @@ import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attach
 import matt.fx.graphics.wrapper.region.RegionWrapperImpl
 import matt.lang.NEVER
-import matt.obs.bindings.math.div
-import matt.obs.bindings.math.minus
-import matt.obs.bindings.math.times
+import matt.obs.math.double.op.minus
+import matt.obs.math.double.op.times
 import matt.obs.prop.BindableProperty
 
 fun EventTargetWrapper.scaledCanvas(
