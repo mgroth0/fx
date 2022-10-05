@@ -9,6 +9,11 @@
 	{
 	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
 	  "cfg" :  "api",
+	  "path" : ":k:obs:math"
+	},
+	{
+	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
+	  "cfg" :  "api",
 	  "path" : ":k:service"
 	},
 	{
@@ -61,7 +66,6 @@
 	  "cfg" :  "api",
 	  "path" : ":k:fx:image"
 	},
-
 	{
 	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
 	  "cfg" :  "api",

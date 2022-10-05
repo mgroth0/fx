@@ -5,7 +5,7 @@ import matt.file.commons.WINDOW_GEOMETRY_FOLDER
 import matt.fx.graphics.wrapper.stage.StageWrapper
 import matt.json.prim.readJson
 import matt.json.prim.writeJson
-import matt.math.Geometry
+import matt.math.geom.Geometry
 
 
 fun StageWrapper.bindGeometry(key: String) = bindGeometry(WINDOW_GEOMETRY_FOLDER["$key.json"])

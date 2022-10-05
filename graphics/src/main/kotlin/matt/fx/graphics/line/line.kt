@@ -1,13 +1,13 @@
 package matt.fx.graphics.line
 
+import javafx.scene.effect.Light.Point
 import javafx.scene.shape.Line
 import matt.fx.graphics.wrapper.node.line.LineWrapper
 import matt.fx.graphics.wrapper.node.line.line
 import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
 import matt.fx.graphics.wrapper.style.FXColor
-import matt.math.BasicPoint
-import matt.math.Point
-import matt.math.unaryMinus
+import matt.math.neg.unaryMinus
+import matt.math.point.BasicPoint
 
 
 @Suppress("unused") class LineDrawDSL(private val parent: PaneWrapperImpl<*, *>, start: Point) {
