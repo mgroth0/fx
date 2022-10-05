@@ -31,7 +31,7 @@ abstract class ScrollVBox(
 	  layoutY = 0.0
 
 	  content = this@ScrollVBox.vbox.apply {
-		/*matt.hurricanefx.tornadofx.vector.matt.hurricanefx.eye.prop.math.minus 10 here is so everything looks nicer*/
+		/*matt.hurricanefx.tornadofx.vector.matt.hurricanefx.eye.prop.math.matt.obs.math.op.matt.obs.math.double.op.minus 10 here is so everything looks nicer*/
 		/*also neccesary to prevent buggy javafx bug where fitToWidth doesnt work and it trys to hscroll.*/
 		/*needs to be exact or content will flow out of scrollpane (doesnt obey fitToWidth)*/
 		exactWidthProperty.bind(sp.widthProperty.minus(woffset*2))

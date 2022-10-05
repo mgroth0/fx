@@ -13,6 +13,7 @@ import matt.fx.graphics.wrapper.sizeman.HasHeight
 import matt.fx.graphics.wrapper.sizeman.HasWidth
 import matt.lang.NOT_IMPLEMENTED
 import matt.obs.math.double.ObsD
+import matt.obs.math.times
 
 fun ET.canvas(width: Double = 0.0, height: Double = 0.0, op: CanvasWrapper.()->Unit = {}) =
   attach(CanvasWrapper(width, height), op)
@@ -59,7 +60,7 @@ open class CanvasWrapper(node: Canvas = Canvas()): NodeWrapperImpl<Canvas>(node)
   final override val heightProperty = node.heightProperty().toNonNullableProp().cast<Double>()
   override var pixelHeight by heightProperty
 
-  override val actualWidth by lazy { widthProperty*scaleXProperty }
+  override val actualWidth by lazy { widthProperty * scaleXProperty }
   override val actualHeight by lazy { heightProperty*scaleYProperty }
 
   override val graphicsContext: GraphicsContext get() = node.graphicsContext2D

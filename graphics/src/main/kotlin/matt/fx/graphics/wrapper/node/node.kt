@@ -366,7 +366,7 @@ interface NodeWrapper: EventTargetWrapper, StyleableWrapper {
 	}
 
   val scaleXProperty: BindableProperty<Double>
-	get() = node.scaleXProperty().toNonNullableProp().cast<Double>()
+	get() = node.scaleXProperty().toNonNullableProp().cast()
   var scaleY
 	get() = node.scaleY
 	set(value) {
@@ -374,7 +374,7 @@ interface NodeWrapper: EventTargetWrapper, StyleableWrapper {
 	}
 
   val scaleYProperty: BindableProperty<Double>
-	get() = node.scaleYProperty().toNonNullableProp().cast<Double>()
+	get() = node.scaleYProperty().toNonNullableProp().cast()
 
   fun requestFocus() = node.requestFocus()
 
