@@ -4,6 +4,7 @@ import javafx.application.Platform
 import javafx.beans.property.DoubleProperty
 import javafx.beans.property.ReadOnlyDoubleProperty
 import javafx.beans.property.SimpleDoubleProperty
+import javafx.beans.property.SimpleObjectProperty
 import javafx.event.EventHandler
 import javafx.event.EventTarget
 import javafx.scene.input.KeyCode
@@ -28,7 +29,6 @@ import matt.fx.graphics.fxthread.runLater
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapperImpl
 import matt.fx.graphics.wrapper.node.attachTo
-import matt.hurricanefx.eye.lang.DProp
 import matt.hurricanefx.eye.mtofx.createROFXPropWrapper
 import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
 import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
@@ -56,12 +56,12 @@ fun WebViewWrapper.exactHeightProperty() = SimpleDoubleProperty().also {
 
 var WebViewWrapper.exactWidth: Number
   set(value) {
-	exactWidthProperty().bind(DProp(value.toDouble()))
+	exactWidthProperty().bind(SimpleDoubleProperty(value.toDouble()))
   }
   get() = NEVER
 var WebViewWrapper.exactHeight: Number
   set(value) {
-	exactHeightProperty().bind(DProp(value.toDouble()))
+	exactHeightProperty().bind(SimpleDoubleProperty(value.toDouble()))
   }
   get() = NEVER
 
