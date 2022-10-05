@@ -1,7 +1,6 @@
 package matt.fx.control.wrapper.cellfact
 
 import javafx.beans.property.ObjectProperty
-import javafx.beans.property.SimpleStringProperty
 import javafx.scene.control.Cell
 import javafx.scene.control.ListCell
 import javafx.scene.control.TableCell
