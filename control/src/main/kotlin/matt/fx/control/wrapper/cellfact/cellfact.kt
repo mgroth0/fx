@@ -1,6 +1,7 @@
 package matt.fx.control.wrapper.cellfact
 
 import javafx.beans.property.ObjectProperty
+import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.beans.value.ObservableObjectValue
 import javafx.beans.value.ObservableStringValue
@@ -14,7 +15,6 @@ import javafx.scene.control.cell.CheckBoxListCell
 import javafx.util.Callback
 import javafx.util.StringConverter
 import matt.fx.graphics.wrapper.node.NodeWrapper
-import matt.hurricanefx.eye.lang.Prop
 import matt.hurricanefx.eye.prop.objectBindingN
 import kotlin.reflect.KProperty1
 
@@ -36,13 +36,13 @@ interface CellFactory<N, T, C: Cell<T>> {
   fun simpleCellFactoryFromProps(op: (T)->Pair<ObservableStringValue, ObservableObjectValue<NodeWrapper>>)
 
   fun simpleCellFactory(prop: KProperty1<T, ObservableStringValue>) {
-	simpleCellFactoryFromProps { prop.get(it) to Prop<NodeWrapper>() }
+	simpleCellFactoryFromProps { prop.get(it) to SimpleObjectProperty<NodeWrapper>() }
   }
 
   fun simpleCellFactory(op: SimpleFactory<T>) {
 	val op2: (T)->Pair<ObservableStringValue, ObservableObjectValue<NodeWrapper>> = {
 	  val pair = op.call(it)
-	  SimpleStringProperty(pair.first) to Prop(pair.second)
+	  SimpleStringProperty(pair.first) to SimpleObjectProperty(pair.second)
 	}
 	simpleCellFactoryFromProps(op2)
   }
@@ -50,7 +50,7 @@ interface CellFactory<N, T, C: Cell<T>> {
   fun simpleCellFactory(op: FirstPropFactory<T>) {
 	val op2: (T)->Pair<ObservableStringValue, ObservableObjectValue<NodeWrapper>> = {
 	  val pair = op.call(it)
-	  pair.first to Prop(pair.second)
+	  pair.first to SimpleObjectProperty(pair.second)
 	}
 	simpleCellFactoryFromProps(op2)
   }

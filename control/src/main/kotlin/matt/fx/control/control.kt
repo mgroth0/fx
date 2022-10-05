@@ -1,6 +1,5 @@
 package matt.fx.control
 
-import javafx.beans.property.SimpleDoubleProperty
 import javafx.scene.Node
 import javafx.scene.control.TreeTableView
 import javafx.scene.input.ContextMenuEvent
@@ -9,13 +8,14 @@ import javafx.scene.layout.Pane
 import javafx.scene.layout.RowConstraints
 import matt.fx.control.wrapper.checkbox.CheckBoxWrapper
 import matt.fx.control.wrapper.control.tab.TabWrapper
+import matt.fx.control.wrapper.scroll.ScrollPaneWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapperImpl
-import matt.hurricanefx.eye.lang.DProp
-import matt.fx.control.wrapper.scroll.ScrollPaneWrapper
 import matt.hurricanefx.eye.lib.onChangeUntilAfterFirst
+import matt.hurricanefx.eye.mtofx.createROFXPropWrapper
 import matt.lang.NEVER
 import matt.log.warn
+import matt.obs.prop.BindableProperty
 import matt.obs.prop.Var
 
 
@@ -28,25 +28,25 @@ fun Scrolls.scrollToMinYOf(node: NodeWrapperImpl<*>) {
 }
 
 
-fun ColumnConstraints.exactWidthProperty() = SimpleDoubleProperty().also {
-  minWidthProperty().bind(it)
-  maxWidthProperty().bind(it)
+fun ColumnConstraints.exactWidthProperty() = BindableProperty<Double?>(null).also {
+  minWidthProperty().bind(it.createROFXPropWrapper())
+  maxWidthProperty().bind(it.createROFXPropWrapper())
 }
 
-fun RowConstraints.exactHeightProperty() = SimpleDoubleProperty().also {
-  minHeightProperty().bind(it)
-  maxHeightProperty().bind(it)
+fun RowConstraints.exactHeightProperty() = BindableProperty<Double?>(null).also {
+  minHeightProperty().bind(it.createROFXPropWrapper())
+  maxHeightProperty().bind(it.createROFXPropWrapper())
 }
 
 
 var ColumnConstraints.exactWidth: Number
   set(value) {
-	exactWidthProperty().bind(DProp(value.toDouble()))
+	exactWidthProperty().bind(BindableProperty(value.toDouble()))
   }
   get() = NEVER
 var RowConstraints.exactHeight: Number
   set(value) {
-	exactHeightProperty().bind(DProp(value.toDouble()))
+	exactHeightProperty().bind(BindableProperty(value.toDouble()))
   }
   get() = NEVER
 
