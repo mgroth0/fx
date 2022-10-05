@@ -6,6 +6,7 @@ import javafx.scene.Parent
 import javafx.scene.input.ContextMenuEvent
 import javafx.scene.paint.Color
 import matt.auto.openInIntelliJ
+import matt.collect.itr.recurse.recurse
 import matt.color.name.ColorUtils
 import matt.file.MFile
 import matt.file.commons.ICON_FOLDER
@@ -28,7 +29,6 @@ import matt.fx.graphics.wrapper.style.StyleableWrapper
 import matt.fx.graphics.wrapper.style.toAwtColor
 import matt.log.profile.tic
 import matt.log.tab
-import matt.stream.recurse.recurse
 import java.net.URL
 import kotlin.reflect.KClass
 
