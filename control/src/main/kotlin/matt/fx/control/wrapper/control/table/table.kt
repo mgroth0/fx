@@ -7,7 +7,6 @@ import javafx.beans.property.Property
 import javafx.beans.property.ReadOnlyListProperty
 import javafx.beans.property.ReadOnlyObjectProperty
 import javafx.beans.property.ReadOnlyObjectWrapper
-import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.value.ObservableValue
 import javafx.collections.ListChangeListener
 import javafx.collections.ObservableList
@@ -37,10 +36,10 @@ import matt.hurricanefx.eye.prop.getValue
 import matt.hurricanefx.eye.prop.observable
 import matt.hurricanefx.eye.prop.setValue
 import matt.hurricanefx.eye.wrapper.obs.collect.createFXWrapper
-import matt.prim.str.decap
 import matt.obs.col.olist.ObsList
 import matt.obs.prop.BindableProperty
 import matt.obs.prop.ObsVal
+import matt.prim.str.decap
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 import kotlin.reflect.KMutableProperty1
