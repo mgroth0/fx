@@ -35,11 +35,6 @@
 	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
 	  "cfg" :  "implementation",
 	  "path" : ":k:fx:fxauto"
-	},
-	{
-	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
-	  "cfg" :  "implementation",
-	  "path" : ":k:stream"
 	}
   ],
   "note" :         null
