@@ -16,9 +16,9 @@ import matt.fx.graphics.wrapper.pane.hbox.HBoxWrapperImpl
 import matt.hurricanefx.eye.lib.onChange
 import matt.log.debug
 import matt.obs.bind.binding
-import matt.obs.bindings.math.div
 import matt.obs.bindings.str.ObsS
 import matt.obs.bindings.str.plus
+import matt.obs.math.double.op.div
 import matt.obs.prop.BindableProperty
 import matt.obs.prop.MObservableROValBase
 import kotlin.contracts.ExperimentalContracts
@@ -57,12 +57,12 @@ class ProcessInspectPane(initialValue: Process?): HBoxWrapperImpl<NodeWrapper>()
   private fun update(p: Process?) {
 	clear()
 	scrollpane(this@ProcessInspectPane.propLabel) {
-	  prefWidthProperty.bind(this@ProcessInspectPane.widthProperty/2)
+	  prefWidthProperty.bind(this@ProcessInspectPane.widthProperty/2.0)
 	}
 	if (p != null) {
 	  @Suppress("RemoveExplicitTypeArguments")
 	  treetableview<ProcessOrHandleWrapper> {
-		prefWidthProperty.bind(this@ProcessInspectPane.widthProperty/2)
+		prefWidthProperty.bind(this@ProcessInspectPane.widthProperty/2.0)
 		val col = (column("pid") { cdf: TreeTableColumn.CellDataFeatures<ProcessOrHandleWrapper, String> ->
 		  cdf.value?.value?.pid()?.let { pid ->
 			SimpleStringProperty(pid.toString())

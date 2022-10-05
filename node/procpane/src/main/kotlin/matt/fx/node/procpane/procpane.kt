@@ -24,7 +24,7 @@ import matt.hurricanefx.eye.prop.setValue
 import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
 import matt.log.logInvokation
 import matt.obs.bindings.bool.not
-import matt.obs.bindings.math.times
+import matt.obs.math.double.op.times
 import matt.obs.prop.BindableProperty
 
 val STATUS_FOLDER = REGISTERED_FOLDER + "status"
