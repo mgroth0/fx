@@ -77,7 +77,7 @@ open class TileableTabPane(
 	  vgrow = ALWAYS
 
 	  if (this@TileableTabPane.lastSelected != null && this@TileableTabPane.lastSelected!! < this@TileableTabPane.panes.size) {
-		selectionModel.select(this@TileableTabPane.lastSelected!!)
+		selectionModel.selectIndex(this@TileableTabPane.lastSelected!!)
 	  }
 	  selectionModel.selectedIndexProperty.onChange {
 		this@TileableTabPane.lastSelected = it
