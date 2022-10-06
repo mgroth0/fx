@@ -21,14 +21,20 @@ import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.hurricanefx.eye.bind.smartBind
 import matt.hurricanefx.eye.collect.asObservable
+import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
+import matt.obs.prop.ObsVal
+import matt.obs.prop.ValProp
+import matt.obs.prop.VarProp
 
-fun <T: Any> ComboBoxWrapper<T>.bindSelected(property: Property<T>) {
+fun <T: Any> ComboBoxWrapper<T>.bindSelected(property: VarProp<T?>) {
   selectionModel.selectedItemProperty.onChange {
 	property.value = it
   }
 }
+
 fun <T: Any> ET.combobox(
-  property: Property<T>? = null,
+  property: VarProp<T?>? = null,
   values: List<T>? = null,
   op: ComboBoxWrapper<T>.()->Unit = {}
 ) =
@@ -72,7 +78,7 @@ class ComboBoxWrapper<E: Any>(
 
 open class ComboBoxBaseWrapper<T: Any, N: ComboBoxBase<T>>(node: N): ControlWrapperImpl<N>(node) {
 
-  fun editableProperty(): BooleanProperty = node.editableProperty()
+  val editableProperty by lazy { node.editableProperty().toNonNullableProp() }
 
   var value: T?
 	get() = node.value
@@ -80,7 +86,7 @@ open class ComboBoxBaseWrapper<T: Any, N: ComboBoxBase<T>>(node: N): ControlWrap
 	  node.value = theVal
 	}
 
-  fun valueProperty(): ObjectProperty<T> = node.valueProperty()
+  val valueProperty by lazy { node.valueProperty().toNullableProp() }
 
   var promptText: String?
 	get() = node.promptText
@@ -97,9 +103,9 @@ open class ComboBoxBaseWrapper<T: Any, N: ComboBoxBase<T>>(node: N): ControlWrap
 }
 
 
-fun ComboBoxBaseWrapper<*,*>.editableWhen(predicate: ObservableValue<Boolean>) = apply {
-  editableProperty().bind(predicate)
+fun ComboBoxBaseWrapper<*, *>.editableWhen(predicate: ObsVal<Boolean>) = apply {
+  editableProperty.bind(predicate)
 }
 
-fun <T> ComboBoxBaseWrapper<T & Any,*>.bind(property: ObservableValue<T>, readonly: Boolean = false) =
-  valueProperty().smartBind(property, readonly)
+fun <T: Any> ComboBoxBaseWrapper<T, *>.bind(property: ValProp<T?>, readonly: Boolean = false) =
+  valueProperty.smartBind(property, readonly)

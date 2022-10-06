@@ -12,6 +12,7 @@ import matt.fx.control.wrapper.control.colbase.TableColumnBaseWrapper
 import matt.fx.control.wrapper.control.column.TableColumnWrapper
 import matt.hurricanefx.eye.wrapper.obs.collect.createImmutableWrapper
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNullableROProp
 import matt.model.convert.Converter
 import matt.obs.bind.binding
@@ -93,8 +94,12 @@ abstract class SelectionModelWrapperBase<T: Any, W: Any>(
   override fun clearSelection(index: Int) = sm.clearSelection(index)
   override fun clearSelection() = sm.clearSelection()
   override fun isSelected(index: Int) = sm.isSelected(index)
-  override val selectedIndex: Int? get() = sm.selectedIndex
-  override val selectedIndexProperty by lazy { sm.selectedIndexProperty().toNullableROProp().cast<Int?>() }
+  override val selectedIndex: Int? get() = selectedIndexProperty.value
+  override val selectedIndexProperty by lazy {
+	sm.selectedIndexProperty().toNonNullableROProp().cast<Int>().binding {
+	  it.takeIf { it >= 0 }
+	}
+  }
 }
 
 fun <T: Any> SelectionModel<T>.wrap() = SelectionModelWrapperImpl(this)
