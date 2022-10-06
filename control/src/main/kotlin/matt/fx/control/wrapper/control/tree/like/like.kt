@@ -5,6 +5,7 @@ import javafx.collections.ObservableList
 import javafx.scene.control.MultipleSelectionModel
 import javafx.scene.control.TreeItem
 import javafx.scene.layout.Region
+import matt.fx.control.wrapper.selects.MultiSelectWrap
 import matt.fx.control.wrapper.selects.SelectingControl
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.region.RegionWrapper
@@ -23,7 +24,7 @@ operator fun <T> TreeItem<T>.plusAssign(treeItem: TreeItem<T>) {
 interface TreeLikeWrapper<N: Region, T>: RegionWrapper<NodeWrapper>, SelectingControl<TreeItem<T>>, SizeManaged {
   var root: TreeItem<T>
   var isShowRoot: Boolean
-  override val selectionModel: MultipleSelectionModel<TreeItem<T>>
+  override val selectionModel: MultiSelectWrap<TreeItem<T>>
   val selectedValue: T? get() = selectedItem?.value
   fun scrollTo(i: Int)
   fun getRow(ti: TreeItem<T>): Int
