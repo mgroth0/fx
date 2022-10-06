@@ -25,7 +25,7 @@ import matt.hurricanefx.eye.collect.asObservable
 import matt.hurricanefx.eye.lib.onChange
 
 fun <T> ComboBoxWrapper<T>.bindSelected(property: Property<T>) {
-  selectionModel.selectedItemProperty().onChange {
+  selectionModel.selectedItemProperty.onChange {
 	property.value = it
   }
 }

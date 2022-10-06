@@ -26,6 +26,7 @@ import javafx.util.Callback
 import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.control.wrapper.control.column.TableColumnWrapper
 import matt.fx.control.wrapper.control.tablelike.TableLikeWrapper
+import matt.fx.control.wrapper.selects.MultipleSelectionModelWrapperImpl
 import matt.fx.control.wrapper.selects.wrap
 import matt.fx.control.wrapper.wrapped.wrapped
 import matt.fx.graphics.wrapper.ET
@@ -82,7 +83,6 @@ fun <T> TableViewWrapper<T>.selectOnDrag() {
 	}
   }
 }
-
 
 
 fun <T> TableViewWrapper<T>.bindSelected(property: Property<T>) {
@@ -492,3 +492,4 @@ fun <T> TableViewWrapper<T>.regainFocusAfterEdit() = apply {
 fun TableViewWrapper<*>.editableWhen(predicate: ObservableValue<Boolean>) = apply {
   editableProperty().bind(predicate)
 }
+

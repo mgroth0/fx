@@ -1,11 +1,14 @@
 package matt.fx.control.wrapper.selects
 
-import javafx.event.EventTarget
 import javafx.scene.control.MultipleSelectionModel
 import javafx.scene.control.SelectionMode
 import javafx.scene.control.SelectionModel
+import javafx.scene.control.TableSelectionModel
+import javafx.scene.control.TableView.TableViewSelectionModel
+import javafx.scene.control.TreeItem
+import javafx.scene.control.TreeTableView.TreeTableViewSelectionModel
 import matt.fx.control.wrapper.control.ControlWrapper
-import matt.fx.graphics.wrapper.EventTargetWrapperImpl
+import matt.fx.control.wrapper.control.column.TableColumnWrapper
 import matt.hurricanefx.eye.wrapper.obs.collect.createImmutableWrapper
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNullableROProp
@@ -16,7 +19,7 @@ import matt.obs.col.olist.mappedlist.toMappedList
 import matt.obs.prop.ObsVal
 import matt.obs.prop.Var
 
-interface SelectionControls<T> {
+interface SelectionControls<T: Any> {
   fun selectNext()
   fun selectFirst()
   fun selectLast()
@@ -40,7 +43,7 @@ interface SelectionControls<T> {
   val selectedItem: T? get() = selectedItemProperty.value
 }
 
-interface Selects<T>: SelectionControls<T> {
+interface Selects<T: Any>: SelectionControls<T> {
   val selectionModel: SelectionControls<T>
   override val selectedItem: T? get() = selectionModel.selectedItem
   override fun selectNext() = selectionModel.selectNext()
@@ -58,7 +61,7 @@ interface Selects<T>: SelectionControls<T> {
   override val selectedItemProperty: ObsVal<T?> get() = selectionModel.selectedItemProperty
 }
 
-interface MultiSelects<T>: Selects<T>, MultiSelectControls<T> {
+interface MultiSelects<T: Any>: Selects<T>, MultiSelectControls<T> {
   override val selectionModel: MultiSelectControls<T>
   override val selectionModeProperty get() = selectionModel.selectionModeProperty
   override fun selectedIndices() = selectionModel.selectedIndices()
@@ -69,12 +72,12 @@ interface MultiSelects<T>: Selects<T>, MultiSelectControls<T> {
 }
 
 
-interface SelectingControl<T>: Selects<T>, ControlWrapper
+interface SelectingControl<T: Any>: Selects<T>, ControlWrapper
 
 
 typealias SelectModWrap<T> = SelectionModelWrapperBase<*, T>
 
-abstract class SelectionModelWrapperBase<T, W>(
+abstract class SelectionModelWrapperBase<T: Any, W: Any>(
   protected open val sm: SelectionModel<T>
 ): SelectionControls<W> {
   override fun selectNext() = sm.selectNext()
@@ -90,18 +93,17 @@ abstract class SelectionModelWrapperBase<T, W>(
   override val selectedIndex: Int? get() = sm.selectedIndex
 }
 
-fun <T> SelectionModel<T>.wrap() = SelectionModelWrapperImpl(this)
-open class SelectionModelWrapperImpl<T>(sm: SelectionModel<T>): SelectionModelWrapperBase<T, T>(sm) {
+fun <T: Any> SelectionModel<T>.wrap() = SelectionModelWrapperImpl(this)
+open class SelectionModelWrapperImpl<T: Any>(sm: SelectionModel<T>): SelectionModelWrapperBase<T, T>(sm) {
   override fun select(obj: T?) = sm.select(obj) /*what if T is Int? Would the index be selected? weird...*/
   override val selectedItemProperty by lazy {
 	sm.selectedItemProperty().toNullableROProp()
   }
 }
 
-fun <T,W> SelectionModel<T>.wrap(converter: Converter<T,W>) = SelectionModelProxy(this,converter)
-class SelectionModelProxy<T, W>(
-  sm: SelectionModel<T>,
-  private val converter: Converter<T, W>
+fun <T: Any, W: Any> SelectionModel<T>.wrap(converter: Converter<T, W>) = SelectionModelProxy(this, converter)
+class SelectionModelProxy<T: Any, W: Any>(
+  sm: SelectionModel<T>, private val converter: Converter<T, W>
 ): SelectionModelWrapperBase<T, W>(sm) {
   override fun select(obj: W?) = sm.select(obj?.let(converter::convertToA))
   override val selectedItemProperty by lazy {
@@ -110,14 +112,7 @@ class SelectionModelProxy<T, W>(
 }
 
 
-interface ETWrapperConverter<N: EventTarget, W: EventTargetWrapperImpl<N>>: Converter<N, W> {
-  override fun convertToA(b: W) = toNode(b)
-  override fun convertToB(a: N) = toWrapper(a)
-  fun toNode(w: W): N
-  fun toWrapper(n: N): W
-}
-
-interface MultiSelectControls<W>: SelectionControls<W> {
+interface MultiSelectControls<W: Any>: SelectionControls<W> {
   val selectionModeProperty: Var<SelectionMode>
   var selectionMode
 	get() = selectionModeProperty.value
@@ -134,8 +129,8 @@ interface MultiSelectControls<W>: SelectionControls<W> {
 
 typealias MultiSelectWrap<T> = MultipleSelectionModelWrapperBase<*, T>
 
-abstract class MultipleSelectionModelWrapperBase<T, W>(
-  protected val sm: MultipleSelectionModel<T>
+abstract class MultipleSelectionModelWrapperBase<T: Any, W: Any>(
+  protected open val sm: MultipleSelectionModel<T>
 ): MultiSelectControls<W> {
   override val selectionModeProperty by lazy { sm.selectionModeProperty().toNonNullableProp() }
   override fun selectedIndices() = sm.selectedIndices.createImmutableWrapper()
@@ -145,21 +140,45 @@ abstract class MultipleSelectionModelWrapperBase<T, W>(
   abstract override fun selectedItems(): ObsList<W>
 }
 
-fun <T> MultipleSelectionModel<T>.wrap() = MultipleSelectionModelWrapperImpl(this)
-class MultipleSelectionModelWrapperImpl<T>(
+fun <T: Any> MultipleSelectionModel<T>.wrap() = MultipleSelectionModelWrapperImpl(this)
+open class MultipleSelectionModelWrapperImpl<T: Any>(
   sm: MultipleSelectionModel<T>
 ): MultipleSelectionModelWrapperBase<T, T>(sm), SelectionControls<T> by SelectionModelWrapperImpl(sm) {
-  override fun selectedItems() = sm.selectedItems
-	.createImmutableWrapper()
+  override fun selectedItems() = sm.selectedItems.createImmutableWrapper()
 }
 
-fun <T,W> MultipleSelectionModel<T>.wrap(converter: Converter<T,W>) = MultipleSelectionModelWrapperProxy(this,converter)
-class MultipleSelectionModelWrapperProxy<T, W>(
-  sm: MultipleSelectionModel<T>,
-  private val converter: Converter<T, W>
+fun <T: Any, W: Any> MultipleSelectionModel<T>.wrap(converter: Converter<T, W>) =
+  MultipleSelectionModelWrapperProxy(this, converter)
+
+class MultipleSelectionModelWrapperProxy<T: Any, W: Any>(
+  sm: MultipleSelectionModel<T>, private val converter: Converter<T, W>
 ): MultipleSelectionModelWrapperBase<T, W>(sm), SelectionControls<W> by SelectionModelProxy<T, W>(sm, converter) {
-  override fun selectedItems() = sm.selectedItems
-	.createImmutableWrapper().toMappedList {
+  override fun selectedItems() = sm.selectedItems.createImmutableWrapper().toMappedList {
 	  converter.convertToB(it)
 	}
+}
+
+/*fun <T: Any> TableSelectionModel<T>.wrap() = TableSelectionModelWrapper<T>(this)*/
+
+abstract class TableSelectionModelWrapper<T: Any>(
+  override val sm: TableSelectionModel<T>
+): MultipleSelectionModelWrapperImpl<T>(sm) {
+  val isCellSelectionEnabled get() = sm.isCellSelectionEnabled
+  fun clearAndSelect(row: Int, col: TableColumnWrapper<T, *>) = sm.clearAndSelect(row, col.node)
+}
+
+fun <T: Any> TableViewSelectionModel<T>.wrap() = TableViewSelectionModelWrapper(this)
+
+open class TableViewSelectionModelWrapper<T: Any>(
+  override val sm: TableViewSelectionModel<T>
+): TableSelectionModelWrapper<T>(sm) {
+  val selectedCells get() = sm.selectedCells
+}
+
+fun <T: Any> TreeTableViewSelectionModel<T>.wrap() = TreeTableViewSelectionModelWrapper(this)
+
+class TreeTableViewSelectionModelWrapper<T: Any>(
+  override val sm: TreeTableViewSelectionModel<T>
+): TableSelectionModelWrapper<TreeItem<T>>(sm) {
+  val selectedCells get() = sm.selectedCells
 }
