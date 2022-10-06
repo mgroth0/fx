@@ -18,8 +18,10 @@ import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.hurricanefx.eye.bind.smartBind
 import matt.hurricanefx.eye.collect.asObservable
+import matt.hurricanefx.eye.wrapper.obs.collect.createFXWrapper
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
+import matt.obs.col.olist.ObsList
 import matt.obs.prop.ObsVal
 import matt.obs.prop.ValProp
 import matt.obs.prop.VarProp
@@ -47,7 +49,7 @@ class ComboBoxWrapper<E: Any>(
 	fun <T: Any> ComboBox<T>.wrapped() = ComboBoxWrapper(this)
   }
 
-  constructor(items: ObservableList<E>): this(ComboBox(items))
+  constructor(items: ObsList<E>): this(ComboBox(items.createFXWrapper()))
 
 
   override val cellFactoryProperty: ObjectProperty<Callback<ListView<E>, ListCell<E>>> get() = node.cellFactoryProperty()
