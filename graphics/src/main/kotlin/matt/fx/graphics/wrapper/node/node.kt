@@ -85,7 +85,7 @@ interface NodeWrapper: EventTargetWrapper, StyleableWrapper {
   val boundsInLocal: Bounds get() = node.boundsInLocal
   val boundsInParent: Bounds get() = node.boundsInParent
 
-  val layoutBoundsProperty: ReadOnlyObjectProperty<Bounds> get() = node.layoutBoundsProperty()
+  val layoutBoundsProperty: ObsVal<Bounds>
 
   fun setOnKeyPressed(listener: (KeyEvent)->Unit) {
 	node.setOnKeyPressed(listener)
@@ -495,6 +495,7 @@ abstract class NodeWrapperImpl<out N: Node>(
 	}*/
 
 
+  override val layoutBoundsProperty by lazy { node.layoutBoundsProperty().toNonNullableROProp() }
   override val hoverProperty by lazy { node.hoverProperty().toNonNullableROProp() }
   override val effectProperty by lazy { node.effectProperty().toNullableProp() }
   override val disabledProperty by lazy { node.disabledProperty().toNonNullableROProp() }
