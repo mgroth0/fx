@@ -249,8 +249,9 @@ fun <T: Number> ValueAxis<T>.wrapped(): ValueAxisWrapper<T> = findWrapper() ?: w
   else          -> cannotFindWrapper()
 }
 
+@Suppress("UNCHECKED_CAST")
 fun <T> Axis<T>.wrapped(): AxisWrapper<T, Axis<T>> = findWrapper() ?: when (this) {
-  is ValueAxis -> wrapped()
+  is ValueAxis -> (this as ValueAxis<out Number>).wrapped() as AxisWrapper<T, Axis<T>>
   else         -> cannotFindWrapper()
 }
 

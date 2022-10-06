@@ -9,16 +9,18 @@ import matt.lang.err
 
 /*https://stackoverflow.com/questions/34771612/javafx-linechart-performance*/
 
-open class HighPerformanceLineChart: NumberLineChart(HighPerformanceFXLineChart()) {
+open class HighPerformanceLineChart(
+  extraHighPerf: Boolean = true
+): NumberLineChart(if (extraHighPerf) HighPerformanceFXLineChart() else LineChart(NumberAxis(), NumberAxis())) {
   init {
 	animated = false
-	animatedProperty.onChange {
+	if (extraHighPerf) animatedProperty.onChange {
 	  if (it) {
 		err("${this::class.simpleName} is unable to animate because dataItemAdded was NOPed")
 	  }
 	}
 	createSymbols = false
-	createSymbolsProperty.onChange {
+	if (extraHighPerf) createSymbolsProperty.onChange {
 	  if (it) {
 		err("${this::class.simpleName} is unable to create symbols because dataItemAdded was NOPed")
 	  }
