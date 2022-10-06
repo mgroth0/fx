@@ -93,11 +93,13 @@ fun fileTreeAndViewerPane(
 
 fun TreeLikeWrapper<*, MFile>.nav(f: MFile) {
 
+  val roo = root ?: return
+
   val fam = f.chain { it.parentFile }.toList()
 
   if (f.doesNotExist) return
 
-  root.children.firstOrNull { it.value in fam }?.let { subRoot ->
+  roo.children.firstOrNull { it.value in fam }?.let { subRoot ->
 	println("good to nav")
 	var nextSubRoot = subRoot as FileTreeItem
 	var keepGoing = true
@@ -153,7 +155,7 @@ fun PaneWrapperImpl<*, *>.fileTree(
 	setupContent(rootFiles, strategy)
 
 
-	root.isExpanded = true
+	root!!.isExpanded = true
 	if (op != null) op()
   }
 }
@@ -170,7 +172,7 @@ fun PaneWrapperImpl<*, *>.fileTableTree(
 	setupContent(rootFiles, strategy)
 
 
-	root.isExpanded = true
+	root!!.isExpanded = true
 	autoResizeColumns()
 	if (op != null) op()
   }
