@@ -59,11 +59,6 @@
 	{
 	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
 	  "cfg" :  "api",
-	  "path" : ":k:auto"
-	},
-	{
-	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
-	  "cfg" :  "api",
 	  "path" : ":k:fx:image"
 	},
 	{
