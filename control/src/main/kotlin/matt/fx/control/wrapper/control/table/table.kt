@@ -75,7 +75,7 @@ fun <T: Any> TableViewWrapper<T>.selectOnDrag() {
 	  if (items.size > index) {
 		if (selectionModel.isCellSelectionEnabled) {
 		  @Suppress("UNCHECKED_CAST")
-		  selectionModel.selectRange(startRow, startColumn, index, tableColumn as TableColumn<T, *>?)
+		  selectionModel.selectRange(startRow, startColumn.wrapped(), index, (tableColumn as TableColumn<T, *>).wrapped())
 		} else {
 		  selectionModel.selectRange(startRow, index)
 		}
