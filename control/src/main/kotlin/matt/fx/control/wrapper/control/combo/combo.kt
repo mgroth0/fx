@@ -1,10 +1,7 @@
 package matt.fx.control.wrapper.control.combo
 
-import javafx.beans.property.BooleanProperty
 import javafx.beans.property.ObjectProperty
-import javafx.beans.property.Property
 import javafx.beans.property.StringProperty
-import javafx.beans.value.ObservableValue
 import javafx.collections.ObservableList
 import javafx.scene.control.ComboBox
 import javafx.scene.control.ComboBoxBase
