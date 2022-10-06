@@ -49,7 +49,7 @@ class ComboBoxWrapper<E: Any>(
 	fun <T: Any> ComboBox<T>.wrapped() = ComboBoxWrapper(this)
   }
 
-  constructor(items: ObsList<E>): this(ComboBox(items.createFXWrapper()))
+  constructor(items: ObsList<E>): this(ComboBox<E>(items.createFXWrapper()))
 
 
   override val cellFactoryProperty: ObjectProperty<Callback<ListView<E>, ListCell<E>>> get() = node.cellFactoryProperty()
