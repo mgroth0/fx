@@ -175,16 +175,16 @@ fun RadioMenuItem.wrapped(): RadioMenuItemWrapper = findWrapper() ?: RadioMenuIt
 fun ToggleButton.wrapped(): ToggleButtonWrapper = findWrapper() ?: ToggleButtonWrapper(this@wrapped)
 fun RadioButton.wrapped(): RadioButtonWrapper = findWrapper() ?: RadioButtonWrapper(this@wrapped)
 
-fun <E> TableView<E>.wrapped(): TableViewWrapper<E> = findWrapper() ?: TableViewWrapper(this@wrapped)
-fun <E> TreeTableView<E>.wrapped(): TreeTableViewWrapper<E> = findWrapper() ?: TreeTableViewWrapper(this@wrapped)
-fun <E> TreeView<E>.wrapped(): TreeViewWrapper<E> = findWrapper() ?: TreeViewWrapper(this@wrapped)
-fun <E> ListView<E>.wrapped(): ListViewWrapper<E> = findWrapper() ?: ListViewWrapper(this@wrapped)
+fun <E: Any> TableView<E>.wrapped(): TableViewWrapper<E> = findWrapper() ?: TableViewWrapper(this@wrapped)
+fun <E: Any> TreeTableView<E>.wrapped(): TreeTableViewWrapper<E> = findWrapper() ?: TreeTableViewWrapper(this@wrapped)
+fun <E: Any> TreeView<E>.wrapped(): TreeViewWrapper<E> = findWrapper() ?: TreeViewWrapper(this@wrapped)
+fun <E: Any> ListView<E>.wrapped(): ListViewWrapper<E> = findWrapper() ?: ListViewWrapper(this@wrapped)
 
 
-fun <E, P> TreeTableColumn<E, P>.wrapped(): TreeTableColumnWrapper<E, P> =
+fun <E: Any, P> TreeTableColumn<E, P>.wrapped(): TreeTableColumnWrapper<E, P> =
   findWrapper() ?: TreeTableColumnWrapper(this@wrapped)
 
-fun <E, P> TableColumn<E, P>.wrapped(): TableColumnWrapper<E, P> = findWrapper() ?: TableColumnWrapper(this@wrapped)
+fun <E: Any, P> TableColumn<E, P>.wrapped(): TableColumnWrapper<E, P> = findWrapper() ?: TableColumnWrapper(this@wrapped)
 
 fun Rectangle.wrapped(): RectangleWrapper = findWrapper() ?: RectangleWrapper(this@wrapped)
 fun Circle.wrapped(): CircleWrapper = findWrapper() ?: CircleWrapper(this@wrapped)
@@ -198,7 +198,7 @@ fun Label.wrapped(): LabelWrapper = findWrapper() ?: LabelWrapper(this@wrapped)
 
 fun TextArea.wrapped(): TextAreaWrapper = findWrapper() ?: TextAreaWrapper(this@wrapped)
 fun <T: Any> Spinner<T>.wrapped(): SpinnerWrapper<T> = findWrapper() ?: SpinnerWrapper(this@wrapped)
-fun <T> ChoiceBox<T>.wrapped(): ChoiceBoxWrapper<T> = findWrapper() ?: ChoiceBoxWrapper(this@wrapped)
+fun <T: Any> ChoiceBox<T>.wrapped(): ChoiceBoxWrapper<T> = findWrapper() ?: ChoiceBoxWrapper(this@wrapped)
 fun FakeFocusTextField.wrapped(): FakeFocusTextFieldWrapper = findWrapper() ?: FakeFocusTextFieldWrapper(this@wrapped)
 fun TextField.wrapped(): TextFieldWrapper = findWrapper() ?: TextFieldWrapper(this@wrapped)
 fun ScrollPane.wrapped(): ScrollPaneWrapper<NodeWrapper> = findWrapper() ?: ScrollPaneWrapper(this@wrapped)
@@ -316,7 +316,7 @@ fun Region.wrapped(): RegionWrapper<*> = findWrapper() ?: when (this) {
 }
 
 /*hansolo*/
-class SunburstChart(val sunburst: Region): RegionWrapperImpl<Region, NodeWrapper>(sunburst) {
+class SunburstChart(sunburst: Region): RegionWrapperImpl<Region, NodeWrapper>(sunburst) {
   override fun addChild(child: NodeWrapper, index: Int?) {
 	TODO("Not yet implemented")
   }

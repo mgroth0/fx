@@ -16,7 +16,7 @@ import matt.fx.control.wrapper.control.treetable.TreeTableViewWrapper
 import matt.fx.control.wrapper.wrapped.wrapped
 
 
-class TreeTableColumnWrapper<E, P>(
+class TreeTableColumnWrapper<E: Any, P>(
   override val node: TreeTableColumn<E, P>
 ): TableColumnBaseWrapper<TreeItem<E>, P, TreeTableColumn<E, P>>(node),
    TreeTableCellFactory<TreeTableColumn<E, P>, E, P>,

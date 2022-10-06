@@ -31,7 +31,7 @@ import matt.hurricanefx.eye.prop.stringBinding
 private typealias CellValFact<E, P> = Callback<CellDataFeatures<E, P>, ObservableValue<P>?>
 
 
-class TableColumnWrapper<E, P>(
+class TableColumnWrapper<E: Any, P>(
   override val node: TableColumn<E, P>
 ): TableColumnBaseWrapper<E, P, TableColumn<E, P>>(node),
    TableCellFactory<TableColumn<E, P>, E, P>,

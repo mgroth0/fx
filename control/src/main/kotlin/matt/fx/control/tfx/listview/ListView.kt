@@ -11,7 +11,6 @@ import javafx.scene.input.MouseEvent
 import matt.fx.control.wrapper.control.list.ListViewWrapper
 import matt.fx.control.wrapper.wrapped.wrapped
 import matt.fx.graphics.wrapper.node.NodeWrapper
-import matt.hurricanefx.eye.lib.onChange
 
 
 /**
@@ -19,7 +18,7 @@ import matt.hurricanefx.eye.lib.onChange
  * @param clickCount The number of mouse clicks to trigger the action
  * @param action The runnable to execute on select
  */
-fun <T> ListViewWrapper<T>.onUserSelect(clickCount: Int = 2, action: (T) -> Unit) {
+fun <T> ListViewWrapper<T & Any>.onUserSelect(clickCount: Int = 2, action: (T) -> Unit) {
     addEventFilter(MouseEvent.MOUSE_CLICKED) { event ->
         val selectedItem = this.selectedItem
         if (event.clickCount == clickCount && selectedItem != null && event.target.wrapped().let{
@@ -35,7 +34,7 @@ fun <T> ListViewWrapper<T>.onUserSelect(clickCount: Int = 2, action: (T) -> Unit
     }
 }
 
-fun <T> ListViewWrapper<T>.onUserDelete(action: (T) -> Unit) {
+fun <T> ListViewWrapper<T & Any>.onUserDelete(action: (T) -> Unit) {
     addEventFilter(KeyEvent.KEY_PRESSED) { event ->
         val selectedItem = this.selectedItem
         if (event.code == KeyCode.BACK_SPACE && selectedItem != null)
@@ -52,12 +51,12 @@ class ListCellCache<T>(private val cacheProvider: (T) -> Node) {
 
 
 
-fun <T> ListViewWrapper<T>.bindSelected(property: Property<T>) {
-    selectionModel.selectedItemProperty().onChange {
+fun <T> ListViewWrapper<T & Any>.bindSelected(property: Property<T>) {
+    selectionModel.selectedItemProperty.onChange {
         property.value = it
     }
 }
 
-fun <T> ListViewWrapper<T>.multiSelect(enable: Boolean = true) {
+fun <T> ListViewWrapper<T & Any>.multiSelect(enable: Boolean = true) {
     selectionModel.selectionMode = if (enable) SelectionMode.MULTIPLE else SelectionMode.SINGLE
 }

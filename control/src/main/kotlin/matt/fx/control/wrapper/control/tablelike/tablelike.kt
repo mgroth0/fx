@@ -4,4 +4,4 @@ import matt.fx.control.wrapper.control.hascols.HasCols
 import matt.fx.control.wrapper.selects.SelectingControl
 
 
-interface TableLikeWrapper<E>: /*ControlWrapperInterface,*/ SelectingControl<E>, HasCols<E>
+interface TableLikeWrapper<E: Any>: /*ControlWrapperInterface,*/ SelectingControl<E>, HasCols<E>
