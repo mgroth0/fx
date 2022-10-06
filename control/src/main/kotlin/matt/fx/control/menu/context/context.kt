@@ -278,16 +278,7 @@ enum class EventHandlerType {
   Handler, Filter
 }
 
-private fun KClass<*>.jumpToSource() {
-  val pack = this.java.`package`.name
-  jumpToKotlinSourceString(
-	matt.file.commons.IdeProject.all.folder,
-	this.simpleName!!,
-	packageFilter = pack
-  )?.let { fl ->
-	openInIntelliJ(fl.first.absolutePath, fl.second)
-  }
-}
+
 
 private fun NodeWrapper.hotkeyInfoMenu() = MenuWrapper("Click For Hotkey Info").apply {
   val node = this@hotkeyInfoMenu
