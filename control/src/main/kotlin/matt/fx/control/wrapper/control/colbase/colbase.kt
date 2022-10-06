@@ -12,7 +12,7 @@ import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
 
 
-abstract class TableColumnBaseWrapper<E, P, F: TableColumnBase<E, P>>(
+abstract class TableColumnBaseWrapper<E: Any, P, F: TableColumnBase<E, P>>(
   override val node: TableColumnBase<E, P>
 ):
   EventTargetWrapperImpl<TableColumnBase<E, P>>(),

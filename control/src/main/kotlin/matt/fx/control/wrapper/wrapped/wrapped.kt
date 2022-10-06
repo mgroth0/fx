@@ -324,7 +324,7 @@ class SunburstChart(sunburst: Region): RegionWrapperImpl<Region, NodeWrapper>(su
 }
 
 /*hansolo*/
-class CoxCombWrapper(val coxcomb: Region): RegionWrapperImpl<Region, NodeWrapper>(coxcomb) {
+class CoxCombWrapper(coxcomb: Region): RegionWrapperImpl<Region, NodeWrapper>(coxcomb) {
   override fun addChild(child: NodeWrapper, index: Int?) {
 	TODO("Not yet implemented")
   }
@@ -332,7 +332,7 @@ class CoxCombWrapper(val coxcomb: Region): RegionWrapperImpl<Region, NodeWrapper
 }
 
 /*RichTextFX*/
-class ParagraphBoxWrapper(val paragraphBox: Region): RegionWrapperImpl<Region, NodeWrapper>(paragraphBox) {
+class ParagraphBoxWrapper(paragraphBox: Region): RegionWrapperImpl<Region, NodeWrapper>(paragraphBox) {
   override fun addChild(child: NodeWrapper, index: Int?) {
 	TODO("Not yet implemented")
   }
@@ -340,7 +340,7 @@ class ParagraphBoxWrapper(val paragraphBox: Region): RegionWrapperImpl<Region, N
 }
 
 /*FlowLess*/
-class NavigatorWrapper(val navigator: Region): RegionWrapperImpl<Region, NodeWrapper>(navigator) {
+class NavigatorWrapper(navigator: Region): RegionWrapperImpl<Region, NodeWrapper>(navigator) {
   override fun addChild(child: NodeWrapper, index: Int?) {
 	TODO("Not yet implemented")
   }
