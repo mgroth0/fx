@@ -8,6 +8,7 @@ import javafx.scene.control.TableView.TableViewSelectionModel
 import javafx.scene.control.TreeItem
 import javafx.scene.control.TreeTableView.TreeTableViewSelectionModel
 import matt.fx.control.wrapper.control.ControlWrapper
+import matt.fx.control.wrapper.control.colbase.TableColumnBaseWrapper
 import matt.fx.control.wrapper.control.column.TableColumnWrapper
 import matt.hurricanefx.eye.wrapper.obs.collect.createImmutableWrapper
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
@@ -154,8 +155,8 @@ class MultipleSelectionModelWrapperProxy<T: Any, W: Any>(
   sm: MultipleSelectionModel<T>, private val converter: Converter<T, W>
 ): MultipleSelectionModelWrapperBase<T, W>(sm), SelectionControls<W> by SelectionModelProxy<T, W>(sm, converter) {
   override fun selectedItems() = sm.selectedItems.createImmutableWrapper().toMappedList {
-	  converter.convertToB(it)
-	}
+	converter.convertToB(it)
+  }
 }
 
 /*fun <T: Any> TableSelectionModel<T>.wrap() = TableSelectionModelWrapper<T>(this)*/
@@ -165,6 +166,12 @@ abstract class TableSelectionModelWrapper<T: Any>(
 ): MultipleSelectionModelWrapperImpl<T>(sm) {
   val isCellSelectionEnabled get() = sm.isCellSelectionEnabled
   fun clearAndSelect(row: Int, col: TableColumnWrapper<T, *>) = sm.clearAndSelect(row, col.node)
+  fun selectRange(
+	min: Int,
+	minCol: TableColumnBaseWrapper<T, *, *>,
+	max: Int,
+	maxCol: TableColumnBaseWrapper<T, *, *>
+  ) = sm.selectRange(min, minCol.node, max, maxCol.node)
 }
 
 fun <T: Any> TableViewSelectionModel<T>.wrap() = TableViewSelectionModelWrapper(this)

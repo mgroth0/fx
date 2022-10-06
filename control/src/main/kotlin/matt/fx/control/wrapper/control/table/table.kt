@@ -62,7 +62,7 @@ fun <T: Any> TableViewWrapper<T>.selectOnDrag() {
 	  startColumn = tableColumn as TableColumn<T, *>?
 
 	  if (selectionModel.isCellSelectionEnabled) {
-		selectionModel.clearAndSelect(startRow, startColumn)
+		selectionModel.clearAndSelect(startRow, startColumn.wrapped())
 	  } else {
 		selectionModel.clearAndSelect(startRow)
 	  }
@@ -85,24 +85,24 @@ fun <T: Any> TableViewWrapper<T>.selectOnDrag() {
 }
 
 
-fun <T> TableViewWrapper<T>.bindSelected(property: Property<T>) {
+fun <T: Any> TableViewWrapper<T>.bindSelected(property: Property<T>) {
   selectionModel.selectedItemProperty().onChange {
 	property.value = it
   }
 }
 
 
-fun <T> ET.tableview(items: ObsList<T>? = null, op: TableViewWrapper<T>.()->Unit = {}) =
+fun <T: Any> ET.tableview(items: ObsList<T>? = null, op: TableViewWrapper<T>.()->Unit = {}) =
   TableViewWrapper<T>().attachTo(this, op) {
 	if (items != null) {
 	  it.items = items.createFXWrapper()
 	}
   }
 
-fun <T> ET.tableview(items: ReadOnlyListProperty<T>, op: TableViewWrapper<T>.()->Unit = {}) =
+fun <T: Any> ET.tableview(items: ReadOnlyListProperty<T>, op: TableViewWrapper<T>.()->Unit = {}) =
   tableview(items as ObservableValue<ObservableList<T>>, op)
 
-fun <T> ET.tableview(
+fun <T: Any> ET.tableview(
   items: ObservableValue<out ObservableList<T>>,
   op: TableViewWrapper<T>.()->Unit = {}
 ) =
@@ -110,7 +110,7 @@ fun <T> ET.tableview(
 	it.itemsProperty().bind(items)
   }
 
-open class TableViewWrapper<E>(
+open class TableViewWrapper<E: Any>(
   node: TableView<E> = TableView<E>(),
 ): ControlWrapperImpl<TableView<E>>(node), TableLikeWrapper<E> {
 
@@ -407,7 +407,7 @@ open class TableViewWrapper<E>(
 }
 
 
-fun <T> TableViewWrapper<T>.selectWhere(scrollTo: Boolean = true, condition: (T)->Boolean) {
+fun <T> TableViewWrapper<T & Any>.selectWhere(scrollTo: Boolean = true, condition: (T)->Boolean) {
   items.asSequence().filter(condition).forEach {
 	selectionModel.select(it)
 	if (scrollTo) scrollTo(it)
@@ -415,8 +415,8 @@ fun <T> TableViewWrapper<T>.selectWhere(scrollTo: Boolean = true, condition: (T)
 }
 
 
-fun <T> TableViewWrapper<T>.moveToTopWhere(
-  backingList: ObservableList<T> = items,
+fun <T> TableViewWrapper<T & Any>.moveToTopWhere(
+  backingList: ObservableList<T & Any> = items,
   select: Boolean = true,
   predicate: (T)->Boolean
 ) {
@@ -428,7 +428,7 @@ fun <T> TableViewWrapper<T>.moveToTopWhere(
   }
 }
 
-fun <T> TableViewWrapper<T>.moveToBottomWhere(
+fun <T> TableViewWrapper<T & Any>.moveToBottomWhere(
   backingList: ObservableList<T> = items,
   select: Boolean = true,
   predicate: (T)->Boolean
@@ -443,10 +443,10 @@ fun <T> TableViewWrapper<T>.moveToBottomWhere(
   }
 }
 
-fun <T> TableViewWrapper<T>.selectFirst() = selectionModel.selectFirst()
+fun <T> TableViewWrapper<T & Any>.selectFirst() = selectionModel.selectFirst()
 
 
-fun <S> TableViewWrapper<S>.onSelectionChange(func: (S?)->Unit) =
+fun <S> TableViewWrapper<T & Any>.onSelectionChange(func: (S?)->Unit) =
   selectionModel.selectedItemProperty().addListener({ _, _, newValue -> func(newValue) })
 
 
@@ -457,7 +457,7 @@ fun <S> TableViewWrapper<S>.onSelectionChange(func: (S?)->Unit) =
  * *
  * @param action The action to execute on select
  */
-fun <T> TableViewWrapper<T>.onUserSelect(clickCount: Int = 2, action: (T)->Unit) {
+fun <T> TableViewWrapper<T & Any>.onUserSelect(clickCount: Int = 2, action: (T)->Unit) {
   val isSelected = { event: InputEvent ->
 	event.target.wrapped().isInsideRow() && !selectionModel.isEmpty
   }
@@ -473,7 +473,7 @@ fun <T> TableViewWrapper<T>.onUserSelect(clickCount: Int = 2, action: (T)->Unit)
   }
 }
 
-fun <T> TableViewWrapper<T>.onUserDelete(action: (T)->Unit) {
+fun <T> TableViewWrapper<T & Any>.onUserDelete(action: (T)->Unit) {
   addEventFilter(KeyEvent.KEY_PRESSED, { event ->
 	if (event.code == KeyCode.BACK_SPACE && selectedItem != null)
 	  action(selectedItem!!)
@@ -481,7 +481,7 @@ fun <T> TableViewWrapper<T>.onUserDelete(action: (T)->Unit) {
 }
 
 
-fun <T> TableViewWrapper<T>.regainFocusAfterEdit() = apply {
+fun <T> TableViewWrapper<T & Any>.regainFocusAfterEdit() = apply {
   editingCellProperty().onChange {
 	if (it == null)
 	  requestFocus()
