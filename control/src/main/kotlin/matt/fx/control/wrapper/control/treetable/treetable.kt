@@ -249,7 +249,7 @@ class TreeTableViewWrapper<E: Any>(
 
 }
 
-fun <T> TreeTableViewWrapper<T & Any>.selectFirst() = selectionModel.selectFirst()
+//fun <T> TreeTableViewWrapper<T & Any>.selectFirst() = selectionModel.selectFirst()
 
 
 fun <T> TreeTableViewWrapper<T & Any>.bindSelected(property: Property<T>) {
