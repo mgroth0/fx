@@ -36,7 +36,7 @@ class TreeViewWrapper<T>(node: TreeView<T> = TreeView(), op: TreeViewWrapper<T>.
   override val cellFactoryProperty: ObjectProperty<Callback<TreeView<T>, TreeCell<T>>> = node.cellFactoryProperty()
 
 
-  override var root: TreeItem<T>
+  override var root: TreeItem<T>?
 	get() = node.root
 	set(value) {
 	  node.root = value

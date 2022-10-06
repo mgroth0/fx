@@ -12,7 +12,6 @@ import javafx.scene.control.TreeTablePosition
 import javafx.scene.control.TreeTableRow
 import javafx.scene.control.TreeTableView
 import javafx.scene.control.TreeTableView.ResizeFeatures
-import javafx.scene.control.TreeTableView.TreeTableViewSelectionModel
 import javafx.scene.control.cell.TreeItemPropertyValueFactory
 import javafx.scene.input.InputEvent
 import javafx.scene.input.KeyCode
@@ -29,7 +28,6 @@ import matt.fx.control.wrapper.wrapped.wrapped
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
-import matt.hurricanefx.eye.lib.onChange
 import matt.hurricanefx.eye.prop.observable
 import matt.lang.go
 import matt.prim.str.decap
