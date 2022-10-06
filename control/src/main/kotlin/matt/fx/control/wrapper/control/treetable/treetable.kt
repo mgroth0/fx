@@ -59,7 +59,6 @@ class TreeTableViewWrapper<E>(
 
   fun editableProperty(): BooleanProperty = node.editableProperty()
 
-
   val sortOrder: ObservableList<TreeTableColumn<E, *>> get() = node.sortOrder
 
   override var root: TreeItem<E>
@@ -101,7 +100,13 @@ class TreeTableViewWrapper<E>(
 	noinline op: TreeTableColumnWrapper<E, P>.()->Unit = {}
   ): TreeTableColumnWrapper<E, P> {
 	val column = TreeTableColumnWrapper<E, P>(title)
-	column.cellValueFactory = Callback { it.value.value?.let { observable(it, prop) } } /*Matt: added null safety here way later because I ran into a NPE here... thought I went years without this null safety first so maybe the null was my fault?*/
+	column.cellValueFactory = Callback {
+	  it.value.value?.let {
+		observable(
+		  it, prop
+		)
+	  }
+	} /*Matt: added null safety here way later because I ran into a NPE here... thought I went years without this null safety first so maybe the null was my fault?*/
 	addColumnInternal(column)
 	return column.also(op)
   }
@@ -113,7 +118,13 @@ class TreeTableViewWrapper<E>(
 	noinline op: TreeTableColumnWrapper<E, P>.()->Unit = {}
   ): TreeTableColumnWrapper<E, P> {
 	val column = TreeTableColumnWrapper<E, P>(title)
-	column.cellValueFactory = Callback { it.value.value?.let { observable(it, prop) } } /*Matt: added null safety here way later because I ran into a NPE here... thought I went years without this null safety first so maybe the null was my fault?*/
+	column.cellValueFactory = Callback {
+	  it.value.value?.let {
+		observable(
+		  it, prop
+		)
+	  }
+	} /*Matt: added null safety here way later because I ran into a NPE here... thought I went years without this null safety first so maybe the null was my fault?*/
 	addColumnInternal(column)
 	return column.also(op)
   }
@@ -240,7 +251,7 @@ fun <T> TreeTableViewWrapper<T>.selectFirst() = selectionModel.selectFirst()
 
 
 fun <T> TreeTableViewWrapper<T>.bindSelected(property: Property<T>) {
-  selectionModel.selectedItemProperty().onChange {
+  selectionModel.selectedItemProperty.onChange {
 	property.value = it?.value
   }
 }

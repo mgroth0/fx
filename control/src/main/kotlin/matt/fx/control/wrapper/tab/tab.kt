@@ -13,6 +13,7 @@ import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
 import matt.hurricanefx.eye.wrapper.obs.collect.createMutableWrapper
+import matt.log.warn
 import matt.obs.col.olist.mappedlist.toSyncedList
 
 

@@ -48,7 +48,7 @@ import kotlin.reflect.KMutableProperty1
 import kotlin.reflect.KProperty1
 
 
-fun <T> TableViewWrapper<T>.selectOnDrag() {
+fun <T: Any> TableViewWrapper<T>.selectOnDrag() {
   var startRow = 0
   var startColumn = columns.first()
 

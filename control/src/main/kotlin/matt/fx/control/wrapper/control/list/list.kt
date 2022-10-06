@@ -19,7 +19,7 @@ import matt.hurricanefx.eye.wrapper.obs.collect.createFXWrapper
 import matt.obs.col.olist.ObsList
 
 
-fun <T> ET.listview(values: ObsList<T>? = null, op: ListViewWrapper<T>.()->Unit = {}) =
+fun <T: Any> ET.listview(values: ObsList<T>? = null, op: ListViewWrapper<T>.()->Unit = {}) =
   ListViewWrapper<T>().attachTo(this, op) {
 	if (values != null) {
 	  it.items = values.createFXWrapper()
@@ -29,15 +29,15 @@ fun <T> ET.listview(values: ObsList<T>? = null, op: ListViewWrapper<T>.()->Unit 
 //fun <T> ET.listview(values: ReadOnlyListProperty<T>, op: ListViewWrapper<T>.()->Unit = {}) =
 //  listview(values as ObservableValue<ObservableList<T>>, op)
 
-fun <T> ET.listview(
+fun <T: Any> ET.listview(
   values: ObservableValue<ObservableList<T>>,
   op: ListViewWrapper<T>.()->Unit = {}
-) =
-  ListViewWrapper<T>().attachTo(this, op) {
-	it.itemsProperty().bind(values)
-  }
-open class ListViewWrapper<E>(
-   node: ListView<E> = ListView<E>(),
+) = ListViewWrapper<T>().attachTo(this, op) {
+  it.itemsProperty().bind(values)
+}
+
+open class ListViewWrapper<E: Any>(
+  node: ListView<E> = ListView<E>(),
 ): ControlWrapperImpl<ListView<E>>(node), SelectingControl<E>, ListCellFactory<ListView<E>, E> {
 
   constructor(items: ObservableList<E>): this(ListView(items))
@@ -72,7 +72,7 @@ open class ListViewWrapper<E>(
 }
 
 
-fun <T> ListViewWrapper<T>.selectWhere(scrollTo: Boolean = true, condition: (T)->Boolean) {
+fun <T: Any> ListViewWrapper<T>.selectWhere(scrollTo: Boolean = true, condition: (T)->Boolean) {
   items.asSequence().filter(condition).forEach {
 	selectionModel.select(it)
 	if (scrollTo) scrollTo(it)
