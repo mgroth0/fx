@@ -79,7 +79,7 @@ open class TileableTabPane(
 	  if (this@TileableTabPane.lastSelected != null && this@TileableTabPane.lastSelected!! < this@TileableTabPane.panes.size) {
 		selectionModel.select(this@TileableTabPane.lastSelected!!)
 	  }
-	  selectionModel.selectedIndexProperty().onChange {
+	  selectionModel.selectedIndexProperty.onChange {
 		this@TileableTabPane.lastSelected = it
 	  }
 	})

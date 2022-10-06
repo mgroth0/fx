@@ -31,6 +31,7 @@ interface SelectionControls<T: Any> {
   fun clearSelection(index: Int)
   fun clearSelection()
   fun isSelected(index: Int): Boolean
+  val selectedIndexProperty: ObsVal<Int?>
   val selectedIndex: Int?
   fun select(obj: T?)
   val selectedItemProperty: ObsVal<T?>
@@ -92,6 +93,7 @@ abstract class SelectionModelWrapperBase<T: Any, W: Any>(
   override fun clearSelection() = sm.clearSelection()
   override fun isSelected(index: Int) = sm.isSelected(index)
   override val selectedIndex: Int? get() = sm.selectedIndex
+  override val selectedIndexProperty by lazy { sm.selectedIndexProperty().toNullableROProp().cast<Int?>() }
 }
 
 fun <T: Any> SelectionModel<T>.wrap() = SelectionModelWrapperImpl(this)
@@ -165,10 +167,11 @@ abstract class TableSelectionModelWrapper<T: Any>(
   override val sm: TableSelectionModel<T>
 ): MultipleSelectionModelWrapperImpl<T>(sm) {
   var isCellSelectionEnabled
-    get() = sm.isCellSelectionEnabled
-    set(value) {
-      sm.isCellSelectionEnabled = value
-    }
+	get() = sm.isCellSelectionEnabled
+	set(value) {
+	  sm.isCellSelectionEnabled = value
+	}
+
   fun clearAndSelect(row: Int, col: TableColumnWrapper<T, *>) = sm.clearAndSelect(row, col.node)
   fun selectRange(
 	min: Int,
