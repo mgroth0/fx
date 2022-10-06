@@ -81,14 +81,14 @@ class ProcessInspectPane(initialValue: Process?): HBoxWrapperImpl<NodeWrapper>()
 		}
 
 		debug("update5")
-		selectionModel.selectedItemProperty().onChange {
+		selectionModel.selectedItemProperty.onChange {
 		  debug("select1")
 
 		  this@ProcessInspectPane.propLabel.oProp.set(it?.value)
 		  debug("select2")
 		}
 		root = TreeItem(ProcessOrHandleWrapper(p))
-		root.isExpanded = true
+		root!!.isExpanded = true
 		debug("update6")
 		selectionModel.select(root)
 		debug("update7")

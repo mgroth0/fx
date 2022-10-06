@@ -302,7 +302,7 @@ private fun TreeLikeWrapper<*, MFile>.setupContent(
   strategy: FileTreePopulationStrategy,
 ) {
   root = TreeItem()
-  root.children.createMutableWrapper().bind(rootFiles) {
+  root!!.children.createMutableWrapper().bind(rootFiles) {
 	FileTreeItem(it)
   }
   isShowRoot = false
@@ -310,7 +310,7 @@ private fun TreeLikeWrapper<*, MFile>.setupContent(
 }
 
 private fun TreeLikeWrapper<*, MFile>.rePop() {
-  root.children.forEach { child ->
+  root!!.children.forEach { child ->
 	populateTree(child, { FileTreeItem(it) }) { item ->
 	  val cs = item.value.childs()
 	  taball("cs of ${item.value}", cs)
@@ -324,14 +324,14 @@ private fun TreeLikeWrapper<*, MFile>.setupPopulating(strategy: FileTreePopulati
   if (strategy == AUTOMATIC) {
 	rePop()
 	refreshWhileInSceneEvery(5.sec) {
-	  if (root.children.flatMap { it.recurse { it.children } }.any {
+	  if (root!!.children.flatMap { it.recurse { it.children } }.any {
 		  !it.children.map { it.value }.sameContentsAnyOrder(it.value.listFiles()?.toList() ?: listOf())
 		}) {
 		rePop()
 	  }
 	}
   } else {
-	root.children.forEach { (it as FileTreeItem).refreshChilds() }
+	root!!.children.forEach { (it as FileTreeItem).refreshChilds() }
 	setOnSelectionChange { v ->
 	  if (v != null) {
 		(v as FileTreeItem).refreshChilds()
