@@ -11,6 +11,7 @@ import javafx.util.Callback
 import matt.fx.control.wrapper.cellfact.ListCellFactory
 import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.control.wrapper.selects.SelectingControl
+import matt.fx.control.wrapper.selects.wrap
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
@@ -62,7 +63,7 @@ open class ListViewWrapper<E>(
 
   fun itemsProperty(): ObjectProperty<ObservableList<E>> = node.itemsProperty()
 
-  override val selectionModel: MultipleSelectionModel<E> get() = node.selectionModel
+  override val selectionModel by lazy { node.selectionModel.wrap() }
   override fun addChild(child: NodeWrapper, index: Int?) {
 	TODO("Not yet implemented")
   }

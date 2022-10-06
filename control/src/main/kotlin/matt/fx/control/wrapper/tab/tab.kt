@@ -11,8 +11,8 @@ import matt.fx.graphics.service.uncheckedWrapperConverter
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
-import matt.hurricanefx.eye.wrapper.obs.collect.createMutableWrapper
 import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
+import matt.hurricanefx.eye.wrapper.obs.collect.createMutableWrapper
 import matt.obs.col.olist.mappedlist.toSyncedList
 
 
@@ -31,6 +31,7 @@ open class TabPaneWrapper<T: TabWrapper<*>>(
   val tabs get() = node.tabs.createMutableWrapper().toSyncedList<Tab, T>(uncheckedWrapperConverter())
 
   override val selectionModel: SelectModWrap<T> by lazy {
+	warn("actually selection model is a property...")
 	node.selectionModel.wrap(uncheckedWrapperConverter())
   }
 

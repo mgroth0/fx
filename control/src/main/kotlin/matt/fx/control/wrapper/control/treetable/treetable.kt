@@ -24,6 +24,7 @@ import matt.fx.control.wrapper.control.tablelike.TableLikeWrapper
 import matt.fx.control.wrapper.control.tree.like.TreeLikeWrapper
 import matt.fx.control.wrapper.control.tree.like.populateTree
 import matt.fx.control.wrapper.control.treecol.TreeTableColumnWrapper
+import matt.fx.control.wrapper.selects.wrap
 import matt.fx.control.wrapper.wrapped.wrapped
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
@@ -84,7 +85,7 @@ class TreeTableViewWrapper<E>(
 
   override fun getRow(ti: TreeItem<E>) = node.getRow(ti)
 
-  override val selectionModel get(): TreeTableViewSelectionModel<E> = node.selectionModel
+  override val selectionModel by lazy { node.selectionModel.wrap() }
   override fun scrollTo(i: Int) = node.scrollTo(i)
   override fun addChild(child: NodeWrapper, index: Int?) {
 	TODO("Not yet implemented")

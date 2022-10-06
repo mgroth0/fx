@@ -12,6 +12,7 @@ import javafx.util.StringConverter
 import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.control.wrapper.control.value.HasWritableValue
 import matt.fx.control.wrapper.selects.SelectingControl
+import matt.fx.control.wrapper.selects.wrap
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
@@ -95,7 +96,7 @@ class ChoiceBoxWrapper<T>(
 	node.setOnAction(op)
   }
 
-  override val selectionModel: SingleSelectionModel<T> = node.selectionModel
+  override val selectionModel by lazy { node.selectionModel.wrap() }
 
   fun selectOnType() {
 	val timer = 1.sec

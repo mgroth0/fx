@@ -26,6 +26,7 @@ import javafx.util.Callback
 import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.control.wrapper.control.column.TableColumnWrapper
 import matt.fx.control.wrapper.control.tablelike.TableLikeWrapper
+import matt.fx.control.wrapper.selects.wrap
 import matt.fx.control.wrapper.wrapped.wrapped
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
@@ -144,7 +145,7 @@ open class TableViewWrapper<E>(
 
   override val columns: ObservableList<TableColumn<E, *>> get() = node.columns
 
-  override val selectionModel: TableViewSelectionModel<E> get() = node.selectionModel
+  override val selectionModel by lazy { node.selectionModel.wrap() }
   fun scrollTo(i: Int) = node.scrollTo(i)
   fun scrollTo(e: E) = node.scrollTo(e)
   fun sort() = node.sort()

@@ -16,6 +16,7 @@ import javafx.util.StringConverter
 import matt.fx.control.wrapper.cellfact.ListCellFactory
 import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.control.wrapper.selects.SelectingControl
+import matt.fx.control.wrapper.selects.wrap
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
@@ -67,7 +68,7 @@ class ComboBoxWrapper<E>(
 
   fun converterProperty(): ObjectProperty<StringConverter<E>> = node.converterProperty()
 
-  override val selectionModel: SingleSelectionModel<E> get() = node.selectionModel
+  override val selectionModel by lazy { node.selectionModel.wrap() }
 
 }
 
