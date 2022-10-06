@@ -31,26 +31,30 @@ import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.hurricanefx.eye.lib.onChange
 import matt.hurricanefx.eye.prop.observable
+import matt.lang.go
 import matt.prim.str.decap
 import kotlin.reflect.KFunction
 import kotlin.reflect.KMutableProperty1
 import kotlin.reflect.KProperty1
 
-val <T> TreeTableViewWrapper<T>.selectedCell: TreeTablePosition<T, *>?
+val <T> TreeTableViewWrapper<T & Any>.selectedCell: TreeTablePosition<T, *>?
   get() = selectionModel.selectedCells.firstOrNull()
 
-val <T> TreeTableViewWrapper<T>.selectedColumn: TreeTableColumn<T, *>?
+val <T> TreeTableViewWrapper<T & Any>.selectedColumn: TreeTableColumn<T, *>?
   get() = selectedCell?.tableColumn
 
 //val <T> TreeTableViewWrapper<T>.selectedValue: Any?
 //  get() = selectedColumn?.getCellObservableValue(selectionModel.selectedItem)?.value
 
-fun <T> ET.treetableview(root: TreeItem<T>? = null, op: TreeTableViewWrapper<T>.()->Unit = {}) =
-  TreeTableViewWrapper<T>().attachTo(this, op) {
+fun <T> ET.treetableview(
+  root: TreeItem<T & Any>? = null,
+  op: TreeTableViewWrapper<T & Any>.()->Unit = {}
+) =
+  TreeTableViewWrapper<T & Any>().attachTo(this, op) {
 	if (root != null) it.root = root
   }
 
-class TreeTableViewWrapper<E>(
+class TreeTableViewWrapper<E: Any>(
   node: TreeTableView<E> = TreeTableView(),
 ): ControlWrapperImpl<TreeTableView<E>>(node),
    TreeLikeWrapper<TreeTableView<E>, E>,
@@ -61,7 +65,7 @@ class TreeTableViewWrapper<E>(
 
   val sortOrder: ObservableList<TreeTableColumn<E, *>> get() = node.sortOrder
 
-  override var root: TreeItem<E>
+  override var root: TreeItem<E>?
 	get() = node.root
 	set(value) {
 	  node.root = value
@@ -247,10 +251,10 @@ class TreeTableViewWrapper<E>(
 
 }
 
-fun <T> TreeTableViewWrapper<T>.selectFirst() = selectionModel.selectFirst()
+fun <T> TreeTableViewWrapper<T & Any>.selectFirst() = selectionModel.selectFirst()
 
 
-fun <T> TreeTableViewWrapper<T>.bindSelected(property: Property<T>) {
+fun <T> TreeTableViewWrapper<T & Any>.bindSelected(property: Property<T>) {
   selectionModel.selectedItemProperty.onChange {
 	property.value = it?.value
   }
@@ -264,9 +268,9 @@ fun <T> TreeTableViewWrapper<T>.bindSelected(property: Property<T>) {
  * *
  * @param action The action to execute on select
  */
-fun <T> TreeTableViewWrapper<T>.onUserSelect(clickCount: Int = 2, action: (T)->Unit) {
+fun <T> TreeTableViewWrapper<T & Any>.onUserSelect(clickCount: Int = 2, action: (T)->Unit) {
   val isSelected = { event: InputEvent ->
-	event.target.wrapped().isInsideRow() && !selectionModel.isEmpty
+	event.target.wrapped().isInsideRow() && !selectionModel.selectionIsEmpty()
   }
 
   addEventFilter(MouseEvent.MOUSE_CLICKED) { event ->
@@ -281,11 +285,13 @@ fun <T> TreeTableViewWrapper<T>.onUserSelect(clickCount: Int = 2, action: (T)->U
 }
 
 
-fun <T> TreeTableViewWrapper<T>.populate(
-  itemFactory: (T)->TreeItem<T> = { TreeItem(it) },
-  childFactory: (TreeItem<T>)->Iterable<T>?
-) =
-  populateTree(root, itemFactory, childFactory)
+fun <T> TreeTableViewWrapper<T & Any>.populate(
+  itemFactory: (T)->TreeItem<T & Any> = { TreeItem(it) },
+  childFactory: (TreeItem<T & Any>)->Iterable<T & Any>?
+) = root?.go {
+  populateTree(it, itemFactory, childFactory)
+}
+
 
 
 fun TreeTableViewWrapper<*>.editableWhen(predicate: ObservableValue<Boolean>) = apply {

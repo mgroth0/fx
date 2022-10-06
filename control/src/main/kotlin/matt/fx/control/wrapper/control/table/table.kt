@@ -16,7 +16,6 @@ import javafx.scene.control.TableColumn
 import javafx.scene.control.TablePosition
 import javafx.scene.control.TableView
 import javafx.scene.control.TableView.ResizeFeatures
-import javafx.scene.control.TableView.TableViewSelectionModel
 import javafx.scene.control.cell.PropertyValueFactory
 import javafx.scene.input.InputEvent
 import javafx.scene.input.KeyCode
@@ -26,7 +25,6 @@ import javafx.util.Callback
 import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.control.wrapper.control.column.TableColumnWrapper
 import matt.fx.control.wrapper.control.tablelike.TableLikeWrapper
-import matt.fx.control.wrapper.selects.MultipleSelectionModelWrapperImpl
 import matt.fx.control.wrapper.selects.wrap
 import matt.fx.control.wrapper.wrapped.wrapped
 import matt.fx.graphics.wrapper.ET
@@ -86,7 +84,7 @@ fun <T: Any> TableViewWrapper<T>.selectOnDrag() {
 
 
 fun <T: Any> TableViewWrapper<T>.bindSelected(property: Property<T>) {
-  selectionModel.selectedItemProperty().onChange {
+  selectionModel.selectedItemProperty.onChange {
 	property.value = it
   }
 }
@@ -429,7 +427,7 @@ fun <T> TableViewWrapper<T & Any>.moveToTopWhere(
 }
 
 fun <T> TableViewWrapper<T & Any>.moveToBottomWhere(
-  backingList: ObservableList<T> = items,
+  backingList: ObservableList<T & Any> = items,
   select: Boolean = true,
   predicate: (T)->Boolean
 ) {
@@ -443,11 +441,11 @@ fun <T> TableViewWrapper<T & Any>.moveToBottomWhere(
   }
 }
 
-fun <T> TableViewWrapper<T & Any>.selectFirst() = selectionModel.selectFirst()
+//fun <T> TableViewWrapper<T & Any>.selectFirst() = selectionModel.selectFirst()
 
 
-fun <S> TableViewWrapper<T & Any>.onSelectionChange(func: (S?)->Unit) =
-  selectionModel.selectedItemProperty().addListener({ _, _, newValue -> func(newValue) })
+//fun <S> TableViewWrapper<S & Any>.onSelectionChange(func: (S?)->Unit) =
+//  selectionModel.selectedItemProperty.addListener({ _, _, newValue -> func(newValue) })
 
 
 /**
@@ -459,7 +457,7 @@ fun <S> TableViewWrapper<T & Any>.onSelectionChange(func: (S?)->Unit) =
  */
 fun <T> TableViewWrapper<T & Any>.onUserSelect(clickCount: Int = 2, action: (T)->Unit) {
   val isSelected = { event: InputEvent ->
-	event.target.wrapped().isInsideRow() && !selectionModel.isEmpty
+	event.target.wrapped().isInsideRow() && !selectionModel.selectionIsEmpty()
   }
 
   addEventFilter(MouseEvent.MOUSE_CLICKED) { event ->

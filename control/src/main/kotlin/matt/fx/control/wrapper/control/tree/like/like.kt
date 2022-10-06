@@ -2,7 +2,6 @@ package matt.fx.control.wrapper.control.tree.like
 
 import javafx.collections.ListChangeListener
 import javafx.collections.ObservableList
-import javafx.scene.control.MultipleSelectionModel
 import javafx.scene.control.TreeItem
 import javafx.scene.layout.Region
 import matt.fx.control.wrapper.selects.MultiSelectWrap
@@ -22,7 +21,7 @@ operator fun <T> TreeItem<T>.plusAssign(treeItem: TreeItem<T>) {
 }
 
 interface TreeLikeWrapper<N: Region, T>: RegionWrapper<NodeWrapper>, SelectingControl<TreeItem<T>>, SizeManaged {
-  var root: TreeItem<T>
+  var root: TreeItem<T>?
   var isShowRoot: Boolean
   override val selectionModel: MultiSelectWrap<TreeItem<T>>
   val selectedValue: T? get() = selectedItem?.value

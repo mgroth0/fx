@@ -164,7 +164,11 @@ class MultipleSelectionModelWrapperProxy<T: Any, W: Any>(
 abstract class TableSelectionModelWrapper<T: Any>(
   override val sm: TableSelectionModel<T>
 ): MultipleSelectionModelWrapperImpl<T>(sm) {
-  val isCellSelectionEnabled get() = sm.isCellSelectionEnabled
+  var isCellSelectionEnabled
+    get() = sm.isCellSelectionEnabled
+    set(value) {
+      sm.isCellSelectionEnabled = value
+    }
   fun clearAndSelect(row: Int, col: TableColumnWrapper<T, *>) = sm.clearAndSelect(row, col.node)
   fun selectRange(
 	min: Int,
