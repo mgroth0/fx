@@ -10,7 +10,6 @@ import javafx.scene.control.ComboBox
 import javafx.scene.control.ComboBoxBase
 import javafx.scene.control.ListCell
 import javafx.scene.control.ListView
-import javafx.scene.control.SingleSelectionModel
 import javafx.util.Callback
 import javafx.util.StringConverter
 import matt.fx.control.wrapper.cellfact.ListCellFactory
@@ -22,14 +21,13 @@ import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.hurricanefx.eye.bind.smartBind
 import matt.hurricanefx.eye.collect.asObservable
-import matt.hurricanefx.eye.lib.onChange
 
-fun <T> ComboBoxWrapper<T>.bindSelected(property: Property<T>) {
+fun <T: Any> ComboBoxWrapper<T>.bindSelected(property: Property<T>) {
   selectionModel.selectedItemProperty.onChange {
 	property.value = it
   }
 }
-fun <T> ET.combobox(
+fun <T: Any> ET.combobox(
   property: Property<T>? = null,
   values: List<T>? = null,
   op: ComboBoxWrapper<T>.()->Unit = {}
@@ -39,11 +37,11 @@ fun <T> ET.combobox(
 	if (property != null) it.bind(property)
   }
 
-class ComboBoxWrapper<E>(
+class ComboBoxWrapper<E: Any>(
   node: ComboBox<E> = ComboBox<E>(),
 ): ComboBoxBaseWrapper<E, ComboBox<E>>(node), SelectingControl<E>, ListCellFactory<ListView<E>, E> {
   companion object {
-	fun <T> ComboBox<T>.wrapped() = ComboBoxWrapper(this)
+	fun <T: Any> ComboBox<T>.wrapped() = ComboBoxWrapper(this)
   }
 
   constructor(items: ObservableList<E>): this(ComboBox(items))

@@ -4,7 +4,6 @@ import javafx.beans.property.ObjectProperty
 import javafx.collections.ObservableList
 import javafx.event.ActionEvent
 import javafx.scene.control.ChoiceBox
-import javafx.scene.control.SingleSelectionModel
 import javafx.scene.input.KeyCode.ENTER
 import javafx.scene.input.KeyCode.ESCAPE
 import javafx.scene.input.KeyCode.SPACE
@@ -31,7 +30,7 @@ import java.lang.System.currentTimeMillis
 import kotlin.contracts.InvocationKind.EXACTLY_ONCE
 import kotlin.contracts.contract
 
-inline fun <T> ET.choicebox(
+inline fun <T: Any> ET.choicebox(
   property: BindableProperty<T?>? = null,
   values: List<T>? = null,
   op: ChoiceBoxWrapper<T>.()->Unit = {}
@@ -45,14 +44,14 @@ inline fun <T> ET.choicebox(
   }
 }
 
-inline fun <T> ET.choicebox(
+inline fun <T: Any> ET.choicebox(
   property: BindableProperty<T?>? = null,
   values: Array<T>? = null,
   op: ChoiceBoxWrapper<T>.()->Unit = {}
 ) = choicebox(property, values?.toList(), op)
 
 
-inline fun <T> choicebox(
+inline fun <T: Any> choicebox(
   property: BindableProperty<T>? = null,
   values: List<T>? = null,
   op: ChoiceBoxWrapper<T>.()->Unit = {}
@@ -68,7 +67,7 @@ inline fun <T> choicebox(
 }
 
 
-class ChoiceBoxWrapper<T>(
+class ChoiceBoxWrapper<T: Any>(
   node: ChoiceBox<T> = ChoiceBox(),
 ): ControlWrapperImpl<ChoiceBox<T>>(node), SelectingControl<T>, HasWritableValue<T?> {
 
@@ -140,8 +139,8 @@ class ChoiceBoxWrapper<T>(
   fun action(op: ()->Unit) = setOnAction { op() }
 }
 
-fun <T> ChoiceBoxWrapper<T>.bind(property: ValProp<T?>, readonly: Boolean = false) =
+fun <T: Any> ChoiceBoxWrapper<T>.bind(property: ValProp<T?>, readonly: Boolean = false) =
   valueProperty.smartBind(property, readonly)
 
-@JvmName("bindNonNull") fun <T> ChoiceBoxWrapper<T>.bind(property: ValProp<T>, readonly: Boolean = false) =
+@JvmName("bindNonNull") fun <T: Any> ChoiceBoxWrapper<T>.bind(property: ValProp<T>, readonly: Boolean = false) =
   valueProperty.smartBind(property.cast(), readonly)
