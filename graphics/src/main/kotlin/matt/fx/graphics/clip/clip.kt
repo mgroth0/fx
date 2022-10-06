@@ -1,11 +1,11 @@
-@file:See(AwtClipLink::class)
+/*@file:See(AwtClipLink::class)*/
 
 package matt.fx.graphics.clip
 
 import javafx.scene.input.Clipboard
 import javafx.scene.input.ClipboardContent
 import javafx.scene.input.DataFormat
-import matt.auto.clip.AwtClipLink
+/*import matt.auto.clip.AwtClipLink*/
 import matt.file.MFile
 import matt.lang.See
 

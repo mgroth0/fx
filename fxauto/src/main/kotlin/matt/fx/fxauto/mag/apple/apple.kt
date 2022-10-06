@@ -1,4 +1,4 @@
-package matt.fx.graphics.mag.apple
+package matt.fx.fxauto.mag.apple
 
 import javafx.application.Platform.runLater
 import javafx.geometry.Rectangle2D
