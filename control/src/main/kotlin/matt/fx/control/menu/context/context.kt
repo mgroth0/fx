@@ -10,8 +10,6 @@ import javafx.scene.canvas.Canvas
 import javafx.scene.control.ContextMenu
 import javafx.scene.control.MenuItem
 import javafx.scene.shape.Shape
-import matt.auto.jumpToKotlinSourceString
-import matt.auto.openInIntelliJ
 import matt.collect.dmap.DefaultStoringMap
 import matt.collect.dmap.withStoringDefault
 import matt.collect.map.lazyMap

@@ -5,7 +5,6 @@ import javafx.scene.Node
 import javafx.scene.Parent
 import javafx.scene.input.ContextMenuEvent
 import javafx.scene.paint.Color
-import matt.auto.openInIntelliJ
 import matt.collect.itr.recurse.recurse
 import matt.color.name.ColorUtils
 import matt.file.MFile
