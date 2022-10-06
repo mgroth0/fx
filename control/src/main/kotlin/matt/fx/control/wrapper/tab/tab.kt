@@ -4,8 +4,9 @@ import javafx.scene.control.Tab
 import javafx.scene.control.TabPane
 import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.control.wrapper.control.tab.TabWrapper
-import matt.fx.control.wrapper.selects.SelectionModelWrapper
+import matt.fx.control.wrapper.selects.SelectModWrap
 import matt.fx.control.wrapper.selects.Selects
+import matt.fx.control.wrapper.selects.wrap
 import matt.fx.graphics.service.uncheckedWrapperConverter
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
@@ -29,10 +30,8 @@ open class TabPaneWrapper<T: TabWrapper<*>>(
 
   val tabs get() = node.tabs.createMutableWrapper().toSyncedList<Tab, T>(uncheckedWrapperConverter())
 
-  override val selectionModel: SelectionModelWrapper<Tab, T> by lazy {
-	SelectionModelWrapper(
-	  node.selectionModel, converter = uncheckedWrapperConverter()
-	)
+  override val selectionModel: SelectModWrap<T> by lazy {
+	node.selectionModel.wrap(uncheckedWrapperConverter())
   }
 
   fun add(tab: T) = tabs.add(tab)
