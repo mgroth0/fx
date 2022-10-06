@@ -70,7 +70,7 @@ class ComboBoxWrapper<E: Any>(
 
 }
 
-open class ComboBoxBaseWrapper<T, N: ComboBoxBase<T>>(node: N): ControlWrapperImpl<N>(node) {
+open class ComboBoxBaseWrapper<T: Any, N: ComboBoxBase<T>>(node: N): ControlWrapperImpl<N>(node) {
 
   fun editableProperty(): BooleanProperty = node.editableProperty()
 
@@ -101,5 +101,5 @@ fun ComboBoxBaseWrapper<*,*>.editableWhen(predicate: ObservableValue<Boolean>) =
   editableProperty().bind(predicate)
 }
 
-fun <T> ComboBoxBaseWrapper<T,*>.bind(property: ObservableValue<T>, readonly: Boolean = false) =
+fun <T> ComboBoxBaseWrapper<T & Any,*>.bind(property: ObservableValue<T>, readonly: Boolean = false) =
   valueProperty().smartBind(property, readonly)

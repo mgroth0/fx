@@ -61,6 +61,7 @@ interface Selects<T: Any>: SelectionControls<T> {
   override val selectedIndex: Int? get() = selectionModel.selectedIndex
   override fun select(obj: T?) = selectionModel.select(obj)
   override val selectedItemProperty: ObsVal<T?> get() = selectionModel.selectedItemProperty
+  override val selectedIndexProperty: ObsVal<Int?> get() = selectionModel.selectedIndexProperty
 }
 
 interface MultiSelects<T: Any>: Selects<T>, MultiSelectControls<T> {
