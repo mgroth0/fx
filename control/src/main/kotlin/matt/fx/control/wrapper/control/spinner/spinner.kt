@@ -215,5 +215,7 @@ fun <T: Any> SpinnerWrapper<T>.bind(property: ObsVal<T>, readonly: Boolean = fal
 fun <T: Any> SpinnerValueFactory<T>.wrap() = SpinnerValueFactoryWrapper(this)
 class SpinnerValueFactoryWrapper<T: Any>(internal val svf: SpinnerValueFactory<T>) {
   fun increment(steps: Int) = svf.increment(steps)
+  fun decrement(steps: Int) = svf.decrement(steps)
   val valueProperty by lazy { svf.valueProperty().toNonNullableProp() }
+  var value by valueProperty
 }
