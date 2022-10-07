@@ -6,6 +6,7 @@ import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
+import matt.hurricanefx.eye.converter.ConverterConverter
 import matt.hurricanefx.eye.wrapper.obs.collect.createFXWrapper
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
@@ -218,4 +219,6 @@ class SpinnerValueFactoryWrapper<T: Any>(internal val svf: SpinnerValueFactory<T
   fun decrement(steps: Int) = svf.decrement(steps)
   val valueProperty by lazy { svf.valueProperty().toNonNullableProp() }
   var value by valueProperty
+  val converterProperty by lazy { svf.converterProperty().toNonNullableProp().proxy(ConverterConverter()) }
+  var converter by converterProperty
 }
