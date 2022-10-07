@@ -102,12 +102,7 @@ open class MScene<R: ParentWrapper<*>>(
 		}*/
 
 
-		actionitem("open darkModena.css") {
-		  mFile(URL(DARK_MODENA_CSS).file).openInIntelliJ()
-		}
-		actionitem("open custom.css") {
-		  mFile(URL(CUSTOM_CSS).file).openInIntelliJ()
-		}
+
 
 
 
