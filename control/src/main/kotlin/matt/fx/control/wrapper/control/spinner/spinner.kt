@@ -1,6 +1,5 @@
 package matt.fx.control.wrapper.control.spinner
 
-import javafx.beans.value.ObservableValue
 import javafx.scene.control.Spinner
 import javafx.scene.control.SpinnerValueFactory
 import matt.fx.control.wrapper.control.ControlWrapperImpl
@@ -11,10 +10,12 @@ import matt.hurricanefx.eye.wrapper.obs.collect.createFXWrapper
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
 import matt.lang.err
+import matt.model.convert.Converter
+import matt.obs.bind.smartBind
 import matt.obs.col.olist.ObsList
 import matt.obs.prop.BindableProperty
+import matt.obs.prop.ObsVal
 import matt.obs.prop.Var
-import matt.obs.bind.smartBind
 
 /**
  * Create a spinner for an arbitrary type. This spinner requires you to configure a value factory, or it will throw an exception.
@@ -31,8 +32,8 @@ fun <T: Any> ET.spinner(
   if (property != null) requireNotNull(it.valueFactory) {
 	"You must configure the value factory or use the Number based spinner builder " +
 		"which configures a default value factory along with min, max and initialValue!"
-  }.valueProperty().apply {
-	toNonNullableProp().bindBidirectional(property)
+  }.valueProperty.apply {
+	bindBidirectional(property)
   }
   it.initialConfig(
 	editable = editable,
@@ -69,7 +70,7 @@ inline fun <reified T: Number> ET.spinner(
 	)
   }
   if (property != null) {
-	spinner.valueFactory!!.valueProperty().toNonNullableProp().bindBidirectional(property)
+	spinner.valueFactory.valueProperty.bindBidirectional(property)
   }
   spinner.initialConfig(
 	editable = editable,
@@ -87,8 +88,8 @@ fun <T: Any> ET.spinner(
   enableScroll: Boolean = false,
   op: SpinnerWrapper<T>.()->Unit = {}
 ) = SpinnerWrapper(items).attachTo(this, op) {
-  if (property != null) it.valueFactory!!.valueProperty().apply {
-	toNonNullableProp().bindBidirectional(property)
+  if (property != null) it.valueFactory.valueProperty.apply {
+	bindBidirectional(property)
   }
   it.initialConfig(
 	editable = editable,
@@ -104,8 +105,8 @@ fun <T: Any> ET.spinner(
   enableScroll: Boolean = false,
   op: SpinnerWrapper<T>.()->Unit = {}
 ) = SpinnerWrapper(valueFactory).attachTo(this, op) {
-  if (property != null) it.valueFactory!!.valueProperty().apply {
-	toNonNullableProp().bindBidirectional(property)
+  if (property != null) it.valueFactory.valueProperty.apply {
+	bindBidirectional(property)
   }
   it.initialConfig(
 	editable = editable,
@@ -156,11 +157,22 @@ class SpinnerWrapper<T: Any>(
   val value: T get() = node.value
   val valueProperty by lazy { node.valueProperty().toNonNullableROProp() }
 
-  var valueFactory: SpinnerValueFactory<T>?
-	get() = node.valueFactory
-	set(value) {
-	  node.valueFactory = value
-	}
+  val valueFactoryProperty by lazy {
+	node.valueFactoryProperty().toNonNullableProp().proxy(
+	  object: Converter<SpinnerValueFactory<T>, SpinnerValueFactoryWrapper<T>> {
+		override fun convertToB(a: SpinnerValueFactory<T>): SpinnerValueFactoryWrapper<T> {
+		  return a.wrap()
+		}
+
+		override fun convertToA(b: SpinnerValueFactoryWrapper<T>): SpinnerValueFactory<T> {
+		  return b.svf
+		}
+
+	  }
+	)
+  }
+
+  var valueFactory by valueFactoryProperty
 
 
   var isEditable
@@ -194,9 +206,14 @@ class SpinnerWrapper<T: Any>(
   }
 
 
-
-
 }
 
-fun <T: Any> SpinnerWrapper<T>.bind(property: ObservableValue<T>, readonly: Boolean = false) =
-  valueFactory!!.valueProperty().smartBind(property, readonly)
+fun <T: Any> SpinnerWrapper<T>.bind(property: ObsVal<T>, readonly: Boolean = false) =
+  valueFactory.valueProperty.smartBind(property, readonly)
+
+
+fun <T: Any> SpinnerValueFactory<T>.wrap() = SpinnerValueFactoryWrapper(this)
+class SpinnerValueFactoryWrapper<T: Any>(internal val svf: SpinnerValueFactory<T>) {
+  fun increment(steps: Int) = svf.increment(steps)
+  val valueProperty by lazy { svf.valueProperty().toNonNullableProp() }
+}
