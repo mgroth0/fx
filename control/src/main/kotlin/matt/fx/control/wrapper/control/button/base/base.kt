@@ -5,6 +5,7 @@ import javafx.scene.control.ButtonBase
 import matt.fx.control.wrapper.labeled.LabeledWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.http.url.MURL
+import matt.lang.NOT_IMPLEMENTED
 import java.awt.Desktop
 import java.net.URI
 import java.net.URL
@@ -15,6 +16,17 @@ open class ButtonBaseWrapper<N: ButtonBase>(node: N): LabeledWrapper<N>(node) {
   fun setOnAction(op: (ActionEvent)->Unit) {
 	node.setOnAction(op)
   }
+  //  fun setOnAction(op: () -> Unit) {
+  //	node.setOnAction { op() }
+  //  }
+
+  var onAction: ()->Unit
+	get() = NOT_IMPLEMENTED
+	set(value) {
+	  setOnAction {
+		value()
+	  }
+	}
 
   override fun addChild(child: NodeWrapper, index: Int?) {
 	require(index == null)
