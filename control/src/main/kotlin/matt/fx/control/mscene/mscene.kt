@@ -9,7 +9,6 @@ import matt.collect.itr.recurse.recurse
 import matt.color.name.ColorUtils
 import matt.file.MFile
 import matt.file.commons.ICON_FOLDER
-import matt.file.construct.mFile
 import matt.fx.control.hotkeys.addDefaultHotkeys
 import matt.fx.control.menu.context.mcontextmenu
 import matt.fx.control.menu.context.showMContextMenu
@@ -17,8 +16,6 @@ import matt.fx.control.wrapper.wrapped.wrapped
 import matt.fx.graphics.core.scene.NEED_REVERSED_DISPLAYS_FEATURE
 import matt.fx.graphics.core.scene.reloadStyle
 import matt.fx.graphics.mag.VarJson
-import matt.fx.graphics.style.CUSTOM_CSS
-import matt.fx.graphics.style.DARK_MODENA_CSS
 import matt.fx.graphics.style.DarkModeController
 import matt.fx.graphics.wrapper.node.parent.ParentWrapper
 import matt.fx.graphics.wrapper.region.RegionWrapper
@@ -28,7 +25,6 @@ import matt.fx.graphics.wrapper.style.StyleableWrapper
 import matt.fx.graphics.wrapper.style.toAwtColor
 import matt.log.profile.tic
 import matt.log.tab
-import java.net.URL
 import kotlin.reflect.KClass
 
 open class MScene<R: ParentWrapper<*>>(

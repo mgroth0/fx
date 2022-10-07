@@ -165,7 +165,6 @@ val contextMenus = lazyMap<Scene, ContextMenuWrapper> {
 }
 
 
-
 /**
  * see [here](https://docs.oracle.com/javase/8/javafx/api/javafx/scene/control/ContextMenu.html) for info on how to propertly use a context menu
  * KDoc test: [NodeWrapperImpl]
@@ -205,7 +204,6 @@ fun SceneWrapper<*>.showMContextMenu(
   contextMenus[this.node].apply {
 	items.clear()
 	var node: EventTarget = target
-	val added = mutableListOf<String>()
 	while (true) {
 	  getCMItems(node)?.let {
 		if (items.isNotEmpty()) separator()
