@@ -34,6 +34,7 @@ import matt.log.warn
 import matt.obs.prop.BindableProperty
 import matt.obs.prop.Var
 import matt.collect.itr.recurse.chain
+import matt.fx.graphics.wrapper.node.NW
 import java.lang.Thread.sleep
 import java.util.WeakHashMap
 import kotlin.concurrent.thread
@@ -166,6 +167,7 @@ val contextMenus = lazyMap<Scene, ContextMenuWrapper> {
 }
 
 
+
 /**
  * see [here](https://docs.oracle.com/javase/8/javafx/api/javafx/scene/control/ContextMenu.html) for info on how to propertly use a context menu
  * KDoc test: [NodeWrapperImpl]
@@ -183,12 +185,9 @@ fun SceneWrapper<*>.showMContextMenu(
 
   CmFix()
 
-  val t = tic(prefix = "showMContextMenu", enabled = false)
-  t.toc("start")
 
   val devMenu = MenuWrapper("dev")
 
-  t.toc("made devMenu")
 
   devMenu.actionitem("test exception") {
 	throw Exception("test exception")
@@ -204,48 +203,16 @@ fun SceneWrapper<*>.showMContextMenu(
 	}
   }
 
-  t.toc("made first actionitem")
 
-  val reflectMenu = devMenu.menu("reflect")
-  t.toc("made reflect menu")
   contextMenus[this.node].apply {
 	items.clear()
-	t.toc("cleared items")
 	var node: EventTarget = target
 	val added = mutableListOf<String>()
-	t.toc("starting loop")
 	while (true) {
-	  //	  println("1looking for parent of $node (parent=${(node as? Parent)?.parent}) (scene=${(node as? Parent)?.scene})")
-	  //	  println("1node=${(node as? Node)}")
-	  //	  println("1node.scene=${(node as? Node)?.scene}")
-	  //	  println("1node.scene.root=${(node as? Node)?.scene?.root}")
-	  //	  println("1node.scene.root.scene=${(node as? Node)?.scene?.root?.scene}")
-	  t.toc("starting loop block for $node")
 	  getCMItems(node)?.let {
 		if (items.isNotEmpty()) separator()
 		items += it.map { it.node }
 	  }
-	  t.toc("got CmItems")
-	  //	  println("2looking for parent of $node (parent=${(node as? Parent)?.parent}) (scene=${(node as? Parent)?.scene})")
-	  //	  println("2node=${(node as? Node)}")
-	  //	  println("2node.scene=${(node as? Node)?.scene}")
-	  //	  println("2node.scene.root=${(node as? Node)?.scene?.root}")
-	  //	  println("2node.scene.root.scene=${(node as? Node)?.scene?.root?.scene}")
-	  node::class.qualifiedName
-		?.takeIf { "matt" in it && it !in added }
-		?.let {
-		  reflectMenu.actionitem(node::class.simpleName!!, threaded = true) {
-			node::class.jumpToSource()
-		  }
-		  added += it
-		}
-	  t.toc("something with q name done")
-	  //	  println("3looking for parent of $node (parent=${(node as? Parent)?.parent}) (scene=${(node as? Parent)?.scene})")
-	  //	  println("3node=${(node as? Node)}")
-	  //	  println("3node.scene=${(node as? Node)?.scene}")
-	  //	  println("3node.scene.root=${(node as? Node)?.scene?.root}")
-	  //	  println("3node.scene.root.scene=${(node as? Node)?.scene?.root?.scene}")
-	  //	  println("looking for parent of $node")
 	  try {
 		node = when (node) {
 		  is Parent -> node.parent ?: node.scene
@@ -262,22 +229,16 @@ fun SceneWrapper<*>.showMContextMenu(
 		break
 	  }
 
-	  t.toc("finished loop block")
 	}
 	if (items.isNotEmpty()) separator()
-	t.toc("made spe")
 	items += target.wrapped().hotkeyInfoMenu().node
-	t.toc("added hotkey info menu")
 	items += devMenu.node
-	t.toc("added devMeny")
   }.node.show(target, xy.first, xy.second)
-  t.toc("showed cm")
 }
 
 enum class EventHandlerType {
   Handler, Filter
 }
-
 
 
 private fun NodeWrapper.hotkeyInfoMenu() = MenuWrapper("Click For Hotkey Info").apply {
@@ -311,9 +272,9 @@ private fun NodeWrapper.hotkeyInfoMenu() = MenuWrapper("Click For Hotkey Info").
 	addInfo(Handler)
 	addInfo(Filter)
   }
-//  setOnMouseClicked {
-//
-//  }
+  //  setOnMouseClicked {
+  //
+  //  }
 
 }
 

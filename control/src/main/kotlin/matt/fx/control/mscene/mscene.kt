@@ -82,6 +82,10 @@ open class MScene<R: ParentWrapper<*>>(
 
 
 	mcontextmenu {
+
+
+
+
 	  menu("style") {
 		actionitem("reload style") {
 		  this@MScene.reloadStyle(DarkModeController.darkModeProp.value)
@@ -104,6 +108,9 @@ open class MScene<R: ParentWrapper<*>>(
 		actionitem("open custom.css") {
 		  mFile(URL(CUSTOM_CSS).file).openInIntelliJ()
 		}
+
+
+
 		actionitem("print style info samples") {
 		  val classesPrinted = mutableListOf<KClass<*>>()
 		  /*  (root.node as Node).recurse {
@@ -124,7 +131,7 @@ open class MScene<R: ParentWrapper<*>>(
 		  }
 		}
 		/*need this*/
-		this.menu("set border") {        /*specify this here explicitly at least once
+		menu("set border") {        /*specify this here explicitly at least once
 		  * or else it will use the `matt.fx.graphics.menu.actionitem` above without import*/
 		  this.actionitem("none") {
 			(root as RegionWrapper<*>).border = null
