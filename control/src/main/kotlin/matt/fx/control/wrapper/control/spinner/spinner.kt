@@ -7,7 +7,6 @@ import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
-import matt.hurricanefx.eye.bind.smartBind
 import matt.hurricanefx.eye.wrapper.obs.collect.createFXWrapper
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
@@ -15,7 +14,7 @@ import matt.lang.err
 import matt.obs.col.olist.ObsList
 import matt.obs.prop.BindableProperty
 import matt.obs.prop.Var
-
+import matt.obs.bind.smartBind
 
 /**
  * Create a spinner for an arbitrary type. This spinner requires you to configure a value factory, or it will throw an exception.

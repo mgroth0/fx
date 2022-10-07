@@ -7,7 +7,7 @@ import javafx.scene.control.ProgressIndicator
 import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
-import matt.hurricanefx.eye.bind.smartBind
+import matt.obs.bind.smartBind
 import matt.fx.graphics.wrapper.ET
 
 fun ET.progressindicator(op: ProgressIndicatorWrapper.()->Unit = {}) = ProgressIndicatorWrapper().attachTo(this, op)

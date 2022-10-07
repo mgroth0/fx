@@ -6,7 +6,7 @@ import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
-import matt.hurricanefx.eye.bind.smartBind
+import matt.obs.bind.smartBind
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.obs.prop.ObsVal
 

@@ -15,12 +15,12 @@ import matt.fx.control.wrapper.selects.wrap
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
-import matt.hurricanefx.eye.bind.smartBind
 import matt.hurricanefx.eye.collect.asObservable
 import matt.hurricanefx.eye.wrapper.obs.collect.createFXWrapper
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.NullableFXBackedBindableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
 import matt.lang.go
+import matt.obs.bind.smartBind
 import matt.obs.col.olist.ObsList
 import matt.obs.prop.BindableProperty
 import matt.obs.prop.ValProp

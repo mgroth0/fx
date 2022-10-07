@@ -5,7 +5,7 @@ import javafx.scene.paint.Color
 import matt.fx.control.wrapper.control.combo.ComboBoxBaseWrapper
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.attachTo
-import matt.hurricanefx.eye.bind.smartBind
+import matt.obs.bind.smartBind
 import matt.obs.prop.ObsVal
 import matt.obs.prop.VarProp
 
