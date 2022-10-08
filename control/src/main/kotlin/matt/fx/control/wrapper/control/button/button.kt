@@ -6,11 +6,11 @@ import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.lang.NEVER
-import matt.obs.prop.ValProp
+import matt.obs.bindings.str.ObsS
 
 
 fun ET.button(
-  text: ValProp<String>, graphic: NodeWrapper? = null, op: ButtonWrapper.()->Unit = {}
+  text: ObsS, graphic: NodeWrapper? = null, op: ButtonWrapper.()->Unit = {}
 ) = ButtonWrapper().attachTo(this, op) {
   it.textProperty.bind(text)
   if (graphic != null) it.graphic = graphic
@@ -29,7 +29,7 @@ fun ET.button(
 
 
 open class ButtonWrapper(
-   node: Button = Button(),
+  node: Button = Button(),
 ): ButtonBaseWrapper<Button>(node) {
   companion object {
 	fun Button.wrapped() = ButtonWrapper(this)

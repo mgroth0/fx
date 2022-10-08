@@ -1,6 +1,6 @@
 package matt.fx.fxauto
 
-import matt.auto.Action
+import matt.auto.AutoAction
 import matt.auto.jumpToSource
 import matt.file.MFile
 import matt.fx.control.menu.context.MContextMenuBuilder
@@ -10,13 +10,13 @@ import matt.fx.graphics.clip.copyToClipboard
 import matt.fx.graphics.wrapper.node.NW
 import kotlin.concurrent.thread
 
-fun MFile.fxActions() = listOf(Action("copy full path") {
+fun MFile.fxActions() = listOf(AutoAction("copy full path") {
   absolutePath.copyToClipboard()
-}, Action("copy as file") {
+}, AutoAction("copy as file") {
   copyToClipboard()
 })
 
-fun MContextMenuBuilder.actionitem(action: Action, op: MenuItemWrapper<*>.()->Unit = {}) = actionitem(action.name) {
+fun MContextMenuBuilder.actionitem(action: AutoAction, op: MenuItemWrapper<*>.()->Unit = {}) = actionitem(action.name) {
   action.op()
 }.op()
 
