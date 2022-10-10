@@ -65,8 +65,8 @@ class ProcessInspectPane(initialValue: Process?): HBoxWrapperImpl<NodeWrapper>()
 		prefWidthProperty.bind(this@ProcessInspectPane.widthProperty/2.0)
 		val col = (column("pid") { cdf: TreeTableColumn.CellDataFeatures<ProcessOrHandleWrapper, String> ->
 		  cdf.value?.value?.pid()?.let { pid ->
-			SimpleStringProperty(pid.toString())
-		  } ?: SimpleStringProperty("null")
+			BindableProperty(pid.toString())
+		  } ?: BindableProperty("null")
 		}).apply {
 		  prefWidth = 100.0
 		}
@@ -74,8 +74,8 @@ class ProcessInspectPane(initialValue: Process?): HBoxWrapperImpl<NodeWrapper>()
 		debug("update4")
 		(column("main program") { cdf: TreeTableColumn.CellDataFeatures<ProcessOrHandleWrapper, String> ->
 		  cdf.value?.value?.command()?.let { com ->
-			SimpleStringProperty(mFile(com).name)
-		  } ?: SimpleStringProperty("null")
+			BindableProperty(mFile(com).name)
+		  } ?: BindableProperty("null")
 		}).apply {
 		  prefWidth = 100.0
 		}

@@ -229,7 +229,7 @@ private fun TreeLikeWrapper<*, MFile>.setupGUI() {
 	  showSizesProp.onChange { b ->
 		if (b) {
 		  column<String>("size") {
-			SimpleStringProperty(it.value.value.size().formatted.toString())
+			BindableProperty(it.value.value.size().formatted.toString())
 		  }
 		  autoResizeColumns()
 		} else {
