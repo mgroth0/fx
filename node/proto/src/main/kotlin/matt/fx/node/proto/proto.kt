@@ -1,6 +1,7 @@
 package matt.fx.node.proto
 
 import javafx.scene.canvas.GraphicsContext
+import matt.fx.control.wrapper.control.text.area.TextAreaWrapper
 import matt.fx.graphics.icon.ICON_HEIGHT
 import matt.fx.graphics.icon.ICON_WIDTH
 import matt.fx.graphics.icon.Icon
@@ -40,3 +41,14 @@ fun Direction.graphic(): NodeWrapperImpl<*>? {
 }
 
 
+
+
+class LinePrintTextArea: TextAreaWrapper() {
+  operator fun plusAssign(a: Any?) {
+    text += "\n$a"
+  }
+
+  infix fun tab(a: Any?) {
+    text += "\n\t$a"
+  }
+}
