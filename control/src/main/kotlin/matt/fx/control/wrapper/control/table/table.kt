@@ -1,13 +1,9 @@
 package matt.fx.control.wrapper.control.table
 
 import javafx.application.Platform
-import javafx.beans.property.BooleanProperty
 import javafx.beans.property.ObjectProperty
-import javafx.beans.property.Property
-import javafx.beans.property.ReadOnlyListProperty
 import javafx.beans.property.ReadOnlyObjectProperty
 import javafx.beans.property.ReadOnlyObjectWrapper
-import javafx.beans.value.ObservableValue
 import javafx.collections.ListChangeListener
 import javafx.collections.ObservableList
 import javafx.scene.control.SelectionMode
@@ -16,7 +12,6 @@ import javafx.scene.control.TableColumn
 import javafx.scene.control.TablePosition
 import javafx.scene.control.TableView
 import javafx.scene.control.TableView.ResizeFeatures
-import javafx.scene.control.cell.PropertyValueFactory
 import javafx.scene.input.InputEvent
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
@@ -31,15 +26,19 @@ import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.hurricanefx.eye.lib.onChange
-import matt.hurricanefx.eye.mtofx.createROFXPropWrapper
-import matt.hurricanefx.eye.prop.getValue
-import matt.hurricanefx.eye.prop.observable
-import matt.hurricanefx.eye.prop.setValue
-import matt.hurricanefx.eye.wrapper.obs.collect.createFXWrapper
+import matt.hurricanefx.eye.wrapper.obs.collect.mfxMutableListConverter
+import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
+import matt.hurricanefx.eye.wrapper.obs.obsval.toNullableROProp
+import matt.obs.bind.binding
+import matt.obs.bindings.bool.ObsB
+import matt.obs.col.olist.FakeMutableObsList
+import matt.obs.col.olist.MutableObsList
 import matt.obs.col.olist.ObsList
 import matt.obs.prop.BindableProperty
 import matt.obs.prop.ObsVal
-import matt.prim.str.decap
+import matt.obs.prop.VarProp
+import matt.obs.prop.toVarProp
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 import kotlin.reflect.KMutableProperty1
@@ -70,10 +69,12 @@ fun <T: Any> TableViewWrapper<T>.selectOnDrag() {
   // Select items while dragging
   addEventFilter(MouseEvent.MOUSE_DRAGGED) {
 	(it.pickResult.intersectedNode as? TableCell<*, *>)?.apply {
-	  if (items.size > index) {
+	  if (items!!.size > index) {
 		if (selectionModel.isCellSelectionEnabled) {
 		  @Suppress("UNCHECKED_CAST")
-		  selectionModel.selectRange(startRow, startColumn.wrapped(), index, (tableColumn as TableColumn<T, *>).wrapped())
+		  selectionModel.selectRange(
+			startRow, startColumn.wrapped(), index, (tableColumn as TableColumn<T, *>).wrapped()
+		  )
 		} else {
 		  selectionModel.selectRange(startRow, index)
 		}
@@ -83,7 +84,7 @@ fun <T: Any> TableViewWrapper<T>.selectOnDrag() {
 }
 
 
-fun <T: Any> TableViewWrapper<T>.bindSelected(property: Property<T>) {
+fun <T: Any> TableViewWrapper<T>.bindSelected(property: VarProp<T?>) {
   selectionModel.selectedItemProperty.onChange {
 	property.value = it
   }
@@ -93,19 +94,24 @@ fun <T: Any> TableViewWrapper<T>.bindSelected(property: Property<T>) {
 fun <T: Any> ET.tableview(items: ObsList<T>? = null, op: TableViewWrapper<T>.()->Unit = {}) =
   TableViewWrapper<T>().attachTo(this, op) {
 	if (items != null) {
-	  it.items = items.createFXWrapper()
+	  if (items is MutableObsList<T>) {
+		it.items = items
+	  } else {
+		it.items = FakeMutableObsList(items)
+	  }
+
 	}
   }
 
-fun <T: Any> ET.tableview(items: ReadOnlyListProperty<T>, op: TableViewWrapper<T>.()->Unit = {}) =
-  tableview(items as ObservableValue<ObservableList<T>>, op)
+//fun <T: Any> ET.tableview(items: ObsVal<ObsList<T>>, op: TableViewWrapper<T>.()->Unit = {}): TableViewWrapper<T> =
+//  tableview(items, op)
 
 fun <T: Any> ET.tableview(
-  items: ObservableValue<out ObservableList<T>>,
+  items: ObsVal<out MutableObsList<T>>,
   op: TableViewWrapper<T>.()->Unit = {}
 ) =
   TableViewWrapper<T>().attachTo(this, op) {
-	it.itemsProperty().bind(items)
+	it.itemsProperty.bind(items.binding { it })
   }
 
 open class TableViewWrapper<E: Any>(
@@ -116,9 +122,9 @@ open class TableViewWrapper<E: Any>(
 
   override fun isInsideRow() = true
 
-  fun editableProperty(): BooleanProperty = node.editableProperty()
+  val editableProperty by lazy { node.editableProperty().toNonNullableProp() }
 
-  var isEditable by editableProperty()
+  var isEditable by editableProperty
 
   val sortOrder: ObservableList<TableColumn<E, *>> get() = node.sortOrder
 
@@ -131,15 +137,11 @@ open class TableViewWrapper<E: Any>(
   fun columnResizePolicyProperty(): ObjectProperty<Callback<ResizeFeatures<Any>, Boolean>> =
 	node.columnResizePolicyProperty()
 
-  var items: ObservableList<E>
-	get() = node.items
-	set(value) {
-	  node.items = value
-	}
 
-  fun itemsProperty(): ObjectProperty<ObservableList<E>> = node.itemsProperty()
+  val itemsProperty by lazy { node.itemsProperty().toNullableProp().proxy(mfxMutableListConverter<E>().nullable()) }
+  var items by itemsProperty
 
-  fun comparatorProperty(): ReadOnlyObjectProperty<Comparator<E>> = node.comparatorProperty()
+  val comparatorProperty by lazy { node.comparatorProperty().toNullableROProp() }
 
   override val columns: ObservableList<TableColumn<E, *>> get() = node.columns
 
@@ -150,7 +152,7 @@ open class TableViewWrapper<E: Any>(
   fun editingCellProperty(): ReadOnlyObjectProperty<TablePosition<E, *>> = node.editingCellProperty()
 
   /**
-   * Create a matt.hurricanefx.tableview.coolColumn with a value factory that extracts the value from the given mutable
+   * Create a coolColumn with a value factory that extracts the value from the given mutable
    * property and converts the property to an observable value.
    */
   inline fun <reified P> column(
@@ -159,28 +161,34 @@ open class TableViewWrapper<E: Any>(
 	noinline op: TableColumnWrapper<E, P>.()->Unit = {}
   ): TableColumnWrapper<E, P> {
 	val column = TableColumnWrapper<E, P>(title)
-	column.cellValueFactory = Callback { observable(it.value, prop) }
+	column.cellValueFactory = Callback {
+	  prop.call(it.value).toVarProp()
+	  /*observable(it.value, prop)*/
+	}
 	addColumnInternal(column)
 	return column.also(op)
   }
 
-  /**
-   * Create a matt.hurricanefx.tableview.coolColumn with a value factory that extracts the value from the given property and
-   * converts the property to an observable value.
-   *
-   * ATTENTION: This function was renamed to `readonlyColumn` to avoid shadowing the version for
-   * observable properties.
-   */
-  inline fun <reified P> readonlyColumn(
-	title: String,
-	prop: KProperty1<E, P>,
-	noinline op: TableColumnWrapper<E, P>.()->Unit = {}
-  ): TableColumnWrapper<E, P> {
-	val column = TableColumnWrapper<E, P>(title)
-	column.cellValueFactory = Callback { observable(it.value, prop) }
-	addColumnInternal(column)
-	return column.also(op)
-  }
+  //  /**
+  //   * Create a matt.hurricanefx.tableview.coolColumn with a value factory that extracts the value from the given property and
+  //   * converts the property to an observable value.
+  //   *
+  //   * ATTENTION: This function was renamed to `readonlyColumn` to avoid shadowing the version for
+  //   * observable properties.
+  //   */
+  //  inline fun <reified P> readonlyColumn(
+  //	title: String,
+  //	prop: KProperty1<E, P>,
+  //	noinline op: TableColumnWrapper<E, P>.()->Unit = {}
+  //  ): TableColumnWrapper<E, P> {
+  //	val column = TableColumnWrapper<E, P>(title)
+  //	column.cellValueFactory = Callback {
+  //	  it.value
+  //	  /*observable(it.value, prop)*/ VarProp(it.value)
+  //	}
+  //	addColumnInternal(column)
+  //	return column.also(op)
+  //  }
 
 
   /**
@@ -188,7 +196,7 @@ open class TableViewWrapper<E: Any>(
    */
   inline fun <reified P> column(
 	title: String,
-	prop: KProperty1<E, ObservableValue<P>>,
+	prop: KProperty1<E, ObsVal<P>>,
 	noinline op: TableColumnWrapper<E, P>.()->Unit = {}
   ): TableColumnWrapper<E, P> {
 	val column = TableColumnWrapper<E, P>(title)
@@ -273,7 +281,7 @@ open class TableViewWrapper<E: Any>(
 	valueProvider: (TableColumn.CellDataFeatures<E, P>)->ObsVal<P>,
   ): TableColumnWrapper<E, P> {
 	val column = TableColumnWrapper<E, P>(title)
-	column.cellValueFactory = Callback { valueProvider(it).createROFXPropWrapper() }
+	column.cellValueFactory = Callback { valueProvider(it) }
 	prefWidth?.let { column.prefWidth = it }
 	addColumnInternal(column)
 	return column
@@ -286,7 +294,7 @@ open class TableViewWrapper<E: Any>(
    */
   inline fun <reified P> column(
 	title: String,
-	observableFn: KFunction<ObservableValue<P>>
+	observableFn: KFunction<ObsVal<P>>
   ): TableColumnWrapper<E, P> {
 	val column = TableColumnWrapper<E, P>(title)
 	column.cellValueFactory = Callback { observableFn.call(it.value) }
@@ -317,30 +325,30 @@ open class TableViewWrapper<E: Any>(
   }
 
 
-  /**
-   * Create a matt.hurricanefx.tableview.coolColumn using the propertyName of the attribute you want shown.
-   */
-  fun <P> column(
-	title: String,
-	propertyName: String,
-	op: TableColumnWrapper<E, P>.()->Unit = {}
-  ): TableColumnWrapper<E, P> {
-	val column = TableColumnWrapper<E, P>(title)
-	column.cellValueFactory = PropertyValueFactory<E, P>(propertyName)
-	addColumnInternal(column)
-	return column.also(op)
-  }
+  //  /**
+  //   * Create a matt.hurricanefx.tableview.coolColumn using the propertyName of the attribute you want shown.
+  //   */
+  //  fun <P> column(
+  //	title: String,
+  //	propertyName: String,
+  //	op: TableColumnWrapper<E, P>.()->Unit = {}
+  //  ): TableColumnWrapper<E, P> {
+  //	val column = TableColumnWrapper<E, P>(title)
+  //	column.cellValueFactory = PropertyValueFactory<E, P>(propertyName)
+  //	addColumnInternal(column)
+  //	return column.also(op)
+  //  }
 
 
-  /**
-   * Create a matt.hurricanefx.tableview.coolColumn using the getter of the attribute you want shown.
-   */
-  @JvmName("pojoColumn")
-  fun <P> column(title: String, getter: KFunction<P>): TableColumnWrapper<E, P> {
-	val startIndex = if (getter.name.startsWith("is") && getter.name[2].isUpperCase()) 2 else 3
-	val propName = getter.name.substring(startIndex).decap()
-	return this.column(title, propName)
-  }
+  //  /**
+  //   * Create a matt.hurricanefx.tableview.coolColumn using the getter of the attribute you want shown.
+  //   */
+  //  @JvmName("pojoColumn")
+  //  fun <P> column(title: String, getter: KFunction<P>): TableColumnWrapper<E, P> {
+  //	val startIndex = if (getter.name.startsWith("is") && getter.name[2].isUpperCase()) 2 else 3
+  //	val propName = getter.name.substring(startIndex).decap()
+  //	return this.column(title, propName)
+  //  }
 
   @Suppress("UNCHECKED_CAST")
   fun addColumnInternal(column: TableColumnWrapper<E, *>, index: Int? = null) {
@@ -354,7 +362,7 @@ open class TableViewWrapper<E: Any>(
 	  prefWidth = width
 
 	  this@TableViewWrapper.columns += this
-	  setCellValueFactory { ReadOnlyObjectWrapper(items.indexOf(it.value) + startNumber) }
+	  setCellValueFactory { ReadOnlyObjectWrapper(items!!.indexOf(it.value) + startNumber) }
 	}
   }
 
@@ -406,7 +414,7 @@ open class TableViewWrapper<E: Any>(
 
 
 fun <T> TableViewWrapper<T & Any>.selectWhere(scrollTo: Boolean = true, condition: (T)->Boolean) {
-  items.asSequence().filter(condition).forEach {
+  items!!.asSequence().filter(condition).forEach {
 	selectionModel.select(it)
 	if (scrollTo) scrollTo(it)
   }
@@ -414,7 +422,7 @@ fun <T> TableViewWrapper<T & Any>.selectWhere(scrollTo: Boolean = true, conditio
 
 
 fun <T> TableViewWrapper<T & Any>.moveToTopWhere(
-  backingList: ObservableList<T & Any> = items,
+  backingList: MutableObsList<T & Any> = items!!,
   select: Boolean = true,
   predicate: (T)->Boolean
 ) {
@@ -427,7 +435,7 @@ fun <T> TableViewWrapper<T & Any>.moveToTopWhere(
 }
 
 fun <T> TableViewWrapper<T & Any>.moveToBottomWhere(
-  backingList: ObservableList<T & Any> = items,
+  backingList: MutableObsList<T & Any> = items!!,
   select: Boolean = true,
   predicate: (T)->Boolean
 ) {
@@ -487,7 +495,7 @@ fun <T> TableViewWrapper<T & Any>.regainFocusAfterEdit() = apply {
 }
 
 
-fun TableViewWrapper<*>.editableWhen(predicate: ObservableValue<Boolean>) = apply {
-  editableProperty().bind(predicate)
+fun TableViewWrapper<*>.editableWhen(predicate: ObsB) = apply {
+  editableProperty.bind(predicate)
 }
 

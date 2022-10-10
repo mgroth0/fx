@@ -184,7 +184,7 @@ fun <E: Any> ListView<E>.wrapped(): ListViewWrapper<E> = findWrapper() ?: ListVi
 fun <E: Any, P> TreeTableColumn<E, P>.wrapped(): TreeTableColumnWrapper<E, P> =
   findWrapper() ?: TreeTableColumnWrapper(this@wrapped)
 
-fun <E: Any, P> TableColumn<E, P>.wrapped(): TableColumnWrapper<E, P> = findWrapper() ?: TableColumnWrapper(this@wrapped)
+@Suppress("UNCHECKED_CAST") fun <E, P> TableColumn<E, P>.wrapped(): TableColumnWrapper<E & Any, P> = findWrapper<TableColumnWrapper<E & Any,P>>() ?: TableColumnWrapper<E & Any,P>(this@wrapped as TableColumn<E & Any, P>)
 
 fun Rectangle.wrapped(): RectangleWrapper = findWrapper() ?: RectangleWrapper(this@wrapped)
 fun Circle.wrapped(): CircleWrapper = findWrapper() ?: CircleWrapper(this@wrapped)

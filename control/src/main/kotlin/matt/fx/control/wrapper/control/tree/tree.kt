@@ -13,6 +13,7 @@ import matt.fx.control.wrapper.selects.wrap
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
+import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 
 
 fun <T> ET.treeview(root: TreeItem<T>? = null, op: TreeViewWrapper<T>.()->Unit = {}) =
@@ -33,7 +34,7 @@ class TreeViewWrapper<T>(node: TreeView<T> = TreeView(), op: TreeViewWrapper<T>.
   fun editableProperty(): BooleanProperty = node.editableProperty()
 
 
-  override val cellFactoryProperty: ObjectProperty<Callback<TreeView<T>, TreeCell<T>>> = node.cellFactoryProperty()
+  override val cellFactoryProperty by lazy { node.cellFactoryProperty().toNonNullableProp() }
 
 
   override var root: TreeItem<T>?

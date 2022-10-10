@@ -1,19 +1,18 @@
 package matt.fx.control.wrapper.control.treecol
 
-import javafx.beans.property.ObjectProperty
-import javafx.beans.value.ObservableValue
 import javafx.collections.ObservableList
 import javafx.scene.control.TreeItem
-import javafx.scene.control.TreeTableCell
 import javafx.scene.control.TreeTableColumn
 import javafx.scene.control.TreeTableColumn.CellDataFeatures
-import javafx.util.Callback
 import matt.fx.control.wrapper.cellfact.TreeTableCellFactory
 import matt.fx.control.wrapper.cellfact.cellvalfact.CellValueFactory
 import matt.fx.control.wrapper.control.colbase.TableColumnBaseWrapper
 import matt.fx.control.wrapper.control.hascols.HasCols
 import matt.fx.control.wrapper.control.treetable.TreeTableViewWrapper
 import matt.fx.control.wrapper.wrapped.wrapped
+import matt.hurricanefx.eye.converter.callbackConverter
+import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
 
 
 class TreeTableColumnWrapper<E: Any, P>(
@@ -26,8 +25,15 @@ class TreeTableColumnWrapper<E: Any, P>(
 
   constructor(name: String): this(TreeTableColumn(name))
 
-  override val cellFactoryProperty: ObjectProperty<Callback<TreeTableColumn<E, P>, TreeTableCell<E, P>>> get() = node.cellFactoryProperty()
-  override var cellValueFactory: Callback<CellDataFeatures<E, P>, ObservableValue<P>>? by node::cellValueFactory
+  override val cellFactoryProperty by lazy { node.cellFactoryProperty().toNonNullableProp() }
+
+
+  val cellValueFactoryProperty by lazy {
+    node.cellValueFactoryProperty().toNullableProp().proxy(
+      callbackConverter<CellDataFeatures<E, P>, P>().nullable()
+    )
+  }
+  override var cellValueFactory by cellValueFactoryProperty
 
   override val columns: ObservableList<TreeTableColumn<E, *>> = node.columns
 

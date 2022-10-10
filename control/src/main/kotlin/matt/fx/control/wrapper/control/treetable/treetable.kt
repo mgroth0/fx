@@ -2,7 +2,6 @@ package matt.fx.control.wrapper.control.treetable
 
 import javafx.beans.property.BooleanProperty
 import javafx.beans.property.Property
-import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.value.ObservableValue
 import javafx.collections.ObservableList
 import javafx.scene.control.TableColumn
@@ -12,7 +11,6 @@ import javafx.scene.control.TreeTablePosition
 import javafx.scene.control.TreeTableRow
 import javafx.scene.control.TreeTableView
 import javafx.scene.control.TreeTableView.ResizeFeatures
-import javafx.scene.control.cell.TreeItemPropertyValueFactory
 import javafx.scene.input.InputEvent
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
@@ -28,9 +26,10 @@ import matt.fx.control.wrapper.wrapped.wrapped
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
-import matt.hurricanefx.eye.prop.observable
 import matt.lang.go
-import matt.prim.str.decap
+import matt.obs.prop.ObsVal
+import matt.obs.prop.VarProp
+import matt.obs.prop.toVarProp
 import kotlin.reflect.KFunction
 import kotlin.reflect.KMutableProperty1
 import kotlin.reflect.KProperty1
@@ -103,11 +102,12 @@ class TreeTableViewWrapper<E: Any>(
   ): TreeTableColumnWrapper<E, P> {
 	val column = TreeTableColumnWrapper<E, P>(title)
 	column.cellValueFactory = Callback {
-	  it.value.value?.let {
-		observable(
-		  it, prop
-		)
-	  }
+	  prop.call(it.value.value).toVarProp()
+//	  it.value.value?.let {
+//		observable(
+//		  it, prop
+//		)
+//	  }
 	} /*Matt: added null safety here way later because I ran into a NPE here... thought I went years without this null safety first so maybe the null was my fault?*/
 	addColumnInternal(column)
 	return column.also(op)
@@ -121,11 +121,12 @@ class TreeTableViewWrapper<E: Any>(
   ): TreeTableColumnWrapper<E, P> {
 	val column = TreeTableColumnWrapper<E, P>(title)
 	column.cellValueFactory = Callback {
-	  it.value.value?.let {
-		observable(
-		  it, prop
-		)
-	  }
+	  prop.call(it.value.value).toVarProp()
+//	  it.value.value?.let {
+//		observable(
+//		  it, prop
+//		)
+//	  }
 	} /*Matt: added null safety here way later because I ran into a NPE here... thought I went years without this null safety first so maybe the null was my fault?*/
 	addColumnInternal(column)
 	return column.also(op)
@@ -135,7 +136,7 @@ class TreeTableViewWrapper<E: Any>(
   @JvmName(name = "columnForObservableProperty")
   fun <P> column(
 	title: String,
-	prop: KProperty1<E, ObservableValue<P>>
+	prop: KProperty1<E, ObsVal<P>>
   ): TreeTableColumnWrapper<E, P> {
 	val column = TreeTableColumnWrapper<E, P>(title)
 	column.cellValueFactory = Callback { prop.call(it.value.value) }
@@ -146,7 +147,7 @@ class TreeTableViewWrapper<E: Any>(
 
   inline fun <reified P> column(
 	title: String,
-	observableFn: KFunction<ObservableValue<P>>
+	observableFn: KFunction<ObsVal<P>>
   ): TreeTableColumnWrapper<E, P> {
 	val column = TreeTableColumnWrapper<E, P>(title)
 	column.cellValueFactory = Callback { observableFn.call(it.value) }
@@ -160,7 +161,7 @@ class TreeTableViewWrapper<E: Any>(
    */
   fun <P> column(
 	title: String,
-	valueProvider: (TreeTableColumn.CellDataFeatures<E, P>)->ObservableValue<P>
+	valueProvider: (TreeTableColumn.CellDataFeatures<E, P>)->ObsVal<P>
   ): TreeTableColumnWrapper<E, P> {
 	val column = TreeTableColumnWrapper<E, P>(title)
 	column.cellValueFactory = Callback { valueProvider(it) }
@@ -187,30 +188,30 @@ class TreeTableViewWrapper<E: Any>(
   }
 
 
-  /**
-   * Create a matt.hurricanefx.tableview.coolColumn using the propertyName of the attribute you want shown.
-   */
-  fun <P> column(
-	title: String,
-	propertyName: String,
-	op: TreeTableColumnWrapper<E, P>.()->Unit = {}
-  ): TreeTableColumnWrapper<E, P> {
-	val column = TreeTableColumnWrapper<E, P>(title)
-	column.cellValueFactory = TreeItemPropertyValueFactory<E, P>(propertyName)
-	addColumnInternal(column)
-	return column.also(op)
-  }
+//  /**
+//   * Create a matt.hurricanefx.tableview.coolColumn using the propertyName of the attribute you want shown.
+//   */
+//  fun <P> column(
+//	title: String,
+//	propertyName: String,
+//	op: TreeTableColumnWrapper<E, P>.()->Unit = {}
+//  ): TreeTableColumnWrapper<E, P> {
+//	val column = TreeTableColumnWrapper<E, P>(title)
+//	column.cellValueFactory = TreeItemPropertyValueFactory<E, P>(propertyName)
+//	addColumnInternal(column)
+//	return column.also(op)
+//  }
 
 
-  /**
-   * Create a matt.hurricanefx.tableview.coolColumn using the getter of the attribute you want shown.
-   */
-  @JvmName("pojoColumn")
-  fun <P> column(title: String, getter: KFunction<P>): TreeTableColumnWrapper<E, P> {
-	val startIndex = if (getter.name.startsWith("is") && getter.name[2].isUpperCase()) 2 else 3
-	val propName = getter.name.substring(startIndex).decap()
-	return this.column(title, propName)
-  }
+//  /**
+//   * Create a matt.hurricanefx.tableview.coolColumn using the getter of the attribute you want shown.
+//   */
+//  @JvmName("pojoColumn")
+//  fun <P> column(title: String, getter: KFunction<P>): TreeTableColumnWrapper<E, P> {
+//	val startIndex = if (getter.name.startsWith("is") && getter.name[2].isUpperCase()) 2 else 3
+//	val propName = getter.name.substring(startIndex).decap()
+//	return this.column(title, propName)
+//  }
 
 
   fun <P> addColumnInternal(column: TreeTableColumnWrapper<E, P>, index: Int? = null) {
@@ -229,7 +230,7 @@ class TreeTableViewWrapper<E: Any>(
 	op: TreeTableColumnWrapper<E, P>.()->Unit = {}
   ): TreeTableColumnWrapper<E, P> {
 	return column(getter.name) {
-	  SimpleObjectProperty(getter.call(it.value.value))
+	  VarProp(getter.call(it.value.value))
 	}.apply(op)
   }
 
@@ -243,7 +244,7 @@ class TreeTableViewWrapper<E: Any>(
 	op: TreeTableColumnWrapper<E, P>.()->Unit = {}
   ): TreeTableColumnWrapper<E, P> {
 	return column(getter.name) {
-	  SimpleObjectProperty(getter.call(it.value.value))
+	  VarProp(getter.call(it.value.value))
 	}.apply(op)
   }
 

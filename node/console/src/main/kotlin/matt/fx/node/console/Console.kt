@@ -268,7 +268,7 @@ sealed class Console(
 	  actionitem("print debug info on all texts") {
 		println("consoleTextFlow matt.fx.control.layout.children info:")
 		consoleTextFlow.children.forEach {
-		  tab(it)
+		  tab<Any>(it)
 		}
 	  }
 	}

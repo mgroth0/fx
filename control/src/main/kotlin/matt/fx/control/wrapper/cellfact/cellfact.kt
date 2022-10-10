@@ -1,6 +1,5 @@
 package matt.fx.control.wrapper.cellfact
 
-import javafx.beans.property.ObjectProperty
 import javafx.scene.control.Cell
 import javafx.scene.control.ListCell
 import javafx.scene.control.TableCell
@@ -16,27 +15,28 @@ import matt.obs.bindings.bool.ObsB
 import matt.obs.bindings.str.ObsS
 import matt.obs.prop.BindableProperty
 import matt.obs.prop.ObsVal
+import matt.obs.prop.Var
 import kotlin.reflect.KProperty1
 
 interface CellFactory<N, T, C: Cell<T>> {
 
 
-  val cellFactoryProperty: ObjectProperty<Callback<N, C>>
+  val cellFactoryProperty: Var<Callback<N, C>>
   var cellFactory: Callback<N, C>
-	get() = cellFactoryProperty.get()
+	get() = cellFactoryProperty.value
 	set(value) {
-	  cellFactoryProperty.set(value)
+	  cellFactoryProperty v value
 	}
 
-  fun setCellFact(value: Callback<N, C>) {
-	cellFactoryProperty.set(value)
+  fun setCellFact(value: (N)->C) {
+	cellFactoryProperty v value
   }
 
 
   fun simpleCellFactoryFromProps(op: (T)->Pair<ObsS, ObsVal<NodeWrapper?>>)
 
   fun simpleCellFactory(prop: KProperty1<T, ObsS>) {
-	simpleCellFactoryFromProps { prop.get(it) to BindableProperty<NodeWrapper?>(null) }
+	simpleCellFactoryFromProps { prop.get(it) to BindableProperty(null) }
   }
 
   fun simpleCellFactory(op: SimpleFactory<T>) {

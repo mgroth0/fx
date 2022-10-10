@@ -2,6 +2,7 @@ package matt.fx.control.wrapper.tab
 
 import javafx.scene.control.Tab
 import javafx.scene.control.TabPane
+import javafx.scene.layout.VBox
 import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.control.wrapper.control.tab.TabWrapper
 import matt.fx.control.wrapper.selects.SelectModWrap
@@ -11,6 +12,8 @@ import matt.fx.graphics.service.uncheckedWrapperConverter
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
+import matt.fx.graphics.wrapper.pane.vbox.VBoxW
+import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapper
 import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
 import matt.hurricanefx.eye.wrapper.obs.collect.createMutableWrapper
 import matt.log.warn
@@ -48,17 +51,15 @@ open class TabPaneWrapper<T: TabWrapper<*>>(
 	else (this as TabPaneWrapper<TabWrapper<NodeWrapper>>).add(index, tab)
   }
 
-
 }
 
 
-fun <W: NodeWrapper> TabPaneWrapper<TabWrapper<*>>.tab(
-
+fun <W: NodeWrapper> TabPaneWrapper<TabWrapper<W>>.tab(
   text: String,
   content: W,
   index: Int? = null,
   op: W.()->Unit = {}
-): TabWrapper<*> {
+): TabWrapper<W> {
   val tab = TabWrapper(text, content)
   tabs.add(index ?: tabs.size, tab)
   op(content)
@@ -66,12 +67,12 @@ fun <W: NodeWrapper> TabPaneWrapper<TabWrapper<*>>.tab(
 }
 
 /*matt was here*/
-fun <W: NodeWrapper> TabPaneWrapper<TabWrapper<*>>.staticTab(
+fun <W: NodeWrapper> TabPaneWrapper<TabWrapper<W>>.staticTab(
   text: String,
   content: W,
   index: Int? = null,
   op: W.()->Unit = {}
-): TabWrapper<*> {
+): TabWrapper<W> {
   val tab = TabWrapper(text, content).apply {
 	isClosable = false
   }
@@ -81,11 +82,11 @@ fun <W: NodeWrapper> TabPaneWrapper<TabWrapper<*>>.staticTab(
 }
 
 
-fun <C: NodeWrapper> TabPaneWrapper<TabWrapper<*>>.vtab(
+fun <C: NodeWrapper> TabPaneWrapper<TabWrapper<VBoxWrapper<C>>>.vtab(
   s: String = "",
-  op: VBoxWrapperImpl<C>.()->Unit = {}
-): TabWrapper<*> {
-  return staticTab(s, VBoxWrapperImpl<C>()) {
+  op: VBoxWrapper<C>.()->Unit = {}
+): TabWrapper<VBoxWrapper<C>> {
+  return staticTab(s, VBoxWrapperImpl()) {
 	op()
   }
 }

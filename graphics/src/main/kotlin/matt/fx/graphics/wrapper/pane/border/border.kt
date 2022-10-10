@@ -1,77 +1,73 @@
 package matt.fx.graphics.wrapper.pane.border
 
-import javafx.scene.Node
 import javafx.scene.layout.BorderPane
+import matt.fx.graphics.service.wrapped
 import matt.fx.graphics.wrapper.ET
+import matt.fx.graphics.wrapper.node.NW
 import matt.fx.graphics.wrapper.node.NodeWrapper
-import matt.fx.graphics.wrapper.node.NodeWrapperImpl
 import matt.fx.graphics.wrapper.node.attach
 import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
 
 fun <C: NodeWrapper> ET.borderpane(op: BorderPaneWrapper<C>.()->Unit = {}) = attach(BorderPaneWrapper(), op)
 open class BorderPaneWrapper<C: NodeWrapper>(node: BorderPane = BorderPane()): PaneWrapperImpl<BorderPane, C>(node) {
 
-  var center: Node?
-	get() = node.center
+  var center: NW?
+	get() = node.center?.wrapped()
 	set(value) {
-	  node.center = value
+	  value?.let {
+		it.removeFromParent()
+		node.center = it.node
+	  }
 	}
-  var top: Node?
-	get() = node.top
+  var top: NW?
+	get() = node.top?.wrapped()
 	set(value) {
-	  node.top = value
+	  value?.let {
+		it.removeFromParent()
+		node.top = it.node
+	  }
 	}
-  var left: Node?
-	get() = node.left
+  var left: NW?
+	get() = node.left?.wrapped()
 	set(value) {
-	  node.left = value
+
+	  value?.let {
+		it.removeFromParent()
+		node.left = it.node
+	  }
 	}
-  var right: Node?
-	get() = node.right
+  var right: NW?
+	get() = node.right?.wrapped()
 	set(value) {
-	  node.right = value
+	  value?.let {
+		it.removeFromParent()
+		node.right = it.node
+	  }
 	}
-  var bottom: Node?
-	get() = node.bottom
+  var bottom: NW?
+	get() = node.bottom?.wrapped()
 	set(value) {
-	  node.bottom = value
+	  value?.let {
+		it.removeFromParent()
+		node.bottom = it.node
+	  }
 	}
 
-
-  @Deprecated("Use top = node {} instead")
-  fun <T: NodeWrapperImpl<*>> top(topNode: T, op: T.()->Unit = {}): T {
-	top = topNode.node
-	return attach(topNode, op)
-  }
-
-
-  @Deprecated("Use bottom = node {} instead")
-  fun <T: NodeWrapperImpl<*>> bottom(bottomNode: T, op: T.()->Unit = {}): T {
-	bottom = bottomNode.node
-	return attach(bottomNode, op)
-  }
-
-  @Deprecated("Use left = node {} instead")
-  fun <T: NodeWrapperImpl<*>> left(leftNode: T, op: T.()->Unit = {}): T {
-	left = leftNode.node
-	return attach(leftNode, op)
-  }
-
-  @Deprecated("Use right = node {} instead")
-  fun <T: NodeWrapperImpl<*>> right(rightNode: T, op: T.()->Unit = {}): T {
-	right = rightNode.node
-	return attach(rightNode, op)
-  }
-
-  @Deprecated("Use center = node {} instead")
-  fun <T: NodeWrapperImpl<*>> center(centerNode: T, op: T.()->Unit = {}): T {
-	center = centerNode.node
-	return attach(centerNode, op)
-  }
 
   override fun addChild(child: NodeWrapper, index: Int?) {
 	require(index == null)
-	center = child.node
+	/*center = child*/
+	/*this needs to do nothing, or else behavior is undefined.*/
+	/*children of border pane should always be set like:
+
+	borderpane {
+		left = text("left")
+		right = text("right")
+	}
+
+	I don't know why having a default here like `center = child` breaks things. I really don't get it, but I've proven that this breaks things. The child ends up not being visible anywhere.
+
+	* */
   }
 
 }

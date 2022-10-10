@@ -24,6 +24,7 @@ import matt.obs.bind.smartBind
 import matt.obs.col.olist.ObsList
 import matt.obs.prop.ObsVal
 import matt.obs.prop.ValProp
+import matt.obs.prop.Var
 import matt.obs.prop.VarProp
 
 fun <T: Any> ComboBoxWrapper<T>.bindSelected(property: VarProp<T?>) {
@@ -52,7 +53,7 @@ class ComboBoxWrapper<E: Any>(
   constructor(items: ObsList<E>): this(ComboBox<E>(items.createFXWrapper()))
 
 
-  override val cellFactoryProperty: ObjectProperty<Callback<ListView<E>, ListCell<E>>> get() = node.cellFactoryProperty()
+  override val cellFactoryProperty: Var<Callback<ListView<E>, ListCell<E>>> by lazy { node.cellFactoryProperty().toNonNullableProp() }
 
 
   var items: ObservableList<E>
