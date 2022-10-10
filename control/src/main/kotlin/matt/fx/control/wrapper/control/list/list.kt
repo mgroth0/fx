@@ -4,9 +4,7 @@ import javafx.beans.property.BooleanProperty
 import javafx.beans.property.ObjectProperty
 import javafx.beans.value.ObservableValue
 import javafx.collections.ObservableList
-import javafx.scene.control.ListCell
 import javafx.scene.control.ListView
-import javafx.util.Callback
 import matt.fx.control.wrapper.cellfact.ListCellFactory
 import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.control.wrapper.selects.SelectingControl
@@ -15,7 +13,7 @@ import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.hurricanefx.eye.wrapper.obs.collect.createFXWrapper
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
 import matt.obs.col.olist.ObsList
 
 
@@ -45,7 +43,7 @@ open class ListViewWrapper<E: Any>(
   fun scrollTo(i: Int) = node.scrollTo(i)
   fun scrollTo(e: E) = node.scrollTo(e)
 
-  override val cellFactoryProperty by lazy { node.cellFactoryProperty().toNonNullableProp() }
+  override val cellFactoryProperty by lazy { node.cellFactoryProperty().toNullableProp() }
 
   var isEditable
 	get() = node.isEditable

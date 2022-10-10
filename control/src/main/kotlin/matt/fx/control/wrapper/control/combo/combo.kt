@@ -5,9 +5,7 @@ import javafx.beans.property.StringProperty
 import javafx.collections.ObservableList
 import javafx.scene.control.ComboBox
 import javafx.scene.control.ComboBoxBase
-import javafx.scene.control.ListCell
 import javafx.scene.control.ListView
-import javafx.util.Callback
 import javafx.util.StringConverter
 import matt.fx.control.wrapper.cellfact.ListCellFactory
 import matt.fx.control.wrapper.control.ControlWrapperImpl
@@ -24,7 +22,6 @@ import matt.obs.bind.smartBind
 import matt.obs.col.olist.ObsList
 import matt.obs.prop.ObsVal
 import matt.obs.prop.ValProp
-import matt.obs.prop.Var
 import matt.obs.prop.VarProp
 
 fun <T: Any> ComboBoxWrapper<T>.bindSelected(property: VarProp<T?>) {
@@ -53,7 +50,7 @@ class ComboBoxWrapper<E: Any>(
   constructor(items: ObsList<E>): this(ComboBox<E>(items.createFXWrapper()))
 
 
-  override val cellFactoryProperty: Var<Callback<ListView<E>, ListCell<E>>> by lazy { node.cellFactoryProperty().toNonNullableProp() }
+  override val cellFactoryProperty by lazy { node.cellFactoryProperty().toNonNullableProp() }
 
 
   var items: ObservableList<E>

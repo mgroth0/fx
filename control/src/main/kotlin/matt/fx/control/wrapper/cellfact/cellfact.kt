@@ -21,8 +21,8 @@ import kotlin.reflect.KProperty1
 interface CellFactory<N, T, C: Cell<T>> {
 
 
-  val cellFactoryProperty: Var<Callback<N, C>>
-  var cellFactory: Callback<N, C>
+  val cellFactoryProperty: Var<Callback<N, C>?>
+  var cellFactory: Callback<N, C>?
 	get() = cellFactoryProperty.value
 	set(value) {
 	  cellFactoryProperty v value

@@ -6,7 +6,7 @@ import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.graphics.wrapper.node.NW
 
 fun NW.add(newToolTip: Tooltip) {
-  if (this is ControlWrapperImpl<*>) node.tooltip = newToolTip else javafx.scene.control.Tooltip.install(this.node, newToolTip)
+  if (this is ControlWrapperImpl<*>) node.tooltip = newToolTip else Tooltip.install(this.node, newToolTip)
 }
 
 fun NW.tooltip(text: String? = null, graphic: Node? = null, op: Tooltip.()->Unit = {}): Tooltip {
