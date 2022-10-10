@@ -1,7 +1,6 @@
 package matt.fx.node.procpane.inspect
 
 import javafx.beans.property.SimpleObjectProperty
-import javafx.beans.property.SimpleStringProperty
 import javafx.scene.control.TreeItem
 import javafx.scene.control.TreeTableColumn
 import matt.auto.process.ProcessOrHandleWrapper
