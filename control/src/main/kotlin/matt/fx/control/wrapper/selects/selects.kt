@@ -35,7 +35,7 @@ interface SelectionControls<T: Any> {
   val selectedIndexProperty: ObsVal<Int?>
   val selectedIndex: Int?
   fun select(obj: T?)
-  val selectedItemProperty: ObsVal<T?>
+  val selectedItemProperty: ObsVal<out T?>
   fun setOnSelectionChange(listener: (T?)->Unit) = selectedItemProperty.onChange(listener)
   fun onSelect(op: (T?)->Unit) {
 	selectedItemProperty.onChange {
@@ -61,7 +61,7 @@ interface Selects<T: Any>: SelectionControls<T> {
   override fun isSelected(index: Int): Boolean = selectionModel.isSelected(index)
   override val selectedIndex: Int? get() = selectionModel.selectedIndex
   override fun select(obj: T?) = selectionModel.select(obj)
-  override val selectedItemProperty: ObsVal<T?> get() = selectionModel.selectedItemProperty
+  override val selectedItemProperty: ObsVal<out T?> get() = selectionModel.selectedItemProperty
   override val selectedIndexProperty: ObsVal<Int?> get() = selectionModel.selectedIndexProperty
 }
 

@@ -2,7 +2,6 @@ package matt.fx.control.wrapper.tab
 
 import javafx.scene.control.Tab
 import javafx.scene.control.TabPane
-import javafx.scene.layout.VBox
 import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.control.wrapper.control.tab.TabWrapper
 import matt.fx.control.wrapper.selects.SelectModWrap
@@ -12,7 +11,6 @@ import matt.fx.graphics.service.uncheckedWrapperConverter
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
-import matt.fx.graphics.wrapper.pane.vbox.VBoxW
 import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapper
 import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
 import matt.hurricanefx.eye.wrapper.obs.collect.createMutableWrapper
@@ -31,6 +29,9 @@ open class TabPaneWrapper<T: TabWrapper<*>>(
 	  *tabs.map { it.node }.toTypedArray()
 	)
   )
+
+//  /*non null*/final override val selectedItemProperty: ObsVal<T> by lazy { selectionModel.selectedItemProperty.cast() }
+//  /*non null*/override val selectedItem: T by selectedItemProperty
 
   val tabs get() = node.tabs.createMutableWrapper().toSyncedList<Tab, T>(uncheckedWrapperConverter())
 
@@ -58,35 +59,21 @@ fun <W: NodeWrapper> TabPaneWrapper<TabWrapper<W>>.tab(
   text: String,
   content: W,
   index: Int? = null,
+  closable: Boolean = true,
   op: W.()->Unit = {}
 ): TabWrapper<W> {
   val tab = TabWrapper(text, content)
+  tab.isClosable = closable
   tabs.add(index ?: tabs.size, tab)
   op(content)
   return tab
 }
-
-/*matt was here*/
-fun <W: NodeWrapper> TabPaneWrapper<TabWrapper<W>>.staticTab(
-  text: String,
-  content: W,
-  index: Int? = null,
-  op: W.()->Unit = {}
-): TabWrapper<W> {
-  val tab = TabWrapper(text, content).apply {
-	isClosable = false
-  }
-  tabs.add(index ?: tabs.size, tab)
-  op(content)
-  return tab
-}
-
 
 fun <C: NodeWrapper> TabPaneWrapper<TabWrapper<VBoxWrapper<C>>>.vtab(
   s: String = "",
   op: VBoxWrapper<C>.()->Unit = {}
 ): TabWrapper<VBoxWrapper<C>> {
-  return staticTab(s, VBoxWrapperImpl()) {
+  return tab(s, VBoxWrapperImpl(), closable = false) {
 	op()
   }
 }

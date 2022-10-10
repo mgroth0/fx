@@ -36,9 +36,12 @@ fun <T> ToggleGroup.bind(property: ObservableValue<T>) = selectedValueProperty<T
  *
  * To matt.hurricanefx.eye.collect.collectbind.bind to this property, use the #ToggleGroup.matt.hurricanefx.eye.collect.collectbind.bind() function.
  */
+
+private object SEL_VAL_PROP
+
 fun <T> ToggleGroup.selectedValueProperty(): ObjectProperty<T> =
-  properties.getOrPut("matt.tornadofx.selectedValueProperty") {
-	SimpleObjectProperty<T>().apply {
+  properties.getOrPut(SEL_VAL_PROP) {
+	SimpleObjectProperty<T>(((selectedToggleProperty().value as? Node)?.wrapped() as? HasConstValue<T>)?.value).apply {
 	  selectedToggleProperty().onChange {
 		value = ((it as? Node)?.wrapped() as? HasConstValue<T>)?.value
 	  }
