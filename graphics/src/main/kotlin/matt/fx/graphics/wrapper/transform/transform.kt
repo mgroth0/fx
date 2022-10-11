@@ -32,3 +32,13 @@ class TranslateWrapper(node: Translate): TransformWrapper(node)
 class ShearWrapper(node: Shear): TransformWrapper(node)
 class AffineWrapper(node: Affine): TransformWrapper(node)
 class ScaleWrapper(node: Scale): TransformWrapper(node)
+
+class ImmutableTransformWrapper(node: Transform): TransformWrapper(node) {
+  companion object {
+	const val JFX_QNAME = "javafx.scene.transform.Transform.ImmutableTransform"
+  }
+
+  init {
+	require(node::class.qualifiedName == JFX_QNAME)
+  }
+}

@@ -259,9 +259,11 @@ import matt.fx.graphics.wrapper.subscene.SubSceneWrapper
 import matt.fx.graphics.wrapper.text.TextWrapper
 import matt.fx.graphics.wrapper.textflow.TextFlowWrapper
 import matt.fx.graphics.wrapper.transform.AffineWrapper
+import matt.fx.graphics.wrapper.transform.ImmutableTransformWrapper
 import matt.fx.graphics.wrapper.transform.RotateWrapper
 import matt.fx.graphics.wrapper.transform.ScaleWrapper
 import matt.fx.graphics.wrapper.transform.ShearWrapper
+import matt.fx.graphics.wrapper.transform.TransformWrapper
 import matt.fx.graphics.wrapper.transform.TranslateWrapper
 import matt.fx.graphics.wrapper.window.WindowWrapper
 import matt.lang.NEVER
@@ -653,18 +655,21 @@ fun Shear.wrapped(): ShearWrapper = findWrapper() ?: ShearWrapper(this@wrapped)
 fun Affine.wrapped(): AffineWrapper = findWrapper() ?: AffineWrapper(this@wrapped)
 fun Scale.wrapped(): ScaleWrapper = findWrapper() ?: ScaleWrapper(this@wrapped)
 
-fun Transform.wrapped(): EventTargetWrapper = findWrapper() ?: when (this) {
+fun Transform.wrapped(): TransformWrapper = findWrapper() ?: when (this) {
   is Rotate    -> wrapped()
   is Translate -> wrapped()
   is Shear     -> wrapped()
   is Affine    -> wrapped()
   is Scale     -> wrapped()
-  else         -> cannotFindWrapper()
+  else         -> when (this::class.qualifiedName) {
+	ImmutableTransformWrapper.JFX_QNAME -> ImmutableTransformWrapper(this)
+	else                                -> cannotFindWrapper()
+  }
 }
 
 fun CheckBoxTreeItem<*>.wrapped(): CheckBoxTreeItemWrapper<*> = findWrapper() ?: CheckBoxTreeItemWrapper(this@wrapped)
 
-fun TreeItem<*>.wrapped(): EventTargetWrapper = findWrapper() ?: when (this) {
+fun TreeItem<*>.wrapped(): TreeItemWrapper<*> = findWrapper() ?: when (this) {
   is CheckBoxTreeItem<*> -> wrapped()
   else                   -> findWrapper() ?: TreeItemWrapper(this)
 }
@@ -692,7 +697,7 @@ fun TextInputDialog.wrapped(): TextInputDialogWrapper = findWrapper() ?: TextInp
 fun Dialog<*>.wrapped(): DialogWrapper<*> = findWrapper() ?: when (this) {
   is ChoiceDialog<*> -> wrapped()
   is TextInputDialog -> wrapped()
-  else               -> cannotFindWrapper()
+  else               -> findWrapper() ?: DialogWrapper(this)
 }
 
 fun TableColumnBase<*, *>.wrapped(): TableColumnBaseWrapper<*, *, *> = findWrapper() ?: when (this) {
