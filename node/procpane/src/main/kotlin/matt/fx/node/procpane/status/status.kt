@@ -1,6 +1,5 @@
 package matt.fx.node.procpane.status
 
-import javafx.application.Platform.runLater
 import javafx.geometry.Insets
 import javafx.geometry.Orientation.HORIZONTAL
 import javafx.scene.control.ScrollPane.ScrollBarPolicy.NEVER

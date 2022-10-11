@@ -20,7 +20,7 @@ class SomeTests {
 
 	yesIUseTestLibs()
 
-	runFXAppBlocking(args = arrayOf(), usePreloaderApp = false, t = null, fxOp = {
+	runFXAppBlocking(args = arrayOf(), usePreloaderApp = false, reporter = null, fxOp = {
 	  val failedToWrap = (EventTarget::class as KClass<out EventTarget>).subclasses("javafx")
 		.filter {
 		  /*must test for anonymous first because trying to see if anonymous is abstract leads to error*/
