@@ -1,23 +1,29 @@
 package matt.fx.control
 
+import javafx.scene.Node
+import javafx.scene.control.ScrollPane
+import matt.reflect.subclasses
+import matt.test.yesIUseTestLibs
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.AfterTestExecutionCallback
 import kotlin.contracts.ExperimentalContracts
-import kotlin.test.junit5.JUnit5Asserter
 
-@Suppress("UNUSED_VARIABLE")
 class SomeTests {
-
 
   @Test
   @ExperimentalContracts
   fun testWrappers() {
 
+	yesIUseTestLibs()
 
-	val yesIUseJUnitHereIsSomethingNotInlined = AfterTestExecutionCallback { TODO("Not yet implemented") }
-	val hereIsAnother = JUnit5Asserter
+	listOf<Node>(
+	  ScrollPane()
+	)
 
-//	assert(false)
+	Node::class.subclasses().forEach {
+	  println("node subclass: ${it}")
+	}
+
+	//	assert(false)
 
   }
 }
