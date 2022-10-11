@@ -7,6 +7,7 @@ import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.lang.NEVER
 import matt.obs.bindings.str.ObsS
+import matt.fx.control.inter.graphic
 
 
 fun ET.button(

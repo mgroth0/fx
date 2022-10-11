@@ -15,7 +15,6 @@ import javafx.geometry.Point3D
 import javafx.scene.CacheHint
 import javafx.scene.Cursor
 import javafx.scene.Node
-import javafx.scene.Parent
 import javafx.scene.Scene
 import javafx.scene.SnapshotParameters
 import javafx.scene.effect.BlendMode
@@ -34,24 +33,14 @@ import javafx.scene.layout.AnchorPane
 import javafx.scene.layout.HBox
 import javafx.scene.layout.Priority
 import javafx.scene.layout.VBox
-import javafx.scene.shape.FillRule
-import javafx.scene.shape.PathElement
 import javafx.stage.FileChooser
 import matt.file.MFile
 import matt.file.construct.toMFile
 import matt.fx.graphics.service.wrapped
 import matt.fx.graphics.wrapper.EventTargetWrapper
 import matt.fx.graphics.wrapper.SingularEventTargetWrapper
-import matt.fx.graphics.wrapper.node.line.LineWrapper
-import matt.fx.graphics.wrapper.node.line.arc.ArcWrapper
-import matt.fx.graphics.wrapper.node.line.cubic.CubicCurveWrapper
 import matt.fx.graphics.wrapper.node.parent.ParentWrapper
 import matt.fx.graphics.wrapper.node.parent.parent
-import matt.fx.graphics.wrapper.node.path.PathWrapper
-import matt.fx.graphics.wrapper.node.shape.circle.CircleWrapper
-import matt.fx.graphics.wrapper.node.shape.ellipse.EllipseWrapper
-import matt.fx.graphics.wrapper.node.shape.rect.RectangleWrapper
-import matt.fx.graphics.wrapper.node.shape.svg.SVGPathWrapper
 import matt.fx.graphics.wrapper.stage.StageWrapper
 import matt.fx.graphics.wrapper.style.StyleableWrapper
 import matt.fx.graphics.wrapper.style.StyleableWrapperImpl
@@ -449,7 +438,7 @@ interface NodeWrapper: EventTargetWrapper, StyleableWrapper {
 	}
 
 
-  val stage get() = scene?.window?.wrapped() as? StageWrapper/*   node.stage.wrapped() as? StageWrapper*/
+  val stage get() = scene?.window?.wrapped() as? StageWrapper
 
   fun onDoubleClickConsume(action: ()->Unit) {
 	node.setOnMouseClicked {
@@ -476,6 +465,8 @@ interface NodeWrapper: EventTargetWrapper, StyleableWrapper {
 }
 
 
+
+
 abstract class NodeWrapperImpl<out N: Node>(
   node: N
 ): SingularEventTargetWrapper<N>(node),
@@ -486,14 +477,6 @@ abstract class NodeWrapperImpl<out N: Node>(
 	 }
    },
    NodeWrapper {
-  /*  companion object {
-
-	  fun <N: Node> N.matt.hurricanefx.eye.wrapper.matt.hurricanefx.eye.wrapper.obs.collect.wrapped(): NodeWrapperImpl<N> = object: NodeWrapperImpl<N>(this@matt.hurricanefx.eye.wrapper.matt.hurricanefx.eye.wrapper.obs.collect.wrapped) {
-		override val node = this@matt.hurricanefx.eye.wrapper.matt.hurricanefx.eye.wrapper.obs.collect.wrapped
-
-	  }
-	}*/
-
 
   override val layoutBoundsProperty by lazy { node.layoutBoundsProperty().toNonNullableROProp() }
   override val hoverProperty by lazy { node.hoverProperty().toNonNullableROProp() }
@@ -518,7 +501,6 @@ abstract class NodeWrapperImpl<out N: Node>(
   override val managedProperty by lazy { node.managedProperty().toNonNullableProp() }
   override val visibleProperty by lazy { node.visibleProperty().toNonNullableProp() }
 
-  //  protected var layout: NodeWrapper? = null
 
   override val layoutProxies = mutableSetOf<NodeWrapper>()
 
@@ -632,19 +614,19 @@ fun NodeWrapper.onRightClick(clickCount: Int = 1, filter: Boolean = false, actio
 }
 
 
-const val TRANSITIONING_PROPERTY = "tornadofx.transitioning"
+private object TFX_TRANSITIONING_PROPERTY
 
 /**
  * Whether this node is currently being used in a [ViewTransition]. Used to determine whether it can be used in a
- * transition. (Nodes can only exist once in the scenegraph, so it cannot be in two transitions at once.)
+ * transition. (Nodes can only exist once in the sceneGraph, so it cannot be in two transitions at once.)
  */
 internal var NodeWrapper.isTransitioning: Boolean
   get() {
-	val x = node.properties[TRANSITIONING_PROPERTY]
+	val x = node.properties[TFX_TRANSITIONING_PROPERTY]
 	return x != null && (x !is Boolean || x != false)
   }
   set(value) {
-	node.properties[TRANSITIONING_PROPERTY] = value
+	node.properties[TFX_TRANSITIONING_PROPERTY] = value
   }
 
 
@@ -667,123 +649,56 @@ fun NodeWrapper.whenVisible(runLater: Boolean = true, op: ()->Unit) {
 }
 
 
-// -- Node helpers
-/**
- * This extension function will automatically matt.hurricanefx.eye.collect.collectbind.bind to the managedProperty of the given node
- * and will make sure that it is managed, if the given [expr] returning an observable boolean value equals true.
- *
- * @see https://docs.oracle.com/javase/8/javafx/api/javafx/scene/Node.html#managedProperty
- */
 fun <T: NodeWrapper> T.managedWhen(expr: ()->ObsB): T = managedWhen(expr())
 
-/**
- * This extension function will automatically matt.hurricanefx.eye.collect.collectbind.bind to the managedProperty of the given node
- * and will make sure that it is managed, if the given [predicate] an observable boolean value equals true.
- *
- * @see https://docs.oracle.com/javase/8/javafx/api/javafx/scene/Node.html#managedProperty)
- */
 fun <T: NodeWrapper> T.managedWhen(predicate: ObsB) = apply {
   managedProperty.bind(predicate)
 }
 
-/**
- * This extension function will automatically matt.hurricanefx.eye.collect.collectbind.bind to the visibleProperty of the given node
- * and will make sure that it is visible, if the given [predicate] an observable boolean value equals true.
- *
- * @see https://docs.oracle.com/javase/8/javafx/api/javafx/scene/Node.html#visibleProperty
- */
 fun <T: NodeWrapper> T.visibleWhen(predicate: ObsB) = apply {
 
   visibleProperty.bind(predicate)
 }
 
-/**
- * This extension function will automatically matt.hurricanefx.eye.collect.collectbind.bind to the visibleProperty of the given node
- * and will make sure that it is visible, if the given [expr] returning an observable boolean value equals true.
- *
- * @see https://docs.oracle.com/javase/8/javafx/api/javafx/scene/Node.html#visibleProperty
- */
 fun <T: NodeWrapper> T.visibleWhen(expr: ()->ObsB): T = visibleWhen(expr())
 
-/**
- * This extension function will make sure to hide the given node,
- * if the given [expr] returning an observable boolean value equals true.
- */
 fun <T: NodeWrapper> T.hiddenWhen(expr: ()->ObsB): T = hiddenWhen(expr())
 
-/**
- * This extension function will make sure to hide the given node,
- * if the given [predicate] an observable boolean value equals true.
- */
 fun <T: NodeWrapper> T.hiddenWhen(predicate: ObsB) = apply {
-  //  val binding = if (predicate is BooleanBinding) predicate.not() else predicate.toBinding().not()
   val binding = predicate.not()
   visibleProperty.bind(binding)
 }
 
-/**
- * This extension function will automatically matt.hurricanefx.eye.collect.collectbind.bind to the disableProperty of the given node
- * and will disable it, if the given [expr] returning an observable boolean value equals true.
- *
- * @see https://docs.oracle.com/javase/8/javafx/api/javafx/scene/Node.html#disable
- */
 fun <T: NodeWrapper> T.disableWhen(expr: ()->ObsB): T = disableWhen(expr())
 
-/**
- * This extension function will automatically matt.hurricanefx.eye.collect.collectbind.bind to the disableProperty of the given node
- * and will disable it, if the given [predicate] observable boolean value equals true.
- *
- * @see https://docs.oracle.com/javase/8/javafx/api/javafx/scene/Node.html#disableProperty
- */
 fun <T: NodeWrapper> T.disableWhen(predicate: ObsB) = apply {
   disableProperty.bind(predicate)
 }
 
-/**
- * This extension function will make sure that the given node is enabled when ever,
- * the given [expr] returning an observable boolean value equals true.
- */
 fun <T: NodeWrapper> T.enableWhen(expr: ()->ObsB): T = enableWhen(expr())
 
-/**
- * This extension function will make sure that the given node is enabled when ever,
- * the given [predicate] observable boolean value equals true.
- */
 fun <T: NodeWrapper> T.enableWhen(predicate: ObsB) = apply {
   val binding = predicate.not()
   disableProperty.bind(binding)
 }
 
-/**
- * This extension function will make sure that the given node will only be visible in the scene graph,
- * if the given [expr] returning an observable boolean value equals true.
- */
 fun <T: NodeWrapper> T.removeWhen(expr: ()->ValProp<Boolean>): T = removeWhen(expr())
 
-/**
- * This extension function will make sure that the given node will only be visible in the scene graph,
- * if the given [predicate] observable boolean value equals true.
- */
 fun <T: NodeWrapper> T.removeWhen(predicate: ValProp<Boolean>) = apply {
-  //  val remove = predicate.booleanBinding { predicate.value.not() }
   val remove = predicate.not()
   visibleProperty.bind(remove)
   managedProperty.bind(remove)
 }
 
 
-/**
- * This extension function will make sure that the given [onHover] function will always be calles
- * when ever the hoverProperty of the given node changes.
- */
 fun NodeWrapper.onHover(onHover: (Boolean)->Unit) = apply {
   node.hoverProperty().onChange { onHover(node.isHover) }
 }
 
 
-fun NW.minYRelativeTo(ancestor: NodeWrapper): Double? { //  println("${this} minYRelative to ${ancestor}")
+fun NW.minYRelativeTo(ancestor: NodeWrapper): Double? {
   var p: ParentWrapper<*>? = parent
-  var y = boundsInParent.minY //  matt.prim.str.build.tab("y = ${y}")
+  var y = boundsInParent.minY
   while (true) {
 	when (p) {
 	  null     -> {

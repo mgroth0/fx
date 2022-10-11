@@ -85,7 +85,7 @@ class ContextMenuWrapper(node: ContextMenu = ContextMenu()): WindowWrapper<Conte
    */
   @Deprecated(
 	"Use the item builder instead, which expects an action parameter",
-	ReplaceWith("item(name, KeyCombination.valueOf(keyCombination), graphic).action(onAction)")
+	ReplaceWith("item(name, KeyCombination.valueOf(keyCombination), matt.fx.control.inter.getGraphic).action(onAction)")
   )
   fun menuitem(
 	name: String, keyCombination: String, graphic: Node? = null, onAction: ()->Unit = {}

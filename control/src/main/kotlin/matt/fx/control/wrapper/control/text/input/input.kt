@@ -8,7 +8,6 @@ import javafx.beans.property.StringProperty
 import javafx.beans.value.ObservableValue
 import javafx.scene.control.TextInputControl
 import javafx.scene.paint.Paint
-import javafx.util.StringConverter
 import matt.fx.control.tfx.control.mutateOnChange
 import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.graphics.wrapper.node.NodeWrapper
@@ -17,14 +16,12 @@ import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.graphics.wrapper.style.FXStyle
 import matt.fx.graphics.wrapper.style.parseFXStyle
 import matt.fx.graphics.wrapper.style.toStyleString
-import matt.fx.graphics.wrapper.text.textlike.TextLike
+import matt.fx.graphics.wrapper.text.textlike.ColoredText
 import matt.lang.err
 import matt.log.warn.warn
 import matt.obs.prop.BindableProperty
-import matt.obs.prop.MObservableValNewAndOld
-import java.text.Format
 
-open class TextInputControlWrapper<N: TextInputControl>(node: N): ControlWrapperImpl<N>(node), TextLike {
+open class TextInputControlWrapper<N: TextInputControl>(node: N): ControlWrapperImpl<N>(node), ColoredText {
 
   override fun addChild(child: NodeWrapper, index: Int?) {
 	TODO("Not yet implemented")

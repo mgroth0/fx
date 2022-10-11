@@ -3,6 +3,7 @@ package matt.fx.control.wrapper.control.accordion
 import javafx.collections.ObservableList
 import javafx.scene.control.Accordion
 import javafx.scene.control.TitledPane
+import matt.fx.control.inter.graphic
 import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.control.wrapper.titled.TitledPaneWrapper
 import matt.fx.graphics.wrapper.ET

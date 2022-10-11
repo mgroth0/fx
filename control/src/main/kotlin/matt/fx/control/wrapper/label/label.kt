@@ -2,11 +2,12 @@ package matt.fx.control.wrapper.label
 
 import javafx.scene.Node
 import javafx.scene.control.Label
+import matt.fx.control.inter.graphic
 import matt.fx.control.wrapper.labeled.LabeledWrapper
 import matt.fx.graphics.wrapper.ET
+import matt.fx.graphics.wrapper.node.NW
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
-import matt.hurricanefx.eye.mtofx.createROFXPropWrapper
 import matt.model.convert.StringConverter
 import matt.obs.bind.binding
 import matt.obs.prop.ObsVal
@@ -15,7 +16,7 @@ import matt.obs.prop.ValProp
 
 inline fun <reified T> ET.label(
   observable: ObsVal<T>,
-  graphicProperty: ValProp<Node>? = null,
+  graphicProperty: ValProp<out NW?>? = null,
   converter: StringConverter<T>? = null,
   noinline op: LabelWrapper.()->Unit = {}
 ) = label().apply {
@@ -29,7 +30,9 @@ inline fun <reified T> ET.label(
   } else {
 	textProperty.bind(observable.binding { converter.toString(it) })
   }
-  if (graphic != null) graphicProperty().bind(graphicProperty?.createROFXPropWrapper())
+  if (graphicProperty != null) {
+	this.graphicProperty.bind(graphicProperty)
+  }
   op(this)
 }
 

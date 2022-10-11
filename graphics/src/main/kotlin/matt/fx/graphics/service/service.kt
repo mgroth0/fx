@@ -30,5 +30,11 @@ object WrapperServiceHub: ServiceHub<WrapperService>()
 
 internal fun EventTarget.wrapped() = WrapperServiceHub.get().wrapped(this)
 internal fun Node.wrapped() = WrapperServiceHub.get().wrapped(this) as NodeWrapper
+
 fun <E: EventTarget, W: EventTargetWrapper> uncheckedWrapperConverter() =
   WrapperServiceHub.get().uncheckedWrapperConverter<E, W>()
+
+fun <E: EventTarget, W: EventTargetWrapper> uncheckedNullableWrapperConverter(): Converter<E?, W?> =
+  uncheckedWrapperConverter<E, W>().nullable()
+
+val nullableNodeConverter by lazy { uncheckedNullableWrapperConverter<Node, NodeWrapper>() }

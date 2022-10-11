@@ -15,6 +15,7 @@ import matt.fx.control.wrapper.menu.radioitem.ValuedRadioMenuItem
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
+import matt.fx.control.inter.graphic
 
 fun ET.menubutton(text: String = "", graphic: NodeWrapper? = null, op: MenuButtonWrapper.()->Unit = {}) =
   MenuButtonWrapper().apply {

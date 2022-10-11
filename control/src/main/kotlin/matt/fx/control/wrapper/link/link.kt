@@ -6,6 +6,7 @@ import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.obs.bindings.str.ObsS
+import matt.fx.control.inter.graphic
 
 fun ET.hyperlink(text: String = "", graphic: NodeWrapper? = null, op: HyperlinkWrapper.()->Unit = {}) =
   HyperlinkWrapper().apply { this.text = text;this.graphic = graphic }.attachTo(this, op)

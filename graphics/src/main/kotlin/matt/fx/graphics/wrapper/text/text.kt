@@ -6,7 +6,7 @@ import javafx.scene.text.TextAlignment
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.fx.graphics.wrapper.node.shape.ShapeWrapper
-import matt.fx.graphics.wrapper.text.textlike.TextLike
+import matt.fx.graphics.wrapper.text.textlike.ColoredText
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.obs.bindings.str.ObsS
 
@@ -24,7 +24,7 @@ fun ET.text(observable: ObsS, op: TextWrapper.()->Unit = {}) = text().apply {
 
 open class TextWrapper(
   node: Text = Text(),
-): ShapeWrapper<Text>(node), TextLike {
+): ShapeWrapper<Text>(node), ColoredText {
 
   constructor(text: String): this(Text(text))
 

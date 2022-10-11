@@ -7,6 +7,7 @@ import javafx.scene.control.TitledPane
 import javafx.scene.layout.Pane
 import javafx.scene.layout.VBox
 import javafx.util.StringConverter
+import matt.fx.control.inter.graphic
 import matt.fx.control.wrapper.labeled.LabeledWrapper
 import matt.fx.control.wrapper.wrapped.wrapped
 import matt.fx.graphics.wrapper.ET
@@ -17,14 +18,7 @@ import matt.lang.err
 import matt.obs.prop.MObservableValNewAndOld
 import matt.obs.prop.ValProp
 import java.text.Format
-
-
-
-
-
-
-
-
+import matt.fx.control.inter.graphic
 
 
 fun ET.titledpane(
@@ -48,6 +42,7 @@ fun ET.titledpane(
   attach(titledPane, op)
   return titledPane
 }
+
 open class TitledPaneWrapper(
   node: TitledPane = TitledPane(),
 ): LabeledWrapper<TitledPane>(node), Titled {

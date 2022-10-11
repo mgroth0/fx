@@ -1,7 +1,9 @@
 package matt.fx.graphics.wrapper.window
 
 import javafx.beans.property.ReadOnlyObjectProperty
+import javafx.event.Event
 import javafx.event.EventHandler
+import javafx.event.EventType
 import javafx.scene.Scene
 import javafx.stage.Screen
 import javafx.stage.Window
@@ -96,6 +98,19 @@ open class WindowWrapper<W: Window>(override val node: W): EventTargetWrapperImp
 
   val screen: Screen?
 	get() = Screen.getScreensForRectangle(x, y, 1.0, 1.0).firstOrNull()
+
+
+  fun <T: Event> addEventFilter(eventType: EventType<T>, handler: EventHandler<T>) =
+	node.addEventFilter(eventType, handler)
+
+  fun <T: Event> addEventHandler(eventType: EventType<T>, handler: EventHandler<T>) =
+	node.addEventHandler(eventType, handler)
+
+  fun <T: Event> removeEventFilter(eventType: EventType<T>, handler: EventHandler<T>) =
+	node.removeEventFilter(eventType, handler)
+
+  fun <T: Event> removeEventHandler(eventType: EventType<T>, handler: EventHandler<T>) =
+	node.removeEventHandler(eventType, handler)
 
 }
 

@@ -3,6 +3,7 @@ package matt.fx.control.wrapper.buttonbar
 import javafx.collections.ObservableList
 import javafx.scene.Node
 import javafx.scene.control.ButtonBar
+import matt.fx.control.inter.graphic
 import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.control.wrapper.control.button.ButtonWrapper
 import matt.fx.graphics.wrapper.ET

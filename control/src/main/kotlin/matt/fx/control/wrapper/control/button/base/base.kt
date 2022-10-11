@@ -9,6 +9,7 @@ import matt.lang.NOT_IMPLEMENTED
 import java.awt.Desktop
 import java.net.URI
 import java.net.URL
+import matt.fx.control.inter.graphic
 
 open class ButtonBaseWrapper<N: ButtonBase>(node: N): LabeledWrapper<N>(node) {
 

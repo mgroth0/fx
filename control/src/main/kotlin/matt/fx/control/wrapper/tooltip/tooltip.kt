@@ -1,11 +1,201 @@
 package matt.fx.control.wrapper.tooltip
 
+import com.sun.javafx.geom.PickRay
+import com.sun.javafx.scene.NodeHelper
+import com.sun.javafx.scene.input.PickResultChooser
+import javafx.event.EventHandler
+import javafx.scene.Scene
 import javafx.scene.control.Tooltip
+import javafx.scene.input.MouseEvent
+import javafx.scene.input.PickResult
+import javafx.scene.text.Font
+import javafx.stage.Window
+import matt.fx.control.inter.TextAndGraphic
+import matt.fx.control.inter.graphic
+import matt.fx.control.wrapper.control.ControlWrapperImpl
+import matt.fx.graphics.service.nullableNodeConverter
+import matt.fx.graphics.wrapper.node.NW
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.window.WindowWrapper
+import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
+import matt.lang.go
+import matt.lang.sync
+import matt.obs.prop.Var
+import matt.obs.prop.VarProp
 
-class TooltipWrapper(node: Tooltip): WindowWrapper<Tooltip>(node) {
-  override fun addChild(child: NodeWrapper, index: Int?) {
-	TODO("Not yet implemented")
+fun NW.install(newToolTip: TooltipWrapper) {
+  if (this is ControlWrapperImpl<*>) {
+	tooltip = newToolTip
+  } else {
+	Tooltip.install(
+	  this.node, newToolTip.node
+	)
   }
+}
+
+fun NW.tooltip(text: String = "", graphic: NW? = null, op: TooltipWrapper.()->Unit = {}): TooltipWrapper {
+  val newToolTip = TooltipWrapper(text).apply {
+	this.graphic = graphic
+	op()
+  }
+  install(newToolTip)
+  return newToolTip
+}
+
+
+open class TooltipWrapper(node: Tooltip = Tooltip()): WindowWrapper<Tooltip>(node), TextAndGraphic {
+
+  constructor(s: String): this(Tooltip(s))
+
+
+  override val textProperty: Var<String?> by lazy { node.textProperty().toNullableProp() }
+  override val fontProperty: Var<Font> by lazy { node.fontProperty().toNonNullableProp() }
+  override val graphicProperty by lazy { node.graphicProperty().toNullableProp().proxy(nullableNodeConverter) }
+  final override val contentDisplayProp by lazy {
+	node.contentDisplayProperty().toNonNullableProp()
+  }
+
+  override fun addChild(child: NodeWrapper, index: Int?) {
+	require(index == null)
+	graphic = child
+  }
+
+
+  var showDelay by node::showDelay
+  var hideDelay by node::hideDelay
+  var showDuration by node::showDuration
+  var consumeAutoHidingEvents by node::consumeAutoHidingEvents
+  var isAutoFix by node.autoFixProperty().toNonNullableProp()
+  var isAutoHide by node.autoHideProperty().toNonNullableProp()
+
+
+  private var transparentMouseEventHandler: EventHandler<MouseEvent>? = null
+
+  val sendMouseEventsToProp = VarProp<SendMouseEvents?>(null).apply {
+	onChange { opt ->
+	  sync {
+		if (opt == null) {
+		  transparentMouseEventHandler?.go {
+			removeEventFilter(MouseEvent.ANY, it)
+			transparentMouseEventHandler = null
+		  }
+		} else {
+
+		  addEventFilter(MouseEvent.ANY, EventHandler<MouseEvent> {
+			correctNativeMouseEvent(
+			  it, target = when (opt) {
+				AutoDetectUnderlyingScene -> null
+				is Owner                  -> node.ownerWindow.scene
+				is SpecificScene          -> opt.scene
+			  }, exclude = scene!!.node
+			)
+			it.consume()
+		  }.also {
+			transparentMouseEventHandler = it
+		  })
+		}
+	  }
+	}
+  }
+  var sendMouseEventsTo by sendMouseEventsToProp
+
+}
+
+sealed interface SendMouseEvents
+object AutoDetectUnderlyingScene: SendMouseEvents
+object Owner: SendMouseEvents
+class SpecificScene(val scene: Scene): SendMouseEvents
+
+
+/*https://stackoverflow.com/questions/31437758/how-to-make-a-tooltip-transparent-to-mouse-events*/
+
+private val processMouseEvent by lazy {
+  Scene::class.java.getDeclaredMethod("processMouseEvent", MouseEvent::class.java).apply {
+	isAccessible = true
+  }
+}
+
+private fun correctNativeMouseEvent(
+  event: MouseEvent, target: Scene? = null, exclude: Scene
+): Boolean {
+  val targetScene = target ?: getTargetScene(event, exclude)
+  if (targetScene != null) {
+	val chooser = PickResultChooser()
+
+
+	val local = targetScene.root.screenToLocal(
+	  event.screenX, event.screenY
+	)
+
+	NodeHelper.pickNode(
+	  targetScene.root, PickRay(
+		local.x,        /*event.screenX - targetScene.window.x - targetScene.x,*/
+		local.y,        /*event.screenY - targetScene.window.y - targetScene.y,*/
+		1.0, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY
+	  ), chooser
+	)
+
+	/*	targetScene.root.impl_pickNode(
+		  PickRay(
+			local.x,
+			*//*event.screenX - targetScene.window.x - targetScene.x,*//*
+		local.y,
+		*//*event.screenY - targetScene.window.y - targetScene.y,*//*
+		1.0,
+		Double.NEGATIVE_INFINITY,
+		Double.POSITIVE_INFINITY
+	  ),
+	  chooser
+	)*/
+
+
+	val res: PickResult? = chooser.toPickResult()
+	if (res != null) {    /*val pos: Point2D =
+		res.getIntersectedNode().localToScene(res.getIntersectedPoint().getX(), res.getIntersectedPoint().getY())*/
+
+	  val pos = res.intersectedNode.localToScene(
+		res.intersectedPoint.x, res.intersectedPoint.y
+	  )
+
+
+	  val newEvent = MouseEvent(
+		null, null, event.eventType, pos.x, pos.y, event.screenX, event.screenY, event.button, event.clickCount,
+		event.isShiftDown, event.isControlDown, event.isAltDown, event.isMetaDown, event.isPrimaryButtonDown,
+		event.isMiddleButtonDown, event.isSecondaryButtonDown, event.isSynthesized, event.isPopupTrigger,
+		event.isStillSincePress, res
+	  )
+
+	  processMouseEvent.invoke(targetScene, newEvent)    //	  m.invoke(targetScene, newEvent)
+	  /*targetScene.root.fireEvent(newEvent)*/    /*targetScene.eventDispatcher.dispatchEvent(newEvent,)*/    /*targetScene.impl_processMouseEvent(newEvent)*/
+
+
+
+	  return true
+	}
+  }
+  return false
+}
+
+private fun getTargetScene(event: MouseEvent, exclude: Scene): Scene? {
+  val x: Double = event.screenX
+  val y: Double = event.screenY
+  var sx: Double
+  var sy: Double
+  var sw: Double
+  var sh: Double/*val itr: Iterator<Window> = Window.impl_getWindows()*/
+  val itr: Iterator<Window> = Window.getWindows().iterator()
+  if (itr.hasNext()) {
+	var w: Window = itr.next()
+	while (itr.hasNext()) {
+	  sx = w.x
+	  sy = w.y
+	  sw = w.width
+	  sh = w.height
+	  if (sx < x && x < sx + sw && sy < y && y < sy + sh && w.scene !== exclude) return w.scene
+	  w = itr.next()
+	}
+
+  }
+  return null
 }

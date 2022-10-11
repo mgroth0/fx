@@ -79,11 +79,6 @@ open class StageWrapper(override val node: Stage): WindowWrapper<Stage>(node), T
   override fun isInsideRow() = false
 
 
-  fun <T: Event> addEventFilter(eventType: EventType<T>, handler: EventHandler<T>) =
-	node.addEventFilter(eventType, handler)
-
-  fun <T: Event> addEventHandler(eventType: EventType<T>, handler: EventHandler<T>) =
-	node.addEventHandler(eventType, handler)
 
   var isAlwaysOnTop
 	get() = node.isAlwaysOnTop

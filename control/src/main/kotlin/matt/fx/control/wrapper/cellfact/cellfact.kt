@@ -162,7 +162,7 @@ private fun Cell<*>.clear() {
 //  else {
 //	op(item).let {
 //	  text = it.first
-//	  graphic = it.second
+//	  matt.fx.control.inter.getGraphic = it.second
 //	}
 //  }
 //}

@@ -4,10 +4,12 @@ import javafx.scene.paint.Color
 import javafx.scene.paint.Paint
 import javafx.scene.text.Font
 import matt.fx.graphics.font.fixed
+import matt.fx.graphics.wrapper.EventTargetWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.obs.prop.Var
 
-interface TextLike: NodeWrapper {
+
+interface TextLike: EventTargetWrapper {
   val textProperty: Var<String?>
   var text: String
 	get() = textProperty.value ?: ""
@@ -22,6 +24,10 @@ interface TextLike: NodeWrapper {
 	  fontProperty v value
 	}
 
+}
+
+interface ColoredText: TextLike, NodeWrapper {
+
   val textFillProperty: Var<Paint?>
   var textFill: Paint?
 	get() = textFillProperty.value
@@ -32,7 +38,7 @@ interface TextLike: NodeWrapper {
 
 }
 
-fun <T: TextLike> T.applyConsoleStyle(size: Double? = null, color: Color? = null): T {
+fun <T: ColoredText> T.applyConsoleStyle(size: Double? = null, color: Color? = null): T {
   font = font.fixed().copy(family = "Consolas").fx()
   if (size != null) {
 	font = font.fixed().copy(size = size).fx()

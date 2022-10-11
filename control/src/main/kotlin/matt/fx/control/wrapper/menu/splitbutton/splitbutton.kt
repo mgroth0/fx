@@ -1,10 +1,12 @@
 package matt.fx.control.wrapper.menu.splitbutton
 
 import javafx.scene.control.SplitMenuButton
+import matt.fx.control.inter.graphic
 import matt.fx.control.wrapper.menu.button.MenuButtonWrapper
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
+
 
 fun ET.splitmenubutton(
   text: String? = null, graphic: NodeWrapper? = null, op: SplitMenuButtonWrapper.()->Unit = {}
