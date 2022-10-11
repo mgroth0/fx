@@ -33,7 +33,7 @@ import matt.kjlib.shell.forEachOutChar
 import matt.lang.err
 import matt.lang.go
 import matt.log.tab
-import matt.log.todoOnce
+import matt.log.todo.todoOnce
 import matt.obs.bindings.bool.not
 import matt.obs.prop.BindableProperty
 import matt.prim.str.throttled

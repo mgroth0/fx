@@ -43,7 +43,7 @@ import matt.gui.setview.autoResizeColumns
 import matt.hurricanefx.eye.wrapper.obs.collect.createMutableWrapper
 import matt.lang.inList
 import matt.log.taball
-import matt.log.todo
+import matt.log.todo.todo
 import matt.obs.col.olist.BasicObservableListImpl
 import matt.obs.col.olist.toBasicObservableList
 import matt.obs.math.double.op.div
