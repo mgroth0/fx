@@ -18,7 +18,7 @@ import matt.hotkey.HotkeyDSL
 import matt.lang.NEVER
 import matt.lang.err
 import matt.lang.go
-import matt.log.Logger
+import matt.log.logger.Logger
 import matt.log.NOPLogger
 import matt.log.SystemOutLogger
 import matt.model.sys.Mac
