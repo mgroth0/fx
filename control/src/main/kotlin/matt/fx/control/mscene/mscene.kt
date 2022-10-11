@@ -23,7 +23,7 @@ import matt.fx.graphics.wrapper.region.border.FXBorder
 import matt.fx.graphics.wrapper.scene.SceneWrapper
 import matt.fx.graphics.wrapper.style.StyleableWrapper
 import matt.fx.graphics.wrapper.style.toAwtColor
-import matt.log.profile.tic
+import matt.log.profile.stopwatch.tic
 import matt.log.tab
 import kotlin.reflect.KClass
 

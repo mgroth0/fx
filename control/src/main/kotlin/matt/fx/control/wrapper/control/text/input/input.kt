@@ -19,7 +19,7 @@ import matt.fx.graphics.wrapper.style.parseFXStyle
 import matt.fx.graphics.wrapper.style.toStyleString
 import matt.fx.graphics.wrapper.text.textlike.TextLike
 import matt.lang.err
-import matt.log.warn
+import matt.log.warn.warn
 import matt.obs.prop.BindableProperty
 import matt.obs.prop.MObservableValNewAndOld
 import java.text.Format

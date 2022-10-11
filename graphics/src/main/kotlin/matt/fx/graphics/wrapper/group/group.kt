@@ -7,7 +7,7 @@ import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attach
 import matt.hurricanefx.eye.wrapper.obs.collect.createMutableWrapper
 import matt.fx.graphics.wrapper.node.parent.ParentWrapperImpl
-import matt.log.warn
+import matt.log.warn.warn
 import matt.obs.col.olist.mappedlist.toSyncedList
 
 fun <C: NodeWrapper> ET.group(initialChildren: Iterable<C>? = null, op: GroupWrapper<C>.()->Unit = {}) =

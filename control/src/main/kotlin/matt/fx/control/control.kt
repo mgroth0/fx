@@ -13,7 +13,7 @@ import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapperImpl
 import matt.hurricanefx.eye.mtofx.createROFXPropWrapper
 import matt.lang.NEVER
-import matt.log.warn
+import matt.log.warn.warn
 import matt.obs.prop.BindableProperty
 import matt.obs.prop.Var
 

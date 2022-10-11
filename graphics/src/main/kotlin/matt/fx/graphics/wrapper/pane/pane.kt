@@ -14,7 +14,7 @@ import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
 import matt.fx.graphics.wrapper.region.RegionWrapper
 import matt.fx.graphics.wrapper.region.RegionWrapperImpl
 import matt.hurricanefx.eye.wrapper.obs.collect.createMutableWrapper
-import matt.log.warnOnce
+import matt.log.warn.warnOnce
 import matt.model.corner.Corner
 import matt.model.corner.Corner.NE
 import matt.model.corner.Corner.NW

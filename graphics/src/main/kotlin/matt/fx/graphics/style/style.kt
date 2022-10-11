@@ -12,7 +12,7 @@ import matt.color.hex
 import matt.css.MyStyleDsl
 import matt.fx.graphics.wrapper.node.NodeWrapperImpl
 import matt.fx.graphics.wrapper.style.toAwtColor
-import matt.log.warn
+import matt.log.warn.warn
 import matt.obs.prop.BindableProperty
 import java.util.logging.Level
 import kotlin.reflect.KProperty

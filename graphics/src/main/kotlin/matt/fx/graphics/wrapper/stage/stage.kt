@@ -14,7 +14,7 @@ import matt.fx.graphics.wrapper.scene.SceneWrapper
 import matt.fx.graphics.wrapper.window.WindowWrapper
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.NullableFXBackedBindableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
-import matt.log.warn
+import matt.log.warn.warn
 
 open class StageWrapper(override val node: Stage): WindowWrapper<Stage>(node), Titled {
 

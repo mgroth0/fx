@@ -14,7 +14,7 @@ import matt.auto.macapp.SystemEvents
 import matt.fx.graphics.mag.left
 import matt.fx.graphics.wrapper.stage.StageWrapper
 import matt.lang.err
-import matt.log.profile.tic
+import matt.log.profile.stopwatch.tic
 import kotlin.concurrent.thread
 
 fun moveFrontmostWindowByApplescript(x: Number, y: Number, width: Number, height: Number) {
