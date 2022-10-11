@@ -18,6 +18,7 @@ class SomeTests {
 	Platform.setImplicitExit(true)
 	Application.launch(TestApp::class.java)
 
+
   }
 }
 
@@ -29,6 +30,7 @@ class TestApp(): Application() {
 	  println("node subclass: $it")
 	}
 	primaryStage!!.close()
+	Platform.exit()
   }
 
 }
