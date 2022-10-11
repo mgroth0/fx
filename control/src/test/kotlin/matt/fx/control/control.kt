@@ -24,7 +24,9 @@ class SomeTests {
 	  val failedToWrap = (EventTarget::class as KClass<out EventTarget>).subclasses("javafx")
 		.filter {
 		  /*must test for anonymous first because trying to see if anonymous is abstract leads to error*/
-		  !it.java.isAnonymousClass && !it.isAbstract
+		  !it.java.isAnonymousClass
+			  && !it.isAbstract
+			  && it.qualifiedName != "javafx.embed.swing.SwingNode" /*not sure how this keeps getting in even though I'm not depending on fx-swing*/
 		}.mapNotNull {
 		  it.noArgConstructor
 		}.mapNotNull {

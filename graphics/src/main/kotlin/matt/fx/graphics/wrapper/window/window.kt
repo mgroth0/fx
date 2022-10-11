@@ -8,13 +8,14 @@ import javafx.stage.Window
 import javafx.stage.WindowEvent
 import matt.fx.graphics.service.wrapped
 import matt.fx.graphics.wrapper.EventTargetWrapperImpl
+import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.scene.SceneWrapper
 import matt.fx.graphics.wrapper.sizeman.SizeControlled
 import matt.hurricanefx.eye.wrapper.obs.obsval.NonNullFXBackedReadOnlyBindableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
 import matt.lang.NOT_IMPLEMENTED
 
-abstract class WindowWrapper<W: Window>(override val node: W): EventTargetWrapperImpl<W>(), SizeControlled {
+open class WindowWrapper<W: Window>(override val node: W): EventTargetWrapperImpl<W>(), SizeControlled {
 
   override fun removeFromParent(): Unit = NOT_IMPLEMENTED
 
@@ -24,6 +25,9 @@ abstract class WindowWrapper<W: Window>(override val node: W): EventTargetWrappe
 
 
   override val properties get() = node.properties
+  override fun addChild(child: NodeWrapper, index: Int?) {
+	TODO("Not yet implemented")
+  }
 
   override var height
 	get() = node.height

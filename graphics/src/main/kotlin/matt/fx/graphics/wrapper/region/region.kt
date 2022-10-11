@@ -22,15 +22,15 @@ import matt.fx.graphics.style.horizontal
 import matt.fx.graphics.style.insets
 import matt.fx.graphics.style.vertical
 import matt.fx.graphics.wrapper.node.NodeWrapper
-import matt.hurricanefx.eye.lib.proxypropDouble
-import matt.hurricanefx.eye.wrapper.obs.collect.createMutableWrapper
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
-import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
 import matt.fx.graphics.wrapper.node.parent.ParentWrapper
 import matt.fx.graphics.wrapper.node.parent.ParentWrapperImpl
 import matt.fx.graphics.wrapper.node.parent.parent
 import matt.fx.graphics.wrapper.region.border.FXBorder
 import matt.fx.graphics.wrapper.sizeman.SizeManaged
+import matt.hurricanefx.eye.lib.proxypropDouble
+import matt.hurricanefx.eye.wrapper.obs.collect.createMutableWrapper
+import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
 import matt.lang.NEVER
 import matt.lang.err
 import matt.obs.col.olist.mappedlist.toSyncedList
@@ -328,7 +328,7 @@ interface RegionWrapper<C: NodeWrapper>: ParentWrapper<C>, SizeManaged {
 }
 
 
-abstract class RegionWrapperImpl<N: Region, C: NodeWrapper>(node: N): ParentWrapperImpl<N, C>(node), RegionWrapper<C> {
+open class RegionWrapperImpl<N: Region, C: NodeWrapper>(node: N): ParentWrapperImpl<N, C>(node), RegionWrapper<C> {
   /*any temporary border changes might want to come back to this after*//*used to be an ugly lazy map that lead to errors. manual is better for this.*/
   var defaultBorder: Border = Border.EMPTY
 
@@ -340,5 +340,9 @@ abstract class RegionWrapperImpl<N: Region, C: NodeWrapper>(node: N): ParentWrap
 	  } as ObservableList<Node>).createMutableWrapper().toSyncedList(
 	  uncheckedWrapperConverter()
 	)
+  }
+
+  override fun addChild(child: NodeWrapper, index: Int?) {
+	TODO("Not yet implemented")
   }
 }

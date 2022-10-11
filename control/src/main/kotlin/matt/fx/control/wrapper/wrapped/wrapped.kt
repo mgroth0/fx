@@ -134,6 +134,7 @@ import matt.fx.control.wrapper.button.toggle.ToggleButtonWrapper
 import matt.fx.control.wrapper.buttonbar.ButtonBarWrapper
 import matt.fx.control.wrapper.chart.area.AreaChartWrapper
 import matt.fx.control.wrapper.chart.axis.AxisWrapper
+import matt.fx.control.wrapper.chart.axis.cat.CategoryAxisWrapper
 import matt.fx.control.wrapper.chart.axis.value.ValueAxisWrapper
 import matt.fx.control.wrapper.chart.axis.value.number.NumberAxisWrapper
 import matt.fx.control.wrapper.chart.bar.BarChartWrapper
@@ -373,7 +374,7 @@ val constructorMap = lazyMap<KType, KFunction<EventTargetWrapper>> { typ ->
 
 
 fun NumberAxis.wrapped(): NumberAxisWrapper = findWrapper() ?: NumberAxisWrapper(this@wrapped)
-
+fun CategoryAxis.wrapped(): CategoryAxisWrapper = findWrapper() ?: CategoryAxisWrapper(this@wrapped)
 
 fun ToolBar.wrapped(): ToolBarWrapper = findWrapper() ?: ToolBarWrapper(this@wrapped)
 
@@ -383,9 +384,11 @@ fun ToolBar.wrapped(): ToolBarWrapper = findWrapper() ?: ToolBarWrapper(this@wra
   else          -> cannotFindWrapper()
 }
 
+
 @Suppress("UNCHECKED_CAST") fun <T> Axis<T>.wrapped(): AxisWrapper<T, Axis<T>> = findWrapper() ?: when (this) {
-  is ValueAxis -> (this as ValueAxis<out Number>).wrapped() as AxisWrapper<T, Axis<T>>
-  else         -> cannotFindWrapper()
+  is ValueAxis    -> (this as ValueAxis<out Number>).wrapped() as AxisWrapper<T, Axis<T>>
+  is CategoryAxis -> wrapped() as AxisWrapper<T, Axis<T>>
+  else            -> cannotFindWrapper()
 }
 
 
@@ -511,7 +514,8 @@ fun Region.wrapped(): RegionWrapper<*> = findWrapper() ?: when (this) {
 	"org.fxmisc.flowless.VirtualFlow"                                    -> FlowLessVirtualFlowWrapper(this@wrapped)
 	"eu.hansolo.fx.charts.CoxcombChart"                                  -> CoxCombWrapper(this@wrapped)
 	"eu.hansolo.fx.charts.matt.fx.control.wrapper.wrapped.SunburstChart" -> SunburstChart(this@wrapped)
-	else                                                                 -> cannotFindWrapper()
+	else                                                                 -> findWrapper()
+	  ?: RegionWrapperImpl<Region, NodeWrapper>(this)
   }
 }
 
@@ -610,6 +614,7 @@ fun Node.wrapped(): NodeWrapper = findWrapper() ?: when (this) {
   is AmbientLight      -> wrapped()
   is SpotLight         -> wrapped()
   is Parent            -> wrapped()
+
   is SubScene          -> wrapped()
   is Shape3D           -> wrapped()
   is Shape             -> wrapped()
@@ -632,9 +637,8 @@ fun Window.wrapped(): WindowWrapper<*> = findWrapper() ?: when (this) {
   is Tooltip      -> wrapped()
   is ContextMenu  -> wrapped()
   is PopupControl -> wrapped()
-
   is Popup        -> wrapped()
-  else            -> cannotFindWrapper()
+  else            -> findWrapper() ?: WindowWrapper(this)
 }
 
 
@@ -701,8 +705,10 @@ fun EventTarget.wrapped(): EventTargetWrapper = findWrapper() ?: when (this) {
   is Node                  -> wrapped()
   is Scene                 -> wrapped()
   is Window                -> wrapped()
+  is Dialog<*>             -> wrapped()
   is Tab                   -> wrapped()
   is MenuItem              -> wrapped()
+  is TreeItem<*>           -> wrapped()
   is TableColumnBase<*, *> -> wrapped()
   is Transform             -> wrapped()
   else                     -> cannotFindWrapper()
