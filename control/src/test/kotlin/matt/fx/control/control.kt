@@ -12,6 +12,8 @@ import org.junit.jupiter.api.Test
 import kotlin.contracts.ExperimentalContracts
 import kotlin.reflect.KClass
 import kotlin.reflect.full.createInstance
+import kotlin.reflect.full.primaryConstructor
+import kotlin.reflect.jvm.isAccessible
 
 class SomeTests {
 
@@ -32,6 +34,7 @@ class SomeTests {
 		  !it.java.isAnonymousClass
 			  && !it.isAbstract
 			  && it.hasNoArgsConstructor
+			  && it.primaryConstructor!!.isAccessible
 		}.mapNotNull {
 		  try {
 			it.createInstance().wrapped()
