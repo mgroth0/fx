@@ -28,6 +28,7 @@ class TestApp(): Application() {
 	Node::class.subclasses().forEach {
 	  println("node subclass: $it")
 	}
+	primaryStage!!.close()
   }
 
 }
