@@ -131,7 +131,7 @@ import matt.fx.graphics.wrapper.window.WindowWrapper
 import matt.lang.NEVER
 import matt.lang.err
 
-object WrapperServiceImpl: WrapperService{
+object WrapperServiceImpl: WrapperService {
   override fun <E: EventTarget> wrapped(e: E): EventTargetWrapper {
 	return e.wrapped()
   }
@@ -184,7 +184,9 @@ fun <E: Any> ListView<E>.wrapped(): ListViewWrapper<E> = findWrapper() ?: ListVi
 fun <E: Any, P> TreeTableColumn<E, P>.wrapped(): TreeTableColumnWrapper<E, P> =
   findWrapper() ?: TreeTableColumnWrapper(this@wrapped)
 
-@Suppress("UNCHECKED_CAST") fun <E, P> TableColumn<E, P>.wrapped(): TableColumnWrapper<E & Any, P> = findWrapper<TableColumnWrapper<E & Any,P>>() ?: TableColumnWrapper<E & Any,P>(this@wrapped as TableColumn<E & Any, P>)
+@Suppress("UNCHECKED_CAST") fun <E, P> TableColumn<E, P>.wrapped(): TableColumnWrapper<E & Any, P> = findWrapper() ?: TableColumnWrapper(
+	this@wrapped as TableColumn<E & Any, P>
+  )
 
 fun Rectangle.wrapped(): RectangleWrapper = findWrapper() ?: RectangleWrapper(this@wrapped)
 fun Circle.wrapped(): CircleWrapper = findWrapper() ?: CircleWrapper(this@wrapped)
@@ -203,17 +205,13 @@ fun FakeFocusTextField.wrapped(): FakeFocusTextFieldWrapper = findWrapper() ?: F
 fun TextField.wrapped(): TextFieldWrapper = findWrapper() ?: TextFieldWrapper(this@wrapped)
 fun ScrollPane.wrapped(): ScrollPaneWrapper<NodeWrapper> = findWrapper() ?: ScrollPaneWrapper(this@wrapped)
 
-
 fun Hyperlink.wrapped(): HyperlinkWrapper = findWrapper() ?: HyperlinkWrapper(this@wrapped)
 
 fun TableColumnHeader.wrapped(): TableColumnHeaderWrapper = findWrapper() ?: TableColumnHeaderWrapper(this@wrapped)
 
-
 fun <X, Y> LineChart<X, Y>.wrapped(): LineChartWrapper<X, Y> = findWrapper() ?: LineChartWrapper(this@wrapped)
 
-
 fun Group.wrapped(): GroupWrapper<*> = findWrapper() ?: GroupWrapper<NodeWrapper>(this@wrapped)
-
 
 fun <T> Cell<T>.wrapped(): CellWrapper<T, *> = findWrapper() ?: CellWrapper(this@wrapped)
 fun <T> IndexedCell<T>.wrapped(): IndexedCellWrapper<T, *> = findWrapper() ?: IndexedCellWrapper(this@wrapped)
@@ -276,18 +274,15 @@ fun Control.wrapped(): ControlWrapper = findWrapper() ?: when (this) {
   is FakeFocusTextField -> wrapped()
   is TextField          -> wrapped()
   is Spinner<*>         -> wrapped()
-  else                  -> {
-
-	when {
-	  this::class.simpleName == "ScrollBarWidget" -> {
-		val contrl: Control = this
-		object: ControlWrapperImpl<Control>(contrl) {
-		  override fun addChild(child: NodeWrapper, index: Int?) = NEVER
-		}
+  is ScrollPane         -> wrapped()
+  else                  -> when {
+	this::class.simpleName == "ScrollBarWidget" -> {
+	  val theControl: Control = this
+	  object: ControlWrapperImpl<Control>(theControl) {
+		override fun addChild(child: NodeWrapper, index: Int?) = NEVER
 	  }
-
-	  else                                        -> cannotFindWrapper()
 	}
+	else                                        -> cannotFindWrapper()
   }
 }
 
