@@ -22,7 +22,7 @@ import matt.hurricanefx.eye.lib.onChange
 import matt.hurricanefx.eye.prop.getValue
 import matt.hurricanefx.eye.prop.setValue
 import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
-import matt.log.logInvokation
+import matt.log.logInvocation
 import matt.obs.bindings.bool.not
 import matt.obs.math.double.op.times
 import matt.obs.prop.BindableProperty
@@ -132,7 +132,7 @@ class ProcessConsolePane(
   }
 
   @Suppress("MemberVisibilityCanBePrivate")
-  override fun rund() = logInvokation {
+  override fun rund() = logInvocation {
 	daemon {
 	  if (running) {
 		stop()
@@ -149,7 +149,7 @@ class ProcessConsolePane(
   }
 
   @Suppress("MemberVisibilityCanBePrivate")
-  fun stop() = logInvokation {
+  fun stop() = logInvocation {
 	statusFolderWatchPane?.stop()
 	val p = process
 	p?.destroyNiceThenForceThenWait()

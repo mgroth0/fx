@@ -9,33 +9,33 @@ import javafx.scene.Scene
 import javafx.scene.control.ProgressBar
 import javafx.scene.layout.BorderPane
 import javafx.stage.Stage
-import matt.log.profile.Stopwatch
+import matt.log.profile.stopwatch.Stopwatch
+import matt.log.reporter.Reporter
 import kotlin.concurrent.thread
 
 
 fun runFXAppBlocking(
   args: Array<String>,
   usePreloaderApp: Boolean = false,
-  t: Stopwatch? = null,
+  reporter: Reporter? = null,
   fxOp: (List<String>)->Unit,
-
-  ) {
-  t?.toc("running FX App")
+) {
+  reporter?.toc("running FX App")
   fxBlock = fxOp
   thread(isDaemon = true) {
 
 	Logging.getJavaFXLogger().disableLogging() /* dodge "Unsupported JavaFX configuration..." part 1 */
   }
-  t?.toc("started disabling FX logging")
+  reporter?.toc("started disabling FX logging")
   fxStopwatch = t
   if (usePreloaderApp) {
-	t?.toc("launching preloader")
+	reporter?.toc("launching preloader")
 	LauncherImpl.launchApplication(MinimalFXApp::class.java, FirstPreloader::class.java, args)
   } else {
-	t?.toc("launching app")
+	reporter?.toc("launching app")
 	Application.launch(MinimalFXApp::class.java, *args)
   }
-  println("main thread has exited from Application.launch")
+  reporter?.info("main thread has exited from Application.launch")
 }
 
 private var fxStopwatch: Stopwatch? = null
@@ -87,7 +87,7 @@ class MinimalFXApp: Application() {
   }
 
   /*DO_NOT_SHUTDOWN_WITH_FX_THREAD*//*DO_NOT_SHUTDOWN_WITH_FX_THREAD*//*DO_NOT_SHUTDOWN_WITH_FX_THREAD*//*DO_NOT_SHUTDOWN_WITH_FX_THREAD*//*DO_NOT_SHUTDOWN_WITH_FX_THREAD*//*DO_NOT_SHUTDOWN_WITH_FX_THREAD*/
-  override fun stop() {	/*DO_NOT_SHUTDOWN_WITH_FX_THREAD*/	/*DO_NOT_SHUTDOWN_WITH_FX_THREAD*/	/*DO_NOT_SHUTDOWN_WITH_FX_THREAD*/	/*DO_NOT_SHUTDOWN_WITH_FX_THREAD*/	/*DO_NOT_SHUTDOWN_WITH_FX_THREAD*/	/*DO_NOT_SHUTDOWN_WITH_FX_THREAD*/
+  override fun stop() {    /*DO_NOT_SHUTDOWN_WITH_FX_THREAD*/    /*DO_NOT_SHUTDOWN_WITH_FX_THREAD*/    /*DO_NOT_SHUTDOWN_WITH_FX_THREAD*/    /*DO_NOT_SHUTDOWN_WITH_FX_THREAD*/    /*DO_NOT_SHUTDOWN_WITH_FX_THREAD*/    /*DO_NOT_SHUTDOWN_WITH_FX_THREAD*/
   }/*DO_NOT_SHUTDOWN_WITH_FX_THREAD*//*DO_NOT_SHUTDOWN_WITH_FX_THREAD*//*DO_NOT_SHUTDOWN_WITH_FX_THREAD*//*DO_NOT_SHUTDOWN_WITH_FX_THREAD*//*DO_NOT_SHUTDOWN_WITH_FX_THREAD*//*DO_NOT_SHUTDOWN_WITH_FX_THREAD*/
 }
 

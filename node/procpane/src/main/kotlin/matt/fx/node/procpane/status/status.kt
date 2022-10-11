@@ -21,6 +21,7 @@ import matt.fx.graphics.wrapper.text.textlike.applyConsoleStyle
 import matt.fx.graphics.wrapper.textflow.TextFlowWrapper
 import matt.fx.node.tileabletabpane.TileableTabPane
 import matt.log.debug
+import matt.log.printlnWithTime
 import matt.log.profile.printlnWithTime
 import java.util.concurrent.Semaphore
 
@@ -92,7 +93,7 @@ class StatusFolderWatchPane(val folder: MFile): TileableTabPane(
 		text = System.currentTimeMillis().toString() + " | " + file.readText()
 		fill = Color.LIGHTSALMON
 	  }.node)
-	  (content as TextFlow).wrapped().text("") /*DEBUG FORCE UPDATE*/
+	  (content as TextFlow).wrapped().text("") /*matt.log.level.getDEBUG FORCE UPDATE*/
 	}
   }
 
@@ -100,21 +101,21 @@ class StatusFolderWatchPane(val folder: MFile): TileableTabPane(
 	if (!folder.exists()) {
 	  return
 	}
-	debug("waiting for matt.hurricanefx.eye.FX thread to refresh in SFW")
+	debug("FX thread to refresh in SFW")
 	runLaterReturn {
-	  debug("matt.hurricanefx.eye.FX thread starting work in SFW")
+	  debug("FX thread starting work in SFW")
 	  panes = folder.listFiles()!!.filter { it.extension == "status" }.map {
 		it.nameWithoutExtension to filenode(it).apply {
 		  if (false) {
-			printlnWithTime("DEBUG:${(this.content as TextFlow).children.joinToString { t -> (t as Text).text }}")
+			printlnWithTime("matt.log.level.getDEBUG:${(this.content as TextFlow).children.joinToString { t -> (t as Text).text }}")
 		  }
 		}
 
 	  }.toTypedArray()
-	  debug("matt.hurricanefx.eye.FX thread going to reset in SFW")
+	  debug("FX thread going to reset in SFW")
 	  reset()
-	  debug("matt.hurricanefx.eye.FX thread returning in SFW")
+	  debug("FX thread returning in SFW")
 	}
-	debug("matt.hurricanefx.eye.FX thread finished refresh in SFW")
+	debug("FX thread finished refresh in SFW")
   }
 }

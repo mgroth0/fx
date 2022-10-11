@@ -199,7 +199,7 @@ sealed class Console(
 	  runLater {        //                THIS ACTUALLY WORKS!!!
 		//                 THIS SOLVES THE PROBLEM WHERE THE CONSOLE IS TOO SMALL
 		//                ITS ABSOLUTELY AN INTERNAL JFX BUG
-		autosize() // DEBUG
+		autosize() // matt.log.level.getDEBUG
 	  }
 	}
 
@@ -262,7 +262,7 @@ sealed class Console(
 		consoleTextFlow.fullText().copyToClipboard()
 	  }
 	  checkitem("hscroll", hscrollOption)
-	  actionitem("DEBUG: remove last child") {
+	  actionitem("matt.log.level.getDEBUG: remove last child") {
 		consoleTextFlow.children.removeAt(consoleTextFlow.children.size - 1)
 	  }
 	  actionitem("print debug info on all texts") {

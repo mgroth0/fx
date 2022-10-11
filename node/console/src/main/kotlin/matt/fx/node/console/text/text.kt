@@ -205,7 +205,7 @@ class ConsoleTextFlow(val takesInput: Boolean = true): TextFlowWrapper<NodeWrapp
 	  unsentInputText = InputText().also {
 		add(it)
 	  }
-	  separatorText!!.fill = PROMPT_COLOR // DEBUG, DIDN'T WORK
+	  separatorText!!.fill = PROMPT_COLOR // matt.log.level.getDEBUG, DIDN'T WORK
 	}
   }
 

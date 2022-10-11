@@ -11,7 +11,7 @@ import kotlin.concurrent.thread
 import kotlin.time.Duration
 
 fun <T> runLaterReturn(op: ()->T): T {
-  /*todo: can check if this is application thread and if so just run op in place*/
+  /*matt.log.todo.todo: can check if this is application thread and if so just run op in place*/
   var r: Any? = object {}
   val latch = SimpleLatch()
   try {
