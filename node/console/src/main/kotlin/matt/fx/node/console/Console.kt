@@ -27,7 +27,6 @@ import matt.fx.node.console.Console.RefreshRate.NORMAL
 import matt.fx.node.console.mem.ConsoleMemory
 import matt.fx.node.console.text.ConsoleTextFlow
 import matt.hurricanefx.eye.mtofx.createROFXPropWrapper
-import matt.fx.graphics.wrapper.node.parent.ParentWrapperImpl
 import matt.kjlib.shell.forEachErrChar
 import matt.kjlib.shell.forEachOutChar
 import matt.lang.err
