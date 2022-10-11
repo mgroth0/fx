@@ -1,6 +1,7 @@
 package matt.fx.control
 
 import javafx.application.Application
+import javafx.application.Platform
 import javafx.scene.Node
 import javafx.stage.Stage
 import matt.reflect.subclasses
@@ -14,6 +15,7 @@ class SomeTests {
 
 	yesIUseTestLibs()
 
+	Platform.setImplicitExit(true)
 	Application.launch(TestApp::class.java)
 
   }
