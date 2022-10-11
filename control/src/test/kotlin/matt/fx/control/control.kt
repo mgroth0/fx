@@ -22,20 +22,25 @@ class SomeTests {
 
 	runFXAppBlocking(args = arrayOf(), usePreloaderApp = false, t = null, fxOp = {
 	  val failedToWrap = (EventTarget::class as KClass<out EventTarget>).subclasses("javafx")
-		.filter {		/*must test for anonymous first because trying to see if anonymous is abstract leads to error*/
+		.filter {
+		  println("testing 1 ${it}")
+		  /*must test for anonymous first because trying to see if anonymous is abstract leads to error*/
 		  !it.java.isAnonymousClass && !it.isAbstract
 		}.mapNotNull {
-		it.noArgConstructor
-	  }.filter {
-		it.isAccessible
-	  }.mapNotNull {
-		try {
-		  (it.call() as EventTarget).wrapped()
-		  null
-		} catch (e: CannotFindWrapperException) {
-		  e.cls
+		  println("testing 2 ${it}")
+		  it.noArgConstructor
+		}.filter {
+		  println("testing 3 ${it}")
+		  it.isAccessible
+		}.mapNotNull {
+		  println("testing 4 ${it}")
+		  try {
+			(it.call() as EventTarget).wrapped()
+			null
+		  } catch (e: CannotFindWrapperException) {
+			e.cls
+		  }
 		}
-	  }
 	  assert(failedToWrap.isEmpty()) {
 		"failed to wrap the following:\n\t${failedToWrap.joinToString("\n\t") { it.qualifiedName!! }}"
 	  }
