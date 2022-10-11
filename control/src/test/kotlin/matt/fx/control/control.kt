@@ -5,13 +5,13 @@ import javafx.event.EventTarget
 import matt.fx.control.fxapp.runFXAppBlocking
 import matt.fx.control.wrapper.wrapped.CannotFindWrapperException
 import matt.fx.control.wrapper.wrapped.wrapped
+import matt.reflect.access
 import matt.reflect.noArgConstructor
 import matt.reflect.reflections.subclasses
 import matt.test.yesIUseTestLibs
 import org.junit.jupiter.api.Test
 import kotlin.contracts.ExperimentalContracts
 import kotlin.reflect.KClass
-import kotlin.reflect.jvm.isAccessible
 
 class SomeTests {
 
@@ -23,19 +23,15 @@ class SomeTests {
 	runFXAppBlocking(args = arrayOf(), usePreloaderApp = false, t = null, fxOp = {
 	  val failedToWrap = (EventTarget::class as KClass<out EventTarget>).subclasses("javafx")
 		.filter {
-		  println("testing 1 ${it}")
 		  /*must test for anonymous first because trying to see if anonymous is abstract leads to error*/
 		  !it.java.isAnonymousClass && !it.isAbstract
 		}.mapNotNull {
-		  println("testing 2 ${it}")
 		  it.noArgConstructor
-		}.filter {
-		  println("testing 3 ${it}")
-		  it.isAccessible
 		}.mapNotNull {
-		  println("testing 4 ${it}")
 		  try {
-			(it.call() as EventTarget).wrapped()
+			it.access {
+			  (it.call() as EventTarget).wrapped()
+			}
 			null
 		  } catch (e: CannotFindWrapperException) {
 			e.cls
