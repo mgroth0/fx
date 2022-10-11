@@ -1,6 +1,5 @@
 package matt.fx.node.file.tree
 
-import javafx.beans.property.SimpleStringProperty
 import javafx.geometry.Pos.CENTER_LEFT
 import javafx.scene.control.SelectionMode.MULTIPLE
 import javafx.scene.control.TreeItem
