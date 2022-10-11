@@ -27,7 +27,6 @@ fun runFXAppBlocking(
 	Logging.getJavaFXLogger().disableLogging() /* dodge "Unsupported JavaFX configuration..." part 1 */
   }
   t?.toc("started disabling FX logging")
-  println("launching app")
   fxStopwatch = t
   if (usePreloaderApp) {
 	t?.toc("launching preloader")
@@ -83,9 +82,7 @@ class MinimalFXApp: Application() {
 
 	/* dodge "Unsupported JavaFX configuration..." part 2 */
 	Logging.getJavaFXLogger().enableLogging()
-	println("running fxBlock")
 	fxBlock(parameters.raw)
-	println("ran fxBlock")
 	fxStopwatch?.toc("finished starting main app")
   }
 
