@@ -323,7 +323,9 @@ interface RegionWrapper<C: NodeWrapper>: ParentWrapper<C>, SizeManaged {
 	} as DoubleProperty
 
 
-
+  override fun addChild(child: NodeWrapper, index: Int?) {
+	TODO("Not yet implemented")
+  }
 
 }
 
@@ -342,7 +344,5 @@ open class RegionWrapperImpl<N: Region, C: NodeWrapper>(node: N): ParentWrapperI
 	)
   }
 
-  override fun addChild(child: NodeWrapper, index: Int?) {
-	TODO("Not yet implemented")
-  }
+
 }
