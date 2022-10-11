@@ -29,7 +29,7 @@ fun runFXAppBlocking(
 	Logging.getJavaFXLogger().disableLogging() /* dodge "Unsupported JavaFX configuration..." part 1 */
   }
   (reporter as? TracksTime)?.toc("started disabling FX logging")
-  fxStopwatch = t
+  fxStopwatch = (reporter as? TracksTime)
   if (usePreloaderApp) {
 	(reporter as? TracksTime)?.toc("launching preloader")
 	LauncherImpl.launchApplication(MinimalFXApp::class.java, FirstPreloader::class.java, args)
@@ -40,7 +40,7 @@ fun runFXAppBlocking(
   (reporter as? Logger)?.info("main thread has exited from Application.launch")
 }
 
-private var fxStopwatch: Stopwatch? = null
+private var fxStopwatch: TracksTime? = null
 private lateinit var fxBlock: (List<String>)->Unit
 
 
