@@ -605,11 +605,13 @@ fun ParallelCamera.wrapped(): ParallelCameraWrapper = findWrapper() ?: ParallelC
 
 fun Canvas.wrapped(): CanvasWrapper = findWrapper() ?: CanvasWrapper(this@wrapped)
 
+
 fun Node.wrapped(): NodeWrapper = findWrapper() ?: when (this) {
   is AmbientLight      -> wrapped()
   is SpotLight         -> wrapped()
   is Parent            -> wrapped()
   is SubScene          -> wrapped()
+  is Shape3D           -> wrapped()
   is Shape             -> wrapped()
   is PointLight        -> wrapped()
   is PerspectiveCamera -> wrapped()
@@ -696,11 +698,14 @@ fun TableColumnBase<*, *>.wrapped(): TableColumnBaseWrapper<*, *, *> = findWrapp
 }
 
 fun EventTarget.wrapped(): EventTargetWrapper = findWrapper() ?: when (this) {
-  is Node   -> wrapped()
-  is Scene  -> wrapped()
-  is Window -> wrapped()
-  is Tab    -> wrapped()
-  else      -> cannotFindWrapper()
+  is Node                  -> wrapped()
+  is Scene                 -> wrapped()
+  is Window                -> wrapped()
+  is Tab                   -> wrapped()
+  is MenuItem              -> wrapped()
+  is TableColumnBase<*, *> -> wrapped()
+  is Transform             -> wrapped()
+  else                     -> cannotFindWrapper()
 }
 
 private fun EventTarget.cannotFindWrapper(): Nothing = throw (CannotFindWrapperException(this::class))
