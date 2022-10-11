@@ -8,7 +8,7 @@ import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.lang.NOT_IMPLEMENTED
 
 open class DialogWrapper<R>(dialog: Dialog<R>): SingularEventTargetWrapper<Dialog<R>>(dialog) {
-  override val properties = NOT_IMPLEMENTED
+  override val properties get() = NOT_IMPLEMENTED
   override fun addChild(child: NodeWrapper, index: Int?) {
 	TODO("Not yet implemented")
   }
