@@ -129,7 +129,7 @@ import matt.fx.graphics.wrapper.text.TextWrapper
 import matt.fx.graphics.wrapper.textflow.TextFlowWrapper
 import matt.fx.graphics.wrapper.window.WindowWrapper
 import matt.lang.NEVER
-import matt.lang.err
+import kotlin.reflect.KClass
 
 object WrapperServiceImpl: WrapperService {
   override fun <E: EventTarget> wrapped(e: E): EventTargetWrapper {
@@ -184,7 +184,8 @@ fun <E: Any> ListView<E>.wrapped(): ListViewWrapper<E> = findWrapper() ?: ListVi
 fun <E: Any, P> TreeTableColumn<E, P>.wrapped(): TreeTableColumnWrapper<E, P> =
   findWrapper() ?: TreeTableColumnWrapper(this@wrapped)
 
-@Suppress("UNCHECKED_CAST") fun <E, P> TableColumn<E, P>.wrapped(): TableColumnWrapper<E & Any, P> = findWrapper() ?: TableColumnWrapper(
+@Suppress("UNCHECKED_CAST") fun <E, P> TableColumn<E, P>.wrapped(): TableColumnWrapper<E & Any, P> =
+  findWrapper() ?: TableColumnWrapper(
 	this@wrapped as TableColumn<E & Any, P>
   )
 
@@ -282,6 +283,7 @@ fun Control.wrapped(): ControlWrapper = findWrapper() ?: when (this) {
 		override fun addChild(child: NodeWrapper, index: Int?) = NEVER
 	  }
 	}
+
 	else                                        -> cannotFindWrapper()
   }
 }
@@ -381,7 +383,11 @@ fun EventTarget.wrapped(): EventTargetWrapper = findWrapper() ?: when (this) {
 }
 
 private fun EventTarget.cannotFindWrapper(): Nothing =
-  err("what is the matt.fx.control.wrapper.wrapped.getWrapper for ${this::class.qualifiedName}?")
+  throw (CannotFindWrapperException(this::class))
+
+class CannotFindWrapperException(val cls: KClass<out EventTarget>): Exception(
+  "what is the wrapper for ${cls.qualifiedName}?"
+)
 
 /*?: run {
   val theMap = constructorMap
