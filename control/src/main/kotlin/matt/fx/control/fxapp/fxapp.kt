@@ -9,8 +9,9 @@ import javafx.scene.Scene
 import javafx.scene.control.ProgressBar
 import javafx.scene.layout.BorderPane
 import javafx.stage.Stage
+import matt.fx.control.wrapper.wrapped.WrapperServiceImpl
+import matt.fx.graphics.service.WrapperServiceHub
 import matt.log.logger.Logger
-import matt.log.profile.stopwatch.Stopwatch
 import matt.log.reporter.Reporter
 import matt.log.reporter.TracksTime
 import kotlin.concurrent.thread
@@ -22,6 +23,7 @@ fun runFXAppBlocking(
   reporter: Reporter? = null,
   fxOp: (List<String>)->Unit,
 ) {
+  WrapperServiceHub.install(WrapperServiceImpl)
   (reporter as? TracksTime)?.toc("running FX App")
   fxBlock = fxOp
   thread(isDaemon = true) {
