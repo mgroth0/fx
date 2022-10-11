@@ -20,18 +20,13 @@ import matt.fx.graphics.wrapper.text.text
 import matt.fx.graphics.wrapper.text.textlike.applyConsoleStyle
 import matt.fx.graphics.wrapper.textflow.TextFlowWrapper
 import matt.fx.node.tileabletabpane.TileableTabPane
-import matt.log.debug
 import matt.log.printlnWithTime
-import matt.log.profile.printlnWithTime
 import java.util.concurrent.Semaphore
 
 class StatusFolderWatchPane(val folder: MFile): TileableTabPane(
   orientation = HORIZONTAL
 ) {
   init {
-	runLater {
-	  debug("temp")
-	}
 	istabmode = false
   }
 
@@ -101,9 +96,7 @@ class StatusFolderWatchPane(val folder: MFile): TileableTabPane(
 	if (!folder.exists()) {
 	  return
 	}
-	debug("FX thread to refresh in SFW")
 	runLaterReturn {
-	  debug("FX thread starting work in SFW")
 	  panes = folder.listFiles()!!.filter { it.extension == "status" }.map {
 		it.nameWithoutExtension to filenode(it).apply {
 		  if (false) {
@@ -112,10 +105,7 @@ class StatusFolderWatchPane(val folder: MFile): TileableTabPane(
 		}
 
 	  }.toTypedArray()
-	  debug("FX thread going to reset in SFW")
 	  reset()
-	  debug("FX thread returning in SFW")
 	}
-	debug("FX thread finished refresh in SFW")
   }
 }
