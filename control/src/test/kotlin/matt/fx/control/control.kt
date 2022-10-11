@@ -34,6 +34,7 @@ class SomeTests {
 		  !it.java.isAnonymousClass
 			  && !it.isAbstract
 			  && it.hasNoArgsConstructor
+			  && it.primaryConstructor != null
 			  && it.primaryConstructor!!.isAccessible
 		}.mapNotNull {
 		  try {
