@@ -14,6 +14,7 @@ import matt.collect.itr.sameContentsAnyOrder
 import matt.collect.map.lazyMap
 import matt.file.MFile
 import matt.file.construct.mFile
+import matt.fx.control.inter.graphic
 import matt.fx.control.menu.context.mcontextmenu
 import matt.fx.control.mstage.WMode.CLOSE
 import matt.fx.control.win.interact.WinGeom
