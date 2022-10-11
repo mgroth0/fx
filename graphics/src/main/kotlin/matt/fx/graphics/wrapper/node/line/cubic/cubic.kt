@@ -5,6 +5,7 @@ import javafx.scene.shape.CubicCurve
 import matt.fx.graphics.wrapper.node.NodeWrapperImpl
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.fx.graphics.wrapper.node.shape.ShapeWrapper
+
 fun NodeWrapperImpl<Parent>.cubiccurve(
   startX: Number = 0.0,
   startY: Number = 0.0,
@@ -22,11 +23,8 @@ fun NodeWrapperImpl<Parent>.cubiccurve(
   ).attachTo(this, op)
 
 open class CubicCurveWrapper(
-   node: CubicCurve = CubicCurve(),
+  node: CubicCurve = CubicCurve(),
 ): ShapeWrapper<CubicCurve>(node) {
-  companion object {
-	fun CubicCurve.wrapped() = CubicCurveWrapper(this)
-  }
 
   constructor(
 	startX: Double,

@@ -35,9 +35,6 @@ fun <T> ET.slider(
 class SliderWrapper(
    node: Slider = Slider(),
 ): ControlWrapperImpl<Slider>(node) {
-  companion object {
-	fun Slider.wrapped() = SliderWrapper(this)
-  }
 
 
   var max

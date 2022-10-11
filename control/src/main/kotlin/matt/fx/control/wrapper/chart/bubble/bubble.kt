@@ -15,9 +15,6 @@ fun <X, Y> ET.bubblechart(title: String? = null, x: MAxis<X>, y: MAxis<Y>, op: B
 open class BubbleChartWrapper<X, Y>(
   node: BubbleChart<X, Y>,
 ): XYChartWrapper<X, Y, BubbleChart<X, Y>>(node) {
-  companion object {
-	fun <X, Y> BubbleChart<X, Y>.wrapped() = BubbleChartWrapper(this)
-  }
 
   constructor(x: MAxis<X>, y: MAxis<Y>): this(BubbleChart(x.node, y.node))
 

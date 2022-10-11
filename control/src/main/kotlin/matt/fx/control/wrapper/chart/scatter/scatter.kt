@@ -20,9 +20,6 @@ fun <X, Y> ET.scatterchart(
 open class ScatterChartWrapper<X, Y>(
   node: ScatterChart<X, Y>
 ): XYChartWrapper<X, Y, ScatterChart<X, Y>>(node) {
-  companion object {
-	fun <X, Y> ScatterChart<X, Y>.wrapped() = ScatterChartWrapper(this)
-  }
 
   constructor(x: MAxis<X>, y: MAxis<Y>): this(ScatterChart(x.node, y.node))
 

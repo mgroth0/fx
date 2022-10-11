@@ -3,14 +3,12 @@ package matt.fx.control.wrapper.buttonbar
 import javafx.collections.ObservableList
 import javafx.scene.Node
 import javafx.scene.control.ButtonBar
-import matt.css.Cursor
 import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.control.wrapper.control.button.ButtonWrapper
+import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.obs.bindings.str.ObsS
-import matt.obs.prop.ValProp
-import matt.fx.graphics.wrapper.ET
 
 fun ET.buttonbar(buttonOrder: String? = null, op: (ButtonBarWrapper.()->Unit)) = ButtonBarWrapper().attachTo(this, op) {
   if (buttonOrder != null) it.buttonOrder = buttonOrder
@@ -19,9 +17,6 @@ fun ET.buttonbar(buttonOrder: String? = null, op: (ButtonBarWrapper.()->Unit)) =
 class ButtonBarWrapper(
   node: ButtonBar = ButtonBar(),
 ): ControlWrapperImpl<ButtonBar>(node) {
-  companion object {
-	fun ButtonBar.wrapped() = matt.fx.control.wrapper.buttonbar.ButtonBarWrapper(this)
-  }
 
 
   val buttons: ObservableList<Node> get() = node.buttons

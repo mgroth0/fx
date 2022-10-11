@@ -43,9 +43,6 @@ fun <T: Any> ET.combobox(
 class ComboBoxWrapper<E: Any>(
   node: ComboBox<E> = ComboBox<E>(),
 ): ComboBoxBaseWrapper<E, ComboBox<E>>(node), SelectingControl<E>, ListCellFactory<ListView<E>, E> {
-  companion object {
-	fun <T: Any> ComboBox<T>.wrapped() = ComboBoxWrapper(this)
-  }
 
   constructor(items: ObsList<E>): this(ComboBox<E>(items.createFXWrapper()))
 

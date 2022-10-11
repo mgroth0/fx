@@ -15,9 +15,6 @@ fun <X, Y> ET.areachart(title: String? = null, x: MAxis<X>, y: MAxis<Y>, op: Are
 open class AreaChartWrapper<X, Y>(
   node: AreaChart<X, Y>,
 ): XYChartWrapper<X, Y, AreaChart<X, Y>>(node) {
-  companion object {
-	fun <X, Y> AreaChart<X, Y>.wrapped() = AreaChartWrapper(this)
-  }
 
   constructor(x: MAxis<X>, y: MAxis<Y>): this(AreaChart(x.node, y.node))
 

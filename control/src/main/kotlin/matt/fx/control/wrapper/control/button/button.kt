@@ -31,9 +31,6 @@ fun ET.button(
 open class ButtonWrapper(
   node: Button = Button(),
 ): ButtonBaseWrapper<Button>(node) {
-  companion object {
-	fun Button.wrapped() = ButtonWrapper(this)
-  }
 
   constructor(text: String?, graphic: NodeWrapper? = null): this(Button(text, graphic?.node))
 

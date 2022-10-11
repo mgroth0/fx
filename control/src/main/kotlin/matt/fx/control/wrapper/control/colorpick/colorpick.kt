@@ -23,9 +23,6 @@ fun ET.colorpicker(
 class ColorPickerWrapper(
    node: ColorPicker = ColorPicker(),
 ): ComboBoxBaseWrapper<Color, ColorPicker>(node) {
-  companion object {
-	fun ColorPicker.wrapped() = ColorPickerWrapper(this)
-  }
 
 }
 

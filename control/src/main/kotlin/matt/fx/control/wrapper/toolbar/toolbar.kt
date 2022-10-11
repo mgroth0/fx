@@ -23,9 +23,6 @@ fun ET.toolbar(vararg nodes: Node, op: ToolBarWrapper.()->Unit = {}): ToolBarWra
 class ToolBarWrapper(
   node: ToolBar = ToolBar(),
 ): ControlWrapperImpl<ToolBar>(node) {
-  companion object {
-	fun ToolBar.wrapped() = ToolBarWrapper(this)
-  }
 
   override val childList get() = items
 

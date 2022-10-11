@@ -12,9 +12,9 @@ import matt.fx.control.wrapper.menu.checkitem.CheckMenuItemWrapper
 import matt.fx.control.wrapper.menu.item.MenuItemWrapper
 import matt.fx.control.wrapper.menu.item.custom.CustomMenuItemWrapper
 import matt.fx.control.wrapper.menu.radioitem.ValuedRadioMenuItem
+import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
-import matt.fx.graphics.wrapper.ET
 
 fun ET.menubutton(text: String = "", graphic: NodeWrapper? = null, op: MenuButtonWrapper.()->Unit = {}) =
   MenuButtonWrapper().apply {
@@ -26,9 +26,6 @@ fun ET.menubutton(text: String = "", graphic: NodeWrapper? = null, op: MenuButto
 open class MenuButtonWrapper(
   node: MenuButton = MenuButton(),
 ): ButtonBaseWrapper<MenuButton>(node) {
-  companion object {
-	fun MenuButton.wrapped() = MenuButtonWrapper(this)
-  }
 
   val items: ObservableList<MenuItem> get() = node.items
 

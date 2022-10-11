@@ -1,45 +1,96 @@
 package matt.fx.control.wrapper.wrapped
 
+import com.sun.javafx.scene.control.DoubleField
 import com.sun.javafx.scene.control.FakeFocusTextField
+import com.sun.javafx.scene.control.IntegerField
+import com.sun.javafx.scene.control.WebColorField
+import com.sun.javafx.scene.control.skin.FXVK
 import javafx.event.EventTarget
+import javafx.scene.AmbientLight
+import javafx.scene.DirectionalLight
 import javafx.scene.Group
 import javafx.scene.Node
+import javafx.scene.ParallelCamera
 import javafx.scene.Parent
+import javafx.scene.PerspectiveCamera
+import javafx.scene.PointLight
 import javafx.scene.Scene
+import javafx.scene.SpotLight
 import javafx.scene.SubScene
+import javafx.scene.canvas.Canvas
+import javafx.scene.chart.AreaChart
 import javafx.scene.chart.Axis
+import javafx.scene.chart.BarChart
+import javafx.scene.chart.BubbleChart
+import javafx.scene.chart.CategoryAxis
 import javafx.scene.chart.LineChart
 import javafx.scene.chart.NumberAxis
+import javafx.scene.chart.PieChart
+import javafx.scene.chart.ScatterChart
+import javafx.scene.chart.StackedBarChart
 import javafx.scene.chart.ValueAxis
+import javafx.scene.control.Accordion
+import javafx.scene.control.Button
+import javafx.scene.control.ButtonBar
+import javafx.scene.control.ButtonBase
 import javafx.scene.control.Cell
+import javafx.scene.control.CheckBox
+import javafx.scene.control.CheckBoxTreeItem
 import javafx.scene.control.CheckMenuItem
 import javafx.scene.control.ChoiceBox
+import javafx.scene.control.ChoiceDialog
+import javafx.scene.control.ColorPicker
+import javafx.scene.control.ComboBox
+import javafx.scene.control.ContextMenu
 import javafx.scene.control.Control
+import javafx.scene.control.CustomMenuItem
+import javafx.scene.control.DatePicker
+import javafx.scene.control.Dialog
 import javafx.scene.control.Hyperlink
 import javafx.scene.control.IndexedCell
 import javafx.scene.control.Label
 import javafx.scene.control.Labeled
 import javafx.scene.control.ListView
+import javafx.scene.control.Menu
+import javafx.scene.control.MenuBar
+import javafx.scene.control.MenuButton
+import javafx.scene.control.MenuItem
+import javafx.scene.control.Pagination
+import javafx.scene.control.PasswordField
+import javafx.scene.control.PopupControl
+import javafx.scene.control.ProgressBar
+import javafx.scene.control.ProgressIndicator
 import javafx.scene.control.RadioButton
 import javafx.scene.control.RadioMenuItem
+import javafx.scene.control.ScrollBar
 import javafx.scene.control.ScrollPane
+import javafx.scene.control.Separator
+import javafx.scene.control.SeparatorMenuItem
+import javafx.scene.control.Slider
 import javafx.scene.control.Spinner
+import javafx.scene.control.SplitMenuButton
 import javafx.scene.control.SplitPane
 import javafx.scene.control.Tab
 import javafx.scene.control.TabPane
 import javafx.scene.control.TableColumn
+import javafx.scene.control.TableColumnBase
 import javafx.scene.control.TableRow
 import javafx.scene.control.TableView
 import javafx.scene.control.TextArea
 import javafx.scene.control.TextField
+import javafx.scene.control.TextInputDialog
 import javafx.scene.control.TitledPane
 import javafx.scene.control.ToggleButton
+import javafx.scene.control.ToolBar
+import javafx.scene.control.Tooltip
+import javafx.scene.control.TreeItem
 import javafx.scene.control.TreeTableColumn
 import javafx.scene.control.TreeTableRow
 import javafx.scene.control.TreeTableView
 import javafx.scene.control.TreeView
 import javafx.scene.control.skin.TableColumnHeader
 import javafx.scene.control.skin.VirtualFlow
+import javafx.scene.image.ImageView
 import javafx.scene.layout.AnchorPane
 import javafx.scene.layout.BorderPane
 import javafx.scene.layout.FlowPane
@@ -51,30 +102,67 @@ import javafx.scene.layout.StackPane
 import javafx.scene.layout.TilePane
 import javafx.scene.layout.VBox
 import javafx.scene.shape.Arc
+import javafx.scene.shape.Box
 import javafx.scene.shape.Circle
+import javafx.scene.shape.CubicCurve
+import javafx.scene.shape.Cylinder
 import javafx.scene.shape.Ellipse
+import javafx.scene.shape.Line
+import javafx.scene.shape.MeshView
 import javafx.scene.shape.Path
+import javafx.scene.shape.Polygon
+import javafx.scene.shape.Polyline
+import javafx.scene.shape.QuadCurve
 import javafx.scene.shape.Rectangle
+import javafx.scene.shape.SVGPath
 import javafx.scene.shape.Shape
+import javafx.scene.shape.Shape3D
+import javafx.scene.shape.Sphere
 import javafx.scene.text.Text
 import javafx.scene.text.TextFlow
+import javafx.scene.transform.Affine
+import javafx.scene.transform.Rotate
+import javafx.scene.transform.Scale
+import javafx.scene.transform.Shear
+import javafx.scene.transform.Transform
+import javafx.scene.transform.Translate
+import javafx.stage.Popup
 import javafx.stage.Stage
 import javafx.stage.Window
 import matt.fx.control.wrapper.button.radio.RadioButtonWrapper
 import matt.fx.control.wrapper.button.toggle.ToggleButtonWrapper
+import matt.fx.control.wrapper.buttonbar.ButtonBarWrapper
+import matt.fx.control.wrapper.chart.area.AreaChartWrapper
 import matt.fx.control.wrapper.chart.axis.AxisWrapper
 import matt.fx.control.wrapper.chart.axis.value.ValueAxisWrapper
 import matt.fx.control.wrapper.chart.axis.value.number.NumberAxisWrapper
+import matt.fx.control.wrapper.chart.bar.BarChartWrapper
+import matt.fx.control.wrapper.chart.bubble.BubbleChartWrapper
 import matt.fx.control.wrapper.chart.line.LineChartWrapper
+import matt.fx.control.wrapper.chart.pie.PieChartWrapper
+import matt.fx.control.wrapper.chart.scatter.ScatterChartWrapper
+import matt.fx.control.wrapper.chart.stackedbar.StackedBarChartWrapper
+import matt.fx.control.wrapper.checkbox.CheckBoxWrapper
+import matt.fx.control.wrapper.contextmenu.ContextMenuWrapper
 import matt.fx.control.wrapper.control.ControlWrapper
 import matt.fx.control.wrapper.control.ControlWrapperImpl
+import matt.fx.control.wrapper.control.accordion.AccordionWrapper
+import matt.fx.control.wrapper.control.button.ButtonWrapper
+import matt.fx.control.wrapper.control.button.base.ButtonBaseWrapper
 import matt.fx.control.wrapper.control.choice.ChoiceBoxWrapper
+import matt.fx.control.wrapper.control.colbase.TableColumnBaseWrapper
+import matt.fx.control.wrapper.control.colorpick.ColorPickerWrapper
 import matt.fx.control.wrapper.control.column.TableColumnWrapper
+import matt.fx.control.wrapper.control.combo.ComboBoxWrapper
+import matt.fx.control.wrapper.control.datepick.DatePickerWrapper
+import matt.fx.control.wrapper.control.fxvk.FXVKWrapper
 import matt.fx.control.wrapper.control.list.ListViewWrapper
+import matt.fx.control.wrapper.control.page.PaginationWrapper
 import matt.fx.control.wrapper.control.row.CellWrapper
 import matt.fx.control.wrapper.control.row.IndexedCellWrapper
 import matt.fx.control.wrapper.control.row.TableRowWrapper
 import matt.fx.control.wrapper.control.row.TreeTableRowWrapper
+import matt.fx.control.wrapper.control.slider.SliderWrapper
 import matt.fx.control.wrapper.control.spinner.SpinnerWrapper
 import matt.fx.control.wrapper.control.tab.TabWrapper
 import matt.fx.control.wrapper.control.table.TableViewWrapper
@@ -82,18 +170,42 @@ import matt.fx.control.wrapper.control.table.colhead.TableColumnHeaderWrapper
 import matt.fx.control.wrapper.control.text.area.TextAreaWrapper
 import matt.fx.control.wrapper.control.text.field.FakeFocusTextFieldWrapper
 import matt.fx.control.wrapper.control.text.field.TextFieldWrapper
+import matt.fx.control.wrapper.control.text.field.color.WebColorFieldWrapper
+import matt.fx.control.wrapper.control.text.field.double.DoubleFieldWrapper
+import matt.fx.control.wrapper.control.text.field.int.IntegerFieldWrapper
+import matt.fx.control.wrapper.control.text.field.pass.PasswordFieldWrapper
 import matt.fx.control.wrapper.control.tree.TreeViewWrapper
 import matt.fx.control.wrapper.control.treecol.TreeTableColumnWrapper
 import matt.fx.control.wrapper.control.treetable.TreeTableViewWrapper
+import matt.fx.control.wrapper.dialog.ChoiceDialogWrapper
+import matt.fx.control.wrapper.dialog.DialogWrapper
+import matt.fx.control.wrapper.dialog.TextInputDialogWrapper
 import matt.fx.control.wrapper.label.LabelWrapper
 import matt.fx.control.wrapper.labeled.LabeledWrapper
 import matt.fx.control.wrapper.link.HyperlinkWrapper
+import matt.fx.control.wrapper.menu.MenuWrapper
+import matt.fx.control.wrapper.menu.button.MenuButtonWrapper
 import matt.fx.control.wrapper.menu.checkitem.CheckMenuItemWrapper
+import matt.fx.control.wrapper.menu.item.MenuItemWrapper
+import matt.fx.control.wrapper.menu.item.custom.CustomMenuItemWrapper
+import matt.fx.control.wrapper.menu.item.sep.SeparatorMenuItemWrapper
 import matt.fx.control.wrapper.menu.radioitem.RadioMenuItemWrapper
+import matt.fx.control.wrapper.menu.splitbutton.SplitMenuButtonWrapper
+import matt.fx.control.wrapper.menubar.MenuBarWrapper
+import matt.fx.control.wrapper.popup.PopupWrapper
+import matt.fx.control.wrapper.popupcontrol.PopupControlWrapper
+import matt.fx.control.wrapper.progressbar.ProgressBarWrapper
+import matt.fx.control.wrapper.progressindicator.ProgressIndicatorWrapper
 import matt.fx.control.wrapper.scroll.ScrollPaneWrapper
+import matt.fx.control.wrapper.scroll.bar.ScrollBarWrapper
+import matt.fx.control.wrapper.sep.SeparatorWrapper
 import matt.fx.control.wrapper.split.SplitPaneWrapper
 import matt.fx.control.wrapper.tab.TabPaneWrapper
 import matt.fx.control.wrapper.titled.TitledPaneWrapper
+import matt.fx.control.wrapper.toolbar.ToolBarWrapper
+import matt.fx.control.wrapper.tooltip.TooltipWrapper
+import matt.fx.control.wrapper.treeitem.CheckBoxTreeItemWrapper
+import matt.fx.control.wrapper.treeitem.TreeItemWrapper
 import matt.fx.control.wrapper.virtualflow.FlowLessVirtualFlowWrapper
 import matt.fx.control.wrapper.virtualflow.VirtualFlowWrapper
 import matt.fx.control.wrapper.virtualflow.clip.CLIPPED_CONTAINER_QNAME
@@ -102,15 +214,33 @@ import matt.fx.graphics.service.WrapperService
 import matt.fx.graphics.wrapper.EventTargetWrapper
 import matt.fx.graphics.wrapper.EventTargetWrapperImpl
 import matt.fx.graphics.wrapper.SingularEventTargetWrapper
+import matt.fx.graphics.wrapper.camera.ParallelCameraWrapper
+import matt.fx.graphics.wrapper.camera.PerspectiveCameraWrapper
+import matt.fx.graphics.wrapper.canvas.CanvasWrapper
 import matt.fx.graphics.wrapper.group.GroupWrapper
+import matt.fx.graphics.wrapper.imageview.ImageViewWrapper
+import matt.fx.graphics.wrapper.light.AmbientLightWrapper
+import matt.fx.graphics.wrapper.light.DirectionalLightWrapper
+import matt.fx.graphics.wrapper.light.PointLightWrapper
+import matt.fx.graphics.wrapper.light.SpotLightWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
+import matt.fx.graphics.wrapper.node.line.LineWrapper
 import matt.fx.graphics.wrapper.node.line.arc.ArcWrapper
+import matt.fx.graphics.wrapper.node.line.cubic.CubicCurveWrapper
+import matt.fx.graphics.wrapper.node.line.poly.PolylineWrapper
+import matt.fx.graphics.wrapper.node.line.quad.QuadCurveWrapper
 import matt.fx.graphics.wrapper.node.parent.ParentWrapper
 import matt.fx.graphics.wrapper.node.path.PathWrapper
 import matt.fx.graphics.wrapper.node.shape.ShapeWrapper
 import matt.fx.graphics.wrapper.node.shape.circle.CircleWrapper
 import matt.fx.graphics.wrapper.node.shape.ellipse.EllipseWrapper
+import matt.fx.graphics.wrapper.node.shape.poly.PolygonWrapper
 import matt.fx.graphics.wrapper.node.shape.rect.RectangleWrapper
+import matt.fx.graphics.wrapper.node.shape.svg.SVGPathWrapper
+import matt.fx.graphics.wrapper.node.shape.threed.box.BoxWrapper3D
+import matt.fx.graphics.wrapper.node.shape.threed.cylinder.CylinderWrapper
+import matt.fx.graphics.wrapper.node.shape.threed.mesh.MeshViewWrapper
+import matt.fx.graphics.wrapper.node.shape.threed.sphere.SphereWrapper
 import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
 import matt.fx.graphics.wrapper.pane.anchor.AnchorPaneWrapperImpl
 import matt.fx.graphics.wrapper.pane.border.BorderPaneWrapper
@@ -127,6 +257,11 @@ import matt.fx.graphics.wrapper.stage.StageWrapper
 import matt.fx.graphics.wrapper.subscene.SubSceneWrapper
 import matt.fx.graphics.wrapper.text.TextWrapper
 import matt.fx.graphics.wrapper.textflow.TextFlowWrapper
+import matt.fx.graphics.wrapper.transform.AffineWrapper
+import matt.fx.graphics.wrapper.transform.RotateWrapper
+import matt.fx.graphics.wrapper.transform.ScaleWrapper
+import matt.fx.graphics.wrapper.transform.ShearWrapper
+import matt.fx.graphics.wrapper.transform.TranslateWrapper
 import matt.fx.graphics.wrapper.window.WindowWrapper
 import matt.lang.NEVER
 import kotlin.reflect.KClass
@@ -167,9 +302,6 @@ fun HBox.wrapped(): HBoxWrapperImpl<*> = findWrapper() ?: HBoxWrapperImpl<NodeWr
 fun TabPane.wrapped(): TabPaneWrapper<TabWrapper<NodeWrapper>> = findWrapper() ?: TabPaneWrapper(this@wrapped)
 fun TitledPane.wrapped(): TitledPaneWrapper = findWrapper() ?: TitledPaneWrapper(this@wrapped)
 fun TilePane.wrapped(): TilePaneWrapper<*> = findWrapper() ?: TilePaneWrapper<NodeWrapper>(this@wrapped)
-
-fun CheckMenuItem.wrapped(): CheckMenuItemWrapper = findWrapper() ?: CheckMenuItemWrapper(this@wrapped)
-fun RadioMenuItem.wrapped(): RadioMenuItemWrapper = findWrapper() ?: RadioMenuItemWrapper(this@wrapped)
 
 
 fun ToggleButton.wrapped(): ToggleButtonWrapper = findWrapper() ?: ToggleButtonWrapper(this@wrapped)
@@ -242,14 +374,16 @@ val constructorMap = lazyMap<KType, KFunction<EventTargetWrapper>> { typ ->
 
 fun NumberAxis.wrapped(): NumberAxisWrapper = findWrapper() ?: NumberAxisWrapper(this@wrapped)
 
-@Suppress("UNCHECKED_CAST")
-fun <T: Number> ValueAxis<T>.wrapped(): ValueAxisWrapper<T> = findWrapper() ?: when (this) {
+
+fun ToolBar.wrapped(): ToolBarWrapper = findWrapper() ?: ToolBarWrapper(this@wrapped)
+
+
+@Suppress("UNCHECKED_CAST") fun <T: Number> ValueAxis<T>.wrapped(): ValueAxisWrapper<T> = findWrapper() ?: when (this) {
   is NumberAxis -> wrapped() as ValueAxisWrapper<T>
   else          -> cannotFindWrapper()
 }
 
-@Suppress("UNCHECKED_CAST")
-fun <T> Axis<T>.wrapped(): AxisWrapper<T, Axis<T>> = findWrapper() ?: when (this) {
+@Suppress("UNCHECKED_CAST") fun <T> Axis<T>.wrapped(): AxisWrapper<T, Axis<T>> = findWrapper() ?: when (this) {
   is ValueAxis -> (this as ValueAxis<out Number>).wrapped() as AxisWrapper<T, Axis<T>>
   else         -> cannotFindWrapper()
 }
@@ -258,24 +392,89 @@ fun <T> Axis<T>.wrapped(): AxisWrapper<T, Axis<T>> = findWrapper() ?: when (this
 fun Labeled.wrapped(): LabeledWrapper<*> = findWrapper() ?: when (this) {
   is Label           -> wrapped()
   is TitledPane      -> wrapped()
-  is Hyperlink       -> wrapped()
   is TreeTableRow<*> -> wrapped()
   is TableRow<*>     -> wrapped()
   is IndexedCell<*>  -> wrapped()
   is Cell<*>         -> wrapped()
-  is RadioButton     -> wrapped()
-  is ToggleButton    -> wrapped()
+  is ButtonBase      -> wrapped()
   else               -> cannotFindWrapper()
 }
 
+fun ButtonBase.wrapped(): ButtonBaseWrapper<*> = findWrapper() ?: when (this) {
+  is MenuButton   -> wrapped()
+  is Hyperlink    -> wrapped()
+  is RadioButton  -> wrapped()
+  is ToggleButton -> wrapped()
+  is Button       -> wrapped()
+  else            -> cannotFindWrapper()
+}
+
+
+fun MenuButton.wrapped(): MenuButtonWrapper = findWrapper() ?: when (this) {
+  is SplitMenuButton -> wrapped()
+  else               -> findWrapper() ?: MenuButtonWrapper(this@wrapped)
+}
+
+
+fun Button.wrapped(): ButtonWrapper = findWrapper() ?: ButtonWrapper(this@wrapped)
+
+
+fun AreaChart<*, *>.wrapped(): AreaChartWrapper<*, *> = findWrapper() ?: AreaChartWrapper(this@wrapped)
+fun BarChart<*, *>.wrapped(): BarChartWrapper<*, *> = findWrapper() ?: BarChartWrapper(this@wrapped)
+fun BubbleChart<*, *>.wrapped(): BubbleChartWrapper<*, *> = findWrapper() ?: BubbleChartWrapper(this@wrapped)
+fun ScatterChart<*, *>.wrapped(): ScatterChartWrapper<*, *> = findWrapper() ?: ScatterChartWrapper(this@wrapped)
+fun StackedBarChart<*, *>.wrapped(): StackedBarChartWrapper<*, *> =
+  findWrapper() ?: StackedBarChartWrapper(this@wrapped)
+
+fun CheckBox.wrapped(): CheckBoxWrapper = findWrapper() ?: CheckBoxWrapper(this@wrapped)
+fun PasswordField.wrapped(): PasswordFieldWrapper = findWrapper() ?: PasswordFieldWrapper(this@wrapped)
+fun ProgressBar.wrapped(): ProgressBarWrapper = findWrapper() ?: ProgressBarWrapper(this@wrapped)
+fun WebColorField.wrapped(): WebColorFieldWrapper = findWrapper() ?: WebColorFieldWrapper(this@wrapped)
+fun ComboBox<*>.wrapped(): ComboBoxWrapper<*> = findWrapper() ?: ComboBoxWrapper(this@wrapped)
+fun ProgressIndicator.wrapped(): ProgressIndicatorWrapper = findWrapper() ?: ProgressIndicatorWrapper(this@wrapped)
+fun Pagination.wrapped(): PaginationWrapper = findWrapper() ?: PaginationWrapper(this@wrapped)
+fun ScrollBar.wrapped(): ScrollBarWrapper = findWrapper() ?: ScrollBarWrapper(this@wrapped)
+fun Accordion.wrapped(): AccordionWrapper = findWrapper() ?: AccordionWrapper(this@wrapped)
+fun ColorPicker.wrapped(): ColorPickerWrapper = findWrapper() ?: ColorPickerWrapper(this@wrapped)
+fun DatePicker.wrapped(): DatePickerWrapper = findWrapper() ?: DatePickerWrapper(this@wrapped)
+fun ButtonBar.wrapped(): ButtonBarWrapper = findWrapper() ?: ButtonBarWrapper(this@wrapped)
+fun Slider.wrapped(): SliderWrapper = findWrapper() ?: SliderWrapper(this@wrapped)
+fun DoubleField.wrapped(): DoubleFieldWrapper = findWrapper() ?: DoubleFieldWrapper(this@wrapped)
+fun FXVK.wrapped(): FXVKWrapper = findWrapper() ?: FXVKWrapper(this@wrapped)
+fun Separator.wrapped(): SeparatorWrapper = findWrapper() ?: SeparatorWrapper(this@wrapped)
+
 fun Control.wrapped(): ControlWrapper = findWrapper() ?: when (this) {
+  is ProgressBar        -> wrapped()
+  is WebColorField      -> wrapped()
+  is CheckBox           -> wrapped()
+  is ComboBox<*>        -> wrapped()
+  is ProgressIndicator  -> wrapped()
+  is Pagination         -> wrapped()
+  is TreeTableView<*>   -> wrapped()
+  is ListView<*>        -> wrapped()
+  is TreeView<*>        -> wrapped()
+  is TableView<*>       -> wrapped()
+  is ChoiceBox<*>       -> wrapped()
+  is ScrollBar          -> wrapped()
+  is Accordion          -> wrapped()
+  is ColorPicker        -> wrapped()
+  is DatePicker         -> wrapped()
+  is SplitPane          -> wrapped()
+  is ButtonBar          -> wrapped()
+  is Slider             -> wrapped()
   is Labeled            -> wrapped()
   is TabPane            -> wrapped()
   is TextArea           -> wrapped()
   is FakeFocusTextField -> wrapped()
+  is DoubleField        -> wrapped()
+  is IntegerField       -> wrapped()
   is TextField          -> wrapped()
+  is MenuBar            -> wrapped()
+  is FXVK               -> wrapped()
+  is ToolBar            -> wrapped()
   is Spinner<*>         -> wrapped()
   is ScrollPane         -> wrapped()
+  is Separator          -> wrapped()
   else                  -> when {
 	this::class.simpleName == "ScrollBarWidget" -> {
 	  val theControl: Control = this
@@ -288,14 +487,17 @@ fun Control.wrapped(): ControlWrapper = findWrapper() ?: when (this) {
   }
 }
 
+//fun PieChart.wrapped(): PieChartWrapper = findWrapper() ?: PieChartWrapper(this@wrapped)
 
 fun Region.wrapped(): RegionWrapper<*> = findWrapper() ?: when (this) {
   is GridPane          -> wrapped()
   is FlowPane          -> wrapped()
   is VBox              -> wrapped()
   is HBox              -> wrapped()
+  is PieChart          -> wrapped()
   is AnchorPane        -> wrapped()
   is StackPane         -> wrapped()
+  is CategoryAxis      -> wrapped()
   is TilePane          -> wrapped()
   is Pane              -> wrapped()
   is TableColumnHeader -> wrapped()
@@ -351,27 +553,146 @@ fun Parent.wrapped(): ParentWrapper<*> = findWrapper() ?: when (this) {
   else      -> cannotFindWrapper()
 }
 
-fun Shape.wrapped(): ShapeWrapper<*> = findWrapper() ?: when (this) {
-  is Rectangle -> wrapped()
-  is Circle    -> wrapped()
-  is Arc       -> wrapped()
-  is Ellipse   -> wrapped()
-  is Path      -> wrapped()
-  is Text      -> wrapped()
-  else         -> cannotFindWrapper()
-}
+fun PieChart.wrapped(): PieChartWrapper = findWrapper() ?: PieChartWrapper(this@wrapped)
 
+fun Sphere.wrapped(): SphereWrapper = findWrapper() ?: SphereWrapper(this@wrapped)
+fun Box.wrapped(): BoxWrapper3D = findWrapper() ?: BoxWrapper3D(this@wrapped)
+fun Cylinder.wrapped(): CylinderWrapper = findWrapper() ?: CylinderWrapper(this@wrapped)
+fun MeshView.wrapped(): MeshViewWrapper = findWrapper() ?: MeshViewWrapper(this@wrapped)
 
-fun Node.wrapped(): NodeWrapper = findWrapper() ?: when (this) {
-  is Parent   -> wrapped()
-  is SubScene -> wrapped()
-  is Shape    -> wrapped()
+fun Shape3D.wrapped(): NodeWrapper = findWrapper() ?: when (this) {
+  is Sphere   -> wrapped()
+  is Box      -> wrapped()
+  is Cylinder -> wrapped()
+  is MeshView -> wrapped()
   else        -> cannotFindWrapper()
 }
 
+fun ImageView.wrapped(): ImageViewWrapper = findWrapper() ?: ImageViewWrapper(this@wrapped)
+fun Line.wrapped(): LineWrapper = findWrapper() ?: LineWrapper(this@wrapped)
+fun CubicCurve.wrapped(): CubicCurveWrapper = findWrapper() ?: CubicCurveWrapper(this@wrapped)
+fun Polyline.wrapped(): PolylineWrapper = findWrapper() ?: PolylineWrapper(this@wrapped)
+fun QuadCurve.wrapped(): QuadCurveWrapper = findWrapper() ?: QuadCurveWrapper(this@wrapped)
+fun Polygon.wrapped(): PolygonWrapper = findWrapper() ?: PolygonWrapper(this@wrapped)
+fun SVGPath.wrapped(): SVGPathWrapper = findWrapper() ?: SVGPathWrapper(this@wrapped)
+fun Shape.wrapped(): ShapeWrapper<*> = findWrapper() ?: when (this) {
+
+
+  is Polyline   -> wrapped()
+  is Line       -> wrapped()
+  is QuadCurve  -> wrapped()
+
+  is SVGPath    -> wrapped()
+  is Rectangle  -> wrapped()
+  is CubicCurve -> wrapped()
+  is Circle     -> wrapped()
+  is Arc        -> wrapped()
+  is Ellipse    -> wrapped()
+  is Path       -> wrapped()
+  is Text       -> wrapped()
+  is Polygon    -> wrapped()
+  else          -> cannotFindWrapper()
+}
+
+
+fun AmbientLight.wrapped(): AmbientLightWrapper = findWrapper() ?: AmbientLightWrapper(this@wrapped)
+fun SpotLight.wrapped(): SpotLightWrapper = findWrapper() ?: SpotLightWrapper(this@wrapped)
+fun PointLight.wrapped(): PointLightWrapper = findWrapper() ?: PointLightWrapper(this@wrapped)
+fun DirectionalLight.wrapped(): DirectionalLightWrapper = findWrapper() ?: DirectionalLightWrapper(this@wrapped)
+
+fun PerspectiveCamera.wrapped(): PerspectiveCameraWrapper = findWrapper() ?: PerspectiveCameraWrapper(this@wrapped)
+fun ParallelCamera.wrapped(): ParallelCameraWrapper = findWrapper() ?: ParallelCameraWrapper(this@wrapped)
+
+fun Canvas.wrapped(): CanvasWrapper = findWrapper() ?: CanvasWrapper(this@wrapped)
+
+fun Node.wrapped(): NodeWrapper = findWrapper() ?: when (this) {
+  is AmbientLight      -> wrapped()
+  is SpotLight         -> wrapped()
+  is Parent            -> wrapped()
+  is SubScene          -> wrapped()
+  is Shape             -> wrapped()
+  is PointLight        -> wrapped()
+  is PerspectiveCamera -> wrapped()
+  is ParallelCamera    -> wrapped()
+
+  is Canvas            -> wrapped()
+  is ImageView         -> wrapped()
+  is DirectionalLight  -> wrapped()
+  else                 -> cannotFindWrapper()
+}
+
+fun Tooltip.wrapped(): TooltipWrapper = findWrapper() ?: TooltipWrapper(this@wrapped)
+fun PopupControl.wrapped(): PopupControlWrapper = findWrapper() ?: PopupControlWrapper(this@wrapped)
+fun Popup.wrapped(): PopupWrapper = findWrapper() ?: PopupWrapper(this@wrapped)
+
 fun Window.wrapped(): WindowWrapper<*> = findWrapper() ?: when (this) {
-  is Stage -> wrapped()
-  else     -> cannotFindWrapper()
+  is Stage        -> wrapped()
+  is Tooltip      -> wrapped()
+  is ContextMenu  -> wrapped()
+  is PopupControl -> wrapped()
+
+  is Popup        -> wrapped()
+  else            -> cannotFindWrapper()
+}
+
+
+fun MenuBar.wrapped(): MenuBarWrapper = findWrapper() ?: MenuBarWrapper(this@wrapped)
+fun ContextMenu.wrapped(): ContextMenuWrapper = findWrapper() ?: ContextMenuWrapper(this@wrapped)
+fun IntegerField.wrapped(): IntegerFieldWrapper = findWrapper() ?: IntegerFieldWrapper(this@wrapped)
+fun SplitMenuButton.wrapped(): SplitMenuButtonWrapper = findWrapper() ?: SplitMenuButtonWrapper(this@wrapped)
+
+fun Rotate.wrapped(): RotateWrapper = findWrapper() ?: RotateWrapper(this@wrapped)
+fun Translate.wrapped(): TranslateWrapper = findWrapper() ?: TranslateWrapper(this@wrapped)
+fun Shear.wrapped(): ShearWrapper = findWrapper() ?: ShearWrapper(this@wrapped)
+fun Affine.wrapped(): AffineWrapper = findWrapper() ?: AffineWrapper(this@wrapped)
+fun Scale.wrapped(): ScaleWrapper = findWrapper() ?: ScaleWrapper(this@wrapped)
+
+fun Transform.wrapped(): EventTargetWrapper = findWrapper() ?: when (this) {
+  is Rotate    -> wrapped()
+  is Translate -> wrapped()
+  is Shear     -> wrapped()
+  is Affine    -> wrapped()
+  is Scale     -> wrapped()
+  else         -> cannotFindWrapper()
+}
+
+fun CheckBoxTreeItem<*>.wrapped(): CheckBoxTreeItemWrapper<*> = findWrapper() ?: CheckBoxTreeItemWrapper(this@wrapped)
+
+fun TreeItem<*>.wrapped(): EventTargetWrapper = findWrapper() ?: when (this) {
+  is CheckBoxTreeItem<*> -> wrapped()
+  else                   -> findWrapper() ?: TreeItemWrapper(this)
+}
+
+
+fun CheckMenuItem.wrapped(): CheckMenuItemWrapper = findWrapper() ?: CheckMenuItemWrapper(this@wrapped)
+fun RadioMenuItem.wrapped(): RadioMenuItemWrapper = findWrapper() ?: RadioMenuItemWrapper(this@wrapped)
+
+fun SeparatorMenuItem.wrapped(): SeparatorMenuItemWrapper = findWrapper() ?: SeparatorMenuItemWrapper(this@wrapped)
+fun CustomMenuItem.wrapped(): CustomMenuItemWrapper = findWrapper() ?: CustomMenuItemWrapper(this@wrapped)
+fun Menu.wrapped(): MenuWrapper = findWrapper() ?: MenuWrapper(this@wrapped)
+
+fun MenuItem.wrapped(): MenuItemWrapper<out MenuItem> = findWrapper() ?: when (this) {
+  is CheckMenuItem     -> wrapped()
+  is RadioMenuItem     -> wrapped()
+  is SeparatorMenuItem -> wrapped()
+  is CustomMenuItem    -> wrapped()
+  is Menu              -> wrapped()
+  else                 -> findWrapper() ?: MenuItemWrapper(this@wrapped)
+}
+
+fun ChoiceDialog<*>.wrapped(): ChoiceDialogWrapper<*> = findWrapper() ?: ChoiceDialogWrapper(this@wrapped)
+fun TextInputDialog.wrapped(): TextInputDialogWrapper = findWrapper() ?: TextInputDialogWrapper(this@wrapped)
+
+fun Dialog<*>.wrapped(): DialogWrapper<*> = findWrapper() ?: when (this) {
+  is ChoiceDialog<*> -> wrapped()
+  is TextInputDialog -> wrapped()
+  else               -> cannotFindWrapper()
+}
+
+fun TableColumnBase<*, *>.wrapped(): TableColumnBaseWrapper<*, *, *> = findWrapper() ?: when (this) {
+  is TreeTableColumn<*, *> -> wrapped()
+  is TableColumn<*, *>     -> wrapped()
+  else                     -> cannotFindWrapper()
 }
 
 fun EventTarget.wrapped(): EventTargetWrapper = findWrapper() ?: when (this) {
@@ -382,8 +703,7 @@ fun EventTarget.wrapped(): EventTargetWrapper = findWrapper() ?: when (this) {
   else      -> cannotFindWrapper()
 }
 
-private fun EventTarget.cannotFindWrapper(): Nothing =
-  throw (CannotFindWrapperException(this::class))
+private fun EventTarget.cannotFindWrapper(): Nothing = throw (CannotFindWrapperException(this::class))
 
 class CannotFindWrapperException(val cls: KClass<out EventTarget>): Exception(
   "what is the wrapper for ${cls.qualifiedName}?"

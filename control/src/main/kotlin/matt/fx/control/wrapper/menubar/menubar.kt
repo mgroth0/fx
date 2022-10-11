@@ -15,9 +15,6 @@ fun ET.menubar(op: MenuBarWrapper.()->Unit = {}) = MenuBarWrapper().attachTo(thi
 open class MenuBarWrapper(
   node: MenuBar = MenuBar(),
 ): ControlWrapperImpl<MenuBar>(node) {
-  companion object {
-	fun MenuBar.wrapped() = MenuBarWrapper(this)
-  }
 
   val menus: ObservableList<Menu> get() = node.menus
 

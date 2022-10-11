@@ -23,9 +23,6 @@ fun ET.piechart(
 open class PieChartWrapper(
    node: PieChart = PieChart(),
 ): ChartWrapper<PieChart>(node) {
-  companion object {
-	fun PieChart.wrapped() = PieChartWrapper(this)
-  }
 
   constructor(data: ObservableList<Data>): this(PieChart(data))
 

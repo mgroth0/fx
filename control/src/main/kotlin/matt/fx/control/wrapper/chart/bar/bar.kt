@@ -15,9 +15,6 @@ fun <X, Y> ET.barchart(title: String? = null, x: MAxis<X>, y: MAxis<Y>, op: BarC
 open class BarChartWrapper<X, Y>(
   node: BarChart<X, Y>,
 ): XYChartWrapper<X, Y, BarChart<X, Y>>(node) {
-  companion object {
-	fun <X, Y> BarChart<X, Y>.wrapped() = BarChartWrapper(this)
-  }
 
   constructor(x: MAxis<X>, y: MAxis<Y>): this(BarChart(x.node, y.node))
 

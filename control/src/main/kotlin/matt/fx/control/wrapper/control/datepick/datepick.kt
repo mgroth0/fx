@@ -19,9 +19,6 @@ class DatePickerWrapper(
   node: DatePicker = DatePicker(),
 ): ComboBoxBaseWrapper<LocalDate, DatePicker>(node) {
 
-  companion object {
-	fun DatePicker.wrapped() = DatePickerWrapper(this)
-  }
 
 
 }

@@ -22,9 +22,6 @@ fun ET.progressindicator(property: Var<Double>, op: ProgressIndicatorWrapper.()-
 class ProgressIndicatorWrapper(
   node: ProgressIndicator = ProgressIndicator(),
 ): ControlWrapperImpl<ProgressIndicator>(node) {
-  companion object {
-	fun ProgressIndicator.wrapped() = ProgressIndicatorWrapper(this)
-  }
 
 
   var progress

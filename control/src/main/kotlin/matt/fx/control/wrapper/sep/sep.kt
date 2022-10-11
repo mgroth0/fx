@@ -16,9 +16,6 @@ fun ET.separator(
 open class SeparatorWrapper(
   node: Separator = Separator(),
 ): ControlWrapperImpl<Separator>(node) {
-  companion object {
-	fun Separator.wrapped() = SeparatorWrapper(this)
-  }
 
   constructor(
 	o: Orientation

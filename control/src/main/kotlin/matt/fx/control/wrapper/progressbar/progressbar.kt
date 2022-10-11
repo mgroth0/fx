@@ -1,13 +1,12 @@
 package matt.fx.control.wrapper.progressbar
 
-import javafx.beans.property.DoubleProperty
 import javafx.scene.control.ProgressBar
 import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
-import matt.obs.bind.smartBind
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.obs.bind.smartBind
 import matt.obs.prop.ObsVal
 
 
@@ -24,9 +23,6 @@ fun ET.progressbar(property: ObsVal<Number>, op: ProgressBarWrapper.()->Unit = {
 class ProgressBarWrapper(
   node: ProgressBar = ProgressBar(),
 ): ControlWrapperImpl<ProgressBar>(node) {
-  companion object {
-	fun ProgressBar.wrapped() = ProgressBarWrapper(this)
-  }
 
 
   var progress

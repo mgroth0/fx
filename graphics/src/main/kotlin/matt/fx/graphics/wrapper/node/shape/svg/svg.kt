@@ -18,9 +18,6 @@ fun NodeWrapperImpl<Parent>.svgpath(
 open class SVGPathWrapper(
   node: SVGPath = SVGPath(),
 ): ShapeWrapper<SVGPath>(node) {
-  companion object {
-	fun SVGPath.wrapped() = SVGPathWrapper(this)
-  }
 
 
   var content: String

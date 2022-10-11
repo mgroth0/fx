@@ -1,12 +1,10 @@
 package matt.fx.graphics.wrapper.node.line
 
-import javafx.scene.Parent
 import javafx.scene.shape.Line
 import matt.fx.graphics.wrapper.ET
-import matt.fx.graphics.wrapper.node.NodeWrapperImpl
 import matt.fx.graphics.wrapper.node.attachTo
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.graphics.wrapper.node.shape.ShapeWrapper
+import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 
 fun ET.line(
   startX: Number = 0.0,
@@ -21,10 +19,6 @@ fun ET.line(
 open class LineWrapper(
   node: Line = Line(),
 ): ShapeWrapper<Line>(node) {
-  companion object {
-	fun Line.wrapped() = LineWrapper(this)
-  }
-
 
   constructor(
 	startX: Double, startY: Double, endX: Double, endY: Double

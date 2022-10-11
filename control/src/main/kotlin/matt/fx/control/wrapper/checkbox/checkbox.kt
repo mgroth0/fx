@@ -19,9 +19,6 @@ fun ET.checkbox(
 class CheckBoxWrapper(
    node: CheckBox = CheckBox(),
 ): ButtonBaseWrapper<CheckBox>(node) {
-  companion object {
-	fun CheckBox.wrapped() = CheckBoxWrapper(this)
-  }
 
   constructor(text: String?): this(CheckBox(text))
 
