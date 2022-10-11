@@ -23,7 +23,7 @@ class SomeTests {
 	  t = null,
 	  fxOp = {
 		(Node::class as KClass<out Node>).subclasses("javafx").filter {
-		  !it.isAbstract
+		  !it.isAbstract && !it.java.isAnonymousClass
 		}.forEach {
 		  println("node subclass: $it")
 		}
