@@ -4,7 +4,7 @@ package matt.fx.node.perfdiagram
 
 import matt.fx.web.WebViewPane
 import matt.html.sankey.sankeyHTML
-import matt.log.profile.Stopwatch
+import matt.log.profile.stopwatch.Stopwatch
 import kotlin.time.ExperimentalTime
 
 fun Stopwatch.analysisNode() = StopWatchAnalysisNode(this)
