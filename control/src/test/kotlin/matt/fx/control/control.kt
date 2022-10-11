@@ -3,11 +3,13 @@ package matt.fx.control
 import javafx.application.Platform
 import javafx.scene.Node
 import matt.fx.control.fxapp.runFXAppBlocking
+import matt.fx.control.wrapper.wrapped.wrapped
 import matt.reflect.reflections.subclasses
 import matt.test.yesIUseTestLibs
 import org.junit.jupiter.api.Test
 import kotlin.contracts.ExperimentalContracts
 import kotlin.reflect.KClass
+import kotlin.reflect.full.createInstance
 
 class SomeTests {
 
@@ -27,7 +29,7 @@ class SomeTests {
 		  !it.java.isAnonymousClass
 			  && !it.isAbstract
 		}.forEach {
-		  println("node subclass: $it")
+		  it.createInstance().wrapped()
 		}
 		Platform.exit()
 	  }
