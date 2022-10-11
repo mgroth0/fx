@@ -192,10 +192,10 @@ fun SceneWrapper<*>.showMContextMenu(
 
   devMenu.actionitem("print nodes") {
 	println("NODES:")
-	tab<Any>("TARGET:\t${target::class.simpleName}")
+	tab("TARGET:\t${target::class.simpleName}")
 	var parent: Node? = target.parent
 	while (parent != null) {
-	  tab<Any>("PARENT:\t${parent::class.simpleName}")
+	  tab("PARENT:\t${parent::class.simpleName}")
 	  parent = parent.parent
 	}
   }
