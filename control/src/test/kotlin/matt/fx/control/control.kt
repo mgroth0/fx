@@ -15,7 +15,7 @@ class SomeTests {
 	val yesIUseJUnitHereIsSomethingNotInlined = AfterTestExecutionCallback { TODO("Not yet implemented") }
 	val hereIsAnother = JUnit5Asserter
 
-	assert(false)
+//	assert(false)
 
   }
 }
