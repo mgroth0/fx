@@ -4,6 +4,7 @@ import javafx.application.Platform
 import javafx.scene.Node
 import matt.fx.control.fxapp.runFXAppBlocking
 import matt.fx.control.wrapper.wrapped.wrapped
+import matt.reflect.hasNoArgsConstructor
 import matt.reflect.reflections.subclasses
 import matt.test.yesIUseTestLibs
 import org.junit.jupiter.api.Test
@@ -28,6 +29,7 @@ class SomeTests {
 		  /*must test for anonymous first because trying to see if anonymous is abstract leads to error*/
 		  !it.java.isAnonymousClass
 			  && !it.isAbstract
+			  && it.hasNoArgsConstructor
 		}.forEach {
 		  it.createInstance().wrapped()
 		}
