@@ -9,8 +9,10 @@ import javafx.scene.Scene
 import javafx.scene.control.ProgressBar
 import javafx.scene.layout.BorderPane
 import javafx.stage.Stage
+import matt.log.logger.Logger
 import matt.log.profile.stopwatch.Stopwatch
 import matt.log.reporter.Reporter
+import matt.log.reporter.TracksTime
 import kotlin.concurrent.thread
 
 
@@ -20,22 +22,22 @@ fun runFXAppBlocking(
   reporter: Reporter? = null,
   fxOp: (List<String>)->Unit,
 ) {
-  reporter?.toc("running FX App")
+  (reporter as? TracksTime)?.toc("running FX App")
   fxBlock = fxOp
   thread(isDaemon = true) {
 
 	Logging.getJavaFXLogger().disableLogging() /* dodge "Unsupported JavaFX configuration..." part 1 */
   }
-  reporter?.toc("started disabling FX logging")
+  (reporter as? TracksTime)?.toc("started disabling FX logging")
   fxStopwatch = t
   if (usePreloaderApp) {
-	reporter?.toc("launching preloader")
+	(reporter as? TracksTime)?.toc("launching preloader")
 	LauncherImpl.launchApplication(MinimalFXApp::class.java, FirstPreloader::class.java, args)
   } else {
-	reporter?.toc("launching app")
+	(reporter as? TracksTime)?.toc("launching app")
 	Application.launch(MinimalFXApp::class.java, *args)
   }
-  reporter?.info("main thread has exited from Application.launch")
+  (reporter as? Logger)?.info("main thread has exited from Application.launch")
 }
 
 private var fxStopwatch: Stopwatch? = null
