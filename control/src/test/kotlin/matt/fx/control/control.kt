@@ -4,7 +4,7 @@ import javafx.application.Application
 import javafx.application.Platform
 import javafx.scene.Node
 import javafx.stage.Stage
-import matt.reflect.subclasses
+import matt.reflect.reflections.subclasses
 import matt.test.yesIUseTestLibs
 import org.junit.jupiter.api.Test
 import kotlin.contracts.ExperimentalContracts
@@ -29,7 +29,7 @@ class SomeTests {
 class TestApp: Application() {
 
   override fun start(primaryStage: Stage?) {
-	(Node::class as KClass<out Node>).subclasses().filter {
+	(Node::class as KClass<out Node>).subclasses("javafx").filter {
 	  !it.isAbstract
 	}.forEach {
 	  println("node subclass: $it")
