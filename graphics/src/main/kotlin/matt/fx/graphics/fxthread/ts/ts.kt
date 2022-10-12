@@ -1,11 +1,13 @@
 package matt.fx.graphics.fxthread.ts
 
+import javafx.application.Platform.runLater
 import matt.fx.graphics.fxthread.ensureInFXThreadInPlace
 import matt.fx.graphics.fxthread.ensureInFXThreadOrRunLater
 import matt.obs.bind.MyBinding
 import matt.obs.col.change.mirror
 import matt.obs.col.olist.BasicObservableListImpl
 import matt.obs.col.olist.ObsList
+import matt.obs.prop.BindableProperty
 import matt.obs.prop.ObsVal
 
 private class BlockingFXWatcher<T>(source: ObsVal<T>): MyBinding<T>(calc = {
@@ -78,3 +80,13 @@ fun <E> ObsList<E>.blockingFXWatcher(): ObsList<E> {
 
 }
 
+
+class FXThreadSafeProp<T>(value: T): BindableProperty<T>(value) {
+  override var value: T
+	get() = super.value
+	set(value) {
+	  runLater {
+		super.value = value
+	  }
+	}
+}
