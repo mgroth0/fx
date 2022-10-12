@@ -28,7 +28,7 @@ fun <T> runLaterReturn(op: ()->T): T {
   return (r as T)
 }
 
-inline fun <reified T> ensureInFXThreadInPlace(crossinline op: ()->T): T {
+inline fun <T> ensureInFXThreadInPlace(crossinline op: ()->T): T {
   return if (Platform.isFxApplicationThread()) op()
   else runLaterReturn { op() }
 }
@@ -58,14 +58,7 @@ inline fun <T: Any, V> inRunLater(crossinline op: T.(V)->Unit): T.(V)->Unit {
 }
 
 
-
-
-
-
-
 fun <N: NodeWrapper> N.runLater(op: N.()->Unit) = PlatformImpl.runLater { op() }
-
-
 
 
 val runLaterOp: MetaFunction = {

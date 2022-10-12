@@ -1,7 +1,9 @@
 package matt.fx.graphics.wrapper.pane.anchor.swapper
 
+import javafx.application.Platform
 import javafx.scene.layout.AnchorPane
 import javafx.scene.layout.Region
+import matt.fx.graphics.fxthread.ts.nonBlockingFXWatcher
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attach
@@ -54,9 +56,11 @@ open class Swapper<P, C: NodeWrapper>: RegionWrapperImpl<Region, C>(AnchorPane()
   ) {
 
 	this.prop?.removeListener(listener!!)
-	this.prop = prop
+	this.prop = prop.nonBlockingFXWatcher()
+
 
 	fun refresh(value: P?) {
+	  require(Platform.isFxApplicationThread()) /*DEBUG*/
 	  anchorWrapper.clear()
 	  if (value == null) {
 		if (nullMessage != null) {
@@ -76,6 +80,7 @@ open class Swapper<P, C: NodeWrapper>: RegionWrapperImpl<Region, C>(AnchorPane()
 	  refresh(it)
 	}
 	refresh(prop.value)
+
 
   }
 
