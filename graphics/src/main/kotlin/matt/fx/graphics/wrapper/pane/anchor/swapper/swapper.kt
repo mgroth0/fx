@@ -36,10 +36,22 @@ open class Swapper<P, C: NodeWrapper>: RegionWrapperImpl<Region, C>(AnchorPane()
 	  }
 
 	  override fun addChild(child: NodeWrapper, index: Int?) {
-		if (index == null) {
-		  node.children.add(child.node)
-		} else {
-		  node.children.add(index, child.node)
+		val debug = """
+		  children
+		  ${children.joinToString("") { "\n\t$it" }}
+		  
+		  node.children
+		  ${node.children.joinToString("") { "\n\t$it" }}
+		""".trimIndent()
+		try {
+		  if (index == null) {
+			node.children.add(child.node)
+		  } else {
+			node.children.add(index, child.node)
+		  }
+		} catch (e: Exception) {
+		  println(debug)
+		  throw e
 		}
 	  }
 	}
