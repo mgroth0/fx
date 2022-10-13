@@ -36,6 +36,7 @@ import javafx.scene.layout.VBox
 import javafx.stage.FileChooser
 import matt.file.MFile
 import matt.file.construct.toMFile
+import matt.fx.graphics.fxthread.ts.nonBlockingFXWatcher
 import matt.fx.graphics.service.wrapped
 import matt.fx.graphics.wrapper.EventTargetWrapper
 import matt.fx.graphics.wrapper.SingularEventTargetWrapper
@@ -678,8 +679,7 @@ fun <T: NodeWrapper> T.disableWhen(predicate: ObsB) = apply {
 fun <T: NodeWrapper> T.enableWhen(expr: ()->ObsB): T = enableWhen(expr())
 
 fun <T: NodeWrapper> T.enableWhen(predicate: ObsB) = apply {
-  val binding = predicate.not()
-  disableProperty.bind(binding)
+  enableProperty.bind(predicate.nonBlockingFXWatcher())
 }
 
 fun <T: NodeWrapper> T.removeWhen(expr: ()->ValProp<Boolean>): T = removeWhen(expr())

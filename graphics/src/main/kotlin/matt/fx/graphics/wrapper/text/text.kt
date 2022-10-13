@@ -3,6 +3,7 @@ package matt.fx.graphics.wrapper.text
 import javafx.beans.property.ObjectProperty
 import javafx.scene.text.Text
 import javafx.scene.text.TextAlignment
+import matt.fx.graphics.fxthread.ts.nonBlockingFXWatcher
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.fx.graphics.wrapper.node.shape.ShapeWrapper
@@ -18,7 +19,7 @@ fun ET.text(initialValue: String? = null, op: TextWrapper.()->Unit = {}) = TextW
 
 
 fun ET.text(observable: ObsS, op: TextWrapper.()->Unit = {}) = text().apply {
-  textProperty.bind(observable)
+  textProperty.bind(observable.nonBlockingFXWatcher())
   op(this)
 }
 

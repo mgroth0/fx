@@ -39,9 +39,9 @@ open class MScene<R: ParentWrapper<*>>(
   ): this(root, "chunk")
 
   private fun handleContextMenuReq(e: Event) {
-	println("context menu requested from e=${e.hashCode()}")
-	tab("target=${e.target}")
-	tab("source=${e.source}")
+//	println("context menu requested from e=${e.hashCode()}")
+//	tab("target=${e.target}")
+//	tab("source=${e.source}")
 	if (e is ContextMenuEvent) {
 	  (e.target as? Node)?.let {
 		showMContextMenu(it, e.screenX to e.screenY)

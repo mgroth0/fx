@@ -30,13 +30,13 @@ open class TabPaneWrapper<T: TabWrapper<*>>(
 	)
   )
 
-//  /*non null*/final override val selectedItemProperty: ObsVal<T> by lazy { selectionModel.selectedItemProperty.cast() }
-//  /*non null*/override val selectedItem: T by selectedItemProperty
+  //  /*non null*/final override val selectedItemProperty: ObsVal<T> by lazy { selectionModel.selectedItemProperty.cast() }
+  //  /*non null*/override val selectedItem: T by selectedItemProperty
 
   val tabs get() = node.tabs.createMutableWrapper().toSyncedList<Tab, T>(uncheckedWrapperConverter())
 
   override val selectionModel: SelectModWrap<T> by lazy {
-	warn("actually selection model is a property...")
+	/*TODO: actually selection model is a property...*/
 	node.selectionModel.wrap(uncheckedWrapperConverter())
   }
 
