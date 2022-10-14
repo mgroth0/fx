@@ -44,7 +44,11 @@ open class WindowWrapper<W: Window>(override val node: W): EventTargetWrapperImp
 	}
 
 
-  val focusedProperty by lazy { node.focusedProperty().toNonNullableROProp() }
+  @Suppress("SENSELESS_COMPARISON")
+  val focusedProperty by lazy {
+	require(node!=null) /*debug*/
+	node.focusedProperty().toNonNullableROProp()
+  }
   val focused by focusedProperty
 
   fun setOnCloseRequest(value: EventHandler<WindowEvent>) = node.setOnCloseRequest(value)
