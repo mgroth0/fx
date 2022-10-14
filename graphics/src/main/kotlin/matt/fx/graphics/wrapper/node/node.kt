@@ -444,7 +444,7 @@ interface NodeWrapper: EventTargetWrapper, StyleableWrapper {
 	}
 
 
-  val stage get() = scene?.window?.wrapped() as? StageWrapper
+  val stage get() = scene?.window as? StageWrapper
 
   fun onDoubleClickConsume(action: ()->Unit) {
 	node.setOnMouseClicked {
@@ -484,12 +484,14 @@ abstract class NodeWrapperImpl<out N: Node>(
    },
    NodeWrapper {
 
+
   override val sceneProperty: ObsVal<SceneWrapper<*>?> by lazy {
 	node.sceneProperty().toNullableROProp().binding<Scene?,SceneWrapper<*>?>(
 	  uncheckedNullableWrapperConverter<Scene,SceneWrapper<*>>()
 	)
 	/*BindableProperty<SceneWrapper<*>?>(null)*/
   }
+  override val scene by sceneProperty
   override val layoutBoundsProperty by lazy { node.layoutBoundsProperty().toNonNullableROProp() }
   override val hoverProperty by lazy { node.hoverProperty().toNonNullableROProp() }
   override val effectProperty by lazy { node.effectProperty().toNullableProp() }

@@ -3,7 +3,6 @@ package matt.fx.graphics.refresh
 import matt.async.schedule.MyTimerTask
 import matt.async.schedule.every
 import matt.fx.graphics.wrapper.node.NodeWrapper
-import matt.hurricanefx.eye.lib.onChange
 import kotlin.time.Duration
 
 fun <T: NodeWrapper> T.refreshWhileInSceneEvery(
@@ -11,7 +10,7 @@ fun <T: NodeWrapper> T.refreshWhileInSceneEvery(
   op: MyTimerTask.(T)->Unit
 ) {
   val thisNode: T = this
-  sceneProperty().onChange {
+  sceneProperty.onChange {
 	if (it != null) {
 	  every(refreshRate, ownTimer = true) {
 		if (thisNode.node.scene == null) {
