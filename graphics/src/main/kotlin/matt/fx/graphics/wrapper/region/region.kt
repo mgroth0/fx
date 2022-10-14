@@ -1,6 +1,5 @@
 package matt.fx.graphics.wrapper.region
 
-import javafx.beans.property.DoubleProperty
 import javafx.beans.property.ObjectProperty
 import javafx.collections.ObservableList
 import javafx.geometry.Insets
@@ -15,11 +14,8 @@ import javafx.scene.paint.Paint
 import matt.file.MFile
 import matt.file.construct.toMFile
 import matt.fx.graphics.service.uncheckedWrapperConverter
-import matt.fx.graphics.style.all
 import matt.fx.graphics.style.backgroundColor
 import matt.fx.graphics.style.copy
-import matt.fx.graphics.style.horizontal
-import matt.fx.graphics.style.insets
 import matt.fx.graphics.style.vertical
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.parent.ParentWrapper
@@ -29,7 +25,6 @@ import matt.fx.graphics.wrapper.region.border.FXBorder
 import matt.fx.graphics.wrapper.sizeman.SizeManaged
 import matt.hurricanefx.eye.wrapper.obs.collect.createMutableWrapper
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
 import matt.lang.NEVER
 import matt.lang.err
@@ -37,7 +32,6 @@ import matt.model.convert.Converter
 import matt.obs.col.olist.mappedlist.toSyncedList
 import matt.obs.prop.BindableProperty
 import matt.obs.prop.Var
-import matt.obs.prop.VarProp
 import matt.reflect.access
 import kotlin.reflect.full.declaredMemberFunctions
 

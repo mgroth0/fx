@@ -1,6 +1,7 @@
 package matt.fx.graphics.wrapper.pane.anchor.swapper
 
 import javafx.application.Platform
+import javafx.geometry.Insets
 import javafx.scene.layout.AnchorPane
 import javafx.scene.layout.Region
 import matt.fx.graphics.fxthread.ts.nonBlockingFXWatcher
@@ -12,6 +13,7 @@ import matt.fx.graphics.wrapper.region.RegionWrapperImpl
 import matt.fx.graphics.wrapper.text.TextWrapper
 import matt.obs.listen.MyListener
 import matt.obs.prop.ObsVal
+import matt.obs.prop.Var
 
 
 fun <P, N: NodeWrapper> ET.swapper(
@@ -54,6 +56,17 @@ open class Swapper<P, C: NodeWrapper>: RegionWrapperImpl<Region, C>(AnchorPane()
 		  throw e
 		}
 	  }
+
+	  override var padding: Insets
+		get() = TODO("Not yet implemented")
+		set(value) {}
+	  override val paddingProperty: Var<Insets>
+		get() = TODO("Not yet implemented")
+	  override val paddingVerticalProperty: Var<Double>
+		get() = TODO("Not yet implemented")
+	  override var paddingVertical: Double
+		get() = TODO("Not yet implemented")
+		set(value) {}
 	}
   }
 

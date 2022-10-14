@@ -6,7 +6,7 @@ import matt.fx.graphics.wrapper.stage.StageWrapper
 fun StageWrapper.noDocking(
   ifCondition: ()->Boolean = { true }
 ) {
-  iconifiedProperty().onChange {
+  iconifiedProperty.onChange {
 	if (it && ifCondition()) {
 	  runLater {
 		show()
