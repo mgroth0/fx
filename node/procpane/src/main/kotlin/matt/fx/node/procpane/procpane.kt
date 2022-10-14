@@ -18,7 +18,6 @@ import matt.fx.node.console.Console
 import matt.fx.node.console.ProcessConsole
 import matt.fx.node.procpane.inspect.ProcessInspectPane
 import matt.fx.node.procpane.status.StatusFolderWatchPane
-import matt.hurricanefx.eye.lib.onChange
 import matt.hurricanefx.eye.prop.getValue
 import matt.hurricanefx.eye.prop.setValue
 import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
@@ -26,6 +25,7 @@ import matt.log.logInvocation
 import matt.obs.bindings.bool.not
 import matt.obs.math.double.op.times
 import matt.obs.prop.BindableProperty
+import matt.obs.prop.VarProp
 
 val STATUS_FOLDER = REGISTERED_FOLDER + "status"
 
@@ -78,7 +78,7 @@ class ProcessConsolePane(
   private var statusFolderWatchPane: StatusFolderWatchPane? = null
 
 
-  private val processProp: SimpleObjectProperty<Process> = SimpleObjectProperty<Process>(null)
+  private val processProp: VarProp<Process?> = VarProp<Process?>(null)
   override var process: Process? by processProp
 
 

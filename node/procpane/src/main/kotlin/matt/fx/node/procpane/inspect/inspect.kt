@@ -9,16 +9,17 @@ import matt.fx.control.wrapper.control.treetable.populate
 import matt.fx.control.wrapper.control.treetable.treetableview
 import matt.fx.control.wrapper.label.LabelWrapper
 import matt.fx.control.wrapper.scroll.scrollpane
+import matt.fx.control.wrapper.treeitem.TreeItemWrapper
 import matt.fx.graphics.fxthread.ts.nonBlockingFXWatcher
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.pane.hbox.HBoxWrapperImpl
-import matt.hurricanefx.eye.lib.onChange
 import matt.obs.bind.binding
 import matt.obs.bindings.str.ObsS
 import matt.obs.bindings.str.plus
 import matt.obs.math.double.op.div
 import matt.obs.prop.BindableProperty
 import matt.obs.prop.MObservableROValBase
+import matt.obs.prop.VarProp
 import kotlin.contracts.ExperimentalContracts
 import kotlin.reflect.KAnnotatedElement
 import kotlin.reflect.KFunction
@@ -80,7 +81,7 @@ class ProcessInspectPane(initialValue: Process?): HBoxWrapperImpl<NodeWrapper>()
 
 		  this@ProcessInspectPane.propLabel.oProp.set(it?.value)
 		}
-		root = TreeItem(ProcessOrHandleWrapper(p))
+		root = TreeItemWrapper(ProcessOrHandleWrapper(p))
 		root!!.isExpanded = true
 		selectionModel.select(root)
 		isShowRoot = true
@@ -95,7 +96,7 @@ private class PropListLabel<T>(
   private vararg val props: Pair<String, KAnnotatedElement>,
   op: LabelWrapper.()->Unit = {}
 ): LabelWrapper() {
-  val oProp = SimpleObjectProperty<T>(initialValue).apply {
+  val oProp = VarProp<T>(initialValue).apply {
 	onChange {
 	  update(it)
 	}
