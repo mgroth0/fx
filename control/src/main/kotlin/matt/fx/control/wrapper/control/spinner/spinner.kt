@@ -3,6 +3,7 @@ package matt.fx.control.wrapper.control.spinner
 import javafx.scene.control.Spinner
 import javafx.scene.control.SpinnerValueFactory
 import matt.fx.control.wrapper.control.ControlWrapperImpl
+import matt.fx.control.wrapper.wrapped.wrapped
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
@@ -98,6 +99,7 @@ fun <T: Any> ET.spinner(
   )
 }
 
+
 /*MATT NOTE: SPINNER INTERNALS USES NULL IN VARIOUS MECHANISMS. SPINNER TYPES CANNOT BE NULLABLE.*/
 fun <T: Any> ET.spinner(
   valueFactory: SpinnerValueFactory<T>,
@@ -154,6 +156,8 @@ class SpinnerWrapper<T: Any>(
   constructor(items: ObsList<T>): this(Spinner(items.createFXWrapper()))
   constructor(valueFactory: SpinnerValueFactory<T>): this(Spinner(valueFactory))
 
+
+  val editor by lazy { node.editor.wrapped() }
 
   val value: T get() = node.value
   val valueProperty by lazy { node.valueProperty().toNonNullableROProp() }

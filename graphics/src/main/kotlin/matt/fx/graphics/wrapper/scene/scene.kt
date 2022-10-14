@@ -29,6 +29,8 @@ open class SceneWrapper<R: ParentWrapper<*>>(
   constructor(root: ParentWrapper<*>): this(Scene(root.node))
 
 
+  val focusOwner get() = node.focusOwner?.wrapped()
+
   override val widthProperty get() = node.widthProperty().toNonNullableROProp().cast<Double>()
   override val heightProperty get() = node.heightProperty().toNonNullableROProp().cast<Double>()
 

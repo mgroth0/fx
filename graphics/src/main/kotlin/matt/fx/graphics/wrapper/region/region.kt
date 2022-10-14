@@ -25,6 +25,7 @@ import matt.fx.graphics.wrapper.region.border.FXBorder
 import matt.fx.graphics.wrapper.sizeman.SizeManaged
 import matt.hurricanefx.eye.wrapper.obs.collect.createMutableWrapper
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
 import matt.lang.NEVER
 import matt.lang.err
@@ -61,13 +62,9 @@ interface RegionWrapper<C: NodeWrapper>: ParentWrapper<C>, SizeManaged {
   val paddingProperty: Var<Insets>
 
 
-  var background: Background?
-	get() = node.background
-	set(value) {
-	  node.background = value
-	}
-  val backgroundProperty: ObjectProperty<Background> get() = node.backgroundProperty()
 
+  val backgroundProperty: Var<Background?>
+  var background: Background?
 
   override val widthProperty get() = node.widthProperty().toNonNullableROProp().cast<Double>()
   override val prefWidthProperty get() = node.prefWidthProperty().toNonNullableProp().cast<Double>()
@@ -232,5 +229,7 @@ open class RegionWrapperImpl<N: Region, C: NodeWrapper>(node: N): ParentWrapperI
   }
   override var paddingVertical by paddingVerticalProperty
 
+  override val backgroundProperty by lazy { node.backgroundProperty().toNullableProp() }
+  override var background by backgroundProperty
 
 }

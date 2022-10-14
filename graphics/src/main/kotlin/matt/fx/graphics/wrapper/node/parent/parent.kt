@@ -11,6 +11,9 @@ import matt.fx.graphics.wrapper.node.line.quad.QuadCurveWrapper
 import matt.fx.graphics.wrapper.node.shape.poly.PolygonWrapper
 import matt.obs.col.olist.mappedlist.toMappedList
 import matt.fx.graphics.service.wrapped
+import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
+import matt.hurricanefx.eye.wrapper.obs.obsval.toNullableROProp
+import matt.obs.bind.binding
 
 interface ParentWrapper<C: NodeWrapper>: NodeWrapper {
   override val node: Parent
@@ -58,7 +61,9 @@ abstract class ParentWrapperImpl<out N: Parent, C: NodeWrapper>(node: N): NodeWr
 
 val NodeWrapper.parent get() : ParentWrapper<*>? = node.parent?.wrapped() as ParentWrapper<*>?
 
-fun NodeWrapper.parentProperty(): ReadOnlyObjectProperty<Parent> = node.parentProperty()
+fun NodeWrapper.parentProperty() = node.parentProperty().toNullableROProp().binding {
+  it?.wrapped()
+}
 
 
 //@Suppress("UNCHECKED_CAST", "PLATFORM_CLASS_MAPPED_TO_KOTLIN")

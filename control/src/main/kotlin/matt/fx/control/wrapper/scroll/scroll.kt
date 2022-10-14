@@ -19,6 +19,8 @@ import matt.fx.graphics.wrapper.region.RegionWrapper
 import matt.hurricanefx.eye.prop.getValue
 import matt.hurricanefx.eye.prop.setValue
 import matt.collect.itr.recurse.chain
+import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.obs.math.op.times
 
 
 fun NW.isFullyVisibleIn(sp: ScrollPaneWrapper<*>): Boolean {
@@ -142,8 +144,8 @@ open class ScrollPaneWrapper<C: NodeWrapper>(node: ScrollPane = ScrollPane()): C
 	  node.prefViewportHeight = value
 	}
 
-  val hValueProp: DoubleProperty get() = node.hvalueProperty()
-  val vValueProp: DoubleProperty get() = node.vvalueProperty()
+  val hValueProp by lazy {node.hvalueProperty().toNonNullableProp().cast<Double>()}
+  val vValueProp by lazy {node.vvalueProperty().toNonNullableProp().cast<Double>()}
 
   var hvalue by hValueProp
   var vvalue by vValueProp
@@ -165,7 +167,7 @@ open class ScrollPaneWrapper<C: NodeWrapper>(node: ScrollPane = ScrollPane()): C
   }
 
   val vValueConverted
-	get() = vvalue*((content.boundsInParent.height - viewportBounds.height).takeIf { it > 0 } ?: 0.0)
+	get() = vvalue* ((content.boundsInParent.height - viewportBounds.height).takeIf { it > 0 } ?: 0.0)
 
   val vValueConvertedMax get() = vValueConverted + viewportBounds.height
   override fun addChild(child: NodeWrapper, index: Int?) {
