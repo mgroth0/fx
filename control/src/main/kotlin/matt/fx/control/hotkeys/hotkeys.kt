@@ -48,6 +48,13 @@ import kotlin.contracts.ExperimentalContracts
 	UP.ctrl.opt { window!!.y -= window!!.height }
 	DOWN.ctrl.opt { window!!.y += window!!.height }
 
+	val smallShift = 10.0
+
+	LEFT.ctrl.shift { window!!.x -= smallShift }
+	RIGHT.ctrl.shift { window!!.x += smallShift }
+	UP.ctrl.shift { window!!.y -= smallShift }
+	DOWN.ctrl.shift { window!!.y += smallShift }
+
 	LEFT.ctrl.meta {
 	  window!!.width /= 2
 	}

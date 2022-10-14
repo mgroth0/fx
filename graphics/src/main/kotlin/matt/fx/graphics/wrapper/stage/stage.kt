@@ -28,8 +28,6 @@ open class StageWrapper(node: Stage): WindowWrapper<Stage>(node), Titled {
   fun initOwner(owner: WindowWrapper<*>?) = node.initOwner(owner?.node)
   fun initModality(m: Modality) = node.initModality(m)
 
-
-
   val iconifiedProperty by lazy { node.iconifiedProperty().toNonNullableROProp() }
   val isIconified by iconifiedProperty
 
