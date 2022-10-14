@@ -5,7 +5,6 @@ import javafx.beans.property.BooleanProperty
 import javafx.beans.property.DoubleProperty
 import javafx.beans.property.ObjectProperty
 import javafx.beans.property.ReadOnlyBooleanProperty
-import javafx.beans.property.ReadOnlyObjectProperty
 import javafx.collections.ObservableMap
 import javafx.event.Event
 import javafx.event.EventHandler
@@ -38,7 +37,6 @@ import matt.file.MFile
 import matt.file.construct.toMFile
 import matt.fx.graphics.fxthread.ts.nonBlockingFXWatcher
 import matt.fx.graphics.service.uncheckedNullableWrapperConverter
-import matt.fx.graphics.service.uncheckedWrapperConverter
 import matt.fx.graphics.service.wrapped
 import matt.fx.graphics.wrapper.EventTargetWrapper
 import matt.fx.graphics.wrapper.SingularEventTargetWrapper
@@ -471,8 +469,6 @@ interface NodeWrapper: EventTargetWrapper, StyleableWrapper {
 }
 
 
-
-
 abstract class NodeWrapperImpl<out N: Node>(
   node: N
 ): SingularEventTargetWrapper<N>(node),
@@ -485,11 +481,10 @@ abstract class NodeWrapperImpl<out N: Node>(
    NodeWrapper {
 
 
-  override val sceneProperty: ObsVal<SceneWrapper<*>?> by lazy {
-	node.sceneProperty().toNullableROProp().binding<Scene?,SceneWrapper<*>?>(
-	  uncheckedNullableWrapperConverter<Scene,SceneWrapper<*>>()
+  override val sceneProperty by lazy {
+	node.sceneProperty().toNullableROProp().binding(
+	  converter = uncheckedNullableWrapperConverter<Scene, SceneWrapper<*>>()
 	)
-	BindableProperty<SceneWrapper<*>?>(null)
   }
   override val scene by sceneProperty
   override val layoutBoundsProperty by lazy { node.layoutBoundsProperty().toNonNullableROProp() }
