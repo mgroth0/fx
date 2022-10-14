@@ -1,22 +1,17 @@
 package matt.fx.node.console.text
 
 import javafx.animation.Timeline
-import javafx.beans.value.ChangeListener
-import javafx.scene.Scene
 import javafx.scene.paint.Color
 import javafx.scene.text.Text
-import javafx.stage.Window
 import matt.async.schedule.AccurateTimer
 import matt.fx.graphics.font.fixed
 import matt.fx.graphics.lang.removeAllButLastN
 import matt.fx.graphics.tfx.animation.keyframe
 import matt.fx.graphics.tfx.animation.timeline
 import matt.fx.graphics.wrapper.node.NodeWrapper
-import matt.fx.graphics.wrapper.scene.SceneWrapper
 import matt.fx.graphics.wrapper.text.TextWrapper
 import matt.fx.graphics.wrapper.text.textlike.applyConsoleStyle
 import matt.fx.graphics.wrapper.textflow.TextFlowWrapper
-import matt.fx.graphics.wrapper.window.WindowWrapper
 import matt.hurricanefx.eye.mtofx.createWritableFXPropWrapper
 import matt.hurricanefx.eye.time.toFXDuration
 import matt.lang.ifTrueOrNull

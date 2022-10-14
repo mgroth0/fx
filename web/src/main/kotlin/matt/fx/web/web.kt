@@ -247,7 +247,7 @@ fun RegionWrapper<*>.specialTransferingToWindowAndBack(par: PaneWrapper<*>) {
 	if (k.code == KeyCode.W && k.isMetaDown) {
 	  if (this.scene?.root == this) {
 		this.removeFromParent()
-		(this.scene!!.window as Stage).close()
+		(this.scene!!.window as StageWrapper).close()
 		par.add(vb)
 		perfectBind(par)
 		if (this is WebViewPane) {
