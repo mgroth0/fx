@@ -3,6 +3,7 @@ package matt.fx.control.wrapper.treeitem
 import javafx.collections.ObservableMap
 import javafx.scene.control.CheckBoxTreeItem
 import javafx.scene.control.TreeItem
+import matt.fx.control.wrapper.wrapped.wrapped
 import matt.fx.graphics.service.uncheckedWrapperConverter
 import matt.fx.graphics.wrapper.SingularEventTargetWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
@@ -32,6 +33,7 @@ open class TreeItemWrapper<T: Any>(node: TreeItem<T> = TreeItem()): SingularEven
 
   val expandedProperty by lazy {node.expandedProperty().toNonNullableProp()}
   var isExpanded by expandedProperty
+  val parent get() = node.parent.wrapped()
   val children by lazy {
 	node.children.createMutableWrapper().toSyncedList(uncheckedWrapperConverter<TreeItem<T>, TreeItemWrapper<T>>())
   }

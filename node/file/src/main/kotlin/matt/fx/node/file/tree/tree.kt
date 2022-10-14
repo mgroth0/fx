@@ -119,8 +119,8 @@ fun TreeLikeWrapper<*, MFile>.nav(f: MFile) {
 		if (it.value == f) {
 		  println("found treeitem: $it")
 		  it.parent.chain { it.parent }.forEach { it.isExpanded = true }
-		  selectionModel.select(it)
-		  scrollTo(getRow(it))
+		  selectionModel.select(it.node)
+		  scrollTo(getRow(it.node))
 		  keepGoing = false
 		} else nextSubRoot = it as FileTreeItem
 	  } ?: run {
