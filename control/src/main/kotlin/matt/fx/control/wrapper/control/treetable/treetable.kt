@@ -288,9 +288,9 @@ fun <T> TreeTableViewWrapper<T & Any>.onUserSelect(clickCount: Int = 2, action: 
 }
 
 
-fun <T> TreeTableViewWrapper<T & Any>.populate(
-  itemFactory: (T)->TreeItemWrapper<T & Any> = { TreeItemWrapper(it) },
-  childFactory: (TreeItemWrapper<T & Any>)->Iterable<T & Any>?
+fun <T: Any> TreeTableViewWrapper<T>.populate(
+  itemFactory: (T)->TreeItemWrapper<T> = { TreeItemWrapper(it) },
+  childFactory: (TreeItemWrapper<T>)->Iterable<T>?
 ) = root?.go {
   populateTree(it, itemFactory, childFactory)
 }
