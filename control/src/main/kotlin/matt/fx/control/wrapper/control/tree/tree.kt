@@ -62,6 +62,11 @@ class TreeViewWrapper<T: Any>(node: TreeView<T> = TreeView(), op: TreeViewWrappe
   override fun getRow(ti: TreeItem<T>) = node.getRow(ti)
 
 
+  fun populate(
+	itemFactory: (T)->TreeItemWrapper<T> = { TreeItemWrapper(it) },
+	childFactory: (TreeItemWrapper<T>)->Iterable<T>?
+  ) = populateTree(root!!, itemFactory, childFactory)
+
 }
 
 
@@ -87,11 +92,7 @@ fun <T: Any> TreeViewWrapper<T>.bindSelected(property: Property<T>) {
  */
 fun <T: Any> TreeViewWrapper<T>.selectFirst() = selectionModel.selectFirst()
 
-fun <T: Any> TreeViewWrapper<T>.populate(
-  itemFactory: (T)->TreeItemWrapper<T> = { TreeItemWrapper(it) },
-  childFactory: (TreeItemWrapper<T>)->Iterable<T>?
-) =
-  populateTree(root, itemFactory, childFactory)
+
 
 
 // -- Properties

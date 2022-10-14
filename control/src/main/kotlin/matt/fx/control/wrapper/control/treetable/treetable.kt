@@ -32,7 +32,6 @@ import matt.fx.graphics.wrapper.node.attachTo
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
 import matt.lang.go
 import matt.obs.prop.ObsVal
-import matt.obs.prop.Var
 import matt.obs.prop.VarProp
 import matt.obs.prop.toVarProp
 import kotlin.reflect.KFunction
