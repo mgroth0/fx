@@ -37,11 +37,14 @@ import javafx.stage.FileChooser
 import matt.file.MFile
 import matt.file.construct.toMFile
 import matt.fx.graphics.fxthread.ts.nonBlockingFXWatcher
+import matt.fx.graphics.service.uncheckedNullableWrapperConverter
+import matt.fx.graphics.service.uncheckedWrapperConverter
 import matt.fx.graphics.service.wrapped
 import matt.fx.graphics.wrapper.EventTargetWrapper
 import matt.fx.graphics.wrapper.SingularEventTargetWrapper
 import matt.fx.graphics.wrapper.node.parent.ParentWrapper
 import matt.fx.graphics.wrapper.node.parent.parent
+import matt.fx.graphics.wrapper.scene.SceneWrapper
 import matt.fx.graphics.wrapper.stage.StageWrapper
 import matt.fx.graphics.wrapper.style.StyleableWrapper
 import matt.fx.graphics.wrapper.style.StyleableWrapperImpl
@@ -49,7 +52,9 @@ import matt.hurricanefx.eye.lib.onChange
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
+import matt.hurricanefx.eye.wrapper.obs.obsval.toNullableROProp
 import matt.model.flowlogic.recursionblocker.RecursionBlocker
+import matt.obs.bind.binding
 import matt.obs.bindings.bool.ObsB
 import matt.obs.bindings.bool.not
 import matt.obs.prop.BindableProperty
@@ -251,8 +256,8 @@ interface NodeWrapper: EventTargetWrapper, StyleableWrapper {
   fun localToScreen(bounds: Bounds): Bounds? = node.localToScreen(bounds)
 
 
-  val scene: Scene? get() = node.scene
-  fun sceneProperty(): ReadOnlyObjectProperty<Scene> = node.sceneProperty()
+  val scene: SceneWrapper<*>?
+  val sceneProperty: ObsVal<SceneWrapper<*>?>
 
 
   operator fun NW.unaryPlus() {
@@ -479,6 +484,12 @@ abstract class NodeWrapperImpl<out N: Node>(
    },
    NodeWrapper {
 
+  override val sceneProperty: ObsVal<SceneWrapper<*>?> by lazy {
+	node.sceneProperty().toNullableROProp().binding<Scene?,SceneWrapper<*>?>(
+	  uncheckedNullableWrapperConverter<Scene,SceneWrapper<*>>()
+	)
+	/*BindableProperty<SceneWrapper<*>?>(null)*/
+  }
   override val layoutBoundsProperty by lazy { node.layoutBoundsProperty().toNonNullableROProp() }
   override val hoverProperty by lazy { node.hoverProperty().toNonNullableROProp() }
   override val effectProperty by lazy { node.effectProperty().toNullableProp() }

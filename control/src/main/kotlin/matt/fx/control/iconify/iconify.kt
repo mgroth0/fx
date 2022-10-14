@@ -1,21 +1,20 @@
 package matt.fx.control.iconify
 
-import javafx.stage.Stage
 import matt.file.MFile
 import matt.fx.control.mscene.MScene
-import matt.fx.graphics.icon.ICON_HEIGHT
-import matt.fx.graphics.icon.ICON_WIDTH
-import matt.fx.graphics.icon.Icon
-import matt.fx.graphics.style.DarkModeController
 import matt.fx.control.win.interact.WinGeom
 import matt.fx.control.win.interact.WinOwn
 import matt.fx.control.win.interact.openInNewWindow
 import matt.fx.graphics.core.scene.reloadStyle
+import matt.fx.graphics.icon.ICON_HEIGHT
+import matt.fx.graphics.icon.ICON_WIDTH
+import matt.fx.graphics.icon.Icon
+import matt.fx.graphics.style.DarkModeController
 import matt.fx.graphics.win.winfun.noDocking
 import matt.fx.graphics.wrapper.node.setOnDoubleClick
+import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
 import matt.fx.graphics.wrapper.scene.SceneWrapper
 import matt.fx.graphics.wrapper.stage.StageWrapper
-import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
 
 fun SceneWrapper<*>.iconify(icon: MFile) {
   var iconWindow: StageWrapper? = null
