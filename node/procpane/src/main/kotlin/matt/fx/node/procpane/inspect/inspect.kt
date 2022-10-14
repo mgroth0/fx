@@ -1,7 +1,5 @@
 package matt.fx.node.procpane.inspect
 
-import javafx.beans.property.SimpleObjectProperty
-import javafx.scene.control.TreeItem
 import javafx.scene.control.TreeTableColumn
 import matt.auto.process.ProcessOrHandleWrapper
 import matt.file.construct.mFile
@@ -81,7 +79,7 @@ import kotlin.reflect.KProperty
 		}
 		root = TreeItemWrapper(ProcessOrHandleWrapper(p))
 		root!!.isExpanded = true
-		selectionModel.select(root)
+		selectionModel.select(root!!.node)
 		isShowRoot = true
 		populate { it.value.obsChildren }
 	  }
