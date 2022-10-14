@@ -122,14 +122,9 @@ fun NodeWrapperImpl<*>.sty(op: StyleClassDSL.()->Unit) {
 }
 
 
-
 fun intColorToFXColor(i: Int): Color {
   return Color.rgb(i shr 16 and 0xFF, i shr 8 and 0xFF, i and 0xFF)
 }
-
-
-
-
 
 
 fun backgroundColor(c: Paint) = Background(BackgroundFill(c, null, null))
@@ -182,6 +177,20 @@ fun Insets.copy(
   horizontal?.toDouble() ?: this.left
 )
 
-val Insets.horizontal get() = (left + right)/2
-val Insets.vertical get() = (top + bottom)/2
-val Insets.all get() = (left + right + top + bottom)/4
+val Insets.horizontal: Double
+  get() {
+	require(left == right)
+	return left
+  }
+val Insets.vertical: Double
+  get() {
+	require(top == bottom)
+	return top
+  }
+val Insets.all: Double
+  get() {
+	require(left == right)
+	require(left == top)
+	require(left == bottom)
+	return left
+  }

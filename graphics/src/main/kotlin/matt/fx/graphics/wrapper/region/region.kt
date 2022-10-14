@@ -27,14 +27,17 @@ import matt.fx.graphics.wrapper.node.parent.ParentWrapperImpl
 import matt.fx.graphics.wrapper.node.parent.parent
 import matt.fx.graphics.wrapper.region.border.FXBorder
 import matt.fx.graphics.wrapper.sizeman.SizeManaged
-import matt.hurricanefx.eye.lib.proxypropDouble
 import matt.hurricanefx.eye.wrapper.obs.collect.createMutableWrapper
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
 import matt.lang.NEVER
 import matt.lang.err
+import matt.model.convert.Converter
 import matt.obs.col.olist.mappedlist.toSyncedList
 import matt.obs.prop.BindableProperty
+import matt.obs.prop.Var
+import matt.obs.prop.VarProp
 import matt.reflect.access
 import kotlin.reflect.full.declaredMemberFunctions
 
@@ -61,11 +64,7 @@ interface RegionWrapper<C: NodeWrapper>: ParentWrapper<C>, SizeManaged {
   fun white() = borderProperty.set(FXBorder.dashed(Color.WHITE))
 
   var padding: Insets
-	get() = node.padding
-	set(value) {
-	  node.padding = value
-	}
-  val paddingProperty: ObjectProperty<Insets> get() = node.paddingProperty()
+  val paddingProperty: Var<Insets>
 
 
   var background: Background?
@@ -113,80 +112,7 @@ interface RegionWrapper<C: NodeWrapper>: ParentWrapper<C>, SizeManaged {
 	  err("no getter yet")
 	}
 
-  @Deprecated("Use the paddingRight property instead", ReplaceWith("paddingRight = p")) fun paddingRight(p: Double) {
-	paddingRight = p
-  }
 
-  var paddingRight: Number
-	get() = padding.right
-	set(value) {
-	  padding = padding.copy(right = value.toDouble())
-	}
-
-  @Deprecated("Use the paddingLeft property instead", ReplaceWith("paddingLeft = p")) fun paddingLeft(p: Double) {
-	paddingLeft = p
-  }
-
-  var paddingLeft: Number
-	get() = padding.left
-	set(value) {
-	  padding = padding.copy(left = value)
-	}
-
-  @Deprecated("Use the paddingTop property instead", ReplaceWith("paddingTop = p")) fun paddingTop(p: Double) {
-	paddingTop = p
-  }
-
-  var paddingTop: Number
-	get() = padding.top
-	set(value) {
-	  padding = padding.copy(top = value)
-	}
-
-  @Deprecated("Use the paddingBottom property instead", ReplaceWith("paddingBottom = p")) fun paddingBottom(p: Double) {
-	paddingBottom = p
-  }
-
-  var paddingBottom: Number
-	get() = padding.bottom
-	set(value) {
-	  padding = padding.copy(bottom = value)
-	}
-
-  @Deprecated("Use the paddingVertical property instead", ReplaceWith("paddingVertical = p"))
-  fun paddingVertical(p: Double) {
-	paddingVertical = p
-  }
-
-  var paddingVertical: Number
-	get() = padding.vertical*2
-	set(value) {
-	  val half = value.toDouble()/2.0
-	  padding = padding.copy(vertical = half)
-	}
-
-  @Deprecated("Use the paddingHorizontal property instead", ReplaceWith("paddingHorizontal = p")) fun paddingHorizontal(
-	p: Double
-  ) {
-	paddingHorizontal = p
-  }
-
-  var paddingHorizontal: Number
-	get() = padding.horizontal*2
-	set(value) {
-	  val half = value.toDouble()/2.0
-	  padding = padding.copy(horizontal = half)
-	}
-
-  @Deprecated("Use the paddingAll property instead", ReplaceWith("paddingAll = p")) fun paddingAll(p: Double) {
-	paddingAll = p
-  }
-
-  var paddingAll: Number
-	get() = padding.all
-	set(value) {
-	  padding = insets(value)
-	}
 
   fun fitToParentHeight() {
 	fitToHeight((parent as RegionWrapper))
@@ -215,30 +141,8 @@ interface RegionWrapper<C: NodeWrapper>: ParentWrapper<C>, SizeManaged {
   }
 
 
-  val paddingVerticalProperty: DoubleProperty
-	get() = node.properties.getOrPut("paddingVerticalProperty") {
-	  proxypropDouble(paddingProperty, { paddingVertical.toDouble() }) {
-
-		val half = it/2.0
-		Insets(half, value.right, half, value.left)
-	  }
-	} as DoubleProperty
-
-  val paddingHorizontalProperty: DoubleProperty
-	get() = node.properties.getOrPut("paddingHorizontalProperty") {
-	  proxypropDouble(paddingProperty, { paddingHorizontal.toDouble() }) {
-		val half = it/2.0
-		Insets(value.top, half, value.bottom, half)
-	  }
-	} as DoubleProperty
-
-  val paddingAllProperty: DoubleProperty
-	get() = node.properties.getOrPut("paddingAllProperty") {
-	  proxypropDouble(paddingProperty, { paddingAll.toDouble() }) {
-		Insets(it, it, it, it)
-	  }
-	} as DoubleProperty
-
+  val paddingVerticalProperty: Var<Double>
+  var paddingVertical: Double
 
   val exactWidthProperty
 	get() = BindableProperty<Double>(0.0).also {
@@ -294,33 +198,6 @@ interface RegionWrapper<C: NodeWrapper>: ParentWrapper<C>, SizeManaged {
 	set(value) = if (value) setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE) else Unit
 
 
-  val paddingTopProperty: DoubleProperty
-	get() = node.properties.getOrPut("paddingTopProperty") {
-	  proxypropDouble(paddingProperty, { value.top }) {
-		Insets(it, value.right, value.bottom, value.left)
-	  }
-	} as DoubleProperty
-
-  val paddingBottomProperty: DoubleProperty
-	get() = node.properties.getOrPut("paddingBottomProperty") {
-	  proxypropDouble(paddingProperty, { value.bottom }) {
-		Insets(value.top, value.right, it, value.left)
-	  }
-	} as DoubleProperty
-
-  val paddingLeftProperty: DoubleProperty
-	get() = node.properties.getOrPut("paddingLeftProperty") {
-	  proxypropDouble(paddingProperty, { value.left }) {
-		Insets(value.top, value.right, value.bottom, it)
-	  }
-	} as DoubleProperty
-
-  val paddingRightProperty: DoubleProperty
-	get() = node.properties.getOrPut("paddingRightProperty") {
-	  proxypropDouble(paddingProperty, { value.right }) {
-		Insets(value.top, it, value.bottom, value.left)
-	  }
-	} as DoubleProperty
 
 
   override fun addChild(child: NodeWrapper, index: Int?) {
@@ -336,13 +213,30 @@ open class RegionWrapperImpl<N: Region, C: NodeWrapper>(node: N): ParentWrapperI
 
   @Suppress("UNCHECKED_CAST") protected val regionChildren by lazy {
 	(node::class.declaredMemberFunctions.first {
-		it.name == "getChildren"
-	  }.access {
-		call(this@RegionWrapperImpl.node)
-	  } as ObservableList<Node>).createMutableWrapper().toSyncedList(
+	  it.name == "getChildren"
+	}.access {
+	  call(this@RegionWrapperImpl.node)
+	} as ObservableList<Node>).createMutableWrapper().toSyncedList(
 	  uncheckedWrapperConverter()
 	)
   }
+
+  override val paddingProperty by lazy {node.paddingProperty().toNonNullableProp()}
+  override var padding by paddingProperty
+
+  override val paddingVerticalProperty by lazy {
+	paddingProperty.proxy(object: Converter<Insets, Double> {
+	  override fun convertToB(a: Insets): Double {
+		return a.vertical
+	  }
+
+	  override fun convertToA(b: Double): Insets {
+		return padding.copy(vertical = b)
+	  }
+
+	})
+  }
+  override var paddingVertical by paddingVerticalProperty
 
 
 }

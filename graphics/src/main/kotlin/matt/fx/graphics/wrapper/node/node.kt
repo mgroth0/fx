@@ -4,7 +4,6 @@ import javafx.application.Platform
 import javafx.beans.property.BooleanProperty
 import javafx.beans.property.DoubleProperty
 import javafx.beans.property.ObjectProperty
-import javafx.beans.property.ReadOnlyBooleanProperty
 import javafx.collections.ObservableMap
 import javafx.event.Event
 import javafx.event.EventHandler
@@ -46,7 +45,6 @@ import matt.fx.graphics.wrapper.scene.SceneWrapper
 import matt.fx.graphics.wrapper.stage.StageWrapper
 import matt.fx.graphics.wrapper.style.StyleableWrapper
 import matt.fx.graphics.wrapper.style.StyleableWrapperImpl
-import matt.hurricanefx.eye.lib.onChange
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
@@ -284,8 +282,8 @@ interface NodeWrapper: EventTargetWrapper, StyleableWrapper {
 
   val enableProperty: Var<Boolean>
 
-  val isFocused get() = node.isFocused
-  fun focusedProperty(): ReadOnlyBooleanProperty = node.focusedProperty()
+  val isFocused: Boolean
+  val focusedProperty: ObsVal<Boolean>
 
 
   var hGrow: Priority
@@ -481,12 +479,15 @@ abstract class NodeWrapperImpl<out N: Node>(
    NodeWrapper {
 
 
-  override val sceneProperty by lazy {
+  final override val sceneProperty by lazy {
 	node.sceneProperty().toNullableROProp().binding(
 	  converter = uncheckedNullableWrapperConverter<Scene, SceneWrapper<*>>()
 	)
   }
-  override val scene by sceneProperty
+  final override val scene by sceneProperty
+  final override val focusedProperty by lazy { node.focusedProperty().toNonNullableROProp() }
+  final override val isFocused by focusedProperty
+
   override val layoutBoundsProperty by lazy { node.layoutBoundsProperty().toNonNullableROProp() }
   override val hoverProperty by lazy { node.hoverProperty().toNonNullableROProp() }
   override val effectProperty by lazy { node.effectProperty().toNullableProp() }
@@ -700,7 +701,7 @@ fun <T: NodeWrapper> T.removeWhen(predicate: ValProp<Boolean>) = apply {
 
 
 fun NodeWrapper.onHover(onHover: (Boolean)->Unit) = apply {
-  node.hoverProperty().onChange { onHover(node.isHover) }
+  hoverProperty.onChange(onHover)
 }
 
 

@@ -14,6 +14,8 @@ import matt.fx.graphics.wrapper.scene.SceneWrapper
 import matt.fx.graphics.wrapper.window.WindowWrapper
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.NullableFXBackedBindableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
+import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
+import matt.hurricanefx.eye.wrapper.obs.obsval.toNullableROProp
 import matt.log.warn.warn
 
 open class StageWrapper(override val node: Stage): WindowWrapper<Stage>(node), Titled {
@@ -29,13 +31,14 @@ open class StageWrapper(override val node: Stage): WindowWrapper<Stage>(node), T
   fun initOwner(owner: WindowWrapper<*>?) = node.initOwner(owner?.node)
   fun initModality(m: Modality) = node.initModality(m)
 
-  var isIconified
-	get() = node.isIconified
-	set(value) {
-	  node.isIconified = value
-	}
 
-  fun iconifiedProperty(): ReadOnlyBooleanProperty = node.iconifiedProperty()
+
+  val iconifiedProperty by lazy { node.iconifiedProperty().toNonNullableROProp() }
+  val isIconified by iconifiedProperty
+
+  fun makeIconinfied() {
+	node.isIconified = true
+  }
 
 
   fun show() = node.show()
