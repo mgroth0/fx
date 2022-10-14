@@ -9,7 +9,7 @@ import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.hurricanefx.eye.wrapper.obs.collect.createMutableWrapper
 import matt.obs.col.olist.mappedlist.toSyncedList
 
-open class TreeItemWrapper<T: Any>(node: TreeItem<T>): SingularEventTargetWrapper<TreeItem<T>>(node) {
+open class TreeItemWrapper<T: Any>(node: TreeItem<T> = TreeItem()): SingularEventTargetWrapper<TreeItem<T>>(node) {
   constructor(item: T): this(TreeItem(item))
 
   val value by node::value

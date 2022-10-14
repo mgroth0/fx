@@ -25,6 +25,8 @@ import matt.fx.control.wrapper.control.tree.TreeViewWrapper
 import matt.fx.control.wrapper.control.tree.like.TreeLikeWrapper
 import matt.fx.control.wrapper.control.tree.like.populateTree
 import matt.fx.control.wrapper.control.treetable.TreeTableViewWrapper
+import matt.fx.control.wrapper.treeitem.TreeItemWrapper
+import matt.fx.control.wrapper.wrapped.wrapped
 import matt.fx.fxauto.actionitem
 import matt.fx.fxauto.fxActions
 import matt.fx.graphics.icon.view
@@ -301,9 +303,9 @@ private fun TreeLikeWrapper<*, MFile>.setupContent(
   rootFiles: BasicObservableListImpl<MFile>,
   strategy: FileTreePopulationStrategy,
 ) {
-  root = TreeItem()
-  root!!.children.createMutableWrapper().bind(rootFiles) {
-	FileTreeItem(it)
+  root = TreeItemWrapper()
+  root!!.children.bind(rootFiles) {
+	FileTreeItem(it).wrapped()
   }
   isShowRoot = false
   setupPopulating(strategy)
@@ -311,7 +313,7 @@ private fun TreeLikeWrapper<*, MFile>.setupContent(
 
 private fun TreeLikeWrapper<*, MFile>.rePop() {
   root!!.children.forEach { child ->
-	populateTree(child, { FileTreeItem(it) }) { item ->
+	populateTree(child, { FileTreeItem(it).wrapped() }) { item ->
 	  val cs = item.value.childs()
 	  taball("cs of ${item.value}", cs)
 	  cs
