@@ -1,8 +1,5 @@
 package matt.fx.control.wrapper.control.slider
 
-import javafx.beans.property.BooleanProperty
-import javafx.beans.property.DoubleProperty
-import javafx.beans.property.IntegerProperty
 import javafx.geometry.Orientation
 import javafx.scene.control.Slider
 import matt.fx.control.wrapper.control.ControlWrapperImpl
@@ -37,6 +34,7 @@ class SliderWrapper(
 ): ControlWrapperImpl<Slider>(node) {
 
 
+
   var max
 	get() = node.max
 	set(value) {
@@ -63,57 +61,32 @@ class SliderWrapper(
 
   val valueProperty by lazy { node.valueProperty().toNonNullableProp().cast<Double>() }
 
-  var valueChanging
-	get() = node.isValueChanging
-	set(value) {
-	  node.isValueChanging = value
-	}
+
 
   val valueChangingProperty by lazy { node.valueChangingProperty().toNonNullableProp() }
+  var valueChanging by valueChangingProperty
 
-  var isSnapToTicks
-	get() = node.isSnapToTicks
-	set(value) {
-	  node.isSnapToTicks = value
-	}
+
 
   val snapToTicksProperty by lazy { node.snapToTicksProperty().toNonNullableProp() }
+  var isSnapToTicks by snapToTicksProperty
 
 
-  var isShowTickMarks
-	get() = node.isShowTickMarks
-	set(value) {
-	  node.isShowTickMarks = value
-	}
+
 
   val showTickMarksProperty by lazy { node.showTickMarksProperty().toNonNullableProp() }
+  var isShowTickMarks by showTickMarksProperty
 
 
-  var isShowTickLabels
-	get() = node.isShowTickLabels
-	set(value) {
-	  node.isShowTickLabels = value
-	}
 
   val showTickLabelsProperty by lazy { node.showTickLabelsProperty().toNonNullableProp() }
-
-
-  var majorTickUnit
-	get() = node.majorTickUnit
-	set(value) {
-	  node.majorTickUnit = value
-	}
+  var isShowTickLabels by showTickLabelsProperty
 
   val majorTickUnitProperty by lazy { node.majorTickUnitProperty().toNonNullableProp() }
-
-
-  var minorTickCount
-	get() = node.minorTickCount
-	set(value) {
-	  node.minorTickCount = value
-	}
+  var majorTickUnit by majorTickUnitProperty
 
   val minorTickCountProperty by lazy { node.minorTickCountProperty().toNonNullableProp() }
+  var minorTickCount by minorTickCountProperty
   override fun addChild(child: NodeWrapper, index: Int?) {
 	TODO("Not yet implemented")
   }
