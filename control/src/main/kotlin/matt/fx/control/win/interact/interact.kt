@@ -394,9 +394,9 @@ fun MFile.openImageInWindow() {
   AnchorPaneWrapperImpl<NodeWrapper>(ImageViewWrapper(this@openImageInWindow.toURI().toString()).apply {
 	isPreserveRatio = true
 	runLater {
-	  fitHeightProperty.bind(scene!!.window.heightProperty().toNonNullableROProp().cast())
-	  fitWidthProperty.bind(scene!!.window.widthProperty().toNonNullableROProp().cast())
-	  this.setOnDoubleClick { (scene!!.window as Stage).close() }
+	  fitHeightProperty.bind(scene!!.window!!.heightProperty.cast())
+	  fitWidthProperty.bind(scene!!.window!!.widthProperty.cast())
+	  this.setOnDoubleClick { (scene!!.window as StageWrapper).close() }
 	}
   }).openInNewWindow()
 }
