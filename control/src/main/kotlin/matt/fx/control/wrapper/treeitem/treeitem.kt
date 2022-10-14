@@ -7,6 +7,7 @@ import matt.fx.graphics.service.uncheckedWrapperConverter
 import matt.fx.graphics.wrapper.SingularEventTargetWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.hurricanefx.eye.wrapper.obs.collect.createMutableWrapper
+import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.obs.col.olist.mappedlist.toSyncedList
 
 open class TreeItemWrapper<T: Any>(node: TreeItem<T> = TreeItem()): SingularEventTargetWrapper<TreeItem<T>>(node) {
@@ -29,11 +30,8 @@ open class TreeItemWrapper<T: Any>(node: TreeItem<T> = TreeItem()): SingularEven
 	TODO("Not yet implemented")
   }
 
-  var isExpanded
-	get() = node.isExpanded
-	set(value) {
-	  node.isExpanded = value
-	}
+  val expandedProperty by lazy {node.expandedProperty().toNonNullableProp()}
+  var isExpanded by expandedProperty
   val children by lazy {
 	node.children.createMutableWrapper().toSyncedList(uncheckedWrapperConverter<TreeItem<T>, TreeItemWrapper<T>>())
   }

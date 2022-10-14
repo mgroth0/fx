@@ -47,6 +47,7 @@ import matt.log.taball
 import matt.log.todo.todo
 import matt.obs.col.olist.BasicObservableListImpl
 import matt.obs.col.olist.toBasicObservableList
+import matt.obs.listen.OldAndNewListener
 import matt.obs.math.double.op.div
 import matt.obs.prop.BindableProperty
 import matt.time.dur.sec
@@ -60,11 +61,11 @@ fun fileTreeAndViewerPane(
   alignment = CENTER_LEFT
   val treeTableView = fileTableTree(rootFile).apply {
 	prefHeightProperty.value = HEIGHT
-	maxWidthProperty.bind(hBox.widthProperty / 2.0)
+	maxWidthProperty.bind(hBox.widthProperty/2.0)
 	hgrow = ALWAYS
   }
   val viewBox = vbox<NodeWrapper> {
-	prefWidthProperty.bind(hBox.widthProperty / 2.0) /*less aggressive to solve these issues?*/
+	prefWidthProperty.bind(hBox.widthProperty/2.0) /*less aggressive to solve these issues?*/
 	prefHeightProperty.bind(hBox.heightProperty)
 	hgrow = ALWAYS
   }
@@ -353,26 +354,26 @@ private fun MFile.childs() = listFilesAsList()
 
 private val FILE_SORT_RULE = compareBy<MFile> { !it.isDirectory }.then(compareBy { it.name })
 private val FILE_SORT_RULE_ITEMS =
-  compareBy<TreeItem<MFile>> { !it.value.isDirectory }.then(compareBy { it.value.name })
+  compareBy<TreeItemWrapper<MFile>> { !it.value.isDirectory }.then(compareBy { it.value.name })
 
 enum class FileTreePopulationStrategy {
   AUTOMATIC, EFFICIENT
 }
 
-private class FileTreeItem(file: MFile): TreeItem<MFile>(file) {
+private class FileTreeItem(file: MFile): TreeItemWrapper<MFile>(file) {
   init {
-	expandedProperty().addListener { _, o, n ->
+	expandedProperty.addListener(OldAndNewListener { o, n ->
 	  if (o != n && !n) {
-		(this as TreeItem<MFile>).recurse { it.children }.forEach { it.isExpanded = false }
+		(this@FileTreeItem as TreeItemWrapper<MFile>).recurse { it.children }.forEach { it.isExpanded = false }
 	  }
-	}
+	})
   }
 
   fun refreshChilds() {
 	//	println("refreshing childs of ${value}")
 	val childs = value.childs() ?: listOf()
 	//	taball("childs", childs)
-	children.removeIf { it.value !in childs }
+	children.removeAll { it.value !in childs }
 	childs.filter { it !in children.map { it.value } }.forEach {
 	  children.add(FileTreeItem(it))
 	}
