@@ -6,7 +6,7 @@ import matt.lang.err
 import matt.lang.setAll
 
 fun NodeWrapper.setOnFocusLost(op: ()->Unit) {
-  focusedProperty().onChange { it: Boolean? ->
+  focusedProperty.onChange { it: Boolean? ->
 	if (it == null) err("here it is")
 	if (!it) {
 	  op()
@@ -15,7 +15,7 @@ fun NodeWrapper.setOnFocusLost(op: ()->Unit) {
 }
 
 fun NodeWrapper.setOnFocusGained(op: ()->Unit) {
-  focusedProperty().onChange { it: Boolean? ->
+  focusedProperty.onChange { it: Boolean? ->
 	if (it == null) err("here it is")
 	if (it) {
 	  op()
