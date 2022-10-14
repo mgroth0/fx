@@ -16,6 +16,7 @@ import matt.fx.graphics.wrapper.pane.hbox.HBoxWrapperImpl
 import matt.obs.bind.binding
 import matt.obs.bindings.str.ObsS
 import matt.obs.bindings.str.plus
+import matt.obs.listen.OldAndNewListener
 import matt.obs.math.double.op.div
 import matt.obs.prop.BindableProperty
 import matt.obs.prop.MObservableROValBase
@@ -26,22 +27,19 @@ import kotlin.reflect.KFunction
 import kotlin.reflect.KProperty
 
 
-@ExperimentalContracts
-class ProcessInspectPane(initialValue: Process?): HBoxWrapperImpl<NodeWrapper>() {
-  val procProp = SimpleObjectProperty<Process>(initialValue).apply {
-	addListener { _, oldValue, newValue ->
+@ExperimentalContracts class ProcessInspectPane(initialValue: Process?): HBoxWrapperImpl<NodeWrapper>() {
+  val procProp = VarProp<Process?>(initialValue).apply {
+	addListener(OldAndNewListener { oldValue, newValue ->
 	  if (newValue != oldValue) {
 		update(newValue)
 	  }
-	}
+
+	})
   }
   private var propLabel: PropListLabel<ProcessOrHandleWrapper> = PropListLabel(
-	if (initialValue != null) ProcessOrHandleWrapper(p = initialValue) else null,
-	"pid" to ProcessOrHandleWrapper::pid,
-	"isAlive" to ProcessOrHandleWrapper::aliveProp,
-	"start time" to ProcessOrHandleWrapper::startInstant,
-	"command" to ProcessOrHandleWrapper::command,
-	"matt.kjlib.shell.top.arguments" to ProcessOrHandleWrapper::arguments,
+	if (initialValue != null) ProcessOrHandleWrapper(p = initialValue) else null, "pid" to ProcessOrHandleWrapper::pid,
+	"isAlive" to ProcessOrHandleWrapper::aliveProp, "start time" to ProcessOrHandleWrapper::startInstant,
+	"command" to ProcessOrHandleWrapper::command, "matt.kjlib.shell.top.arguments" to ProcessOrHandleWrapper::arguments,
 	"matt.kjlib.shell.top.commandLine" to ProcessOrHandleWrapper::commandLine
   )
 
@@ -79,7 +77,7 @@ class ProcessInspectPane(initialValue: Process?): HBoxWrapperImpl<NodeWrapper>()
 
 		selectionModel.selectedItemProperty.onChange {
 
-		  this@ProcessInspectPane.propLabel.oProp.set(it?.value)
+		  this@ProcessInspectPane.propLabel.oProp v (it?.value)
 		}
 		root = TreeItemWrapper(ProcessOrHandleWrapper(p))
 		root!!.isExpanded = true
@@ -92,11 +90,9 @@ class ProcessInspectPane(initialValue: Process?): HBoxWrapperImpl<NodeWrapper>()
 }
 
 private class PropListLabel<T>(
-  initialValue: T? = null,
-  private vararg val props: Pair<String, KAnnotatedElement>,
-  op: LabelWrapper.()->Unit = {}
+  initialValue: T? = null, private vararg val props: Pair<String, KAnnotatedElement>, op: LabelWrapper.()->Unit = {}
 ): LabelWrapper() {
-  val oProp = VarProp<T>(initialValue).apply {
+  val oProp = VarProp<T?>(initialValue).apply {
 	onChange {
 	  update(it)
 	}
@@ -108,7 +104,7 @@ private class PropListLabel<T>(
   }
 
   fun refresh() {
-	update(oProp.get())
+	update(oProp.value)
   }
 
   private fun update(o: T?) {
@@ -137,9 +133,7 @@ fun userString(o: Any?): String {
   return when (o) {
 	null        -> "null"
 	is Array<*> -> o.joinToString(
-	  prefix = "[",
-	  postfix = "]",
-	  separator = ","
+	  prefix = "[", postfix = "]", separator = ","
 	)
 
 	else        -> o.toString()
