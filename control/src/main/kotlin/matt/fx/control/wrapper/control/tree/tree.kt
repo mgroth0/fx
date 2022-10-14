@@ -24,7 +24,7 @@ import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
 
 
-fun <T> ET.treeview(root: TreeItem<T>? = null, op: TreeViewWrapper<T>.()->Unit = {}) =
+fun <T> ET.treeview(root: TreeItemWrapper<T>? = null, op: TreeViewWrapper<T>.()->Unit = {}) =
   TreeViewWrapper<T>().attachTo(this, op) {
 	if (root != null) it.root = root
   }
@@ -42,10 +42,11 @@ class TreeViewWrapper<T>(node: TreeView<T> = TreeView(), op: TreeViewWrapper<T>.
   fun editableProperty(): BooleanProperty = node.editableProperty()
 
 
-  override val cellFactoryProperty by lazy { node.cellFactoryProperty().toNonNullableProp() }
+  final override val cellFactoryProperty by lazy { node.cellFactoryProperty().toNonNullableProp() }
 
 
-  override val rootProperty by lazy {node.rootProperty().toNullableProp().proxy(uncheckedNullableWrapperConverter<TreeItem<T>,TreeItemWrapper<T>>())}
+  final override val rootProperty by lazy {node.rootProperty().toNullableProp().proxy(uncheckedNullableWrapperConverter<TreeItem<T>,TreeItemWrapper<T>>())}
+
   override var isShowRoot: Boolean
 	get() = node.isShowRoot
 	set(value) {

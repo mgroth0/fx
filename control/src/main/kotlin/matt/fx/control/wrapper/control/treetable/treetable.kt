@@ -4,6 +4,7 @@ import javafx.beans.property.BooleanProperty
 import javafx.beans.property.Property
 import javafx.beans.value.ObservableValue
 import javafx.collections.ObservableList
+import javafx.scene.control.SelectionMode
 import javafx.scene.control.TableColumn
 import javafx.scene.control.TreeItem
 import javafx.scene.control.TreeTableColumn
@@ -24,6 +25,7 @@ import matt.fx.control.wrapper.control.treecol.TreeTableColumnWrapper
 import matt.fx.control.wrapper.selects.wrap
 import matt.fx.control.wrapper.treeitem.TreeItemWrapper
 import matt.fx.control.wrapper.wrapped.wrapped
+import matt.fx.graphics.service.uncheckedNullableWrapperConverter
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
@@ -47,7 +49,7 @@ val <T> TreeTableViewWrapper<T & Any>.selectedColumn: TreeTableColumn<T, *>?
 //  get() = selectedColumn?.getCellObservableValue(selectionModel.selectedItem)?.value
 
 fun <T> ET.treetableview(
-  root: TreeItem<T & Any>? = null,
+  root: TreeItemWrapper<T & Any>? = null,
   op: TreeTableViewWrapper<T & Any>.()->Unit = {}
 ) =
   TreeTableViewWrapper<T & Any>().attachTo(this, op) {
@@ -65,7 +67,10 @@ class TreeTableViewWrapper<E: Any>(
 
   val sortOrder: ObservableList<TreeTableColumn<E, *>> get() = node.sortOrder
 
-  override val rootProperty by lazy { node.rootProperty().toNullableProp() }
+  final override val rootProperty by lazy {node.rootProperty().toNullableProp().proxy(
+	uncheckedNullableWrapperConverter<TreeItem<E>,TreeItemWrapper<E>>()
+  )}
+
   override var isShowRoot: Boolean
 	get() = node.isShowRoot
 	set(value) {
@@ -284,8 +289,8 @@ fun <T> TreeTableViewWrapper<T & Any>.onUserSelect(clickCount: Int = 2, action: 
 
 
 fun <T> TreeTableViewWrapper<T & Any>.populate(
-  itemFactory: (T)->TreeItem<T & Any> = { TreeItem(it) },
-  childFactory: (TreeItem<T & Any>)->Iterable<T & Any>?
+  itemFactory: (T)->TreeItemWrapper<T & Any> = { TreeItemWrapper(it) },
+  childFactory: (TreeItemWrapper<T & Any>)->Iterable<T & Any>?
 ) = root?.go {
   populateTree(it, itemFactory, childFactory)
 }
