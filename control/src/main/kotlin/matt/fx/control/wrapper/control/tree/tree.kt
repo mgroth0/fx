@@ -13,10 +13,15 @@ import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.control.wrapper.control.tree.like.TreeLikeWrapper
 import matt.fx.control.wrapper.control.tree.like.populateTree
 import matt.fx.control.wrapper.selects.wrap
+import matt.fx.control.wrapper.treeitem.TreeItemWrapper
+import matt.fx.control.wrapper.wrapped.wrapped
+import matt.fx.graphics.service.uncheckedNullableWrapperConverter
+import matt.fx.graphics.service.uncheckedWrapperConverter
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
 
 
 fun <T> ET.treeview(root: TreeItem<T>? = null, op: TreeViewWrapper<T>.()->Unit = {}) =
@@ -40,11 +45,7 @@ class TreeViewWrapper<T>(node: TreeView<T> = TreeView(), op: TreeViewWrapper<T>.
   override val cellFactoryProperty by lazy { node.cellFactoryProperty().toNonNullableProp() }
 
 
-  override var root: TreeItem<T>?
-	get() = node.root
-	set(value) {
-	  node.root = value
-	}
+  override val rootProperty by lazy {node.rootProperty().toNullableProp().proxy(uncheckedNullableWrapperConverter<TreeItem<T>,TreeItemWrapper<T>>())}
   override var isShowRoot: Boolean
 	get() = node.isShowRoot
 	set(value) {
@@ -86,8 +87,8 @@ fun <T> TreeViewWrapper<T>.bindSelected(property: Property<T>) {
 fun <T> TreeViewWrapper<T>.selectFirst() = selectionModel.selectFirst()
 
 fun <T> TreeViewWrapper<T>.populate(
-  itemFactory: (T) -> TreeItem<T> = { TreeItem(it) },
-  childFactory: (TreeItem<T>) -> Iterable<T>?
+  itemFactory: (T)->TreeItemWrapper<T> = { TreeItemWrapper(it) },
+  childFactory: (TreeItemWrapper<T>)->Iterable<T>?
 ) =
   populateTree(root, itemFactory, childFactory)
 

@@ -22,12 +22,15 @@ import matt.fx.control.wrapper.control.tree.like.TreeLikeWrapper
 import matt.fx.control.wrapper.control.tree.like.populateTree
 import matt.fx.control.wrapper.control.treecol.TreeTableColumnWrapper
 import matt.fx.control.wrapper.selects.wrap
+import matt.fx.control.wrapper.treeitem.TreeItemWrapper
 import matt.fx.control.wrapper.wrapped.wrapped
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
+import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
 import matt.lang.go
 import matt.obs.prop.ObsVal
+import matt.obs.prop.Var
 import matt.obs.prop.VarProp
 import matt.obs.prop.toVarProp
 import kotlin.reflect.KFunction
@@ -62,11 +65,7 @@ class TreeTableViewWrapper<E: Any>(
 
   val sortOrder: ObservableList<TreeTableColumn<E, *>> get() = node.sortOrder
 
-  override var root: TreeItem<E>?
-	get() = node.root
-	set(value) {
-	  node.root = value
-	}
+  override val rootProperty by lazy { node.rootProperty().toNullableProp() }
   override var isShowRoot: Boolean
 	get() = node.isShowRoot
 	set(value) {
@@ -103,11 +102,11 @@ class TreeTableViewWrapper<E: Any>(
 	val column = TreeTableColumnWrapper<E, P>(title)
 	column.cellValueFactory = Callback {
 	  prop.call(it.value.value).toVarProp()
-//	  it.value.value?.let {
-//		observable(
-//		  it, prop
-//		)
-//	  }
+	  //	  it.value.value?.let {
+	  //		observable(
+	  //		  it, prop
+	  //		)
+	  //	  }
 	} /*Matt: added null safety here way later because I ran into a NPE here... thought I went years without this null safety first so maybe the null was my fault?*/
 	addColumnInternal(column)
 	return column.also(op)
@@ -122,11 +121,11 @@ class TreeTableViewWrapper<E: Any>(
 	val column = TreeTableColumnWrapper<E, P>(title)
 	column.cellValueFactory = Callback {
 	  prop.call(it.value.value).toVarProp()
-//	  it.value.value?.let {
-//		observable(
-//		  it, prop
-//		)
-//	  }
+	  //	  it.value.value?.let {
+	  //		observable(
+	  //		  it, prop
+	  //		)
+	  //	  }
 	} /*Matt: added null safety here way later because I ran into a NPE here... thought I went years without this null safety first so maybe the null was my fault?*/
 	addColumnInternal(column)
 	return column.also(op)
@@ -188,30 +187,30 @@ class TreeTableViewWrapper<E: Any>(
   }
 
 
-//  /**
-//   * Create a matt.hurricanefx.tableview.coolColumn using the propertyName of the attribute you want shown.
-//   */
-//  fun <P> column(
-//	title: String,
-//	propertyName: String,
-//	op: TreeTableColumnWrapper<E, P>.()->Unit = {}
-//  ): TreeTableColumnWrapper<E, P> {
-//	val column = TreeTableColumnWrapper<E, P>(title)
-//	column.cellValueFactory = TreeItemPropertyValueFactory<E, P>(propertyName)
-//	addColumnInternal(column)
-//	return column.also(op)
-//  }
+  //  /**
+  //   * Create a matt.hurricanefx.tableview.coolColumn using the propertyName of the attribute you want shown.
+  //   */
+  //  fun <P> column(
+  //	title: String,
+  //	propertyName: String,
+  //	op: TreeTableColumnWrapper<E, P>.()->Unit = {}
+  //  ): TreeTableColumnWrapper<E, P> {
+  //	val column = TreeTableColumnWrapper<E, P>(title)
+  //	column.cellValueFactory = TreeItemPropertyValueFactory<E, P>(propertyName)
+  //	addColumnInternal(column)
+  //	return column.also(op)
+  //  }
 
 
-//  /**
-//   * Create a matt.hurricanefx.tableview.coolColumn using the getter of the attribute you want shown.
-//   */
-//  @JvmName("pojoColumn")
-//  fun <P> column(title: String, getter: KFunction<P>): TreeTableColumnWrapper<E, P> {
-//	val startIndex = if (getter.name.startsWith("is") && getter.name[2].isUpperCase()) 2 else 3
-//	val propName = getter.name.substring(startIndex).decap()
-//	return this.column(title, propName)
-//  }
+  //  /**
+  //   * Create a matt.hurricanefx.tableview.coolColumn using the getter of the attribute you want shown.
+  //   */
+  //  @JvmName("pojoColumn")
+  //  fun <P> column(title: String, getter: KFunction<P>): TreeTableColumnWrapper<E, P> {
+  //	val startIndex = if (getter.name.startsWith("is") && getter.name[2].isUpperCase()) 2 else 3
+  //	val propName = getter.name.substring(startIndex).decap()
+  //	return this.column(title, propName)
+  //  }
 
 
   fun <P> addColumnInternal(column: TreeTableColumnWrapper<E, P>, index: Int? = null) {
@@ -290,7 +289,6 @@ fun <T> TreeTableViewWrapper<T & Any>.populate(
 ) = root?.go {
   populateTree(it, itemFactory, childFactory)
 }
-
 
 
 fun TreeTableViewWrapper<*>.editableWhen(predicate: ObservableValue<Boolean>) = apply {

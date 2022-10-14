@@ -10,6 +10,8 @@ import matt.hurricanefx.eye.wrapper.obs.collect.createMutableWrapper
 import matt.obs.col.olist.mappedlist.toSyncedList
 
 open class TreeItemWrapper<T>(node: TreeItem<T>): SingularEventTargetWrapper<TreeItem<T>>(node) {
+  constructor(item: T): this(TreeItem(item))
+
   override val properties: ObservableMap<Any, Any?>
 	get() = TODO("Not yet implemented")
 

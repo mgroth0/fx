@@ -487,7 +487,7 @@ fun <T> TableViewWrapper<T & Any>.onUserDelete(action: (T)->Unit) {
 
 
 fun <T> TableViewWrapper<T & Any>.regainFocusAfterEdit() = apply {
-  editingCellProperty().onChange {
+  editingCellProperty.onChange {
 	if (it == null)
 	  requestFocus()
   }
