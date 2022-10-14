@@ -489,7 +489,7 @@ abstract class NodeWrapperImpl<out N: Node>(
 	node.sceneProperty().toNullableROProp().binding<Scene?,SceneWrapper<*>?>(
 	  uncheckedNullableWrapperConverter<Scene,SceneWrapper<*>>()
 	)
-	/*BindableProperty<SceneWrapper<*>?>(null)*/
+	BindableProperty<SceneWrapper<*>?>(null)
   }
   override val scene by sceneProperty
   override val layoutBoundsProperty by lazy { node.layoutBoundsProperty().toNonNullableROProp() }
