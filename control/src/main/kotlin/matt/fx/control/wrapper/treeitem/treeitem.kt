@@ -3,8 +3,11 @@ package matt.fx.control.wrapper.treeitem
 import javafx.collections.ObservableMap
 import javafx.scene.control.CheckBoxTreeItem
 import javafx.scene.control.TreeItem
+import matt.fx.graphics.service.uncheckedWrapperConverter
 import matt.fx.graphics.wrapper.SingularEventTargetWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
+import matt.hurricanefx.eye.wrapper.obs.collect.createMutableWrapper
+import matt.obs.col.olist.mappedlist.toSyncedList
 
 open class TreeItemWrapper<T>(node: TreeItem<T>): SingularEventTargetWrapper<TreeItem<T>>(node) {
   override val properties: ObservableMap<Any, Any?>
@@ -22,12 +25,14 @@ open class TreeItemWrapper<T>(node: TreeItem<T>): SingularEventTargetWrapper<Tre
 	TODO("Not yet implemented")
   }
 
-  var isExpanded get() = node.isExpanded
+  var isExpanded
+	get() = node.isExpanded
 	set(value) {
 	  node.isExpanded = value
 	}
-  val children by node::children
-
+  val children by lazy {
+	node.children.createMutableWrapper().toSyncedList(uncheckedWrapperConverter<TreeItem<T>, TreeItemWrapper<T>>())
+  }
 
 
   // -- TreeItem helpers
@@ -37,7 +42,7 @@ open class TreeItemWrapper<T>(node: TreeItem<T>): SingularEventTargetWrapper<Tre
   fun expandTo(depth: Int) {
 	if (depth > 0) {
 	  this.isExpanded = true
-	  this.children.forEach { it.wrapped().expandTo(depth - 1) }
+	  this.children.forEach { it.expandTo(depth - 1) }
 	}
   }
 
@@ -52,7 +57,7 @@ open class TreeItemWrapper<T>(node: TreeItem<T>): SingularEventTargetWrapper<Tre
 
   fun collapseAll() {
 	this.isExpanded = false
-	this.children.forEach { it.wrapped().collapseAll() }
+	this.children.forEach { it.collapseAll() }
   }
 }
 

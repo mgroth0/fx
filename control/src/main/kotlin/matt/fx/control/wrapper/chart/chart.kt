@@ -22,7 +22,7 @@ open class ChartWrapper<N: Chart>(node: N): RegionWrapperImpl<N, NodeWrapper>(no
   fun titleProperty(): StringProperty = node.titleProperty()
   override fun addChild(child: NodeWrapper, index: Int?) = NOT_IMPLEMENTED
 
-  val animatedProperty: BooleanProperty get() = node.animatedProperty()
+  val animatedProperty by lazy { node.animatedProperty().toNonNullableProp() }
   var animated by animatedProperty
 
   val legendVisibleProperty by lazy { node.legendVisibleProperty().toNonNullableProp() }

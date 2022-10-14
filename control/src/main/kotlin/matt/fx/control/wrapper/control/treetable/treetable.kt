@@ -297,6 +297,6 @@ fun TreeTableViewWrapper<*>.editableWhen(predicate: ObservableValue<Boolean>) = 
   editableProperty().bind(predicate)
 }
 
-fun <T> TreeTableViewWrapper<T>.multiSelect(enable: Boolean = true) {
+fun <T: Any> TreeTableViewWrapper<T>.multiSelect(enable: Boolean = true) {
   selectionModel.selectionMode = if (enable) SelectionMode.MULTIPLE else SelectionMode.SINGLE
 }

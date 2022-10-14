@@ -6,6 +6,7 @@ import javafx.scene.control.TreeItem
 import javafx.scene.layout.Region
 import matt.fx.control.wrapper.selects.MultiSelectWrap
 import matt.fx.control.wrapper.selects.SelectingControl
+import matt.fx.control.wrapper.treeitem.TreeItemWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.region.RegionWrapper
 import matt.fx.graphics.wrapper.sizeman.SizeManaged
@@ -40,7 +41,7 @@ interface TreeLikeWrapper<N: Region, T>: RegionWrapper<NodeWrapper>, SelectingCo
  * simply wraps the given T in a TreeItem, but you can override it to add icons etc. Lastly, the populateTree
  * function is called for each of the generated child items.
  */
-fun <T> populateTree(item: TreeItem<T>, itemFactory: (T)->TreeItem<T>, childFactory: (TreeItem<T>)->Iterable<T>?) {
+fun <T> populateTree(item: TreeItemWrapper<T>, itemFactory: (T)->TreeItemWrapper<T>, childFactory: (TreeItemWrapper<T>)->Iterable<T>?) {
   val children = childFactory.invoke(item)
 
   children?.map { itemFactory(it) }?.apply {

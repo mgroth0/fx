@@ -148,7 +148,7 @@ open class TableViewWrapper<E: Any>(
   fun scrollTo(i: Int) = node.scrollTo(i)
   fun scrollTo(e: E) = node.scrollTo(e)
   fun sort() = node.sort()
-  fun editingCellProperty(): ReadOnlyObjectProperty<TablePosition<E, *>> = node.editingCellProperty()
+  val editingCellProperty by lazy { node.editingCellProperty().toNullableROProp() }
 
   /**
    * Create a coolColumn with a value factory that extracts the value from the given mutable

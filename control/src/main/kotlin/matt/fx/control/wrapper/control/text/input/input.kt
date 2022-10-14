@@ -68,7 +68,7 @@ open class TextInputControlWrapper<N: TextInputControl>(node: N): ControlWrapper
   /**
    * Remove leading or trailing whitespace from a Text Input Control.
    */
-  fun trimWhitespace() = focusedProperty().onChange { focused: Boolean? ->
+  fun trimWhitespace() = focusedProperty.onChange { focused: Boolean? ->
 	if (focused == null) err("here it is")
 	if (!focused) text = text.trim()
   }
