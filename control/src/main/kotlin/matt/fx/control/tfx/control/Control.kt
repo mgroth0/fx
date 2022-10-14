@@ -12,7 +12,8 @@ import javafx.scene.Node
 import javafx.scene.control.ToggleGroup
 import matt.fx.control.wrapper.control.value.constval.HasConstValue
 import matt.fx.control.wrapper.wrapped.wrapped
-import matt.hurricanefx.eye.lib.onChange
+import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
+import matt.hurricanefx.eye.wrapper.obs.obsval.toNullableROProp
 import matt.obs.prop.Var
 
 
@@ -42,10 +43,10 @@ private object SEL_VAL_PROP
 fun <T> ToggleGroup.selectedValueProperty(): ObjectProperty<T> =
   properties.getOrPut(SEL_VAL_PROP) {
 	SimpleObjectProperty<T>(((selectedToggleProperty().value as? Node)?.wrapped() as? HasConstValue<T>)?.value).apply {
-	  selectedToggleProperty().onChange {
+	  selectedToggleProperty().toNullableROProp().onChange {
 		value = ((it as? Node)?.wrapped() as? HasConstValue<T>)?.value
 	  }
-	  onChange { selectedValue ->
+	  toNullableProp().onChange { selectedValue ->
 		selectToggle(toggles.find {
 		  ((it as Node).wrapped() as HasConstValue<T>).value == selectedValue
 		})

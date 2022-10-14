@@ -1,13 +1,11 @@
 package matt.fx.graphics.wrapper.stage
 
 import javafx.beans.property.ReadOnlyBooleanProperty
-import javafx.event.Event
-import javafx.event.EventHandler
-import javafx.event.EventType
 import javafx.stage.Modality
 import javafx.stage.Stage
 import javafx.stage.StageStyle
 import javafx.stage.Window
+import matt.fx.graphics.service.wrapped
 import matt.fx.graphics.wrapper.inter.titled.Titled
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.scene.SceneWrapper
@@ -15,7 +13,6 @@ import matt.fx.graphics.wrapper.window.WindowWrapper
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.NullableFXBackedBindableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
-import matt.hurricanefx.eye.wrapper.obs.obsval.toNullableROProp
 import matt.log.warn.warn
 
 open class StageWrapper(override val node: Stage): WindowWrapper<Stage>(node), Titled {
@@ -26,7 +23,7 @@ open class StageWrapper(override val node: Stage): WindowWrapper<Stage>(node), T
 
   fun showAndWait() = node.showAndWait()
 
-  val owner: Window? get() = node.owner
+  val owner: WindowWrapper<*>? get() = node.owner?.wrapped() as? WindowWrapper<*>
   fun initOwner(owner: Window?) = node.initOwner(owner)
   fun initOwner(owner: WindowWrapper<*>?) = node.initOwner(owner?.node)
   fun initModality(m: Modality) = node.initModality(m)

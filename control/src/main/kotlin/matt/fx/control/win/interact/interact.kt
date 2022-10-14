@@ -49,8 +49,6 @@ import matt.fx.graphics.wrapper.region.border.FXBorder
 import matt.fx.graphics.wrapper.region.border.solidBorder
 import matt.fx.graphics.wrapper.stage.StageWrapper
 import matt.fx.graphics.wrapper.window.WindowWrapper
-import matt.hurricanefx.eye.lib.onChange
-import matt.hurricanefx.eye.mtofx.createROFXPropWrapper
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
 import matt.json.prim.isValidJson
 import matt.lang.noExceptions
@@ -59,6 +57,7 @@ import matt.obs.bind.binding
 import matt.obs.bindings.bool.ObsB
 import matt.obs.bindings.bool.not
 import matt.obs.prop.BindableProperty
+import matt.obs.prop.ObsVal
 import java.net.URI
 import java.util.WeakHashMap
 import kotlin.jvm.optionals.getOrNull
@@ -113,18 +112,19 @@ class MDialog<R> internal constructor(): VBoxWrapperImpl<NodeWrapper>() {
   }
 }
 
-val aXBindingStrengthener = WeakHashMap<Stage, DoubleBinding>()
-val aYBindingStrengthener = WeakHashMap<Stage, DoubleBinding>()
+val aXBindingStrengthener = WeakHashMap<Stage, ObsVal<Double>>()
+val aYBindingStrengthener = WeakHashMap<Stage, ObsVal<Double>>()
 fun StageWrapper.bindXYToOwnerCenter() {
+
   require(owner != null) {
 	"must use initOwner before bindXYToOwnerCenter"
   }
-  val xBinding =
-	owner!!.xProperty().toNonNullableROProp().doubleBinding(owner!!.widthProperty(), this.widthProperty.createROFXPropWrapper()) {
-	  (owner!!.x + (owner!!.width/2)) - width/2
-	}
-  val yBinding =
-	owner!!.yProperty().toNonNullableROProp().doubleBinding(owner!!.heightProperty(), this.heightProperty.createROFXPropWrapper()) {
+
+  val xBinding = owner!!.xProperty.binding(owner!!.widthProperty,widthProperty) {
+	(owner!!.x + (owner!!.width/2)) - width/2
+  }
+
+  val yBinding = owner!!.yProperty.binding(owner!!.heightProperty, heightProperty) {
 	  (owner!!.y + (owner!!.height/2)) - height/2
 	}
   aXBindingStrengthener[this.node] = xBinding
@@ -144,11 +144,11 @@ fun StageWrapper.bindHWToOwner() {
 	"must use initOwner before bindXYToOwnerCenter"
   }
   width = owner!!.width
-  owner!!.widthProperty().onChange {
+  owner!!.widthProperty.onChange {
 	width = it
   }
   height = owner!!.height
-  owner!!.heightProperty().onChange {
+  owner!!.heightProperty.onChange {
 	y = it
   }
 }

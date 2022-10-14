@@ -7,11 +7,14 @@ import javafx.scene.control.SelectionMode
 import javafx.scene.control.TreeItem
 import javafx.scene.control.TreeTableView
 import javafx.scene.control.TreeView
+import matt.fx.control.wrapper.control.tree.TreeViewWrapper
 import matt.fx.control.wrapper.control.tree.like.populateTree
-import matt.hurricanefx.eye.lib.onChange
+import matt.fx.control.wrapper.control.treetable.TreeTableViewWrapper
+import matt.fx.control.wrapper.treeitem.TreeItemWrapper
 
 
-fun <T> TreeView<T>.bindSelected(property: Property<T>) {
+fun <T> TreeViewWrapper<T>.bindSelected(property: Property<T>) {
+
     selectionModel.selectedItemProperty().onChange { property.value = it?.value }
 }
 
@@ -30,9 +33,9 @@ fun <T> TreeView<T>.bindSelected(property: Property<T>) {
  *
  * ```
  */
-fun <T> TreeView<T>.selectFirst() = selectionModel.selectFirst()
+fun <T> TreeViewWrapper<T>.selectFirst() = selectionModel.selectFirst()
 
-fun <T> TreeView<T>.populate(
+fun <T> TreeViewWrapper<T>.populate(
     itemFactory: (T) -> TreeItem<T> = { TreeItem(it) },
     childFactory: (TreeItem<T>) -> Iterable<T>?
 ) =
@@ -49,38 +52,13 @@ fun <T> TreeView<T>.populate(
  *
  * <p>Note that the returned value is a snapshot in time.
  */
-val <T> TreeView<T>.selectedValue: T?
+val <T> TreeViewWrapper<T>.selectedValue: T?
     get() = this.selectionModel.selectedItem?.value
 
-fun <T> TreeView<T>.multiSelect(enable: Boolean = true) {
+fun <T> TreeViewWrapper<T>.multiSelect(enable: Boolean = true) {
     selectionModel.selectionMode = if (enable) SelectionMode.MULTIPLE else SelectionMode.SINGLE
 }
 
-fun <T> TreeTableView<T>.multiSelect(enable: Boolean = true) {
+fun <T> TreeTableViewWrapper<T>.multiSelect(enable: Boolean = true) {
     selectionModel.selectionMode = if (enable) SelectionMode.MULTIPLE else SelectionMode.SINGLE
-}
-
-// -- TreeItem helpers
-/**
- * Expand this [TreeItem] and matt.fx.control.layout.children down to `depth`.
- */
-fun <T> TreeItem<T>.expandTo(depth: Int) {
-    if (depth > 0) {
-        this.isExpanded = true
-        this.children.forEach { it.expandTo(depth - 1) }
-    }
-}
-
-/**
- * Expand this `[TreeItem] and all it's matt.fx.control.layout.children.
- */
-fun <T> TreeItem<T>.expandAll() = expandTo(Int.MAX_VALUE)
-
-/**
- * Collapse this [TreeItem] and all it's matt.fx.control.layout.children.
- */
-
-fun <T> TreeItem<T>.collapseAll() {
-    this.isExpanded = false
-    this.children.forEach { it.collapseAll() }
 }
