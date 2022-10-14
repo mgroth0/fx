@@ -24,13 +24,13 @@ import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
 
 
-fun <T> ET.treeview(root: TreeItemWrapper<T>? = null, op: TreeViewWrapper<T>.()->Unit = {}) =
+fun <T: Any> ET.treeview(root: TreeItemWrapper<T>? = null, op: TreeViewWrapper<T>.()->Unit = {}) =
   TreeViewWrapper<T>().attachTo(this, op) {
 	if (root != null) it.root = root
   }
 
 
-class TreeViewWrapper<T>(node: TreeView<T> = TreeView(), op: TreeViewWrapper<T>.()->Unit = {}):
+class TreeViewWrapper<T: Any>(node: TreeView<T> = TreeView(), op: TreeViewWrapper<T>.()->Unit = {}):
   ControlWrapperImpl<TreeView<T>>(node),
   TreeLikeWrapper<TreeView<T>, T>,
   TreeCellFactory<TreeView<T>, T> {

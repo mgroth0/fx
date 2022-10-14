@@ -24,7 +24,7 @@ operator fun <T> TreeItem<T>.plusAssign(treeItem: TreeItem<T>) {
   this.children.add(treeItem)
 }
 
-interface TreeLikeWrapper<N: Region, T>: RegionWrapper<NodeWrapper>, SelectingControl<TreeItem<T>>, SizeManaged {
+interface TreeLikeWrapper<N: Region, T: Any>: RegionWrapper<NodeWrapper>, SelectingControl<TreeItem<T>>, SizeManaged {
 
   val rootProperty: Var<TreeItemWrapper<T>?>
   var root: TreeItemWrapper<T>?
