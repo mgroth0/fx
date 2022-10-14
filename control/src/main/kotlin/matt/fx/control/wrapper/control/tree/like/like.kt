@@ -49,7 +49,7 @@ interface TreeLikeWrapper<N: Region, T: Any>: RegionWrapper<NodeWrapper>, Select
  * simply wraps the given T in a TreeItem, but you can override it to add icons etc. Lastly, the populateTree
  * function is called for each of the generated child items.
  */
-fun <T> populateTree(
+fun <T: Any> populateTree(
   item: TreeItemWrapper<T>,
   itemFactory: (T)->TreeItemWrapper<T>,
   childFactory: (TreeItemWrapper<T>)->Iterable<T>?

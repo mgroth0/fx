@@ -65,7 +65,7 @@ class TreeViewWrapper<T: Any>(node: TreeView<T> = TreeView(), op: TreeViewWrappe
 }
 
 
-fun <T> TreeViewWrapper<T>.bindSelected(property: Property<T>) {
+fun <T: Any> TreeViewWrapper<T>.bindSelected(property: Property<T>) {
 
   selectedItemProperty.onChange { property.value = it?.value }
 }
@@ -85,9 +85,9 @@ fun <T> TreeViewWrapper<T>.bindSelected(property: Property<T>) {
  *
  * ```
  */
-fun <T> TreeViewWrapper<T>.selectFirst() = selectionModel.selectFirst()
+fun <T: Any> TreeViewWrapper<T>.selectFirst() = selectionModel.selectFirst()
 
-fun <T> TreeViewWrapper<T>.populate(
+fun <T: Any> TreeViewWrapper<T>.populate(
   itemFactory: (T)->TreeItemWrapper<T> = { TreeItemWrapper(it) },
   childFactory: (TreeItemWrapper<T>)->Iterable<T>?
 ) =
@@ -104,9 +104,9 @@ fun <T> TreeViewWrapper<T>.populate(
  *
  * <p>Note that the returned value is a snapshot in time.
  */
-val <T> TreeViewWrapper<T>.selectedValue: T?
+val <T: Any> TreeViewWrapper<T>.selectedValue: T?
   get() = this.selectionModel.selectedItem?.value
 
-fun <T> TreeViewWrapper<T>.multiSelect(enable: Boolean = true) {
+fun <T: Any> TreeViewWrapper<T>.multiSelect(enable: Boolean = true) {
   selectionModel.selectionMode = if (enable) SelectionMode.MULTIPLE else SelectionMode.SINGLE
 }
