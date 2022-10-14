@@ -2,16 +2,16 @@ package matt.fx.graphics.hotkey
 
 import javafx.application.Platform.runLater
 import javafx.event.EventHandler
-import javafx.scene.Node
-import javafx.scene.Scene
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
-import javafx.stage.Stage
 import matt.collect.itr.allUnique
 import matt.collect.itr.applyEach
 import matt.collect.itr.duplicates
 import matt.file.thismachine.thisMachine
 import matt.fx.graphics.wrapper.EventTargetWrapper
+import matt.fx.graphics.wrapper.node.NodeWrapperImpl
+import matt.fx.graphics.wrapper.scene.SceneWrapper
+import matt.fx.graphics.wrapper.stage.StageWrapper
 import matt.hotkey.Hotkey
 import matt.hotkey.HotkeyDSL
 import matt.lang.NEVER
@@ -299,17 +299,17 @@ fun EventTargetWrapper.register(
 	}
 	if (inFilter) {
 	  when (this) {
-		is Node  -> addEventFilter(KeyEvent.KEY_PRESSED, it)
-		is Scene -> addEventFilter(KeyEvent.KEY_PRESSED, it)
-		is Stage -> addEventFilter(KeyEvent.KEY_PRESSED, it)
-		else     -> NEVER
+		is NodeWrapperImpl<*> -> addEventFilter(KeyEvent.KEY_PRESSED, it)
+		is SceneWrapper<*>    -> addEventFilter(KeyEvent.KEY_PRESSED, it)
+		is StageWrapper       -> addEventFilter(KeyEvent.KEY_PRESSED, it)
+		else                  -> NEVER
 	  }
 	} else {
 	  when (this) {
-		is Node  -> addEventHandler(KeyEvent.KEY_PRESSED, it)
-		is Scene -> addEventHandler(KeyEvent.KEY_PRESSED, it)
-		is Stage -> addEventHandler(KeyEvent.KEY_PRESSED, it)
-		else     -> NEVER
+		is NodeWrapperImpl<*> -> addEventHandler(KeyEvent.KEY_PRESSED, it)
+		is SceneWrapper<*>    -> addEventHandler(KeyEvent.KEY_PRESSED, it)
+		is StageWrapper       -> addEventHandler(KeyEvent.KEY_PRESSED, it)
+		else                  -> NEVER
 	  }
 	}
   }

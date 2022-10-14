@@ -55,6 +55,21 @@ import kotlin.contracts.ExperimentalContracts
 	UP.ctrl.shift { window!!.y -= smallShift }
 	DOWN.ctrl.shift { window!!.y += smallShift }
 
+	LEFT.ctrl.meta.opt {
+	  window!!.width -= smallShift
+	}
+	RIGHT.ctrl.meta.opt {
+	  window!!.width -= smallShift
+	  window!!.x += smallShift
+	}
+	UP.ctrl.meta.opt {
+	  window!!.height -= smallShift
+	}
+	DOWN.ctrl.meta.opt {
+	  window!!.height -= smallShift
+	  window!!.y += smallShift
+	}
+
 	LEFT.ctrl.meta {
 	  window!!.width /= 2
 	}
@@ -68,6 +83,23 @@ import kotlin.contracts.ExperimentalContracts
 	DOWN.ctrl.meta {
 	  window!!.height /= 2
 	  window!!.y += window!!.height
+	}
+
+
+	LEFT.ctrl.meta.shift.opt {
+	  window!!.x -= smallShift
+	  window!!.width += smallShift
+	}
+	RIGHT.ctrl.meta.shift.opt {
+	  window!!.width += smallShift
+	}
+	UP.ctrl.meta.shift.opt {
+	  window!!.height += smallShift
+	  window!!.y -= smallShift
+	}
+	DOWN.ctrl.meta.shift.opt {
+	  window!!.height += smallShift
+
 	}
 
 	LEFT.ctrl.meta.shift {
