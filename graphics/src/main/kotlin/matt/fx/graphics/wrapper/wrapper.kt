@@ -14,6 +14,9 @@ typealias ET = EventTargetWrapper
 @FXNodeWrapperDSL interface EventTargetWrapper {
 
 
+  var hotKeyHandler: HotKeyEventHandler?
+  var hotKeyFilter: HotKeyEventHandler?
+
   val node: EventTarget
 
 
@@ -53,8 +56,8 @@ abstract class EventTargetWrapperImpl<out N: EventTarget>: EventTargetWrapper {
   abstract override val node: N
 
 
-  val hotKeyHandler: HotKeyEventHandler? = null
-  val hotKeyFilter: HotKeyEventHandler? = null
+  override var hotKeyHandler: HotKeyEventHandler? = null
+  override var hotKeyFilter: HotKeyEventHandler? = null
 
 }
 

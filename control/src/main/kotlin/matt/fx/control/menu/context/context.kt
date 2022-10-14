@@ -23,6 +23,7 @@ import matt.fx.control.wrapper.menu.item.MenuItemWrapper
 import matt.fx.control.wrapper.menu.item.SimpleMenuItem
 import matt.fx.control.wrapper.wrapped.wrapped
 import matt.fx.graphics.wrapper.EventTargetWrapper
+import matt.fx.graphics.wrapper.node.NW
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapperImpl
 import matt.fx.graphics.wrapper.node.parent.parent
@@ -61,7 +62,7 @@ class MContextMenuBuilder(
 	}
   }.also { add(it) }
 
-  fun item(s: String, g: NodeWrapperImpl<*>? = null, op: MenuItemWrapper<*>.()->Unit = {}) =
+  fun item(s: String, g: NW? = null, op: MenuItemWrapper<*>.()->Unit = {}) =
 	SimpleMenuItem(s, g?.node).apply {
 	  isMnemonicParsing = false
 	  op()
@@ -236,7 +237,7 @@ enum class EventHandlerType {
 
 
 private fun NodeWrapper.hotkeyInfoMenu() = MenuWrapper("Click For Hotkey Info").apply {
-  val node = this@hotkeyInfoMenu as NodeWrapperImpl<*>
+  val node = this@hotkeyInfoMenu
   fun addInfo(type: EventHandlerType) {
 	menu(
 	  when (type) {
@@ -245,7 +246,7 @@ private fun NodeWrapper.hotkeyInfoMenu() = MenuWrapper("Click For Hotkey Info").
 	) {
 
 
-	  (node.chain { it.parent as NodeWrapperImpl<*> } + node.scene + node.stage).forEach { subNode ->
+	  (node.chain { it.parent } + node.scene + node.stage).forEach { subNode ->
 		menu(subNode.toString()) {
 		  val h = when (type) {
 			Handler -> subNode?.hotKeyHandler

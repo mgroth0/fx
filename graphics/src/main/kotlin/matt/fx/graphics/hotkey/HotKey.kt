@@ -2,7 +2,6 @@ package matt.fx.graphics.hotkey
 
 import javafx.application.Platform.runLater
 import javafx.event.EventHandler
-import javafx.event.EventTarget
 import javafx.scene.Node
 import javafx.scene.Scene
 import javafx.scene.input.KeyCode
@@ -18,16 +17,15 @@ import matt.hotkey.HotkeyDSL
 import matt.lang.NEVER
 import matt.lang.err
 import matt.lang.go
-import matt.log.logger.Logger
 import matt.log.NOPLogger
 import matt.log.SystemOutLogger
+import matt.log.logger.Logger
 import matt.model.sys.Mac
 import matt.obs.prop.BindableProperty
 import matt.obs.prop.VarProp
 import matt.obs.prop.toggle
 import matt.prim.str.joinWithNewLinesAndTabs
 import java.lang.System.currentTimeMillis
-import java.util.WeakHashMap
 import kotlin.contracts.InvocationKind.EXACTLY_ONCE
 import kotlin.contracts.contract
 
@@ -286,16 +284,19 @@ fun <K, V> Map<K, V>.invert(): Map<V, K> {
 }
 
 
-
-fun EventTarget.register(
+@Synchronized
+fun EventTargetWrapper.register(
   inFilter: Boolean,
   hotkeys: Iterable<HotKeyContainer>,
   quickPassForNormalTyping: Boolean = false,
   debug: Boolean = false,
 ) {
-  val map = if (inFilter) filters else handlers
-  val handler = map[this] ?: HotKeyEventHandler(quickPassForNormalTyping).also {
-	map[this] = it
+  val handler = (if (inFilter) hotKeyFilter else hotKeyHandler) ?: HotKeyEventHandler(quickPassForNormalTyping).also {
+	if (inFilter) {
+	  hotKeyFilter = it
+	} else {
+	  hotKeyHandler = it
+	}
 	if (inFilter) {
 	  when (this) {
 		is Node  -> addEventFilter(KeyEvent.KEY_PRESSED, it)
@@ -447,12 +448,12 @@ inline fun EventTargetWrapper.hotkeys(
   quickPassForNormalTyping: Boolean = false,
   debug: Boolean = false,
   op: FXHotkeyDSL.()->Unit,
-  ) {
+) {
   contract {
 	callsInPlace(op, EXACTLY_ONCE)
   }
   FXHotkeyDSL().apply(op).hotkeys.go {
-	if (filter) this.node.register(inFilter = true, it, quickPassForNormalTyping, debug)
-	else this.node.register(inFilter = false, it, quickPassForNormalTyping, debug)
+	if (filter) this.register(inFilter = true, it, quickPassForNormalTyping, debug)
+	else this.register(inFilter = false, it, quickPassForNormalTyping, debug)
   }
 }
