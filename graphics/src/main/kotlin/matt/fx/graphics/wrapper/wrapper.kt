@@ -4,14 +4,14 @@ import javafx.collections.ObservableMap
 import javafx.event.EventTarget
 import javafx.scene.Node
 import matt.collect.weak.WeakMap
+import matt.fx.graphics.hotkey.HotKeyEventHandler
 import matt.fx.graphics.wrapper.node.NodeWrapper
 
 @DslMarker annotation class FXNodeWrapperDSL
 
 typealias ET = EventTargetWrapper
 
-@FXNodeWrapperDSL
-interface EventTargetWrapper {
+@FXNodeWrapperDSL interface EventTargetWrapper {
 
 
   val node: EventTarget
@@ -38,7 +38,6 @@ interface EventTargetWrapper {
   }
 
 
-
   fun removeFromParent()
 
 
@@ -54,11 +53,13 @@ abstract class EventTargetWrapperImpl<out N: EventTarget>: EventTargetWrapper {
   abstract override val node: N
 
 
+  val hotKeyHandler: HotKeyEventHandler? = null
+  val hotKeyFilter: HotKeyEventHandler? = null
+
 }
 
-abstract class SingularEventTargetWrapper<out N: EventTarget>(
-  /*TODO: node must be made internal...? then protected...*/
-  final override val node: N
+abstract class SingularEventTargetWrapper<out N: EventTarget>(/*TODO: node must be made internal...? then protected...*/
+															  final override val node: N
 ): EventTargetWrapperImpl<N>() {
 
   companion object {

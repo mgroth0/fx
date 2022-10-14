@@ -22,8 +22,6 @@ import matt.fx.control.wrapper.menu.checkitem.CheckMenuItemWrapper
 import matt.fx.control.wrapper.menu.item.MenuItemWrapper
 import matt.fx.control.wrapper.menu.item.SimpleMenuItem
 import matt.fx.control.wrapper.wrapped.wrapped
-import matt.fx.graphics.hotkey.filters
-import matt.fx.graphics.hotkey.handlers
 import matt.fx.graphics.wrapper.EventTargetWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapperImpl
@@ -238,7 +236,7 @@ enum class EventHandlerType {
 
 
 private fun NodeWrapper.hotkeyInfoMenu() = MenuWrapper("Click For Hotkey Info").apply {
-  val node = this@hotkeyInfoMenu
+  val node = this@hotkeyInfoMenu as NodeWrapperImpl<*>
   fun addInfo(type: EventHandlerType) {
 	menu(
 	  when (type) {
@@ -247,14 +245,14 @@ private fun NodeWrapper.hotkeyInfoMenu() = MenuWrapper("Click For Hotkey Info").
 	) {
 
 
-	  (node.chain { it.parent } + node.scene + node.stage).forEach { node ->
-		menu(node.toString()) {
+	  (node.chain { it.parent as NodeWrapperImpl<*> } + node.scene + node.stage).forEach { subNode ->
+		menu(subNode.toString()) {
 		  val h = when (type) {
-			Handler -> handlers[node]
-			Filter  -> filters[node]
+			Handler -> subNode?.hotKeyHandler
+			Filter  -> subNode?.hotKeyFilter
 		  }
 		  item("\tqp=${h?.quickPassForNormalTyping}")
-		  handlers[node]?.hotkeys?.forEach { hkc ->
+		  subNode?.hotKeyHandler?.hotkeys?.forEach { hkc ->
 			item("\t${hkc.getHotkeys().joinToString { it.toString() }}")
 		  }
 		}

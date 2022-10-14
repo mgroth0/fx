@@ -285,8 +285,7 @@ fun <K, V> Map<K, V>.invert(): Map<V, K> {
   return this.map { it.value to it.key }.associate { it.first to it.second }
 }
 
-val handlers = WeakHashMap<EventTarget, HotKeyEventHandler>()
-val filters = WeakHashMap<EventTarget, HotKeyEventHandler>()
+
 
 fun EventTarget.register(
   inFilter: Boolean,
