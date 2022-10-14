@@ -322,7 +322,7 @@ fun WebViewWrapper.specialTransferingToWindowAndBack(par: PaneWrapperImpl<*, *>)
   val wv = this
   this.setOnKeyPressed { k ->
 	if (k.code == KeyCode.W && k.isMetaDown) {
-	  if (this.scene?.root == this.node) {
+	  if (this.scene?.root == this) {
 		this.removeFromParent()
 		(this.scene?.window as Stage).close()
 		par.add(wv)
@@ -334,7 +334,7 @@ fun WebViewWrapper.specialTransferingToWindowAndBack(par: PaneWrapperImpl<*, *>)
   }
 
   setOnDoubleClick {
-	if (this.scene?.root != this.node) {
+	if (this.scene?.root != this) {
 	  this.removeFromParent()
 
 	  this.openInNewWindow().apply {
