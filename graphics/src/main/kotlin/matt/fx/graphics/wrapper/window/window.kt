@@ -44,6 +44,9 @@ open class WindowWrapper<W: Window>(override val node: W): EventTargetWrapperImp
 	}
 
 
+  val focusedProperty by lazy { node.focusedProperty().toNonNullableROProp() }
+  val focused by focusedProperty
+
   fun setOnCloseRequest(value: EventHandler<WindowEvent>) = node.setOnCloseRequest(value)
   fun setOnHidden(value: EventHandler<WindowEvent>) = node.setOnHidden(value)
 

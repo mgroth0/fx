@@ -8,6 +8,8 @@ import javafx.event.EventType
 import javafx.scene.Parent
 import javafx.scene.Scene
 import javafx.scene.paint.Paint
+import javafx.stage.Window
+import matt.fx.graphics.service.uncheckedNullableWrapperConverter
 import matt.fx.graphics.service.wrapped
 import matt.fx.graphics.wrapper.SingularEventTargetWrapper
 import matt.fx.graphics.wrapper.node.parent.ParentWrapper
@@ -15,6 +17,8 @@ import matt.fx.graphics.wrapper.scenelike.SceneLikeWrapper
 import matt.fx.graphics.wrapper.stage.StageWrapper
 import matt.fx.graphics.wrapper.window.WindowWrapper
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
+import matt.hurricanefx.eye.wrapper.obs.obsval.toNullableROProp
+import matt.obs.bind.binding
 
 
 open class SceneWrapper<R: ParentWrapper<*>>(
@@ -41,7 +45,12 @@ open class SceneWrapper<R: ParentWrapper<*>>(
 	node.addEventHandler(eventType, handler)
 
 
-  val window: WindowWrapper<*>? get() = node.window?.wrapped() as WindowWrapper<*>?
+  val windowProperty by lazy {
+	node.windowProperty().toNullableROProp().binding(
+	  converter = uncheckedNullableWrapperConverter<Window, WindowWrapper<*>>()
+	)
+  }
+  val window by windowProperty
   val stage get() = window as StageWrapper
 
   override val properties get() = node.properties

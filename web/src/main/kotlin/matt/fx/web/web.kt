@@ -4,7 +4,6 @@ import javafx.application.Platform
 import javafx.beans.property.DoubleProperty
 import javafx.beans.property.ReadOnlyDoubleProperty
 import javafx.beans.property.SimpleDoubleProperty
-import javafx.beans.property.SimpleObjectProperty
 import javafx.event.EventHandler
 import javafx.event.EventTarget
 import javafx.scene.input.KeyCode
@@ -19,24 +18,24 @@ import matt.file.MFile
 import matt.file.construct.toMFile
 import matt.fx.control.lang.actionbutton
 import matt.fx.control.menu.context.mcontextmenu
-import matt.fx.graphics.clip.copyToClipboard
-import matt.fx.graphics.fxthread.runLaterReturn
-import matt.fx.graphics.refresh.refreshWhileInSceneEvery
 import matt.fx.control.win.interact.openInNewWindow
 import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.control.wrapper.wrapped.wrapped
+import matt.fx.graphics.clip.copyToClipboard
 import matt.fx.graphics.fxthread.runLater
+import matt.fx.graphics.fxthread.runLaterReturn
+import matt.fx.graphics.refresh.refreshWhileInSceneEvery
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapperImpl
 import matt.fx.graphics.wrapper.node.attachTo
-import matt.hurricanefx.eye.mtofx.createROFXPropWrapper
-import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
-import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
 import matt.fx.graphics.wrapper.node.parent.ParentWrapperImpl
 import matt.fx.graphics.wrapper.node.setOnDoubleClick
 import matt.fx.graphics.wrapper.pane.PaneWrapper
+import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
+import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
 import matt.fx.graphics.wrapper.region.RegionWrapper
 import matt.fx.graphics.wrapper.stage.StageWrapper
+import matt.hurricanefx.eye.mtofx.createROFXPropWrapper
 import matt.lang.NEVER
 import matt.time.dur.sec
 import netscape.javascript.JSObject
@@ -324,7 +323,7 @@ fun WebViewWrapper.specialTransferingToWindowAndBack(par: PaneWrapperImpl<*, *>)
 	if (k.code == KeyCode.W && k.isMetaDown) {
 	  if (this.scene?.root == this) {
 		this.removeFromParent()
-		(this.scene?.window as Stage).close()
+		(this.scene?.window as StageWrapper).close()
 		par.add(wv)
 		perfectBind(par)
 		runLater { zoom = perfectZoom(par.width) }

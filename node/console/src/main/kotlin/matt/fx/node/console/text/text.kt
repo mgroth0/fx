@@ -12,12 +12,16 @@ import matt.fx.graphics.lang.removeAllButLastN
 import matt.fx.graphics.tfx.animation.keyframe
 import matt.fx.graphics.tfx.animation.timeline
 import matt.fx.graphics.wrapper.node.NodeWrapper
+import matt.fx.graphics.wrapper.scene.SceneWrapper
 import matt.fx.graphics.wrapper.text.TextWrapper
 import matt.fx.graphics.wrapper.text.textlike.applyConsoleStyle
 import matt.fx.graphics.wrapper.textflow.TextFlowWrapper
+import matt.fx.graphics.wrapper.window.WindowWrapper
 import matt.hurricanefx.eye.mtofx.createWritableFXPropWrapper
 import matt.hurricanefx.eye.time.toFXDuration
 import matt.lang.ifTrueOrNull
+import matt.obs.bind.deepBinding
+import matt.obs.prop.VarProp
 import matt.time.dur.ms
 
 private const val PROMPT = "> "
@@ -64,53 +68,26 @@ class ConsoleTextFlow(val takesInput: Boolean = true): TextFlowWrapper<NodeWrapp
 		  keyvalue(sepText.fillProperty.createWritableFXPropWrapper(), Color.BLUE)
 		}
 	  }
-	  var sceneListener: ChangeListener<Window?>? = null
-	  var windowListener: ChangeListener<Boolean?>? = null
-	  fun sceneListen(newScene: Scene?) {
-		fun winListen(newWindow: Window?) {
-		  fun focusListen(newFocused: Boolean?) {
-			if (newFocused != null) {
-			  if (newFocused) {
-				blink.play()
-			  } else {
-				blink.stop()
-				sepText.fill = PROMPT_COLOR
-			  }
-			}
-		  }
-		  newWindow?.focusedProperty()?.addListener(
-			ChangeListener { _, _, newFocused ->
-			  focusListen(newFocused)
-			}.apply {
-			  windowListener = this
-			})
-		  focusListen(newWindow?.isFocused)
-		}
-		newScene?.windowProperty()?.addListener(
-		  ChangeListener<Window?> { _, oldWindow, newWindow ->
-			windowListener?.let {
-			  oldWindow?.focusedProperty()?.removeListener(it)
-			}
-			winListen(newWindow)
-		  }.apply {
-			sceneListener = this
-		  }
-		)
-		winListen(newScene?.window)
+	  val shouldBlink = sceneProperty.deepBinding { it?.windowProperty ?: VarProp(null) }.deepBinding {
+		it?.focusedProperty ?: VarProp(false)
 	  }
-	  sceneProperty().addListener { _, oldScene, newScene ->
-		sceneListener?.let {
-		  oldScene?.windowProperty()?.removeListener(it)
+	  if (shouldBlink.value) blink.play()
+	  shouldBlink.onChange {
+		if (it) {
+		  blink.play()
+		} else {
+		  blink.stop()
+		  sepText.fill = PROMPT_COLOR
 		}
-		sceneListen(newScene)
 	  }
-	  sceneListen(scene)
+
+
 	}
   }
   private var unsentInputText = takesInput ifTrueOrNull { InputText() }
   fun prepStoredInput() = unsentInputText!!.text + "\n"
 
-  private fun isReallyFocused() = scene?.window?.isFocused ?: false
+  private fun isReallyFocused() = scene?.window?.focused ?: false
 
   companion object {
 	private val NEWLINES = listOf('\n', '\r')
