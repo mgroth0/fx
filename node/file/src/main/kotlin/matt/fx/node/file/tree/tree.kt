@@ -2,7 +2,6 @@ package matt.fx.node.file.tree
 
 import javafx.geometry.Pos.CENTER_LEFT
 import javafx.scene.control.SelectionMode.MULTIPLE
-import javafx.scene.control.TreeItem
 import javafx.scene.layout.Priority.ALWAYS
 import matt.auto.actions
 import matt.auto.moveToTrash
@@ -305,8 +304,7 @@ private fun TreeLikeWrapper<*, MFile>.setupContent(
 ) {
   root = TreeItemWrapper()
   root!!.children.bind(rootFiles) {
-	@Suppress("UNCHECKED_CAST")
-	FileTreeItem(it).wrapped() as TreeItemWrapper<MFile>
+	(FileTreeItem(it))
   }
   isShowRoot = false
   setupPopulating(strategy)
@@ -315,8 +313,7 @@ private fun TreeLikeWrapper<*, MFile>.setupContent(
 private fun TreeLikeWrapper<*, MFile>.rePop() {
   root!!.children.forEach { child ->
 	populateTree(child, {
-	  @Suppress("UNCHECKED_CAST")
-	  FileTreeItem(it).wrapped() as TreeItemWrapper<MFile>
+	  FileTreeItem(it)
 	}) { item ->
 	  val cs = item.value.childs()
 	  taball("cs of ${item.value}", cs)
@@ -340,8 +337,8 @@ private fun TreeLikeWrapper<*, MFile>.setupPopulating(strategy: FileTreePopulati
 	root!!.children.forEach { (it as FileTreeItem).refreshChilds() }
 	setOnSelectionChange { v ->
 	  if (v != null) {
-		(v as FileTreeItem).refreshChilds()
-		v.children.forEach { (it as FileTreeItem).refreshChilds() } /*so i can always see which have matt.fx.control.layout.children*/
+		(v.wrapped() as FileTreeItem).refreshChilds()
+		v.children.forEach { (it.wrapped() as FileTreeItem).refreshChilds() } /*so i can always see which have matt.fx.control.layout.children*/
 	  }
 	}
   }
