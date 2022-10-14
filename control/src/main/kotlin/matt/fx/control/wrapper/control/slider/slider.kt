@@ -33,7 +33,7 @@ fun <T> ET.slider(
 }
 
 class SliderWrapper(
-   node: Slider = Slider(),
+  node: Slider = Slider(),
 ): ControlWrapperImpl<Slider>(node) {
 
 
@@ -69,7 +69,7 @@ class SliderWrapper(
 	  node.isValueChanging = value
 	}
 
-  fun valueChangingProperty(): BooleanProperty = node.valueChangingProperty()
+  val valueChangingProperty by lazy { node.valueChangingProperty().toNonNullableProp() }
 
   var isSnapToTicks
 	get() = node.isSnapToTicks
@@ -77,7 +77,7 @@ class SliderWrapper(
 	  node.isSnapToTicks = value
 	}
 
-  fun snapToTicksProperty(): BooleanProperty = node.snapToTicksProperty()
+  val snapToTicksProperty by lazy { node.snapToTicksProperty().toNonNullableProp() }
 
 
   var isShowTickMarks
@@ -86,7 +86,7 @@ class SliderWrapper(
 	  node.isShowTickMarks = value
 	}
 
-  fun showTickMarksProperty(): BooleanProperty = node.showTickMarksProperty()
+  val showTickMarksProperty by lazy { node.showTickMarksProperty().toNonNullableProp() }
 
 
   var isShowTickLabels
@@ -95,7 +95,7 @@ class SliderWrapper(
 	  node.isShowTickLabels = value
 	}
 
-  fun showTickLabelsProperty(): BooleanProperty = node.showTickLabelsProperty()
+  val showTickLabelsProperty by lazy { node.showTickLabelsProperty().toNonNullableProp() }
 
 
   var majorTickUnit
@@ -104,7 +104,7 @@ class SliderWrapper(
 	  node.majorTickUnit = value
 	}
 
-  fun majorTickUnitProperty(): DoubleProperty = node.majorTickUnitProperty()
+  val majorTickUnitProperty by lazy { node.majorTickUnitProperty().toNonNullableProp() }
 
 
   var minorTickCount
@@ -113,7 +113,7 @@ class SliderWrapper(
 	  node.minorTickCount = value
 	}
 
-  fun minorTickCountProperty(): IntegerProperty = node.minorTickCountProperty()
+  val minorTickCountProperty by lazy { node.minorTickCountProperty().toNonNullableProp() }
   override fun addChild(child: NodeWrapper, index: Int?) {
 	TODO("Not yet implemented")
   }

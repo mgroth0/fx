@@ -42,7 +42,6 @@ import matt.fx.node.file.tree.FileTreePopulationStrategy.AUTOMATIC
 import matt.fx.web.specialTransferingToWindowAndBack
 import matt.gui.draggableIcon
 import matt.gui.setview.autoResizeColumns
-import matt.hurricanefx.eye.wrapper.obs.collect.createMutableWrapper
 import matt.lang.inList
 import matt.log.taball
 import matt.log.todo.todo
@@ -305,7 +304,8 @@ private fun TreeLikeWrapper<*, MFile>.setupContent(
 ) {
   root = TreeItemWrapper()
   root!!.children.bind(rootFiles) {
-	FileTreeItem(it).wrapped()
+	@Suppress("UNCHECKED_CAST")
+	FileTreeItem(it).wrapped() as TreeItemWrapper<MFile>
   }
   isShowRoot = false
   setupPopulating(strategy)
@@ -313,7 +313,10 @@ private fun TreeLikeWrapper<*, MFile>.setupContent(
 
 private fun TreeLikeWrapper<*, MFile>.rePop() {
   root!!.children.forEach { child ->
-	populateTree(child, { FileTreeItem(it).wrapped() }) { item ->
+	populateTree(child, {
+	  @Suppress("UNCHECKED_CAST")
+	  FileTreeItem(it).wrapped() as TreeItemWrapper<MFile>
+	}) { item ->
 	  val cs = item.value.childs()
 	  taball("cs of ${item.value}", cs)
 	  cs
