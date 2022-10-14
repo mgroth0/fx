@@ -1,7 +1,5 @@
 package matt.fx.node.tileabletabpane
 
-import javafx.beans.property.SimpleBooleanProperty
-import javafx.beans.property.SimpleObjectProperty
 import javafx.geometry.Orientation
 import javafx.geometry.Orientation.HORIZONTAL
 import javafx.geometry.Orientation.VERTICAL
@@ -15,10 +13,8 @@ import matt.fx.graphics.wrapper.pane.PaneWrapper
 import matt.fx.graphics.wrapper.pane.hbox.hbox
 import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
 import matt.fx.graphics.wrapper.region.RegionWrapper
-import matt.hurricanefx.eye.lib.onChange
-import matt.hurricanefx.eye.prop.getValue
-import matt.hurricanefx.eye.prop.setValue
 import matt.obs.math.double.op.div
+import matt.obs.prop.VarProp
 import java.util.concurrent.Semaphore
 
 open class TileableTabPane(
@@ -27,14 +23,14 @@ open class TileableTabPane(
 ): VBoxWrapperImpl<NodeWrapper>() {
   private val mysem = Semaphore(1)
   var lastSelected: Int? = null
-  val istabmodeprop = SimpleBooleanProperty(true).apply {
+  val istabmodeprop = VarProp(true).apply {
 	onChange {
 	  reset()
 	}
   }
   var istabmode: Boolean by istabmodeprop
 
-  var orientationProp: SimpleObjectProperty<Orientation> = SimpleObjectProperty(orientation).apply {
+  var orientationProp: VarProp<Orientation> = VarProp(orientation).apply {
 	onChange {
 	  reset()
 	}
