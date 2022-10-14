@@ -8,13 +8,12 @@ import javafx.event.EventType
 import javafx.scene.Parent
 import javafx.scene.Scene
 import javafx.scene.paint.Paint
-import javafx.stage.Stage
-import javafx.stage.Window
-import matt.fx.graphics.service.WrapperServiceHub
+import matt.fx.graphics.service.wrapped
 import matt.fx.graphics.wrapper.SingularEventTargetWrapper
 import matt.fx.graphics.wrapper.node.parent.ParentWrapper
 import matt.fx.graphics.wrapper.scenelike.SceneLikeWrapper
 import matt.fx.graphics.wrapper.stage.StageWrapper
+import matt.fx.graphics.wrapper.window.WindowWrapper
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
 
 
@@ -42,12 +41,12 @@ open class SceneWrapper<R: ParentWrapper<*>>(
 	node.addEventHandler(eventType, handler)
 
 
-  val window: Window? get() = node.window
-  val stage get() = WrapperServiceHub.get().wrapped(window!! as Stage) as StageWrapper
+  val window: WindowWrapper<*>? get() = node.window?.wrapped() as WindowWrapper<*>?
+  val stage get() = window as StageWrapper
 
   override val properties get() = node.properties
   override fun removeFromParent() {
-	(window as? Stage)?.let { it.scene = null }
+	(window as? StageWrapper)?.let { it.scene = null }
   }
 
   override fun isInsideRow() = false

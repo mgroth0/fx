@@ -2,10 +2,8 @@ package matt.fx.control.hotkeys
 
 import javafx.application.Platform.runLater
 import javafx.scene.paint.Color
-import javafx.stage.Stage
 import matt.fx.control.iconify.iconify
 import matt.fx.control.mscene.MScene
-import matt.fx.control.wrapper.wrapped.wrapped
 import matt.fx.graphics.hotkey.HotKey
 import matt.fx.graphics.hotkey.hotkeys
 import matt.fx.graphics.mag.VarJson
@@ -32,6 +30,7 @@ import matt.fx.graphics.mag.topright
 import matt.fx.graphics.wrapper.region.RegionWrapper
 import matt.fx.graphics.wrapper.region.RegionWrapperImpl
 import matt.fx.graphics.wrapper.region.border.FXBorder
+import matt.fx.graphics.wrapper.stage.StageWrapper
 import matt.lang.go
 import java.lang.Thread.sleep
 import kotlin.concurrent.thread
@@ -50,14 +49,14 @@ import kotlin.contracts.ExperimentalContracts
 	DOWN.ctrl.opt { window!!.y += window!!.height }
 
 	LEFT.ctrl.meta {
-	  window!!.width /= 2	//	  window.x -= window.width
+	  window!!.width /= 2
 	}
 	RIGHT.ctrl.meta {
 	  window!!.width /= 2
 	  window!!.x += window!!.width
 	}
 	UP.ctrl.meta {
-	  window!!.height /= 2	//	  window.y -= window.height
+	  window!!.height /= 2
 	}
 	DOWN.ctrl.meta {
 	  window!!.height /= 2
@@ -69,52 +68,52 @@ import kotlin.contracts.ExperimentalContracts
 	  window!!.width *= 2
 	}
 	RIGHT.ctrl.meta.shift {
-	  window!!.width *= 2	//	  window.x += window.width
+	  window!!.width *= 2
 	}
 	UP.ctrl.meta.shift {
 	  window!!.y -= window!!.height
 	  window!!.height *= 2
 	}
 	DOWN.ctrl.meta.shift {
-	  window!!.height *= 2	//	  window.y += window.height
+	  window!!.height *= 2
 	}
 
-	A.ctrl.opt { window?.wrapped()?.left() }
-	D.ctrl.opt { window?.wrapped()?.right() }
-	W.ctrl.opt { window?.wrapped()?.top() }
-	S.ctrl.opt { window?.wrapped()?.bottom() }
+	A.ctrl.opt { window?.left() }
+	D.ctrl.opt { window?.right() }
+	W.ctrl.opt { window?.top() }
+	S.ctrl.opt { window?.bottom() }
 
-	Z.ctrl.opt { window?.wrapped()?.bottomleft() }
-	E.ctrl.opt { window?.wrapped()?.topright() }
-	Q.ctrl.opt { window?.wrapped()?.topleft() }
-	C.ctrl.opt { window?.wrapped()?.bottomright() }
+	Z.ctrl.opt { window?.bottomleft() }
+	E.ctrl.opt { window?.topright() }
+	Q.ctrl.opt { window?.topleft() }
+	C.ctrl.opt { window?.bottomright() }
 
 	LEFT_BRACKET.ctrl.opt {
-	  window?.wrapped()?.apply {
+	  window?.apply {
 		if (!VarJson.reversed_displays) lastdisplay()
 		else nextdisplay()
 	  }
 	}
 	RIGHT_BRACKET.ctrl.opt {
-	  window?.wrapped()?.apply {
+	  window?.apply {
 		if (!VarJson.reversed_displays) nextdisplay()
 		else lastdisplay()
 	  }
 	}
 
-	F.ctrl.opt { (window as? Stage?)?.isFullScreen = !((window as Stage).isFullScreen) }
-	TAB.ctrl.opt { (window as? Stage?)?.wrapped()?.max() }
-	ENTER.ctrl.opt { window?.wrapped()?.resetPosition() }
+	F.ctrl.opt { (window as? StageWrapper?)?.isFullScreen = !((window as StageWrapper).isFullScreen) }
+	TAB.ctrl.opt { (window as? StageWrapper?)?.max() }
+	ENTER.ctrl.opt { window?.resetPosition() }
 	X.ctrl.opt { iconify(icon) }
 
-	DIGIT1.ctrl.opt { window?.wrapped()?.eighth1() }
-	DIGIT2.ctrl.opt { window?.wrapped()?.eighth2() }
-	DIGIT3.ctrl.opt { window?.wrapped()?.eighth3() }
-	DIGIT4.ctrl.opt { window?.wrapped()?.eighth4() }
-	DIGIT5.ctrl.opt { window?.wrapped()?.eighth5() }
-	DIGIT6.ctrl.opt { window?.wrapped()?.eighth6() }
-	DIGIT7.ctrl.opt { window?.wrapped()?.eighth7() }
-	DIGIT8.ctrl.opt { window?.wrapped()?.eighth8() }
+	DIGIT1.ctrl.opt { window?.eighth1() }
+	DIGIT2.ctrl.opt { window?.eighth2() }
+	DIGIT3.ctrl.opt { window?.eighth3() }
+	DIGIT4.ctrl.opt { window?.eighth4() }
+	DIGIT5.ctrl.opt { window?.eighth5() }
+	DIGIT6.ctrl.opt { window?.eighth6() }
+	DIGIT7.ctrl.opt { window?.eighth7() }
+	DIGIT8.ctrl.opt { window?.eighth8() }
 
 	hotkeys.map { it as HotKey }.forEach {
 	  it.wrapOp {
