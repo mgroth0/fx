@@ -1,6 +1,5 @@
 package matt.fx.graphics.wrapper.target
 
-import javafx.beans.value.ObservableValue
 import matt.fx.graphics.wrapper.EventTargetWrapper
 import matt.obs.prop.ObsVal
 

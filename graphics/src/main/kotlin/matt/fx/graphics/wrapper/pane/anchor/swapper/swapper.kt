@@ -30,6 +30,7 @@ fun <P, N: NodeWrapper> ET.swapper(
 open class Swapper<P, C: NodeWrapper>: RegionWrapperImpl<Region, C>(AnchorPane()) {
 
 
+  @Suppress("UNUSED_PARAMETER")
   private val anchorWrapper by lazy {
 	object: AnchorPaneWrapper<C>, NodeWrapper by this@Swapper {
 	  override val node get() = this@Swapper.node as AnchorPane
