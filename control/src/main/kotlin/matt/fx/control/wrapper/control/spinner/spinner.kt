@@ -200,7 +200,7 @@ class SpinnerWrapper<T: Any>(
   }
 
   fun tfxWeirdEditableThing() {
-	focusedProperty().addListener { _, _, newValue: Boolean? ->
+	focusedProperty.onChange { newValue: Boolean? ->
 	  if (newValue == null) err("here it is")
 	  if (!newValue) increment(0)
 	}

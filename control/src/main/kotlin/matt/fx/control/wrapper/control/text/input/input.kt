@@ -11,7 +11,6 @@ import javafx.scene.paint.Paint
 import matt.fx.control.tfx.control.mutateOnChange
 import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.graphics.wrapper.node.NodeWrapper
-import matt.hurricanefx.eye.lib.onChange
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.graphics.wrapper.style.FXStyle
 import matt.fx.graphics.wrapper.style.parseFXStyle

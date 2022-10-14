@@ -7,10 +7,10 @@ import matt.fx.control.toggle.getToggleGroup
 import matt.fx.control.wrapper.control.button.base.ButtonBaseWrapper
 import matt.fx.control.wrapper.control.value.HasWritableValue
 import matt.fx.graphics.wrapper.node.attachTo
-import matt.hurricanefx.eye.lib.onChange
 import matt.lang.go
 import matt.obs.prop.BindableProperty
 import matt.fx.graphics.wrapper.ET
+import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.obs.prop.VarProp
 
 /**
@@ -80,7 +80,7 @@ open class ToggleButtonWrapper(
   //  	  node.toggleGroup = value
   //  	}
 
-  val selectedProperty: BooleanProperty get() = node.selectedProperty()
+  val selectedProperty by lazy { node.selectedProperty().toNonNullableProp() }
 
   fun whenSelected(op: ()->Unit) {
 	selectedProperty.onChange { if (it) op() }

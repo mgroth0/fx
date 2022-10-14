@@ -296,3 +296,7 @@ fun <T> TreeTableViewWrapper<T & Any>.populate(
 fun TreeTableViewWrapper<*>.editableWhen(predicate: ObservableValue<Boolean>) = apply {
   editableProperty().bind(predicate)
 }
+
+fun <T> TreeTableViewWrapper<T>.multiSelect(enable: Boolean = true) {
+  selectionModel.selectionMode = if (enable) SelectionMode.MULTIPLE else SelectionMode.SINGLE
+}

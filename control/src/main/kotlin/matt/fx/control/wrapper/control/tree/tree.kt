@@ -2,6 +2,8 @@ package matt.fx.control.wrapper.control.tree
 
 import javafx.beans.property.BooleanProperty
 import javafx.beans.property.ObjectProperty
+import javafx.beans.property.Property
+import javafx.scene.control.SelectionMode
 import javafx.scene.control.TreeCell
 import javafx.scene.control.TreeItem
 import javafx.scene.control.TreeView
@@ -9,6 +11,7 @@ import javafx.util.Callback
 import matt.fx.control.wrapper.cellfact.TreeCellFactory
 import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.control.wrapper.control.tree.like.TreeLikeWrapper
+import matt.fx.control.wrapper.control.tree.like.populateTree
 import matt.fx.control.wrapper.selects.wrap
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
@@ -57,4 +60,51 @@ class TreeViewWrapper<T>(node: TreeView<T> = TreeView(), op: TreeViewWrapper<T>.
   override fun getRow(ti: TreeItem<T>) = node.getRow(ti)
 
 
+}
+
+
+fun <T> TreeViewWrapper<T>.bindSelected(property: Property<T>) {
+
+  selectedItemProperty.onChange { property.value = it?.value }
+}
+
+/**
+ * <p>This method will attempt to select the first index in the control.
+ * If clearSelection is not called first, this method
+ * will have the result of selecting the first index, whilst retaining
+ * the selection of any other currently selected indices.</p>
+ *
+ * <p>If the first index is already selected, calling this method will have
+ * no result, and no selection event will take place.</p>
+ *
+ * This functions is the same as calling.
+ * ```
+ * selectionModel.selectFirst()
+ *
+ * ```
+ */
+fun <T> TreeViewWrapper<T>.selectFirst() = selectionModel.selectFirst()
+
+fun <T> TreeViewWrapper<T>.populate(
+  itemFactory: (T) -> TreeItem<T> = { TreeItem(it) },
+  childFactory: (TreeItem<T>) -> Iterable<T>?
+) =
+  populateTree(root, itemFactory, childFactory)
+
+
+// -- Properties
+
+/**
+ * Returns the currently selected value of type [T] (which is currently the
+ * selected value represented by the current selection model). If there
+ * are multiple values selected, it will return the most recently selected
+ * value.
+ *
+ * <p>Note that the returned value is a snapshot in time.
+ */
+val <T> TreeViewWrapper<T>.selectedValue: T?
+  get() = this.selectionModel.selectedItem?.value
+
+fun <T> TreeViewWrapper<T>.multiSelect(enable: Boolean = true) {
+  selectionModel.selectionMode = if (enable) SelectionMode.MULTIPLE else SelectionMode.SINGLE
 }

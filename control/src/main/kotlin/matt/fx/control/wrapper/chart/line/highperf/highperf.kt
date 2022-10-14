@@ -4,7 +4,6 @@ import javafx.scene.chart.LineChart
 import javafx.scene.chart.NumberAxis
 import matt.collect.itr.applyEach
 import matt.fx.control.wrapper.chart.line.num.NumberLineChart
-import matt.hurricanefx.eye.lib.onChange
 import matt.lang.err
 
 /*https://stackoverflow.com/questions/34771612/javafx-linechart-performance*/
