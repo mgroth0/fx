@@ -34,8 +34,8 @@ fun SceneWrapper<*>.iconify(icon: MFile) {
 	  iconWindow?.y = it.screenY + (yOffset ?: 0.0)
 	}
 	setOnDoubleClick {
-	  (this@iconify.window as Stage).show()
-	  (scene!!.window as Stage).close()
+	  (this@iconify.window as StageWrapper).show()
+	  (scene!!.window as StageWrapper).close()
 	}
   }.openInNewWindow(own = WinOwn.None, geom = WinGeom.ManualOr0(
 	width = ICON_WIDTH,
