@@ -1,10 +1,12 @@
 package matt.fx.control.wrapper.control.tree
 
+import javafx.application.Platform
 import javafx.beans.property.BooleanProperty
 import javafx.beans.property.Property
 import javafx.scene.control.SelectionMode
 import javafx.scene.control.TreeItem
 import javafx.scene.control.TreeView
+import matt.collect.itr.recurse.recurse
 import matt.fx.control.wrapper.cellfact.TreeCellFactory
 import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.control.wrapper.control.tree.like.TreeLikeWrapper
@@ -17,6 +19,21 @@ import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
+
+fun <T: Any> TreeViewWrapper<T>.items(): Sequence<TreeItemWrapper<T>> = root!!.recurse { it.children }
+
+
+fun <T: Any> TreeViewWrapper<T>.select(o: T?) {
+  Platform.runLater {
+	when {
+	  o != null -> {
+		selectionModel.select(items().firstOrNull { it == o })
+	  }
+
+	  else      -> selectionModel.clearSelection()
+	}
+  }
+}
 
 
 fun <T: Any> ET.treeview(root: TreeItemWrapper<T>? = null, op: TreeViewWrapper<T>.()->Unit = {}) =

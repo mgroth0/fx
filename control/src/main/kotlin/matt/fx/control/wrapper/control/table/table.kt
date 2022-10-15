@@ -22,6 +22,7 @@ import matt.fx.control.wrapper.control.column.TableColumnWrapper
 import matt.fx.control.wrapper.control.tablelike.TableLikeWrapper
 import matt.fx.control.wrapper.selects.wrap
 import matt.fx.control.wrapper.wrapped.wrapped
+import matt.fx.graphics.fxWidth
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
@@ -43,6 +44,21 @@ import kotlin.reflect.KFunction
 import kotlin.reflect.KMutableProperty1
 import kotlin.reflect.KProperty1
 
+//  call the method after inserting the data into table
+fun <T: Any> TableViewWrapper<T>.autoResizeColumns() {
+  columnResizePolicy = TableView.UNCONSTRAINED_RESIZE_POLICY
+  columns.forEach { column ->
+	column.setPrefWidth(
+	  (((0 until items!!.size).mapNotNull {
+		column.getCellData(it)
+	  }.map {
+		it.toString().fxWidth
+	  }.toMutableList() + listOf(
+		column.text.fxWidth
+	  )).maxOrNull() ?: 0.0) + 10.0
+	)
+  }
+}
 
 fun <T: Any> TableViewWrapper<T>.selectOnDrag() {
   var startRow = 0

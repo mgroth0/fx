@@ -1,6 +1,7 @@
 package matt.fx.node.proto.scaledcanvas
 
 import javafx.scene.layout.Pane
+import matt.fx.graphics.style.intColorToFXColor
 import matt.fx.graphics.wrapper.EventTargetWrapper
 import matt.fx.graphics.wrapper.canvas.Canv
 import matt.fx.graphics.wrapper.canvas.CanvasWrapper
@@ -12,6 +13,7 @@ import matt.obs.math.double.op.div
 import matt.obs.math.double.op.minus
 import matt.obs.math.double.op.times
 import matt.obs.prop.BindableProperty
+import java.awt.image.BufferedImage
 
 fun EventTargetWrapper.scaledCanvas(
   width: Number,
@@ -32,6 +34,17 @@ fun EventTargetWrapper.scaledCanvas(
   scale: Number = 1.0,
   op: ScaledCanvas.()->Unit = {}
 ) = scaledCanvas(height = hw, width = hw, scale = scale, op = op)
+
+
+fun BufferedImage.toScaledCanvas(): ScaledCanvas {
+  val canv = ScaledCanvas(width = width, height = height)
+  (0 until width).forEach { x ->
+	(0 until height).forEach { y ->
+	  canv[x, y] = intColorToFXColor(getRGB(x, y))
+	}
+  }
+  return canv
+}
 
 open class ScaledCanvas(
   canvas: CanvasWrapper = CanvasWrapper(),

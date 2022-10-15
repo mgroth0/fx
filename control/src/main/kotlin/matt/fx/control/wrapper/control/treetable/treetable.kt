@@ -1,5 +1,6 @@
 package matt.fx.control.wrapper.control.treetable
 
+import javafx.application.Platform
 import javafx.beans.property.BooleanProperty
 import javafx.beans.property.Property
 import javafx.beans.value.ObservableValue
@@ -17,6 +18,9 @@ import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
 import javafx.scene.input.MouseEvent
 import javafx.util.Callback
+import matt.collect.itr.recurse.recurse
+import matt.collect.itr.recurse.recurseToFlat
+import matt.collect.itr.recurse.recursionDepth
 import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.control.wrapper.control.tablelike.TableLikeWrapper
 import matt.fx.control.wrapper.control.tree.like.TreeLikeWrapper
@@ -25,6 +29,7 @@ import matt.fx.control.wrapper.control.treecol.TreeTableColumnWrapper
 import matt.fx.control.wrapper.selects.wrap
 import matt.fx.control.wrapper.treeitem.TreeItemWrapper
 import matt.fx.control.wrapper.wrapped.wrapped
+import matt.fx.graphics.fxWidth
 import matt.fx.graphics.service.uncheckedNullableWrapperConverter
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
@@ -37,6 +42,43 @@ import matt.obs.prop.toVarProp
 import kotlin.reflect.KFunction
 import kotlin.reflect.KMutableProperty1
 import kotlin.reflect.KProperty1
+
+fun <T: Any> TreeTableViewWrapper<T>.items(): Sequence<TreeItemWrapper<T>> = root!!.recurse { it.children }
+
+fun <T: Any> TreeTableViewWrapper<T>.select(o: T?) {
+  Platform.runLater {
+	when {
+	  o != null -> {
+		selectionModel.select(items().firstOrNull { it == o })
+	  }
+
+	  else      -> selectionModel.clearSelection()
+	}
+  }
+}
+
+// this one is different! it will apply a special width for the first coolColumn (which it assumes is for arrows)
+fun <T: Any> TreeTableViewWrapper<T>.autoResizeColumns() {
+  val roo = root ?: return
+  columnResizePolicy = TreeTableView.UNCONSTRAINED_RESIZE_POLICY
+
+  columns.forEachIndexed { index, column ->
+	if (index == 0) {
+	  column.prefWidth =
+		roo.recursionDepth { it.children }*15.0 // guess. works with depth=2. maybe can be smaller.
+	} else {
+	  column.setPrefWidth(
+		((roo.recurseToFlat({ it.children }).map {
+		  column.getCellData(it.node)
+		}.map {
+		  "$it".fxWidth
+		}.toMutableList() + listOf(
+		  column.text.fxWidth
+		)).maxOrNull() ?: 0.0) + 10.0
+	  )
+	}
+  }
+}
 
 val <T> TreeTableViewWrapper<T & Any>.selectedCell: TreeTablePosition<T, *>?
   get() = selectionModel.selectedCells.firstOrNull()

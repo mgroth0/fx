@@ -24,7 +24,6 @@ import matt.file.SvgFile
 import matt.fx.control.lang.actionbutton
 import matt.fx.control.menu.context.mcontextmenu
 import matt.fx.control.mstage.WMode.CLOSE
-import matt.fx.graphics.fxthread.runLaterReturn
 import matt.fx.control.win.interact.doubleClickToOpenInWindow
 import matt.fx.control.win.interact.openImageInWindow
 import matt.fx.control.win.interact.openInNewWindow
@@ -33,25 +32,36 @@ import matt.fx.control.wrapper.checkbox.checkbox
 import matt.fx.control.wrapper.control.button.button
 import matt.fx.control.wrapper.control.spinner.spinner
 import matt.fx.control.wrapper.control.text.area.textarea
+import matt.fx.graphics.drag.drags
+import matt.fx.graphics.fxthread.runLaterReturn
+import matt.fx.graphics.icon.Icon
 import matt.fx.graphics.wrapper.imageview.imageview
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.disableWhen
-import matt.fx.node.file.tree.fileTreeAndViewerPane
-import matt.fx.web.WebViewPane
-import matt.fx.web.WebViewWrapper
-import matt.fx.web.specialZooming
-import matt.gui.draggableIcon
 import matt.fx.graphics.wrapper.pane.SimplePaneWrapper
 import matt.fx.graphics.wrapper.pane.hbox.hbox
 import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
 import matt.fx.graphics.wrapper.pane.vbox.vbox
 import matt.fx.graphics.wrapper.region.RegionWrapper
 import matt.fx.graphics.wrapper.text.TextWrapper
+import matt.fx.node.file.tree.fileTreeAndViewerPane
+import matt.fx.web.WebViewPane
+import matt.fx.web.WebViewWrapper
+import matt.fx.web.specialZooming
 import matt.lang.err
 import matt.obs.prop.BindableProperty
 import matt.time.dur.sec
 import java.lang.Thread.sleep
 import java.lang.ref.WeakReference
+
+fun MFile.draggableIcon() =
+  (when {
+	(isDirectory) -> Icon("folder")
+	(extension.isBlank()) -> Icon("file/bin")
+	else -> Icon("file/${extension}"/*, invert = extension in listOf("md", "txt")*/)
+  }).apply {
+	drags(this@draggableIcon)
+  }
 
 
 fun MFile.createNode(renderHTMLAndSVG: Boolean = false): RegionWrapper<NodeWrapper> {

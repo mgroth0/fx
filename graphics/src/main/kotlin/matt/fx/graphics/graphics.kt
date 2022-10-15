@@ -5,6 +5,7 @@ import javafx.event.Event
 import javafx.event.EventHandler
 import javafx.event.EventType
 import javafx.scene.Node
+import javafx.scene.text.Text
 import javafx.stage.Stage
 
 fun <T: Event> Node.filterAndConsume(eventType: EventType<T>, handler: EventHandler<T>) {
@@ -26,3 +27,7 @@ fun <T: Event> Node.handleAndConsume(eventType: EventType<T>, handler: EventHand
 class DummyAppForFxThreadForScreen: Application() {
   override fun start(primaryStage: Stage?) = Unit
 }
+
+
+val String.fxWidth: Double
+  get() = Text(this).layoutBounds.width

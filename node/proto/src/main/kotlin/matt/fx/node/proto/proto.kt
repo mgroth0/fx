@@ -87,3 +87,8 @@ class EnumTabPane<E: Enum<E>, C: NW>(cls: KClass<E>, builder: (E)->C):
 }
 
 class EnumTab<E: Enum<E>, C: NW>(val cnst: E, content: C): TabWrapper<C>(cnst.name, content)
+
+
+interface Refreshable {
+  fun refresh()
+}
