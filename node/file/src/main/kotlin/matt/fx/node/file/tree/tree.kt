@@ -24,6 +24,7 @@ import matt.fx.control.wrapper.control.tree.TreeViewWrapper
 import matt.fx.control.wrapper.control.tree.like.TreeLikeWrapper
 import matt.fx.control.wrapper.control.tree.like.populateTree
 import matt.fx.control.wrapper.control.treetable.TreeTableViewWrapper
+import matt.fx.control.wrapper.control.treetable.autoResizeColumns
 import matt.fx.control.wrapper.treeitem.TreeItemWrapper
 import matt.fx.control.wrapper.wrapped.wrapped
 import matt.fx.fxauto.actionitem
@@ -37,10 +38,9 @@ import matt.fx.graphics.wrapper.pane.hbox.HBoxWrapperImpl
 import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
 import matt.fx.graphics.wrapper.pane.vbox.vbox
 import matt.fx.node.file.createNode
+import matt.fx.node.file.draggableIcon
 import matt.fx.node.file.tree.FileTreePopulationStrategy.AUTOMATIC
 import matt.fx.web.specialTransferingToWindowAndBack
-import matt.gui.draggableIcon
-import matt.gui.setview.autoResizeColumns
 import matt.lang.NEVER
 import matt.lang.inList
 import matt.log.taball
