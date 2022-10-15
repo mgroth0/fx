@@ -10,11 +10,6 @@
 	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
 	  "cfg" :  "implementation",
 	  "path" : ":k:fx:graphics"
-	},
-	{
-	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
-	  "cfg" :  "api",
-	  "path" : ":k:model:obsmod"
 	}
   ]
 }
