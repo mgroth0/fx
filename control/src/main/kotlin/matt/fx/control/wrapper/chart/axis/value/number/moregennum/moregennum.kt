@@ -506,8 +506,8 @@ class MoreGenericNumberAxis<T: Any>(
 	init {
 	  formatter = if (axis.isAutoRanging) DecimalFormat(axis.currentFormatterProperty.get()) else DecimalFormat()
 	  val axisListener =
-		ChangeListener { observable: ObservableValue<*>?, oldValue: Any?, newValue: Any? ->
-		  formatter = if (axis.isAutoRanging()) DecimalFormat(
+		ChangeListener { _: ObservableValue<*>?, _: Any?, _: Any? ->
+		  formatter = if (axis.isAutoRanging) DecimalFormat(
 			axis.currentFormatterProperty.get()
 		  ) else DecimalFormat()
 		}

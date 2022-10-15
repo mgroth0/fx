@@ -320,7 +320,7 @@ abstract class MoreGenericValueAxis<T: UpperBound>(
    * @return new scale to fit the range from lower bound to upper bound in the given display length
    */
   protected fun calculateNewScale(length: Double, lowerBound: InternalData, upperBound: InternalData): Double {
-	var newScale = 1.0
+	val newScale: Double
 	val side = getEffectiveSideMethod.invoke(this) as Side
 	/*val side = getEffectiveSide()*/
 	if (side.isVertical) {

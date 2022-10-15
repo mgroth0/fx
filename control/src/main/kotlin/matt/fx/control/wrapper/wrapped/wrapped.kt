@@ -136,7 +136,6 @@ import matt.fx.control.wrapper.chart.area.AreaChartWrapper
 import matt.fx.control.wrapper.chart.axis.AxisWrapper
 import matt.fx.control.wrapper.chart.axis.cat.CategoryAxisWrapper
 import matt.fx.control.wrapper.chart.axis.value.OldValueAxisWrapper
-import matt.fx.control.wrapper.chart.axis.value.ValueAxisWrapper
 import matt.fx.control.wrapper.chart.axis.value.number.NumberAxisWrapper
 import matt.fx.control.wrapper.chart.axis.value.number.OldNumberAxisWrapper
 import matt.fx.control.wrapper.chart.axis.value.number.moregennum.MoreGenericNumberAxis
