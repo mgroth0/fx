@@ -41,6 +41,7 @@ import matt.fx.node.file.tree.FileTreePopulationStrategy.AUTOMATIC
 import matt.fx.web.specialTransferingToWindowAndBack
 import matt.gui.draggableIcon
 import matt.gui.setview.autoResizeColumns
+import matt.lang.NEVER
 import matt.lang.inList
 import matt.log.taball
 import matt.log.todo.todo
@@ -191,6 +192,7 @@ private fun TreeLikeWrapper<*, MFile>.setupGUI() {
 	is TreeViewWrapper<MFile>      -> {
 
 	  node.setCellFactory {
+		println("in cell fact")
 		TreeCellWrapper<MFile>().apply {
 		  setOnDoubleClick {
 			this.treeItem?.value?.open()
@@ -205,6 +207,7 @@ private fun TreeLikeWrapper<*, MFile>.setupGUI() {
 			  if (text.isNotBlank()) text = ""
 			  if (graphic != null) graphic = null
 			} else {
+			  println("setting text to ${item.name}")
 			  text = item.name
 			  graphic = dragIconCache[item]
 			}
@@ -242,6 +245,7 @@ private fun TreeLikeWrapper<*, MFile>.setupGUI() {
 	  node.sortOrder.setAll(nameCol.node) /*not working, but can click columns*/
 	}
 
+	else                           -> NEVER
   }
 
 
@@ -302,7 +306,7 @@ private fun TreeLikeWrapper<*, MFile>.setupContent(
   rootFiles: BasicObservableListImpl<MFile>,
   strategy: FileTreePopulationStrategy,
 ) {
-  root = TreeItemWrapper()
+  root = TreeItemWrapper<MFile>()
   root!!.children.bind(rootFiles) {
 	(FileTreeItem(it))
   }

@@ -31,7 +31,7 @@ open class TreeItemWrapper<T: Any>(node: TreeItem<T> = TreeItem()): SingularEven
 	TODO("Not yet implemented")
   }
 
-  val expandedProperty by lazy {node.expandedProperty().toNonNullableProp()}
+  val expandedProperty by lazy { node.expandedProperty().toNonNullableProp() }
   var isExpanded by expandedProperty
   val parent get() = node.parent.wrapped()
   val children by lazy {
