@@ -1,22 +1,26 @@
 package matt.fx.control.wrapper.chart.axis.value.number
 
-import javafx.scene.chart.NumberAxis
 import matt.fx.control.wrapper.chart.axis.value.ValueAxisWrapper
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.fx.control.wrapper.chart.axis.value.moregenval.ValueAxisConverter
+import matt.fx.control.wrapper.chart.axis.value.number.moregennum.MoreGenericNumberAxis
 
-fun minimalNumberAxis() = NumberAxisWrapper().apply {
+
+fun <T: Any> minimalNumberAxis(converter: ValueAxisConverter<T>) = NumberAxisWrapper(converter).apply {
   minorTickCount = 0
   isAutoRanging = false
   isTickMarkVisible = false
   isTickLabelsVisible = false
 }
 
-class NumberAxisWrapper(node: NumberAxis = NumberAxis()): ValueAxisWrapper<Number>(node) {
-  val tickUnitProperty by lazy { node.tickUnitProperty().toNonNullableProp() }
+
+class NumberAxisWrapper<T: Any>(override val node: MoreGenericNumberAxis<T>): ValueAxisWrapper<T>(node) {
+
+  constructor(converter: ValueAxisConverter<T>): this(MoreGenericNumberAxis(converter))
+
+  val tickUnitProperty by lazy { node.tickUnit }
   var tickUnit by tickUnitProperty
 
-  val minorTickVisibleProperty by lazy { node.minorTickVisibleProperty().toNonNullableProp() }
-  var isMinorTickVisible by minorTickVisibleProperty
 
+  fun maximizeTickUnit() = node.maximizeTickUnit()
 
 }

@@ -62,7 +62,7 @@ abstract class EventTargetWrapperImpl<out N: EventTarget>: EventTargetWrapper {
 }
 
 abstract class SingularEventTargetWrapper<out N: EventTarget>(/*TODO: node must be made internal...? then protected...*/
-															  final override val node: N
+															  open override val node: N
 ): EventTargetWrapperImpl<N>() {
 
   companion object {

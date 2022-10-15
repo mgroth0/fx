@@ -1,16 +1,25 @@
 package matt.fx.control.wrapper.chart.line.highperf
 
+import javafx.scene.chart.Axis
 import javafx.scene.chart.LineChart
-import javafx.scene.chart.NumberAxis
 import matt.collect.itr.applyEach
-import matt.fx.control.wrapper.chart.line.num.NumberLineChart
+import matt.fx.control.wrapper.chart.axis.AxisWrapper
+import matt.fx.control.wrapper.chart.axis.value.ValueAxisWrapper
+import matt.fx.control.wrapper.chart.axis.value.number.NumberAxisWrapper
+import matt.fx.control.wrapper.chart.line.LineChartWrapper
 import matt.lang.err
 
 /*https://stackoverflow.com/questions/34771612/javafx-linechart-performance*/
 
-open class HighPerformanceLineChart(
-  extraHighPerf: Boolean = true
-): NumberLineChart(if (extraHighPerf) HighPerformanceFXLineChart() else LineChart(NumberAxis(), NumberAxis())) {
+open class HighPerformanceLineChart<X, Y>(
+  extraHighPerf: Boolean = true,
+  xAxis: AxisWrapper<X, out Axis<X>>,
+  yAxis: AxisWrapper<Y, out Axis<Y>>
+): LineChartWrapper<X, Y>(
+  if (extraHighPerf) HighPerformanceFXLineChart(
+	xAxis.node, yAxis.node
+  ) else LineChart(xAxis.node, yAxis.node)
+) {
   init {
 	animated = false
 	if (extraHighPerf) animatedProperty.onChange {
@@ -29,17 +38,20 @@ open class HighPerformanceLineChart(
 	  animated = false
 	  isAutoRanging = false
 	  isTickMarkVisible = false
-	  isMinorTickVisible = false
-	  minorTickCount = 0
 	  isTickLabelsVisible = false
-	  tickUnit = Double.MAX_VALUE
+	  (this as? ValueAxisWrapper)?.apply {
+		isMinorTickVisible = false
+		minorTickCount = 0
+		(this as? NumberAxisWrapper)?.maximizeTickUnit()
+	  }
 	}
   }
 }
 
 
-private class HighPerformanceFXLineChart: LineChart<Number, Number>(NumberAxis(), NumberAxis()) {
-  override fun dataItemAdded(series: Series<Number, Number>?, itemIndex: Int, item: Data<Number, Number>?) {
-	/*NOP*/
+private class HighPerformanceFXLineChart<X, Y>(
+  xAxis: Axis<X>, yAxis: Axis<Y>
+): LineChart<X, Y>(xAxis, yAxis) {
+  override fun dataItemAdded(series: Series<X, Y>?, itemIndex: Int, item: Data<X, Y>?) {    /*NOP*/
   }
 }

@@ -1,18 +1,26 @@
 package matt.fx.control.wrapper.chart.axis.value
 
-import javafx.scene.chart.ValueAxis
 import matt.fx.control.wrapper.chart.axis.AxisWrapper
+import matt.fx.control.wrapper.chart.axis.value.moregenval.MoreGenericValueAxis
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
 
 
-abstract class ValueAxisWrapper<T: Number>(node: ValueAxis<T>): AxisWrapper<T, ValueAxis<T>>(node) {
+abstract class ValueAxisWrapper<T: Any>(node: MoreGenericValueAxis<T>): AxisWrapper<T, MoreGenericValueAxis<T>>(node) {
   val minorTickCountProperty by lazy { node.minorTickCountProperty().toNonNullableProp() }
   var minorTickCount by minorTickCountProperty
-  val lowerBoundProperty by lazy { node.lowerBoundProperty().toNonNullableProp().cast<Double>() }
+  val lowerBoundProperty get() = node.lowerBound
   var lowerBound by lowerBoundProperty
-  val upperBoundProperty by lazy { node.upperBoundProperty().toNonNullableProp().cast<Double>() }
+  val upperBoundProperty get() = node.upperBound
   var upperBound by upperBoundProperty
   val tickLabelFormatterProperty by lazy { node.tickLabelFormatterProperty().toNullableProp() }
   var tickLabelFormatter by tickLabelFormatterProperty
+  val minorTickVisibleProperty by lazy { node.minorTickVisibleProperty().toNonNullableProp() }
+  var isMinorTickVisible by minorTickVisibleProperty
 }
+
+
+
+
+
+
