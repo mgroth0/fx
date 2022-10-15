@@ -1,5 +1,7 @@
 package matt.fx.control.wrapper.chart.axis.value.number
 
+import javafx.scene.chart.NumberAxis
+import matt.fx.control.wrapper.chart.axis.value.OldValueAxisWrapper
 import matt.fx.control.wrapper.chart.axis.value.ValueAxisWrapper
 import matt.fx.control.wrapper.chart.axis.value.moregenval.ValueAxisConverter
 import matt.fx.control.wrapper.chart.axis.value.number.moregennum.MoreGenericNumberAxis
@@ -22,5 +24,18 @@ class NumberAxisWrapper<T: Any>(override val node: MoreGenericNumberAxis<T>): Va
 
 
   fun maximizeTickUnit() = node.maximizeTickUnit()
+
+}
+
+
+class OldNumberAxisWrapper(node: NumberAxis): OldValueAxisWrapper<Number>(node) {
+
+  //  constructor(converter: ValueAxisConverter<T>): this(MoreGenericNumberAxis(converter))
+
+  /*val tickUnitProperty by lazy { node.tickUnit }
+  var tickUnit by tickUnitProperty*/
+
+
+//  fun maximizeTickUnit() = node.maximizeTickUnit()
 
 }

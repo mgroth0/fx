@@ -135,8 +135,11 @@ import matt.fx.control.wrapper.buttonbar.ButtonBarWrapper
 import matt.fx.control.wrapper.chart.area.AreaChartWrapper
 import matt.fx.control.wrapper.chart.axis.AxisWrapper
 import matt.fx.control.wrapper.chart.axis.cat.CategoryAxisWrapper
+import matt.fx.control.wrapper.chart.axis.value.OldValueAxisWrapper
 import matt.fx.control.wrapper.chart.axis.value.ValueAxisWrapper
 import matt.fx.control.wrapper.chart.axis.value.number.NumberAxisWrapper
+import matt.fx.control.wrapper.chart.axis.value.number.OldNumberAxisWrapper
+import matt.fx.control.wrapper.chart.axis.value.number.moregennum.MoreGenericNumberAxis
 import matt.fx.control.wrapper.chart.bar.BarChartWrapper
 import matt.fx.control.wrapper.chart.bubble.BubbleChartWrapper
 import matt.fx.control.wrapper.chart.line.LineChartWrapper
@@ -374,23 +377,24 @@ val constructorMap = lazyMap<KType, KFunction<EventTargetWrapper>> { typ ->
 }*/
 
 
-
-fun NumberAxis.wrapped(): NumberAxisWrapper = findWrapper() ?: NumberAxisWrapper(this@wrapped)
+fun <T: Any> MoreGenericNumberAxis<T>.wrapped(): NumberAxisWrapper<*> = findWrapper() ?: NumberAxisWrapper(this@wrapped)
+fun NumberAxis.wrapped(): OldNumberAxisWrapper = findWrapper() ?: OldNumberAxisWrapper(this@wrapped)
 fun CategoryAxis.wrapped(): CategoryAxisWrapper = findWrapper() ?: CategoryAxisWrapper(this@wrapped)
 
 fun ToolBar.wrapped(): ToolBarWrapper = findWrapper() ?: ToolBarWrapper(this@wrapped)
 
 
-@Suppress("UNCHECKED_CAST") fun <T: Number> ValueAxis<T>.wrapped(): ValueAxisWrapper<T> = findWrapper() ?: when (this) {
-  is NumberAxis -> wrapped() as ValueAxisWrapper<T>
+@Suppress("UNCHECKED_CAST") fun <T: Number> ValueAxis<T>.wrapped(): OldValueAxisWrapper<T> = findWrapper() ?: when (this) {
+  is NumberAxis -> wrapped() as OldValueAxisWrapper<T>
   else          -> cannotFindWrapper()
 }
 
 
 @Suppress("UNCHECKED_CAST") fun <T> Axis<T>.wrapped(): AxisWrapper<T, Axis<T>> = findWrapper() ?: when (this) {
-  is ValueAxis    -> (this as ValueAxis<out Number>).wrapped() as AxisWrapper<T, Axis<T>>
-  is CategoryAxis -> wrapped() as AxisWrapper<T, Axis<T>>
-  else            -> cannotFindWrapper()
+  is ValueAxis             -> (this as ValueAxis<out Number>).wrapped() as AxisWrapper<T, Axis<T>>
+  is CategoryAxis          -> wrapped() as AxisWrapper<T, Axis<T>>
+  is MoreGenericNumberAxis -> wrapped()
+  else                     -> cannotFindWrapper()
 }
 
 

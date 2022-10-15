@@ -7,6 +7,6 @@ import matt.fx.control.wrapper.chart.line.LineChartWrapper
 
 open class NumberLineChart(node: LineChart<Number, Number> = LineChart(NumberAxis(), NumberAxis())):
   LineChartWrapper<Number, Number>(node) {
-  override val yAxis: NumberAxisWrapper get() = super.yAxis as NumberAxisWrapper
-  override val xAxis: NumberAxisWrapper get() = super.xAxis as NumberAxisWrapper
+  override val yAxis: NumberAxisWrapper<Number> get() = super.yAxis as NumberAxisWrapper
+  override val xAxis: NumberAxisWrapper<Number> get() = super.xAxis as NumberAxisWrapper
 }

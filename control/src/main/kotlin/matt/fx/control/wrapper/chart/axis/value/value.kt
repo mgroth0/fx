@@ -1,5 +1,6 @@
 package matt.fx.control.wrapper.chart.axis.value
 
+import javafx.scene.chart.ValueAxis
 import matt.fx.control.wrapper.chart.axis.AxisWrapper
 import matt.fx.control.wrapper.chart.axis.value.moregenval.MoreGenericValueAxis
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
@@ -18,6 +19,20 @@ abstract class ValueAxisWrapper<T: Any>(node: MoreGenericValueAxis<T>): AxisWrap
   val minorTickVisibleProperty by lazy { node.minorTickVisibleProperty().toNonNullableProp() }
   var isMinorTickVisible by minorTickVisibleProperty
 }
+
+abstract class OldValueAxisWrapper<T: Number>(node: ValueAxis<T>): AxisWrapper<T, ValueAxis<T>>(node) {
+  val minorTickCountProperty by lazy { node.minorTickCountProperty().toNonNullableProp() }
+  var minorTickCount by minorTickCountProperty
+  /*val lowerBoundProperty get() = node.lowerBound
+  var lowerBound by lowerBoundProperty
+  val upperBoundProperty get() = node.upperBound
+  var upperBound by upperBoundProperty*/
+  val tickLabelFormatterProperty by lazy { node.tickLabelFormatterProperty().toNullableProp() }
+  var tickLabelFormatter by tickLabelFormatterProperty
+  val minorTickVisibleProperty by lazy { node.minorTickVisibleProperty().toNonNullableProp() }
+  var isMinorTickVisible by minorTickVisibleProperty
+}
+
 
 
 
