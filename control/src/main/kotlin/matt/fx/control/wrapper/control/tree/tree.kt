@@ -27,7 +27,7 @@ fun <T: Any> TreeViewWrapper<T>.select(o: T?) {
   Platform.runLater {
 	when {
 	  o != null -> {
-		selectionModel.select(items().firstOrNull { it == o })
+		selectionModel.select(items().firstOrNull { it == o }?.node)
 	  }
 
 	  else      -> selectionModel.clearSelection()
