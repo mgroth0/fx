@@ -183,8 +183,8 @@ abstract class MoreGenericValueAxis<T: UpperBound>(
   }
 
   /** StringConverter used to format tick mark labels. If null a default will be used  */
-  protected val tickLabelFormatter: ObjectProperty<StringConverter<T>> =
-	object: ObjectPropertyBase<StringConverter<T>>(null) {
+  protected val tickLabelFormatter: ObjectProperty<StringConverter<in T>> =
+	object: ObjectPropertyBase<StringConverter<in T>>(null) {
 	  override fun invalidated() {
 		invalidateRange()
 		requestAxisLayout()
@@ -199,15 +199,15 @@ abstract class MoreGenericValueAxis<T: UpperBound>(
 	  }
 	}
 
-  fun getTickLabelFormatter(): StringConverter<T> {
+  fun getTickLabelFormatter(): StringConverter<in T> {
 	return tickLabelFormatter.value
   }
 
-  fun setTickLabelFormatter(value: StringConverter<T>) {
+  fun setTickLabelFormatter(value: StringConverter<in T>) {
 	tickLabelFormatter.value = value
   }
 
-  fun tickLabelFormatterProperty(): ObjectProperty<StringConverter<T>> {
+  fun tickLabelFormatterProperty(): ObjectProperty<StringConverter<in T>> {
 	return tickLabelFormatter
   }
 

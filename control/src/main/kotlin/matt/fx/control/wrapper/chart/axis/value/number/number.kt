@@ -28,7 +28,7 @@ class NumberAxisWrapper<T: Any>(override val node: MoreGenericNumberAxis<T>): Va
 }
 
 
-class OldNumberAxisWrapper(node: NumberAxis): OldValueAxisWrapper<Number>(node) {
+class OldNumberAxisWrapper(node: NumberAxis = NumberAxis()): OldValueAxisWrapper<Number>(node) {
 
   //  constructor(converter: ValueAxisConverter<T>): this(MoreGenericNumberAxis(converter))
 
