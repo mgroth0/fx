@@ -37,10 +37,10 @@ class TreeViewWrapper<T: Any>(node: TreeView<T> = TreeView(), op: TreeViewWrappe
   fun editableProperty(): BooleanProperty = node.editableProperty()
 
 
-  final override val cellFactoryProperty by lazy { node.cellFactoryProperty().toNonNullableProp() }
+  override val cellFactoryProperty by lazy { node.cellFactoryProperty().toNonNullableProp() }
 
 
-  final override val rootProperty by lazy {node.rootProperty().toNullableProp().proxy(uncheckedNullableWrapperConverter<TreeItem<T>,TreeItemWrapper<T>>())}
+  override val rootProperty by lazy {node.rootProperty().toNullableProp().proxy(uncheckedNullableWrapperConverter<TreeItem<T>,TreeItemWrapper<T>>())}
 
   override var isShowRoot: Boolean
 	get() = node.isShowRoot
