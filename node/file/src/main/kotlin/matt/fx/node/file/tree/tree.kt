@@ -192,7 +192,6 @@ private fun TreeLikeWrapper<*, MFile>.setupGUI() {
 	is TreeViewWrapper<MFile>      -> {
 
 	  node.setCellFactory {
-		println("in cell fact")
 		TreeCellWrapper<MFile>().apply {
 		  setOnDoubleClick {
 			this.treeItem?.value?.open()
@@ -207,7 +206,6 @@ private fun TreeLikeWrapper<*, MFile>.setupGUI() {
 			  if (text.isNotBlank()) text = ""
 			  if (graphic != null) graphic = null
 			} else {
-			  println("setting text to ${item.name}")
 			  text = item.name
 			  graphic = dragIconCache[item]
 			}
