@@ -5,10 +5,6 @@ import javafx.animation.KeyFrame
 import javafx.animation.KeyValue
 import javafx.beans.property.BooleanProperty
 import javafx.beans.property.BooleanPropertyBase
-import javafx.beans.property.SimpleStringProperty
-import javafx.beans.property.StringProperty
-import javafx.beans.value.ChangeListener
-import javafx.beans.value.ObservableValue
 import javafx.css.CssMetaData
 import javafx.css.Styleable
 import javafx.geometry.Dimension2D
@@ -17,8 +13,8 @@ import javafx.util.Duration
 import javafx.util.StringConverter
 import matt.fx.control.wrapper.chart.axis.value.moregenval.MoreGenericValueAxis
 import matt.fx.control.wrapper.chart.axis.value.moregenval.ValueAxisConverter
+import matt.lang.NEVER
 import matt.obs.prop.BindableProperty
-import java.text.DecimalFormat
 
 
 /**
@@ -37,8 +33,7 @@ class MoreGenericNumberAxis<T: Any>(
 ) {
   private var currentAnimationID: Any? = null
   private val animator = ChartLayoutAnimator(this)
-  private val currentFormatterProperty: StringProperty = SimpleStringProperty(this, "currentFormatter", "")
-  private val defaultFormatter = DefaultFormatter(this)
+  private val defaultFormatter = DefaultFormatter()
   // -------------- PUBLIC PROPERTIES --------------------------------------------------------------------------------
   /** When true zero is always included in the visible range. This only has effect if auto-ranging is on.  */
   private val forceZeroInRange: BooleanProperty = object: BooleanPropertyBase(true) {
@@ -142,7 +137,7 @@ class MoreGenericNumberAxis<T: Any>(
 	  upperBound.value.convert(),
 	  tickUnit.value.convert(),
 	  scale,
-	  currentFormatterProperty.get()
+	  /*currentFormatterProperty.get()*/
 	)
   }
 
@@ -160,8 +155,8 @@ class MoreGenericNumberAxis<T: Any>(
 	val upperBound = rangeProps[1] as Double
 	val tickUnit = rangeProps[2] as Double
 	val scale = rangeProps[3] as Double
-	val formatter = rangeProps[4] as String
-	currentFormatterProperty.set(formatter)
+	/*val formatter = rangeProps[4] as String*/
+	/*currentFormatterProperty.set(formatter)*/
 	val oldLowerBound = this.lowerBound.value
 	this.lowerBound.value = (lowerBound.convert())
 	this.upperBound.value = (upperBound.convert())
@@ -294,10 +289,10 @@ class MoreGenericNumberAxis<T: Any>(
    * @return size of tick mark label for given value
    */
   override fun measureTickMarkSize(value: T, range: Any): Dimension2D {
-	@Suppress("UNCHECKED_CAST")
+	@Suppress("UNCHECKED_CAST", "UNUSED_VARIABLE")
 	val rangeProps = range as Array<Any>
-	val formatter = rangeProps[4] as String
-	return measureTickMarkSize(value, tickLabelRotation, formatter)
+//	val formatter = rangeProps[4] as String
+	return measureTickMarkSize(value, tickLabelRotation/*, formatter*/)
   }
 
   /**
@@ -308,12 +303,12 @@ class MoreGenericNumberAxis<T: Any>(
    * @param numFormatter The number formatter
    * @return size of tick mark label for given value
    */
-  private fun measureTickMarkSize(value: T, rotation: Double, numFormatter: String): Dimension2D {
+  private fun measureTickMarkSize(value: T, rotation: Double, @Suppress("UNUSED_PARAMETER") numFormatter: Unit = Unit): Dimension2D {
 	val labelText: String
 	val formatter = tickLabelFormatter
 	if (formatter.value == null) formatter.value = defaultFormatter
 	if (formatter.value is DefaultFormatter) {
-	  labelText = (formatter.value as DefaultFormatter).toString(value, numFormatter)
+	  labelText = (formatter.value as DefaultFormatter).toString(value)
 	} else {
 	  labelText = formatter.value.toString(value)
 	}
@@ -416,7 +411,7 @@ class MoreGenericNumberAxis<T: Any>(
 	  var major = minRounded
 	  var i = 0
 	  while (major <= maxRounded && i < count) {
-		val markSize = measureTickMarkSize(converter.convertToA(major), tickLabelRotation, formatter)
+		val markSize = measureTickMarkSize(converter.convertToA(major), tickLabelRotation/*, formatter*/)
 		val size = if (side.isVertical) markSize.height else markSize.width
 		if (i == 0) { // first
 		  last = size/2
@@ -493,27 +488,9 @@ class MoreGenericNumberAxis<T: Any>(
    * You can wrap this formatter to add prefixes or suffixes;
    * @since JavaFX 2.0
    */
-  inner class DefaultFormatter(axis: MoreGenericNumberAxis<*>): StringConverter<T>() {
-	private var formatter: DecimalFormat
+  inner class DefaultFormatter(): StringConverter<T>() {
 	private var prefix: String? = null
 	private var suffix: String? = null
-
-	/**
-	 * Construct a DefaultFormatter for the given NumberAxis
-	 *
-	 * @param axis The axis to format tick marks for
-	 */
-	init {
-	  formatter = if (axis.isAutoRanging) DecimalFormat(axis.currentFormatterProperty.get()) else DecimalFormat()
-	  val axisListener =
-		ChangeListener { _: ObservableValue<*>?, _: Any?, _: Any? ->
-		  formatter = if (axis.isAutoRanging) DecimalFormat(
-			axis.currentFormatterProperty.get()
-		  ) else DecimalFormat()
-		}
-	  axis.currentFormatterProperty.addListener(axisListener)
-	  axis.autoRangingProperty().addListener(axisListener)
-	}
 
 	/**
 	 * Construct a DefaultFormatter for the given NumberAxis with a prefix and/or suffix.
@@ -522,38 +499,20 @@ class MoreGenericNumberAxis<T: Any>(
 	 * @param prefix The prefix to append to the start of formatted number, can be null if not needed
 	 * @param suffix The suffix to append to the end of formatted number, can be null if not needed
 	 */
-	constructor(axis: MoreGenericNumberAxis<*>, prefix: String?, suffix: String?): this(axis) {
+	constructor(prefix: String?, suffix: String?): this() {
 	  this.prefix = prefix
 	  this.suffix = suffix
 	}
 
-	/**
-	 * Converts the object provided into its string form.
-	 * Format of the returned string is defined by this converter.
-	 * @return a string representation of the object passed in.
-	 * @see StringConverter.toString
-	 */
 	override fun toString(`object`: T): String {
-	  return toString(`object`, formatter)
-	}
-
-	internal fun toString(`object`: T, numFormatter: String?): String {
-	  return if (numFormatter == null || numFormatter.isEmpty()) {
-		toString(`object`, formatter)
-	  } else {
-		toString(`object`, DecimalFormat(numFormatter))
-	  }
-	}
-
-	private fun toString(`object`: T, formatter: DecimalFormat): String {
 	  if (prefix != null && suffix != null) {
-		return prefix + formatter.format(`object`) + suffix
+		return prefix + `object`.toString() + suffix
 	  } else if (prefix != null) {
-		return prefix + formatter.format(`object`)
+		return prefix + `object`.toString()
 	  } else return if (suffix != null) {
-		formatter.format(`object`) + suffix
+		`object`.toString() + suffix
 	  } else {
-		formatter.format(`object`)
+		`object`.toString()
 	  }
 	}
 
@@ -564,12 +523,13 @@ class MoreGenericNumberAxis<T: Any>(
 	 * @see StringConverter.toString
 	 */
 	override fun fromString(string: String): T {
+	  NEVER
 	  /*try {*/
-	  val prefixLength = if ((prefix == null)) 0 else prefix!!.length
-	  val suffixLength = if ((suffix == null)) 0 else suffix!!.length
-	  return converter.convertToA(
-		formatter.parse(string.substring(prefixLength, string.length - suffixLength)).toDouble()
-	  )
+//	  val prefixLength = if ((prefix == null)) 0 else prefix!!.length
+//	  val suffixLength = if ((suffix == null)) 0 else suffix!!.length
+//	  return converter.convertToA(
+//		formatter.parse(string.substring(prefixLength, string.length - suffixLength)).toDouble()
+//	  )
 	  /*} catch (e: ParseException) {
 		return null
 	  }*/

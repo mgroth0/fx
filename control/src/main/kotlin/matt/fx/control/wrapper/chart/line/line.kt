@@ -1,21 +1,28 @@
 package matt.fx.control.wrapper.chart.line
 
 import javafx.scene.chart.LineChart
+import javafx.scene.chart.XYChart.Data
 import matt.fx.control.wrapper.chart.axis.MAxis
+import matt.fx.control.wrapper.chart.axis.value.number.NumberAxisWrapper
 import matt.fx.control.wrapper.chart.xy.XYChartWrapper
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
-
+import matt.math.point.BasicPoint
 
 
 /**
  * Create a LineChart with optional title, axis and add to the parent pane. The optional op will be performed on the new instance.
  */
-fun <X, Y> ET.linechart(title: String? = null, x: MAxis<X>, y: MAxis<Y>, op: LineChartWrapper<X, Y>.()->Unit = {}) =
+fun <X: Any, Y: Any> ET.linechart(
+  title: String? = null,
+  x: MAxis<X>,
+  y: MAxis<Y>,
+  op: LineChartWrapper<X, Y>.()->Unit = {}
+) =
   LineChartWrapper(x, y).attachTo(this, op) { it.title = title }
 
-open class LineChartWrapper<X, Y>(
+open class LineChartWrapper<X: Any, Y: Any>(
   node: LineChart<X, Y>
 ): XYChartWrapper<X, Y, LineChart<X, Y>>(node) {
   constructor(x: MAxis<X>, y: MAxis<Y>): this(LineChart(x.node, y.node))
@@ -24,8 +31,17 @@ open class LineChartWrapper<X, Y>(
   var createSymbols by createSymbolsProperty
 
 
+  fun displayPixelOf(x: X, y: Y) = BasicPoint(
+	x = (xAxis as NumberAxisWrapper<X>).displayPixelOf(x),
+	y = (yAxis as NumberAxisWrapper<Y>).displayPixelOf(y)
+  )
 
-
+  fun valueForPosition(xPixels: Double, yPixels: Double) {
+	Data<X, Y>(
+	  (xAxis as NumberAxisWrapper<X>).valueForDisplayPixel(xPixels),
+	  (yAxis as NumberAxisWrapper<Y>).valueForDisplayPixel(yPixels)
+	)
+  }
 
 }
 

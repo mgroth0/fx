@@ -5,6 +5,10 @@
 	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
 	  "cfg" :  "api",
 	  "path" : ":k:css"
+	},	{
+	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
+	  "cfg" :  "implementation",
+	  "path" : ":k:cbor"
 	},
 	{
 	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",

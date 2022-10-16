@@ -64,7 +64,7 @@ abstract class MoreGenericValueAxis<T: UpperBound>(
 
   companion object {
 	protected val measureInvalidProp: Field by lazy {
-	  Axis::class.java.getDeclaredField("measuredInvalid").also {
+	  Axis::class.java.getDeclaredField("measureInvalid").also {
 		it.isAccessible = true
 	  }
 	}
@@ -140,7 +140,7 @@ abstract class MoreGenericValueAxis<T: UpperBound>(
   protected val scale: ReadOnlyDoubleWrapper = object: ReadOnlyDoubleWrapper(this, "scale", 0.0) {
 	override fun invalidated() {
 	  requestAxisLayout()
-	  measureInvalidProp.set(this, true)
+	  measureInvalidProp.set(this@MoreGenericValueAxis, true)
 	  /*measureInvalid = true*/
 	}
   }
@@ -622,5 +622,7 @@ abstract class MoreGenericValueAxis<T: UpperBound>(
   override fun getCssMetaData(): List<CssMetaData<out Styleable?, *>>? {
 	return StyleableProperties.classCssMetaData
   }
+
+
 
 }

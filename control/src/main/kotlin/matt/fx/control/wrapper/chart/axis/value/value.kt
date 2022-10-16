@@ -8,11 +8,12 @@ import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
 
 
 abstract class ValueAxisWrapper<T: Any>(node: MoreGenericValueAxis<T>): AxisWrapper<T, MoreGenericValueAxis<T>>(node) {
+  private val superNode = node
   val minorTickCountProperty by lazy { node.minorTickCountProperty().toNonNullableProp() }
   var minorTickCount by minorTickCountProperty
-  val lowerBoundProperty get() = node.lowerBound
+  val lowerBoundProperty get() = superNode.lowerBound
   var lowerBound by lowerBoundProperty
-  val upperBoundProperty get() = node.upperBound
+  val upperBoundProperty get() = superNode.upperBound
   var upperBound by upperBoundProperty
   val tickLabelFormatterProperty by lazy { node.tickLabelFormatterProperty().toNullableProp() }
   var tickLabelFormatter by tickLabelFormatterProperty

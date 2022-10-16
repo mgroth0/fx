@@ -61,9 +61,19 @@ abstract class EventTargetWrapperImpl<out N: EventTarget>: EventTargetWrapper {
 
 }
 
-abstract class SingularEventTargetWrapper<out N: EventTarget>(/*TODO: node must be made internal...? then protected...*/
-															  open override val node: N
+abstract class SingularEventTargetWrapper<out N: EventTarget>(
+  /*TODO: node must be made internal...? then protected...*/
+  node: N
 ): EventTargetWrapperImpl<N>() {
+
+  //  private var superNode: N? = null
+  //  init {
+  //	node
+  //  }
+
+  private val superNode = node
+  @Suppress("CanBePrimaryConstructorProperty")
+  override val node = node
 
   companion object {
 	val wrappers = WeakMap<EventTarget, EventTargetWrapper>()
@@ -71,9 +81,9 @@ abstract class SingularEventTargetWrapper<out N: EventTarget>(/*TODO: node must 
 
   init {
 
-	require(node !in wrappers) {
-	  "A second ${SingularEventTargetWrapper::class.simpleName} was created for $node"
+	require(superNode !in wrappers) {
+	  "A second ${SingularEventTargetWrapper::class.simpleName} was created for $superNode"
 	}
-	wrappers[node] = this
+	wrappers[superNode] = this
   }
 }

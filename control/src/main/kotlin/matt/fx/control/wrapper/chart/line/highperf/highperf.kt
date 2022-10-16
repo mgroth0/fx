@@ -4,6 +4,7 @@ import javafx.scene.chart.Axis
 import javafx.scene.chart.LineChart
 import matt.collect.itr.applyEach
 import matt.fx.control.wrapper.chart.axis.AxisWrapper
+import matt.fx.control.wrapper.chart.axis.value.OldValueAxisWrapper
 import matt.fx.control.wrapper.chart.axis.value.ValueAxisWrapper
 import matt.fx.control.wrapper.chart.axis.value.number.NumberAxisWrapper
 import matt.fx.control.wrapper.chart.line.LineChartWrapper
@@ -11,7 +12,7 @@ import matt.lang.err
 
 /*https://stackoverflow.com/questions/34771612/javafx-linechart-performance*/
 
-open class HighPerformanceLineChart<X, Y>(
+open class HighPerformanceLineChart<X: Any, Y: Any>(
   extraHighPerf: Boolean = true,
   xAxis: AxisWrapper<X, out Axis<X>>,
   yAxis: AxisWrapper<Y, out Axis<Y>>
@@ -42,16 +43,31 @@ open class HighPerformanceLineChart<X, Y>(
 	  (this as? ValueAxisWrapper)?.apply {
 		isMinorTickVisible = false
 		minorTickCount = 0
-		(this as? NumberAxisWrapper)?.maximizeTickUnit()
+		(this as? NumberAxisWrapper)?.apply{
+		  maximizeTickUnit()
+		}
+	  }
+	  (this as? OldValueAxisWrapper)?.apply {
+		error("dont use this")
+		/*isMinorTickVisible = false
+		minorTickCount = 0
+		(this as? OldNumberAxisWrapper)?.apply{
+		  maximizeTickUnit()
+		}*/
 	  }
 	}
   }
-}
 
+
+
+
+
+}
 
 private class HighPerformanceFXLineChart<X, Y>(
   xAxis: Axis<X>, yAxis: Axis<Y>
 ): LineChart<X, Y>(xAxis, yAxis) {
   override fun dataItemAdded(series: Series<X, Y>?, itemIndex: Int, item: Data<X, Y>?) {    /*NOP*/
   }
+
 }
