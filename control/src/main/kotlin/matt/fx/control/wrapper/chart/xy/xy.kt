@@ -2,15 +2,13 @@ package matt.fx.control.wrapper.chart.xy
 
 import javafx.scene.chart.XYChart
 import javafx.scene.chart.XYChart.Data
-import javafx.scene.chart.XYChart.Series
 import matt.fx.control.wrapper.chart.ChartWrapper
 import matt.fx.control.wrapper.chart.axis.MAxis
+import matt.fx.control.wrapper.chart.xy.series.SeriesConverter
 import matt.fx.control.wrapper.chart.xy.series.SeriesWrapper
-import matt.fx.control.wrapper.chart.xy.series.wrapped
 import matt.fx.control.wrapper.wrapped.wrapped
 import matt.hurricanefx.eye.wrapper.obs.collect.createMutableWrapper
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
-import matt.model.convert.Converter
 import matt.obs.col.olist.MutableObsList
 import matt.obs.col.olist.mappedlist.toSyncedList
 
@@ -19,18 +17,8 @@ fun <X, Y> MutableList<Data<X, Y>>.add(x: X, y: Y) = add(Data(x, y))
 open class XYChartWrapper<X, Y, N: XYChart<X, Y>>(node: N): ChartWrapper<N>(node) {
 
 
-  @Suppress("UNCHECKED_CAST")
   val data: MutableObsList<SeriesWrapper<X, Y>> by lazy {
-	node.data.createMutableWrapper().toSyncedList(object: Converter<Series<X, Y>, SeriesWrapper<X, Y>> {
-	  override fun convertToB(a: Series<X, Y>): SeriesWrapper<X, Y> {
-		return a.wrapped() as SeriesWrapper<X, Y>
-	  }
-
-	  override fun convertToA(b: SeriesWrapper<X, Y>): Series<X, Y> {
-		return b.series
-	  }
-	})
-
+	node.data.createMutableWrapper().toSyncedList(SeriesConverter<X, Y>())
   }
 
 
