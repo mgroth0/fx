@@ -45,6 +45,8 @@ value class DurationWrapper(val dur: Duration): Interpolatable<DurationWrapper>,
   fun toDouble(unit: DurationUnit) = dur.toDouble(unit)
 
   val inWholeMilliseconds get() = dur.inWholeMilliseconds
+  val inWholeSeconds get() = dur.inWholeSeconds
+  val inDecimalSeconds get() = dur.toDouble(SECONDS)
   override fun plus(m: DurationWrapper): DurationWrapper {
 	return (dur + m.dur).wrapped()
   }

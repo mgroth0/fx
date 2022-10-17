@@ -2,7 +2,6 @@ package matt.fx.control.wrapper.control.table
 
 import javafx.application.Platform
 import javafx.beans.property.ObjectProperty
-import javafx.beans.property.ReadOnlyObjectProperty
 import javafx.beans.property.ReadOnlyObjectWrapper
 import javafx.collections.ListChangeListener
 import javafx.collections.ObservableList
@@ -44,66 +43,7 @@ import kotlin.reflect.KFunction
 import kotlin.reflect.KMutableProperty1
 import kotlin.reflect.KProperty1
 
-//  call the method after inserting the data into table
-fun <T: Any> TableViewWrapper<T>.autoResizeColumns() {
-  columnResizePolicy = TableView.UNCONSTRAINED_RESIZE_POLICY
-  columns.forEach { column ->
-	column.setPrefWidth(
-	  (((0 until items!!.size).mapNotNull {
-		column.getCellData(it)
-	  }.map {
-		it.toString().fxWidth
-	  }.toMutableList() + listOf(
-		column.text.fxWidth
-	  )).maxOrNull() ?: 0.0) + 10.0
-	)
-  }
-}
 
-fun <T: Any> TableViewWrapper<T>.selectOnDrag() {
-  var startRow = 0
-  var startColumn = columns.first()
-
-  // Record start position and clear selection unless Control is down
-  addEventFilter(MouseEvent.MOUSE_PRESSED) {
-	startRow = 0
-
-	(it.pickResult.intersectedNode as? TableCell<*, *>)?.apply {
-	  startRow = index
-	  @Suppress("UNCHECKED_CAST")
-	  startColumn = tableColumn as TableColumn<T, *>?
-
-	  if (selectionModel.isCellSelectionEnabled) {
-		selectionModel.clearAndSelect(startRow, startColumn.wrapped())
-	  } else {
-		selectionModel.clearAndSelect(startRow)
-	  }
-	}
-  }
-
-  // Select items while dragging
-  addEventFilter(MouseEvent.MOUSE_DRAGGED) {
-	(it.pickResult.intersectedNode as? TableCell<*, *>)?.apply {
-	  if (items!!.size > index) {
-		if (selectionModel.isCellSelectionEnabled) {
-		  @Suppress("UNCHECKED_CAST")
-		  selectionModel.selectRange(
-			startRow, startColumn.wrapped(), index, (tableColumn as TableColumn<T, *>).wrapped()
-		  )
-		} else {
-		  selectionModel.selectRange(startRow, index)
-		}
-	  }
-	}
-  }
-}
-
-
-fun <T: Any> TableViewWrapper<T>.bindSelected(property: VarProp<T?>) {
-  selectionModel.selectedItemProperty.onChange {
-	property.value = it
-  }
-}
 
 
 fun <T: Any> ET.tableview(items: ObsList<T>? = null, op: TableViewWrapper<T>.()->Unit = {}) =
@@ -117,9 +57,6 @@ fun <T: Any> ET.tableview(items: ObsList<T>? = null, op: TableViewWrapper<T>.()-
 
 	}
   }
-
-//fun <T: Any> ET.tableview(items: ObsVal<ObsList<T>>, op: TableViewWrapper<T>.()->Unit = {}): TableViewWrapper<T> =
-//  tableview(items, op)
 
 fun <T: Any> ET.tableview(
   items: ObsVal<out MutableObsList<T>>,
@@ -166,10 +103,26 @@ open class TableViewWrapper<E: Any>(
   fun sort() = node.sort()
   val editingCellProperty by lazy { node.editingCellProperty().toNullableROProp() }
 
-  /**
-   * Create a coolColumn with a value factory that extracts the value from the given mutable
-   * property and converts the property to an observable value.
-   */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   inline fun <reified P> column(
 	title: String,
 	prop: KMutableProperty1<E, P>,
@@ -184,31 +137,7 @@ open class TableViewWrapper<E: Any>(
 	return column.also(op)
   }
 
-  //  /**
-  //   * Create a matt.hurricanefx.tableview.coolColumn with a value factory that extracts the value from the given property and
-  //   * converts the property to an observable value.
-  //   *
-  //   * ATTENTION: This function was renamed to `readonlyColumn` to avoid shadowing the version for
-  //   * observable properties.
-  //   */
-  //  inline fun <reified P> readonlyColumn(
-  //	title: String,
-  //	prop: KProperty1<E, P>,
-  //	noinline op: TableColumnWrapper<E, P>.()->Unit = {}
-  //  ): TableColumnWrapper<E, P> {
-  //	val column = TableColumnWrapper<E, P>(title)
-  //	column.cellValueFactory = Callback {
-  //	  it.value
-  //	  /*observable(it.value, prop)*/ VarProp(it.value)
-  //	}
-  //	addColumnInternal(column)
-  //	return column.also(op)
-  //  }
 
-
-  /**
-   * Create a matt.hurricanefx.tableview.coolColumn with a value factory that extracts the value from the given ObservableValue property.
-   */
   inline fun <reified P> column(
 	title: String,
 	prop: KProperty1<E, ObsVal<P>>,
@@ -219,6 +148,280 @@ open class TableViewWrapper<E: Any>(
 	addColumnInternal(column)
 	return column.also(op)
   }
+
+
+
+  /**
+   * Create a matt.hurricanefx.tableview.coolColumn with a title specified cell type and operate on it. Inside the code block you can call
+   * `value { it.value.someProperty }` to set up a cellValueFactory that must return T or ObservableValue<T>
+   */
+  @Suppress("UNUSED_PARAMETER")
+  fun <P: Any> column(
+	title: String,
+	cellType: KClass<P>,
+	op: TableColumnWrapper<E, P>.()->Unit = {}
+  ): TableColumnWrapper<E, P> {
+	val column = TableColumnWrapper<E, P>(title)
+	addColumnInternal(column)
+	return column.also(op)
+  }
+
+
+  fun <P> column(
+	title: String,
+	prefWidth: Double? = null,
+	valueProvider: (TableColumn.CellDataFeatures<E, P>)->ObsVal<P>,
+  ): TableColumnWrapper<E, P> {
+	val column = TableColumnWrapper<E, P>(title)
+	column.cellValueFactory = Callback { valueProvider(it) }
+	prefWidth?.let { column.prefWidth = it }
+	addColumnInternal(column)
+	return column
+  }
+
+
+  inline fun <reified P> column(
+	title: String,
+	observableFn: KFunction<ObsVal<P>>
+  ): TableColumnWrapper<E, P> {
+	val column = TableColumnWrapper<E, P>(title)
+	column.cellValueFactory = Callback { observableFn.call(it.value) }
+	addColumnInternal(column)
+	return column
+  }
+
+
+
+
+  @JvmName("coolColumn")
+  fun <P> column(getter: KFunction<P>, op: TableColumnWrapper<E, P>.()->Unit = {}): TableColumnWrapper<E, P> {
+	return column(getter.name) {
+	  BindableProperty(getter.call(it.value))
+	}.apply(op)
+  }
+
+
+  @JvmName("coolColumn2")
+  fun <P> column(
+	getter: KProperty1<E, P>,
+	op: TableColumnWrapper<E, P>.()->Unit = {}
+  ): TableColumnWrapper<E, P> {
+	return column(getter.name) {
+	  BindableProperty(getter.call(it.value))
+	}.apply(op)
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  /**
+   * Create a matt.hurricanefx.tableview.coolColumn holding matt.fx.control.layout.children columns
+   */
+  @Suppress("UNCHECKED_CAST")
+  fun nestedColumn(
+	title: String,
+	op: TableViewWrapper<E>.(TableColumn<E, Any?>)->Unit = {}
+  ): TableColumnWrapper<E, Any?> {
+	val column = TableColumnWrapper<E, Any?>(title)
+	addColumnInternal(column)
+	val previousColumnTarget = node.properties["tornadofx.columnTarget"] as? ObservableList<TableColumn<E, *>>
+	node.properties["tornadofx.columnTarget"] = column.node.columns
+	op(this, column.node)
+	node.properties["tornadofx.columnTarget"] = previousColumnTarget
+	return column
+  }
+
+  @Suppress("UNCHECKED_CAST")
+  fun addColumnInternal(column: TableColumnWrapper<E, *>, index: Int? = null) {
+	val columnTarget = node.properties["tornadofx.columnTarget"] as? ObservableList<TableColumn<E, *>> ?: columns
+	if (index == null) columnTarget.add(column.node) else columnTarget.add(index, column.node)
+  }
+
+  fun makeIndexColumn(name: String = "#", startNumber: Int = 1): TableColumn<E, Number> {
+	return TableColumn<E, Number>(name).apply {
+	  isSortable = false
+	  prefWidth = width
+
+	  this@TableViewWrapper.columns += this
+	  setCellValueFactory { ReadOnlyObjectWrapper(items!!.indexOf(it.value) + startNumber) }
+	}
+  }
+
+
+
+
+
+
+
+
+
+  override fun addChild(child: NodeWrapper, index: Int?) {
+	TODO("Not yet implemented")
+  }
+
+
+  fun selectOnDrag() {
+	var startRow = 0
+	var startColumn = columns.first()
+
+	// Record start position and clear selection unless Control is down
+	addEventFilter(MouseEvent.MOUSE_PRESSED) {
+	  startRow = 0
+
+	  (it.pickResult.intersectedNode as? TableCell<*, *>)?.apply {
+		startRow = index
+		@Suppress("UNCHECKED_CAST")
+		startColumn = tableColumn as TableColumn<E, *>?
+
+		if (selectionModel.isCellSelectionEnabled) {
+		  selectionModel.clearAndSelect(startRow, startColumn.wrapped())
+		} else {
+		  selectionModel.clearAndSelect(startRow)
+		}
+	  }
+	}
+
+	// Select items while dragging
+	addEventFilter(MouseEvent.MOUSE_DRAGGED) {
+	  (it.pickResult.intersectedNode as? TableCell<*, *>)?.apply {
+		if (items!!.size > index) {
+		  if (selectionModel.isCellSelectionEnabled) {
+			@Suppress("UNCHECKED_CAST")
+			selectionModel.selectRange(
+			  startRow, startColumn.wrapped(), index, (tableColumn as TableColumn<E, *>).wrapped()
+			)
+		  } else {
+			selectionModel.selectRange(startRow, index)
+		  }
+		}
+	  }
+	}
+  }
+
+
+  //  call the method after inserting the data into table
+  fun autoResizeColumns() {
+	columnResizePolicy = TableView.UNCONSTRAINED_RESIZE_POLICY
+	columns.forEach { column ->
+	  column.setPrefWidth(
+		(((0 until items!!.size).mapNotNull {
+		  column.getCellData(it)
+		}.map {
+		  it.toString().fxWidth
+		}.toMutableList() + listOf(
+		  column.text.fxWidth
+		)).maxOrNull() ?: 0.0) + 10.0
+	  )
+	}
+  }
+
+
+  fun bindSelected(property: VarProp<E?>) {
+	selectionModel.selectedItemProperty.onChange {
+	  property.value = it
+	}
+  }
+
+  fun selectWhere(scrollTo: Boolean = true, condition: (E)->Boolean) {
+	items!!.asSequence().filter(condition).forEach {
+	  selectionModel.select(it)
+	  if (scrollTo) scrollTo(it)
+	}
+  }
+
+
+  fun moveToTopWhere(
+	backingList: MutableObsList<E> = items!!,
+	select: Boolean = true,
+	predicate: (E)->Boolean
+  ) {
+	if (select) selectionModel.clearSelection()
+	backingList.filter(predicate).forEach {
+	  backingList.remove(it)
+	  backingList.add(0, it)
+	  if (select) selectionModel.select(it)
+	}
+  }
+
+
+  fun moveToBottomWhere(
+	backingList: MutableObsList<E> = items!!,
+	select: Boolean = true,
+	predicate: (E)->Boolean
+  ) {
+	val end = backingList.size - 1
+	if (select) selectionModel.clearSelection()
+	backingList.filter(predicate).forEach {
+	  backingList.remove(it)
+	  backingList.add(end, it)
+	  if (select) selectionModel.select(it)
+
+	}
+  }
+
+  /**
+   * Execute action when the enter key is pressed or the mouse is clicked
+
+   * @param clickCount The number of mouse clicks to trigger the action
+   * *
+   * @param action The action to execute on select
+   */
+  fun onUserSelect(clickCount: Int = 2, action: (E)->Unit) {
+	val isSelected = { event: InputEvent ->
+	  event.target.wrapped().isInsideRow() && !selectionModel.selectionIsEmpty()
+	}
+
+	addEventFilter(MouseEvent.MOUSE_CLICKED) { event ->
+	  if (event.clickCount == clickCount && isSelected(event))
+		action(selectedItem!!)
+	}
+
+	addEventFilter(KeyEvent.KEY_PRESSED) { event ->
+	  if (event.code == KeyCode.ENTER && !event.isMetaDown && isSelected(event))
+		action(selectedItem!!)
+	}
+  }
+
+
+
+
+
+  fun onUserDelete(action: (E)->Unit) {
+	addEventFilter(KeyEvent.KEY_PRESSED) { event ->
+	  if (event.code == KeyCode.BACK_SPACE && selectedItem != null)
+		action(selectedItem!!)
+	}
+  }
+
+
+
+  fun regainFocusAfterEdit() = apply {
+	editingCellProperty.onChange {
+	  if (it == null)
+		requestFocus()
+	}
+  }
+
+
+  fun editableWhen(predicate: ObsB) = apply {
+	editableProperty.bind(predicate)
+  }
+
+
 
 
   /**
@@ -262,123 +465,21 @@ open class TableViewWrapper<E: Any>(
 
 	columns.forEach(::addEventHandlerForColumn)
 
-	columns.addListener({ change: ListChangeListener.Change<out TableColumn<E, *>> ->
+	columns.addListener { change: ListChangeListener.Change<out TableColumn<E, *>> ->
 	  while (change.next()) {
 		if (change.wasAdded())
 		  change.addedSubList.forEach(::addEventHandlerForColumn)
 	  }
-	})
+	}
   }
 
 
-  /**
-   * Create a matt.hurricanefx.tableview.coolColumn with a title specified cell type and operate on it. Inside the code block you can call
-   * `value { it.value.someProperty }` to set up a cellValueFactory that must return T or ObservableValue<T>
-   */
-  @Suppress("UNUSED_PARAMETER")
-  fun <P: Any> column(
-	title: String,
-	cellType: KClass<P>,
-	op: TableColumnWrapper<E, P>.()->Unit = {}
-  ): TableColumnWrapper<E, P> {
-	val column = TableColumnWrapper<E, P>(title)
-	addColumnInternal(column)
-	return column.also(op)
-  }
 
 
-  /**
-   * Create a matt.hurricanefx.tableview.coolColumn with a value factory that extracts the value from the given callback.
-   */
-  fun <P> column(
-	title: String,
-	prefWidth: Double? = null,
-	valueProvider: (TableColumn.CellDataFeatures<E, P>)->ObsVal<P>,
-  ): TableColumnWrapper<E, P> {
-	val column = TableColumnWrapper<E, P>(title)
-	column.cellValueFactory = Callback { valueProvider(it) }
-	prefWidth?.let { column.prefWidth = it }
-	addColumnInternal(column)
-	return column
-  }
-
-
-  /**
-   * Create a matt.hurricanefx.tableview.coolColumn with a value factory that extracts the observable value from the given function reference.
-   * This method requires that you have kotlin-reflect on your classpath.
-   */
-  inline fun <reified P> column(
-	title: String,
-	observableFn: KFunction<ObsVal<P>>
-  ): TableColumnWrapper<E, P> {
-	val column = TableColumnWrapper<E, P>(title)
-	column.cellValueFactory = Callback { observableFn.call(it.value) }
-	addColumnInternal(column)
-	return column
-  }
 
   fun enableCellEditing() {
 	selectionModel.isCellSelectionEnabled = true
 	isEditable = true
-  }
-
-  /**
-   * Create a matt.hurricanefx.tableview.coolColumn holding matt.fx.control.layout.children columns
-   */
-  @Suppress("UNCHECKED_CAST")
-  fun nestedColumn(
-	title: String,
-	op: TableViewWrapper<E>.(TableColumn<E, Any?>)->Unit = {}
-  ): TableColumnWrapper<E, Any?> {
-	val column = TableColumnWrapper<E, Any?>(title)
-	addColumnInternal(column)
-	val previousColumnTarget = node.properties["tornadofx.columnTarget"] as? ObservableList<TableColumn<E, *>>
-	node.properties["tornadofx.columnTarget"] = column.node.columns
-	op(this, column.node)
-	node.properties["tornadofx.columnTarget"] = previousColumnTarget
-	return column
-  }
-
-
-  //  /**
-  //   * Create a matt.hurricanefx.tableview.coolColumn using the propertyName of the attribute you want shown.
-  //   */
-  //  fun <P> column(
-  //	title: String,
-  //	propertyName: String,
-  //	op: TableColumnWrapper<E, P>.()->Unit = {}
-  //  ): TableColumnWrapper<E, P> {
-  //	val column = TableColumnWrapper<E, P>(title)
-  //	column.cellValueFactory = PropertyValueFactory<E, P>(propertyName)
-  //	addColumnInternal(column)
-  //	return column.also(op)
-  //  }
-
-
-  //  /**
-  //   * Create a matt.hurricanefx.tableview.coolColumn using the getter of the attribute you want shown.
-  //   */
-  //  @JvmName("pojoColumn")
-  //  fun <P> column(title: String, getter: KFunction<P>): TableColumnWrapper<E, P> {
-  //	val startIndex = if (getter.name.startsWith("is") && getter.name[2].isUpperCase()) 2 else 3
-  //	val propName = getter.name.substring(startIndex).decap()
-  //	return this.column(title, propName)
-  //  }
-
-  @Suppress("UNCHECKED_CAST")
-  fun addColumnInternal(column: TableColumnWrapper<E, *>, index: Int? = null) {
-	val columnTarget = node.properties["tornadofx.columnTarget"] as? ObservableList<TableColumn<E, *>> ?: columns
-	if (index == null) columnTarget.add(column.node) else columnTarget.add(index, column.node)
-  }
-
-  fun makeIndexColumn(name: String = "#", startNumber: Int = 1): TableColumn<E, Number> {
-	return TableColumn<E, Number>(name).apply {
-	  isSortable = false
-	  prefWidth = width
-
-	  this@TableViewWrapper.columns += this
-	  setCellValueFactory { ReadOnlyObjectWrapper(items!!.indexOf(it.value) + startNumber) }
-	}
   }
 
 
@@ -397,120 +498,11 @@ open class TableViewWrapper<E: Any>(
   }
 
 
-  /**
-   * Matt was here!
-   */
-  @JvmName("coolColumn")
-  fun <P> column(getter: KFunction<P>, op: TableColumnWrapper<E, P>.()->Unit = {}): TableColumnWrapper<E, P> {
-	return column<P>(getter.name) {
-	  BindableProperty<P>(getter.call(it.value))
-	}.apply(op)
-  }
-
-
-  /**
-   * Matt was here!
-   */
-  @JvmName("coolColumn2")
-  fun <P> column(
-	getter: KProperty1<E, P>,
-	op: TableColumnWrapper<E, P>.()->Unit = {}
-  ): TableColumnWrapper<E, P> {
-	return column<P>(getter.name) {
-	  BindableProperty<P>(getter.call(it.value))
-	}.apply(op)
-  }
-
-  override fun addChild(child: NodeWrapper, index: Int?) {
-	TODO("Not yet implemented")
-  }
 
 }
 
 
-fun <T> TableViewWrapper<T & Any>.selectWhere(scrollTo: Boolean = true, condition: (T)->Boolean) {
-  items!!.asSequence().filter(condition).forEach {
-	selectionModel.select(it)
-	if (scrollTo) scrollTo(it)
-  }
-}
 
 
-fun <T> TableViewWrapper<T & Any>.moveToTopWhere(
-  backingList: MutableObsList<T & Any> = items!!,
-  select: Boolean = true,
-  predicate: (T)->Boolean
-) {
-  if (select) selectionModel.clearSelection()
-  backingList.filter(predicate).forEach {
-	backingList.remove(it)
-	backingList.add(0, it)
-	if (select) selectionModel.select(it)
-  }
-}
 
-fun <T> TableViewWrapper<T & Any>.moveToBottomWhere(
-  backingList: MutableObsList<T & Any> = items!!,
-  select: Boolean = true,
-  predicate: (T)->Boolean
-) {
-  val end = backingList.size - 1
-  if (select) selectionModel.clearSelection()
-  backingList.filter(predicate).forEach {
-	backingList.remove(it)
-	backingList.add(end, it)
-	if (select) selectionModel.select(it)
-
-  }
-}
-
-//fun <T> TableViewWrapper<T & Any>.selectFirst() = selectionModel.selectFirst()
-
-
-//fun <S> TableViewWrapper<S & Any>.onSelectionChange(func: (S?)->Unit) =
-//  selectionModel.selectedItemProperty.addListener({ _, _, newValue -> func(newValue) })
-
-
-/**
- * Execute action when the enter key is pressed or the mouse is clicked
-
- * @param clickCount The number of mouse clicks to trigger the action
- * *
- * @param action The action to execute on select
- */
-fun <T> TableViewWrapper<T & Any>.onUserSelect(clickCount: Int = 2, action: (T)->Unit) {
-  val isSelected = { event: InputEvent ->
-	event.target.wrapped().isInsideRow() && !selectionModel.selectionIsEmpty()
-  }
-
-  addEventFilter(MouseEvent.MOUSE_CLICKED) { event ->
-	if (event.clickCount == clickCount && isSelected(event))
-	  action(selectedItem!!)
-  }
-
-  addEventFilter(KeyEvent.KEY_PRESSED) { event ->
-	if (event.code == KeyCode.ENTER && !event.isMetaDown && isSelected(event))
-	  action(selectedItem!!)
-  }
-}
-
-fun <T> TableViewWrapper<T & Any>.onUserDelete(action: (T)->Unit) {
-  addEventFilter(KeyEvent.KEY_PRESSED, { event ->
-	if (event.code == KeyCode.BACK_SPACE && selectedItem != null)
-	  action(selectedItem!!)
-  })
-}
-
-
-fun <T> TableViewWrapper<T & Any>.regainFocusAfterEdit() = apply {
-  editingCellProperty.onChange {
-	if (it == null)
-	  requestFocus()
-  }
-}
-
-
-fun TableViewWrapper<*>.editableWhen(predicate: ObsB) = apply {
-  editableProperty.bind(predicate)
-}
 
