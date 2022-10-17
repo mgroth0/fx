@@ -16,6 +16,7 @@ import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
 import javafx.scene.input.MouseEvent
 import javafx.util.Callback
+import matt.fx.control.wrapper.cellfact.SimpleFactory
 import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.control.wrapper.control.column.TableColumnWrapper
 import matt.fx.control.wrapper.control.tablelike.TableLikeWrapper
@@ -174,6 +175,21 @@ open class TableViewWrapper<E: Any>(
   ): TableColumnWrapper<E, P> {
 	val column = TableColumnWrapper<E, P>(title)
 	column.cellValueFactory = Callback { valueProvider(it) }
+	prefWidth?.let { column.prefWidth = it }
+	addColumnInternal(column)
+	return column
+  }
+
+  fun column(
+	title: String,
+	prefWidth: Double? = null,
+	nodeProvider: (TableColumn.CellDataFeatures<E, NodeWrapper>)->NodeWrapper,
+  ): TableColumnWrapper<E, NodeWrapper> {
+	val column = TableColumnWrapper<E, NodeWrapper>(title)
+	column.cellValueFactory = Callback { BindableProperty(nodeProvider(it)) }
+	column.simpleCellFactory(SimpleFactory {
+	  "" to it
+	})
 	prefWidth?.let { column.prefWidth = it }
 	addColumnInternal(column)
 	return column
