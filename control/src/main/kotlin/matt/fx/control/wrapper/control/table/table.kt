@@ -180,7 +180,7 @@ open class TableViewWrapper<E: Any>(
 	return column
   }
 
-  fun column(
+  fun nodeColumn(
 	title: String,
 	prefWidth: Double? = null,
 	nodeProvider: (TableColumn.CellDataFeatures<E, NodeWrapper>)->NodeWrapper,
