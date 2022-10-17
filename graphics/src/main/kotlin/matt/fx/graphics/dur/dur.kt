@@ -5,6 +5,8 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import matt.cbor.ser.MyCborSerializer
+import matt.hurricanefx.eye.time.FXDuration
+import matt.hurricanefx.eye.time.toFXDuration
 import matt.math.mathable.MathAndComparable
 import matt.model.convert.Converter
 import kotlin.time.Duration
@@ -77,6 +79,8 @@ value class DurationWrapper(val dur: Duration): Interpolatable<DurationWrapper>,
 	return inWholeMilliseconds.rem(d.inWholeMilliseconds).milliseconds.wrapped()
   }
 
+  fun toFXDuration() = dur.toFXDuration()
+
 }
 
 object MilliSecondDurationWrapperConverter: Converter<DurationWrapper, Double> {
@@ -89,3 +93,4 @@ object MilliSecondDurationWrapperConverter: Converter<DurationWrapper, Double> {
   }
 
 }
+
