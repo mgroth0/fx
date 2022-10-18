@@ -6,6 +6,7 @@ import javafx.scene.Node
 import matt.collect.weak.WeakMap
 import matt.fx.graphics.hotkey.HotKeyEventHandler
 import matt.fx.graphics.wrapper.node.NodeWrapper
+import matt.lang.toStringBasic
 
 @DslMarker annotation class FXNodeWrapperDSL
 
@@ -76,14 +77,28 @@ abstract class SingularEventTargetWrapper<out N: EventTarget>(
   override val node = node
 
   companion object {
-	val wrappers = WeakMap<EventTarget, EventTargetWrapper>()
+	private val wrappers = WeakMap<EventTarget, EventTargetWrapper>()
+	operator fun get(e: EventTarget) = wrappers[e]
   }
 
   init {
-
-	require(superNode !in wrappers) {
-	  "A second ${SingularEventTargetWrapper::class.simpleName} was created for $superNode"
+	println("checking for ${this.toStringBasic()} with ${superNode.toStringBasic()}")
+	if ("Scene@" in superNode.toStringBasic()) {
+	  Thread.dumpStack()
 	}
+	require(superNode !in wrappers) {
+	  """
+		
+		This is ${this.toStringBasic()}
+		
+		A second ${this::class.simpleName} was created for ${superNode.toStringBasic()}
+		
+		The first one is ${wrappers[superNode]?.toStringBasic()}
+		
+		
+	  """.trimMargin()
+	}
+	println("putting ${superNode.toStringBasic()} in wrappers for ${this.toStringBasic()}")
 	wrappers[superNode] = this
   }
 }

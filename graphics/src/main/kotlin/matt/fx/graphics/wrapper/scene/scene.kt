@@ -52,7 +52,7 @@ open class SceneWrapper<R: ParentWrapper<*>>(
 	  converter = uncheckedNullableWrapperConverter<Window, WindowWrapper<*>>()
 	)
   }
-  val window by windowProperty
+  val window get() = windowProperty.value
   val stage get() = window as StageWrapper
 
   override val properties get() = node.properties

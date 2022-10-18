@@ -278,7 +278,7 @@ object WrapperServiceImpl: WrapperService {
 }
 
 inline fun <reified W: EventTargetWrapper> EventTarget.findWrapper(): W? {
-  val w = SingularEventTargetWrapper.wrappers[this]
+  val w = SingularEventTargetWrapper[this]
   return w as? W ?: run { require(w == null); w }
 }
 
@@ -383,10 +383,11 @@ fun CategoryAxis.wrapped(): CategoryAxisWrapper = findWrapper() ?: CategoryAxisW
 fun ToolBar.wrapped(): ToolBarWrapper = findWrapper() ?: ToolBarWrapper(this@wrapped)
 
 
-@Suppress("UNCHECKED_CAST") fun <T: Number> ValueAxis<T>.wrapped(): OldValueAxisWrapper<T> = findWrapper() ?: when (this) {
-  is NumberAxis -> wrapped() as OldValueAxisWrapper<T>
-  else          -> cannotFindWrapper()
-}
+@Suppress("UNCHECKED_CAST") fun <T: Number> ValueAxis<T>.wrapped(): OldValueAxisWrapper<T> =
+  findWrapper() ?: when (this) {
+	is NumberAxis -> wrapped() as OldValueAxisWrapper<T>
+	else          -> cannotFindWrapper()
+  }
 
 
 @Suppress("UNCHECKED_CAST") fun <T> Axis<T>.wrapped(): AxisWrapper<T, Axis<T>> = findWrapper() ?: when (this) {
