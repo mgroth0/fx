@@ -490,9 +490,9 @@ abstract class NodeWrapperImpl<out N: Node>(
 
   override val scene by sceneProperty
 
-  val sceneTemp by provider<_, ReadOnlyProperty<Any, Int>> {
+  val sceneTemp by provider<_, ReadOnlyProperty<Any, _>> {
 	//	sceneProperty
-	valProp {
+	valProp<Any,Int> {
 	  1
 	  //	  SceneWrapper(Scene(VBox()))
 	}
