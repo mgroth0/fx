@@ -29,7 +29,6 @@ import javafx.scene.input.TransferMode
 import javafx.scene.input.ZoomEvent
 import javafx.scene.layout.AnchorPane
 import javafx.scene.layout.HBox
-import javafx.scene.layout.Pane
 import javafx.scene.layout.Priority
 import javafx.scene.layout.VBox
 import javafx.stage.FileChooser
@@ -52,7 +51,6 @@ import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNullableROProp
 import matt.lang.delegation.provider
 import matt.lang.delegation.valProp
-import matt.lang.delegation.varProp
 import matt.model.flowlogic.recursionblocker.RecursionBlocker
 import matt.obs.bind.binding
 import matt.obs.bindings.bool.ObsB
@@ -65,7 +63,6 @@ import matt.obs.prop.Var
 import kotlin.contracts.InvocationKind.EXACTLY_ONCE
 import kotlin.contracts.contract
 import kotlin.properties.ReadOnlyProperty
-import kotlin.reflect.KProperty
 
 
 typealias NW = NodeWrapper
@@ -493,9 +490,9 @@ abstract class NodeWrapperImpl<out N: Node>(
 
   override val scene by sceneProperty
 
-  val sceneTemp by provider<NodeWrapperImpl<N>, Int, ReadOnlyProperty<NodeWrapperImpl<N>, Int>> {
+  val sceneTemp by provider<Int, ReadOnlyProperty<Any, Int>> {
 	//	sceneProperty
-	valProp<NodeWrapperImpl<N>, Int> {
+	valProp<Any, Int> {
 	  1
 	  //	  SceneWrapper(Scene(VBox()))
 	}
