@@ -64,6 +64,7 @@ import matt.obs.prop.ValProp
 import matt.obs.prop.Var
 import kotlin.contracts.InvocationKind.EXACTLY_ONCE
 import kotlin.contracts.contract
+import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
 
@@ -492,11 +493,11 @@ abstract class NodeWrapperImpl<out N: Node>(
 
   override val scene by sceneProperty
 
-  val sceneTemp by provider {
-//	sceneProperty
-	valProp {
+  val sceneTemp by provider<NodeWrapperImpl<N>, Int, ReadOnlyProperty<NodeWrapperImpl<N>, Int>> {
+	//	sceneProperty
+	valProp<NodeWrapperImpl<N>, Int> {
 	  1
-//	  SceneWrapper(Scene(VBox()))
+	  //	  SceneWrapper(Scene(VBox()))
 	}
   }
 
