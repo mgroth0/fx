@@ -8,6 +8,7 @@ import matt.fx.graphics.wrapper.node.attach
 import matt.fx.graphics.wrapper.pane.PaneWrapper
 import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
 import matt.lang.NOT_IMPLEMENTED
+import matt.log.warn.warnOnce
 
 fun <C: NodeWrapper> ET.anchorpane(
   vararg nodes: C,
@@ -24,30 +25,31 @@ interface AnchorPaneWrapper<C: NodeWrapper>: PaneWrapper<C> {
   var left: NodeWrapper
 	get() = NOT_IMPLEMENTED
 	set(value) {
-	  if (value !in children) add(value)
+	  if (value.node !in node.children) add(value)
 	  value.setAsLeftAnchor(0.0)
 	}
   var right: NodeWrapper
 	get() = NOT_IMPLEMENTED
 	set(value) {
-	  if (value !in children) add(value)
+	  if (value.node !in node.children) add(value)
 	  value.setAsRightAnchor(0.0)
 	}
   var bottom: NodeWrapper
 	get() = NOT_IMPLEMENTED
 	set(value) {
-	  if (value !in children) add(value)
+	  if (value.node !in node.children) add(value)
 	  value.setAsBottomAnchor(0.0)
 	}
   var top: NodeWrapper
 	get() = NOT_IMPLEMENTED
 	set(value) {
-	  if (value !in children) add(value)
+	  if (value.node !in node.children) add(value)
 	  value.setAsTopAnchor(0.0)
 	}
   var allSides: NodeWrapper
 	get() = NOT_IMPLEMENTED
 	set(value) {
+	  warnOnce("`value.node !in node.children` is a temp fix. There must be some wrapper issue here.")
 	  left = value
 	  right = value
 	  bottom = value

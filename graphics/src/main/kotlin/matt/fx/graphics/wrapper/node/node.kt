@@ -49,8 +49,7 @@ import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNullableROProp
-import matt.lang.delegation.provider
-import matt.lang.delegation.valProp
+import matt.lang.delegation.lazyDelegate
 import matt.model.flowlogic.recursionblocker.RecursionBlocker
 import matt.obs.bind.binding
 import matt.obs.bindings.bool.ObsB
@@ -62,7 +61,6 @@ import matt.obs.prop.ValProp
 import matt.obs.prop.Var
 import kotlin.contracts.InvocationKind.EXACTLY_ONCE
 import kotlin.contracts.contract
-import kotlin.properties.ReadOnlyProperty
 
 
 typealias NW = NodeWrapper
@@ -469,7 +467,9 @@ interface NodeWrapper: EventTargetWrapper, StyleableWrapper {
 
 }
 
-
+//private operator fun <T, V> ReadOnlyProperty<T, V>.getValue(t: T, property: KProperty<*>): V {
+//	return error("abc")
+//}
 abstract class NodeWrapperImpl<out N: Node>(
   node: N
 ): SingularEventTargetWrapper<N>(node),
@@ -488,15 +488,11 @@ abstract class NodeWrapperImpl<out N: Node>(
 	)
   }
 
-  override val scene by sceneProperty
-
-  val sceneTemp by provider<_, Int, ReadOnlyProperty<NodeWrapperImpl<N>, Int>> {
-	//	sceneProperty
-	valProp<NodeWrapperImpl<N>,Int> {
-	  1
-	  //	  SceneWrapper(Scene(VBox()))
-	}
+  override val scene by lazyDelegate {
+	/*lazy because there is an issue where the inner mechanics of this property causes the wrong scene wrapper to be built during the SceneWrapper's initialization*/
+	sceneProperty
   }
+
 
   final override val focusedProperty by lazy { node.focusedProperty().toNonNullableROProp() }
   final override val isFocused by focusedProperty

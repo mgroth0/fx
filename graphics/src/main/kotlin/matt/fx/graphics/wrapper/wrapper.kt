@@ -53,7 +53,7 @@ typealias ET = EventTargetWrapper
 
 }
 
-abstract class EventTargetWrapperImpl<out N: EventTarget>: EventTargetWrapper {
+sealed class EventTargetWrapperImpl<out N: EventTarget>: EventTargetWrapper {
   abstract override val node: N
 
 
@@ -62,9 +62,8 @@ abstract class EventTargetWrapperImpl<out N: EventTarget>: EventTargetWrapper {
 
 }
 
-abstract class SingularEventTargetWrapper<out N: EventTarget>(
-  /*TODO: node must be made internal...? then protected...*/
-  node: N
+abstract class SingularEventTargetWrapper<out N: EventTarget>(/*TODO: node must be made internal...? then protected...*/
+															  node: N
 ): EventTargetWrapperImpl<N>() {
 
   //  private var superNode: N? = null
@@ -73,8 +72,8 @@ abstract class SingularEventTargetWrapper<out N: EventTarget>(
   //  }
 
   private val superNode = node
-  @Suppress("CanBePrimaryConstructorProperty")
-  override val node = node
+
+  @Suppress("CanBePrimaryConstructorProperty") override val node = node
 
   companion object {
 	private val wrappers = WeakMap<EventTarget, EventTargetWrapper>()
@@ -82,10 +81,12 @@ abstract class SingularEventTargetWrapper<out N: EventTarget>(
   }
 
   init {
-	println("checking for ${this.toStringBasic()} with ${superNode.toStringBasic()}")
-	if ("Scene@" in superNode.toStringBasic()) {
+
+	/*println("checking for ${this.toStringBasic()} with ${superNode.toStringBasic()}")*/
+	/*if ("Scene@" in superNode.toStringBasic()) {
 	  Thread.dumpStack()
-	}
+	}*/
+
 	require(superNode !in wrappers) {
 	  """
 		
@@ -98,7 +99,7 @@ abstract class SingularEventTargetWrapper<out N: EventTarget>(
 		
 	  """.trimMargin()
 	}
-	println("putting ${superNode.toStringBasic()} in wrappers for ${this.toStringBasic()}")
+	/*println("putting ${superNode.toStringBasic()} in wrappers for ${this.toStringBasic()}")*/
 	wrappers[superNode] = this
   }
 }

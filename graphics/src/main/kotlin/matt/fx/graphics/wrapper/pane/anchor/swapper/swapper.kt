@@ -40,6 +40,7 @@ open class Swapper<P, C: NodeWrapper>: RegionWrapperImpl<Region, C>(AnchorPane()
 	  }
 
 	  override fun addChild(child: NodeWrapper, index: Int?) {
+
 		val debug = """
 		  children
 		  ${children.joinToString("") { "\n\t$it" }}
