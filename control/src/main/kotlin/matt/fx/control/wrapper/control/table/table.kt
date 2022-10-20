@@ -16,6 +16,7 @@ import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
 import javafx.scene.input.MouseEvent
 import javafx.util.Callback
+import jdk.jfr.Recording
 import matt.fx.control.wrapper.cellfact.SimpleFactory
 import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.control.wrapper.control.column.TableColumnWrapper
@@ -43,8 +44,6 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 import kotlin.reflect.KMutableProperty1
 import kotlin.reflect.KProperty1
-
-
 
 
 fun <T: Any> ET.tableview(items: ObsList<T>? = null, op: TableViewWrapper<T>.()->Unit = {}) =
@@ -105,25 +104,6 @@ open class TableViewWrapper<E: Any>(
   val editingCellProperty by lazy { node.editingCellProperty().toNullableROProp() }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   inline fun <reified P> column(
 	title: String,
 	prop: KMutableProperty1<E, P>,
@@ -149,7 +129,6 @@ open class TableViewWrapper<E: Any>(
 	addColumnInternal(column)
 	return column.also(op)
   }
-
 
 
   /**
@@ -207,8 +186,6 @@ open class TableViewWrapper<E: Any>(
   }
 
 
-
-
   @JvmName("coolColumn")
   fun <P> column(getter: KFunction<P>, op: TableColumnWrapper<E, P>.()->Unit = {}): TableColumnWrapper<E, P> {
 	return column(getter.name) {
@@ -226,21 +203,6 @@ open class TableViewWrapper<E: Any>(
 	  BindableProperty(getter.call(it.value))
 	}.apply(op)
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -276,13 +238,6 @@ open class TableViewWrapper<E: Any>(
 	  setCellValueFactory { ReadOnlyObjectWrapper(items!!.indexOf(it.value) + startNumber) }
 	}
   }
-
-
-
-
-
-
-
 
 
   override fun addChild(child: NodeWrapper, index: Int?) {
@@ -413,16 +368,12 @@ open class TableViewWrapper<E: Any>(
   }
 
 
-
-
-
   fun onUserDelete(action: (E)->Unit) {
 	addEventFilter(KeyEvent.KEY_PRESSED) { event ->
 	  if (event.code == KeyCode.BACK_SPACE && selectedItem != null)
 		action(selectedItem!!)
 	}
   }
-
 
 
   fun regainFocusAfterEdit() = apply {
@@ -436,8 +387,6 @@ open class TableViewWrapper<E: Any>(
   fun editableWhen(predicate: ObsB) = apply {
 	editableProperty.bind(predicate)
   }
-
-
 
 
   /**
@@ -490,9 +439,6 @@ open class TableViewWrapper<E: Any>(
   }
 
 
-
-
-
   fun enableCellEditing() {
 	selectionModel.isCellSelectionEnabled = true
 	isEditable = true
@@ -512,6 +458,7 @@ open class TableViewWrapper<E: Any>(
   fun multiSelect(enable: Boolean = true) {
 	selectionModel.selectionMode = if (enable) SelectionMode.MULTIPLE else SelectionMode.SINGLE
   }
+
 
 
 
