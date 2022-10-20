@@ -27,11 +27,11 @@ import matt.obs.prop.ValProp
 import matt.prim.str.upper
 import matt.time.dur.sec
 import java.lang.System.currentTimeMillis
-import kotlin.contracts.InvocationKind.EXACTLY_ONCE
 import kotlin.contracts.contract
 
 inline fun <T: Any> ET.choicebox(
-  property: BindableProperty<T?>? = null,
+  property: BindableProperty<T>? = null,
+  nullableProp: BindableProperty<T?>? = null,
   values: List<T>? = null,
   op: ChoiceBoxWrapper<T>.()->Unit = {}
 ): ChoiceBoxWrapper<T> {
@@ -41,30 +41,20 @@ inline fun <T: Any> ET.choicebox(
   return ChoiceBoxWrapper<T>().attachTo(this, op) {
 	if (values != null) it.items = (values as? ObservableList<T>) ?: values.asObservable()
 	if (property != null) it.bind(property)
+	if (nullableProp != null) {
+	  require(property == null)
+	  it.bind(nullableProp)
+	}
   }
 }
+
 
 inline fun <T: Any> ET.choicebox(
-  property: BindableProperty<T?>? = null,
+  property: BindableProperty<T>? = null,
+  nullableProp: BindableProperty<T?>? = null,
   values: Array<T>? = null,
   op: ChoiceBoxWrapper<T>.()->Unit = {}
-) = choicebox(property, values?.toList(), op)
-
-
-inline fun <T: Any> choicebox(
-  property: BindableProperty<T>? = null,
-  values: List<T>? = null,
-  op: ChoiceBoxWrapper<T>.()->Unit = {}
-): ChoiceBoxWrapper<T> {
-  contract {
-	callsInPlace(op, EXACTLY_ONCE)
-  }
-  return ChoiceBoxWrapper<T>().also {
-	it.op()
-	if (values != null) it.items = (values as? ObservableList<T>) ?: values.asObservable()
-	if (property != null) it.bind(property)
-  }
-}
+) = choicebox(property, nullableProp = nullableProp, values?.toList(), op)
 
 
 class ChoiceBoxWrapper<T: Any>(
@@ -110,10 +100,7 @@ class ChoiceBoxWrapper<T: Any>(
 
 		  recent += letter.upper()
 
-		  items
-			.asSequence()
-			.map { it to (converter?.toString(it) ?: it.toString()).uppercase() }
-			.onEach {
+		  items.asSequence().map { it to (converter?.toString(it) ?: it.toString()).uppercase() }.onEach {
 			  if (it.second.startsWith(recent)) {
 				select(it.first)
 			  }
