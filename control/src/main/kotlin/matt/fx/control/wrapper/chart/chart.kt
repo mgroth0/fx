@@ -12,6 +12,7 @@ open class ChartWrapper<N: Chart>(node: N): RegionWrapperImpl<N, NodeWrapper>(no
 
 
   override val titleProperty by lazy { node.titleProperty().toNullableProp() }
+
   override fun addChild(child: NodeWrapper, index: Int?) = NOT_IMPLEMENTED
 
   val animatedProperty by lazy { node.animatedProperty().toNonNullableProp() }

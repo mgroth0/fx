@@ -9,6 +9,7 @@ import javafx.scene.control.TreeCell
 import javafx.scene.control.TreeItem
 import javafx.scene.control.TreeTableRow
 import matt.fx.control.wrapper.labeled.LabeledWrapper
+import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
 
 open class CellWrapper<E, N: Cell<E>>(
   node: N
@@ -30,6 +31,7 @@ class TreeTableRowWrapper<E>(
 class TableRowWrapper<E>(
   node: TableRow<E> = TableRow()
 ): IndexedCellWrapper<E, TableRow<E>>(node) {
+  val itemProperty by lazy {node.itemProperty().toNullableProp()}
   val item: E? get() = node.item
   override fun isInsideRow() = true
 }

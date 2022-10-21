@@ -5,9 +5,9 @@ import javafx.scene.paint.Paint
 import javafx.scene.shape.Rectangle
 import matt.fx.graphics.wrapper.node.NodeWrapperImpl
 import matt.fx.graphics.wrapper.node.attachTo
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.graphics.wrapper.node.shape.ShapeWrapper
 import matt.fx.graphics.wrapper.sizeman.SizeControlled
+import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 
 fun NodeWrapperImpl<Parent>.rectangle(
   x: Number = 0.0,
@@ -31,14 +31,26 @@ open class RectangleWrapper(
   //	set(value) {
   //	  node.width = value
   //	}
-  override val widthProperty get() = node.widthProperty().toNonNullableProp().cast<Double>()
+  override val widthProperty by lazy {
+	node.widthProperty().toNonNullableProp().cast<Double>()
+  }
 
   //  var height
   //	get() = node.height
   //	set(value) {
   //	  node.height = value
   //	}
-  override val heightProperty get() = node.heightProperty().toNonNullableProp().cast<Double>()
+  override val heightProperty by lazy { node.heightProperty().toNonNullableProp().cast<Double>() }
+
+
+  val xProperty by lazy {
+	node.xProperty().toNonNullableProp().cast<Double>()
+  }
+  var x by xProperty
+  val yProperty by lazy {
+	node.yProperty().toNonNullableProp().cast<Double>()
+  }
+  var y by yProperty
 
 
   override var height

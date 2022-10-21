@@ -5,7 +5,6 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import matt.cbor.ser.MyCborSerializer
-import matt.hurricanefx.eye.time.FXDuration
 import matt.hurricanefx.eye.time.toFXDuration
 import matt.math.mathable.MathAndComparable
 import matt.model.convert.Converter

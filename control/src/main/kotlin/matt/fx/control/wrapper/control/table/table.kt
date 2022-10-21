@@ -9,6 +9,7 @@ import javafx.scene.control.SelectionMode
 import javafx.scene.control.TableCell
 import javafx.scene.control.TableColumn
 import javafx.scene.control.TablePosition
+import javafx.scene.control.TableRow
 import javafx.scene.control.TableView
 import javafx.scene.control.TableView.ResizeFeatures
 import javafx.scene.input.InputEvent
@@ -16,7 +17,6 @@ import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
 import javafx.scene.input.MouseEvent
 import javafx.util.Callback
-import jdk.jfr.Recording
 import matt.fx.control.wrapper.cellfact.SimpleFactory
 import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.control.wrapper.control.column.TableColumnWrapper
@@ -71,6 +71,9 @@ open class TableViewWrapper<E: Any>(
 ): ControlWrapperImpl<TableView<E>>(node), TableLikeWrapper<E> {
 
   constructor(items: ObservableList<E>): this(TableView(items))
+
+  fun setRowFactory(value: Callback<TableView<E>, TableRow<E>>) = node.setRowFactory(value)
+
 
   override fun isInsideRow() = true
 
@@ -203,7 +206,6 @@ open class TableViewWrapper<E: Any>(
 	  BindableProperty(getter.call(it.value))
 	}.apply(op)
   }
-
 
 
   /**
@@ -458,8 +460,6 @@ open class TableViewWrapper<E: Any>(
   fun multiSelect(enable: Boolean = true) {
 	selectionModel.selectionMode = if (enable) SelectionMode.MULTIPLE else SelectionMode.SINGLE
   }
-
-
 
 
 }

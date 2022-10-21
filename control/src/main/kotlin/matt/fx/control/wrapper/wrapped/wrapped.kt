@@ -397,6 +397,7 @@ fun ToolBar.wrapped(): ToolBarWrapper = findWrapper() ?: ToolBarWrapper(this@wra
   else                     -> cannotFindWrapper()
 }
 
+//fun TableRow<T>.wrapped()
 
 fun Labeled.wrapped(): LabeledWrapper<*> = findWrapper() ?: when (this) {
   is Label           -> wrapped()

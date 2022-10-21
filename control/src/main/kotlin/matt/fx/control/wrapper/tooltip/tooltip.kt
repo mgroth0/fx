@@ -10,6 +10,7 @@ import javafx.scene.input.MouseEvent
 import javafx.scene.input.PickResult
 import javafx.scene.text.Font
 import javafx.stage.Window
+import javafx.util.Duration
 import matt.fx.control.inter.TextAndGraphic
 import matt.fx.control.inter.graphic
 import matt.fx.control.wrapper.control.ControlWrapperImpl
@@ -37,6 +38,7 @@ fun NW.install(newToolTip: TooltipWrapper) {
 fun NW.tooltip(text: String = "", graphic: NW? = null, op: TooltipWrapper.()->Unit = {}): TooltipWrapper {
   val newToolTip = TooltipWrapper(text).apply {
 	this.graphic = graphic
+	comfortableShowAndHideSettingsForMatt()
 	op()
   }
   install(newToolTip)
@@ -61,6 +63,12 @@ open class TooltipWrapper(node: Tooltip = Tooltip()): WindowWrapper<Tooltip>(nod
 	graphic = child
   }
 
+
+  fun comfortableShowAndHideSettingsForMatt() {
+	showDelay = Duration.millis(100.0)
+	hideDelay = Duration.INDEFINITE
+	showDuration = Duration.INDEFINITE
+  }
 
   var showDelay by node::showDelay
   var hideDelay by node::hideDelay

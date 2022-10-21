@@ -64,7 +64,7 @@ class MContextMenuBuilder(
 	}
   }.also { add(it) }
 
-  fun item(s: String, g: NW? = null, op: MenuItemWrapper<*>.()->Unit = {}) =
+  fun item(s: String = "", g: NW? = null, op: MenuItemWrapper<*>.()->Unit = {}) =
 	SimpleMenuItem(s, g?.node).apply {
 	  isMnemonicParsing = false
 	  op()

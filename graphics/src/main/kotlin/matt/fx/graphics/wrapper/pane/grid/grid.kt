@@ -13,6 +13,7 @@ import matt.fx.graphics.wrapper.node.attach
 import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
 import matt.fx.graphics.wrapper.pane.grid.GridPaneWrapper.GridDSLType.COL
 import matt.fx.graphics.wrapper.pane.grid.GridPaneWrapper.GridDSLType.ROW
+import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 
 
 fun <T: NodeWrapper> T.gridpaneConstraints(op: (GridPaneConstraint.()->Unit)): T {
@@ -85,6 +86,12 @@ open class GridPaneWrapper<C: NodeWrapper>(node: GridPane = GridPane()): PaneWra
 	@Suppress("UNUSED_EXPRESSION") op()
 	return children.filter { it !in oldChildren }
   }
+
+  val hgapProperty by lazy {node.hgapProperty().toNonNullableProp().cast<Double>()}
+  var hGap by hgapProperty
+  val vgapProperty by lazy {node.hgapProperty().toNonNullableProp().cast<Double>()}
+  var vGap by vgapProperty
+
 
 }
 

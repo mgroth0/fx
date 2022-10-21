@@ -4,6 +4,7 @@ import javafx.scene.Node
 import javafx.scene.control.Label
 import matt.fx.control.inter.graphic
 import matt.fx.control.wrapper.labeled.LabeledWrapper
+import matt.fx.control.wrapper.tooltip.tooltip
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NW
 import matt.fx.graphics.wrapper.node.NodeWrapper
@@ -18,12 +19,13 @@ inline fun <reified T> ET.label(
   observable: ObsVal<T>,
   graphicProperty: ValProp<out NW?>? = null,
   converter: StringConverter<T>? = null,
+  tooltip: Boolean = false,
   noinline op: LabelWrapper.()->Unit = {}
 ) = label().apply {
   if (converter == null) {
 	if (T::class == String::class) {
 	  @Suppress("UNCHECKED_CAST")
-	  textProperty.bind(observable as ValProp<String>)
+	  textProperty.bind(observable as ObsVal<String>)
 	} else {
 	  textProperty.bind(observable.binding { it?.toString() })
 	}
@@ -32,6 +34,11 @@ inline fun <reified T> ET.label(
   }
   if (graphicProperty != null) {
 	this.graphicProperty.bind(graphicProperty)
+  }
+  if (tooltip) {
+	tooltip {
+	  textProperty.bind(this@apply.textProperty)
+	}
   }
   op(this)
 }

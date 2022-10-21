@@ -46,6 +46,16 @@ object DoubleAxisConverter: ValueAxisConverter<Double> {
   }
 
 }
+object IntAxisConverter: ValueAxisConverter<Int> {
+  override fun convertToB(a: Int): InternalData {
+	return a.toDouble()
+  }
+
+  override fun convertToA(b: InternalData): Int {
+	return b.toInt()
+  }
+
+}
 
 private typealias UpperBound = Any
 
