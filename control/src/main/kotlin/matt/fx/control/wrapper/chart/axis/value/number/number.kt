@@ -26,6 +26,7 @@ class NumberAxisWrapper<T: Any>(override val node: MoreGenericNumberAxis<T>): Va
   fun maximizeTickUnit() = node.maximizeTickUnit()
 
   fun displayPixelOf(v: T) = node.getDisplayPosition(v)
+
   fun valueForDisplayPixel(pixel: Double) = node.getValueForDisplay(pixel)
 
 }
@@ -39,6 +40,6 @@ class OldNumberAxisWrapper(node: NumberAxis = NumberAxis()): OldValueAxisWrapper
   var tickUnit by tickUnitProperty*/
 
 
-//  fun maximizeTickUnit() = node.maximizeTickUnit()
+  //  fun maximizeTickUnit() = node.maximizeTickUnit()
 
 }

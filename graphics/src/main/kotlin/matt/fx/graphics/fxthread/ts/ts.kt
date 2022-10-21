@@ -27,13 +27,9 @@ private class NonBlockingFXWatcher<T>(source: ObsVal<T>): MyBinding<T>(calc = {
 }) {
   init {
 	source.onChange {
-	  println("NonBlockingFXWatcher 1")
 	  ensureInFXThreadOrRunLater {
-		println("NonBlockingFXWatcher 2")
 		markInvalid()
-		println("NonBlockingFXWatcher 3")
 	  }
-	  println("NonBlockingFXWatcher 4")
 	}
   }
 }
