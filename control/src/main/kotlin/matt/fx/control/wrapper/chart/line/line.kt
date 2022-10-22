@@ -36,10 +36,7 @@ open class LineChartWrapper<X: Any, Y: Any>(
 	y = (yAxis as NumberAxisWrapper<Y>).displayPixelOf(y)
   )
 
-  /*displayPixel is relative to axis, this is relative to chart?*/
-  fun layoutXOf(v: X) = (xAxis as NumberAxisWrapper<X>).displayPixelOf(v) + (xAxis.boundsInScene.minX - boundsInScene.minX)
-  /*displayPixel is relative to axis, this is relative to chart?*/
-  fun layoutYOf(v: Y) = (yAxis as NumberAxisWrapper<Y>).displayPixelOf(v) + (yAxis.boundsInScene.minY - boundsInScene.minY)
+
 
   fun valueForPosition(xPixels: Double, yPixels: Double) {
 	Data<X, Y>(
