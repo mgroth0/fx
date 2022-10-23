@@ -47,7 +47,7 @@ class ComboBoxWrapper<E: Any>(
   constructor(items: ObsList<E>): this(ComboBox<E>(items.createFXWrapper()))
 
 
-  override val cellFactoryProperty by lazy { node.cellFactoryProperty().toNonNullableProp() }
+  override val cellFactoryProperty by lazy { node.cellFactoryProperty().toNullableProp() }
 
 
   var items: ObservableList<E>

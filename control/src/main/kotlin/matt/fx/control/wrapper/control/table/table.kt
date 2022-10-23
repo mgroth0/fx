@@ -31,11 +31,12 @@ import matt.hurricanefx.eye.wrapper.obs.collect.mfxMutableListConverter
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNullableROProp
+import matt.lang.setAll
 import matt.obs.bind.binding
 import matt.obs.bindings.bool.ObsB
-import matt.obs.col.olist.FakeMutableObsList
 import matt.obs.col.olist.MutableObsList
 import matt.obs.col.olist.ObsList
+import matt.obs.col.olist.toMutableObsList
 import matt.obs.prop.BindableProperty
 import matt.obs.prop.ObsVal
 import matt.obs.prop.VarProp
@@ -52,7 +53,11 @@ fun <T: Any> ET.tableview(items: ObsList<T>? = null, op: TableViewWrapper<T>.()-
 	  if (items is MutableObsList<T>) {
 		it.items = items
 	  } else {
-		it.items = FakeMutableObsList(items)
+		it.items = items.toMutableObsList().apply {
+		  items.onChange {
+			setAll(items)
+		  }
+		}
 	  }
 
 	}
