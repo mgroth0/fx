@@ -5,8 +5,6 @@ import javafx.scene.control.TabPane
 import matt.fx.control.wrapper.wrapped.wrapped
 import matt.fx.graphics.wrapper.SingularEventTargetWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
-import matt.hurricanefx.eye.prop.getValue
-import matt.hurricanefx.eye.prop.setValue
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
@@ -24,7 +22,8 @@ open class TabWrapper<C: NodeWrapper>(
 	content: C? = null
   ): this(Tab(text, content?.node))
 
-  var isClosable by node.closableProperty()
+  val closableProp by lazy {node.closableProperty().toNonNullableProp()}
+  var isClosable by closableProp
 
   override val properties get() = node.properties
 
@@ -39,7 +38,8 @@ open class TabWrapper<C: NodeWrapper>(
 	get() = node.content.wrapped() as C
 	set(value) = contentProperty v (value.node)
 
-  var graphic by node.graphicProperty()
+  val graphicProperty by lazy {node.graphicProperty().toNullableProp()}
+  var graphic by graphicProperty
   val disabledProperty by lazy { node.disabledProperty().toNonNullableROProp() }
   val disableProperty by lazy { node.disableProperty().toNonNullableProp() }
   val closableProperty by lazy { node.closableProperty().toNonNullableProp() }

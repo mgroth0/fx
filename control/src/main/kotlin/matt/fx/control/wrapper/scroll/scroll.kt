@@ -16,8 +16,6 @@ import matt.fx.graphics.wrapper.node.maxYRelativeTo
 import matt.fx.graphics.wrapper.node.minYRelativeTo
 import matt.fx.graphics.wrapper.node.parent.parent
 import matt.fx.graphics.wrapper.region.RegionWrapper
-import matt.hurricanefx.eye.prop.getValue
-import matt.hurricanefx.eye.prop.setValue
 import matt.collect.itr.recurse.chain
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.obs.math.op.times

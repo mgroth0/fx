@@ -1,7 +1,6 @@
 package matt.fx.control.wrapper.control.choice
 
 import javafx.beans.property.ObjectProperty
-import javafx.collections.ObservableList
 import javafx.event.ActionEvent
 import javafx.scene.control.ChoiceBox
 import javafx.scene.input.KeyCode.ENTER
@@ -15,13 +14,15 @@ import matt.fx.control.wrapper.selects.wrap
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
-import matt.hurricanefx.eye.collect.asObservable
 import matt.hurricanefx.eye.wrapper.obs.collect.createFXWrapper
+import matt.hurricanefx.eye.wrapper.obs.collect.mfxMutableListConverter
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.NullableFXBackedBindableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
 import matt.lang.go
 import matt.obs.bind.smartBind
+import matt.obs.col.olist.MutableObsList
 import matt.obs.col.olist.ObsList
+import matt.obs.col.olist.toBasicObservableList
 import matt.obs.prop.BindableProperty
 import matt.obs.prop.ValProp
 import matt.prim.str.upper
@@ -39,7 +40,7 @@ inline fun <T: Any> ET.choicebox(
 	callsInPlace(op, kotlin.contracts.InvocationKind.EXACTLY_ONCE)
   }
   return ChoiceBoxWrapper<T>().attachTo(this, op) {
-	if (values != null) it.items = (values as? ObservableList<T>) ?: values.asObservable()
+	if (values != null) it.items = (values as? MutableObsList<T>) ?: values.toBasicObservableList()
 	if (property != null) it.bind(property)
 	if (nullableProp != null) {
 	  require(property == null)
@@ -73,11 +74,9 @@ class ChoiceBoxWrapper<T: Any>(
   fun converterProperty(): ObjectProperty<StringConverter<T>> = node.converterProperty()
 
 
-  var items: ObservableList<T>
-	get() = node.items
-	set(value) {
-	  node.items = value
-	}
+  val itemsProperty by lazy { node.itemsProperty().toNullableProp().proxy(mfxMutableListConverter<T>().nullable()) }
+  var items by itemsProperty
+
 
   override val valueProperty: NullableFXBackedBindableProp<T> by lazy { node.valueProperty().toNullableProp() }
 
@@ -100,17 +99,17 @@ class ChoiceBoxWrapper<T: Any>(
 
 		  recent += letter.upper()
 
-		  items.asSequence().map { it to (converter?.toString(it) ?: it.toString()).uppercase() }.onEach {
-			  if (it.second.startsWith(recent)) {
-				select(it.first)
-			  }
-			}.firstOrNull {
-			  it.second.contains(recent)
-			}?.let {
+		  items?.asSequence()?.map { it to (converter?.toString(it) ?: it.toString()).uppercase() }?.onEach {
+			if (it.second.startsWith(recent)) {
 			  select(it.first)
-			  e.consume()
-			  return@setOnKeyTyped
-			} ?: run {
+			}
+		  }?.firstOrNull {
+			it.second.contains(recent)
+		  }?.let {
+			select(it.first)
+			e.consume()
+			return@setOnKeyTyped
+		  } ?: run {
 			recent = ""
 		  }
 		  e.consume()

@@ -6,8 +6,7 @@ import matt.fx.control.wrapper.control.text.input.TextInputControlWrapper
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
-import matt.hurricanefx.eye.prop.getValue
-import matt.hurricanefx.eye.prop.setValue
+import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.model.convert.StringConverter
 import matt.obs.prop.VarProp
 
@@ -41,7 +40,7 @@ open class TextAreaWrapper(
   }
 
 
-  val wrapTextProperty: BooleanProperty get() = node.wrapTextProperty()
-  var isWrapText by node.wrapTextProperty()
+  val wrapTextProperty by lazy { node.wrapTextProperty().toNonNullableProp() }
+  var isWrapText by wrapTextProperty
 
 }

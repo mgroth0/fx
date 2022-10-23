@@ -17,12 +17,10 @@ import matt.fx.control.wrapper.menu.item.action
 import matt.fx.control.wrapper.menu.radioitem.ValuedRadioMenuItem
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
-import matt.hurricanefx.eye.prop.getValue
-import matt.hurricanefx.eye.prop.setValue
 import matt.fx.graphics.wrapper.window.WindowWrapper
+import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.obs.bindings.str.ObsS
 import kotlin.concurrent.thread
-
 
 
 fun ET.contextmenu(op: ContextMenu.()->Unit = {}): ContextMenu {
@@ -38,9 +36,6 @@ fun ET.contextmenu(op: ContextMenu.()->Unit = {}): ContextMenu {
   }
   return menu
 }
-
-
-
 
 
 /**
@@ -64,8 +59,9 @@ class ContextMenuWrapper(node: ContextMenu = ContextMenu()): WindowWrapper<Conte
   val items: ObservableList<MenuItem> get() = node.items
 
 
-  var isAutoHide by node.autoHideProperty()
-  var isAutoFix by node.autoHideProperty()
+  val autoHideProperty by lazy { node.autoHideProperty().toNonNullableProp() }
+  var isAutoHide by autoHideProperty
+  var isAutoFix by autoHideProperty
 
 
   operator fun <T: MenuItem> plusAssign(menuItem: T) {
@@ -185,8 +181,6 @@ class ContextMenuWrapper(node: ContextMenu = ContextMenu()): WindowWrapper<Conte
   override fun addChild(child: NodeWrapper, index: Int?) {
 	TODO("Not yet implemented")
   }
-
-
 
 
 }

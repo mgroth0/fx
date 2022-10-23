@@ -14,12 +14,14 @@ import matt.fx.control.wrapper.selects.wrap
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
-import matt.hurricanefx.eye.collect.asObservable
 import matt.hurricanefx.eye.wrapper.obs.collect.createFXWrapper
+import matt.hurricanefx.eye.wrapper.obs.collect.mfxMutableListConverter
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
 import matt.obs.bind.smartBind
+import matt.obs.col.olist.MutableObsList
 import matt.obs.col.olist.ObsList
+import matt.obs.col.olist.toBasicObservableList
 import matt.obs.prop.ObsVal
 import matt.obs.prop.ValProp
 import matt.obs.prop.VarProp
@@ -36,7 +38,7 @@ fun <T: Any> ET.combobox(
   op: ComboBoxWrapper<T>.()->Unit = {}
 ) =
   ComboBoxWrapper<T>().attachTo(this, op) {
-	if (values != null) it.items = values as? ObservableList<T> ?: values.asObservable()
+	if (values != null) it.items = values as? MutableObsList<T> ?: values.toBasicObservableList()
 	if (property != null) it.bind(property)
   }
 
@@ -50,13 +52,9 @@ class ComboBoxWrapper<E: Any>(
   override val cellFactoryProperty by lazy { node.cellFactoryProperty().toNullableProp() }
 
 
-  var items: ObservableList<E>
-	get() = node.items
-	set(value) {
-	  node.items = value
-	}
+  val itemsProperty by lazy { node.itemsProperty().toNullableProp().proxy(mfxMutableListConverter<E>().nullable()) }
+  var items by itemsProperty
 
-  fun itemsProperty(): ObjectProperty<ObservableList<E>> = node.itemsProperty()
 
   var converter: StringConverter<E>
 	get() = node.converter
