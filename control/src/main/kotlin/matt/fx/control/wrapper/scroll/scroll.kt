@@ -1,10 +1,10 @@
 package matt.fx.control.wrapper.scroll
 
 import javafx.beans.property.BooleanProperty
-import javafx.beans.property.DoubleProperty
 import javafx.geometry.Bounds
 import javafx.scene.control.ScrollPane
 import javafx.scene.control.ScrollPane.ScrollBarPolicy
+import matt.collect.itr.recurse.chain
 import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.control.wrapper.wrapped.wrapped
 import matt.fx.graphics.wrapper.ET
@@ -16,9 +16,7 @@ import matt.fx.graphics.wrapper.node.maxYRelativeTo
 import matt.fx.graphics.wrapper.node.minYRelativeTo
 import matt.fx.graphics.wrapper.node.parent.parent
 import matt.fx.graphics.wrapper.region.RegionWrapper
-import matt.collect.itr.recurse.chain
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
-import matt.obs.math.op.times
 
 
 fun NW.isFullyVisibleIn(sp: ScrollPaneWrapper<*>): Boolean {

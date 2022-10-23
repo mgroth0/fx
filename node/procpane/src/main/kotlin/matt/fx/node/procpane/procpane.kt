@@ -18,8 +18,6 @@ import matt.fx.node.console.Console
 import matt.fx.node.console.ProcessConsole
 import matt.fx.node.procpane.inspect.ProcessInspectPane
 import matt.fx.node.procpane.status.StatusFolderWatchPane
-import matt.hurricanefx.eye.prop.getValue
-import matt.hurricanefx.eye.prop.setValue
 import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
 import matt.log.logInvocation
 import matt.obs.bindings.bool.not
