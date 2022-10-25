@@ -1,5 +1,5 @@
 {
-  "type" :         "matt.mstruct.bj.APPLIBModule",
+  "type": "matt.mstruct.bj.BasicJvmOnlyMod",
   "dependencies" : [
 	{
 	  "type" : "matt.mstruct.bj.BuildJsonLibDependency",
