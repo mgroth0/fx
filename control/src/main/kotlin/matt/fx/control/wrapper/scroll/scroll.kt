@@ -20,15 +20,16 @@ import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 
 
 fun NW.isFullyVisibleIn(sp: ScrollPaneWrapper<*>): Boolean {
+  val content = sp.content!!
   require(sp.vmin == 0.0)
   require(sp.vmax == 1.0)
   if (this.parent!!.chain { it.parent }.none { it == sp }) return false
   if (!this.isVisible) return false
   if (!this.isManaged) return false
-  val minY = this.minYRelativeTo(sp.content)
+  val minY = this.minYRelativeTo(content)
   val maxY =
 	this.maxYRelativeTo(
-	  sp.content
+	  content
 	) // /* println("vValueConverted=${sp.vValueConverted},vValueConvertedMax=${sp.vValueConvertedMax},minY=${minY},maxY=${maxY}")*/ /*,boundsInParent.height=${boundsInParent.height},boundsInLocal.height=${boundsInLocal.height},boundsInScene.height=${boundsInScene.height}*/
   require(minY != null && maxY != null)
   return minY >= sp.vValueConverted && maxY <= sp.vValueConvertedMax
@@ -58,9 +59,12 @@ infix fun RegionWrapper<*>.wrappedIn(sp: ScrollPaneWrapper<in NodeWrapper>): Scr
 
 
 fun <C: NodeWrapper> ET.scrollpane(
-  content: C, fitToWidth: Boolean = false, fitToHeight: Boolean = false, op: ScrollPaneWrapper<C>.()->Unit = {}
+  content: C? = null,
+  fitToWidth: Boolean = false,
+  fitToHeight: Boolean = false,
+  op: ScrollPaneWrapper<C>.()->Unit = {}
 ): ScrollPaneWrapper<C> {
-  val pane = ScrollPaneWrapper(content)
+  val pane = if (content!=null) ScrollPaneWrapper(content) else ScrollPaneWrapper()
   pane.isFitToWidth = fitToWidth
   pane.isFitToHeight = fitToHeight
   attach(pane, op)
@@ -146,29 +150,29 @@ open class ScrollPaneWrapper<C: NodeWrapper>(node: ScrollPane = ScrollPane()): C
   var hvalue by hValueProp
   var vvalue by vValueProp
 
-  @Suppress("UNCHECKED_CAST") var content: C
-	get() = node.content.wrapped() as C
+  @Suppress("UNCHECKED_CAST") var content: C?
+	get() = node.content?.wrapped() as C
 	set(value) {
-	  node.content = value.node
+	  node.content = value?.node
 	}
 
   fun scrollToMinYOf(node: NodeWrapperImpl<*>): Boolean {/*scrolling values range from 0 to 1*/
 	minYRelativeTo(node)?.let {
 	  /*there was an issue with this code. no idea if in "it/content" below, "content" is supposed to be "content" or "node"*/
 	  vvalue =
-		(it/content.boundsInLocal.height)*1.1 /*IDK why, but y is always coming up a bit short, but this fixes it*/
+		(it/content!!.boundsInLocal.height)*1.1 /*IDK why, but y is always coming up a bit short, but this fixes it*/
 	  return true
 	}
 	return false
   }
 
   val vValueConverted
-	get() = vvalue* ((content.boundsInParent.height - viewportBounds.height).takeIf { it > 0 } ?: 0.0)
+	get() = vvalue* ((content!!.boundsInParent.height - viewportBounds.height).takeIf { it > 0 } ?: 0.0)
 
   val vValueConvertedMax get() = vValueConverted + viewportBounds.height
   override fun addChild(child: NodeWrapper, index: Int?) {
 	require(index == null)    /*content = node*/ /*TORNADOFX DEFAULT*/
-	content.addChild(child) /*MATT'S WAY*/
+	content!!.addChild(child) /*MATT'S WAY*/
 
   }
 

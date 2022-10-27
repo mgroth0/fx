@@ -127,7 +127,8 @@ fun intColorToFXColor(i: Int): Color {
 }
 
 
-fun backgroundColor(c: Paint) = Background(BackgroundFill(c, null, null))
+fun backgroundFill(c: Paint) = BackgroundFill(c, null, null)
+fun backgroundFromColor(c: Paint) = Background(backgroundFill(c))
 
 
 /*part of this file was taken from tornadofx*/

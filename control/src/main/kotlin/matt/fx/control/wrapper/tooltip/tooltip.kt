@@ -24,6 +24,7 @@ import matt.lang.go
 import matt.lang.sync
 import matt.obs.prop.Var
 import matt.obs.prop.VarProp
+import matt.fx.graphics.stylelock.toNonNullableStyleProp
 
 fun NW.install(newToolTip: TooltipWrapper) {
   if (this is ControlWrapperImpl<*>) {
@@ -55,7 +56,7 @@ open class TooltipWrapper(node: Tooltip = Tooltip()): WindowWrapper<Tooltip>(nod
   override val fontProperty: Var<Font> by lazy { node.fontProperty().toNonNullableProp() }
   override val graphicProperty by lazy { node.graphicProperty().toNullableProp().proxy(nullableNodeConverter) }
   final override val contentDisplayProp by lazy {
-	node.contentDisplayProperty().toNonNullableProp()
+	node.contentDisplayProperty().toNonNullableStyleProp()
   }
 
   override fun addChild(child: NodeWrapper, index: Int?) {

@@ -14,7 +14,7 @@ import javafx.scene.paint.Paint
 import matt.file.MFile
 import matt.file.construct.toMFile
 import matt.fx.graphics.service.uncheckedWrapperConverter
-import matt.fx.graphics.style.backgroundColor
+import matt.fx.graphics.style.backgroundFromColor
 import matt.fx.graphics.style.copy
 import matt.fx.graphics.style.vertical
 import matt.fx.graphics.wrapper.node.NodeWrapper
@@ -25,7 +25,6 @@ import matt.fx.graphics.wrapper.region.border.FXBorder
 import matt.fx.graphics.wrapper.sizeman.SizeManaged
 import matt.hurricanefx.eye.wrapper.obs.collect.createMutableWrapper
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
 import matt.lang.NEVER
 import matt.lang.err
@@ -34,6 +33,7 @@ import matt.obs.col.olist.mappedlist.toSyncedList
 import matt.obs.prop.BindableProperty
 import matt.obs.prop.Var
 import matt.reflect.access
+import matt.fx.graphics.stylelock.toNullableStyleProp
 import kotlin.reflect.full.declaredMemberFunctions
 
 interface RegionWrapper<C: NodeWrapper>: ParentWrapper<C>, SizeManaged {
@@ -60,7 +60,6 @@ interface RegionWrapper<C: NodeWrapper>: ParentWrapper<C>, SizeManaged {
 
   var padding: Insets
   val paddingProperty: Var<Insets>
-
 
 
   val backgroundProperty: Var<Background?>
@@ -95,14 +94,13 @@ interface RegionWrapper<C: NodeWrapper>: ParentWrapper<C>, SizeManaged {
 	  if (value == null) {
 		this.background = null
 	  } else {
-		background = backgroundColor(value)
+		background = backgroundFromColor(value)
 	  }
 
 	}
 	get() {
 	  err("no getter yet")
 	}
-
 
 
   fun fitToParentHeight() {
@@ -189,8 +187,6 @@ interface RegionWrapper<C: NodeWrapper>: ParentWrapper<C>, SizeManaged {
 	set(value) = if (value) setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE) else Unit
 
 
-
-
   override fun addChild(child: NodeWrapper, index: Int?) {
 	TODO("Not yet implemented")
   }
@@ -212,7 +208,7 @@ open class RegionWrapperImpl<N: Region, C: NodeWrapper>(node: N): ParentWrapperI
 	)
   }
 
-  override val paddingProperty by lazy {node.paddingProperty().toNonNullableProp()}
+  override val paddingProperty by lazy { node.paddingProperty().toNonNullableProp() }
   override var padding by paddingProperty
 
   override val paddingVerticalProperty by lazy {
@@ -229,7 +225,7 @@ open class RegionWrapperImpl<N: Region, C: NodeWrapper>(node: N): ParentWrapperI
   }
   override var paddingVertical by paddingVerticalProperty
 
-  override val backgroundProperty by lazy { node.backgroundProperty().toNullableProp() }
+  override val backgroundProperty by lazy { node.backgroundProperty().toNullableStyleProp() }
   override var background by backgroundProperty
 
 }

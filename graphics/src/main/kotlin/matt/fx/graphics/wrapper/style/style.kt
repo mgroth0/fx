@@ -7,8 +7,10 @@ import javafx.css.PseudoClass
 import javafx.css.Styleable
 import javafx.scene.paint.Color
 import matt.color.AColor
+import matt.color.findName
 import matt.color.hex
 import matt.color.mostContrastingForMe
+import matt.color.name.ColorUtils
 import matt.fx.graphics.wrapper.style.FXStyle.fill
 import matt.fx.graphics.wrapper.style.FXStyle.`text-fill`
 import matt.lang.NOT_IMPLEMENTED
@@ -18,6 +20,7 @@ import matt.prim.str.LineAppender
 typealias FXColor = Color
 
 fun FXColor.toAwtColor() = AColor(red.toFloat(), green.toFloat(), blue.toFloat(), opacity.toFloat())
+fun FXColor.findName() = toAwtColor().findName()
 fun FXColor.hex() = toAwtColor().hex()
 fun AColor.toFXColor() = FXColor(red/255.0, green/255.0, blue/255.0, alpha/255.0)
 fun FXColor.mostContrastingForMe() = toAwtColor().mostContrastingForMe().toFXColor()
@@ -111,6 +114,6 @@ fun String.parseFXStyle() = split(";").map { it.substringBefore(":") to it.subst
 	)) to value
   }
 
-typealias FXStyleMap = Map<FXStyle,String>
+typealias FXStyleMap = Map<FXStyle, String>
 
 fun FXStyleMap.toStyleString() = entries.joinToString(";") { "${it.key.key}: ${it.value}" }

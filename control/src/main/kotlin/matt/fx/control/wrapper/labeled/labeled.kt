@@ -13,6 +13,7 @@ import matt.fx.graphics.wrapper.text.textlike.ColoredText
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.NullableFXBackedBindableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
+import matt.fx.graphics.stylelock.toNonNullableStyleProp
 
 open class LabeledWrapper<N: Labeled>(node: N): ControlWrapperImpl<N>(node), ColoredText, TextAndGraphic {
 
@@ -40,7 +41,7 @@ open class LabeledWrapper<N: Labeled>(node: N): ControlWrapperImpl<N>(node), Col
   }
 
   final override val contentDisplayProp by lazy {
-	node.contentDisplayProperty().toNonNullableProp()
+	node.contentDisplayProperty().toNonNullableStyleProp()
   }
 
   override val fontProperty by lazy { node.fontProperty().toNonNullableProp() }

@@ -22,6 +22,7 @@ import matt.fx.graphics.wrapper.region.RegionWrapper
 import matt.fx.graphics.wrapper.region.border.FXBorder
 import matt.fx.graphics.wrapper.scene.SceneWrapper
 import matt.fx.graphics.wrapper.style.StyleableWrapper
+import matt.fx.graphics.wrapper.style.findName
 import matt.fx.graphics.wrapper.style.toAwtColor
 import matt.log.profile.stopwatch.tic
 import kotlin.reflect.KClass
@@ -128,7 +129,7 @@ open class MScene<R: ParentWrapper<*>>(
 			/*(root.node as? Region)?.matt.hurricanefx.eye.wrapper.matt.hurricanefx.eye.wrapper.obs.collect.wrapped()?.borderFill = null*/
 		  }
 		  listOf(Color.YELLOW, Color.BLUE, Color.RED, Color.GREEN, Color.ORANGE, Color.PURPLE, Color.WHITE).forEach {
-			actionitem(ColorUtils().getColorNameFromColor(it.toAwtColor())) {
+			actionitem(it.findName()) {
 			  (root as RegionWrapper<*>).border = FXBorder.solid(it)
 			  /*(root.node as? Region)?.matt.hurricanefx.eye.wrapper.matt.hurricanefx.eye.wrapper.obs.collect.wrapped()?.borderFill = it*/
 			}
