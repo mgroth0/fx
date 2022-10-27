@@ -73,7 +73,7 @@ class StatusFolderWatchPane(val folder: MFile): TileableTabPane(
 		  //                backgroundFill = matt.css.Color.BLACK
 		  this minBind sp
 		}
-		backgroundProperty.bindBidirectional(content.backgroundProperty)
+		backgroundProperty.bindBidirectional(content!!.backgroundProperty)
 		this@StatusFolderWatchPane.filenodes[file.name] = this
 	  }
 	  //	  TextFlowWrapper<NodeWrapper>().apply {
