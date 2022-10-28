@@ -6,7 +6,6 @@ package matt.fx.control.tfx.control
 
 import matt.fx.control.inter.select.SelectableValue
 import matt.model.flowlogic.recursionblocker.RecursionBlocker
-import matt.obs.bind.binding
 import matt.obs.col.change.AdditionBase
 import matt.obs.col.change.RemovalBase
 import matt.obs.col.oset.basicObservableSetOf
@@ -111,7 +110,7 @@ class ToggleMechanism<V: Any>() {
 	  }
 	  (it as? RemovalBase)?.removedElements?.forEach { toggle ->
 		if (selectedToggle.value == toggle) {
-		  mSelectedToggle.value = null
+		  selectedToggle.value = null
 		}
 		listeners.remove(toggle)!!.removeListener()
 	  }
