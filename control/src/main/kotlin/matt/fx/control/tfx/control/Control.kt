@@ -5,6 +5,7 @@
 package matt.fx.control.tfx.control
 
 import matt.fx.control.inter.select.SelectableValue
+import matt.model.flowlogic.keypass.KeyPass
 import matt.model.flowlogic.recursionblocker.RecursionBlocker
 import matt.obs.col.change.AdditionBase
 import matt.obs.col.change.RemovalBase
@@ -70,6 +71,7 @@ class ToggleMechanism<V: Any>() {
   fun selectToggle(toggle: SelectableValue<V>?) {
 	selectedToggle.value = toggle
   }
+
   fun selectValue(value: V?) {
 	selectedValue.value = value
   }
@@ -77,7 +79,7 @@ class ToggleMechanism<V: Any>() {
   init {
 	val rBlocker = RecursionBlocker()
 	selectedToggle.onChange {
-	  require(it in toggles)
+	  require(it == null || it in toggles)
 	  rBlocker.with {
 		selectedValue.value = it?.value
 	  }
@@ -93,30 +95,36 @@ class ToggleMechanism<V: Any>() {
 
   private val listeners = mutableMapOf<SelectableValue<V>, Listener>()
 
+  private var selecting = KeyPass()
+  private fun didSelectToggle(toggle: SelectableValue<V>) = selecting.with {
+	toggles.filter { it != toggle }.forEach {
+	  it.isSelected = false
+	}
+	selectedToggle.value = toggle
+  }
+
+  private fun didUnSelectToggle(toggle: SelectableValue<V>) {
+	if (selecting.isNotHeld) {
+	  require(selectedToggle.value == toggle)
+	  selectedToggle.value = null
+	}
+  }
+
+  fun hasSelection() = selectedValue.value != null
+
   init {
-	toggles.onChange {
-	  (it as? AdditionBase)?.addedElements?.forEach { toggle ->
-		if (toggle.isSelected) {
-		  if (selectedValue.value != null) {
-			toggle.isSelected = false
-		  } else {
-			selectedToggle.value = toggle
-		  }
-		}
+	toggles.onChange { change ->
+	  (change as? AdditionBase)?.addedElements?.forEach { toggle ->
 		listeners[toggle] = toggle.selectedProperty.onChange {
-		  if (it) {
-			toggles.forEach {
-			  it.isSelected = false
-			}
-			if (selectedValue.value != null) {
-			  toggle.isSelected = false
-			} else {
-			  selectedToggle.value = toggle
-			}
-		  }
+		  if (it) didSelectToggle(toggle)
+		  else didUnSelectToggle(toggle)
+		}
+		if (toggle.isSelected) {
+		  if (hasSelection()) toggle.isSelected = false
+		  else selectedToggle.value = toggle
 		}
 	  }
-	  (it as? RemovalBase)?.removedElements?.forEach { toggle ->
+	  (change as? RemovalBase)?.removedElements?.forEach { toggle ->
 		if (selectedToggle.value == toggle) {
 		  selectedToggle.value = null
 		}
