@@ -65,7 +65,7 @@ class ValuedToggleButton<V: Any>(value: V): ToggleButtonWrapper(ToggleButton()),
 
   override val valueProperty = BindableProperty(value)
 
-  val toggleMechanism = BindableProperty<ToggleMechanism<V>?>(null).apply {
+  override val toggleMechanism = BindableProperty<ToggleMechanism<V>?>(null).apply {
 	addListener(OldAndNewListener { old, new ->
 	  old?.toggles?.remove(this@ValuedToggleButton)
 	  new?.toggles?.add(this@ValuedToggleButton)

@@ -1,14 +1,14 @@
 package matt.fx.control.wrapper.button.radio
 
 import javafx.scene.control.RadioButton
-import javafx.scene.control.ToggleGroup
-import matt.fx.control.toggle.getToggleGroup
+import matt.fx.control.inter.select.SelectableValue
+import matt.fx.control.tfx.control.ToggleMechanism
 import matt.fx.control.wrapper.button.toggle.ToggleButtonWrapper
 import matt.fx.control.wrapper.control.value.HasWritableValue
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.attachTo
+import matt.obs.listen.OldAndNewListener
 import matt.obs.prop.BindableProperty
-
 
 
 /**
@@ -19,19 +19,25 @@ import matt.obs.prop.BindableProperty
  * Likewise, if the `selectedValueProperty` of the ToggleGroup is updated to a value that matches the value for this
  * radiobutton, it will be automatically selected.
  */
-fun <V> ET.radiobutton(
+fun <V: Any> ET.radiobutton(
   text: String? = null,
-  group: ToggleGroup? = getToggleGroup(),
+  group: ToggleMechanism<V>? = null,
   value: V,
   op: ValuedRadioButton<V>.()->Unit = {}
 ) = ValuedRadioButton(value).attachTo(this, op) {
-  it.text = if (value != null && text == null) value.toString() else text ?: ""
-  if (group != null) it.node.toggleGroup = group
+  it.text = if (/*value != null && */text == null) value.toString() else text
+  if (group != null) it.toggleMechanism.value = group
 }
 
 
-class ValuedRadioButton<V>(value: V): RadioButtonWrapper(), HasWritableValue<V> {
+class ValuedRadioButton<V: Any>(value: V): RadioButtonWrapper(), HasWritableValue<V>, SelectableValue<V> {
   override val valueProperty = BindableProperty(value)
+  override val toggleMechanism = BindableProperty<ToggleMechanism<V>?>(null).apply {
+	addListener(OldAndNewListener { old, new ->
+	  old?.toggles?.remove(this@ValuedRadioButton)
+	  new?.toggles?.add(this@ValuedRadioButton)
+	})
+  }
 }
 
 open class RadioButtonWrapper(

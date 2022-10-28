@@ -1,5 +1,6 @@
 package matt.fx.control.inter.select
 
+import matt.fx.control.tfx.control.ToggleMechanism
 import matt.fx.control.wrapper.control.value.constval.HasConstValue
 import matt.lang.B
 import matt.obs.prop.Var
@@ -13,4 +14,6 @@ interface Selectable {
 	}
 }
 
-interface SelectableValue<V>: Selectable, HasConstValue<V>
+interface SelectableValue<V: Any>: Selectable, HasConstValue<V> {
+  val toggleMechanism: Var<ToggleMechanism<V>?>
+}
