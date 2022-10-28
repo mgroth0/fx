@@ -5,6 +5,7 @@
 package matt.fx.control.tfx.control
 
 import matt.fx.control.inter.select.SelectableValue
+import matt.model.flowlogic.recursionblocker.RecursionBlocker
 import matt.obs.bind.binding
 import matt.obs.col.change.AdditionBase
 import matt.obs.col.change.RemovalBase
@@ -64,10 +65,23 @@ fun <T> Var<T>.mutateOnChange(mutator: (T)->T) = onChange {
 class ToggleMechanism<V: Any>() {
   val toggles = basicObservableSetOf<SelectableValue<V>>()
 
-  private val mSelectedToggle = BindableProperty<SelectableValue<V>?>(null)
-  val selectedToggle = mSelectedToggle.readOnly()
-  val selectedValue = selectedToggle.binding {
-	it?.value
+  val selectedToggle = BindableProperty<SelectableValue<V>?>(null)
+  val selectedValue = BindableProperty<V?>(null)
+
+  init {
+	val rBlocker = RecursionBlocker()
+	selectedToggle.onChange {
+	  rBlocker.with {
+		selectedValue.value = it?.value
+	  }
+	}
+	selectedValue.onChange { newVal ->
+	  rBlocker.with {
+		selectedToggle.value = newVal?.let {
+		  toggles.first { it.value == newVal }
+		}
+	  }
+	}
   }
 
   private val listeners = mutableMapOf<SelectableValue<V>, Listener>()
@@ -79,7 +93,7 @@ class ToggleMechanism<V: Any>() {
 		  if (selectedValue.value != null) {
 			toggle.isSelected = false
 		  } else {
-			mSelectedToggle.value = toggle
+			selectedToggle.value = toggle
 		  }
 		}
 		listeners[toggle] = toggle.selectedProperty.onChange {
@@ -90,7 +104,7 @@ class ToggleMechanism<V: Any>() {
 			if (selectedValue.value != null) {
 			  toggle.isSelected = false
 			} else {
-			  mSelectedToggle.value = toggle
+			  selectedToggle.value = toggle
 			}
 		  }
 		}
