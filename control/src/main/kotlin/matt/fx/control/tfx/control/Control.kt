@@ -4,16 +4,13 @@
 
 package matt.fx.control.tfx.control
 
-import javafx.beans.property.ObjectProperty
-import javafx.beans.property.Property
-import javafx.beans.property.SimpleObjectProperty
-import javafx.beans.value.ObservableValue
-import javafx.scene.Node
-import javafx.scene.control.ToggleGroup
-import matt.fx.control.wrapper.control.value.constval.HasConstValue
-import matt.fx.control.wrapper.wrapped.wrapped
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
-import matt.hurricanefx.eye.wrapper.obs.obsval.toNullableROProp
+import matt.fx.control.inter.select.SelectableValue
+import matt.obs.bind.binding
+import matt.obs.col.change.AdditionBase
+import matt.obs.col.change.RemovalBase
+import matt.obs.col.oset.basicObservableSetOf
+import matt.obs.listen.Listener
+import matt.obs.prop.BindableProperty
 import matt.obs.prop.Var
 
 
@@ -25,9 +22,9 @@ import matt.obs.prop.Var
  * button will be selected when the value is changed. Likewise, if the selected toggle is changed,
  * the property value will be updated if it is writeable.
  */
-fun <T> ToggleGroup.bind(property: ObservableValue<T>) = selectedValueProperty<T>().apply {
+/*fun <T> ToggleGroup.bind(property: ObservableValue<T>) = selectedValueProperty<T>().apply {
   (property as? Property<T>)?.also { bindBidirectional(it) } ?: bind(property)
-}
+}*/
 
 /**
  * Generates a writable property that represents the selected value for this toggele group.
@@ -40,7 +37,7 @@ fun <T> ToggleGroup.bind(property: ObservableValue<T>) = selectedValueProperty<T
 
 private object SEL_VAL_PROP
 
-fun <T> ToggleGroup.selectedValueProperty(): ObjectProperty<T> =
+/*fun <T> ToggleGroup.selectedValueProperty(): ObjectProperty<T> =
   properties.getOrPut(SEL_VAL_PROP) {
 	SimpleObjectProperty<T>(((selectedToggleProperty().value as? Node)?.wrapped() as? HasConstValue<T>)?.value).apply {
 	  selectedToggleProperty().toNullableROProp().onChange {
@@ -52,7 +49,7 @@ fun <T> ToggleGroup.selectedValueProperty(): ObjectProperty<T> =
 		})
 	  }
 	}
-  } as ObjectProperty<T>
+  } as ObjectProperty<T>*/
 
 
 /**
@@ -64,3 +61,46 @@ fun <T> Var<T>.mutateOnChange(mutator: (T)->T) = onChange {
 }
 
 
+class ToggleMechanism<V: Any>() {
+  val toggles = basicObservableSetOf<SelectableValue<V>>()
+
+  private val mSelectedToggle = BindableProperty<SelectableValue<V>?>(null)
+  val selectedToggle = mSelectedToggle.readOnly()
+  val selectedValue = selectedToggle.binding {
+	it?.value
+  }
+
+  private val listeners = mutableMapOf<SelectableValue<V>, Listener>()
+
+  init {
+	toggles.onChange {
+	  (it as? AdditionBase)?.addedElements?.forEach { toggle ->
+		if (toggle.isSelected) {
+		  if (selectedValue.value != null) {
+			toggle.isSelected = false
+		  } else {
+			mSelectedToggle.value = toggle
+		  }
+		}
+		listeners[toggle] = toggle.selectedProperty.onChange {
+		  if (it) {
+			toggles.forEach {
+			  it.isSelected = false
+			}
+			if (selectedValue.value != null) {
+			  toggle.isSelected = false
+			} else {
+			  mSelectedToggle.value = toggle
+			}
+		  }
+		}
+	  }
+	  (it as? RemovalBase)?.removedElements?.forEach { toggle ->
+		if (selectedToggle.value == toggle) {
+		  mSelectedToggle.value = null
+		}
+		listeners.remove(toggle)!!.removeListener()
+	  }
+	}
+  }
+}

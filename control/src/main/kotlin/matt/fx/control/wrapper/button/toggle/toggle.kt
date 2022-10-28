@@ -1,16 +1,17 @@
 package matt.fx.control.wrapper.button.toggle
 
-import javafx.beans.property.BooleanProperty
 import javafx.scene.control.ToggleButton
 import javafx.scene.control.ToggleGroup
+import matt.fx.control.inter.select.Selectable
+import matt.fx.control.inter.select.SelectableValue
 import matt.fx.control.toggle.getToggleGroup
 import matt.fx.control.wrapper.control.button.base.ButtonBaseWrapper
 import matt.fx.control.wrapper.control.value.HasWritableValue
+import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.attachTo
+import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.lang.go
 import matt.obs.prop.BindableProperty
-import matt.fx.graphics.wrapper.ET
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.obs.prop.VarProp
 
 /**
@@ -57,36 +58,19 @@ fun <V> ET.togglebutton(
 }
 
 
-
 class ValuedToggleButton<V>(value: V): ToggleButtonWrapper(ToggleButton()),
-									   HasWritableValue<V> {
+									   HasWritableValue<V>, SelectableValue<V> {
   override val valueProperty = BindableProperty(value)
 }
 
 open class ToggleButtonWrapper(
   node: ToggleButton = ToggleButton(),
-): ButtonBaseWrapper<ToggleButton>(node) {
+): ButtonBaseWrapper<ToggleButton>(node), Selectable {
 
-  var isSelected
-	get() = node.isSelected
-	set(value) {
-	  node.isSelected = value
-	}
-
-
-  //    var toggleGroup: ToggleGroup
-  //  	get() = node.toggleGroup
-  //  	set(value) {
-  //  	  node.toggleGroup = value
-  //  	}
-
-  val selectedProperty by lazy { node.selectedProperty().toNonNullableProp() }
+  override val selectedProperty by lazy { node.selectedProperty().toNonNullableProp() }
 
   fun whenSelected(op: ()->Unit) {
 	selectedProperty.onChange { if (it) op() }
   }
-
-
-
 
 }
