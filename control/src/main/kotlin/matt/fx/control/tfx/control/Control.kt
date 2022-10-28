@@ -67,9 +67,17 @@ class ToggleMechanism<V: Any>() {
   val selectedToggle = BindableProperty<SelectableValue<V>?>(null)
   val selectedValue = BindableProperty<V?>(null)
 
+  fun selectToggle(toggle: SelectableValue<V>?) {
+	selectedToggle.value = toggle
+  }
+  fun selectValue(value: V?) {
+	selectedValue.value = value
+  }
+
   init {
 	val rBlocker = RecursionBlocker()
 	selectedToggle.onChange {
+	  require(it in toggles)
 	  rBlocker.with {
 		selectedValue.value = it?.value
 	  }
