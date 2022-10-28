@@ -32,7 +32,8 @@ import matt.fx.control.wrapper.checkbox.checkbox
 import matt.fx.control.wrapper.control.button.button
 import matt.fx.control.wrapper.control.spinner.spinner
 import matt.fx.control.wrapper.control.text.area.textarea
-import matt.fx.graphics.drag.drags
+import matt.fx.graphics.drag.BetterTransferMode
+import matt.fx.graphics.drag.dragsFile
 import matt.fx.graphics.fxthread.runLaterReturn
 import matt.fx.graphics.icon.Icon
 import matt.fx.graphics.wrapper.imageview.imageview
@@ -56,11 +57,11 @@ import java.lang.ref.WeakReference
 
 fun MFile.draggableIcon() =
   (when {
-	(isDirectory) -> Icon("folder")
+	(isDirectory)         -> Icon("folder")
 	(extension.isBlank()) -> Icon("file/bin")
-	else -> Icon("file/${extension}"/*, invert = extension in listOf("md", "txt")*/)
+	else                  -> Icon("file/${extension}"/*, invert = extension in listOf("md", "txt")*/)
   }).apply {
-	drags(this@draggableIcon)
+	dragsFile(this@draggableIcon, mode = BetterTransferMode.COPY)
   }
 
 
