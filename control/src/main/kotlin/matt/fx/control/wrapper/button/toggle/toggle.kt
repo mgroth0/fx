@@ -30,7 +30,7 @@ fun <V: Any> ET.togglebutton(
   value: V,
   op: ValuedToggleButton<V>.()->Unit = {}
 ) = ValuedToggleButton(value).attachTo(this, op) {
-  it.text = if (value != null && text == null) value.toString() else text ?: ""
+  it.text = if (/*value != null && */text == null) value.toString() else text/* ?: ""*/
   if (group != null) it.toggleMechanism.value = group
   if (it.node.toggleGroup?.selectedToggle == null && selectFirst) it.isSelected = true
 }
