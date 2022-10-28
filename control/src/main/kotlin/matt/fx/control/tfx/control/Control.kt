@@ -60,7 +60,7 @@ fun <T> Var<T>.mutateOnChange(mutator: (T)->T) = onChange {
   if (changed != value) value = changed
 }
 
-
+/*ToggleGroup was a better name, but that is taken... */
 class ToggleMechanism<V: Any>() {
   val toggles = basicObservableSetOf<SelectableValue<V>>()
 
