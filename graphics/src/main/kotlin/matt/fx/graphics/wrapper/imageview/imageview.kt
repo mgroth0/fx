@@ -1,41 +1,36 @@
 package matt.fx.graphics.wrapper.imageview
 
-import javafx.beans.property.BooleanProperty
-import javafx.beans.property.DoubleProperty
-import javafx.beans.property.ObjectProperty
-import javafx.beans.property.SimpleDoubleProperty
-import javafx.beans.value.ObservableValue
 import javafx.scene.image.Image
 import javafx.scene.image.ImageView
-import matt.collect.dmap.DefaultStoringMap
-import matt.collect.dmap.withStoringDefault
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapperImpl
 import matt.fx.graphics.wrapper.node.attach
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.fx.graphics.wrapper.region.RegionWrapperImpl
-import matt.hurricanefx.eye.prop.objectBindingN
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
-import java.util.WeakHashMap
+import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
+import matt.obs.bind.binding
+import matt.obs.prop.BindableProperty
+import matt.obs.prop.ObsVal
 
 
-fun ET.imageview(url: String? = null, lazyload: Boolean = true, op: ImageViewWrapper.()->Unit = {}) =
+fun ET.imageview(url: String? = null, lazyLoad: Boolean = true, op: ImageViewWrapper.()->Unit = {}) =
   attach(
-	if (url == null) ImageViewWrapper() else ImageViewWrapper().apply { this.image = Image(url, lazyload) }, op
+	if (url == null) ImageViewWrapper() else ImageViewWrapper().apply { this.image = Image(url, lazyLoad) }, op
   )
 
 fun ET.imageview(
-  url: ObservableValue<String>,
-  lazyload: Boolean = true,
+  url: ObsVal<String>,
+  lazyLoad: Boolean = true,
   op: ImageViewWrapper.()->Unit = {}
 ) = ImageViewWrapper().attachTo(this, op) { imageView ->
-  imageView.imageProperty().bind(url.objectBindingN { it?.let { Image(it, lazyload) } })
+  imageView.imageProperty.bind(url.binding { Image(it, lazyLoad) })
 }
 
-fun ET.imageview(image: ObservableValue<Image?>, op: ImageViewWrapper.()->Unit = {}) =
+fun ET.imageview(image: ObsVal<Image?>, op: ImageViewWrapper.()->Unit = {}) =
   ImageViewWrapper().attachTo(this, op) {
-	it.imageProperty().bind(image)
+	it.imageProperty.bind(image)
   }
 
 fun ET.imageview(image: Image, op: ImageViewWrapper.()->Unit = {}) =
@@ -50,22 +45,12 @@ class ImageViewWrapper(
   constructor(imageURL: String): this(ImageView(imageURL))
 
 
-  var image: Image?
-	get() = node.image
-	set(value) {
-	  node.image = value
-	}
-
-  fun imageProperty(): ObjectProperty<Image> = node.imageProperty()
+  val imageProperty by lazy { node.imageProperty().toNullableProp() }
+  var image by imageProperty
 
 
-  var isPreserveRatio
-	get() = node.isPreserveRatio
-	set(value) {
-	  node.isPreserveRatio = value
-	}
-
-  fun preserveRatioProperty(): BooleanProperty = node.preserveRatioProperty()
+  val preserveRatioProperty by lazy { node.preserveRatioProperty().toNonNullableProp() }
+  var isPreserveRatio by preserveRatioProperty
 
 
   var fitWidth
@@ -91,10 +76,16 @@ class ImageViewWrapper(
 	  node.isSmooth = value
 	}
 
-  fun smoothProperty(): BooleanProperty = node.smoothProperty()
+  val smoothProperty by lazy { node.smoothProperty().toNonNullableProp() }
 
 
-  fun fitBothProp(): DoubleProperty = fitBothProps[this.node]
+  val fitBothProp by lazy {
+	BindableProperty(0.0).apply {
+	  fitWidthProperty.bind(this)
+	  fitWidthProperty.bind(this)
+	}
+  }
+
   fun bindFitTo(r: RegionWrapperImpl<*, *>) {
 	fitWidthProperty.bind(r.widthProperty)
 	fitHeightProperty.bind(r.heightProperty)
@@ -105,11 +96,3 @@ class ImageViewWrapper(
   }
 
 }
-
-val fitBothProps: DefaultStoringMap<ImageView, DoubleProperty> =
-  WeakHashMap<ImageView, DoubleProperty>().withStoringDefault {
-	SimpleDoubleProperty().apply {
-	  it.fitWidthProperty().bind(this)
-	  it.fitWidthProperty().bind(this)
-	}
-  }

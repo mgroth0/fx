@@ -33,6 +33,8 @@ import matt.fx.control.wrapper.control.button.button
 import matt.fx.control.wrapper.control.spinner.spinner
 import matt.fx.control.wrapper.control.text.area.textarea
 import matt.fx.graphics.drag.BetterTransferMode
+import matt.fx.graphics.drag.DragType
+import matt.fx.graphics.drag.drags
 import matt.fx.graphics.drag.dragsFile
 import matt.fx.graphics.fxthread.runLaterReturn
 import matt.fx.graphics.icon.Icon
@@ -50,7 +52,9 @@ import matt.fx.web.WebViewPane
 import matt.fx.web.WebViewWrapper
 import matt.fx.web.specialZooming
 import matt.lang.err
+import matt.obs.bind.binding
 import matt.obs.prop.BindableProperty
+import matt.obs.prop.ObsVal
 import matt.time.dur.sec
 import java.lang.Thread.sleep
 import java.lang.ref.WeakReference
@@ -63,6 +67,18 @@ fun MFile.draggableIcon() =
   }).apply {
 	dragsFile(this@draggableIcon, mode = BetterTransferMode.COPY)
   }
+
+fun ObsVal<MFile>.draggableIcon() = Icon(
+  binding {
+	when {
+	  (it.isDirectory)         -> "folder"
+	  (it.extension.isBlank()) -> "file/bin"
+	  else                     -> "file/${it.extension}"/*, invert = extension in listOf("md", "txt")*/
+	}
+  }
+).apply {
+  dragsFile(this@draggableIcon, mode = BetterTransferMode.COPY)
+}
 
 
 fun MFile.createNode(renderHTMLAndSVG: Boolean = false): RegionWrapper<NodeWrapper> {

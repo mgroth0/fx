@@ -1,9 +1,6 @@
-@file:OptIn(ExperimentalStdlibApi::class)
-
 package matt.fx.control.win.interact
 
 import javafx.application.Platform.runLater
-import javafx.beans.binding.DoubleBinding
 import javafx.geometry.Pos
 import javafx.scene.Scene
 import javafx.scene.control.Alert
@@ -49,7 +46,6 @@ import matt.fx.graphics.wrapper.region.border.FXBorder
 import matt.fx.graphics.wrapper.region.border.solidBorder
 import matt.fx.graphics.wrapper.stage.StageWrapper
 import matt.fx.graphics.wrapper.window.WindowWrapper
-import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
 import matt.json.prim.isValidJson
 import matt.lang.noExceptions
 import matt.lang.nullIfExceptions
@@ -120,13 +116,13 @@ fun StageWrapper.bindXYToOwnerCenter() {
 	"must use initOwner before bindXYToOwnerCenter"
   }
 
-  val xBinding = owner!!.xProperty.binding(owner!!.widthProperty,widthProperty) {
+  val xBinding = owner!!.xProperty.binding(owner!!.widthProperty, widthProperty) {
 	(owner!!.x + (owner!!.width/2)) - width/2
   }
 
   val yBinding = owner!!.yProperty.binding(owner!!.heightProperty, heightProperty) {
-	  (owner!!.y + (owner!!.height/2)) - height/2
-	}
+	(owner!!.y + (owner!!.height/2)) - height/2
+  }
   aXBindingStrengthener[this.node] = xBinding
   aYBindingStrengthener[this.node] = yBinding
   x = xBinding.value
@@ -337,20 +333,6 @@ sealed class WinOwn {
   abstract fun applyTo(win: StageWrapper)
 }
 
-//fun NodeWrapperImpl<Parent>.openInNewWindow(
-//  showMode: matt.fx.control.mstage.ShowMode = SHOW,
-//  wMode: matt.fx.control.mstage.WMode = NOTHING,
-//  EscClosable: Boolean = false,
-//  EnterClosable: Boolean = false,
-//  own: WinOwn = Auto,
-//  geom: WinGeom = Centered(),
-//  mScene: Boolean = true,
-//  beforeShowing: StageWrapper.()->Unit = {},
-//  border: Boolean = true,
-//  decorated: Boolean = false
-//) = node.openInNewWindow(
-//  showMode, wMode, EscClosable, EnterClosable, own, geom, mScene, beforeShowing, border, decorated
-//)
 
 fun ParentWrapper<*>.openInNewWindow(
   showMode: ShowMode = SHOW,
@@ -405,7 +387,6 @@ fun ImageViewWrapper.doubleClickToOpenInWindow() {
   this.setOnDoubleClick { mFile(URI(this.image!!.url)).openImageInWindow() }
 }
 
-@OptIn(ExperimentalStdlibApi::class)
 fun NodeWrapper.textInput(
   default: String = "insert default here",
   prompt: String = "insert prompt here"

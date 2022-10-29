@@ -11,6 +11,10 @@ import matt.fx.graphics.effect.INVERSION_EFFECT
 import matt.fx.graphics.wrapper.imageview.ImageViewWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.image.toFXImage
+import matt.obs.bind.binding
+import matt.obs.bindings.str.ObsS
+import matt.obs.prop.FakeObsVal
+import matt.obs.prop.ObsVal
 import java.awt.RenderingHints.KEY_ALPHA_INTERPOLATION
 import java.awt.RenderingHints.KEY_ANTIALIASING
 import java.awt.RenderingHints.KEY_COLOR_RENDERING
@@ -37,10 +41,13 @@ const val ICON_WIDTH = 20.0
 const val ICON_HEIGHT = 20.0
 
 fun NodeWrapper.icon(file: MFile, invert: Boolean = false) = add(Icon(file, invert = invert))
+fun NodeWrapper.icon(file: ObsVal<MFile>, invert: Boolean = false) = add(Icon(file, invert = invert))
 
 fun NodeWrapper.icon(image: Image, invert: Boolean = false) = add(Icon(image, invert = invert))
+fun NodeWrapper.icon(image: ObsVal<Image>, invert: Boolean = false) = add(Icon(image, invert = invert))
 
 fun NodeWrapper.icon(file: String, invert: Boolean = false) = add(Icon(file, invert = invert))
+fun NodeWrapper.icon(file: ObsS, invert: Boolean = false) = add(Icon(file, invert = invert))
 
 
 private val FALLBACK_FILE = (ICON_FOLDER + "chunk.png").apply { //  SvgImageLoaderFactory.install();
@@ -49,15 +56,24 @@ private val FALLBACK_FILE = (ICON_FOLDER + "chunk.png").apply { //  SvgImageLoad
 fun matt.file.icongen.Icon.view() = Icon(name)
 
 fun Icon(file: String, invert: Boolean = false) = Icon(ICON_FOLDER[file], invert = invert)
+fun Icon(file: ObsS, invert: Boolean = false) = Icon(file.binding { ICON_FOLDER[it] }, invert = invert)
+
 fun IconImage(file: String) = IconImage(ICON_FOLDER[file])
+fun IconImage(file: ObsS) = IconImage(file.binding { ICON_FOLDER[it] })
+
+
 fun Icon(file: MFile, invert: Boolean = false): ImageViewWrapper = Icon(IconImage(file), invert = invert)
+fun Icon(file: ObsVal<MFile>, invert: Boolean = false): ImageViewWrapper = Icon(IconImage(file), invert = invert)
+
 
 /*private val SVG_PARAMS = LoaderParameters().apply {
   this.width = ICON_WIDTH
   this.
 }*/
 
-fun Icon(image: Image, invert: Boolean = false): ImageViewWrapper = ImageViewWrapper(image).apply {
+fun Icon(image: Image, invert: Boolean = false): ImageViewWrapper = Icon(FakeObsVal(image), invert = invert)
+fun Icon(image: ObsVal<Image>, invert: Boolean = false): ImageViewWrapper = ImageViewWrapper().apply {
+  imageProperty.bind(image)
   isPreserveRatio = false
   fitWidth = ICON_WIDTH
   fitHeight = ICON_HEIGHT
@@ -126,7 +142,8 @@ private val images = lazyMap<MFile, Image> { file ->
   }
 }
 
-fun IconImage(file: MFile): Image = images[file]
+fun IconImage(file: MFile): Image = IconImage(FakeObsVal(file)).value
+fun IconImage(file: ObsVal<MFile>): ObsVal<Image> = file.binding { images[it] }
 
 private val RENDERING_HINTS: MutableMap<Key, Any> by lazy {
   java.util.Map.of(
