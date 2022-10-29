@@ -38,6 +38,7 @@ import matt.fx.graphics.drag.drags
 import matt.fx.graphics.drag.dragsFile
 import matt.fx.graphics.fxthread.runLaterReturn
 import matt.fx.graphics.icon.Icon
+import matt.fx.graphics.icon.ObsStringIcon
 import matt.fx.graphics.wrapper.imageview.imageview
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.disableWhen
@@ -68,7 +69,7 @@ fun MFile.draggableIcon() =
 	dragsFile(this@draggableIcon, mode = BetterTransferMode.COPY)
   }
 
-fun ObsVal<MFile>.draggableIcon() = Icon(
+fun ObsVal<MFile>.draggableIcon() = ObsStringIcon(
   binding {
 	when {
 	  (it.isDirectory)         -> "folder"

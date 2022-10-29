@@ -41,13 +41,14 @@ const val ICON_WIDTH = 20.0
 const val ICON_HEIGHT = 20.0
 
 fun NodeWrapper.icon(file: MFile, invert: Boolean = false) = add(Icon(file, invert = invert))
-fun NodeWrapper.icon(file: ObsVal<MFile>, invert: Boolean = false) = add(Icon(file, invert = invert))
+
+fun NodeWrapper.obsFileIcon(file: ObsVal<MFile>, invert: Boolean = false) = add(ObsFileIcon(file, invert = invert))
 
 fun NodeWrapper.icon(image: Image, invert: Boolean = false) = add(Icon(image, invert = invert))
-fun NodeWrapper.icon(image: ObsVal<Image>, invert: Boolean = false) = add(Icon(image, invert = invert))
+fun NodeWrapper.obsImageIcon(image: ObsVal<Image>, invert: Boolean = false) = add(ObsIcon(image, invert = invert))
 
 fun NodeWrapper.icon(file: String, invert: Boolean = false) = add(Icon(file, invert = invert))
-fun NodeWrapper.icon(file: ObsS, invert: Boolean = false) = add(Icon(file, invert = invert))
+fun NodeWrapper.obsStringIcon(file: ObsS, invert: Boolean = false) = add(ObsStringIcon(file, invert = invert))
 
 
 private val FALLBACK_FILE = (ICON_FOLDER + "chunk.png").apply { //  SvgImageLoaderFactory.install();
@@ -56,14 +57,14 @@ private val FALLBACK_FILE = (ICON_FOLDER + "chunk.png").apply { //  SvgImageLoad
 fun matt.file.icongen.Icon.view() = Icon(name)
 
 fun Icon(file: String, invert: Boolean = false) = Icon(ICON_FOLDER[file], invert = invert)
-fun Icon(file: ObsS, invert: Boolean = false) = Icon(file.binding { ICON_FOLDER[it] }, invert = invert)
+fun ObsStringIcon(file: ObsS, invert: Boolean = false) = ObsFileIcon(file.binding { ICON_FOLDER[it] }, invert = invert)
 
 fun IconImage(file: String) = IconImage(ICON_FOLDER[file])
-fun IconImage(file: ObsS) = IconImage(file.binding { ICON_FOLDER[it] })
+fun ObsIconImage(file: ObsS) = IconImage(file.binding { ICON_FOLDER[it] })
 
 
 fun Icon(file: MFile, invert: Boolean = false): ImageViewWrapper = Icon(IconImage(file), invert = invert)
-fun Icon(file: ObsVal<MFile>, invert: Boolean = false): ImageViewWrapper = Icon(IconImage(file), invert = invert)
+fun ObsFileIcon(file: ObsVal<MFile>, invert: Boolean = false): ImageViewWrapper = ObsIcon(IconImage(file), invert = invert)
 
 
 /*private val SVG_PARAMS = LoaderParameters().apply {
@@ -71,8 +72,8 @@ fun Icon(file: ObsVal<MFile>, invert: Boolean = false): ImageViewWrapper = Icon(
   this.
 }*/
 
-fun Icon(image: Image, invert: Boolean = false): ImageViewWrapper = Icon(FakeObsVal(image), invert = invert)
-fun Icon(image: ObsVal<Image>, invert: Boolean = false): ImageViewWrapper = ImageViewWrapper().apply {
+fun Icon(image: Image, invert: Boolean = false): ImageViewWrapper = ObsIcon(FakeObsVal(image), invert = invert)
+fun ObsIcon(image: ObsVal<Image>, invert: Boolean = false): ImageViewWrapper = ImageViewWrapper().apply {
   imageProperty.bind(image)
   isPreserveRatio = false
   fitWidth = ICON_WIDTH
