@@ -118,7 +118,7 @@ fun TreeLikeWrapper<*, MFile>.nav(f: MFile) {
 		println("${it}?")
 		if (it.value == f) {
 		  println("found treeitem: $it")
-		  it.parent.chain { it.parent }.forEach { it.isExpanded = true }
+		  it.parent?.chain { it.parent }?.forEach { it.isExpanded = true }
 		  selectionModel.select(it.node)
 		  scrollTo(getRow(it.node))
 		  keepGoing = false
@@ -360,6 +360,7 @@ enum class FileTreePopulationStrategy {
 }
 
 private class FileTreeItem(file: MFile): TreeItemWrapper<MFile>(file) {
+
   init {
 	expandedProperty.addListener(OldAndNewListener { o, n ->
 	  if (o != n && !n) {

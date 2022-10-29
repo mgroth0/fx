@@ -33,7 +33,7 @@ open class TreeItemWrapper<T: Any>(node: TreeItem<T> = TreeItem()): SingularEven
 
   val expandedProperty by lazy { node.expandedProperty().toNonNullableProp() }
   var isExpanded by expandedProperty
-  val parent get() = node.parent.wrapped()
+  val parent get() = node.parent?.wrapped()
   val children by lazy {
 	node.children.createMutableWrapper().toSyncedList(uncheckedWrapperConverter<TreeItem<T>, TreeItemWrapper<T>>())
   }
