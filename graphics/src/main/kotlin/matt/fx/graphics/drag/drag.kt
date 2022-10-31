@@ -15,9 +15,9 @@ import matt.fx.graphics.drag.BetterTransferMode.COPY
 import matt.fx.graphics.wrapper.node.NW
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.image.save
-import matt.lang.On
-import matt.lang.Op
-import matt.lang.Produce
+import matt.lang.function.On
+import matt.lang.function.Op
+import matt.lang.function.Produce
 import matt.lang.go
 import matt.lang.inList
 import matt.obs.prop.ObsVal

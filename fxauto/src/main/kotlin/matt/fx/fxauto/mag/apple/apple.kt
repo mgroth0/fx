@@ -4,9 +4,11 @@ import javafx.application.Platform.runLater
 import javafx.geometry.Rectangle2D
 import javafx.stage.Screen
 import javafx.stage.Stage
-import matt.auto.applescript.AppleScriptExpression
-import matt.auto.applescript.interactiveOsascript
-import matt.auto.applescript.runAppleScript
+import matt.auto.ascript.AppleScriptExpression
+import matt.auto.ascript.AppleScriptString
+import matt.auto.ascript.DoShellScript
+import matt.auto.ascript.interactiveOsascript
+import matt.auto.ascript.runAppleScript
 import matt.auto.compileAndOrRunApplescript
 import matt.auto.macapp.JavaMacApp
 import matt.auto.macapp.MacApp.Companion.getFrontmostProcessFromKotlinNative
@@ -20,10 +22,7 @@ import kotlin.concurrent.thread
 fun moveFrontmostWindowByApplescript(x: Number, y: Number, width: Number, height: Number) {
   println(
 	"MOVE:" + compileAndOrRunApplescript(
-	  "moveFrontmostWindow",
-	  x.toInt().toString(),
-	  y.toInt().toString(),
-	  width.toInt().toString(),
+	  "moveFrontmostWindow", x.toInt().toString(), y.toInt().toString(), width.toInt().toString(),
 	  height.toInt().toString()
 	)
   )
@@ -81,14 +80,14 @@ fun getAppWindowPositionAndSizeByApplescript(app: String): Rectangle2D {
 
 
 fun sdtInTest() {
-  val writerP = interactiveOsascript(
-	"""
-	 log "in script 1"
-     set stdin to do shell script "cat 0<&3"
-	 log "in script 2"
-     return "hello, " & stdin
-  """.trimIndent()
-  )
+
+
+  val writerP = interactiveOsascript {
+	log(AppleScriptString("in script 1"))
+	set("stdin", DoShellScript("cat", "0<&3"))
+	log(AppleScriptString("in script 2"))
+	`return`(AppleScriptString("hello, ").concat(AppleScriptExpression("stdin")))
+  }
   val p = writerP.second
   val reader = p.inputStream.bufferedReader()
   val readerE = p.errorStream.bufferedReader()
@@ -115,21 +114,16 @@ fun sdtInTest() {
 	"""
 	its not worth it. Doing it through matt.auto.applescript.applescript is extremely slow and there is no workaround for that. The only other option is to do it through objective C, which is extremely complicated and not worth it. You can try again if you want, but trust me its insane and you have to go through annoying accessibility APIs. Even with kotlin native, it is not worth it. Keyboard maestro and magnet seemed to have done exactly this and developed the perfect native code for this. But guess what, they are closed source. Maybe I should just respect their work and use their software for now. Its not that bad...
   """.trimIndent()
-  )
-  /*https://stackoverflow.com/questions/70647124/how-to-reduce-overhead-and-run-applescripts-faster*/
+  )/*https://stackoverflow.com/questions/70647124/how-to-reduce-overhead-and-run-applescripts-faster*/
   sdtInTest()
   tic()
   val app = getFrontmostProcessFromKotlinNative() // NOSONAR
   if (app !is JavaMacApp) {
 	val bounds = getFrontmostWindowPositionAndSizeByApplescript()
 	runLater {
-	  val screen =
-		Screen.getScreensForRectangle(bounds.minX, bounds.minY, bounds.width, bounds.height).firstOrNull()!!
+	  val screen = Screen.getScreensForRectangle(bounds.minX, bounds.minY, bounds.width, bounds.height).firstOrNull()!!
 	  moveFrontmostWindowByApplescript(
-		screen.bounds.minX,
-		screen.bounds.minY,
-		screen.bounds.width/2,
-		screen.bounds.height
+		screen.bounds.minX, screen.bounds.minY, screen.bounds.width/2, screen.bounds.height
 	  )
 	}
   }
