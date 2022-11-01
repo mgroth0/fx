@@ -138,23 +138,6 @@ open class TableViewWrapper<E: Any>(
 	return column.also(op)
   }
 
-
-  /**
-   * Create a matt.hurricanefx.tableview.coolColumn with a title specified cell type and operate on it. Inside the code block you can call
-   * `value { it.value.someProperty }` to set up a cellValueFactory that must return T or ObservableValue<T>
-   */
-  @Suppress("UNUSED_PARAMETER")
-  fun <P: Any> column(
-	title: String,
-	cellType: KClass<P>,
-	op: TableColumnWrapper<E, P>.()->Unit = {}
-  ): TableColumnWrapper<E, P> {
-	val column = TableColumnWrapper<E, P>(title)
-	addColumnInternal(column)
-	return column.also(op)
-  }
-
-
   fun <P> column(
 	title: String,
 	prefWidth: Double? = null,
@@ -194,15 +177,16 @@ open class TableViewWrapper<E: Any>(
   }
 
 
-  @JvmName("coolColumn")
-  fun <P> column(getter: KFunction<P>, op: TableColumnWrapper<E, P>.()->Unit = {}): TableColumnWrapper<E, P> {
+  fun <P> column(
+	getter: KFunction<P>,
+	op: TableColumnWrapper<E, P>.()->Unit = {}
+  ): TableColumnWrapper<E, P> {
 	return column(getter.name) {
 	  BindableProperty(getter.call(it.value))
 	}.apply(op)
   }
 
 
-  @JvmName("coolColumn2")
   fun <P> column(
 	getter: KProperty1<E, P>,
 	op: TableColumnWrapper<E, P>.()->Unit = {}
