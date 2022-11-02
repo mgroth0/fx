@@ -1,7 +1,6 @@
 package matt.fx.control.wrapper.control.table
 
 import javafx.application.Platform
-import javafx.beans.property.ObjectProperty
 import javafx.beans.property.ReadOnlyObjectWrapper
 import javafx.collections.ListChangeListener
 import javafx.collections.ObservableList
@@ -11,7 +10,6 @@ import javafx.scene.control.TableColumn
 import javafx.scene.control.TablePosition
 import javafx.scene.control.TableRow
 import javafx.scene.control.TableView
-import javafx.scene.control.TableView.ResizeFeatures
 import javafx.scene.input.InputEvent
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
@@ -25,12 +23,14 @@ import matt.fx.control.wrapper.selects.wrap
 import matt.fx.control.wrapper.wrapped.wrapped
 import matt.fx.graphics.fxWidth
 import matt.fx.graphics.wrapper.ET
+import matt.fx.graphics.wrapper.node.NW
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.hurricanefx.eye.wrapper.obs.collect.mfxMutableListConverter
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNullableROProp
+import matt.lang.go
 import matt.lang.setAll
 import matt.obs.bind.binding
 import matt.obs.bindings.bool.ObsB
@@ -44,7 +44,6 @@ import matt.obs.prop.toVarProp
 import kotlin.reflect.KFunction
 import kotlin.reflect.KMutableProperty1
 import kotlin.reflect.KProperty1
-
 
 fun <T: Any> ET.tableview(items: ObsList<T>? = null, op: TableViewWrapper<T>.()->Unit = {}) =
   TableViewWrapper<T>().attachTo(this, op) {
@@ -87,14 +86,8 @@ open class TableViewWrapper<E: Any>(
 
   val sortOrder: ObservableList<TableColumn<E, *>> get() = node.sortOrder
 
-  var columnResizePolicy: Callback<ResizeFeatures<Any>, Boolean>
-	get() = node.columnResizePolicy
-	set(value) {
-	  node.columnResizePolicy = value
-	}
-
-  fun columnResizePolicyProperty(): ObjectProperty<Callback<ResizeFeatures<Any>, Boolean>> =
-	node.columnResizePolicyProperty()
+  val columnResizePolicyProperty by lazy { node.columnResizePolicyProperty().toNonNullableProp() }
+  var columnResizePolicy by columnResizePolicyProperty
 
 
   val itemsProperty by lazy { node.itemsProperty().toNullableProp().proxy(mfxMutableListConverter<E>().nullable()) }
@@ -152,10 +145,12 @@ open class TableViewWrapper<E: Any>(
   fun nodeColumn(
 	title: String,
 	prefWidth: Double? = null,
-	nodeProvider: (TableColumn.CellDataFeatures<E, NodeWrapper>)->NodeWrapper,
+	nodeProvider: (E)->NodeWrapper,
   ): TableColumnWrapper<E, NodeWrapper> {
 	val column = TableColumnWrapper<E, NodeWrapper>(title)
-	column.cellValueFactory = Callback { BindableProperty(nodeProvider(it)) }
+	column.cellValueFactory = Callback {
+	  BindableProperty(nodeProvider(it.value))
+	}
 	column.simpleCellFactory(SimpleFactory {
 	  "" to it
 	})
@@ -277,16 +272,28 @@ open class TableViewWrapper<E: Any>(
   //  call the method after inserting the data into table
   fun autoResizeColumns() {
 	columnResizePolicy = TableView.UNCONSTRAINED_RESIZE_POLICY
-	columns.forEach { column ->
-	  column.setPrefWidth(
-		(((0 until items!!.size).mapNotNull {
-		  column.getCellData(it)
-		}.map {
+	columns.associateWith { column ->
+
+	  val dataList = (0 until items!!.size).map {
+		column.getCellData(it)
+	  }
+	  if (dataList.any { it is NW }) {
+		null /*prevent resizing of nodeColumn which is managed separately. Trying to resize those here leads to issues because getCellData() returns a different node then the one being displayed*/
+	  } else {
+		val textWidths = dataList.mapNotNull {
 		  it.toString().fxWidth
-		}.toMutableList() + listOf(
+		}.toTypedArray()
+
+		val widths = listOf(
+		  *textWidths,
 		  column.text.fxWidth
-		)).maxOrNull() ?: 0.0) + 10.0
-	  )
+		)
+		val bareMinW = widths.maxOrNull() ?: 0.0
+		bareMinW + 10.0
+	  }
+
+	}.forEach { (column, w) ->
+	  w?.go(column::setPrefWidth)
 	}
   }
 

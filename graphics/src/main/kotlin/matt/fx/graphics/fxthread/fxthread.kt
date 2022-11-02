@@ -5,13 +5,16 @@ import javafx.application.Platform
 import javafx.application.Platform.runLater
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.lang.function.MetaFunction
+import matt.lang.function.Produce
 import matt.model.latch.SimpleLatch
+import matt.model.runner.Run
+import matt.model.runner.Runner
+import matt.model.runner.ThreadRunner
 import matt.service.scheduler.Scheduler
 import kotlin.concurrent.thread
 import kotlin.time.Duration
 
-fun <T> runLaterReturn(op: ()->T): T {
-  /*matt.log.todo.todo: can check if this is application thread and if so just run op in place*/
+fun <T> runLaterReturn(op: ()->T): T {/*matt.log.todo.todo: can check if this is application thread and if so just run op in place*/
   var r: Any? = object {}
   val latch = SimpleLatch()
   try {
@@ -24,8 +27,7 @@ fun <T> runLaterReturn(op: ()->T): T {
 	e.printStackTrace()
   }
   latch.await()
-  @Suppress("UNCHECKED_CAST")
-  return (r as T)
+  @Suppress("UNCHECKED_CAST") return (r as T)
 }
 
 inline fun <T> ensureInFXThreadInPlace(crossinline op: ()->T): T {
@@ -68,5 +70,14 @@ val runLaterOp: MetaFunction = {
 object FXScheduler: Scheduler {
   override fun schedule(op: ()->Unit) {
 	PlatformImpl.runLater(op)
+  }
+}
+
+object FXRunner: Runner {
+  override fun <R> run(op: Produce<R>): Run<R> {
+	val run = ThreadRunner.run {
+	  runLaterReturn(op)
+	}
+	return run
   }
 }

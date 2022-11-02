@@ -17,10 +17,12 @@ import matt.fx.graphics.service.uncheckedWrapperConverter
 import matt.fx.graphics.style.backgroundFromColor
 import matt.fx.graphics.style.copy
 import matt.fx.graphics.style.vertical
+import matt.fx.graphics.stylelock.toNullableStyleProp
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.parent.ParentWrapper
 import matt.fx.graphics.wrapper.node.parent.ParentWrapperImpl
 import matt.fx.graphics.wrapper.node.parent.parent
+import matt.fx.graphics.wrapper.region.RegionWrapper.Companion.computePrefWidthFun
 import matt.fx.graphics.wrapper.region.border.FXBorder
 import matt.fx.graphics.wrapper.sizeman.SizeManaged
 import matt.hurricanefx.eye.wrapper.obs.collect.createMutableWrapper
@@ -33,10 +35,16 @@ import matt.obs.col.olist.mappedlist.toSyncedList
 import matt.obs.prop.BindableProperty
 import matt.obs.prop.Var
 import matt.reflect.access
-import matt.fx.graphics.stylelock.toNullableStyleProp
 import kotlin.reflect.full.declaredMemberFunctions
 
+
 interface RegionWrapper<C: NodeWrapper>: ParentWrapper<C>, SizeManaged {
+
+  companion object {
+	internal val computePrefWidthFun = Region::class.java.getDeclaredMethod("computePrefWidth", Double::class.java).apply {
+		isAccessible = true
+	  }
+  }
 
 
   override val node: Region
@@ -191,6 +199,11 @@ interface RegionWrapper<C: NodeWrapper>: ParentWrapper<C>, SizeManaged {
 	TODO("Not yet implemented")
   }
 
+
+}
+
+fun RegionWrapper<*>.computePrefWidth(height: Double) = (computePrefWidthFun.invoke(node, height) as Double).also {
+  println("computed pref width of ${node} with height ${height} is ${it}")
 }
 
 

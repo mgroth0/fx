@@ -25,6 +25,8 @@ open class WindowWrapper<W: Window>(override val node: W): SingularEventTargetWr
 
   var pullBackWhenOffScreen = true
 
+  fun requestFocus() = node.requestFocus()
+
 
   override val properties get() = node.properties
   override fun addChild(child: NodeWrapper, index: Int?) {
