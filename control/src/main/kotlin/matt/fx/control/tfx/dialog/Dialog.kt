@@ -12,12 +12,12 @@ import javafx.scene.control.Dialog
 import javafx.stage.DirectoryChooser
 import javafx.stage.FileChooser
 import javafx.stage.Stage
-import javafx.stage.Window
 import matt.file.MFile
 import matt.file.construct.toMFile
 import matt.fx.control.tfx.dialog.FileChooserMode.Multi
 import matt.fx.control.tfx.dialog.FileChooserMode.Save
 import matt.fx.control.tfx.dialog.FileChooserMode.Single
+import matt.fx.graphics.wrapper.window.WindowWrapper
 
 
 inline fun confirm(
@@ -25,7 +25,7 @@ inline fun confirm(
   content: String = "",
   confirmButton: ButtonType = ButtonType.OK,
   cancelButton: ButtonType = ButtonType.CANCEL,
-  owner: Window? = null,
+  owner: WindowWrapper<*>? = null,
   title: String? = null,
   actionFn: ()->Unit
 ) {
@@ -39,7 +39,7 @@ inline fun alert(
   header: String,
   content: String? = null,
   vararg buttons: ButtonType,
-  owner: Window? = null,
+  owner: WindowWrapper<*>? = null,
   title: String? = null,
   actionFn: Alert.(ButtonType)->Unit = {}
 ): Alert {
@@ -47,7 +47,7 @@ inline fun alert(
   val alert = Alert(type, content ?: "", *buttons)
   title?.let { alert.title = it }
   alert.headerText = header
-  owner?.also { alert.initOwner(it) }
+  owner?.also { alert.initOwner(it.node) }
   val buttonClicked = alert.showAndWait()
   if (buttonClicked.isPresent) {
 	alert.actionFn(buttonClicked.get())
@@ -59,7 +59,7 @@ inline fun warning(
   header: String,
   content: String? = null,
   vararg buttons: ButtonType,
-  owner: Window? = null,
+  owner: WindowWrapper<*>? = null,
   title: String? = null,
   actionFn: Alert.(ButtonType)->Unit = {}
 ) =
@@ -69,7 +69,7 @@ inline fun error(
   header: String,
   content: String? = null,
   vararg buttons: ButtonType,
-  owner: Window? = null,
+  owner: WindowWrapper<*>? = null,
   title: String? = null,
   actionFn: Alert.(ButtonType)->Unit = {}
 ) =
@@ -79,7 +79,7 @@ inline fun information(
   header: String,
   content: String? = null,
   vararg buttons: ButtonType,
-  owner: Window? = null,
+  owner: WindowWrapper<*>? = null,
   title: String? = null,
   actionFn: Alert.(ButtonType)->Unit = {}
 ) =
@@ -89,7 +89,7 @@ inline fun confirmation(
   header: String,
   content: String? = null,
   vararg buttons: ButtonType,
-  owner: Window? = null,
+  owner: WindowWrapper<*>? = null,
   title: String? = null,
   actionFn: Alert.(ButtonType)->Unit = {}
 ) =
@@ -102,7 +102,7 @@ fun chooseFile(
   filters: Array<out FileChooser.ExtensionFilter>,
   initialDirectory: MFile? = null,
   mode: FileChooserMode = Single,
-  owner: Window? = null,
+  owner: WindowWrapper<*>? = null,
   op: FileChooser.()->Unit = {}
 ): List<MFile> {
   val chooser = FileChooser()
@@ -112,13 +112,13 @@ fun chooseFile(
   op(chooser)
   return when (mode) {
 	Single -> {
-	  val result = chooser.showOpenDialog(owner)?.toMFile()
+	  val result = chooser.showOpenDialog(owner?.node)?.toMFile()
 	  if (result == null) emptyList() else listOf(result)
 	}
 
-	Multi  -> chooser.showOpenMultipleDialog(owner).map { it.toMFile() } /*?: emptyList()*/
+	Multi  -> chooser.showOpenMultipleDialog(owner?.node).map { it.toMFile() } /*?: emptyList()*/
 	Save   -> {
-	  val result = chooser.showSaveDialog(owner)?.toMFile()
+	  val result = chooser.showSaveDialog(owner?.node)?.toMFile()
 	  if (result == null) emptyList() else listOf(result)
 	}
 
@@ -129,14 +129,14 @@ fun chooseFile(
 fun chooseDirectory(
   title: String? = null,
   initialDirectory: MFile? = null,
-  owner: Window? = null,
+  owner: WindowWrapper<*>? = null,
   op: DirectoryChooser.()->Unit = {}
 ): MFile? {
   val chooser = DirectoryChooser()
   if (title != null) chooser.title = title
   if (initialDirectory != null) chooser.initialDirectory = initialDirectory
   op(chooser)
-  return chooser.showDialog(owner)?.toMFile()
+  return chooser.showDialog(owner?.node)?.toMFile()
 }
 
 fun Dialog<*>.toFront() = (dialogPane.scene.window as? Stage)?.toFront()

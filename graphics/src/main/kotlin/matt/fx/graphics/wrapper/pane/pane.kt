@@ -41,7 +41,7 @@ interface PaneWrapper<C: NodeWrapper>: RegionWrapper<C> {
   }
 
 
-  val children get() = node.children.createMutableWrapper().toSyncedList(uncheckedWrapperConverter<Node, C>())
+  override val children get() = node.children.createMutableWrapper().toSyncedList(uncheckedWrapperConverter<Node, C>())
 
 
   fun resizer(corner: Corner) {/*var y = 0.0

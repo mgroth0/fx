@@ -25,12 +25,14 @@ import matt.fx.graphics.wrapper.node.parent.parent
 import matt.fx.graphics.wrapper.region.RegionWrapper.Companion.computePrefWidthFun
 import matt.fx.graphics.wrapper.region.border.FXBorder
 import matt.fx.graphics.wrapper.sizeman.SizeManaged
+import matt.hurricanefx.eye.wrapper.obs.collect.createImmutableWrapper
 import matt.hurricanefx.eye.wrapper.obs.collect.createMutableWrapper
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
 import matt.lang.NEVER
 import matt.lang.err
 import matt.model.convert.Converter
+import matt.obs.col.olist.mappedlist.toMappedList
 import matt.obs.col.olist.mappedlist.toSyncedList
 import matt.obs.prop.BindableProperty
 import matt.obs.prop.Var
@@ -41,7 +43,8 @@ import kotlin.reflect.full.declaredMemberFunctions
 interface RegionWrapper<C: NodeWrapper>: ParentWrapper<C>, SizeManaged {
 
   companion object {
-	internal val computePrefWidthFun = Region::class.java.getDeclaredMethod("computePrefWidth", Double::class.java).apply {
+	internal val computePrefWidthFun =
+	  Region::class.java.getDeclaredMethod("computePrefWidth", Double::class.java).apply {
 		isAccessible = true
 	  }
   }
@@ -199,6 +202,10 @@ interface RegionWrapper<C: NodeWrapper>: ParentWrapper<C>, SizeManaged {
 	TODO("Not yet implemented")
   }
 
+
+  val children
+	get() = node.childrenUnmodifiable.createImmutableWrapper()
+	  .toMappedList { uncheckedWrapperConverter<Node, C>().convertToB(it) }
 
 }
 
