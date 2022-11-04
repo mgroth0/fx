@@ -11,6 +11,7 @@ import javafx.scene.control.ButtonType
 import javafx.scene.control.Dialog
 import javafx.stage.DirectoryChooser
 import javafx.stage.FileChooser
+import javafx.stage.Modality
 import javafx.stage.Stage
 import matt.file.MFile
 import matt.file.construct.toMFile
@@ -18,6 +19,9 @@ import matt.fx.control.tfx.dialog.FileChooserMode.Multi
 import matt.fx.control.tfx.dialog.FileChooserMode.Save
 import matt.fx.control.tfx.dialog.FileChooserMode.Single
 import matt.fx.graphics.wrapper.window.WindowWrapper
+import matt.model.latch.asyncloaded.LoadedValueSlot
+import matt.model.runner.ResultRun
+import matt.model.runner.Run
 
 
 inline fun confirm(
@@ -53,6 +57,33 @@ inline fun alert(
 	alert.actionFn(buttonClicked.get())
   }
   return alert
+}
+
+
+fun asyncAlert(
+  type: Alert.AlertType,
+  header: String,
+  content: String? = null,
+  vararg buttons: ButtonType,
+  owner: WindowWrapper<*>? = null,
+  title: String? = null,
+  op: Alert.() -> Unit = {}
+): Run<ButtonType> {
+  val result = LoadedValueSlot<ButtonType>()
+  val run = ResultRun(result)
+  val alert = Alert(type, content ?: "", *buttons)
+  title?.let { alert.title = it }
+  alert.headerText = header
+  owner?.also { alert.initOwner(it.node) }
+  alert.initModality(Modality.NONE)
+  alert.show()
+  alert.setOnHidden {
+	alert.result?.let {
+	  result.putLoadedValue(it)
+	}
+  }
+  alert.op()
+  return run
 }
 
 inline fun warning(

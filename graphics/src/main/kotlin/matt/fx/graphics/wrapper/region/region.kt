@@ -32,7 +32,7 @@ import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
 import matt.lang.NEVER
 import matt.lang.err
 import matt.model.convert.Converter
-import matt.obs.col.olist.mappedlist.toMappedList
+import matt.obs.col.olist.mappedlist.toLazyMappedList
 import matt.obs.col.olist.mappedlist.toSyncedList
 import matt.obs.prop.BindableProperty
 import matt.obs.prop.Var
@@ -205,12 +205,13 @@ interface RegionWrapper<C: NodeWrapper>: ParentWrapper<C>, SizeManaged {
 
   val children
 	get() = node.childrenUnmodifiable.createImmutableWrapper()
-	  .toMappedList { uncheckedWrapperConverter<Node, C>().convertToB(it) }
+	  .toLazyMappedList { uncheckedWrapperConverter<Node, C>().convertToB(it) }
+  /*trying to avoid initializing wrappers to quickly (and getting the wrong ones as a result)*/
 
 }
 
 fun RegionWrapper<*>.computePrefWidth(height: Double) = (computePrefWidthFun.invoke(node, height) as Double).also {
-  println("computed pref width of ${node} with height ${height} is ${it}")
+  println("computed pref width of $node with height $height is $it")
 }
 
 
