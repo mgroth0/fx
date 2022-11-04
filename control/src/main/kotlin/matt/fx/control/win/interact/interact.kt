@@ -64,8 +64,8 @@ fun safe(s: String, op: ()->Unit): Boolean {
 	Alert.AlertType.CONFIRMATION,
 	header = s,
 	content = s,
-	owner = Stage.getWindows().firstOrNull {
-	  it.isFocused
+	owner = WindowWrapper.windows().firstOrNull {
+	  it.focused
 	}
   ) {
 	if (it.buttonData.isDefaultButton) {

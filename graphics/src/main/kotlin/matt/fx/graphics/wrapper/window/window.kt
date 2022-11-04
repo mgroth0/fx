@@ -19,6 +19,10 @@ import matt.lang.NOT_IMPLEMENTED
 
 open class WindowWrapper<W: Window>(override val node: W): SingularEventTargetWrapper<W>(node), SizeControlled {
 
+  companion object {
+	fun windows() = Window.getWindows().map { it.wrapped() as WindowWrapper<*> }
+  }
+
   override fun removeFromParent(): Unit = NOT_IMPLEMENTED
 
   override fun isInsideRow() = false
