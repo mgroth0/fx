@@ -24,8 +24,8 @@ import matt.fx.graphics.clip.copyToClipboard
 import matt.fx.graphics.fxthread.runLater
 import matt.fx.graphics.fxthread.runLaterReturn
 import matt.fx.graphics.refresh.refreshWhileInSceneEvery
+import matt.fx.graphics.wrapper.node.NW
 import matt.fx.graphics.wrapper.node.NodeWrapper
-import matt.fx.graphics.wrapper.node.NodeWrapperImpl
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.fx.graphics.wrapper.node.parent.ParentWrapperImpl
 import matt.fx.graphics.wrapper.node.setOnDoubleClick
@@ -41,6 +41,21 @@ import netscape.javascript.JSObject
 import org.intellij.lang.annotations.Language
 import org.jsoup.Jsoup
 import kotlin.contracts.ExperimentalContracts
+
+fun NW.testWebView(op: WebViewWrapper.() -> Unit = {}) = webview {
+  //	  engine.loadContent(segSeg.code)
+  /*engine.loadContent("<html><body>hello world</html></body>")*/
+  fun doLoad() = Platform.runLater {
+	engine.load("http://info.cern.ch/hypertext/WWW/TheProject.html")
+  }
+  doLoad()
+  setOnMouseClicked {
+	println("doing load")
+	doLoad()
+	println("send load command")
+  }
+  op()
+}
 
 fun WebViewWrapper.exactWidthProperty() = SimpleDoubleProperty().also {
   minWidthProperty.bind(it)
@@ -63,7 +78,7 @@ var WebViewWrapper.exactHeight: Number
   }
   get() = NEVER
 
-fun NodeWrapperImpl<*>.webview(
+fun NW.webview(
   htmlContent: String? = null,
   op: WebViewWrapper.()->Unit = {}
 ) = WebViewWrapper().apply {

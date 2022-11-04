@@ -5,6 +5,7 @@
 package matt.fx.control.tfx.control
 
 import matt.fx.control.inter.select.SelectableValue
+import matt.log.warn.warn
 import matt.model.flowlogic.keypass.KeyPass
 import matt.model.flowlogic.recursionblocker.RecursionBlocker
 import matt.obs.col.change.AdditionBase
@@ -105,7 +106,10 @@ class ToggleMechanism<V: Any>() {
 
   private fun didUnSelectToggle(toggle: SelectableValue<V>) {
 	if (selecting.isNotHeld) {
-	  require(selectedToggle.value == toggle)
+	  val theVal = selectedToggle.value
+	  if (theVal != toggle) {
+		warn("odd issue: expected selectedToggle.value to be $toggle but it was $theVal. I don't , but it still should be figured out.")
+	  }
 	  selectedToggle.value = null
 	}
   }
@@ -116,6 +120,9 @@ class ToggleMechanism<V: Any>() {
 	toggles.onChange { change ->
 	  (change as? AdditionBase)?.addedElements?.forEach { toggle ->
 		listeners[toggle] = toggle.selectedProperty.onChange {
+		  /*println("selectedProperty of toggle ${toggle} changed to ${it}")
+		  println("selectedToggle.value=${selectedToggle.value}")
+		  println("selectedValue.value=${selectedValue.value}")*/
 		  if (it) didSelectToggle(toggle)
 		  else didUnSelectToggle(toggle)
 		}
