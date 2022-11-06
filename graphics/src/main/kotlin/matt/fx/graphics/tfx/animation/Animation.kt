@@ -420,7 +420,7 @@ abstract class ViewTransition {
    * Create an animation to play for the transition between two nodes. The [StackPane] used as a placeholder during
    * the transition is also provided.
    *
-   * There are a number of useful extensions functions for nodes defined above to make animations easier. See any of
+   * There are a number of useful extensions functions for nodes defined above to make animations easier. matt.lang.anno.See any of
    * the ViewTransitions defined below for examples.
    *
    * @param current The node currently in the scenegraph that is to be replaced
@@ -434,7 +434,7 @@ abstract class ViewTransition {
    * Will be called after the transition is finished and the replacement node has been docked. This function is useful
    * for resetting changes made to the node during the transition, such as position, scale, and opacity.
    *
-   * See [Metro] for an example.
+   * matt.lang.anno.See [Metro] for an example.
    *
    * @param removed The node that was removed from the scenegraph
    * @param replacement The node now in the scenegraph
@@ -501,7 +501,7 @@ abstract class ViewTransition {
    * Create a [StackPane] in which the transition will take place. You should generally put both the current and the
    * replacement nodes in the stack, but it isn't technically required.
    *
-   * See [FadeThrough] for an example.
+   * matt.lang.anno.See [FadeThrough] for an example.
    *
    * By default this returns a StackPane with only the current and replacement nodes in it (the current node will be
    * on top).
