@@ -10,7 +10,7 @@ import javafx.scene.transform.Translate
 import matt.fx.graphics.wrapper.SingularEventTargetWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
 
-abstract class TransformWrapper(node: Transform): SingularEventTargetWrapper<Transform>(node) {
+abstract class TransformWrapper<E: Transform>(node: E): SingularEventTargetWrapper<E>(node) {
   override val properties: ObservableMap<Any, Any?>
 	get() = TODO("Not yet implemented")
 
@@ -27,13 +27,13 @@ abstract class TransformWrapper(node: Transform): SingularEventTargetWrapper<Tra
   }
 }
 
-class RotateWrapper(node: Rotate): TransformWrapper(node)
-class TranslateWrapper(node: Translate): TransformWrapper(node)
-class ShearWrapper(node: Shear): TransformWrapper(node)
-class AffineWrapper(node: Affine): TransformWrapper(node)
-class ScaleWrapper(node: Scale): TransformWrapper(node)
+class RotateWrapper(node: Rotate = Rotate()): TransformWrapper<Rotate>(node)
+class TranslateWrapper(node: Translate = Translate()): TransformWrapper<Translate>(node)
+class ShearWrapper(node: Shear = Shear()): TransformWrapper<Shear>(node)
+class AffineWrapper(node: Affine = Affine()): TransformWrapper<Affine>(node)
+class ScaleWrapper(node: Scale = Scale()): TransformWrapper<Scale>(node)
 
-class ImmutableTransformWrapper(node: Transform): TransformWrapper(node) {
+class ImmutableTransformWrapper(node: Transform): TransformWrapper<Transform>(node) {
   companion object {
 	const val JFX_QNAME = "javafx.scene.transform.Transform.ImmutableTransform"
   }

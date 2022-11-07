@@ -660,7 +660,7 @@ fun Shear.wrapped(): ShearWrapper = findWrapper() ?: ShearWrapper(this@wrapped)
 fun Affine.wrapped(): AffineWrapper = findWrapper() ?: AffineWrapper(this@wrapped)
 fun Scale.wrapped(): ScaleWrapper = findWrapper() ?: ScaleWrapper(this@wrapped)
 
-fun Transform.wrapped(): TransformWrapper = findWrapper() ?: when (this) {
+fun Transform.wrapped(): TransformWrapper<*> = findWrapper() ?: when (this) {
   is Rotate    -> wrapped()
   is Translate -> wrapped()
   is Shear     -> wrapped()

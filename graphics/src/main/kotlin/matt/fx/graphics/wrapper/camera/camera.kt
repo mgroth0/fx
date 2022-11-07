@@ -12,5 +12,5 @@ abstract class CameraWrapper(node: Camera): NodeWrapperImpl<Camera>(node) {
   }
 }
 
-class PerspectiveCameraWrapper(node: PerspectiveCamera): CameraWrapper(node)
-class ParallelCameraWrapper(node: ParallelCamera): CameraWrapper(node)
+class PerspectiveCameraWrapper(node: PerspectiveCamera = PerspectiveCamera()): CameraWrapper(node)
+class ParallelCameraWrapper(node: ParallelCamera = ParallelCamera()): CameraWrapper(node)
