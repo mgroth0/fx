@@ -1,5 +1,17 @@
 package matt.fx.threedemo
 
+import javafx.scene.PerspectiveCamera
+import javafx.scene.transform.Rotate
+import javafx.scene.transform.Translate
+import matt.fx.control.mscene.MScene
+import matt.fx.graphics.hotkey.hotkeys
+import matt.fx.graphics.wrapper.camera.PerspectiveCameraWrapper
+import matt.fx.graphics.wrapper.group.GroupWrapper
+import matt.fx.graphics.wrapper.node.NodeWrapper
+import matt.fx.graphics.wrapper.node.shape.threed.box.BoxWrapper3D
+import matt.fx.graphics.wrapper.transform.RotateWrapper
+import matt.fx.graphics.wrapper.transform.TranslateWrapper
+import matt.gui.app.GuiApp
 
 
 fun main() {
