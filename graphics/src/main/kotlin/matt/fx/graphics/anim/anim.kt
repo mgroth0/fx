@@ -14,7 +14,6 @@ interface FXDoubleWrapper<M: FXDoubleWrapper<M>>: DoubleWrapper<M>, Interpolatab
 	  asDouble + (endValue.asDouble - asDouble)*t,
 	)
   }
-
 }
 
 
