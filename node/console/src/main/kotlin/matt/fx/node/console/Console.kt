@@ -13,6 +13,7 @@ import matt.async.safe.sync
 import matt.async.schedule.every
 import matt.async.thread.daemon
 import matt.auto.macapp.SublimeText
+import matt.file.MFile
 import matt.file.commons.DATA_FOLDER
 import matt.file.commons.LOG_FOLDER
 import matt.file.construct.mFile
@@ -295,6 +296,24 @@ sealed class Console(
 }
 
 class ProcessConsole(name: String): Console(name) {
+  fun alsoTail(logFile: MFile) {
+
+	daemon {
+	  var got = ""
+	  while (true) {
+		if (logFile.exists()) {
+		  val r = logFile.text
+		  if (got != r) {
+			unshownOutput += r.removePrefix(got)
+			/*println(r.removePrefix(got))*/
+			got = r
+		  }
+		}
+		Thread.sleep(1000)
+	  }
+	}
+  }
+
   fun attachProcess(p: Process) {
 	logfile.doubleBackupWrite("")
 	errFile.doubleBackupWrite("")
