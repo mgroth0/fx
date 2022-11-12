@@ -30,7 +30,7 @@ class SeriesConverter<X, Y>(): Converter<Series<X, Y>, SeriesWrapper<X, Y>> {
 
 fun <X, Y> Series<X, Y>.wrapped() = wrappers[this] ?: SeriesWrapper(this)
 
-class SeriesWrapper<X, Y>(internal val series: Series<X, Y> = Series<X, Y>()) {
+class SeriesWrapper<X, Y>( val series: Series<X, Y> = Series<X, Y>()) {
   companion object {
 	internal val wrappers = WeakMap<Series<*, *>, SeriesWrapper<*, *>>()
   }
