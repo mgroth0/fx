@@ -58,5 +58,5 @@ fun main() {
 		}
 	  }
 	}
-  }.start()
+  }.runBlocking()
 }

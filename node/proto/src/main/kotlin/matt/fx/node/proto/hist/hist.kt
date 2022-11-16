@@ -12,7 +12,7 @@ import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.shape.rect.rectangle
 import matt.fx.graphics.wrapper.pane.pane
 import matt.fx.graphics.wrapper.region.RegionWrapperImpl
-import matt.math.mathable.MathAndComparable
+import matt.model.mathable.MathAndComparable
 import matt.model.idea.MChartIdea
 import matt.obs.bind.binding
 import matt.obs.math.double.op.div

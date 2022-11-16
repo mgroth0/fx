@@ -11,7 +11,6 @@ import matt.hurricanefx.eye.wrapper.obs.collect.mfxMutableListConverter
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNullableROProp
-import matt.lang.NOT_IMPLEMENTED
 import matt.model.convert.Converter
 import matt.model.convert.NullToBlankStringConverter
 import matt.obs.col.olist.MutableObsList
@@ -30,7 +29,7 @@ class SeriesConverter<X, Y>(): Converter<Series<X, Y>, SeriesWrapper<X, Y>> {
 
 fun <X, Y> Series<X, Y>.wrapped() = wrappers[this] ?: SeriesWrapper(this)
 
-class SeriesWrapper<X, Y>( val series: Series<X, Y> = Series<X, Y>()) {
+class SeriesWrapper<X, Y>(val series: Series<X, Y> = Series<X, Y>()) {
   companion object {
 	internal val wrappers = WeakMap<Series<*, *>, SeriesWrapper<*, *>>()
   }
@@ -58,8 +57,9 @@ class SeriesWrapper<X, Y>( val series: Series<X, Y> = Series<X, Y>()) {
   var node by nodeProperty
 
   private var strokeListener: Listener? = null
+  private var strokeThatWasSet: Color? = null
   var stroke: Color
-	get() = NOT_IMPLEMENTED
+	get() = strokeThatWasSet ?: error("no stroke was set")
 	set(value) {
 
 	  fun update(node: Node) {
@@ -91,6 +91,8 @@ class SeriesWrapper<X, Y>( val series: Series<X, Y> = Series<X, Y>()) {
 		  //			  stroke = value
 		  //			}
 		  //		  }
+
+
 		}
 	  }
 
@@ -100,6 +102,7 @@ class SeriesWrapper<X, Y>( val series: Series<X, Y> = Series<X, Y>()) {
 		update(it)
 	  }
 	  node?.let(::update)
+	  strokeThatWasSet = value
 	  //	  require(chart != null) {
 	  //		"""
 	  //		this stuff must be done AFTER series are added to chart, or else NPE

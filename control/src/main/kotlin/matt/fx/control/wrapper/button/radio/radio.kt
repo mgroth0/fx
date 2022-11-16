@@ -7,7 +7,7 @@ import matt.fx.control.wrapper.button.toggle.ToggleButtonWrapper
 import matt.fx.control.wrapper.control.value.HasWritableValue
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.attachTo
-import matt.obs.listen.OldAndNewListener
+import matt.obs.listen.OldAndNewListenerImpl
 import matt.obs.prop.BindableProperty
 
 
@@ -33,9 +33,9 @@ fun <V: Any> ET.radiobutton(
 class ValuedRadioButton<V: Any>(value: V): RadioButtonWrapper(), HasWritableValue<V>, SelectableValue<V> {
   override val valueProperty = BindableProperty(value)
   override val toggleMechanism = BindableProperty<ToggleMechanism<V>?>(null).apply {
-	addListener(OldAndNewListener { old, new ->
-	  old?.toggles?.remove(this@ValuedRadioButton)
-	  new?.toggles?.add(this@ValuedRadioButton)
+	addListener(OldAndNewListenerImpl { old, new ->
+	  old?.removeToggle(this@ValuedRadioButton)
+	  new?.addToggle(this@ValuedRadioButton)
 	})
   }
 }

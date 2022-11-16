@@ -47,7 +47,7 @@ import matt.log.taball
 import matt.log.todo.todo
 import matt.obs.col.olist.BasicObservableListImpl
 import matt.obs.col.olist.toBasicObservableList
-import matt.obs.listen.OldAndNewListener
+import matt.obs.listen.OldAndNewListenerImpl
 import matt.obs.math.double.op.div
 import matt.obs.prop.BindableProperty
 import matt.time.dur.sec
@@ -362,7 +362,7 @@ enum class FileTreePopulationStrategy {
 private class FileTreeItem(file: MFile): TreeItemWrapper<MFile>(file) {
 
   init {
-	expandedProperty.addListener(OldAndNewListener { o, n ->
+	expandedProperty.addListener(OldAndNewListenerImpl { o, n ->
 	  if (o != n && !n) {
 		(this@FileTreeItem as TreeItemWrapper<MFile>).recurse { it.children }.forEach { it.isExpanded = false }
 	  }

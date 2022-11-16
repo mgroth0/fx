@@ -8,28 +8,31 @@ import matt.fx.graphics.dur.DurationWrapper
 import matt.fx.graphics.dur.wrapped
 import matt.lang.function.Convert
 import matt.math.jmath.decimalOrScientificNotation
-import matt.math.mathable.MathAndComparable
+import matt.model.byte.ByteSize
+import matt.model.byte.gigabytes
+import matt.model.byte.killobytes
+import matt.model.byte.megabytes
+import matt.model.mathable.MathAndComparable
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.DurationUnit
 
-inline fun <reified X: MathAndComparable<X>, reified Y: MathAndComparable<Y>>
-	LineChartWrapper<X, Y>.showBestTicks() {
+inline fun <reified X: MathAndComparable<X>, reified Y: MathAndComparable<Y>> LineChartWrapper<X, Y>.showBestTicks() {
   (xAxis as NumberAxisWrapper<X>).showBestTicksNoLayout()
   (yAxis as NumberAxisWrapper<Y>).showBestTicksNoLayout()
   requestLayout()
 }
 
 inline fun <reified T: MathAndComparable<T>> NumberAxisWrapper<T>.showBestTicksNoLayout() {
-  @Suppress("UNCHECKED_CAST")
-  when (T::class) {
+  @Suppress("UNCHECKED_CAST") when (T::class) {
 	DurationWrapper::class -> DurationWrapperTickConfigurer.showBestTicksNoLayout(
 	  this as NumberAxisWrapper<DurationWrapper>
 	)
 
 	UnitLess::class        -> UnitLessTickConfigurer.showBestTicksNoLayout(this as NumberAxisWrapper<UnitLess>)
+	ByteSize::class        -> ByteSizeTickConfigurer.showBestTicksNoLayout(this as NumberAxisWrapper<ByteSize>)
   }
 }
 
@@ -80,6 +83,7 @@ object DurationWrapperTickConfigurer: TickConfigurer<DurationWrapper>(minorTickC
 	range < 100.milliseconds.wrapped() -> 10.milliseconds.wrapped()
 	range < 1.seconds.wrapped()        -> 100.milliseconds.wrapped()
 	range < 10.seconds.wrapped()       -> 1.seconds.wrapped()
+	range < 50.seconds.wrapped()      -> 5.seconds.wrapped()
 	range < 100.seconds.wrapped()      -> 10.seconds.wrapped()
 	range < 10.minutes.wrapped()       -> 1.minutes.wrapped()
 	range < 100.minutes.wrapped()      -> 10.minutes.wrapped()
@@ -102,6 +106,35 @@ object DurationWrapperTickConfigurer: TickConfigurer<DurationWrapper>(minorTickC
 
 	return {
 	  it.toString(unit = bestUnit, decimals = 2)
+	}
+
+  }
+}
+
+object ByteSizeTickConfigurer: TickConfigurer<ByteSize>(minorTickCount = 10) {
+  override fun bestTickUnit(range: ByteSize) = when {
+	range.bytes < 10       -> ByteSize(1)
+	range.bytes < 100      -> ByteSize(10)
+
+	range < 1.killobytes   -> ByteSize(100)
+	range < 10.killobytes  -> 1.killobytes
+	range < 100.killobytes -> 10.killobytes
+
+	range < 1.megabytes    -> 100.killobytes
+	range < 10.megabytes   -> 1.megabytes
+	range < 100.megabytes  -> 10.megabytes
+
+	range < 1.gigabytes    -> 100.megabytes
+	range < 10.gigabytes   -> 1.gigabytes
+	range < 100.gigabytes  -> 10.gigabytes
+
+
+	else                   -> ByteSize(Long.MAX_VALUE)
+  }
+
+  override fun tickLabelConverter(range: ByteSize): Convert<ByteSize, String> {
+	return {
+	  it.toString()
 	}
 
   }

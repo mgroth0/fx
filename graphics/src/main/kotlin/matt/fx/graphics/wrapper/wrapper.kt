@@ -1,10 +1,11 @@
 package matt.fx.graphics.wrapper
 
+import com.google.common.collect.MapMaker
 import javafx.collections.ObservableMap
 import javafx.event.EventTarget
 import javafx.scene.Node
-import matt.collect.weak.WeakMap
 import matt.fx.graphics.hotkey.HotKeyEventHandler
+import matt.fx.graphics.wrapper.node.NW
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.lang.toStringBasic
 
@@ -66,17 +67,15 @@ abstract class SingularEventTargetWrapper<out N: EventTarget>(/*TODO: node must 
 															  node: N
 ): EventTargetWrapperImpl<N>() {
 
-  //  private var superNode: N? = null
-  //  init {
-  //	node
-  //  }
-
-  private val superNode = node
-
-  @Suppress("CanBePrimaryConstructorProperty") override val node = node
+  override val node = node
 
   companion object {
-	private val wrappers = WeakMap<EventTarget, EventTargetWrapper>()
+	private val wrappers = MapMaker()
+	  .weakKeys()
+	  .weakValues()
+	  .makeMap<EventTarget, EventTargetWrapper>()
+
+	/*WeakMap<EventTarget, EventTargetWrapper>()*/
 	operator fun get(e: EventTarget) = wrappers[e]
   }
 
@@ -87,19 +86,48 @@ abstract class SingularEventTargetWrapper<out N: EventTarget>(/*TODO: node must 
 	  Thread.dumpStack()
 	}*/
 
-	require(superNode !in wrappers) {
+	require(node !in wrappers) {
 	  """
 		
 		This is ${this.toStringBasic()}
 		
-		A second ${this::class.simpleName} was created for ${superNode.toStringBasic()}
+		A second ${this::class.simpleName} was created for ${node.toStringBasic()}
 		
-		The first one is ${wrappers[superNode]?.toStringBasic()}
+		The first one is ${wrappers[node]?.toStringBasic()}
 		
 		
 	  """.trimMargin()
 	}
 	/*println("putting ${superNode.toStringBasic()} in wrappers for ${this.toStringBasic()}")*/
-	wrappers[superNode] = this
+	wrappers[node] = this
   }
+}
+
+
+@Suppress("UNUSED_PARAMETER")
+class ProxyEventTargetWrapper(private val addOp: (NW)->Unit): EventTargetWrapper {
+  override var hotKeyHandler: HotKeyEventHandler?
+	get() = TODO("Not yet implemented")
+	set(value) {}
+  override var hotKeyFilter: HotKeyEventHandler?
+	get() = TODO("Not yet implemented")
+	set(value) {}
+  override val node: EventTarget
+	get() = TODO("Not yet implemented")
+  override val properties: ObservableMap<Any, Any?>
+	get() = TODO("Not yet implemented")
+
+  override fun addChild(child: NodeWrapper, index: Int?) {
+	require(index == null)
+	addOp(child)
+  }
+
+  override fun removeFromParent() {
+	TODO("Not yet implemented")
+  }
+
+  override fun isInsideRow(): Boolean {
+	TODO("Not yet implemented")
+  }
+
 }

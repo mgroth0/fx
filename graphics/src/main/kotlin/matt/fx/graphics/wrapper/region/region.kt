@@ -32,6 +32,7 @@ import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
 import matt.lang.NEVER
 import matt.lang.err
 import matt.model.convert.Converter
+import matt.obs.col.olist.ImmutableObsList
 import matt.obs.col.olist.mappedlist.toLazyMappedList
 import matt.obs.col.olist.mappedlist.toSyncedList
 import matt.obs.prop.BindableProperty
@@ -203,10 +204,8 @@ interface RegionWrapper<C: NodeWrapper>: ParentWrapper<C>, SizeManaged {
   }
 
 
-  val children
-	get() = node.childrenUnmodifiable.createImmutableWrapper()
-	  .toLazyMappedList { uncheckedWrapperConverter<Node, C>().convertToB(it) }
-  /*trying to avoid initializing wrappers to quickly (and getting the wrong ones as a result)*/
+  val children: ImmutableObsList<C>
+
 
 }
 
@@ -227,6 +226,12 @@ open class RegionWrapperImpl<N: Region, C: NodeWrapper>(node: N): ParentWrapperI
 	} as ObservableList<Node>).createMutableWrapper().toSyncedList(
 	  uncheckedWrapperConverter()
 	)
+  }
+
+  override val children by lazy {
+	/*trying to avoid initializing wrappers to quickly (and getting the wrong ones as a result)*/
+	node.childrenUnmodifiable.createImmutableWrapper()
+	  .toLazyMappedList { uncheckedWrapperConverter<Node, C>().convertToB(it) }
   }
 
   override val paddingProperty by lazy { node.paddingProperty().toNonNullableProp() }

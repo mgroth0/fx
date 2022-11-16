@@ -33,7 +33,6 @@ import matt.kjlib.shell.forEachOutChar
 import matt.lang.err
 import matt.lang.go
 import matt.log.tab
-import matt.log.todo.todoOnce
 import matt.obs.bindings.bool.not
 import matt.obs.prop.BindableProperty
 import matt.prim.str.throttled
@@ -51,19 +50,24 @@ import java.io.PipedOutputStream
 import java.io.PrintWriter
 
 fun ParentWrapper<NodeWrapper>.processConsole(
-  name: String = "new console", op: ProcessConsole.()->Unit = {}
+  process: Process? = null,
+  name: String = "new process console",
+  op: ProcessConsole.()->Unit = {}
 ): ProcessConsole {
-  return addr(ProcessConsole(name).apply(op))
+  return addr(ProcessConsole(name).apply {
+	process?.let(::attachProcess)
+	op()
+  })
 }
 
 fun ParentWrapper<NodeWrapper>.interceptConsole(
-  name: String = "new console", op: SystemRedirectConsole.()->Unit = {}
+  name: String = "new intercept console", op: SystemRedirectConsole.()->Unit = {}
 ): SystemRedirectConsole {
   return addr(SystemRedirectConsole(name).apply(op))
 }
 
 fun ParentWrapper<NodeWrapper>.customConsole(
-  name: String = "new console", takesInput: Boolean = true, op: CustomConsole.()->Unit = {}
+  name: String = "new custom console", takesInput: Boolean = true, op: CustomConsole.()->Unit = {}
 ): CustomConsole {
 
   return addr(CustomConsole(name, takesInput).apply(op))
@@ -216,8 +220,6 @@ sealed class Console(
 	}
 
 
-	todoOnce("removed parentProperty listener here... make sure the key handlers below still work")
-	/*parentProperty().onChange { parent ->*/
 
 	if (takesInput) {        /*parent?.apply {*/
 	  addEventFilter(KeyEvent.KEY_TYPED) {
@@ -297,7 +299,6 @@ sealed class Console(
 
 class ProcessConsole(name: String): Console(name) {
   fun alsoTail(logFile: MFile) {
-
 	daemon {
 	  var got = ""
 	  while (true) {

@@ -43,7 +43,9 @@ fun SceneWrapper<*>.iconify(icon: MFile) {
 	y = this@iconify.window!!.y + (this@iconify.window!!.height/2) - (ICON_HEIGHT/2),
   ), mScene = false, border = false, beforeShowing = {
 	scene!!.reloadStyle(DarkModeController.darkModeProp.value)
-	DarkModeController.darkModeProp.onChangeWithWeak(this) { scene!!.reloadStyle(DarkModeController.darkModeProp.value) }
+	DarkModeController.darkModeProp.onChangeWithWeak(this) { _, _ ->
+	  scene!!.reloadStyle(DarkModeController.darkModeProp.value)
+	}
   }).apply {
 	iconWindow = this
 	isAlwaysOnTop = true

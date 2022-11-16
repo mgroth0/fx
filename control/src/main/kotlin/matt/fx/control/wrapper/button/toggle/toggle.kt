@@ -10,7 +10,7 @@ import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.lang.go
-import matt.obs.listen.OldAndNewListener
+import matt.obs.listen.OldAndNewListenerImpl
 import matt.obs.prop.BindableProperty
 import matt.obs.prop.VarProp
 
@@ -66,9 +66,9 @@ class ValuedToggleButton<V: Any>(value: V): ToggleButtonWrapper(ToggleButton()),
   override val valueProperty = BindableProperty(value)
 
   override val toggleMechanism = BindableProperty<ToggleMechanism<V>?>(null).apply {
-	addListener(OldAndNewListener { old, new ->
-	  old?.toggles?.remove(this@ValuedToggleButton)
-	  new?.toggles?.add(this@ValuedToggleButton)
+	addListener(OldAndNewListenerImpl { old, new ->
+      old?.removeToggle(this@ValuedToggleButton)
+      new?.addToggle(this@ValuedToggleButton)
 	})
   }
 
@@ -78,7 +78,9 @@ open class ToggleButtonWrapper(
   node: ToggleButton = ToggleButton(),
 ): ButtonBaseWrapper<ToggleButton>(node), Selectable {
 
-  override val selectedProperty by lazy { node.selectedProperty().toNonNullableProp() }
+  override val selectedProperty by lazy {
+    node.selectedProperty().toNonNullableProp()
+  }
 
   fun whenSelected(op: ()->Unit) {
 	selectedProperty.onChange { if (it) op() }

@@ -6,7 +6,7 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import matt.cbor.ser.MyCborSerializer
 import matt.hurricanefx.eye.time.toFXDuration
-import matt.math.mathable.MathAndComparable
+import matt.model.mathable.MathAndComparable
 import matt.model.convert.Converter
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
@@ -92,4 +92,6 @@ object MilliSecondDurationWrapperConverter: Converter<DurationWrapper, Double> {
   }
 
 }
+
+
 

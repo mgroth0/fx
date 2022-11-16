@@ -14,7 +14,7 @@ import matt.fx.graphics.wrapper.pane.hbox.HBoxWrapperImpl
 import matt.obs.bind.binding
 import matt.obs.bindings.str.ObsS
 import matt.obs.bindings.str.plus
-import matt.obs.listen.OldAndNewListener
+import matt.obs.listen.OldAndNewListenerImpl
 import matt.obs.math.double.op.div
 import matt.obs.prop.BindableProperty
 import matt.obs.prop.MObservableROValBase
@@ -27,7 +27,7 @@ import kotlin.reflect.KProperty
 
 @ExperimentalContracts class ProcessInspectPane(initialValue: Process?): HBoxWrapperImpl<NodeWrapper>() {
   val procProp = VarProp<Process?>(initialValue).apply {
-	addListener(OldAndNewListener { oldValue, newValue ->
+	addListener(OldAndNewListenerImpl { oldValue, newValue ->
 	  if (newValue != oldValue) {
 		update(newValue)
 	  }

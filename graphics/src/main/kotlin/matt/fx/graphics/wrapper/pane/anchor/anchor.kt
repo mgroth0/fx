@@ -59,6 +59,8 @@ interface AnchorPaneWrapper<C: NodeWrapper>: PaneWrapper<C> {
 	}
 }
 
+//class UnRegisteredAnchorPaneWrapper<C: NodeWrapper>(node: AnchorPane): AnchorPaneWrapper<C>
+
 open class AnchorPaneWrapperImpl<C: NodeWrapper>(node: AnchorPane = AnchorPane()): PaneWrapperImpl<AnchorPane, C>(node),
 																				   AnchorPaneWrapper<C> {
 

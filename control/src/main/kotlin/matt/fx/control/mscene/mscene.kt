@@ -6,7 +6,6 @@ import javafx.scene.Parent
 import javafx.scene.input.ContextMenuEvent
 import javafx.scene.paint.Color
 import matt.collect.itr.recurse.recurse
-import matt.color.name.ColorUtils
 import matt.file.MFile
 import matt.file.commons.ICON_FOLDER
 import matt.fx.control.hotkeys.addDefaultHotkeys
@@ -23,7 +22,6 @@ import matt.fx.graphics.wrapper.region.border.FXBorder
 import matt.fx.graphics.wrapper.scene.SceneWrapper
 import matt.fx.graphics.wrapper.style.StyleableWrapper
 import matt.fx.graphics.wrapper.style.findName
-import matt.fx.graphics.wrapper.style.toAwtColor
 import matt.log.profile.stopwatch.tic
 import kotlin.reflect.KClass
 
@@ -39,9 +37,9 @@ open class MScene<R: ParentWrapper<*>>(
   ): this(root, "chunk")
 
   private fun handleContextMenuReq(e: Event) {
-//	println("context menu requested from e=${e.hashCode()}")
-//	tab("target=${e.target}")
-//	tab("source=${e.source}")
+	//	println("context menu requested from e=${e.hashCode()}")
+	//	tab("target=${e.target}")
+	//	tab("source=${e.source}")
 	if (e is ContextMenuEvent) {
 	  (e.target as? Node)?.let {
 		showMContextMenu(it, e.screenX to e.screenY)
@@ -61,12 +59,10 @@ open class MScene<R: ParentWrapper<*>>(
 	t.toc("finished DarkModeController 0")
 	reloadStyle(dark)
 	t.toc("finished DarkModeController 1")
-	var old = DarkModeController.darkModeProp.value
 	t.toc("finished DarkModeController 2")
-	DarkModeController.darkModeProp.onChangeWithWeak(this) {
-	  if (it != old) {
-		reloadStyle(DarkModeController.darkModeProp.value)
-		old = it
+	DarkModeController.darkModeProp.onChangeWithWeakAndOld(this) { scene, old, new ->
+	  if (new != old) {
+		scene.reloadStyle(DarkModeController.darkModeProp.value)
 	  }
 	}
 	t.toc("finished DarkModeController 3")
@@ -78,8 +74,6 @@ open class MScene<R: ParentWrapper<*>>(
 
 
 	mcontextmenu {
-
-
 
 
 	  menu("style") {

@@ -4,7 +4,9 @@
 
 package matt.fx.control.tfx.control
 
+import matt.collect.weak.WeakMap
 import matt.fx.control.inter.select.SelectableValue
+import matt.lang.weak.WeakRef
 import matt.log.warn.warn
 import matt.model.flowlogic.keypass.KeyPass
 import matt.model.flowlogic.recursionblocker.RecursionBlocker
@@ -64,7 +66,21 @@ fun <T> Var<T>.mutateOnChange(mutator: (T)->T) = onChange {
 
 /*ToggleGroup was a better name, but that is taken... */
 class ToggleMechanism<V: Any>() {
-  val toggles = basicObservableSetOf<SelectableValue<V>>()
+  val toggles = basicObservableSetOf<WeakRef<SelectableValue<V>>>()
+  fun derefToggles(): Set<SelectableValue<V>> {
+	val itr = toggles.iterator()
+	val r = mutableSetOf<SelectableValue<V>>()
+	while (itr.hasNext()) {
+	  val n = itr.next()
+	  val de = n.deref()
+	  if (de == null) {
+		itr.remove()
+	  } else {
+		r += de
+	  }
+	}
+	return r
+  }
 
   val selectedToggle = BindableProperty<SelectableValue<V>?>(null)
   val selectedValue = BindableProperty<V?>(null)
@@ -80,7 +96,7 @@ class ToggleMechanism<V: Any>() {
   init {
 	val rBlocker = RecursionBlocker()
 	selectedToggle.onChange {
-	  require(it == null || it in toggles)
+	  require(it == null || it in derefToggles())
 	  rBlocker.with {
 		selectedValue.value = it?.value
 	  }
@@ -88,17 +104,17 @@ class ToggleMechanism<V: Any>() {
 	selectedValue.onChange { newVal ->
 	  rBlocker.with {
 		selectedToggle.value = newVal?.let {
-		  toggles.first { it.value == newVal }
+		  derefToggles().first { it.value == newVal }
 		}
 	  }
 	}
   }
 
-  private val listeners = mutableMapOf<SelectableValue<V>, Listener>()
+  private val listeners = WeakMap<SelectableValue<V>, Listener>()
 
   private var selecting = KeyPass()
   private fun didSelectToggle(toggle: SelectableValue<V>) = selecting.with {
-	toggles.filter { it != toggle }.forEach {
+	derefToggles().filter { it != toggle }.forEach {
 	  it.isSelected = false
 	}
 	selectedToggle.value = toggle
@@ -116,26 +132,35 @@ class ToggleMechanism<V: Any>() {
 
   fun hasSelection() = selectedValue.value != null
 
+  fun removeToggle(s: SelectableValue<V>) {
+	toggles.removeAll { it.deref() == s }
+  }
+  fun addToggle(s: SelectableValue<V>) {
+	toggles.add(WeakRef(s))
+  }
+
   init {
 	toggles.onChange { change ->
 	  (change as? AdditionBase)?.addedElements?.forEach { toggle ->
-		listeners[toggle] = toggle.selectedProperty.onChange {
+		val togg = toggle.deref()!!
+		listeners[togg] = togg.selectedProperty.onChangeWithAlreadyWeak(toggle) { tog: SelectableValue<V>, sel ->
 		  /*println("selectedProperty of toggle ${toggle} changed to ${it}")
 		  println("selectedToggle.value=${selectedToggle.value}")
 		  println("selectedValue.value=${selectedValue.value}")*/
-		  if (it) didSelectToggle(toggle)
-		  else didUnSelectToggle(toggle)
+
+		  if (sel) didSelectToggle(tog)
+		  else didUnSelectToggle(tog)
 		}
-		if (toggle.isSelected) {
-		  if (hasSelection()) toggle.isSelected = false
-		  else selectedToggle.value = toggle
+		if (togg.isSelected) {
+		  if (hasSelection()) togg.isSelected = false
+		  else selectedToggle.value = togg
 		}
 	  }
 	  (change as? RemovalBase)?.removedElements?.forEach { toggle ->
 		if (selectedToggle.value == toggle) {
 		  selectedToggle.value = null
 		}
-		listeners.remove(toggle)!!.removeListener()
+		listeners.remove(toggle.deref())?.removeListener()
 	  }
 	}
   }

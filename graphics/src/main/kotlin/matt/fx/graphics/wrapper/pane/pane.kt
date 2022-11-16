@@ -20,6 +20,7 @@ import matt.model.corner.Corner.NE
 import matt.model.corner.Corner.NW
 import matt.model.corner.Corner.SE
 import matt.model.corner.Corner.SW
+import matt.obs.col.olist.ObsList
 import matt.obs.col.olist.mappedlist.toSyncedList
 
 fun <C: NodeWrapper> ET.pane(op: PaneWrapperImpl<*, C>.()->Unit = {}) = attach(SimplePaneWrapper(), op)
@@ -41,7 +42,7 @@ interface PaneWrapper<C: NodeWrapper>: RegionWrapper<C> {
   }
 
 
-  override val children get() = node.children.createMutableWrapper().toSyncedList(uncheckedWrapperConverter<Node, C>())
+  override val children: ObsList<C>
 
 
   fun resizer(corner: Corner) {/*var y = 0.0
@@ -149,4 +150,7 @@ open class PaneWrapperImpl<N: Pane, C: NodeWrapper>(
   node: N
 ): RegionWrapperImpl<N, C>(node), PaneWrapper<C> {
   override val childList get() = node.children
+  override val children by lazy {
+	node.children.createMutableWrapper().toSyncedList(uncheckedWrapperConverter<Node, C>())
+  }
 }
