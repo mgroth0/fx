@@ -4,6 +4,7 @@ import javafx.geometry.Pos
 import javafx.scene.layout.Priority
 import javafx.scene.layout.VBox
 import matt.fx.graphics.wrapper.ET
+import matt.fx.graphics.wrapper.node.NW
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attach
 import matt.fx.graphics.wrapper.pane.PaneWrapper
@@ -11,7 +12,17 @@ import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
 import matt.fx.graphics.wrapper.pane.SimplePaneWrapper
 import matt.fx.graphics.wrapper.pane.box.BoxWrapper
 import matt.fx.graphics.wrapper.pane.box.BoxWrapperImpl
+import matt.fx.graphics.wrapper.pane.hbox.HBoxWrapper
+import matt.fx.graphics.wrapper.pane.hbox.hbox
+import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.lang.B
+import matt.obs.prop.Var
 
+fun ET.v(
+  spacing: Number? = null,
+  alignment: Pos? = null,
+  op: VBoxWrapper<NW>.()->Unit = {}
+) = vbox(spacing, alignment, op)
 
 fun <C: NodeWrapper> ET.vbox(
   spacing: Number? = null,
@@ -26,11 +37,18 @@ fun <C: NodeWrapper> ET.vbox(
 
 typealias VBoxW = VBoxWrapperImpl<NodeWrapper>
 
-interface VBoxWrapper<C: NodeWrapper>: BoxWrapper<C>
+interface VBoxWrapper<C: NodeWrapper>: BoxWrapper<C> {
+  val fillWidthProperty: Var<B>
+  var isFillWidth: B
+}
 
 open class VBoxWrapperImpl<C: NodeWrapper>(node: VBox = VBox()): BoxWrapperImpl<VBox, C>(node), VBoxWrapper<C> {
   constructor(vararg nodes: C): this(VBox(*nodes.map { it.node }.toTypedArray()))
 
+  final override val fillWidthProperty by lazy {
+	node.fillWidthProperty().toNonNullableProp()
+  }
+  override var isFillWidth by fillWidthProperty
 }
 
 fun VBoxWrapperImpl<PaneWrapper<*>>.spacer(prio: Priority = Priority.ALWAYS, op: PaneWrapperImpl<*, *>.()->Unit = {}) =
