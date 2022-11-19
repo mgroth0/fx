@@ -20,7 +20,7 @@ import matt.lang.go
 import matt.log.NOPLogger
 import matt.log.SystemOutLogger
 import matt.log.logger.Logger
-import matt.model.sys.Mac
+import matt.model.code.sys.Mac
 import matt.obs.prop.BindableProperty
 import matt.obs.prop.VarProp
 import matt.obs.prop.toggle

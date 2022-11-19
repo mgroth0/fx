@@ -6,10 +6,10 @@ import javafx.application.Platform.runLater
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.lang.function.MetaFunction
 import matt.lang.function.Produce
-import matt.model.latch.SimpleLatch
-import matt.model.runner.Run
-import matt.model.runner.Runner
-import matt.model.runner.ThreadRunner
+import matt.model.flowlogic.latch.SimpleLatch
+import matt.model.flowlogic.runner.Run
+import matt.model.flowlogic.runner.Runner
+import matt.model.flowlogic.runner.ThreadRunner
 import matt.service.scheduler.Scheduler
 import kotlin.concurrent.thread
 import kotlin.time.Duration

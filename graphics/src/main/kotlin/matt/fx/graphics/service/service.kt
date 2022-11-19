@@ -4,7 +4,7 @@ import javafx.event.EventTarget
 import javafx.scene.Node
 import matt.fx.graphics.wrapper.EventTargetWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
-import matt.model.convert.Converter
+import matt.model.op.convert.Converter
 import matt.service.MattService
 import matt.service.ServiceHub
 

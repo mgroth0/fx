@@ -1,6 +1,5 @@
 package matt.fx.control.wrapper.control.text.area
 
-import javafx.beans.property.BooleanProperty
 import javafx.scene.control.TextArea
 import matt.fx.control.wrapper.control.text.input.TextInputControlWrapper
 import matt.fx.graphics.fxthread.runLater
@@ -9,7 +8,7 @@ import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
-import matt.model.convert.StringConverter
+import matt.model.op.convert.StringConverter
 import matt.obs.bindings.str.ObsS
 import matt.obs.prop.VarProp
 

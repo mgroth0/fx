@@ -11,8 +11,8 @@ import matt.hurricanefx.eye.wrapper.obs.collect.mfxMutableListConverter
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNullableROProp
-import matt.model.convert.Converter
-import matt.model.convert.NullToBlankStringConverter
+import matt.model.op.convert.Converter
+import matt.model.op.convert.NullToBlankStringConverter
 import matt.obs.col.olist.MutableObsList
 import matt.obs.listen.Listener
 

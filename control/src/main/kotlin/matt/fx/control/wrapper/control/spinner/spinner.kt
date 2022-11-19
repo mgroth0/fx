@@ -12,7 +12,7 @@ import matt.hurricanefx.eye.wrapper.obs.collect.createFXWrapper
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
 import matt.lang.err
-import matt.model.convert.Converter
+import matt.model.op.convert.Converter
 import matt.obs.bind.smartBind
 import matt.obs.col.olist.ObsList
 import matt.obs.prop.BindableProperty

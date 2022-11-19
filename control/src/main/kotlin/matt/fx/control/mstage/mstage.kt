@@ -10,7 +10,7 @@ import matt.fx.control.mstage.WMode.ICONIFY
 import matt.fx.control.mstage.WMode.NOTHING
 import matt.fx.graphics.hotkey.hotkeys
 import matt.fx.graphics.wrapper.stage.StageWrapper
-import matt.model.sys.GAMING_WINDOWS
+import matt.model.code.sys.GAMING_WINDOWS
 
 enum class WMode {
   CLOSE,

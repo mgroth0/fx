@@ -120,7 +120,7 @@ class ConsoleTextFlow(val takesInput: Boolean = true): TextFlowWrapper<NodeWrapp
   //				  separatorText!!.fill = if (toggle) matt.css.Color.BLUE else PROMPT_COLOR
   //				}
   //				toggle = !toggle
-  //				sleep(350)
+  //				matt.time.dur.sleep(350)
   //			  }
   //			  runLater {
   //				separatorText!!.fill = PROMPT_COLOR
@@ -148,7 +148,7 @@ class ConsoleTextFlow(val takesInput: Boolean = true): TextFlowWrapper<NodeWrapp
 	//	  daemon {
 	//		while (myWindow == null) {
 	//		  myWindow = this@ConsoleTextFlow.scene?.window as Stage?
-	//		  sleep(200)
+	//		  matt.time.dur.sleep(200)
 	//		}
 	//	  }
 	//	}

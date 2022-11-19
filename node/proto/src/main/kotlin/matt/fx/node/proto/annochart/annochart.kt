@@ -34,9 +34,9 @@ import matt.lang.function.Op
 import matt.lang.go
 import matt.lang.setAll
 import matt.log.warn.warnOnce
-import matt.model.mathable.MathAndComparable
-import matt.model.runner.InPlaceRunner
-import matt.model.runner.Runner
+import matt.model.data.mathable.MathAndComparable
+import matt.model.flowlogic.runner.InPlaceRunner
+import matt.model.flowlogic.runner.Runner
 import matt.obs.col.change.mirror
 import matt.obs.col.olist.basicMutableObservableListOf
 import matt.obs.math.double.op.div

@@ -2,7 +2,7 @@ package matt.fx.control.convert
 
 import javafx.event.EventTarget
 import matt.fx.graphics.wrapper.EventTargetWrapperImpl
-import matt.model.convert.Converter
+import matt.model.op.convert.Converter
 
 interface ETWrapperConverter<N: EventTarget, W: EventTargetWrapperImpl<N>>: Converter<N, W> {
   override fun convertToA(b: W) = toNode(b)

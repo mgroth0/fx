@@ -7,9 +7,9 @@ import matt.fx.control.wrapper.control.text.input.TextInputControlWrapper
 import matt.fx.control.wrapper.control.value.HasWritableValue
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.attachTo
-import matt.model.convert.Converter
-import matt.model.convert.MyNumberStringConverter
-import matt.model.convert.StringConverter
+import matt.model.op.convert.Converter
+import matt.model.op.convert.MyNumberStringConverter
+import matt.model.op.convert.StringConverter
 import matt.obs.prop.Var
 import kotlin.reflect.KClass
 

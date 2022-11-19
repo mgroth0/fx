@@ -15,11 +15,11 @@ import matt.fx.graphics.wrapper.region.RegionWrapper
 import matt.fx.graphics.wrapper.region.RegionWrapperImpl
 import matt.hurricanefx.eye.wrapper.obs.collect.createMutableWrapper
 import matt.log.warn.warnOnce
-import matt.model.corner.Corner
-import matt.model.corner.Corner.NE
-import matt.model.corner.Corner.NW
-import matt.model.corner.Corner.SE
-import matt.model.corner.Corner.SW
+import matt.model.data.corner.Corner
+import matt.model.data.corner.Corner.NE
+import matt.model.data.corner.Corner.NW
+import matt.model.data.corner.Corner.SE
+import matt.model.data.corner.Corner.SW
 import matt.obs.col.olist.ObsList
 import matt.obs.col.olist.mappedlist.toSyncedList
 

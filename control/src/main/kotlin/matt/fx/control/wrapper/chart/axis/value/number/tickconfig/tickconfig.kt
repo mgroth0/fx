@@ -8,11 +8,11 @@ import matt.fx.graphics.dur.DurationWrapper
 import matt.fx.graphics.dur.wrapped
 import matt.lang.function.Convert
 import matt.math.jmath.decimalOrScientificNotation
-import matt.model.byte.ByteSize
-import matt.model.byte.gigabytes
-import matt.model.byte.killobytes
-import matt.model.byte.megabytes
-import matt.model.mathable.MathAndComparable
+import matt.model.data.byte.ByteSize
+import matt.model.data.byte.gigabytes
+import matt.model.data.byte.killobytes
+import matt.model.data.byte.megabytes
+import matt.model.data.mathable.MathAndComparable
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.minutes
@@ -31,8 +31,8 @@ inline fun <reified T: MathAndComparable<T>> NumberAxisWrapper<T>.showBestTicksN
 	  this as NumberAxisWrapper<DurationWrapper>
 	)
 
-	UnitLess::class        -> UnitLessTickConfigurer.showBestTicksNoLayout(this as NumberAxisWrapper<UnitLess>)
-	ByteSize::class        -> ByteSizeTickConfigurer.showBestTicksNoLayout(this as NumberAxisWrapper<ByteSize>)
+	UnitLess::class -> UnitLessTickConfigurer.showBestTicksNoLayout(this as NumberAxisWrapper<UnitLess>)
+	ByteSize::class -> ByteSizeTickConfigurer.showBestTicksNoLayout(this as NumberAxisWrapper<ByteSize>)
   }
 }
 

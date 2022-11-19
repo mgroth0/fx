@@ -10,7 +10,7 @@ import matt.fx.graphics.wrapper.SingularEventTargetWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
-import matt.model.convert.NullToBlankStringConverter
+import matt.model.op.convert.NullToBlankStringConverter
 import matt.obs.bindings.bool.ObsB
 import matt.obs.bindings.bool.not
 

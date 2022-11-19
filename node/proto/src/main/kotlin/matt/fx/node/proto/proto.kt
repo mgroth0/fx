@@ -13,9 +13,9 @@ import matt.fx.graphics.wrapper.node.NW
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapperImpl
 import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
-import matt.model.dir.Direction
-import matt.model.dir.Direction.BACKWARD
-import matt.model.dir.Direction.FORWARD
+import matt.model.data.dir.Direction
+import matt.model.data.dir.Direction.BACKWARD
+import matt.model.data.dir.Direction.FORWARD
 import matt.model.flowlogic.recursionblocker.RecursionBlocker
 import matt.obs.prop.VarProp
 import kotlin.reflect.KClass

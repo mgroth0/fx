@@ -27,7 +27,7 @@ import javafx.scene.shape.MoveTo
 import javafx.scene.shape.Path
 import javafx.util.StringConverter
 import matt.lang.anno.See
-import matt.model.convert.Converter
+import matt.model.op.convert.Converter
 import matt.obs.prop.BindableProperty
 import java.lang.reflect.Field
 import java.lang.reflect.Method

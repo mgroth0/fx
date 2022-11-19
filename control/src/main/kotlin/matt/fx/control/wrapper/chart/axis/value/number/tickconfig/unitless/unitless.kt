@@ -3,7 +3,7 @@ package matt.fx.control.wrapper.chart.axis.value.number.tickconfig.unitless
 import kotlinx.serialization.Serializable
 import matt.fx.control.wrapper.chart.axis.value.moregenval.ValueAxisConverter
 import matt.fx.graphics.anim.FXDoubleWrapper
-import matt.model.num.NumberWrapper
+import matt.model.data.num.NumberWrapper
 
 /*I CANT USE VALUE CALSSES*/
 /*https://youtrack.jetbrains.com/issue/KT-54513/java.lang.NoSuchMethodError-with-value-class-implementing-an-interface*/

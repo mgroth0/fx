@@ -19,9 +19,9 @@ import matt.fx.control.tfx.dialog.FileChooserMode.Multi
 import matt.fx.control.tfx.dialog.FileChooserMode.Save
 import matt.fx.control.tfx.dialog.FileChooserMode.Single
 import matt.fx.graphics.wrapper.window.WindowWrapper
-import matt.model.latch.asyncloaded.LoadedValueSlot
-import matt.model.runner.ResultRun
-import matt.model.runner.Run
+import matt.model.flowlogic.latch.asyncloaded.LoadedValueSlot
+import matt.model.flowlogic.runner.ResultRun
+import matt.model.flowlogic.runner.Run
 
 
 inline fun confirm(

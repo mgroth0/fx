@@ -2,7 +2,7 @@ package matt.fx.graphics.anim
 
 import javafx.animation.Interpolatable
 import javafx.animation.Interpolator
-import matt.model.mathable.DoubleWrapper
+import matt.model.data.mathable.DoubleWrapper
 import kotlin.time.Duration
 
 interface FXDoubleWrapper<M: FXDoubleWrapper<M>>: DoubleWrapper<M>, Interpolatable<M> {

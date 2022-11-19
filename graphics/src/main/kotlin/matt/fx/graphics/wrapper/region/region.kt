@@ -31,7 +31,7 @@ import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
 import matt.lang.NEVER
 import matt.lang.err
-import matt.model.convert.Converter
+import matt.model.op.convert.Converter
 import matt.obs.col.olist.ImmutableObsList
 import matt.obs.col.olist.mappedlist.toLazyMappedList
 import matt.obs.col.olist.mappedlist.toSyncedList

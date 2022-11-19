@@ -6,7 +6,7 @@ import matt.file.MFile
 import matt.file.thismachine.thisMachine
 import matt.fx.image.jswingIconToImage
 import matt.fx.image.toBufferedImage
-import matt.model.sys.GAMING_WINDOWS
+import matt.model.code.sys.GAMING_WINDOWS
 import java.awt.image.BufferedImage
 import javax.swing.JFileChooser
 import javax.swing.filechooser.FileSystemView

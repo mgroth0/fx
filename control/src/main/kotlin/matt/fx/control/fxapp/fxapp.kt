@@ -13,7 +13,7 @@ import matt.fx.control.wrapper.wrapped.WrapperServiceImpl
 import matt.fx.graphics.service.WrapperServiceHub
 import matt.log.logger.Logger
 import matt.log.reporter.TracksTime
-import matt.model.report.Reporter
+import matt.model.code.report.Reporter
 import kotlin.concurrent.thread
 
 
