@@ -271,6 +271,8 @@ import matt.fx.graphics.wrapper.window.WindowWrapper
 import matt.lang.NEVER
 import kotlin.reflect.KClass
 
+
+
 object WrapperServiceImpl: WrapperService {
   override fun <E: EventTarget> wrapped(e: E): EventTargetWrapper {
 	return e.wrapped()
