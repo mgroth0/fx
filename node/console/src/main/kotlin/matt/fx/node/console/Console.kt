@@ -6,8 +6,7 @@ import javafx.scene.control.ScrollPane.ScrollBarPolicy
 import javafx.scene.input.Clipboard
 import javafx.scene.input.KeyEvent
 import javafx.scene.paint.Color
-import matt.async.queue.QueueThread
-import matt.async.queue.QueueThread.SleepType
+import matt.async.queue.QueueWorker
 import matt.async.safe.SemaphoreString
 import matt.async.safe.sync
 import matt.async.schedule.every
@@ -143,7 +142,7 @@ sealed class Console(
 
   private var clearLogI = 0
 
-  private val logWorker = QueueThread(sleepPeriod = NORMAL.ms, SleepType.WHEN_NO_JOBS)
+  private val logWorker = QueueWorker()
   private val refresh: ()->Unit = sync {
 	if (enableProp.value) {
 	  var newString = unshownOutput.takeAndClear()
@@ -156,7 +155,7 @@ sealed class Console(
 		  consoleTextFlow.displayNewText(newString)
 		  if (takesInput) consoleTextFlow.clearStoredAndDisplayedInput()
 		}
-		logWorker.with {
+		logWorker.schedule {
 		  if (clearLogI == 1000) {
 			logfile.clearIfTooBigThenAppendText(newString)
 			clearLogI = 0
@@ -164,7 +163,6 @@ sealed class Console(
 			logfile.append(newString)
 			clearLogI += 1
 		  }
-
 		}
 	  }
 	}
