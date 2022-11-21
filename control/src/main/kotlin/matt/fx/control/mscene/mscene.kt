@@ -26,15 +26,16 @@ import matt.log.profile.stopwatch.tic
 import kotlin.reflect.KClass
 
 open class MScene<R: ParentWrapper<*>>(
-  root: R, val icon: MFile
-): SceneWrapper<R>(root) {
+  root: R, val icon: MFile, userWidth: Double = -1.0, userHeight: Double = -1.0
+): SceneWrapper<R>(root, userWidth, userHeight) {
   constructor(
-	root: R, icon: String
-  ): this(root, ICON_FOLDER["white/$icon.png"])
+	root: R, icon: String, userWidth: Double = -1.0, userHeight: Double = -1.0
+  ): this(root, ICON_FOLDER["white/$icon.png"], userWidth = userWidth, userHeight = userHeight)
 
   constructor(
-	root: R
-  ): this(root, "chunk")
+	root: R, userWidth: Double = -1.0, userHeight: Double = -1.0
+  ): this(root, "chunk", userWidth = userWidth, userHeight = userHeight)
+
 
   private fun handleContextMenuReq(e: Event) {
 	//	println("context menu requested from e=${e.hashCode()}")

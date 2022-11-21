@@ -409,6 +409,8 @@ fun EventTargetWrapper.register(
   fun HotKeySet.bare(h: ()->Unit) = hotkeys.add(this op { h() })
 
 
+
+
   infix fun HotKey.op(setOp: ()->Unit) = apply {
 	require(theHandler == null)
 	theOp = setOp

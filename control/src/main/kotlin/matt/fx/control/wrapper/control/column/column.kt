@@ -1,5 +1,7 @@
 package matt.fx.control.wrapper.control.column
 
+import matt.fx.control.wrapper.control.table.cols.ColumnsDSL
+import matt.fx.control.wrapper.control.table.cols.ColumnsDSLImpl
 import javafx.beans.binding.Bindings
 import javafx.beans.value.ObservableValue
 import javafx.beans.value.WritableValue
@@ -40,7 +42,8 @@ class TableColumnWrapper<E: Any, P>(
 ): TableColumnBaseWrapper<E, P, TableColumn<E, P>>(node),
    TableCellFactory<TableColumn<E, P>, E, P>,
    CellValueFactory<CellDataFeatures<E, P>, P>,
-   HasCols<E> {
+   HasCols<E>,
+   ColumnsDSL<E> by ColumnsDSLImpl(node.columns) {
 
   constructor(name: String): this(TableColumn<E, P>(name))
 

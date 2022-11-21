@@ -13,6 +13,7 @@ import matt.fx.graphics.wrapper.SingularEventTargetWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.scene.SceneWrapper
 import matt.fx.graphics.wrapper.sizeman.SizeControlled
+import matt.fx.graphics.wrapper.stage.StageWrapper
 import matt.hurricanefx.eye.wrapper.obs.obsval.NonNullFXBackedReadOnlyBindableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
 import matt.lang.NOT_IMPLEMENTED
@@ -21,6 +22,7 @@ open class WindowWrapper<W: Window>(override val node: W): SingularEventTargetWr
 
   companion object {
 	fun windows() = Window.getWindows().map { it.wrapped() as WindowWrapper<*> }
+	fun guessMainStage() = windows().firstOrNull {it is StageWrapper }
   }
 
   override fun removeFromParent(): Unit = NOT_IMPLEMENTED

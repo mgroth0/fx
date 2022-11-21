@@ -39,8 +39,9 @@ abstract class TableColumnBaseWrapper<E: Any, P, F: TableColumnBase<E, P>>(
 }
 
 /**
- * Used to matt.hurricanefx.matt.fx.control.wrapper.wrapped.getWrapper.control.column.matt.hurricanefx.matt.fx.control.wrapper.wrapped.getWrapper.control.colbase.cancel an edit event, typically from `onEditStart`
+ * Used cancel an edit event, typically from `onEditStart`
  */
 fun <S, T> TableColumn.CellEditEvent<S, T>.cancel() {
+
   tableView.edit(-1, tableColumn)
 }

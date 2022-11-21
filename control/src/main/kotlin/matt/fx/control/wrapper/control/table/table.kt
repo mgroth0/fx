@@ -1,6 +1,7 @@
 package matt.fx.control.wrapper.control.table
 
 import javafx.application.Platform
+import javafx.application.Platform.runLater
 import javafx.beans.property.ReadOnlyObjectWrapper
 import javafx.collections.ListChangeListener
 import javafx.collections.ObservableList
@@ -15,9 +16,10 @@ import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
 import javafx.scene.input.MouseEvent
 import javafx.util.Callback
-import matt.fx.control.wrapper.cellfact.SimpleFactory
+import matt.async.thread.daemon
 import matt.fx.control.wrapper.control.ControlWrapperImpl
-import matt.fx.control.wrapper.control.column.TableColumnWrapper
+import matt.fx.control.wrapper.control.table.cols.ColumnsDSL
+import matt.fx.control.wrapper.control.table.cols.ColumnsDSLImpl
 import matt.fx.control.wrapper.control.tablelike.TableLikeWrapper
 import matt.fx.control.wrapper.selects.wrap
 import matt.fx.control.wrapper.wrapped.wrapped
@@ -30,6 +32,7 @@ import matt.hurricanefx.eye.wrapper.obs.collect.mfxMutableListConverter
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNullableROProp
+import matt.lang.function.Op
 import matt.lang.go
 import matt.lang.setAll
 import matt.obs.bind.binding
@@ -37,13 +40,10 @@ import matt.obs.bindings.bool.ObsB
 import matt.obs.col.olist.MutableObsList
 import matt.obs.col.olist.ObsList
 import matt.obs.col.olist.toMutableObsList
-import matt.obs.prop.BindableProperty
 import matt.obs.prop.ObsVal
 import matt.obs.prop.VarProp
-import matt.obs.prop.toVarProp
-import kotlin.reflect.KFunction
-import kotlin.reflect.KMutableProperty1
-import kotlin.reflect.KProperty1
+import matt.time.dur.sleep
+import kotlin.time.Duration.Companion.milliseconds
 
 fun <T: Any> ET.tableview(items: ObsList<T>? = null, op: TableViewWrapper<T>.()->Unit = {}) =
   TableViewWrapper<T>().attachTo(this, op) {
@@ -71,7 +71,7 @@ fun <T: Any> ET.tableview(
 
 open class TableViewWrapper<E: Any>(
   node: TableView<E> = TableView<E>(),
-): ControlWrapperImpl<TableView<E>>(node), TableLikeWrapper<E> {
+): ControlWrapperImpl<TableView<E>>(node), TableLikeWrapper<E>, ColumnsDSL<E> by ColumnsDSLImpl<E>(node.columns) {
 
   constructor(items: ObservableList<E>): this(TableView(items))
 
@@ -99,120 +99,31 @@ open class TableViewWrapper<E: Any>(
 
   override val selectionModel by lazy { node.selectionModel.wrap() }
   fun scrollTo(i: Int) = node.scrollTo(i)
+  fun scrollToWithWeirdDirtyFix(
+	i: Int,
+	recursionLevel: Int = 5,
+	sleepTime: kotlin.time.Duration = 100.milliseconds,
+	callback: Op = {}
+  ) {
+	scrollTo(i) /*scrollTo is not working well... hope this helps*/
+	if (recursionLevel > 0) {
+	  daemon {
+		sleep(sleepTime)
+		runLater {
+		  scrollToWithWeirdDirtyFix(i, recursionLevel = recursionLevel - 1, sleepTime = sleepTime, callback = callback)
+		}
+	  }
+	} else {
+	  callback()
+	}
+  }
+
   fun scrollTo(e: E) = node.scrollTo(e)
+  val focusModel get() = node.focusModel
   fun sort() = node.sort()
   val editingCellProperty by lazy { node.editingCellProperty().toNullableROProp() }
+  fun edit(row: Int, col: TableColumn<E, *>) = node.edit(row, col)
 
-
-  inline fun <reified P> column(
-	title: String,
-	prop: KMutableProperty1<E, P>,
-	noinline op: TableColumnWrapper<E, P>.()->Unit = {}
-  ): TableColumnWrapper<E, P> {
-	val column = TableColumnWrapper<E, P>(title)
-	column.cellValueFactory = Callback {
-	  prop.call(it.value).toVarProp()
-	  /*observable(it.value, prop)*/
-	}
-	addColumnInternal(column)
-	return column.also(op)
-  }
-
-
-  inline fun <reified P> column(
-	title: String,
-	prop: KProperty1<E, ObsVal<P>>,
-	noinline op: TableColumnWrapper<E, P>.()->Unit = {}
-  ): TableColumnWrapper<E, P> {
-	val column = TableColumnWrapper<E, P>(title)
-	column.cellValueFactory = Callback { prop.call(it.value) }
-	addColumnInternal(column)
-	return column.also(op)
-  }
-
-  fun <P> column(
-	title: String,
-	prefWidth: Double? = null,
-	valueProvider: (TableColumn.CellDataFeatures<E, P>)->ObsVal<P>,
-  ): TableColumnWrapper<E, P> {
-	val column = TableColumnWrapper<E, P>(title)
-	column.cellValueFactory = Callback { valueProvider(it) }
-	prefWidth?.let { column.prefWidth = it }
-	addColumnInternal(column)
-	return column
-  }
-
-  fun nodeColumn(
-	title: String,
-	prefWidth: Double? = null,
-	nodeProvider: (E)->NodeWrapper,
-  ): TableColumnWrapper<E, NodeWrapper> {
-	val column = TableColumnWrapper<E, NodeWrapper>(title)
-	column.cellValueFactory = Callback {
-	  BindableProperty(nodeProvider(it.value))
-	}
-	column.simpleCellFactory(SimpleFactory {
-	  "" to it
-	})
-	prefWidth?.let { column.prefWidth = it }
-	addColumnInternal(column)
-	return column
-  }
-
-
-  inline fun <reified P> column(
-	title: String,
-	observableFn: KFunction<ObsVal<P>>
-  ): TableColumnWrapper<E, P> {
-	val column = TableColumnWrapper<E, P>(title)
-	column.cellValueFactory = Callback { observableFn.call(it.value) }
-	addColumnInternal(column)
-	return column
-  }
-
-
-  fun <P> column(
-	getter: KFunction<P>,
-	op: TableColumnWrapper<E, P>.()->Unit = {}
-  ): TableColumnWrapper<E, P> {
-	return column(getter.name) {
-	  BindableProperty(getter.call(it.value))
-	}.apply(op)
-  }
-
-
-  fun <P> column(
-	getter: KProperty1<E, P>,
-	op: TableColumnWrapper<E, P>.()->Unit = {}
-  ): TableColumnWrapper<E, P> {
-	return column(getter.name) {
-	  BindableProperty(getter.call(it.value))
-	}.apply(op)
-  }
-
-
-  /**
-   * Create a matt.hurricanefx.tableview.coolColumn holding matt.fx.control.layout.children columns
-   */
-  @Suppress("UNCHECKED_CAST")
-  fun nestedColumn(
-	title: String,
-	op: TableViewWrapper<E>.(TableColumn<E, Any?>)->Unit = {}
-  ): TableColumnWrapper<E, Any?> {
-	val column = TableColumnWrapper<E, Any?>(title)
-	addColumnInternal(column)
-	val previousColumnTarget = node.properties["tornadofx.columnTarget"] as? ObservableList<TableColumn<E, *>>
-	node.properties["tornadofx.columnTarget"] = column.node.columns
-	op(this, column.node)
-	node.properties["tornadofx.columnTarget"] = previousColumnTarget
-	return column
-  }
-
-  @Suppress("UNCHECKED_CAST")
-  fun addColumnInternal(column: TableColumnWrapper<E, *>, index: Int? = null) {
-	val columnTarget = node.properties["tornadofx.columnTarget"] as? ObservableList<TableColumn<E, *>> ?: columns
-	if (index == null) columnTarget.add(column.node) else columnTarget.add(index, column.node)
-  }
 
   fun makeIndexColumn(name: String = "#", startNumber: Int = 1): TableColumn<E, Number> {
 	return TableColumn<E, Number>(name).apply {
@@ -281,7 +192,7 @@ open class TableViewWrapper<E: Any>(
 		null /*prevent resizing of nodeColumn which is managed separately. Trying to resize those here leads to issues because getCellData() returns a different node then the one being displayed*/
 	  } else {
 		val textWidths = dataList.mapNotNull {
-		  it.toString().fxWidth
+		  it?.toString()?.fxWidth ?: 0.0
 		}.toTypedArray()
 
 		val widths = listOf(
@@ -458,9 +369,6 @@ open class TableViewWrapper<E: Any>(
 
 
 }
-
-
-
 
 
 

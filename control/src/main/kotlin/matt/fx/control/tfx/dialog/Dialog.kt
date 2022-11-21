@@ -29,7 +29,7 @@ inline fun confirm(
   content: String = "",
   confirmButton: ButtonType = ButtonType.OK,
   cancelButton: ButtonType = ButtonType.CANCEL,
-  owner: WindowWrapper<*>? = null,
+  owner: WindowWrapper<*>? = WindowWrapper.guessMainStage(),
   title: String? = null,
   actionFn: ()->Unit
 ) {
@@ -43,7 +43,7 @@ inline fun alert(
   header: String,
   content: String? = null,
   vararg buttons: ButtonType,
-  owner: WindowWrapper<*>? = null,
+  owner: WindowWrapper<*>? = WindowWrapper.guessMainStage(),
   title: String? = null,
   actionFn: Alert.(ButtonType)->Unit = {}
 ): Alert {
@@ -65,7 +65,7 @@ fun asyncAlert(
   header: String,
   content: String? = null,
   vararg buttons: ButtonType,
-  owner: WindowWrapper<*>? = null,
+  owner: WindowWrapper<*>? = WindowWrapper.guessMainStage(),
   title: String? = null,
   op: Alert.() -> Unit = {}
 ): Run<ButtonType> {
@@ -86,11 +86,12 @@ fun asyncAlert(
   return run
 }
 
+
 inline fun warning(
   header: String,
   content: String? = null,
   vararg buttons: ButtonType,
-  owner: WindowWrapper<*>? = null,
+  owner: WindowWrapper<*>? = WindowWrapper.guessMainStage(),
   title: String? = null,
   actionFn: Alert.(ButtonType)->Unit = {}
 ) =
@@ -100,7 +101,7 @@ inline fun error(
   header: String,
   content: String? = null,
   vararg buttons: ButtonType,
-  owner: WindowWrapper<*>? = null,
+  owner: WindowWrapper<*>? = WindowWrapper.guessMainStage(),
   title: String? = null,
   actionFn: Alert.(ButtonType)->Unit = {}
 ) =
@@ -110,7 +111,7 @@ inline fun information(
   header: String,
   content: String? = null,
   vararg buttons: ButtonType,
-  owner: WindowWrapper<*>? = null,
+  owner: WindowWrapper<*>? = WindowWrapper.guessMainStage(),
   title: String? = null,
   actionFn: Alert.(ButtonType)->Unit = {}
 ) =
@@ -120,7 +121,7 @@ inline fun confirmation(
   header: String,
   content: String? = null,
   vararg buttons: ButtonType,
-  owner: WindowWrapper<*>? = null,
+  owner: WindowWrapper<*>? = WindowWrapper.guessMainStage(),
   title: String? = null,
   actionFn: Alert.(ButtonType)->Unit = {}
 ) =
@@ -133,7 +134,7 @@ fun chooseFile(
   filters: Array<out FileChooser.ExtensionFilter>,
   initialDirectory: MFile? = null,
   mode: FileChooserMode = Single,
-  owner: WindowWrapper<*>? = null,
+  owner: WindowWrapper<*>?= WindowWrapper.guessMainStage(),
   op: FileChooser.()->Unit = {}
 ): List<MFile> {
   val chooser = FileChooser()
@@ -160,7 +161,7 @@ fun chooseFile(
 fun chooseDirectory(
   title: String? = null,
   initialDirectory: MFile? = null,
-  owner: WindowWrapper<*>? = null,
+  owner: WindowWrapper<*>? = WindowWrapper.guessMainStage(),
   op: DirectoryChooser.()->Unit = {}
 ): MFile? {
   val chooser = DirectoryChooser()

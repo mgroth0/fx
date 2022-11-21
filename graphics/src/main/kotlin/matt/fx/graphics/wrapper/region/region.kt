@@ -37,6 +37,7 @@ import matt.obs.col.olist.mappedlist.toLazyMappedList
 import matt.obs.col.olist.mappedlist.toSyncedList
 import matt.obs.prop.BindableProperty
 import matt.obs.prop.Var
+import matt.obs.prop.VarProp
 import matt.reflect.access
 import kotlin.reflect.full.declaredMemberFunctions
 
@@ -145,17 +146,8 @@ interface RegionWrapper<C: NodeWrapper>: ParentWrapper<C>, SizeManaged {
   val paddingVerticalProperty: Var<Double>
   var paddingVertical: Double
 
-  val exactWidthProperty
-	get() = BindableProperty<Double>(0.0).also {
-	  minWidthProperty.bind(it)
-	  maxWidthProperty.bind(it)
-	}
-
-  val exactHeightProperty
-	get() = BindableProperty<Double>(0.0).also {
-	  minHeightProperty.bind(it)
-	  maxHeightProperty.bind(it)
-	}
+  val exactWidthProperty: VarProp<Double>
+  val exactHeightProperty: VarProp<Double>
 
 
   var exactWidth: Number
@@ -253,5 +245,19 @@ open class RegionWrapperImpl<N: Region, C: NodeWrapper>(node: N): ParentWrapperI
 
   override val backgroundProperty by lazy { node.backgroundProperty().toNullableStyleProp() }
   override var background by backgroundProperty
+
+  override val exactWidthProperty by lazy {
+	BindableProperty<Double>(0.0).also {
+	  minWidthProperty.bind(it)
+	  maxWidthProperty.bind(it)
+	}
+  }
+
+  override val exactHeightProperty by lazy {
+	BindableProperty<Double>(0.0).also {
+	  minHeightProperty.bind(it)
+	  maxHeightProperty.bind(it)
+	}
+  }
 
 }

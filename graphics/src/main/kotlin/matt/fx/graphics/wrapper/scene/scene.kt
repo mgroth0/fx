@@ -27,6 +27,9 @@ open class SceneWrapper<R: ParentWrapper<*>>(
 
 
   constructor(root: ParentWrapper<*>): this(Scene(root.node))
+  constructor(root: ParentWrapper<*>, userWidth: Double, userHeight: Double): this(
+	Scene(root.node, userWidth, userHeight)
+  )
 
 
   val focusOwner get() = node.focusOwner?.wrapped()

@@ -210,8 +210,10 @@ open class AnnotateableChart<X: MathAndComparable<X>, Y: MathAndComparable<Y>> p
   }
 
   fun clearAnnotations() {
+	println("clearing annotations")
 	annotationSeries.clear()
 	annotationLayer.clear()
+	println("annotations cleared")
   }
 
   val annotationColor = Color.YELLOW
@@ -268,6 +270,7 @@ open class AnnotateableChart<X: MathAndComparable<X>, Y: MathAndComparable<Y>> p
 	) {
 	  x = minXPixel
 	  yProperty.bind(this@AnnotateableChart.heightProperty*.90)
+
 	}
   }
 
