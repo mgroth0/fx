@@ -194,8 +194,8 @@ open class AnnotateableChart<X: MathAndComparable<X>, Y: MathAndComparable<Y>> p
 	annotationLayer.gridpane<NW> {
 	  border = Border.stroke(Color.WHITE)
 	  padding = Insets(8.0)
-	  layoutXProperty.bind(this@AnnotateableChart.widthProperty / 2.0)
-	  layoutYProperty.bind(this@AnnotateableChart.heightProperty / 2.0)
+	  layoutXProperty.bind(this@AnnotateableChart.widthProperty/2.0)
+	  layoutYProperty.bind(this@AnnotateableChart.heightProperty/2.0)
 	  this@AnnotateableChart.realData.forEach {
 		row {
 		  circle(radius = 10.0) {
@@ -210,13 +210,11 @@ open class AnnotateableChart<X: MathAndComparable<X>, Y: MathAndComparable<Y>> p
   }
 
   fun clearAnnotations() {
-	println("clearing annotations")
 	annotationSeries.clear()
 	annotationLayer.clear()
-	println("annotations cleared")
   }
 
-  val annotationColor = Color.YELLOW
+  private val annotationColor: Color = Color.YELLOW
 
   private val chartContent by lazy {
 	(Chart::class.java.getDeclaredField("chartContent").run {
