@@ -269,6 +269,7 @@ import matt.fx.graphics.wrapper.transform.TransformWrapper
 import matt.fx.graphics.wrapper.transform.TranslateWrapper
 import matt.fx.graphics.wrapper.window.WindowWrapper
 import matt.lang.NEVER
+import matt.model.data.mathable.MathAndComparable
 import kotlin.reflect.KClass
 
 
@@ -349,7 +350,7 @@ fun Hyperlink.wrapped(): HyperlinkWrapper = findWrapper() ?: HyperlinkWrapper(th
 
 fun TableColumnHeader.wrapped(): TableColumnHeaderWrapper = findWrapper() ?: TableColumnHeaderWrapper(this@wrapped)
 
-fun <X: Any, Y: Any> LineChart<X, Y>.wrapped(): LineChartWrapper<X, Y> = findWrapper() ?: LineChartWrapper(this@wrapped)
+fun <X: MathAndComparable<X>, Y: MathAndComparable<Y>> LineChart<X, Y>.wrapped(): LineChartWrapper<X, Y> = findWrapper() ?: LineChartWrapper(this@wrapped)
 
 fun Group.wrapped(): GroupWrapper<*> = findWrapper() ?: GroupWrapper<NodeWrapper>(this@wrapped)
 

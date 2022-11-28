@@ -9,10 +9,11 @@ import matt.fx.control.wrapper.chart.axis.value.ValueAxisWrapper
 import matt.fx.control.wrapper.chart.axis.value.number.NumberAxisWrapper
 import matt.fx.control.wrapper.chart.line.LineChartWrapper
 import matt.lang.err
+import matt.model.data.mathable.MathAndComparable
 
 /*https://stackoverflow.com/questions/34771612/javafx-linechart-performance*/
 
-open class HighPerformanceLineChart<X: Any, Y: Any>(
+open class HighPerformanceLineChart<X: MathAndComparable<X>, Y: MathAndComparable<Y>>(
   extraHighPerf: Boolean = true,
   xAxis: AxisWrapper<X, out Axis<X>>,
   yAxis: AxisWrapper<Y, out Axis<Y>>

@@ -9,12 +9,13 @@ import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.math.point.BasicPoint
+import matt.model.data.mathable.MathAndComparable
 
 
 /**
  * Create a LineChart with optional title, axis and add to the parent pane. The optional op will be performed on the new instance.
  */
-fun <X: Any, Y: Any> ET.linechart(
+fun <X: MathAndComparable<X>, Y: MathAndComparable<Y>> ET.linechart(
   title: String? = null,
   x: MAxis<X>,
   y: MAxis<Y>,
@@ -22,7 +23,7 @@ fun <X: Any, Y: Any> ET.linechart(
 ) =
   LineChartWrapper(x, y).attachTo(this, op) { it.title = title }
 
-open class LineChartWrapper<X: Any, Y: Any>(
+open class LineChartWrapper<X: MathAndComparable<X>, Y: MathAndComparable<Y>>(
   node: LineChart<X, Y>
 ): XYChartWrapper<X, Y, LineChart<X, Y>>(node) {
   constructor(x: MAxis<X>, y: MAxis<Y>): this(LineChart(x.node, y.node))
