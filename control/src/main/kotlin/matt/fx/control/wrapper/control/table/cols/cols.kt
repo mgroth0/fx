@@ -67,9 +67,8 @@ class ColumnsDSLImpl<E: Any>(private val columns: ObservableList<TableColumn<E, 
 	val column = TableColumnWrapper<E, P>(title)
 	column.cellValueFactory = Callback {
 	  prop.call(it.value).toVarProp()
-	  /*observable(it.value, prop)*/
 	}
-	addColumnInternal(column)
+	columns.add(column.node)
 	return column.also(op)
   }
 
@@ -81,7 +80,7 @@ class ColumnsDSLImpl<E: Any>(private val columns: ObservableList<TableColumn<E, 
   ): TableColumnWrapper<E, P> {
 	val column = TableColumnWrapper<E, P>(title)
 	column.cellValueFactory = Callback { prop.call(it.value) }
-	addColumnInternal(column)
+	columns.add(column.node)
 	return column.also(op)
   }
 
@@ -93,7 +92,7 @@ class ColumnsDSLImpl<E: Any>(private val columns: ObservableList<TableColumn<E, 
 	val column = TableColumnWrapper<E, P>(title)
 	column.cellValueFactory = Callback { valueProvider(it) }
 	prefWidth?.let { column.prefWidth = it }
-	addColumnInternal(column)
+	columns.add(column.node)
 	return column
   }
 
@@ -110,7 +109,7 @@ class ColumnsDSLImpl<E: Any>(private val columns: ObservableList<TableColumn<E, 
 	  "" to it
 	})
 	prefWidth?.let { column.prefWidth = it }
-	addColumnInternal(column)
+	columns.add(column.node)
 	return column
   }
 
@@ -121,7 +120,7 @@ class ColumnsDSLImpl<E: Any>(private val columns: ObservableList<TableColumn<E, 
   ): TableColumnWrapper<E, P> {
 	val column = TableColumnWrapper<E, P>(title)
 	column.cellValueFactory = Callback { observableFn.call(it.value) }
-	addColumnInternal(column)
+	columns.add(column.node)
 	return column
   }
 
@@ -143,11 +142,6 @@ class ColumnsDSLImpl<E: Any>(private val columns: ObservableList<TableColumn<E, 
 	return column(getter.name) {
 	  BindableProperty(getter.call(it.value))
 	}.apply(op)
-  }
-
-
-  private fun addColumnInternal(column: TableColumnWrapper<E, *>, index: Int? = null) {
-	if (index == null) columns.add(column.node) else columns.add(index, column.node)
   }
 }
 

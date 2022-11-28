@@ -31,8 +31,8 @@ inline fun <reified T: MathAndComparable<T>> NumberAxisWrapper<T>.showBestTicksN
 	  this as NumberAxisWrapper<DurationWrapper>
 	)
 
-	UnitLess::class -> UnitLessTickConfigurer.showBestTicksNoLayout(this as NumberAxisWrapper<UnitLess>)
-	ByteSize::class -> ByteSizeTickConfigurer.showBestTicksNoLayout(this as NumberAxisWrapper<ByteSize>)
+	UnitLess::class        -> UnitLessTickConfigurer.showBestTicksNoLayout(this as NumberAxisWrapper<UnitLess>)
+	ByteSize::class        -> ByteSizeTickConfigurer.showBestTicksNoLayout(this as NumberAxisWrapper<ByteSize>)
   }
 }
 
@@ -62,12 +62,14 @@ object UnitLessTickConfigurer: TickConfigurer<UnitLess>(
 		  maybeGoodDecimalAbove /= 10.0
 		}
 		maybeGoodDecimalAbove
+
 	  } else {
 		var maybeGoodDecimalAbove = UnitLess(10.0)
 		while (theAbs > maybeGoodDecimalAbove*1.2) {
 		  maybeGoodDecimalAbove *= 10.0
 		}
 		maybeGoodDecimalAbove
+
 	  }
 	  return goodDecimalAbove/10.0
 	}
@@ -83,7 +85,7 @@ object DurationWrapperTickConfigurer: TickConfigurer<DurationWrapper>(minorTickC
 	range < 100.milliseconds.wrapped() -> 10.milliseconds.wrapped()
 	range < 1.seconds.wrapped()        -> 100.milliseconds.wrapped()
 	range < 10.seconds.wrapped()       -> 1.seconds.wrapped()
-	range < 50.seconds.wrapped()      -> 5.seconds.wrapped()
+	range < 50.seconds.wrapped()       -> 5.seconds.wrapped()
 	range < 100.seconds.wrapped()      -> 10.seconds.wrapped()
 	range < 10.minutes.wrapped()       -> 1.minutes.wrapped()
 	range < 100.minutes.wrapped()      -> 10.minutes.wrapped()
@@ -149,20 +151,21 @@ abstract class TickConfigurer<T: MathAndComparable<T>>(
   abstract fun tickLabelConverter(range: T): Convert<T, String>
 
   fun showBestTicksNoLayout(axis: NumberAxisWrapper<T>) {
-	val durationShown = (axis.upperBound - axis.lowerBound)
+	val amountShown = (axis.upperBound - axis.lowerBound)
+
 
 	axis.apply {
 	  isTickMarkVisible = true
 	  isMinorTickVisible = true
-	  minorTickCount = minorTickCount
+	  minorTickCount = this@TickConfigurer.minorTickCount
 	  isTickLabelsVisible = true
 	}
 
 
-	axis.tickUnit = bestTickUnit(durationShown)
+	axis.tickUnit = bestTickUnit(amountShown)
 
 
-	val converter = tickLabelConverter(durationShown)
+	val converter = tickLabelConverter(amountShown)
 
 	val stringConverter = object: StringConverter<T>() {
 

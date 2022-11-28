@@ -17,7 +17,7 @@ import matt.fx.control.wrapper.chart.axis.value.number.minimalNumberAxis
 import matt.fx.control.wrapper.chart.line.highperf.HighPerformanceLineChart
 import matt.fx.control.wrapper.chart.xy.series.SeriesWrapper
 import matt.fx.control.wrapper.label.label
-import matt.fx.graphics.fxthread.ensureInFXThreadOrRunLater
+import matt.fx.graphics.fxthread.ensureInFXThreadInPlace
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NW
 import matt.fx.graphics.wrapper.node.attachTo
@@ -30,13 +30,10 @@ import matt.fx.graphics.wrapper.pane.grid.gridpane
 import matt.fx.graphics.wrapper.region.RegionWrapperImpl
 import matt.fx.graphics.wrapper.text.TextWrapper
 import matt.fx.graphics.wrapper.text.text
-import matt.lang.function.Op
 import matt.lang.go
 import matt.lang.setAll
 import matt.log.warn.warnOnce
 import matt.model.data.mathable.MathAndComparable
-import matt.model.flowlogic.runner.InPlaceRunner
-import matt.model.flowlogic.runner.Runner
 import matt.obs.col.change.mirror
 import matt.obs.col.olist.basicMutableObservableListOf
 import matt.obs.math.double.op.div
@@ -151,12 +148,10 @@ open class AnnotateableChart<X: MathAndComparable<X>, Y: MathAndComparable<Y>> p
 
   fun autoRangeY(
 	forceMin: Y? = null,
-	calcRunner: Runner = InPlaceRunner,
-	callback: Op? = null,
   ) {
-	calcRunner.run {
-	  val mn = realData.mapNotNull { it.data.minOfOrNull { it.yValue } }.minOrNull()
-	  val mx = realData.mapNotNull { it.data.maxOfOrNull { it.yValue } }.maxOrNull()
+	val mn = realData.mapNotNull { it.data.minOfOrNull { it.yValue } }.minOrNull()
+	val mx = realData.mapNotNull { it.data.maxOfOrNull { it.yValue } }.maxOrNull()
+	val r = run {
 	  if (mn == null || mx == null) return@run null
 	  val range = mx - mn
 	  val margin = range*0.1
@@ -164,16 +159,14 @@ open class AnnotateableChart<X: MathAndComparable<X>, Y: MathAndComparable<Y>> p
 		lowerBound = forceMin ?: (mn - margin),
 		upperBound = mx + margin
 	  )
-	}.whenFinished {
-	  it?.go {
-		ensureInFXThreadOrRunLater {
-		  yAxis.apply {
-			lowerBound = it.lowerBound
-			upperBound = it.upperBound
-		  }
-		  callback?.invoke()
+	}
+	r?.go {
+	  ensureInFXThreadInPlace {
+		yAxis.apply {
+		  lowerBound = r.lowerBound
+		  upperBound = r.upperBound
 		}
-	  } ?: callback?.invoke()
+	  }
 	}
   }
 
