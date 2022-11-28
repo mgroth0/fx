@@ -8,23 +8,41 @@ import matt.fx.control.wrapper.chart.axis.value.moregenval.HzConverter
 import matt.fx.control.wrapper.chart.axis.value.moregenval.MicroVoltConverter
 import matt.fx.control.wrapper.chart.axis.value.moregenval.ValueAxisConverter
 import matt.fx.control.wrapper.chart.axis.value.number.moregennum.MoreGenericNumberAxis
+import matt.fx.control.wrapper.chart.axis.value.number.tickconfig.ByteSizeTickConfigurer
+import matt.fx.control.wrapper.chart.axis.value.number.tickconfig.DefaultIntTickConfigurer
+import matt.fx.control.wrapper.chart.axis.value.number.tickconfig.DefaultTickConfigurer
+import matt.fx.control.wrapper.chart.axis.value.number.tickconfig.DurationWrapperTickConfigurer
+import matt.fx.control.wrapper.chart.axis.value.number.tickconfig.TickConfigurer
+import matt.fx.control.wrapper.chart.axis.value.number.tickconfig.UnitLessTickConfigurer
 import matt.fx.control.wrapper.chart.axis.value.number.tickconfig.unitless.UnitLessConverter
 import matt.fx.graphics.dur.MilliSecondDurationWrapperConverter
 import matt.math.index.IndexWrapperConverter
+import matt.math.index.IndexWrapperIntConverter
 import matt.model.data.byte.ByteSizeDoubleConverter
+import matt.model.data.mathable.DoubleWrapper
+import matt.model.data.mathable.MathAndComparable
+import matt.model.data.percent.PercentDoubleConverter
 
 
-fun timeAxis() = NumberAxisWrapper(MilliSecondDurationWrapperConverter)
-fun voltageAxis() = NumberAxisWrapper(MicroVoltConverter)
-fun frequencyAxis() = NumberAxisWrapper(HzConverter)
-fun unitlessAxis() = NumberAxisWrapper(UnitLessConverter)
-fun doubleAxis() = NumberAxisWrapper(DoubleAxisConverter)
-fun indexAxis() = NumberAxisWrapper(IndexWrapperConverter)
-fun byteAxis() = NumberAxisWrapper(ByteSizeDoubleConverter)
+fun timeAxis() = NumberAxisWrapper(MilliSecondDurationWrapperConverter, DurationWrapperTickConfigurer)
+fun voltageAxis() = numAxis(DefaultTickConfigurer(MicroVoltConverter))
+fun frequencyAxis() = numAxis(DefaultTickConfigurer(HzConverter))
+fun unitlessAxis() = numAxis(UnitLessTickConfigurer)
+fun indexAxis() = NumberAxisWrapper(IndexWrapperConverter, DefaultIntTickConfigurer(IndexWrapperIntConverter))
+fun byteAxis() = NumberAxisWrapper(ByteSizeDoubleConverter, ByteSizeTickConfigurer)
+fun percentAxis() = numAxis(DefaultTickConfigurer(PercentDoubleConverter))
 
-class NumberAxisWrapper<T: Any>(override val node: MoreGenericNumberAxis<T>): ValueAxisWrapper<T>(node) {
+fun <T: DoubleWrapper<T>> numAxis(tickConfigurer: DefaultTickConfigurer<T>) =
+  NumberAxisWrapper(tickConfigurer.converter, tickConfigurer)
 
-  constructor(converter: ValueAxisConverter<T>): this(MoreGenericNumberAxis(converter))
+class NumberAxisWrapper<T: MathAndComparable<T>>(
+  override val node: MoreGenericNumberAxis<T>,
+  val tickConfigurer: TickConfigurer<T>
+): ValueAxisWrapper<T>(node) {
+
+  constructor(converter: ValueAxisConverter<T>, tickConfigurer: TickConfigurer<T>): this(
+	MoreGenericNumberAxis(converter), tickConfigurer
+  )
 
   fun minimize() {
 	minorTickCount = 0

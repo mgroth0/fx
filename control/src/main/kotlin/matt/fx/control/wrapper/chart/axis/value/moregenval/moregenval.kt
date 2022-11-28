@@ -28,6 +28,7 @@ import javafx.scene.shape.Path
 import javafx.util.StringConverter
 import matt.lang.anno.See
 import matt.math.hz.Hz
+import matt.model.data.mathable.DoubleWrapper
 import matt.model.data.volt.MicroVolt
 import matt.model.op.convert.Converter
 import matt.obs.prop.BindableProperty
@@ -48,6 +49,7 @@ object DoubleAxisConverter: ValueAxisConverter<Double> {
   }
 
 }
+
 object IntAxisConverter: ValueAxisConverter<Int> {
   override fun convertToB(a: Int): InternalData {
 	return a.toDouble()

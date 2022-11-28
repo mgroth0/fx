@@ -1,8 +1,11 @@
 package matt.fx.control.wrapper.chart.axis.value.number.tickconfig
 
+import javafx.scene.chart.ValueAxis
 import javafx.util.StringConverter
+import matt.fx.control.wrapper.chart.axis.value.moregenval.ValueAxisConverter
 import matt.fx.control.wrapper.chart.axis.value.number.NumberAxisWrapper
 import matt.fx.control.wrapper.chart.axis.value.number.tickconfig.unitless.UnitLess
+import matt.fx.control.wrapper.chart.axis.value.number.tickconfig.unitless.UnitLessConverter
 import matt.fx.control.wrapper.chart.line.LineChartWrapper
 import matt.fx.graphics.dur.DurationWrapper
 import matt.fx.graphics.dur.wrapped
@@ -12,7 +15,10 @@ import matt.model.data.byte.ByteSize
 import matt.model.data.byte.gigabytes
 import matt.model.data.byte.killobytes
 import matt.model.data.byte.megabytes
+import matt.model.data.mathable.DoubleWrapper
+import matt.model.data.mathable.IntWrapper
 import matt.model.data.mathable.MathAndComparable
+import matt.model.op.convert.Converter
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.minutes
@@ -25,46 +31,40 @@ inline fun <reified X: MathAndComparable<X>, reified Y: MathAndComparable<Y>> Li
   requestLayout()
 }
 
-inline fun <reified T: MathAndComparable<T>> NumberAxisWrapper<T>.showBestTicksNoLayout() {
-  @Suppress("UNCHECKED_CAST") when (T::class) {
-	DurationWrapper::class -> DurationWrapperTickConfigurer.showBestTicksNoLayout(
-	  this as NumberAxisWrapper<DurationWrapper>
-	)
-
-	UnitLess::class        -> UnitLessTickConfigurer.showBestTicksNoLayout(this as NumberAxisWrapper<UnitLess>)
-	ByteSize::class        -> ByteSizeTickConfigurer.showBestTicksNoLayout(this as NumberAxisWrapper<ByteSize>)
-  }
+fun <T: MathAndComparable<T>> NumberAxisWrapper<T>.showBestTicksNoLayout() {
+  tickConfigurer.showBestTicksNoLayout(this)
 }
 
-inline fun <reified T: MathAndComparable<T>> NumberAxisWrapper<T>.showBestTicksIn(chart: LineChartWrapper<*, *>) {
+fun <T: MathAndComparable<T>> NumberAxisWrapper<T>.showBestTicksIn(chart: LineChartWrapper<*, *>) {
   showBestTicksNoLayout()
   chart.requestLayout()
 }
 
 
-object UnitLessTickConfigurer: TickConfigurer<UnitLess>(
-  minorTickCount = 0
-) {
-  private val default = UnitLess(100.0)
+open class DefaultTickConfigurer<T: DoubleWrapper<T>>(val converter: ValueAxisConverter<T>):
+  TickConfigurer<T>(minorTickCount = 0) {
+  private val default = converter.convertToA(100.0)
 
-  private val labelConvert: Convert<UnitLess, String> = {
-	it.asNumber.decimalOrScientificNotation()
+  private val labelConvert: Convert<T, String> = {
+	converter.convertToB(it).decimalOrScientificNotation()
   }
 
-  override fun bestTickUnit(range: UnitLess): UnitLess {
+  private val zero = converter.convertToA(0.0)
+  private val two = converter.convertToA(2.0)
 
-	if (range == UnitLess.ZERO) return default
+  override fun bestTickUnit(range: T): T {
+	if (range == zero) return default
 	else {
-	  val theAbs = UnitLess(kotlin.math.abs(range.asDouble))
-	  val goodDecimalAbove = if (theAbs < UnitLess.TWO) {
-		var maybeGoodDecimalAbove = UnitLess(1.0)
+	  val theAbs = converter.convertToA(kotlin.math.abs(range.asDouble))
+	  val goodDecimalAbove = if (theAbs < two) {
+		var maybeGoodDecimalAbove = converter.convertToA(1.0)
 		while (theAbs < maybeGoodDecimalAbove/5.0) {
 		  maybeGoodDecimalAbove /= 10.0
 		}
 		maybeGoodDecimalAbove
 
 	  } else {
-		var maybeGoodDecimalAbove = UnitLess(10.0)
+		var maybeGoodDecimalAbove = converter.convertToA(10.0)
 		while (theAbs > maybeGoodDecimalAbove*1.2) {
 		  maybeGoodDecimalAbove *= 10.0
 		}
@@ -76,8 +76,50 @@ object UnitLessTickConfigurer: TickConfigurer<UnitLess>(
 
   }
 
-  override fun tickLabelConverter(range: UnitLess) = labelConvert
+  override fun tickLabelConverter(range: T) = labelConvert
 }
+
+open class DefaultIntTickConfigurer<T: IntWrapper<T>>(val converter: Converter<T, Int>):
+  TickConfigurer<T>(minorTickCount = 0) {
+  private val default = converter.convertToA(100)
+
+  private val labelConvert: Convert<T, String> = {
+	converter.convertToB(it).toDouble().decimalOrScientificNotation()
+  }
+
+  private val zero = converter.convertToA(0)
+  private val two = converter.convertToA(2)
+
+  override fun bestTickUnit(range: T): T {
+	if (range == zero) return default
+	else {
+	  val theAbs = converter.convertToA(kotlin.math.abs(range.asInt))
+	  val goodDecimalAbove = if (theAbs < two) {
+		var maybeGoodDecimalAbove = converter.convertToA(1)
+		while (theAbs < maybeGoodDecimalAbove/5.0) {
+		  maybeGoodDecimalAbove /= 10.0
+		}
+		maybeGoodDecimalAbove
+
+	  } else {
+		var maybeGoodDecimalAbove = converter.convertToA(10)
+		while (theAbs > maybeGoodDecimalAbove*1.2) {
+		  maybeGoodDecimalAbove *= 10.0
+		}
+		maybeGoodDecimalAbove
+
+	  }
+	  return goodDecimalAbove/10.0
+	}
+
+  }
+
+  override fun tickLabelConverter(range: T) = labelConvert
+}
+
+
+object UnitLessTickConfigurer: DefaultTickConfigurer<UnitLess>(UnitLessConverter)
+
 
 object DurationWrapperTickConfigurer: TickConfigurer<DurationWrapper>(minorTickCount = 10) {
   override fun bestTickUnit(range: DurationWrapper) = when {

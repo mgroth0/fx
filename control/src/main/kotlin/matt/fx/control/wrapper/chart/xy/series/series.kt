@@ -11,10 +11,15 @@ import matt.hurricanefx.eye.wrapper.obs.collect.mfxMutableListConverter
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNullableROProp
+import matt.lang.setAll
 import matt.model.op.convert.Converter
 import matt.model.op.convert.NullToBlankStringConverter
 import matt.obs.col.olist.MutableObsList
 import matt.obs.listen.Listener
+
+fun <X, Y> List<Data<X, Y>>.toSeries() = SeriesWrapper<X, Y>().apply {
+  data.setAll(this@toSeries)
+}
 
 class SeriesConverter<X, Y>(): Converter<Series<X, Y>, SeriesWrapper<X, Y>> {
   override fun convertToB(a: Series<X, Y>): SeriesWrapper<X, Y> {

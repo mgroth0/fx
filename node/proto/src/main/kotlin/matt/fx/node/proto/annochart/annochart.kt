@@ -12,6 +12,7 @@ import javafx.scene.layout.StackPane
 import javafx.scene.paint.Color
 import matt.async.safe.with
 import matt.fx.control.wrapper.chart.axis.value.number.NumberAxisWrapper
+import matt.fx.control.wrapper.chart.axis.value.number.tickconfig.showBestTicksIn
 import matt.fx.control.wrapper.chart.line.highperf.HighPerformanceLineChart
 import matt.fx.control.wrapper.chart.xy.series.SeriesWrapper
 import matt.fx.control.wrapper.label.label
@@ -82,6 +83,12 @@ open class AnnotateableChart<X: MathAndComparable<X>, Y: MathAndComparable<Y>> p
   private val annotationSeries = basicMutableObservableListOf<SeriesWrapper<X, Y>>()
 
   val realData = basicMutableObservableListOf<SeriesWrapper<X, Y>>()
+
+
+  fun showBestTicks() {
+	xAxis.showBestTicksIn(chart)
+	yAxis.showBestTicksIn(chart)
+  }
 
 
   init {
