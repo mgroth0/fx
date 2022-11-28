@@ -1,6 +1,5 @@
 package matt.fx.control.wrapper.chart.axis.value.number.tickconfig
 
-import javafx.scene.chart.ValueAxis
 import javafx.util.StringConverter
 import matt.fx.control.wrapper.chart.axis.value.moregenval.ValueAxisConverter
 import matt.fx.control.wrapper.chart.axis.value.number.NumberAxisWrapper

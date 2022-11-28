@@ -379,7 +379,7 @@ val constructorMap = lazyMap<KType, KFunction<EventTargetWrapper>> { typ ->
 }*/
 
 
-fun <T: MathAndComparable<T>> MoreGenericNumberAxis<T>.wrapped(): NumberAxisWrapper<*> = findWrapper() ?: NumberAxisWrapper(this@wrapped)
+fun <T: MathAndComparable<T>> MoreGenericNumberAxis<T>.wrapped(): NumberAxisWrapper<*> = findWrapper() ?: error("not implemented: NumberAxisWrapper(this@wrapped)")
 fun NumberAxis.wrapped(): OldNumberAxisWrapper = findWrapper() ?: OldNumberAxisWrapper(this@wrapped)
 fun CategoryAxis.wrapped(): CategoryAxisWrapper = findWrapper() ?: CategoryAxisWrapper(this@wrapped)
 
