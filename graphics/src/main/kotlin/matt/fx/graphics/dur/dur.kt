@@ -33,6 +33,10 @@ fun Duration.wrapped() = DurationWrapper(this)
 value class DurationWrapper(val dur: Duration): Interpolatable<DurationWrapper>,
 												MathAndComparable<DurationWrapper> {
 
+  companion object {
+	val ZERO = DurationWrapper(Duration.ZERO)
+  }
+
   override fun toString() = dur.toString()
 
   fun toString(unit: DurationUnit, decimals: Int = 0) = dur.toString(unit, decimals)
