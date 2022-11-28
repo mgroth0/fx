@@ -9,8 +9,7 @@ import javafx.scene.layout.ColumnConstraints
 import javafx.scene.layout.GridPane
 import javafx.scene.layout.Priority
 import javafx.scene.layout.RowConstraints
-import matt.fx.graphics.tfx.nodes.GridPaneConstraint
-import matt.fx.graphics.tfx.nodes.MarginableConstraints
+import matt.fx.graphics.style.inset.MarginableConstraints
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NW
 import matt.fx.graphics.wrapper.node.NodeWrapper
