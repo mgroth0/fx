@@ -1,6 +1,5 @@
 package matt.fx.node.proto.notification
 
-import javafx.animation.Interpolator
 import javafx.application.Platform
 import javafx.geometry.Pos.TOP_CENTER
 import javafx.scene.paint.Color
@@ -87,7 +86,7 @@ fun notification(
 			keyframe(0.2.sec.toFXDuration()) {
 			  keyvalue(
 				fakeYProps[it]!!.createWritableFXPropWrapper(), notificationYs[it]!! - Y_MOVE_AMOUNT,
-				Interpolator.EASE_BOTH
+				MyInterpolator.EASE_BOTH
 			  )
 			}
 			notificationYs[it] = notificationYs[it]!! - Y_MOVE_AMOUNT

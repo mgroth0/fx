@@ -10,6 +10,8 @@ import matt.fx.control.wrapper.chart.axis.value.moregenval.ValueAxisConverter
 import matt.fx.control.wrapper.chart.axis.value.number.moregennum.MoreGenericNumberAxis
 import matt.fx.control.wrapper.chart.axis.value.number.tickconfig.unitless.UnitLessConverter
 import matt.fx.graphics.dur.MilliSecondDurationWrapperConverter
+import matt.math.index.IndexWrapperConverter
+import matt.model.data.byte.ByteSizeDoubleConverter
 
 
 fun timeAxis() = NumberAxisWrapper(MilliSecondDurationWrapperConverter)
@@ -17,6 +19,8 @@ fun voltageAxis() = NumberAxisWrapper(MicroVoltConverter)
 fun frequencyAxis() = NumberAxisWrapper(HzConverter)
 fun unitlessAxis() = NumberAxisWrapper(UnitLessConverter)
 fun doubleAxis() = NumberAxisWrapper(DoubleAxisConverter)
+fun indexAxis() = NumberAxisWrapper(IndexWrapperConverter)
+fun byteAxis() = NumberAxisWrapper(ByteSizeDoubleConverter)
 
 class NumberAxisWrapper<T: Any>(override val node: MoreGenericNumberAxis<T>): ValueAxisWrapper<T>(node) {
 
