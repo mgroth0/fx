@@ -1,8 +1,11 @@
 package matt.fx.graphics.wrapper.pane.hbox
 
+import javafx.geometry.Insets
 import javafx.geometry.Pos
+import javafx.scene.Node
 import javafx.scene.layout.HBox
 import javafx.scene.layout.Priority
+import matt.fx.graphics.tfx.nodes.MarginableConstraints
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NW
 import matt.fx.graphics.wrapper.node.NodeWrapper
@@ -50,3 +53,25 @@ open class HBoxWrapperImpl<C: NodeWrapper>(node: HBox = HBox()): BoxWrapperImpl<
 
 fun HBoxWrapperImpl<NodeWrapper>.spacer(prio: Priority = Priority.ALWAYS, op: PaneWrapperImpl<*, *>.()->Unit = {}) =
   attach(SimplePaneWrapper<NodeWrapper>().apply { hGrow = prio }, op)
+
+
+
+inline fun <T: Node> T.hboxConstraints(op: (HBoxConstraint.()->Unit)): T {
+  val c = HBoxConstraint(this)
+  c.op()
+  return c.applyToNode(this)
+}
+
+class HBoxConstraint(
+  node: Node,
+  override var margin: Insets? = HBox.getMargin(node),
+  var hGrow: Priority? = null
+): MarginableConstraints() {
+
+  fun <T: Node> applyToNode(node: T): T {
+    margin?.let { HBox.setMargin(node, it) }
+    hGrow?.let { HBox.setHgrow(node, it) }
+    return node
+  }
+}
+

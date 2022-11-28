@@ -1,5 +1,6 @@
 package matt.fx.graphics.wrapper.pane.anchor
 
+import javafx.scene.Node
 import javafx.scene.layout.AnchorPane
 import matt.collect.itr.mapToArray
 import matt.fx.graphics.wrapper.ET
@@ -67,4 +68,27 @@ open class AnchorPaneWrapperImpl<C: NodeWrapper>(node: AnchorPane = AnchorPane()
   constructor (vararg children: NodeWrapper): this(AnchorPane(*children.mapToArray { it.node }))
 
 
+}
+
+
+
+inline fun <T: Node> T.anchorpaneConstraints(op: AnchorPaneConstraint.()->Unit): T {
+  val c = AnchorPaneConstraint()
+  c.op()
+  return c.applyToNode(this)
+}
+
+class AnchorPaneConstraint(
+  var topAnchor: Number? = null,
+  var rightAnchor: Number? = null,
+  var bottomAnchor: Number? = null,
+  var leftAnchor: Number? = null
+) {
+  fun <T: Node> applyToNode(node: T): T {
+	topAnchor?.let { AnchorPane.setTopAnchor(node, it.toDouble()) }
+	rightAnchor?.let { AnchorPane.setRightAnchor(node, it.toDouble()) }
+	bottomAnchor?.let { AnchorPane.setBottomAnchor(node, it.toDouble()) }
+	leftAnchor?.let { AnchorPane.setLeftAnchor(node, it.toDouble()) }
+	return node
+  }
 }

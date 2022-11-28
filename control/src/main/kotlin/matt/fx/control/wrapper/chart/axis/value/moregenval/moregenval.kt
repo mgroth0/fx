@@ -27,6 +27,8 @@ import javafx.scene.shape.MoveTo
 import javafx.scene.shape.Path
 import javafx.util.StringConverter
 import matt.lang.anno.See
+import matt.math.hz.Hz
+import matt.model.data.volt.MicroVolt
 import matt.model.op.convert.Converter
 import matt.obs.prop.BindableProperty
 import java.lang.reflect.Field
@@ -56,6 +58,30 @@ object IntAxisConverter: ValueAxisConverter<Int> {
   }
 
 }
+
+object MicroVoltConverter: ValueAxisConverter<MicroVolt> {
+  override fun convertToB(a: MicroVolt): Double {
+	return a.asDouble
+  }
+
+  override fun convertToA(b: Double): MicroVolt {
+	return MicroVolt(b)
+  }
+
+}
+
+object HzConverter: ValueAxisConverter<Hz> {
+  override fun convertToB(a: Hz): Double {
+	return a.asNumber
+  }
+
+  override fun convertToA(b: Double): Hz {
+	return Hz(b)
+  }
+
+}
+
+
 
 private typealias UpperBound = Any
 

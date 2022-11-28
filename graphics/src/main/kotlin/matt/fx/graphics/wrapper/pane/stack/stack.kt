@@ -1,8 +1,11 @@
 package matt.fx.graphics.wrapper.pane.stack
 
 import javafx.beans.property.ObjectProperty
+import javafx.geometry.Insets
 import javafx.geometry.Pos
+import javafx.scene.Node
 import javafx.scene.layout.StackPane
+import matt.fx.graphics.tfx.nodes.MarginableConstraints
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attach
@@ -25,3 +28,27 @@ open class StackPaneWrapper<C: NodeWrapper>(node: StackPane = StackPane()): Pane
 
   fun alignmentProperty(): ObjectProperty<Pos> = node.alignmentProperty()
 }
+
+
+class StackpaneConstraint(
+  node: Node,
+  override var margin: Insets? = StackPane.getMargin(node),
+  var alignment: Pos? = null
+
+): MarginableConstraints() {
+  fun <T: Node> applyToNode(node: T): T {
+	margin?.let { StackPane.setMargin(node, it) }
+	alignment?.let { StackPane.setAlignment(node, it) }
+	return node
+  }
+}
+
+
+
+
+inline fun <T: Node> T.stackpaneConstraints(op: (StackpaneConstraint.()->Unit)): T {
+  val c = StackpaneConstraint(this)
+  c.op()
+  return c.applyToNode(this)
+}
+

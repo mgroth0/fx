@@ -1,7 +1,11 @@
 package matt.fx.graphics.wrapper.pane.border
 
+import javafx.geometry.Insets
+import javafx.geometry.Pos
+import javafx.scene.Node
 import javafx.scene.layout.BorderPane
 import matt.fx.graphics.service.wrapped
+import matt.fx.graphics.tfx.nodes.MarginableConstraints
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NW
 import matt.fx.graphics.wrapper.node.NodeWrapper
@@ -71,3 +75,27 @@ open class BorderPaneWrapper<C: NodeWrapper>(node: BorderPane = BorderPane()): P
   }
 
 }
+
+
+
+/**
+ * Access BorderPane constraints to manipulate and apply on this control
+ */
+inline fun <T: Node> T.borderpaneConstraints(op: (BorderPaneConstraint.()->Unit)): T {
+  val bpc = BorderPaneConstraint(this)
+  bpc.op()
+  return bpc.applyToNode(this)
+}
+
+class BorderPaneConstraint(
+  node: Node,
+  override var margin: Insets? = BorderPane.getMargin(node),
+  var alignment: Pos? = null
+): MarginableConstraints() {
+  fun <T: Node> applyToNode(node: T): T {
+	margin.let { BorderPane.setMargin(node, it) }
+	alignment?.let { BorderPane.setAlignment(node, it) }
+	return node
+  }
+}
+

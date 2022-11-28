@@ -11,9 +11,7 @@ import javafx.scene.layout.Region
 import javafx.scene.layout.StackPane
 import javafx.scene.paint.Color
 import matt.async.safe.with
-import matt.fx.control.wrapper.chart.axis.value.moregenval.ValueAxisConverter
 import matt.fx.control.wrapper.chart.axis.value.number.NumberAxisWrapper
-import matt.fx.control.wrapper.chart.axis.value.number.minimalNumberAxis
 import matt.fx.control.wrapper.chart.line.highperf.HighPerformanceLineChart
 import matt.fx.control.wrapper.chart.xy.series.SeriesWrapper
 import matt.fx.control.wrapper.label.label
@@ -41,13 +39,13 @@ import matt.obs.math.double.op.times
 
 
 fun <X: MathAndComparable<X>, Y: MathAndComparable<Y>> ET.annoChart(
-  xConverter: ValueAxisConverter<X>,
-  yConverter: ValueAxisConverter<Y>,
+  xAxis: NumberAxisWrapper<X>,
+  yAxis: NumberAxisWrapper<Y>,
   op: AnnotateableChart<X, Y>.()->Unit = {}
 ) = AnnotateableChart(
   extraHighPerf = false,
-  xAxis = minimalNumberAxis<X>(xConverter),
-  yAxis = minimalNumberAxis<Y>(yConverter)
+  xAxis = xAxis.minimal(),
+  yAxis = yAxis.minimal(),
 ).attachTo(this, op)
 
 open class AnnotateableChart<X: MathAndComparable<X>, Y: MathAndComparable<Y>> private constructor(

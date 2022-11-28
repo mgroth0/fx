@@ -13,6 +13,7 @@ import javafx.util.Duration
 import javafx.util.StringConverter
 import matt.fx.control.wrapper.chart.axis.value.moregenval.MoreGenericValueAxis
 import matt.fx.control.wrapper.chart.axis.value.moregenval.ValueAxisConverter
+import matt.fx.graphics.anim.interp.MyInterpolator.Companion.MY_DEFAULT_INTERPOLATOR
 import matt.lang.NEVER
 import matt.obs.prop.BindableProperty
 
@@ -166,13 +167,13 @@ class MoreGenericNumberAxis<T: Any>(
 	  currentAnimationID = animator.animate(
 		KeyFrame(
 		  Duration.ZERO,
-		  KeyValue(currentLowerBound, oldLowerBound.convert()),
-		  KeyValue(scalePropertyImpl(), getScale())
+		  KeyValue(currentLowerBound, oldLowerBound.convert(), MY_DEFAULT_INTERPOLATOR),
+		  KeyValue(scalePropertyImpl(), getScale(), MY_DEFAULT_INTERPOLATOR)
 		),
 		KeyFrame(
 		  Duration.millis(700.0),
-		  KeyValue(currentLowerBound, lowerBound),
-		  KeyValue(scalePropertyImpl(), scale)
+		  KeyValue(currentLowerBound, lowerBound, MY_DEFAULT_INTERPOLATOR),
+		  KeyValue(scalePropertyImpl(), scale, MY_DEFAULT_INTERPOLATOR)
 		)
 	  )
 	} else {
@@ -291,7 +292,7 @@ class MoreGenericNumberAxis<T: Any>(
   override fun measureTickMarkSize(value: T, range: Any): Dimension2D {
 	@Suppress("UNCHECKED_CAST", "UNUSED_VARIABLE")
 	val rangeProps = range as Array<Any>
-//	val formatter = rangeProps[4] as String
+	//	val formatter = rangeProps[4] as String
 	return measureTickMarkSize(value, tickLabelRotation/*, formatter*/)
   }
 
@@ -303,7 +304,11 @@ class MoreGenericNumberAxis<T: Any>(
    * @param numFormatter The number formatter
    * @return size of tick mark label for given value
    */
-  private fun measureTickMarkSize(value: T, rotation: Double, @Suppress("UNUSED_PARAMETER") numFormatter: Unit = Unit): Dimension2D {
+  private fun measureTickMarkSize(
+	value: T,
+	rotation: Double,
+	@Suppress("UNUSED_PARAMETER") numFormatter: Unit = Unit
+  ): Dimension2D {
 	val labelText: String
 	val formatter = tickLabelFormatter
 	if (formatter.value == null) formatter.value = defaultFormatter
@@ -525,11 +530,11 @@ class MoreGenericNumberAxis<T: Any>(
 	override fun fromString(string: String): T {
 	  NEVER
 	  /*try {*/
-//	  val prefixLength = if ((prefix == null)) 0 else prefix!!.length
-//	  val suffixLength = if ((suffix == null)) 0 else suffix!!.length
-//	  return converter.convertToA(
-//		formatter.parse(string.substring(prefixLength, string.length - suffixLength)).toDouble()
-//	  )
+	  //	  val prefixLength = if ((prefix == null)) 0 else prefix!!.length
+	  //	  val suffixLength = if ((suffix == null)) 0 else suffix!!.length
+	  //	  return converter.convertToA(
+	  //		formatter.parse(string.substring(prefixLength, string.length - suffixLength)).toDouble()
+	  //	  )
 	  /*} catch (e: ParseException) {
 		return null
 	  }*/

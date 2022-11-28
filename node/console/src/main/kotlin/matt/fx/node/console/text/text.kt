@@ -6,8 +6,8 @@ import javafx.scene.text.Text
 import matt.async.schedule.AccurateTimer
 import matt.fx.graphics.font.fixed
 import matt.fx.graphics.lang.removeAllButLastN
-import matt.fx.graphics.tfx.animation.keyframe
-import matt.fx.graphics.tfx.animation.timeline
+import matt.fx.graphics.anim.animation.keyframe
+import matt.fx.graphics.anim.animation.timeline
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.text.TextWrapper
 import matt.fx.graphics.wrapper.text.textlike.applyConsoleStyle

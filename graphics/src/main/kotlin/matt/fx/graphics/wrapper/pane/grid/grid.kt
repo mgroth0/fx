@@ -1,11 +1,16 @@
 package matt.fx.graphics.wrapper.pane.grid
 
 import javafx.collections.ObservableList
+import javafx.geometry.HPos
+import javafx.geometry.Insets
+import javafx.geometry.VPos
 import javafx.scene.Node
 import javafx.scene.layout.ColumnConstraints
 import javafx.scene.layout.GridPane
+import javafx.scene.layout.Priority
 import javafx.scene.layout.RowConstraints
 import matt.fx.graphics.tfx.nodes.GridPaneConstraint
+import matt.fx.graphics.tfx.nodes.MarginableConstraints
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NW
 import matt.fx.graphics.wrapper.node.NodeWrapper
@@ -97,3 +102,60 @@ open class GridPaneWrapper<C: NodeWrapper>(node: GridPane = GridPane()): PaneWra
 }
 
 
+
+
+
+class GridPaneConstraint(
+  node: Node,
+  var columnIndex: Int? = null,
+  var rowIndex: Int? = null,
+  var hGrow: Priority? = null,
+  var vGrow: Priority? = null,
+  override var margin: Insets? = GridPane.getMargin(node),
+  var fillHeight: Boolean? = null,
+  var fillWidth: Boolean? = null,
+  var hAlignment: HPos? = null,
+  var vAlignment: VPos? = null,
+  var columnSpan: Int? = null,
+  var rowSpan: Int? = null
+
+): MarginableConstraints() {
+  var vhGrow: Priority? = null
+	set(value) {
+	  vGrow = value
+	  hGrow = value
+	  field = value
+	}
+
+  var fillHeightWidth: Boolean? = null
+	set(value) {
+	  fillHeight = value
+	  fillWidth = value
+	  field = value
+	}
+
+  fun columnRowIndex(columnIndex: Int, rowIndex: Int) {
+	this.columnIndex = columnIndex
+	this.rowIndex = rowIndex
+  }
+
+  fun fillHeightWidth(fill: Boolean) {
+	fillHeight = fill
+	fillWidth = fill
+  }
+
+  fun <T: NodeWrapper> applyToNode(node: T): T {
+	columnIndex?.let { GridPane.setColumnIndex(node.node, it) }
+	rowIndex?.let { GridPane.setRowIndex(node.node, it) }
+	hGrow?.let { GridPane.setHgrow(node.node, it) }
+	vGrow?.let { GridPane.setVgrow(node.node, it) }
+	margin.let { GridPane.setMargin(node.node, it) }
+	fillHeight?.let { GridPane.setFillHeight(node.node, it) }
+	fillWidth?.let { GridPane.setFillWidth(node.node, it) }
+	hAlignment?.let { GridPane.setHalignment(node.node, it) }
+	vAlignment?.let { GridPane.setValignment(node.node, it) }
+	columnSpan?.let { GridPane.setColumnSpan(node.node, it) }
+	rowSpan?.let { GridPane.setRowSpan(node.node, it) }
+	return node
+  }
+}

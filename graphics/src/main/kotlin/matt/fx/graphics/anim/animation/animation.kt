@@ -1,4 +1,4 @@
-package matt.fx.graphics.tfx.animation
+package matt.fx.graphics.anim.animation
 
 /*slightly modified code I stole from tornadofx*/
 
@@ -19,12 +19,13 @@ import javafx.scene.paint.Paint
 import javafx.scene.shape.Shape
 import javafx.scene.transform.Rotate
 import javafx.util.Duration
+import matt.fx.graphics.anim.animation.ViewTransition.Direction.DOWN
+import matt.fx.graphics.anim.animation.ViewTransition.Direction.LEFT
+import matt.fx.graphics.anim.animation.ViewTransition.Direction.RIGHT
+import matt.fx.graphics.anim.animation.ViewTransition.Direction.UP
+import matt.fx.graphics.anim.interp.MyInterpolator
 import matt.fx.graphics.service.wrapped
-import matt.fx.graphics.tfx.animation.ViewTransition.Direction.DOWN
-import matt.fx.graphics.tfx.animation.ViewTransition.Direction.LEFT
-import matt.fx.graphics.tfx.animation.ViewTransition.Direction.RIGHT
-import matt.fx.graphics.tfx.animation.ViewTransition.Direction.UP
-import matt.fx.graphics.tfx.nodes.point
+import matt.fx.graphics.vector.point
 import matt.fx.graphics.wrapper.canvas.CanvasWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.isTransitioning
@@ -72,7 +73,7 @@ fun timeline(play: Boolean = true, op: (Timeline).()->Unit) = Timeline().apply {
  */
 fun NodeWrapper.move(
   time: Duration, destination: Point2D,
-  easing: Interpolator = Interpolator.EASE_BOTH, reversed: Boolean = false, play: Boolean = true,
+  easing: MyInterpolator = MyInterpolator.EASE_BOTH, reversed: Boolean = false, play: Boolean = true,
   op: TranslateTransition.()->Unit = {}
 ): TranslateTransition {
   val target: Point2D
@@ -106,7 +107,7 @@ fun NodeWrapper.move(
  */
 fun NodeWrapper.rotate(
   time: Duration, angle: Number,
-  easing: Interpolator = Interpolator.EASE_BOTH, reversed: Boolean = false, play: Boolean = true,
+  easing: MyInterpolator = MyInterpolator.EASE_BOTH, reversed: Boolean = false, play: Boolean = true,
   op: RotateTransition.()->Unit = {}
 ): RotateTransition {
   val target: Double
@@ -138,7 +139,7 @@ fun NodeWrapper.rotate(
  */
 fun NodeWrapper.scale(
   time: Duration, scale: Point2D,
-  easing: Interpolator = Interpolator.EASE_BOTH, reversed: Boolean = false, play: Boolean = true,
+  easing: MyInterpolator = MyInterpolator.EASE_BOTH, reversed: Boolean = false, play: Boolean = true,
   op: ScaleTransition.()->Unit = {}
 ): ScaleTransition {
   val target: Point2D
@@ -172,7 +173,7 @@ fun NodeWrapper.scale(
  */
 fun NodeWrapper.fade(
   time: Duration, opacity: Number,
-  easing: Interpolator = Interpolator.EASE_BOTH, reversed: Boolean = false, play: Boolean = true,
+  easing: MyInterpolator = MyInterpolator.EASE_BOTH, reversed: Boolean = false, play: Boolean = true,
   op: FadeTransition.()->Unit = {}
 ): FadeTransition {
   val target: Double
@@ -212,7 +213,7 @@ fun NodeWrapper.transform(
   angle: Number,
   scale: Point2D,
   opacity: Number,
-  easing: Interpolator = Interpolator.EASE_BOTH,
+  easing: MyInterpolator = MyInterpolator.EASE_BOTH,
   reversed: Boolean = false,
   play: Boolean = true,
   op: ParallelTransition.()->Unit = {}
@@ -298,7 +299,7 @@ fun Iterable<Animation>.playSequential(
 
 fun Shape.animateFill(
   time: Duration, from: Color, to: Color,
-  easing: Interpolator = Interpolator.EASE_BOTH, reversed: Boolean = false, play: Boolean = true,
+  easing: MyInterpolator = MyInterpolator.EASE_BOTH, reversed: Boolean = false, play: Boolean = true,
   op: FillTransition.()->Unit = {}
 ): FillTransition {
   return FillTransition(time, this, from, to).apply {
@@ -314,7 +315,7 @@ fun Shape.animateFill(
 
 fun Shape.animateStroke(
   time: Duration, from: Color, to: Color,
-  easing: Interpolator = Interpolator.EASE_BOTH, reversed: Boolean = false, play: Boolean = true,
+  easing: MyInterpolator = MyInterpolator.EASE_BOTH, reversed: Boolean = false, play: Boolean = true,
   op: StrokeTransition.()->Unit = {}
 ): StrokeTransition {
   return StrokeTransition(time, this, from, to).apply {
@@ -330,7 +331,7 @@ fun Shape.animateStroke(
 
 fun Node.follow(
   time: Duration, path: Shape,
-  easing: Interpolator = Interpolator.EASE_BOTH, reversed: Boolean = false, play: Boolean = true,
+  easing: MyInterpolator = MyInterpolator.EASE_BOTH, reversed: Boolean = false, play: Boolean = true,
   op: PathTransition.()->Unit = {}
 ): PathTransition {
   return PathTransition(time, path, this).apply {
@@ -365,8 +366,8 @@ class KeyFrameBuilder(val duration: Duration) {
 	keyValues.add(keyValue)
   }
 
-  fun <T> keyvalue(writableValue: WritableValue<T>, endValue: T, interpolator: Interpolator? = null): KeyValue {
-	val keyValue = interpolator?.let { KeyValue(writableValue, endValue, it) } ?: KeyValue(writableValue, endValue)
+  fun <T> keyvalue(writableValue: WritableValue<T>, endValue: T, interpolator: MyInterpolator = MyInterpolator.MY_DEFAULT_INTERPOLATOR): KeyValue {
+	val keyValue = interpolator.let { KeyValue(writableValue, endValue, it) }
 	this += keyValue
 	return keyValue
   }
@@ -378,7 +379,7 @@ class KeyFrameBuilder(val duration: Duration) {
 fun <T> WritableValue<T>.animate(
   endValue: T,
   duration: Duration,
-  interpolator: Interpolator? = null,
+  interpolator: MyInterpolator = MyInterpolator.MY_DEFAULT_INTERPOLATOR,
   op: Timeline.()->Unit = {}
 ) {
   val writableValue = this
@@ -591,8 +592,8 @@ abstract class ViewTransition {
 	  current: NodeWrapper,
 	  replacement: NodeWrapper,
 	  stack: StackPaneWrapper<NodeWrapper>
-	) = current.fade(halfTime, 0, easing = Interpolator.EASE_IN, play = false)
-		.then(replacement.fade(halfTime, 0, easing = Interpolator.EASE_OUT, reversed = true, play = false))
+	) = current.fade(halfTime, 0, easing = MyInterpolator.EASE_IN, play = false)
+		.then(replacement.fade(halfTime, 0, easing = MyInterpolator.EASE_OUT, reversed = true, play = false))
 
 	override fun stack(current: NodeWrapper, replacement: NodeWrapper) = StackPaneWrapper<NodeWrapper>(bg, replacement, current)
 
@@ -789,8 +790,8 @@ abstract class ViewTransition {
 	val targetAxis: Point3D = (if (vertical) Rotate.X_AXIS else Rotate.Y_AXIS)
 
 	override fun create(current: NodeWrapper, replacement: NodeWrapper, stack: StackPaneWrapper<NodeWrapper>): Animation {
-	  return current.rotate(halfTime, 90, easing = Interpolator.EASE_IN, play = false) { axis = targetAxis }.then(
-		replacement.rotate(halfTime, 90, easing = Interpolator.EASE_OUT, reversed = true, play = false) {
+	  return current.rotate(halfTime, 90, easing = MyInterpolator.EASE_IN, play = false) { axis = targetAxis }.then(
+		replacement.rotate(halfTime, 90, easing = MyInterpolator.EASE_OUT, reversed = true, play = false) {
 		  axis = targetAxis
 		}
 	  )
@@ -818,7 +819,7 @@ abstract class ViewTransition {
 	  angle = rotations.toDouble()*360,
 	  scale = Point2D.ZERO,
 	  opacity = 1,
-	  easing = Interpolator.EASE_IN,
+	  easing = MyInterpolator.EASE_IN,
 	  reversed = true,
 	  play = false
 	)

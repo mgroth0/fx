@@ -1,8 +1,11 @@
 package matt.fx.graphics.wrapper.pane.vbox
 
+import javafx.geometry.Insets
 import javafx.geometry.Pos
+import javafx.scene.Node
 import javafx.scene.layout.Priority
 import javafx.scene.layout.VBox
+import matt.fx.graphics.tfx.nodes.MarginableConstraints
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NW
 import matt.fx.graphics.wrapper.node.NodeWrapper
@@ -53,3 +56,28 @@ open class VBoxWrapperImpl<C: NodeWrapper>(node: VBox = VBox()): BoxWrapperImpl<
 
 fun VBoxWrapperImpl<PaneWrapper<*>>.spacer(prio: Priority = Priority.ALWAYS, op: PaneWrapperImpl<*, *>.()->Unit = {}) =
   attach(SimplePaneWrapper<NodeWrapper>().apply { vGrow = prio }, op)
+
+
+
+
+class VBoxConstraint(
+  node: Node,
+  override var margin: Insets? = VBox.getMargin(node),
+  var vGrow: Priority? = null
+
+): MarginableConstraints() {
+  fun <T: Node> applyToNode(node: T): T {
+    margin?.let { VBox.setMargin(node, it) }
+    vGrow?.let { VBox.setVgrow(node, it) }
+    return node
+  }
+}
+
+
+
+inline fun <T: Node> T.vboxConstraints(op: (VBoxConstraint.()->Unit)): T {
+  val c = VBoxConstraint(this)
+  c.op()
+  return c.applyToNode(this)
+}
+

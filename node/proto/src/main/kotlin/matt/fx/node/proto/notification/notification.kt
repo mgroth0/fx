@@ -7,8 +7,9 @@ import javafx.scene.paint.Color
 import javafx.stage.Screen
 import matt.fx.control.mscene.MScene
 import matt.fx.control.mstage.MStage
-import matt.fx.graphics.tfx.animation.keyframe
-import matt.fx.graphics.tfx.animation.timeline
+import matt.fx.graphics.anim.animation.keyframe
+import matt.fx.graphics.anim.animation.timeline
+import matt.fx.graphics.anim.interp.MyInterpolator
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
 import matt.fx.graphics.wrapper.text.text
@@ -104,7 +105,7 @@ fun notification(
 	  Platform.runLater {
 		timeline {
 		  keyframe(0.75.sec.toFXDuration()) {
-			keyvalue(fakeXProp.createWritableFXPropWrapper(), screen.bounds.minX + 30.0, Interpolator.EASE_BOTH)
+			keyvalue(fakeXProp.createWritableFXPropWrapper(), screen.bounds.minX + 30.0, MyInterpolator.EASE_BOTH)
 		  }
 		}
 	  }

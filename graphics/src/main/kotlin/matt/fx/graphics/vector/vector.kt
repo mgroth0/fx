@@ -218,3 +218,9 @@ val Point3D.yzz: Point3D
 
 val Point3D.zzz: Point3D
   get() = Point3D(this.z, this.z, this.z)
+
+
+
+fun point(x: Number, y: Number) = Point2D(x.toDouble(), y.toDouble())
+fun point(x: Number, y: Number, z: Number) = Point3D(x.toDouble(), y.toDouble(), z.toDouble())
+infix fun Number.xy(y: Number) = Point2D(toDouble(), y.toDouble())
