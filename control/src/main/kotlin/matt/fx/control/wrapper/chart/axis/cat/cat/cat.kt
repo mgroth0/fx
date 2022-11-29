@@ -303,16 +303,14 @@ class CategoryAxisForCatAxisWrapper: AxisForPackagePrivateProps<String> {
    * @param range A range object returned from autoRange()
    * @param animate If true animate the change in range
    */
-  override fun setRange(range: Any, animate: Boolean) {
-	@Suppress("UNCHECKED_CAST")
-	val rangeArray = range as Array<Any>
+  override fun setRange(range: RangeProps, animate: Boolean) {
+	val rangeArray = range as CategoryRangeProps
 
-	@Suppress("UNCHECKED_CAST")
-	val categories = rangeArray[0] as List<String>
+	val categories = rangeArray.allDataCategories
 	//        if (categories.isEmpty()) new java.lang.Throwable().printStackTrace();
-	val newCategorySpacing = rangeArray[1] as Double
-	val newFirstCategoryPos = rangeArray[2] as Double
-	effectiveTickLabelRotation = (rangeArray[3] as Double)
+	val newCategorySpacing = rangeArray.newCategorySpacing
+	val newFirstCategoryPos = rangeArray.newFirstPos
+	effectiveTickLabelRotation = rangeArray.tickLabelRotation
 	changeIsLocal = true
 	setCategories(FXCollections.observableArrayList(categories))
 	changeIsLocal = false
@@ -396,7 +394,6 @@ class CategoryAxisForCatAxisWrapper: AxisForPackagePrivateProps<String> {
    * @param length The length of the axis in display units
    * @return A list of tick marks that fit along the axis if it was the given length
    */
-  @Suppress("UNCHECKED_CAST")
   override fun calculateTickValues(length: Double, range: RangeProps): List<String> {
 	return (range as CategoryRangeProps).allDataCategories
   }
