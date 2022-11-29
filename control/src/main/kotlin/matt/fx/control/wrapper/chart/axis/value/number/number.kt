@@ -63,15 +63,18 @@ class NumberAxisWrapper<T: MathAndComparable<T>>(
 
 }
 
+/*
 
 class OldNumberAxisWrapper(node: NumberAxis = NumberAxis()): OldValueAxisWrapper<Number>(node) {
 
   //  constructor(converter: ValueAxisConverter<T>): this(MoreGenericNumberAxis(converter))
 
-  /*val tickUnitProperty by lazy { node.tickUnit }
-  var tickUnit by tickUnitProperty*/
+  */
+/*val tickUnitProperty by lazy { node.tickUnit }
+  var tickUnit by tickUnitProperty*//*
+
 
 
   //  fun maximizeTickUnit() = node.maximizeTickUnit()
 
-}
+}*/
