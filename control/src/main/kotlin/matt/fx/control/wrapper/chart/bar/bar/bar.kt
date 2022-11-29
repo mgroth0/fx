@@ -571,7 +571,7 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
   /*
      * Super-lazy instantiation pattern from Bill Pugh.
      */
-  private object StyleableProperties {
+  internal object StyleableProperties {
 	internal val BAR_GAP: CssMetaData<BarChartForWrapper<*, *>, Number> = object: CssMetaData<BarChartForWrapper<*, *>, Number>(
 	  "-fx-bar-gap",
 	  SizeConverter.getInstance(), 4.0

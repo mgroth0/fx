@@ -1,6 +1,5 @@
 package matt.fx.control.wrapper.chart.bubble
 
-import matt.fx.control.wrapper.chart.bubble.bubble.BubbleChart
 import matt.fx.control.wrapper.chart.axis.MAxis
 import matt.fx.control.wrapper.chart.bubble.bubble.BubbleChartForWrapper
 import matt.fx.control.wrapper.chart.xy.XYChartWrapper
