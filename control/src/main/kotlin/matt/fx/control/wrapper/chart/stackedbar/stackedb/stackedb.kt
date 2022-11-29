@@ -26,12 +26,8 @@ import javafx.geometry.Orientation.HORIZONTAL
 import javafx.geometry.Orientation.VERTICAL
 import javafx.scene.AccessibleRole.TEXT
 import javafx.scene.Node
-import javafx.scene.chart.CategoryAxis
-import javafx.scene.chart.StackedBarChart
-import javafx.scene.chart.ValueAxis
 import javafx.scene.layout.StackPane
 import javafx.util.Duration
-import matt.fx.control.wrapper.chart.axis.cat.CategoryAxisWrapper
 import matt.fx.control.wrapper.chart.axis.cat.cat.CategoryAxisForCatAxisWrapper
 import matt.fx.control.wrapper.chart.axis.value.axis.AxisForPackagePrivateProps
 import matt.fx.control.wrapper.chart.axis.value.moregenval.MoreGenericValueAxis

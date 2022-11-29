@@ -1,8 +1,7 @@
 package matt.fx.control.wrapper.chart.stackedbar
 
-import javafx.scene.chart.StackedBarChart
-import matt.fx.control.wrapper.chart.stackedbar.stackedb.StackedBarChartForWrapper
 import matt.fx.control.wrapper.chart.axis.MAxis
+import matt.fx.control.wrapper.chart.stackedbar.stackedb.StackedBarChartForWrapper
 import matt.fx.control.wrapper.chart.xy.XYChartWrapper
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.attachTo
