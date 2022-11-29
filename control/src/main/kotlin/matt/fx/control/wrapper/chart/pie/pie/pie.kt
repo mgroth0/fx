@@ -1,27 +1,3 @@
-/*
- * Copyright (c) 2010, 2021, Oracle and/or its affiliates. All rights reserved.
- * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
- *
- * This code is free software; you can redistribute it and/or modify it
- * under the terms of the GNU General Public License version 2 only, as
- * published by the Free Software Foundation.  Oracle designates this
- * particular file as subject to the "Classpath" exception as provided
- * by Oracle in the LICENSE file that accompanied this code.
- *
- * This code is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
- * version 2 for more details (a copy is included in the LICENSE file that
- * accompanied this code).
- *
- * You should have received a copy of the GNU General Public License version
- * 2 along with this work; if not, write to the Free Software Foundation,
- * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
- *
- * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
- * or visit www.oracle.com if you need additional information or have any
- * questions.
- */
 package matt.fx.control.wrapper.chart.pie.pie
 
 import com.sun.javafx.charts.Legend
@@ -63,7 +39,6 @@ import javafx.geometry.Side.LEFT
 import javafx.geometry.Side.RIGHT
 import javafx.scene.AccessibleRole.TEXT
 import javafx.scene.Node
-import javafx.scene.chart.Chart
 import javafx.scene.layout.Region
 import javafx.scene.shape.Arc
 import javafx.scene.shape.ArcTo
@@ -76,6 +51,7 @@ import javafx.scene.text.Text
 import javafx.scene.transform.Scale
 import javafx.util.Duration
 import matt.fx.control.wrapper.chart.line.highperf.relinechart.xy.chart.ChartForPrivateProps
+import matt.fx.control.wrapper.chart.pie.pie.PieChartForWrapper.StyleableProperties.classCssMetaData
 import java.util.BitSet
 import java.util.Collections
 import java.util.Objects
@@ -129,7 +105,7 @@ class PieChartForWrapper @JvmOverloads constructor(data: ObservableList<Data> = 
 	  // recreate linked list & set chart on new data
 	  for (i in c.getFrom() until c.getTo()) {
 		val item: Data = getData()!!.get(i)
-		item.setChart(this@PieChart)
+		item.setChart(this@PieChartForWrapper)
 		if (begin == null) {
 		  begin = item
 		  begin!!.next = null
@@ -172,7 +148,7 @@ class PieChartForWrapper @JvmOverloads constructor(data: ObservableList<Data> = 
   }
   // -------------- PUBLIC PROPERTIES ----------------------------------------
   /** PieCharts data  */
-  private val data: ObjectProperty<ObservableList<Data>> = object: ObjectPropertyBase<ObservableList<Data?>?>() {
+  private val data: ObjectProperty<ObservableList<Data>> = object: ObjectPropertyBase<ObservableList<Data>>() {
 	private var old: ObservableList<Data>? = null
 	override fun invalidated() {
 	  val current: ObservableList<Data>? = value
@@ -185,7 +161,7 @@ class PieChartForWrapper @JvmOverloads constructor(data: ObservableList<Data> = 
 		val toIndex = current?.size ?: 0
 		// let data listener know all old data have been removed and new data that has been added
 		if (toIndex > 0 || !removed.isEmpty()) {
-		  dataChangeListener.onChanged(object: NonIterableChange<Data?>(0, toIndex, current) {
+		  dataChangeListener.onChanged(object: NonIterableChange<Data>(0, toIndex, current) {
 			override fun getRemoved(): List<Data> {
 			  return removed
 			}
@@ -199,11 +175,11 @@ class PieChartForWrapper @JvmOverloads constructor(data: ObservableList<Data> = 
 			}
 		  })
 		}
-	  } else if (old != null && old.size > 0) {
+	  } else if (old?.let { it.size > 0 } ?: false) {
 		// let series listener know all old series have been removed
 		dataChangeListener.onChanged(object: NonIterableChange<Data?>(0, 0, current) {
 		  override fun getRemoved(): List<Data> {
-			return old
+			return old!!
 		  }
 
 		  override fun wasPermutated(): Boolean {
@@ -219,7 +195,7 @@ class PieChartForWrapper @JvmOverloads constructor(data: ObservableList<Data> = 
 	}
 
 	override fun getBean(): Any {
-	  return this@PieChart
+	  return this@PieChartForWrapper
 	}
 
 	override fun getName(): String {
@@ -247,14 +223,14 @@ class PieChartForWrapper @JvmOverloads constructor(data: ObservableList<Data> = 
 	}
 
 	override fun getBean(): Any {
-	  return this@PieChart
+	  return this@PieChartForWrapper
 	}
 
 	override fun getName(): String {
 	  return "startAngle"
 	}
 
-	override fun getCssMetaData(): CssMetaData<PieChart, Number> {
+	override fun getCssMetaData(): CssMetaData<PieChartForWrapper, Number> {
 	  return StyleableProperties.START_ANGLE
 	}
   }
@@ -279,14 +255,14 @@ class PieChartForWrapper @JvmOverloads constructor(data: ObservableList<Data> = 
 	}
 
 	override fun getBean(): Any {
-	  return this@PieChart
+	  return this@PieChartForWrapper
 	}
 
 	override fun getName(): String {
 	  return "clockwise"
 	}
 
-	override fun getCssMetaData(): CssMetaData<PieChart, Boolean> {
+	override fun getCssMetaData(): CssMetaData<PieChartForWrapper, Boolean> {
 	  return StyleableProperties.CLOCKWISE
 	}
   }
@@ -311,14 +287,14 @@ class PieChartForWrapper @JvmOverloads constructor(data: ObservableList<Data> = 
 	}
 
 	override fun getBean(): Any {
-	  return this@PieChart
+	  return this@PieChartForWrapper
 	}
 
 	override fun getName(): String {
 	  return "labelLineLength"
 	}
 
-	override fun getCssMetaData(): CssMetaData<PieChart, Number> {
+	override fun getCssMetaData(): CssMetaData<PieChartForWrapper, Number> {
 	  return StyleableProperties.LABEL_LINE_LENGTH
 	}
   }
@@ -343,14 +319,14 @@ class PieChartForWrapper @JvmOverloads constructor(data: ObservableList<Data> = 
 	}
 
 	override fun getBean(): Any {
-	  return this@PieChart
+	  return this@PieChartForWrapper
 	}
 
 	override fun getName(): String {
 	  return "labelsVisible"
 	}
 
-	override fun getCssMetaData(): CssMetaData<PieChart, Boolean> {
+	override fun getCssMetaData(): CssMetaData<PieChartForWrapper, Boolean> {
 	  return StyleableProperties.LABELS_VISIBLE
 	}
   }
@@ -479,8 +455,8 @@ class PieChartForWrapper @JvmOverloads constructor(data: ObservableList<Data> = 
 			text.setOpacity(0.0)
 			// RT-23597 : item's chart might have been set to null if
 			// this item is added and removed before its add animation finishes.
-			if (item.getChart() == null) item.setChart(this@PieChart)
-			item.getChart()!!.getChartChildren().add(text)
+			if (item.getChart() == null) item.setChart(this@PieChartForWrapper)
+			item.getChart()!!.chartChildren.add(text)
 			val ft: FadeTransition = FadeTransition(Duration.millis(150.0), text)
 			ft.setToValue(1.0)
 			ft.play()
@@ -529,14 +505,14 @@ class PieChartForWrapper @JvmOverloads constructor(data: ObservableList<Data> = 
 		{ actionEvent: ActionEvent? ->
 		  // removing item
 		  colorBits.clear(item.defaultColorIndex)
-		  getChartChildren().remove(shape)
+		  chartChildren.remove(shape)
 		  // fade out label
 		  val ft: FadeTransition = FadeTransition(Duration.millis(150.0), item.textNode)
 		  ft.setFromValue(1.0)
 		  ft.setToValue(0.0)
 		  ft.setOnFinished(object: EventHandler<ActionEvent?> {
 			override fun handle(actionEvent: ActionEvent?) {
-			  getChartChildren().remove(item.textNode)
+			  chartChildren.remove(item.textNode)
 			  // remove chart references from old data - RT-22553
 			  item.setChart(null)
 			  removeDataItemRef(item)
@@ -576,7 +552,7 @@ class PieChartForWrapper @JvmOverloads constructor(data: ObservableList<Data> = 
 	  total += Math.abs(item.getCurrentPieValue())
 	  item = item.next
 	}
-	val scale: Double = if (total != 0.0) 360/total else 0
+	val scale: Double = if (total != 0.0) 360/total else 0.0
 
 	// calculate combined bounds of all labels & pie radius
 	var labelsX: DoubleArray? = null
@@ -601,11 +577,11 @@ class PieChartForWrapper @JvmOverloads constructor(data: ObservableList<Data> = 
 		item.textNode.transforms.clear()
 		val size =
 		  if (isClockwise()) -scale*Math.abs(item.getCurrentPieValue()) else scale*Math.abs(item.getCurrentPieValue())
-		labelAngles.get(index) = normalizeAngle(start + size/2)
+		labelAngles[index] = normalizeAngle(start + size/2)
 		val sproutX = calcX(labelAngles.get(index), getLabelLineLength(), 0.0)
 		val sproutY = calcY(labelAngles.get(index), getLabelLineLength(), 0.0)
-		labelsX.get(index) = sproutX
-		labelsY.get(index) = sproutY
+		labelsX[index] = sproutX
+		labelsY[index] = sproutY
 		xPad = Math.max(xPad, 2*(item.textNode.layoutBounds.width + LABEL_TICK_GAP + Math.abs(sproutX)))
 		if (sproutY > 0) { // on bottom
 		  yPad = Math.max(yPad, 2*Math.abs(sproutY + item.textNode.layoutBounds.maxY))
@@ -635,8 +611,8 @@ class PieChartForWrapper @JvmOverloads constructor(data: ObservableList<Data> = 
 		  pieRadius = MIN_PIE_RADIUS.toDouble()
 		  // apply scale to all label positions
 		  for (i in labelsX.indices) {
-			labelsX.get(i) = labelsX.get(i)*labelScale
-			labelsY.get(i) = labelsY.get(i)*labelScale
+			labelsX[i] = labelsX.get(i)*labelScale
+			labelsY[i] = labelsY.get(i)*labelScale
 		  }
 		}
 	  }
@@ -689,7 +665,7 @@ class PieChartForWrapper @JvmOverloads constructor(data: ObservableList<Data> = 
 			  item!!.textNode.getTransforms().add(
 				Scale(
 				  labelScale, labelScale,
-				  if (isLeftSide) item!!.textNode.getLayoutBounds().getWidth() else 0, 0.0
+				  if (isLeftSide) item!!.textNode.getLayoutBounds().getWidth() else 0.0, 0.0
 				)
 			  )
 			}
@@ -828,7 +804,7 @@ class PieChartForWrapper @JvmOverloads constructor(data: ObservableList<Data> = 
   private fun updateLegend() {
 	val legendNode = getLegend()
 	if (legendNode != null && legendNode !== legend) return  // RT-23596 dont update when user has set legend.
-	legend.isVertical = (legendSide == LEFT) || (legendSide == RIGHT)
+	legend.isVertical = (legendSide.value == LEFT) || (legendSide.value == RIGHT)
 	val legendList: MutableList<LegendItem> = ArrayList()
 	if (getData() != null) {
 	  for (item: Data in getData()!!) {
@@ -894,26 +870,26 @@ class PieChartForWrapper @JvmOverloads constructor(data: ObservableList<Data> = 
 	/**
 	 * Next pointer for the next data item : so we can do animation on data delete.
 	 */
-	val next: Data? = null
+	var next: Data? = null
 
 	/**
 	 * Default color index for this slice.
 	 */
-	val defaultColorIndex = 0
+	var defaultColorIndex = 0
 	// -------------- PUBLIC PROPERTIES ------------------------------------
 	/**
 	 * The chart which this data belongs to.
 	 */
-	private val chart = ReadOnlyObjectWrapper<PieChart?>(this, "chart")
-	fun getChart(): PieChart? {
+	private val chart = ReadOnlyObjectWrapper<PieChartForWrapper?>(this, "chart")
+	fun getChart(): PieChartForWrapper? {
 	  return chart.value
 	}
 
-	fun setChart(value: PieChart?) {
+	fun setChart(value: PieChartForWrapper?) {
 	  chart.value = value
 	}
 
-	fun chartProperty(): ReadOnlyObjectProperty<PieChart?> {
+	fun chartProperty(): ReadOnlyObjectProperty<PieChartForWrapper?> {
 	  return chart.readOnlyProperty
 	}
 
@@ -1069,71 +1045,63 @@ class PieChartForWrapper @JvmOverloads constructor(data: ObservableList<Data> = 
      * Super-lazy instantiation pattern from Bill Pugh.
      */
   private object StyleableProperties {
-	val CLOCKWISE: CssMetaData<PieChart, Boolean> = object: CssMetaData<PieChart, Boolean?>(
+	val CLOCKWISE: CssMetaData<PieChartForWrapper, Boolean> = object: CssMetaData<PieChartForWrapper, Boolean>(
 	  "-fx-clockwise",
 	  BooleanConverter.getInstance(), java.lang.Boolean.TRUE
 	) {
-	  override fun isSettable(node: PieChart): Boolean {
+	  override fun isSettable(node: PieChartForWrapper): Boolean {
 		return node.clockwise == null || !node.clockwise.isBound
 	  }
 
-	  override fun getStyleableProperty(node: PieChart): StyleableProperty<Boolean?> {
+	  override fun getStyleableProperty(node: PieChartForWrapper): StyleableProperty<Boolean?> {
 		return node.clockwiseProperty() as StyleableProperty<Boolean?>
 	  }
 	}
-	val LABELS_VISIBLE: CssMetaData<PieChart, Boolean> = object: CssMetaData<PieChart, Boolean?>(
+	val LABELS_VISIBLE: CssMetaData<PieChartForWrapper, Boolean> = object: CssMetaData<PieChartForWrapper, Boolean>(
 	  "-fx-pie-label-visible",
 	  BooleanConverter.getInstance(), java.lang.Boolean.TRUE
 	) {
-	  override fun isSettable(node: PieChart): Boolean {
+	  override fun isSettable(node: PieChartForWrapper): Boolean {
 		return node.labelsVisible == null || !node.labelsVisible.isBound
 	  }
 
-	  override fun getStyleableProperty(node: PieChart): StyleableProperty<Boolean?> {
+	  override fun getStyleableProperty(node: PieChartForWrapper): StyleableProperty<Boolean?> {
 		return node.labelsVisibleProperty() as StyleableProperty<Boolean?>
 	  }
 	}
-	val LABEL_LINE_LENGTH: CssMetaData<PieChart, Number> = object: CssMetaData<PieChart, Number?>(
+	val LABEL_LINE_LENGTH: CssMetaData<PieChartForWrapper, Number> = object: CssMetaData<PieChartForWrapper, Number>(
 	  "-fx-label-line-length",
 	  SizeConverter.getInstance(), 20.0
 	) {
-	  override fun isSettable(node: PieChart): Boolean {
+	  override fun isSettable(node: PieChartForWrapper): Boolean {
 		return node.labelLineLength == null || !node.labelLineLength.isBound
 	  }
 
-	  override fun getStyleableProperty(node: PieChart): StyleableProperty<Number?> {
+	  override fun getStyleableProperty(node: PieChartForWrapper): StyleableProperty<Number?> {
 		return node.labelLineLengthProperty() as StyleableProperty<Number?>
 	  }
 	}
-	val START_ANGLE: CssMetaData<PieChart, Number> = object: CssMetaData<PieChart, Number?>(
+	val START_ANGLE: CssMetaData<PieChartForWrapper, Number> = object: CssMetaData<PieChartForWrapper, Number>(
 	  "-fx-start-angle",
 	  SizeConverter.getInstance(), 0.0
 	) {
-	  override fun isSettable(node: PieChart): Boolean {
+	  override fun isSettable(node: PieChartForWrapper): Boolean {
 		return node.startAngle == null || !node.startAngle.isBound
 	  }
 
-	  override fun getStyleableProperty(node: PieChart): StyleableProperty<Number?> {
+	  override fun getStyleableProperty(node: PieChartForWrapper): StyleableProperty<Number?> {
 		return node.startAngleProperty() as StyleableProperty<Number?>
 	  }
 	}
-	val classCssMetaData: List<CssMetaData<out Styleable?, *>>? = null
-	  /**
-	   * Gets the `CssMetaData` associated with this class, which may include the
-	   * `CssMetaData` of its superclasses.
-	   * @return the `CssMetaData`
-	   * @since JavaFX 8.0
-	   */
-	  get() = classCssMetaData
-
-	init {
+	val classCssMetaData: List<CssMetaData<out Styleable?, *>>? by lazy {
 	  val styleables: MutableList<CssMetaData<out Styleable?, *>> = ArrayList(getClassCssMetaData())
 	  styleables.add(CLOCKWISE)
 	  styleables.add(LABELS_VISIBLE)
 	  styleables.add(LABEL_LINE_LENGTH)
 	  styleables.add(START_ANGLE)
-	  classCssMetaData = Collections.unmodifiableList(styleables)
+	  Collections.unmodifiableList(styleables)
 	}
+
   }
 
   /**
@@ -1141,7 +1109,7 @@ class PieChartForWrapper @JvmOverloads constructor(data: ObservableList<Data> = 
    * @since JavaFX 8.0
    */
   override fun getCssMetaData(): List<CssMetaData<out Styleable?, *>>? {
-	return Companion.classCssMetaData
+	return classCssMetaData
   }
 
   companion object {

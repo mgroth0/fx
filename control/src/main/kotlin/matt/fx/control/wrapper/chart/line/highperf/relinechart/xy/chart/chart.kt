@@ -209,7 +209,7 @@ abstract class ChartForPrivateProps: Region() {
    *
    * @defaultValue Side.BOTTOM
    */
-  private val legendSide: ObjectProperty<Side> = object: StyleableObjectProperty<Side>(BOTTOM) {
+  internal val legendSide: ObjectProperty<Side> = object: StyleableObjectProperty<Side>(BOTTOM) {
 	override fun invalidated() {
 	  val legendSide = get()
 	  val legend = getLegend()
@@ -243,7 +243,7 @@ abstract class ChartForPrivateProps: Region() {
   }
 
   /** When true any data changes will be animated.  */
-  private val animated: BooleanProperty = SimpleBooleanProperty(this, "animated", true)
+  internal val animated: BooleanProperty = SimpleBooleanProperty(this, "animated", true)
 
   /**
    * Indicates whether data changes will be animated or not.

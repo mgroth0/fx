@@ -33,6 +33,7 @@ import javafx.scene.chart.ValueAxis
 import javafx.scene.chart.XYChart
 import javafx.scene.layout.StackPane
 import javafx.util.Duration
+import matt.fx.control.wrapper.chart.axis.value.axis.AxisForPackagePrivateProps
 import matt.fx.control.wrapper.chart.line.highperf.relinechart.xy.XYChartForPackagePrivateProps
 import matt.fx.graphics.anim.interp.MyInterpolator
 import java.util.Collections
@@ -43,8 +44,8 @@ import java.util.Collections
  * @since JavaFX 2.0
  */
 class BarChartForWrapper<X, Y> @JvmOverloads constructor(
-  @NamedArg("xAxis") xAxis: Axis<X>?,
-  @NamedArg("yAxis") yAxis: Axis<Y>?,
+  @NamedArg("xAxis") xAxis: AxisForPackagePrivateProps<X>?,
+  @NamedArg("yAxis") yAxis: AxisForPackagePrivateProps<Y>?,
   @NamedArg("data")
   data: ObservableList<Series<X, Y>?>? = FXCollections.observableArrayList()
 ):

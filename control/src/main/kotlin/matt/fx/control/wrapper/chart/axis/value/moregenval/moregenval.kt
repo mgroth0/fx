@@ -156,7 +156,7 @@ abstract class MoreGenericValueAxis<T: UpperBound>(
   }
 
   /** The scale factor from data units to visual units  */
-  protected val scale: ReadOnlyDoubleWrapper = object: ReadOnlyDoubleWrapper(this, "scale", 0.0) {
+  internal val scale: ReadOnlyDoubleWrapper = object: ReadOnlyDoubleWrapper(this, "scale", 0.0) {
 	override fun invalidated() {
 	  requestAxisLayout()
 	  measureInvalid = true

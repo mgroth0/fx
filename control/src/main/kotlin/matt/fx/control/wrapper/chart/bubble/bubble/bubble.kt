@@ -13,14 +13,13 @@ import javafx.scene.AccessibleAttribute
 import javafx.scene.AccessibleAttribute.TEXT
 import javafx.scene.AccessibleRole
 import javafx.scene.Node
-import javafx.scene.chart.Axis
-import javafx.scene.chart.CategoryAxis
-import javafx.scene.chart.NumberAxis
-import javafx.scene.chart.ValueAxis
-import javafx.scene.chart.XYChart
 import javafx.scene.layout.StackPane
 import javafx.scene.shape.Ellipse
 import javafx.util.Duration
+import matt.fx.control.wrapper.chart.axis.cat.cat.CategoryAxisForCatAxisWrapper
+import matt.fx.control.wrapper.chart.axis.value.axis.AxisForPackagePrivateProps
+import matt.fx.control.wrapper.chart.axis.value.moregenval.MoreGenericValueAxis
+import matt.fx.control.wrapper.chart.axis.value.number.moregennum.MoreGenericNumberAxis
 import matt.fx.control.wrapper.chart.line.highperf.relinechart.xy.XYChartForPackagePrivateProps
 
 /**
@@ -29,12 +28,12 @@ import matt.fx.control.wrapper.chart.line.highperf.relinechart.xy.XYChartForPack
  * @since JavaFX 2.0
  */
 class BubbleChartForWrapper<X, Y> @JvmOverloads constructor(
-  @NamedArg("xAxis") xAxis: Axis<X>?,
-  @NamedArg("yAxis") yAxis: Axis<Y>?,
+  @NamedArg("xAxis") xAxis: AxisForPackagePrivateProps<X>,
+  @NamedArg("yAxis") yAxis: AxisForPackagePrivateProps<Y>,
   @NamedArg("data")
-  data: ObservableList<Series<X, Y>?>? = FXCollections.observableArrayList()
+  data: ObservableList<Series<X, Y>> = FXCollections.observableArrayList()
 ):
-  XYChartForPackagePrivateProps<X?, Y?>(xAxis, yAxis) {
+  XYChartForPackagePrivateProps<X, Y>(xAxis, yAxis) {
   /**
    * Construct a new BubbleChart with the given axis and data. BubbleChart does not
    * use a Category Axis. Both X and Y axes should be of type NumberAxis.
@@ -52,7 +51,7 @@ class BubbleChartForWrapper<X, Y> @JvmOverloads constructor(
    * @param yAxis The y axis to use
    */
   init {
-	require(xAxis is ValueAxis<*> && yAxis is ValueAxis<*>) { "Axis type incorrect, X and Y should both be NumberAxis" }
+	require(xAxis is MoreGenericValueAxis<*> && yAxis is MoreGenericValueAxis<*>) { "Axis type incorrect, X and Y should both be NumberAxis" }
 	setData(data)
   }
 
@@ -60,24 +59,24 @@ class BubbleChartForWrapper<X, Y> @JvmOverloads constructor(
   override fun layoutPlotChildren() {
 	// update bubble positions
 	for (seriesIndex in 0 until dataSize) {
-	  val series = data[seriesIndex]
+	  val series = data.value[seriesIndex]
 	  //            for (Data<X,Y> item = series.begin; item != null; item = item.next) {
 	  val iter = getDisplayedDataIterator(series)
 	  while (iter.hasNext()) {
 		val item = iter.next()
-		val x = xAxis.getDisplayPosition(item.currentX)
-		val y = yAxis.getDisplayPosition(item.currentY)
+		val x = xAxis.getDisplayPosition(item.currentX.value)
+		val y = yAxis.getDisplayPosition(item.currentY.value)
 		if (java.lang.Double.isNaN(x) || java.lang.Double.isNaN(y)) {
 		  continue
 		}
-		val bubble = item.node
+		val bubble = item.node.value
 		var ellipse: Ellipse
 		if (bubble != null) {
 		  if (bubble is StackPane) {
-			val region = item.node as StackPane
+			val region = item.node.value as StackPane
 			ellipse = if (region.shape == null) {
 			  Ellipse(
-				getDoubleValue(item.extraValue, 1.0), getDoubleValue(item.extraValue, 1.0)
+				getDoubleValue(item.extraValue.value, 1.0), getDoubleValue(item.extraValue.value, 1.0)
 			  )
 			} else if (region.shape is Ellipse) {
 			  region.shape as Ellipse
@@ -85,9 +84,9 @@ class BubbleChartForWrapper<X, Y> @JvmOverloads constructor(
 			  return
 			}
 			ellipse.radiusX =
-			  getDoubleValue(item.extraValue, 1.0)*if (xAxis is NumberAxis) Math.abs((xAxis as NumberAxis).scale) else 1
+			  getDoubleValue(item.extraValue.value, 1.0)*if (xAxis is MoreGenericNumberAxis) Math.abs((xAxis as MoreGenericNumberAxis).scale.value) else 1.0
 			ellipse.radiusY =
-			  getDoubleValue(item.extraValue, 1.0)*if (yAxis is NumberAxis) Math.abs((yAxis as NumberAxis).scale) else 1
+			  getDoubleValue(item.extraValue.value, 1.0)*if (yAxis is MoreGenericNumberAxis) Math.abs((yAxis as MoreGenericNumberAxis).scale.value) else 1.0
 			// Note: workaround for RT-7689 - saw this in ProgressControlSkin
 			// The region doesn't update itself when the shape is mutated in place, so we
 			// null out and then restore the shape in order to force invalidation.
@@ -105,8 +104,8 @@ class BubbleChartForWrapper<X, Y> @JvmOverloads constructor(
 	}
   }
 
-  override fun dataItemAdded(series: Series<X?, Y?>, itemIndex: Int, item: Data<X?, Y?>) {
-	val bubble = createBubble(series, data.indexOf(series), item, itemIndex)
+  override fun dataItemAdded(series: Series<X, Y>, itemIndex: Int, item: Data<X, Y>) {
+	val bubble = createBubble(series, data.value.indexOf(series), item, itemIndex)
 	if (shouldAnimate()) {
 	  // fade in new bubble
 	  bubble.opacity = 0.0
@@ -119,8 +118,8 @@ class BubbleChartForWrapper<X, Y> @JvmOverloads constructor(
 	}
   }
 
-  override fun dataItemRemoved(item: Data<X?, Y?>, series: Series<X?, Y?>) {
-	val bubble = item.node
+  override fun dataItemRemoved(item: Data<X, Y>, series: Series<X, Y>) {
+	val bubble = item.node.value
 	if (shouldAnimate()) {
 	  // fade out old bubble
 	  val ft = FadeTransition(Duration.millis(500.0), bubble)
@@ -138,11 +137,11 @@ class BubbleChartForWrapper<X, Y> @JvmOverloads constructor(
   }
 
   /** {@inheritDoc}  */
-  override fun dataItemChanged(item: Data<X?, Y?>) {}
-  override fun seriesAdded(series: Series<X?, Y?>, seriesIndex: Int) {
+  override fun dataItemChanged(item: Data<X, Y>) {}
+  override fun seriesAdded(series: Series<X, Y>, seriesIndex: Int) {
 	// handle any data already in series
-	for (j in series.data.indices) {
-	  val item = series.data[j]
+	for (j in series.data.value.indices) {
+	  val item = series.data.value[j]
 	  val bubble = createBubble(series, seriesIndex, item, j)
 	  if (shouldAnimate()) {
 		bubble.opacity = 0.0
@@ -157,7 +156,7 @@ class BubbleChartForWrapper<X, Y> @JvmOverloads constructor(
 	}
   }
 
-  override fun seriesRemoved(series: Series<X?, Y?>) {
+  override fun seriesRemoved(series: Series<X, Y>) {
 	// remove all bubble nodes
 	if (shouldAnimate()) {
 	  val pt = ParallelTransition()
@@ -166,8 +165,8 @@ class BubbleChartForWrapper<X, Y> @JvmOverloads constructor(
 		  series
 		)
 	  }
-	  for (d in series.data) {
-		val bubble = d.node
+	  for (d in series.data.value) {
+		val bubble = d.node.value
 		// fade out old bubble
 		val ft = FadeTransition(Duration.millis(500.0), bubble)
 		ft.toValue = 0.0
@@ -179,8 +178,8 @@ class BubbleChartForWrapper<X, Y> @JvmOverloads constructor(
 	  }
 	  pt.play()
 	} else {
-	  for (d in series.data) {
-		val bubble = d.node
+	  for (d in series.data.value) {
+		val bubble = d.node.value
 		plotChildren.remove(bubble)
 	  }
 	  removeSeriesFromDisplay(series)
@@ -197,8 +196,8 @@ class BubbleChartForWrapper<X, Y> @JvmOverloads constructor(
    * @param itemIndex   The index of the data item in the series
    * @return Node used for given data item
    */
-  private fun createBubble(series: Series<X?, Y?>, seriesIndex: Int, item: Data<X?, Y?>, itemIndex: Int): Node {
-	var bubble = item.node
+  private fun createBubble(series: Series<X, Y>, seriesIndex: Int, item: Data<X, Y>, itemIndex: Int): Node {
+	var bubble = item.node.value
 	// check if bubble has already been created
 	if (bubble == null) {
 	  bubble = object: StackPane() {
@@ -206,7 +205,7 @@ class BubbleChartForWrapper<X, Y> @JvmOverloads constructor(
 		  return when (attribute) {
 			TEXT -> {
 			  val accText = accessibleText
-			  if (item.extraValue == null) {
+			  if (item.extraValue.value == null) {
 				accText
 			  } else {
 				accText + " Bubble radius is " + item.extraValue
@@ -220,7 +219,7 @@ class BubbleChartForWrapper<X, Y> @JvmOverloads constructor(
 	  bubble.setAccessibleRole(AccessibleRole.TEXT)
 	  bubble.setAccessibleRoleDescription("Bubble")
 	  bubble.focusTraversableProperty().bind(Platform.accessibilityActiveProperty())
-	  item.node = bubble
+	  item.node.value = bubble
 	}
 	// set bubble styles
 	bubble.styleClass.setAll(
@@ -240,29 +239,29 @@ class BubbleChartForWrapper<X, Y> @JvmOverloads constructor(
 	// to cover the whole area occupied by the bubble not just its center data value
 	val xa = xAxis
 	val ya = yAxis
-	var xData: MutableList<X?>? = null
-	var yData: MutableList<Y?>? = null
-	if (xa.isAutoRanging) xData = ArrayList()
-	if (ya.isAutoRanging) yData = ArrayList()
-	val xIsCategory = xa is CategoryAxis
-	val yIsCategory = ya is CategoryAxis
+	var xData: MutableList<X>? = null
+	var yData: MutableList<Y>? = null
+	if (xa.isAutoRanging()) xData = ArrayList()
+	if (ya.isAutoRanging()) yData = ArrayList()
+	val xIsCategory = xa is CategoryAxisForCatAxisWrapper
+	val yIsCategory = ya is CategoryAxisForCatAxisWrapper
 	if (xData != null || yData != null) {
-	  for (series in data) {
-		for (data in series.data) {
+	  for (series in data.value) {
+		for (data in series.data.value) {
 		  if (xData != null) {
 			if (xIsCategory) {
-			  xData.add(data.xValue)
+			  xData.add(data.xValue.value)
 			} else {
-			  xData.add(xa.toRealValue(xa.toNumericValue(data.xValue) + getDoubleValue(data.extraValue, 0.0)))
-			  xData.add(xa.toRealValue(xa.toNumericValue(data.xValue) - getDoubleValue(data.extraValue, 0.0)))
+			  xData.add(xa.toRealValue(xa.toNumericValue(data.xValue.value) + getDoubleValue(data.extraValue, 0.0))!!)
+			  xData.add(xa.toRealValue(xa.toNumericValue(data.xValue.value) - getDoubleValue(data.extraValue, 0.0))!!)
 			}
 		  }
 		  if (yData != null) {
 			if (yIsCategory) {
-			  yData.add(data.yValue)
+			  yData.add(data.yValue.value)
 			} else {
-			  yData.add(ya.toRealValue(ya.toNumericValue(data.yValue) + getDoubleValue(data.extraValue, 0.0)))
-			  yData.add(ya.toRealValue(ya.toNumericValue(data.yValue) - getDoubleValue(data.extraValue, 0.0)))
+			  yData.add(ya.toRealValue(ya.toNumericValue(data.yValue.value) + getDoubleValue(data.extraValue, 0.0))!!)
+			  yData.add(ya.toRealValue(ya.toNumericValue(data.yValue.value) - getDoubleValue(data.extraValue, 0.0))!!)
 			}
 		  }
 		}
@@ -272,8 +271,8 @@ class BubbleChartForWrapper<X, Y> @JvmOverloads constructor(
 	}
   }
 
-  public override fun createLegendItemForSeries(series: Series<X?, Y?>, seriesIndex: Int): LegendItem {
-	val legendItem = LegendItem(series.name)
+  override fun createLegendItemForSeries(series: Series<X, Y>, seriesIndex: Int): LegendItem {
+	val legendItem = LegendItem(series.name.value)
 	legendItem.symbol.styleClass.addAll(
 	  "series$seriesIndex", "chart-bubble",
 	  "bubble-legend-symbol", series.defaultColorStyleClass

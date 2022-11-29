@@ -23,7 +23,6 @@ import javafx.css.StyleableProperty
 import javafx.css.converter.BooleanConverter
 import javafx.css.converter.SizeConverter
 import javafx.geometry.Dimension2D
-import javafx.scene.chart.Axis
 import javafx.util.Duration
 import matt.fx.control.wrapper.chart.axis.cat.cat.CategoryAxisForCatAxisWrapper.StyleableProperties.classCssMetaData
 import matt.fx.control.wrapper.chart.axis.value.axis.AxisForPackagePrivateProps
@@ -36,7 +35,7 @@ import java.util.Collections
  */
 class CategoryAxisForCatAxisWrapper: AxisForPackagePrivateProps<String> {
   // -------------- PRIVATE FIELDS -------------------------------------------
-  private val allDataCategories: MutableList<String> = ArrayList()
+  internal val allDataCategories: MutableList<String> = ArrayList()
   private var changeIsLocal = false
 
   /** This is the gap between one category and the next along this axis  */
@@ -155,7 +154,7 @@ class CategoryAxisForCatAxisWrapper: AxisForPackagePrivateProps<String> {
 	return gapStartAndEnd
   }
 
-  private val categories: ObjectProperty<ObservableList<String>> =
+  internal val categories: ObjectProperty<ObservableList<String>> =
 	object: ObjectPropertyBase<ObservableList<String>>() {
 	  var old: ObservableList<String>? = null
 	  override fun invalidated() {
@@ -226,7 +225,7 @@ class CategoryAxisForCatAxisWrapper: AxisForPackagePrivateProps<String> {
   }
 
   /** This is the gap between one category and the next along this axis  */
-  private val categorySpacing = ReadOnlyDoubleWrapper(this, "categorySpacing", 1.0)
+  internal val categorySpacing = ReadOnlyDoubleWrapper(this, "categorySpacing", 1.0)
   fun getCategorySpacing(): Double {
 	return categorySpacing.get()
   }

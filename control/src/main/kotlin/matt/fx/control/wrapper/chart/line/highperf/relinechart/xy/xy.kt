@@ -1342,7 +1342,7 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 	 * The generic data value to be plotted in any way the chart needs. For example used as the radius
 	 * for BubbleChart.
 	 */
-	private val extraValue: ObjectProperty<Any> = object: SimpleObjectProperty<Any>(this@Data, "extraValue") {
+	internal val extraValue: ObjectProperty<Any> = object: SimpleObjectProperty<Any>(this@Data, "extraValue") {
 	  override fun invalidated() {
 		if (series != null) {
 		  val chart = series!!.getChart()

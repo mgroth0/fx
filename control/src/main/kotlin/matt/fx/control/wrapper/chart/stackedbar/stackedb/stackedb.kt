@@ -2,7 +2,6 @@ package matt.fx.control.wrapper.chart.stackedbar.stackedb
 
 import com.sun.javafx.charts.Legend.LegendItem
 import javafx.animation.FadeTransition
-import javafx.animation.Interpolator
 import javafx.animation.KeyFrame
 import javafx.animation.KeyValue
 import javafx.animation.ParallelTransition
@@ -27,13 +26,17 @@ import javafx.geometry.Orientation.HORIZONTAL
 import javafx.geometry.Orientation.VERTICAL
 import javafx.scene.AccessibleRole.TEXT
 import javafx.scene.Node
-import javafx.scene.chart.Axis
 import javafx.scene.chart.CategoryAxis
 import javafx.scene.chart.StackedBarChart
 import javafx.scene.chart.ValueAxis
 import javafx.scene.layout.StackPane
 import javafx.util.Duration
+import matt.fx.control.wrapper.chart.axis.cat.CategoryAxisWrapper
+import matt.fx.control.wrapper.chart.axis.cat.cat.CategoryAxisForCatAxisWrapper
+import matt.fx.control.wrapper.chart.axis.value.axis.AxisForPackagePrivateProps
+import matt.fx.control.wrapper.chart.axis.value.moregenval.MoreGenericValueAxis
 import matt.fx.control.wrapper.chart.line.highperf.relinechart.xy.XYChartForPackagePrivateProps
+import matt.fx.control.wrapper.chart.stackedbar.stackedb.StackedBarChartForWrapper.StyleableProperties.classCssMetaData
 import matt.fx.graphics.anim.interp.MyInterpolator
 import java.util.Collections
 
@@ -45,17 +48,17 @@ import java.util.Collections
  * @since JavaFX 2.1
  */
 class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
-  @NamedArg("xAxis") xAxis: Axis<X>?,
-  @NamedArg("yAxis") yAxis: Axis<Y>?,
+  @NamedArg("xAxis") xAxis: AxisForPackagePrivateProps<X>,
+  @NamedArg("yAxis") yAxis: AxisForPackagePrivateProps<Y>,
   @NamedArg("data")
-  data: ObservableList<Series<X, Y>?>? = FXCollections.observableArrayList()
+  data: ObservableList<Series<X, Y>> = FXCollections.observableArrayList()
 ):
-  XYChartForPackagePrivateProps<X?, Y?>(xAxis, yAxis) {
+  XYChartForPackagePrivateProps<X, Y>(xAxis, yAxis) {
   // -------------- PRIVATE FIELDS -------------------------------------------
-  private val seriesCategoryMap: MutableMap<Series<X?, Y?>, MutableMap<String?, MutableList<Data<X?, Y?>>?>> = HashMap()
+  private val seriesCategoryMap: MutableMap<Series<X, Y>, MutableMap<String?, MutableList<Data<X, Y>>>> = HashMap()
   private var orientation: Orientation? = null
-  private var categoryAxis: CategoryAxis? = null
-  private var valueAxis: ValueAxis<*>? = null
+  private var categoryAxis: CategoryAxisForCatAxisWrapper? = null
+  private var valueAxis: MoreGenericValueAxis<*>? = null
 
   // RT-23125 handling data removal when a category is removed.
   private val categoriesListener =
@@ -63,12 +66,12 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
 	  while (c.next()) {
 		for (cat in c.removed) {
 		  for (series in getData()) {
-			for (data in series.data) {
-			  if (cat == if (orientation == VERTICAL) data.xValue else data.yValue) {
-				val animatedOn = animated
-				animated = false
+			for (data in series.data.value) {
+			  if (cat == if (orientation == VERTICAL) data.xValue.value else data.yValue.value) {
+				val animatedOn = animated.value
+				setAnimated(false)
 				dataItemRemoved(data, series)
-				animated = animatedOn
+				setAnimated(animatedOn)
 			  }
 			}
 		  }
@@ -85,14 +88,14 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
 	}
 
 	override fun getBean(): Any {
-	  return this@StackedBarChart
+	  return this@StackedBarChartForWrapper
 	}
 
 	override fun getName(): String {
 	  return "categoryGap"
 	}
 
-	override fun getCssMetaData(): CssMetaData<StackedBarChart<*, *>, Number> {
+	override fun getCssMetaData(): CssMetaData<StackedBarChartForWrapper<*, *>, Number> {
 	  return StyleableProperties.CATEGORY_GAP
 	}
   }
@@ -119,9 +122,9 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
    * @param categoryGap The gap to leave between bars in separate categories
    */
   constructor(
-	@NamedArg("xAxis") xAxis: Axis<X>?,
-	@NamedArg("yAxis") yAxis: Axis<Y>?,
-	@NamedArg("data") data: ObservableList<Series<X, Y>?>?,
+	@NamedArg("xAxis") xAxis: AxisForPackagePrivateProps<X>,
+	@NamedArg("yAxis") yAxis: AxisForPackagePrivateProps<Y>,
+	@NamedArg("data") data: ObservableList<Series<X, Y>>,
 	@NamedArg("categoryGap") categoryGap: Double
   ): this(xAxis, yAxis) {
 	setData(data)
@@ -129,7 +132,7 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
   }
 
   // -------------- METHODS --------------------------------------------------
-  override fun dataItemAdded(series: Series<X?, Y?>, itemIndex: Int, item: Data<X?, Y?>) {
+  override fun dataItemAdded(series: Series<X, Y>, itemIndex: Int, item: Data<X, Y>) {
 	val category: String?
 	category = if (orientation == VERTICAL) {
 	  item.xValue as String?
@@ -144,12 +147,12 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
 	  seriesCategoryMap[series] = categoryMap
 	}
 	// list to hold more that one bar "positive and negative"
-	val itemList: MutableList<Data<X?, Y?>>? =
+	val itemList: MutableList<Data<X, Y>>? =
 	  if (categoryMap[category] != null) categoryMap[category] else ArrayList<Data<X, Y>>()
 	itemList!!.add(item)
 	categoryMap[category] = itemList
 	//        categoryMap.put(category, item);
-	val bar = createBar(series, data.indexOf(series), item, itemIndex)
+	val bar = createBar(series, data.value.indexOf(series), item, itemIndex)
 	if (shouldAnimate()) {
 	  animateDataAdd(item, bar)
 	} else {
@@ -157,8 +160,8 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
 	}
   }
 
-  override fun dataItemRemoved(item: Data<X?, Y?>, series: Series<X?, Y?>) {
-	val bar = item.node
+  override fun dataItemRemoved(item: Data<X, Y>, series: Series<X, Y>) {
+	val bar = item.node.value
 	bar?.focusTraversableProperty()?.unbind()
 	if (shouldAnimate()) {
 	  val t = createDataRemoveTimeline(item, bar, series)
@@ -175,7 +178,7 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
   }
 
   /** {@inheritDoc}  */
-  override fun dataItemChanged(item: Data<X?, Y?>) {
+  override fun dataItemChanged(item: Data<X, Y>) {
 	val barVal: Double
 	val currentVal: Double
 	if (orientation == VERTICAL) {
@@ -187,33 +190,33 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
 	}
 	if (currentVal > 0 && barVal < 0) { // going from positive to negative
 	  // add style class negative
-	  item.node.styleClass.add("negative")
+	  item.node.value.styleClass.add("negative")
 	} else if (currentVal < 0 && barVal > 0) { // going from negative to positive
 	  // remove style class negative
-	  item.node.styleClass.remove("negative")
+	  item.node.value.styleClass.remove("negative")
 	}
   }
 
-  override fun seriesChanged(c: Change<out Series<*, *>?>?) {
+  override fun seriesChanged(c: Change<out Series<*, *>>) {
 	// Update style classes for all series lines and symbols
 	// Note: is there a more efficient way of doing this?
 	for (i in 0 until dataSize) {
-	  val series = data[i]
-	  for (j in series.data.indices) {
-		val item = series.data[j]
-		val bar = item.node
+	  val series = data.value[i]
+	  for (j in series.data.value.indices) {
+		val item = series.data.value[j]
+		val bar = item.node.value
 		bar.styleClass.setAll("chart-bar", "series$i", "data$j", series.defaultColorStyleClass)
 	  }
 	}
   }
 
   /** {@inheritDoc}  */
-  override fun seriesAdded(series: Series<X?, Y?>, seriesIndex: Int) {
+  override fun seriesAdded(series: Series<X, Y>, seriesIndex: Int) {
 	// handle any data already in series
 	// create entry in the map
-	val categoryMap: MutableMap<String?, MutableList<Data<X?, Y?>>?> = HashMap()
-	for (j in series.data.indices) {
-	  val item = series.data[j]
+	val categoryMap: MutableMap<String?, MutableList<Data<X, Y>>> = HashMap()
+	for (j in series.data.value.indices) {
+	  val item = series.data.value[j]
 	  val bar = createBar(series, seriesIndex, item, j)
 	  var category: String?
 	  category = if (orientation == VERTICAL) {
@@ -222,7 +225,7 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
 		item.yValue as String?
 	  }
 	  // list of two item positive and negative
-	  val itemList: MutableList<Data<X?, Y?>>? =
+	  val itemList: MutableList<Data<X, Y>>? =
 		if (categoryMap[category] != null) categoryMap[category] else ArrayList<Data<X, Y>>()
 	  itemList!!.add(item)
 	  categoryMap[category] = itemList
@@ -242,7 +245,7 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
 	}
   }
 
-  override fun seriesRemoved(series: Series<X?, Y?>) {
+  override fun seriesRemoved(series: Series<X, Y>) {
 	// remove all symbol nodes
 	if (shouldAnimate()) {
 	  val pt = ParallelTransition()
@@ -250,8 +253,8 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
 		removeSeriesFromDisplay(series)
 		requestChartLayout()
 	  }
-	  for (d in series.data) {
-		val bar = d.node
+	  for (d in series.data.value) {
+		val bar = d.node.value
 		// Animate series deletion
 		if (seriesSize > 1) {
 		  val t = createDataRemoveTimeline(d, bar, series)
@@ -270,7 +273,7 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
 	  }
 	  pt.play()
 	} else {
-	  for (d in series.data) {
+	  for (d in series.data.value) {
 		processDataRemove(series, d)
 	  }
 	  removeSeriesFromDisplay(series)
@@ -283,16 +286,16 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
 	// This override is necessary to update axis range based on cumulative Y value for the
 	// Y axis instead of the inherited way where the max value in the data range is used.
 	val categoryIsX = categoryAxis == xAxis
-	if (categoryAxis!!.isAutoRanging) {
-	  val cData: MutableList<*> = ArrayList<Any?>()
-	  for (series in data) {
-		for (data in series.data) {
-		  if (data != null) cData.add(if (categoryIsX) data.xValue else data.yValue)
+	if (categoryAxis!!.isAutoRanging()) {
+	  val cData = ArrayList<Any?>()
+	  for (series in data.value) {
+		for (data in series.data.value) {
+		  if (data != null) cData.add(if (categoryIsX) data.xValue.value else data.yValue.value)
 		}
 	  }
-	  categoryAxis!!.invalidateRange(cData)
+	  categoryAxis!!.invalidateRange(cData as List<String>)
 	}
-	if (valueAxis!!.isAutoRanging) {
+	if (valueAxis!!.isAutoRanging()) {
 	  val vData: MutableList<Number> = ArrayList()
 	  for (category in categoryAxis!!.allDataCategories) {
 		var totalXN = 0.0
@@ -303,12 +306,12 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
 		  val series = seriesIterator.next()
 		  for (item in getDataItem(series, category)!!) {
 			if (item != null) {
-			  val isNegative = item.node.styleClass.contains("negative")
-			  val value = (if (categoryIsX) item.yValue else item.xValue) as Number?
+			  val isNegative = item.node.value.styleClass.contains("negative")
+			  val value = (if (categoryIsX) item.yValue.value else item.xValue.value) as Number?
 			  if (!isNegative) {
-				totalXP += valueAxis!!.toNumericValue(value)
+				totalXP += toNumericValueFromValueAxis(value)
 			  } else {
-				totalXN += valueAxis!!.toNumericValue(value)
+				totalXN += toNumericValueFromValueAxis(value)
 			  }
 			}
 		  }
@@ -316,18 +319,46 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
 		vData.add(totalXP)
 		vData.add(totalXN)
 	  }
-	  valueAxis!!.invalidateRange(vData)
+	  valueAxisInvalidateRange(vData as List<String>)
+	}
+  }
+
+  @Suppress("UNCHECKED_CAST")
+  private fun toNumericValueFromValueAxis(v: Any?): Double {
+	if (xAxis is CategoryAxisForCatAxisWrapper) {
+	  return (xAxis.toNumericValue(v as X))
+	} else {
+	  return (yAxis.toNumericValue(v as Y))
+	}
+  }
+
+
+  @Suppress("UNCHECKED_CAST")
+  private fun valueAxisGetDisplayPosition(v: Any?): Double {
+	if (xAxis is CategoryAxisForCatAxisWrapper) {
+	  return (xAxis.getDisplayPosition(v as X))
+	} else {
+	  return (yAxis.getDisplayPosition(v as Y))
+	}
+  }
+
+
+  private fun valueAxisInvalidateRange(list: List<String>) {
+	if (xAxis is CategoryAxisForCatAxisWrapper) {
+	  return (xAxis.invalidateRange(list))
+	} else {
+	  return ((yAxis as CategoryAxisForCatAxisWrapper).invalidateRange(list))
 	}
   }
 
   /** {@inheritDoc}  */
   override fun layoutPlotChildren() {
-	val catSpace = categoryAxis!!.categorySpacing
+	val catSpace = categoryAxis!!.categorySpacing.value
 	// calculate bar spacing
 	val availableBarSpace = catSpace - getCategoryGap()
 	val barOffset = -((catSpace - getCategoryGap())/2)
 	// update bar positions and sizes
-	for (category in categoryAxis!!.categories) {
+	for (category in categoryAxis!!.categories.value) {
 	  var currentPositiveValue = 0.0
 	  var currentNegativeValue = 0.0
 	  val seriesIterator =
@@ -336,7 +367,7 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
 		val series = seriesIterator.next()
 		for (item in getDataItem(series, category)!!) {
 		  if (item != null) {
-			val bar = item.node
+			val bar = item.node.value
 			val categoryPos: Double
 			val valNumber: Double
 			val xValue = getCurrentDisplayedXValue(item)
@@ -352,12 +383,12 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
 			var top: Double
 			val isNegative = bar.styleClass.contains("negative")
 			if (!isNegative) {
-			  bottom = valueAxis!!.getDisplayPosition(currentPositiveValue)
-			  top = valueAxis!!.getDisplayPosition(currentPositiveValue + valNumber)
+			  bottom = valueAxisGetDisplayPosition(currentPositiveValue)
+			  top = valueAxisGetDisplayPosition(currentPositiveValue + valNumber)
 			  currentPositiveValue += valNumber
 			} else {
-			  bottom = valueAxis!!.getDisplayPosition(currentNegativeValue + valNumber)
-			  top = valueAxis!!.getDisplayPosition(currentNegativeValue)
+			  bottom = valueAxisGetDisplayPosition(currentNegativeValue + valNumber)
+			  top = valueAxisGetDisplayPosition(currentNegativeValue)
 			  currentNegativeValue += valNumber
 			}
 			if (orientation == VERTICAL) {
@@ -378,8 +409,8 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
 	}
   }
 
-  public override fun createLegendItemForSeries(series: Series<X?, Y?>, seriesIndex: Int): LegendItem {
-	val legendItem = LegendItem(series.name)
+  public override fun createLegendItemForSeries(series: Series<X, Y>, seriesIndex: Int): LegendItem {
+	val legendItem = LegendItem(series.name.value)
 	legendItem.symbol.styleClass.addAll(
 	  "chart-bar", "series$seriesIndex",
 	  "bar-legend-symbol", series.defaultColorStyleClass
@@ -387,33 +418,33 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
 	return legendItem
   }
 
-  private fun updateMap(series: Series<X?, Y?>, item: Data<X?, Y?>) {
+  private fun updateMap(series: Series<X, Y>, item: Data<X, Y>) {
 	val category = if (orientation == VERTICAL) item.xValue as String? else item.yValue as String?
 	val categoryMap = seriesCategoryMap[series]
 	if (categoryMap != null) {
 	  categoryMap.remove(category)
 	  if (categoryMap.isEmpty()) seriesCategoryMap.remove(series)
 	}
-	if (seriesCategoryMap.isEmpty() && categoryAxis!!.isAutoRanging) categoryAxis!!.categories.clear()
+	if (seriesCategoryMap.isEmpty() && categoryAxis!!.isAutoRanging()) categoryAxis!!.categories.value.clear()
   }
 
-  private fun processDataRemove(series: Series<X?, Y?>, item: Data<X?, Y?>) {
-	val bar = item.node
+  private fun processDataRemove(series: Series<X, Y>, item: Data<X, Y>) {
+	val bar = item.node.value
 	plotChildren.remove(bar)
 	updateMap(series, item)
   }
 
-  private fun animateDataAdd(item: Data<X?, Y?>, bar: Node) {
+  private fun animateDataAdd(item: Data<X, Y>, bar: Node) {
 	val barVal: Double
 	if (orientation == VERTICAL) {
-	  barVal = (item.yValue as Number?)!!.toDouble()
+	  barVal = (item.yValue.value as Number?)!!.toDouble()
 	  if (barVal < 0) {
 		bar.styleClass.add("negative")
 	  }
-	  item.yValue = yAxis.toRealValue(yAxis.zeroPosition)
-	  setCurrentDisplayedYValue(item, yAxis.toRealValue(yAxis.zeroPosition))
+	  item.yValue.value = yAxis.toRealValue(yAxis.zeroPosition)
+	  setCurrentDisplayedYValue(item, yAxis.toRealValue(yAxis.zeroPosition)!!)
 	  plotChildren.add(bar)
-	  item.yValue = yAxis.toRealValue(barVal)
+	  item.yValue.value = yAxis.toRealValue(barVal)
 	  animate(
 		KeyFrame(
 		  Duration.ZERO, KeyValue(
@@ -425,7 +456,7 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
 		KeyFrame(
 		  Duration.millis(700.0), KeyValue(
 			currentDisplayedYValueProperty(item),
-			item.yValue, MyInterpolator.EASE_BOTH
+			item.yValue.value, MyInterpolator.EASE_BOTH
 		  )
 		)
 	  )
@@ -434,10 +465,10 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
 	  if (barVal < 0) {
 		bar.styleClass.add("negative")
 	  }
-	  item.xValue = xAxis.toRealValue(xAxis.zeroPosition)
-	  setCurrentDisplayedXValue(item, xAxis.toRealValue(xAxis.zeroPosition))
+	  item.xValue.value = xAxis.toRealValue(xAxis.zeroPosition)
+	  setCurrentDisplayedXValue(item, xAxis.toRealValue(xAxis.zeroPosition)!!)
 	  plotChildren.add(bar)
-	  item.xValue = xAxis.toRealValue(barVal)
+	  item.xValue.value = xAxis.toRealValue(barVal)
 	  animate(
 		KeyFrame(
 		  Duration.ZERO, KeyValue(
@@ -449,17 +480,17 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
 		KeyFrame(
 		  Duration.millis(700.0), KeyValue(
 			currentDisplayedXValueProperty(item),
-			item.xValue, MyInterpolator.EASE_BOTH
+			item.xValue.value, MyInterpolator.EASE_BOTH
 		  )
 		)
 	  )
 	}
   }
 
-  private fun createDataRemoveTimeline(item: Data<X?, Y?>, bar: Node?, series: Series<X?, Y?>): Timeline {
+  private fun createDataRemoveTimeline(item: Data<X, Y>, bar: Node?, series: Series<X, Y>): Timeline {
 	val t = Timeline()
 	if (orientation == VERTICAL) {
-	  item.yValue = yAxis.toRealValue(yAxis.zeroPosition)
+	  item.yValue.value = yAxis.toRealValue(yAxis.zeroPosition)
 	  t.keyFrames.addAll(
 		KeyFrame(
 		  Duration.ZERO, KeyValue(
@@ -476,12 +507,12 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
 			)
 		  }, KeyValue(
 			currentDisplayedYValueProperty(item),
-			item.yValue, MyInterpolator.EASE_BOTH
+			item.yValue.value, MyInterpolator.EASE_BOTH
 		  )
 		)
 	  )
 	} else {
-	  item.xValue = xAxis.toRealValue(xAxis.zeroPosition)
+	  item.xValue.value = xAxis.toRealValue(xAxis.zeroPosition)
 	  t.keyFrames.addAll(
 		KeyFrame(
 		  Duration.ZERO, KeyValue(
@@ -498,7 +529,7 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
 			)
 		  }, KeyValue(
 			currentDisplayedXValueProperty(item),
-			item.xValue, MyInterpolator.EASE_BOTH
+			item.xValue.value, MyInterpolator.EASE_BOTH
 		  )
 		)
 	  )
@@ -506,22 +537,21 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
 	return t
   }
 
-  private fun createBar(series: Series<X?, Y?>, seriesIndex: Int, item: Data<X?, Y?>, itemIndex: Int): Node {
-	var bar = item.node
+  private fun createBar(series: Series<X, Y>, seriesIndex: Int, item: Data<X, Y>, itemIndex: Int): Node {
+	var bar = item.node.value
 	if (bar == null) {
 	  bar = StackPane()
 	  bar.setAccessibleRole(TEXT)
 	  bar.setAccessibleRoleDescription("Bar")
 	  bar.focusTraversableProperty().bind(Platform.accessibilityActiveProperty())
-	  item.node = bar
+	  item.node.value = bar
 	}
 	bar.styleClass.setAll("chart-bar", "series$seriesIndex", "data$itemIndex", series.defaultColorStyleClass)
 	return bar
   }
 
-  private fun getDataItem(series: Series<X?, Y?>, category: String): List<Data<X?, Y?>>? {
-	val catmap: Map<String?, MutableList<Data<X?, Y?>>?>? =
-	  seriesCategoryMap[series]
+  private fun getDataItem(series: Series<X, Y>, category: String): List<Data<X, Y>>? {
+	val catmap: Map<String?, MutableList<Data<X, Y>>>? = seriesCategoryMap[series]
 	return if (catmap != null) if (catmap[category] != null) catmap[category] else ArrayList<Data<X, Y>>() else ArrayList<Data<X, Y>>()
   }
 
@@ -530,33 +560,25 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
      * Super-lazy instantiation pattern from Bill Pugh.
      */
   private object StyleableProperties {
-	private val CATEGORY_GAP: CssMetaData<StackedBarChart<*, *>, Number> =
-	  object: CssMetaData<StackedBarChart<*, *>, Number?>(
+	internal val CATEGORY_GAP: CssMetaData<StackedBarChartForWrapper<*, *>, Number> =
+	  object: CssMetaData<StackedBarChartForWrapper<*, *>, Number>(
 		"-fx-category-gap",
 		SizeConverter.getInstance(), 10.0
 	  ) {
-		override fun isSettable(node: StackedBarChart<*, *>): Boolean {
+		override fun isSettable(node: StackedBarChartForWrapper<*, *>): Boolean {
 		  return node.categoryGap == null || !node.categoryGap.isBound
 		}
 
-		override fun getStyleableProperty(node: StackedBarChart<*, *>): StyleableProperty<Number?> {
+		override fun getStyleableProperty(node: StackedBarChartForWrapper<*, *>): StyleableProperty<Number?> {
 		  return node.categoryGapProperty() as StyleableProperty<Number?>
 		}
 	  }
-	val classCssMetaData: List<CssMetaData<out Styleable?, *>>? = null
-	  /**
-	   * Gets the `CssMetaData` associated with this class, which may include the
-	   * `CssMetaData` of its superclasses.
-	   * @return the `CssMetaData`
-	   * @since JavaFX 8.0
-	   */
-	  get() = classCssMetaData
-
-	init {
+	val classCssMetaData: List<CssMetaData<out Styleable?, *>> by lazy {
 	  val styleables: MutableList<CssMetaData<out Styleable?, *>> = ArrayList(getClassCssMetaData())
 	  styleables.add(CATEGORY_GAP)
-	  classCssMetaData = Collections.unmodifiableList(styleables)
+	  Collections.unmodifiableList(styleables)
 	}
+
   }
 
   /**
@@ -564,7 +586,7 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
    * @since JavaFX 8.0
    */
   override fun getCssMetaData(): List<CssMetaData<out Styleable?, *>>? {
-	return Companion.classCssMetaData
+	return classCssMetaData
   }
   /**
    * Construct a new StackedBarChart with the given axis and data. The two axis should be a ValueAxis/NumberAxis and a
@@ -585,22 +607,22 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
   init {
 	styleClass.add("stacked-bar-chart")
 	require(
-	  xAxis is ValueAxis<*> && yAxis is CategoryAxis || yAxis is ValueAxis<*> && xAxis is CategoryAxis
+	  xAxis is MoreGenericValueAxis<*> && yAxis is CategoryAxisForCatAxisWrapper || yAxis is MoreGenericValueAxis<*> && xAxis is CategoryAxisForCatAxisWrapper
 	) { "Axis type incorrect, one of X,Y should be CategoryAxis and the other NumberAxis" }
-	if (xAxis is CategoryAxis) {
+	if (xAxis is CategoryAxisForCatAxisWrapper) {
 	  categoryAxis = xAxis
-	  valueAxis = yAxis as ValueAxis<*>?
+	  valueAxis = yAxis as MoreGenericValueAxis<*>
 	  orientation = VERTICAL
 	} else {
-	  categoryAxis = yAxis as CategoryAxis?
-	  valueAxis = xAxis as ValueAxis<*>?
+	  categoryAxis = yAxis as CategoryAxisForCatAxisWrapper?
+	  valueAxis = xAxis as MoreGenericValueAxis<*>
 	  orientation = HORIZONTAL
 	}
 	// update css
 	pseudoClassStateChanged(HORIZONTAL_PSEUDOCLASS_STATE, orientation == HORIZONTAL)
 	pseudoClassStateChanged(VERTICAL_PSEUDOCLASS_STATE, orientation == VERTICAL)
 	setData(data)
-	categoryAxis!!.categories.addListener(categoriesListener)
+	categoryAxis!!.categories.value.addListener(categoriesListener)
   }
 
   companion object {

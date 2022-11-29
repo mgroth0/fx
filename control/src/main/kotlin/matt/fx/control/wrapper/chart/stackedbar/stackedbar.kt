@@ -17,9 +17,9 @@ fun <X, Y> ET.stackedbarchart(
 
 
 open class StackedBarChartWrapper<X, Y>(
-  node: StackedBarChart<X, Y>,
+  node: StackedBarChartForWrapper<X, Y>,
 ): XYChartWrapper<X, Y, StackedBarChartForWrapper<X, Y>>(node) {
 
-  constructor(x: MAxis<X>, y: MAxis<Y>): this(StackedBarChart(x.node, y.node))
+  constructor(x: MAxis<X>, y: MAxis<Y>): this(StackedBarChartForWrapper(x.node, y.node))
 
 }
