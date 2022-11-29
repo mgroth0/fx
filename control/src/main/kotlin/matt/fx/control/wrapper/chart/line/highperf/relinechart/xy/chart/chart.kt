@@ -28,7 +28,6 @@ import javafx.geometry.Side.LEFT
 import javafx.geometry.Side.RIGHT
 import javafx.geometry.Side.TOP
 import javafx.scene.Node
-import javafx.scene.chart.Chart
 import javafx.scene.control.Label
 import javafx.scene.layout.Pane
 import javafx.scene.layout.Region
@@ -270,7 +269,7 @@ abstract class ChartForPrivateProps: Region() {
 	 *
 	 * @return Observable list of plot children
 	 */
-	protected get() = chartContent.children
+	get() = chartContent.children
   // -------------- CONSTRUCTOR --------------------------------------------------------------------------------------
   /**
    * Creates a new default Chart instance.
@@ -365,6 +364,7 @@ abstract class ChartForPrivateProps: Region() {
 	}
 	// layout legend
 	val legend = getLegend()
+	@Suppress("SENSELESS_COMPARISON")
 	if (legend != null) {
 	  var shouldShowLegend = isLegendVisible()
 	  if (shouldShowLegend) {
@@ -456,10 +456,11 @@ abstract class ChartForPrivateProps: Region() {
 	  TOP
 	) {
 	  override fun isSettable(node: ChartForPrivateProps): Boolean {
-		return node.titleSide == null || !node.titleSide.isBound
+		return node.titleSide.value == null || !node.titleSide.isBound
 	  }
 
 	  override fun getStyleableProperty(node: ChartForPrivateProps): StyleableProperty<Side> {
+		@Suppress("UNCHECKED_CAST")
 		return node.titleSideProperty() as StyleableProperty<Side>
 	  }
 	}
@@ -469,10 +470,11 @@ abstract class ChartForPrivateProps: Region() {
 	  BOTTOM
 	) {
 	  override fun isSettable(node: ChartForPrivateProps): Boolean {
-		return node.legendSide == null || !node.legendSide.isBound
+		return node.legendSide.value == null || !node.legendSide.isBound
 	  }
 
 	  override fun getStyleableProperty(node: ChartForPrivateProps): StyleableProperty<Side> {
+		@Suppress("UNCHECKED_CAST")
 		return node.legendSideProperty() as StyleableProperty<Side>
 	  }
 	}
@@ -481,10 +483,11 @@ abstract class ChartForPrivateProps: Region() {
 	  BooleanConverter.getInstance(), java.lang.Boolean.TRUE
 	) {
 	  override fun isSettable(node: ChartForPrivateProps): Boolean {
-		return node.legendVisible == null || !node.legendVisible.isBound
+		return node.legendVisible.value == null || !node.legendVisible.isBound
 	  }
 
 	  override fun getStyleableProperty(node: ChartForPrivateProps): StyleableProperty<Boolean?> {
+		@Suppress("UNCHECKED_CAST")
 		return node.legendVisibleProperty() as StyleableProperty<Boolean?>
 	  }
 	}

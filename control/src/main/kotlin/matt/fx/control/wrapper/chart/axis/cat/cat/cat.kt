@@ -202,7 +202,7 @@ class CategoryAxisForCatAxisWrapper: AxisForPackagePrivateProps<String> {
   }
 
   private val duplicate: String?
-	private get() {
+	get() {
 	  if (getCategories() != null) {
 		for (i in getCategories()!!.indices) {
 		  for (j in getCategories()!!.indices) {
@@ -254,7 +254,6 @@ class CategoryAxisForCatAxisWrapper: AxisForPackagePrivateProps<String> {
 
   // -------------- PRIVATE METHODS ----------------------------------------------------------------------------------
   private fun calculateNewSpacing(length: Double, categories: List<String>?): Double {
-	val side = effectiveSide
 	var newCategorySpacing = 1.0
 	if (categories != null) {
 	  val bVal = (if (isGapStartAndEnd()) categories.size else categories.size - 1).toDouble()
@@ -387,6 +386,7 @@ class CategoryAxisForCatAxisWrapper: AxisForPackagePrivateProps<String> {
    * @param length The length of the axis in display units
    * @return A list of tick marks that fit along the axis if it was the given length
    */
+  @Suppress("UNCHECKED_CAST")
   override fun calculateTickValues(length: Double, range: Any): List<String> {
 	val rangeArray = range as Array<Any>
 	return rangeArray[0] as List<String>
@@ -411,6 +411,7 @@ class CategoryAxisForCatAxisWrapper: AxisForPackagePrivateProps<String> {
    * @param range range to use during calculations
    * @return size of tick mark label for given value
    */
+  @Suppress("UNCHECKED_CAST")
   override fun measureTickMarkSize(value: String, range: Any): Dimension2D {
 	val rangeArray = range as Array<Any>
 	val tickLabelRotation = rangeArray[3] as Double
@@ -545,9 +546,10 @@ class CategoryAxisForCatAxisWrapper: AxisForPackagePrivateProps<String> {
 	  SizeConverter.getInstance(), 5.0
 	) {
 	  override fun isSettable(n: CategoryAxisForCatAxisWrapper): Boolean {
-		return n.startMargin == null || !n.startMargin.isBound
+		return n.startMargin.value == null || !n.startMargin.isBound
 	  }
 
+	  @Suppress("UNCHECKED_CAST")
 	  override fun getStyleableProperty(n: CategoryAxisForCatAxisWrapper): StyleableProperty<Number?> {
 		return n.startMarginProperty() as StyleableProperty<Number?>
 	  }
@@ -557,9 +559,10 @@ class CategoryAxisForCatAxisWrapper: AxisForPackagePrivateProps<String> {
 	  SizeConverter.getInstance(), 5.0
 	) {
 	  override fun isSettable(n: CategoryAxisForCatAxisWrapper): Boolean {
-		return n.endMargin == null || !n.endMargin.isBound
+		return n.endMargin.value == null || !n.endMargin.isBound
 	  }
 
+	  @Suppress("UNCHECKED_CAST")
 	  override fun getStyleableProperty(n: CategoryAxisForCatAxisWrapper): StyleableProperty<Number?> {
 		return n.endMarginProperty() as StyleableProperty<Number?>
 	  }
@@ -569,9 +572,10 @@ class CategoryAxisForCatAxisWrapper: AxisForPackagePrivateProps<String> {
 	  BooleanConverter.getInstance(), java.lang.Boolean.TRUE
 	) {
 	  override fun isSettable(n: CategoryAxisForCatAxisWrapper): Boolean {
-		return n.gapStartAndEnd == null || !n.gapStartAndEnd.isBound
+		return n.gapStartAndEnd.value == null || !n.gapStartAndEnd.isBound
 	  }
 
+	  @Suppress("UNCHECKED_CAST")
 	  override fun getStyleableProperty(n: CategoryAxisForCatAxisWrapper): StyleableProperty<Boolean?> {
 		return n.gapStartAndEndProperty() as StyleableProperty<Boolean?>
 	  }
@@ -590,7 +594,7 @@ class CategoryAxisForCatAxisWrapper: AxisForPackagePrivateProps<String> {
    * {@inheritDoc}
    * @since JavaFX 8.0
    */
-  override fun getCssMetaData(): List<CssMetaData<out Styleable?, *>>? {
+  override fun getCssMetaData(): List<CssMetaData<out Styleable?, *>> {
 	return classCssMetaData
   }
 

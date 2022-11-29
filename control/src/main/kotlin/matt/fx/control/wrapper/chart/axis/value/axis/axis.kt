@@ -175,6 +175,7 @@ abstract class AxisForPackagePrivateProps<T>: Region() {
   val effectiveSide: Side
 	get() {
 	  val side = getSide()
+	  @Suppress("SENSELESS_COMPARISON")
 	  return if (side == null || side.isVertical && effectiveOrientation == HORIZONTAL || side.isHorizontal && effectiveOrientation == VERTICAL
 	  ) {
 		// Means side == null && effectiveOrientation == null produces Side.BOTTOM
@@ -1160,13 +1161,14 @@ abstract class AxisForPackagePrivateProps<T>: Region() {
   }
 
   // -------------- STYLESHEET HANDLING ------------------------------------------------------------------------------
+  @Suppress("UNCHECKED_CAST")
   private object StyleableProperties {
 	val SIDE: CssMetaData<AxisForPackagePrivateProps<*>, Side> = object: CssMetaData<AxisForPackagePrivateProps<*>, Side>(
 	  "-fx-side",
 	  EnumConverter(Side::class.java)
 	) {
 	  override fun isSettable(n: AxisForPackagePrivateProps<*>): Boolean {
-		return n.side == null || !n.side.isBound
+		return n.side.value == null || !n.side.isBound
 	  }
 
 	  override fun getStyleableProperty(n: AxisForPackagePrivateProps<*>): StyleableProperty<Side> {
@@ -1178,7 +1180,7 @@ abstract class AxisForPackagePrivateProps<T>: Region() {
 	  SizeConverter.getInstance(), 8.0
 	) {
 	  override fun isSettable(n: AxisForPackagePrivateProps<*>): Boolean {
-		return n.tickLength == null || !n.tickLength.isBound
+		return n.tickLength.value == null || !n.tickLength.isBound
 	  }
 
 	  override fun getStyleableProperty(n: AxisForPackagePrivateProps<*>): StyleableProperty<Number?> {
@@ -1190,7 +1192,7 @@ abstract class AxisForPackagePrivateProps<T>: Region() {
 	  Font.font("system", 8.0)
 	) {
 	  override fun isSettable(n: AxisForPackagePrivateProps<*>): Boolean {
-		return n.tickLabelFont == null || !n.tickLabelFont.isBound
+		return n.tickLabelFont.value == null || !n.tickLabelFont.isBound
 	  }
 
 	  override fun getStyleableProperty(n: AxisForPackagePrivateProps<*>): StyleableProperty<Font> {
@@ -1202,7 +1204,7 @@ abstract class AxisForPackagePrivateProps<T>: Region() {
 	  PaintConverter.getInstance(), Color.BLACK
 	) {
 	  override fun isSettable(n: AxisForPackagePrivateProps<*>): Boolean {
-		return (n.tickLabelFill == null) or !n.tickLabelFill.isBound
+		return (n.tickLabelFill.value == null) or !n.tickLabelFill.isBound
 	  }
 
 	  override fun getStyleableProperty(n: AxisForPackagePrivateProps<*>): StyleableProperty<Paint> {
@@ -1214,7 +1216,7 @@ abstract class AxisForPackagePrivateProps<T>: Region() {
 	  SizeConverter.getInstance(), 3.0
 	) {
 	  override fun isSettable(n: AxisForPackagePrivateProps<*>): Boolean {
-		return n.tickLabelGap == null || !n.tickLabelGap.isBound
+		return n.tickLabelGap.value == null || !n.tickLabelGap.isBound
 	  }
 
 	  override fun getStyleableProperty(n: AxisForPackagePrivateProps<*>): StyleableProperty<Number?> {
@@ -1226,7 +1228,7 @@ abstract class AxisForPackagePrivateProps<T>: Region() {
 	  BooleanConverter.getInstance(), java.lang.Boolean.TRUE
 	) {
 	  override fun isSettable(n: AxisForPackagePrivateProps<*>): Boolean {
-		return n.tickMarkVisible == null || !n.tickMarkVisible.isBound
+		return n.tickMarkVisible.value == null || !n.tickMarkVisible.isBound
 	  }
 
 	  override fun getStyleableProperty(n: AxisForPackagePrivateProps<*>): StyleableProperty<Boolean?> {
@@ -1238,7 +1240,7 @@ abstract class AxisForPackagePrivateProps<T>: Region() {
 	  BooleanConverter.getInstance(), java.lang.Boolean.TRUE
 	) {
 	  override fun isSettable(n: AxisForPackagePrivateProps<*>): Boolean {
-		return n.tickLabelsVisible == null || !n.tickLabelsVisible.isBound
+		return n.tickLabelsVisible.value == null || !n.tickLabelsVisible.isBound
 	  }
 
 	  override fun getStyleableProperty(n: AxisForPackagePrivateProps<*>): StyleableProperty<Boolean?> {

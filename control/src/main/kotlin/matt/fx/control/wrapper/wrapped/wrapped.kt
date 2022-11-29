@@ -18,8 +18,6 @@ import javafx.scene.Scene
 import javafx.scene.SpotLight
 import javafx.scene.SubScene
 import javafx.scene.canvas.Canvas
-import javafx.scene.chart.ScatterChart
-import javafx.scene.chart.StackedBarChart
 import javafx.scene.control.Accordion
 import javafx.scene.control.Button
 import javafx.scene.control.ButtonBar

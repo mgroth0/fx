@@ -148,9 +148,9 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
   override fun dataItemAdded(series: Series<X, Y>, itemIndex: Int, item: Data<X, Y>) {
 	val category: String?
 	category = if (orientation == VERTICAL) {
-	  item.xValue as String?
+	  item.xValue.value as String?
 	} else {
-	  item.yValue as String?
+	  item.yValue.value as String?
 	}
 	var categoryMap = seriesCategoryMap[series]
 	if (categoryMap == null) {
@@ -200,11 +200,11 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
 	val barVal: Double
 	val currentVal: Double
 	if (orientation == VERTICAL) {
-	  barVal = (item.yValue as Number?)!!.toDouble()
-	  currentVal = (item.currentY as Number?)!!.toDouble()
+	  barVal = (item.yValue.value as Number?)!!.toDouble()
+	  currentVal = (item.currentY.value as Number?)!!.toDouble()
 	} else {
-	  barVal = (item.xValue as Number?)!!.toDouble()
-	  currentVal = (item.currentX as Number?)!!.toDouble()
+	  barVal = (item.xValue.value as Number?)!!.toDouble()
+	  currentVal = (item.currentX.value as Number?)!!.toDouble()
 	}
 	if (currentVal > 0 && barVal < 0) { // going from positive to negative
 	  // add style class negative
@@ -239,9 +239,9 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
 	  val bar = createBar(series, seriesIndex, item, j)
 	  var category: String?
 	  category = if (orientation == VERTICAL) {
-		item.xValue as String?
+		item.xValue.value as String?
 	  } else {
-		item.yValue as String?
+		item.yValue.value as String?
 	  }
 	  categoryMap[category] = item
 	  if (shouldAnimate()) {
@@ -249,7 +249,7 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
 	  } else {
 		// RT-21164 check if bar value is negative to add NEGATIVE_STYLE style class
 		val barVal =
-		  if (orientation == VERTICAL) (item.yValue as Number?)!!.toDouble() else (item.xValue as Number?)!!.toDouble()
+		  if (orientation == VERTICAL) (item.yValue.value as Number?)!!.toDouble() else (item.xValue.value as Number?)!!.toDouble()
 		if (barVal < 0) {
 		  bar.styleClass.add(NEGATIVE_STYLE)
 		}
@@ -370,7 +370,7 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
 	}
   }
 
-  public override fun createLegendItemForSeries(series: Series<X, Y>, seriesIndex: Int): LegendItem {
+  override fun createLegendItemForSeries(series: Series<X, Y>, seriesIndex: Int): LegendItem {
 	val legendItem = LegendItem(series.name.value)
 	legendItem.symbol.styleClass.addAll(
 	  "chart-bar", "series$seriesIndex",
@@ -381,7 +381,7 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
 
   // -------------- PRIVATE METHODS ------------------------------------------
   private fun updateMap(series: Series<X, Y>, item: Data<X, Y>) {
-	val category = if (orientation == VERTICAL) item.xValue as String? else item.yValue as String?
+	val category = if (orientation == VERTICAL) item.xValue.value as String? else item.yValue.value as String?
 	val categoryMap = seriesCategoryMap[series]
 	if (categoryMap != null) {
 	  categoryMap.remove(category)
@@ -399,7 +399,7 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
   private fun animateDataAdd(item: Data<X, Y>, bar: Node) {
 	val barVal: Double
 	if (orientation == VERTICAL) {
-	  barVal = (item.yValue as Number?)!!.toDouble()
+	  barVal = (item.yValue.value as Number?)!!.toDouble()
 	  if (barVal < 0) {
 		bar.styleClass.add(NEGATIVE_STYLE)
 	  }
@@ -422,7 +422,7 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
 		)
 	  )
 	} else {
-	  barVal = (item.xValue as Number?)!!.toDouble()
+	  barVal = (item.xValue.value as Number?)!!.toDouble()
 	  if (barVal < 0) {
 		bar.styleClass.add(NEGATIVE_STYLE)
 	  }

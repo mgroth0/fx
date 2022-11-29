@@ -62,11 +62,11 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
 	  while (c.next()) {
 		for (cat in c.removed) {
 		  for (series in getData()) {
-			for (data in series.data.value) {
-			  if (cat == if (orientation == VERTICAL) data.xValue.value else data.yValue.value) {
+			for (data2 in series.data.value) {
+			  if (cat == if (orientation == VERTICAL) data2.xValue.value else data2.yValue.value) {
 				val animatedOn = animated.value
 				setAnimated(false)
-				dataItemRemoved(data, series)
+				dataItemRemoved(data2, series)
 				setAnimated(animatedOn)
 			  }
 			}
@@ -117,7 +117,7 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
    * @param data The data to use, this is the actual list used so any changes to it will be reflected in the chart
    * @param categoryGap The gap to leave between bars in separate categories
    */
-  constructor(
+  @Suppress("unused") constructor(
 	@NamedArg("xAxis") xAxis: AxisForPackagePrivateProps<X>,
 	@NamedArg("yAxis") yAxis: AxisForPackagePrivateProps<Y>,
 	@NamedArg("data") data: ObservableList<Series<X, Y>>,
@@ -131,9 +131,9 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
   override fun dataItemAdded(series: Series<X, Y>, itemIndex: Int, item: Data<X, Y>) {
 	val category: String?
 	category = if (orientation == VERTICAL) {
-	  item.xValue as String?
+	  item.xValue.value as String?
 	} else {
-	  item.yValue as String?
+	  item.yValue.value as String?
 	}
 	// Don't plot if category does not already exist ?
 	//        if (!categoryAxis.getCategories().contains(category)) return;
@@ -178,10 +178,10 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
 	val barVal: Double
 	val currentVal: Double
 	if (orientation == VERTICAL) {
-	  barVal = (item.yValue as Number?)!!.toDouble()
+	  barVal = (item.yValue.value as Number?)!!.toDouble()
 	  currentVal = (getCurrentDisplayedYValue(item) as Number?)!!.toDouble()
 	} else {
-	  barVal = (item.xValue as Number?)!!.toDouble()
+	  barVal = (item.xValue.value as Number?)!!.toDouble()
 	  currentVal = (getCurrentDisplayedXValue(item) as Number?)!!.toDouble()
 	}
 	if (currentVal > 0 && barVal < 0) { // going from positive to negative
@@ -216,9 +216,9 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
 	  val bar = createBar(series, seriesIndex, item, j)
 	  var category: String?
 	  category = if (orientation == VERTICAL) {
-		item.xValue as String?
+		item.xValue.value as String?
 	  } else {
-		item.yValue as String?
+		item.yValue.value as String?
 	  }
 	  // list of two item positive and negative
 	  val itemList: MutableList<Data<X, Y>>? =
@@ -229,7 +229,7 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
 		animateDataAdd(item, bar)
 	  } else {
 		val barVal =
-		  if (orientation == VERTICAL) (item.yValue as Number?)!!.toDouble() else (item.xValue as Number?)!!.toDouble()
+		  if (orientation == VERTICAL) (item.yValue.value as Number?)!!.toDouble() else (item.xValue.value as Number?)!!.toDouble()
 		if (barVal < 0) {
 		  bar.styleClass.add("negative")
 		}
@@ -289,6 +289,7 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
 		  if (data != null) cData.add(if (categoryIsX) data.xValue.value else data.yValue.value)
 		}
 	  }
+	  @Suppress("UNCHECKED_CAST")
 	  categoryAxis!!.invalidateRange(cData as List<String>)
 	}
 	if (valueAxis!!.isAutoRanging()) {
@@ -301,6 +302,7 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
 		while (seriesIterator.hasNext()) {
 		  val series = seriesIterator.next()
 		  for (item in getDataItem(series, category)!!) {
+			@Suppress("SENSELESS_COMPARISON")
 			if (item != null) {
 			  val isNegative = item.node.value.styleClass.contains("negative")
 			  val value = (if (categoryIsX) item.yValue.value else item.xValue.value) as Number?
@@ -315,6 +317,7 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
 		vData.add(totalXP)
 		vData.add(totalXN)
 	  }
+	  @Suppress("UNCHECKED_CAST")
 	  valueAxisInvalidateRange(vData as List<String>)
 	}
   }
@@ -362,6 +365,7 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
 	  while (seriesIterator.hasNext()) {
 		val series = seriesIterator.next()
 		for (item in getDataItem(series, category)!!) {
+		  @Suppress("SENSELESS_COMPARISON")
 		  if (item != null) {
 			val bar = item.node.value
 			val categoryPos: Double
@@ -405,7 +409,7 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
 	}
   }
 
-  public override fun createLegendItemForSeries(series: Series<X, Y>, seriesIndex: Int): LegendItem {
+  override fun createLegendItemForSeries(series: Series<X, Y>, seriesIndex: Int): LegendItem {
 	val legendItem = LegendItem(series.name.value)
 	legendItem.symbol.styleClass.addAll(
 	  "chart-bar", "series$seriesIndex",
@@ -415,7 +419,7 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
   }
 
   private fun updateMap(series: Series<X, Y>, item: Data<X, Y>) {
-	val category = if (orientation == VERTICAL) item.xValue as String? else item.yValue as String?
+	val category = if (orientation == VERTICAL) item.xValue.value as String? else item.yValue.value as String?
 	val categoryMap = seriesCategoryMap[series]
 	if (categoryMap != null) {
 	  categoryMap.remove(category)
@@ -457,7 +461,7 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
 		)
 	  )
 	} else {
-	  barVal = (item.xValue as Number?)!!.toDouble()
+	  barVal = (item.xValue.value as Number?)!!.toDouble()
 	  if (barVal < 0) {
 		bar.styleClass.add("negative")
 	  }
@@ -483,6 +487,7 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
 	}
   }
 
+  @Suppress("UNUSED_PARAMETER")
   private fun createDataRemoveTimeline(item: Data<X, Y>, bar: Node?, series: Series<X, Y>): Timeline {
 	val t = Timeline()
 	if (orientation == VERTICAL) {
@@ -556,15 +561,16 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
      * Super-lazy instantiation pattern from Bill Pugh.
      */
   private object StyleableProperties {
-	internal val CATEGORY_GAP: CssMetaData<StackedBarChartForWrapper<*, *>, Number> =
+	val CATEGORY_GAP: CssMetaData<StackedBarChartForWrapper<*, *>, Number> =
 	  object: CssMetaData<StackedBarChartForWrapper<*, *>, Number>(
 		"-fx-category-gap",
 		SizeConverter.getInstance(), 10.0
 	  ) {
 		override fun isSettable(node: StackedBarChartForWrapper<*, *>): Boolean {
-		  return node.categoryGap == null || !node.categoryGap.isBound
+		  return node.categoryGap.value == null || !node.categoryGap.isBound
 		}
 
+		@Suppress("UNCHECKED_CAST")
 		override fun getStyleableProperty(node: StackedBarChartForWrapper<*, *>): StyleableProperty<Number?> {
 		  return node.categoryGapProperty() as StyleableProperty<Number?>
 		}
@@ -581,7 +587,7 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
    * {@inheritDoc}
    * @since JavaFX 8.0
    */
-  override fun getCssMetaData(): List<CssMetaData<out Styleable?, *>>? {
+  override fun getCssMetaData(): List<CssMetaData<out Styleable?, *>> {
 	return classCssMetaData
   }
   /**

@@ -65,7 +65,6 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
 			plotChildren.add(symbol)
 		  } else if (!get() && symbol != null) { // remove symbols
 			plotChildren.remove(symbol)
-			symbol = null
 			item.node.value = null
 		  }
 		}
@@ -95,6 +94,7 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
 	return createSymbols.value
   }
 
+  @Suppress("unused")
   fun setCreateSymbols(value: Boolean) {
 	createSymbols.value = value
   }
@@ -130,11 +130,11 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
 	return axisSortingPolicy.value
   }
 
-  fun setAxisSortingPolicy(value: SortingPolicy) {
+  @Suppress("unused") fun setAxisSortingPolicy(value: SortingPolicy) {
 	axisSortingPolicy.value = value
   }
 
-  fun axisSortingPolicyProperty(): ObjectProperty<SortingPolicy> {
+  @Suppress("unused") fun axisSortingPolicyProperty(): ObjectProperty<SortingPolicy> {
 	return axisSortingPolicy
   }
   /**
@@ -172,10 +172,10 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
 	  }
 	  // RT-32838 No need to invalidate range if there is one data item - whose value is zero.
 	  if (xData != null && !(xData.size == 1 && xAxis.toNumericValue(xData[0]!!) == 0.0)) {
-		xa.invalidateRange(xData!!)
+		xa.invalidateRange(xData)
 	  }
 	  if (yData != null && !(yData.size == 1 && yAxis.toNumericValue(yData[0]!!) == 0.0)) {
-		ya.invalidateRange(yData!!)
+		ya.invalidateRange(yData)
 	  }
 	}
   }
@@ -197,6 +197,7 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
 		}
 	  }
 	  var animate = false
+	  @Suppress("SENSELESS_COMPARISON")
 	  if (itemIndex > 0 && itemIndex < series.data.value.size - 1) {
 		animate = true
 		val p1 = series.data.value[itemIndex - 1]
@@ -243,6 +244,7 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
 		  KeyFrame(
 			Duration.ZERO,
 			{ e: ActionEvent? ->
+			  @Suppress("SENSELESS_COMPARISON")
 			  if (symbol != null && !plotChildren.contains(
 				  symbol
 				)
@@ -272,6 +274,7 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
 		)
 	  }
 	} else {
+	  @Suppress("SENSELESS_COMPARISON")
 	  if (symbol != null) plotChildren.add(symbol)
 	}
   }
@@ -295,9 +298,9 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
 		val p1 = series.getItem(itemIndex - 1)
 		val p2 = series.getItem(itemIndex + 1)
 		val x1 = xAxis.toNumericValue(p1!!.xValue.value)
-		val y1 = yAxis.toNumericValue(p1!!.yValue.value)
+		val y1 = yAxis.toNumericValue(p1.yValue.value)
 		val x3 = xAxis.toNumericValue(p2!!.xValue.value)
-		val y3 = yAxis.toNumericValue(p2!!.yValue.value)
+		val y3 = yAxis.toNumericValue(p2.yValue.value)
 		val x2 = xAxis.toNumericValue(item.xValue.value)
 		val y2 = yAxis.toNumericValue(item.yValue.value)
 		if (x2 > x1 && x2 < x3) {
@@ -410,6 +413,7 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
 	for (j in series.data.value.indices) {
 	  val item = series.data.value[j]
 	  val symbol = createSymbol(series, seriesIndex, item, j)
+	  @Suppress("SENSELESS_COMPARISON")
 	  if (symbol != null) {
 		if (shouldAnimate()) symbol.opacity = 0.0
 		plotChildren.add(symbol)
@@ -444,7 +448,7 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
 	for (seriesIndex in 0 until dataSize) {
 	  val series = data.value[seriesIndex]
 	  val seriesYAnimMultiplier = seriesYMultiplierMap[series]
-	  val seriesNode = series.node
+	  val seriesNode = series.node.value
 	  if (seriesNode is Path) {
 		AreaChartForPrivateProps.makePaths(
 		  this,
@@ -558,16 +562,17 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
 
   // -------------- STYLESHEET HANDLING --------------------------------------
   private object StyleableProperties {
-	internal val CREATE_SYMBOLS: CssMetaData<MorePerfOptionsLineChart<*, *>, Boolean> =
+	val CREATE_SYMBOLS: CssMetaData<MorePerfOptionsLineChart<*, *>, Boolean> =
 	  object: CssMetaData<MorePerfOptionsLineChart<*, *>, Boolean>(
 		"-fx-create-symbols",
 		BooleanConverter.getInstance(), true
 	  ) {
 		override fun isSettable(node: MorePerfOptionsLineChart<*, *>): Boolean {
-		  return node.createSymbols == null || !node.createSymbols.isBound
+		  return node.createSymbols.value == null || !node.createSymbols.isBound
 		}
 
 		override fun getStyleableProperty(node: MorePerfOptionsLineChart<*, *>): StyleableProperty<Boolean?> {
+		  @Suppress("UNCHECKED_CAST")
 		  return node.createSymbolsProperty() as StyleableProperty<Boolean?>
 		}
 	  }

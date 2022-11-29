@@ -71,7 +71,6 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
 			}
 		  } else if (!get() && symbol != null) { // remove symbols
 			plotChildren.remove(symbol)
-			symbol = null
 			item.node.value = null
 		  }
 		}
@@ -102,7 +101,7 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
 	return createSymbols.value
   }
 
-  fun setCreateSymbols(value: Boolean) {
+  @Suppress("unused") fun setCreateSymbols(value: Boolean) {
 	createSymbols.value = value
   }
 
@@ -164,7 +163,7 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
 		val x3 = xAxis.toNumericValue(p2.xValue.value)
 		val y3 = yAxis.toNumericValue(p2.yValue.value)
 		val x2 = xAxis.toNumericValue(item.xValue.value)
-		val y2 = yAxis.toNumericValue(item.yValue.value)
+		@Suppress("UNUSED_VARIABLE") val y2 = yAxis.toNumericValue(item.yValue.value)
 
 		//                //1. y intercept of the line : y = ((y3-y1)/(x3-x1)) * x2 + (x3y1 - y3x1)/(x3 -x1)
 		val y = (y3 - y1)/(x3 - x1)*x2 + (x3*y1 - y3*x1)/(x3 - x1)
@@ -453,7 +452,7 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
 	return symbol
   }
 
-  public override fun createLegendItemForSeries(series: Series<X, Y>, seriesIndex: Int): LegendItem {
+  override fun createLegendItemForSeries(series: Series<X, Y>, seriesIndex: Int): LegendItem {
 	val legendItem = LegendItem(series.name.value)
 	legendItem.symbol.styleClass.addAll(
 	  "chart-area-symbol", "series$seriesIndex",
@@ -464,15 +463,16 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
 
   // -------------- STYLESHEET HANDLING --------------------------------------
   private object StyleableProperties {
-	internal val CREATE_SYMBOLS: CssMetaData<AreaChartForPrivateProps<*, *>, Boolean> = object: CssMetaData<AreaChartForPrivateProps<*, *>, Boolean>(
+	val CREATE_SYMBOLS: CssMetaData<AreaChartForPrivateProps<*, *>, Boolean> = object: CssMetaData<AreaChartForPrivateProps<*, *>, Boolean>(
 	  "-fx-create-symbols",
 	  BooleanConverter.getInstance(), java.lang.Boolean.TRUE
 	) {
 	  override fun isSettable(node: AreaChartForPrivateProps<*, *>): Boolean {
-		return node.createSymbols == null || !node.createSymbols.isBound
+		return node.createSymbols.value == null || !node.createSymbols.isBound
 	  }
 
 	  override fun getStyleableProperty(node: AreaChartForPrivateProps<*, *>): StyleableProperty<Boolean> {
+		@Suppress("UNCHECKED_CAST")
 		return node.createSymbolsProperty() as StyleableProperty<Boolean>
 	  }
 	}
@@ -488,12 +488,13 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
    * {@inheritDoc}
    * @since JavaFX 8.0
    */
-  override fun getCssMetaData(): List<CssMetaData<out Styleable?, *>>? {
+  override fun getCssMetaData(): List<CssMetaData<out Styleable?, *>> {
 	return classCssMetaData
   }
 
   companion object {
 	// -------------- METHODS ------------------------------------------------------------------------------------------
+	@Suppress("unused")
 	private fun doubleValue(number: Number?, nullDefault: Double = 0.0): Double {
 	  return number?.toDouble() ?: nullDefault
 	}

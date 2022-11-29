@@ -21,6 +21,7 @@ import matt.fx.control.wrapper.chart.axis.value.axis.AxisForPackagePrivateProps
 import matt.fx.control.wrapper.chart.axis.value.moregenval.MoreGenericValueAxis
 import matt.fx.control.wrapper.chart.axis.value.number.moregennum.MoreGenericNumberAxis
 import matt.fx.control.wrapper.chart.line.highperf.relinechart.xy.XYChartForPackagePrivateProps
+import kotlin.math.abs
 
 /**
  * Chart type that plots bubbles for the data points in a series. The extra value property of Data is used to represent
@@ -84,9 +85,9 @@ class BubbleChartForWrapper<X, Y> @JvmOverloads constructor(
 			  return
 			}
 			ellipse.radiusX =
-			  getDoubleValue(item.extraValue.value, 1.0)*if (xAxis is MoreGenericNumberAxis) Math.abs((xAxis as MoreGenericNumberAxis).scale.value) else 1.0
+			  getDoubleValue(item.extraValue.value, 1.0)*if (xAxis is MoreGenericNumberAxis) abs(xAxis.scale.value) else 1.0
 			ellipse.radiusY =
-			  getDoubleValue(item.extraValue.value, 1.0)*if (yAxis is MoreGenericNumberAxis) Math.abs((yAxis as MoreGenericNumberAxis).scale.value) else 1.0
+			  getDoubleValue(item.extraValue.value, 1.0)*if (yAxis is MoreGenericNumberAxis) abs(yAxis.scale.value) else 1.0
 			// Note: workaround for RT-7689 - saw this in ProgressControlSkin
 			// The region doesn't update itself when the shape is mutated in place, so we
 			// null out and then restore the shape in order to force invalidation.
@@ -124,7 +125,7 @@ class BubbleChartForWrapper<X, Y> @JvmOverloads constructor(
 	  // fade out old bubble
 	  val ft = FadeTransition(Duration.millis(500.0), bubble)
 	  ft.toValue = 0.0
-	  ft.onFinished = EventHandler { actionEvent: ActionEvent? ->
+	  ft.onFinished = EventHandler {
 		plotChildren.remove(bubble)
 		removeDataItemFromDisplay(series, item)
 		bubble.opacity = 1.0
@@ -160,7 +161,7 @@ class BubbleChartForWrapper<X, Y> @JvmOverloads constructor(
 	// remove all bubble nodes
 	if (shouldAnimate()) {
 	  val pt = ParallelTransition()
-	  pt.onFinished = EventHandler { event: ActionEvent? ->
+	  pt.onFinished = EventHandler {
 		removeSeriesFromDisplay(
 		  series
 		)

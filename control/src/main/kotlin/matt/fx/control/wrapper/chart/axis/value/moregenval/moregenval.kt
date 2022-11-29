@@ -490,7 +490,7 @@ abstract class MoreGenericValueAxis<T: UpperBound>(
 	  dataMaxValue = -Double.MAX_VALUE
 	}
 	for (dataValue in data) {
-	  dataMinValue = Math.min(dataMinValue, converter.convertToB(dataValue!!))
+	  dataMinValue = Math.min(dataMinValue, converter.convertToB(dataValue))
 	  dataMaxValue = Math.max(dataMaxValue, converter.convertToB(dataValue))
 	}
 	super.invalidateRange(data)

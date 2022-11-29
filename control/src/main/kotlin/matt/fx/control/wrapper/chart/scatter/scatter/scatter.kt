@@ -31,7 +31,6 @@ import javafx.application.Platform
 import javafx.beans.NamedArg
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
-import javafx.event.ActionEvent
 import javafx.event.EventHandler
 import javafx.scene.AccessibleRole.TEXT
 import javafx.scene.layout.StackPane
@@ -104,7 +103,7 @@ class ScatterChartForWrapper<X, Y> @JvmOverloads constructor(
 	  // fade out old symbol
 	  val ft = FadeTransition(Duration.millis(500.0), symbol)
 	  ft.toValue = 0.0
-	  ft.onFinished = EventHandler { actionEvent: ActionEvent? ->
+	  ft.onFinished = EventHandler {
 		plotChildren.remove(symbol)
 		removeDataItemFromDisplay(series, item)
 		symbol!!.opacity = 1.0
@@ -132,7 +131,7 @@ class ScatterChartForWrapper<X, Y> @JvmOverloads constructor(
 	// remove all symbol nodes
 	if (shouldAnimate()) {
 	  val pt = ParallelTransition()
-	  pt.onFinished = EventHandler { event: ActionEvent? ->
+	  pt.onFinished = EventHandler {
 		removeSeriesFromDisplay(
 		  series
 		)
@@ -142,7 +141,7 @@ class ScatterChartForWrapper<X, Y> @JvmOverloads constructor(
 		// fade out old symbol
 		val ft = FadeTransition(Duration.millis(500.0), symbol)
 		ft.toValue = 0.0
-		ft.onFinished = EventHandler { actionEvent: ActionEvent? ->
+		ft.onFinished = EventHandler {
 		  plotChildren.remove(symbol)
 		  symbol.opacity = 1.0
 		}
@@ -181,7 +180,7 @@ class ScatterChartForWrapper<X, Y> @JvmOverloads constructor(
 	}
   }
 
-  public override fun createLegendItemForSeries(series: Series<X, Y>, seriesIndex: Int): LegendItem {
+  override fun createLegendItemForSeries(series: Series<X, Y>, seriesIndex: Int): LegendItem {
 	val legendItem = LegendItem(series.name.value)
 	val node = if (series.data.value.isEmpty()) null else series.data.value[0].node
 	if (node != null) {

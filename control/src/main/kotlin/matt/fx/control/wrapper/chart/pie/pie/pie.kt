@@ -397,6 +397,7 @@ class PieChartForWrapper @JvmOverloads constructor(data: ObservableList<Data> = 
   private fun createArcRegion(item: Data): Node {
 	var arcRegion: Node = item.getNode()
 	// check if symbol has already been created
+	@Suppress("SENSELESS_COMPARISON")
 	if (arcRegion == null) {
 	  arcRegion = Region()
 	  arcRegion.setNodeOrientation(LEFT_TO_RIGHT)
@@ -414,6 +415,7 @@ class PieChartForWrapper @JvmOverloads constructor(data: ObservableList<Data> = 
 
   private fun updateDataItemStyleClass(item: Data, index: Int) {
 	val node: Node = item.getNode()
+	@Suppress("SENSELESS_COMPARISON")
 	if (node != null) {
 	  // Note: not sure if we want to add or check, ie be more careful and efficient here
 	  node.styleClass.setAll(
@@ -426,7 +428,7 @@ class PieChartForWrapper @JvmOverloads constructor(data: ObservableList<Data> = 
 	}
   }
 
-  private fun dataItemAdded(item: Data, index: Int) {
+  private fun dataItemAdded(item: Data, @Suppress("UNUSED_PARAMETER") index: Int) {
 	// create shape
 	val shape = createArcRegion(item)
 	val text = createPieLabel(item)
@@ -457,7 +459,7 @@ class PieChartForWrapper @JvmOverloads constructor(data: ObservableList<Data> = 
 			// this item is added and removed before its add animation finishes.
 			if (item.getChart() == null) item.setChart(this@PieChartForWrapper)
 			item.getChart()!!.chartChildren.add(text)
-			val ft: FadeTransition = FadeTransition(Duration.millis(150.0), text)
+			val ft = FadeTransition(Duration.millis(150.0), text)
 			ft.setToValue(1.0)
 			ft.play()
 		  },
@@ -507,7 +509,7 @@ class PieChartForWrapper @JvmOverloads constructor(data: ObservableList<Data> = 
 		  colorBits.clear(item.defaultColorIndex)
 		  chartChildren.remove(shape)
 		  // fade out label
-		  val ft: FadeTransition = FadeTransition(Duration.millis(150.0), item.textNode)
+		  val ft = FadeTransition(Duration.millis(150.0), item.textNode)
 		  ft.setFromValue(1.0)
 		  ft.setToValue(0.0)
 		  ft.setOnFinished(object: EventHandler<ActionEvent?> {
@@ -545,6 +547,7 @@ class PieChartForWrapper @JvmOverloads constructor(data: ObservableList<Data> = 
   }
 
   /** {@inheritDoc}  */
+  @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
   override fun layoutChartChildren(top: Double, left: Double, contentWidth: Double, contentHeight: Double) {
 	var total = 0.0
 	var item = begin
@@ -626,16 +629,16 @@ class PieChartForWrapper @JvmOverloads constructor(data: ObservableList<Data> = 
 	  val centerY = contentHeight/2 + top
 	  var index = 0
 	  run {
-		var item: Data? = begin
-		while (item != null) {
+		var item2: Data? = begin
+		while (item2 != null) {
 
 		  // layout labels for pie slice
-		  item!!.textNode.setVisible(shouldShowLabels)
+		  item2.textNode.setVisible(shouldShowLabels)
 		  if (shouldShowLabels) {
 			val size: Double = if ((isClockwise())) (-scale*Math.abs(
-			  item!!.getCurrentPieValue()
+			  item2.getCurrentPieValue()
 			)) else (scale*Math.abs(
-			  item!!.getCurrentPieValue()
+			  item2.getCurrentPieValue()
 			))
 			val isLeftSide: Boolean = !(labelAngles!!.get(index) > -90 && labelAngles.get(index) < 90)
 			val sliceCenterEdgeX: Double =
@@ -643,35 +646,35 @@ class PieChartForWrapper @JvmOverloads constructor(data: ObservableList<Data> = 
 			val sliceCenterEdgeY: Double =
 			  calcY(labelAngles.get(index), pieRadius, centerY)
 			val xval: Double =
-			  if (isLeftSide) ((labelsX!!.get(index) + sliceCenterEdgeX) - item!!.textNode.getLayoutBounds()
+			  if (isLeftSide) ((labelsX!!.get(index) + sliceCenterEdgeX) - item2.textNode.getLayoutBounds()
 				.getMaxX() - LABEL_TICK_GAP) else (labelsX!!.get(
 				index
-			  ) + sliceCenterEdgeX - item!!.textNode.getLayoutBounds()
+			  ) + sliceCenterEdgeX - item2.textNode.getLayoutBounds()
 				.getMinX() + LABEL_TICK_GAP)
 			val yval: Double =
-			  (labelsY!!.get(index) + sliceCenterEdgeY) - (item!!.textNode.getLayoutBounds().getMinY()/2) - 2
+			  (labelsY!!.get(index) + sliceCenterEdgeY) - (item2.textNode.getLayoutBounds().getMinY()/2) - 2
 
 			// do the line (Path)for labels
 			val lineEndX: Double = sliceCenterEdgeX + labelsX.get(index)
 			val lineEndY: Double = sliceCenterEdgeY + labelsY.get(index)
 			val info: LabelLayoutInfo = LabelLayoutInfo(
 			  sliceCenterEdgeX,
-			  sliceCenterEdgeY, lineEndX, lineEndY, xval, yval, item!!.textNode, Math.abs(size)
+			  sliceCenterEdgeY, lineEndX, lineEndY, xval, yval, item2.textNode, Math.abs(size)
 			)
 			fullPie!!.add(info)
 
 			// set label scales
 			if (labelScale < 1) {
-			  item!!.textNode.getTransforms().add(
+			  item2.textNode.getTransforms().add(
 				Scale(
 				  labelScale, labelScale,
-				  if (isLeftSide) item!!.textNode.getLayoutBounds().getWidth() else 0.0, 0.0
+				  if (isLeftSide) item2.textNode.getLayoutBounds().getWidth() else 0.0, 0.0
 				)
 			  )
 			}
 		  }
 		  index++
-		  item = item!!.next
+		  item2 = item2.next
 		}
 	  }
 
@@ -679,8 +682,9 @@ class PieChartForWrapper @JvmOverloads constructor(data: ObservableList<Data> = 
 	  var sAngle = getStartAngle()
 	  var item = begin
 	  while (item != null) {
-		val node: Node = item!!.getNode()
+		val node: Node = item.getNode()
 		var arc: Arc? = null
+		@Suppress("SENSELESS_COMPARISON")
 		if (node != null) {
 		  if (node is Region) {
 			val arcRegion = node
@@ -695,19 +699,19 @@ class PieChartForWrapper @JvmOverloads constructor(data: ObservableList<Data> = 
 			arcRegion.isCacheShape = false
 		  }
 		}
-		val size = if (isClockwise()) -scale*Math.abs(item!!.getCurrentPieValue()) else scale*Math.abs(
-		  item!!.getCurrentPieValue()
+		val size = if (isClockwise()) -scale*Math.abs(item.getCurrentPieValue()) else scale*Math.abs(
+		  item.getCurrentPieValue()
 		)
 		// update slice arc size
 		arc!!.startAngle = sAngle
 		arc.length = size
 		arc.type = ROUND
-		arc.radiusX = pieRadius*item!!.getRadiusMultiplier()
-		arc.radiusY = pieRadius*item!!.getRadiusMultiplier()
+		arc.radiusX = pieRadius*item.getRadiusMultiplier()
+		arc.radiusY = pieRadius*item.getRadiusMultiplier()
 		node.layoutX = centerX
 		node.layoutY = centerY
 		sAngle += size
-		item = item!!.next
+		item = item.next
 	  }
 	  // finally draw the text and line
 	  if (fullPie != null) {
@@ -803,6 +807,7 @@ class PieChartForWrapper @JvmOverloads constructor(data: ObservableList<Data> = 
    */
   private fun updateLegend() {
 	val legendNode = getLegend()
+	@Suppress("SENSELESS_COMPARISON")
 	if (legendNode != null && legendNode !== legend) return  // RT-23596 dont update when user has set legend.
 	legend.isVertical = (legendSide.value == LEFT) || (legendSide.value == RIGHT)
 	val legendList: MutableList<LegendItem> = ArrayList()
@@ -816,6 +821,7 @@ class PieChartForWrapper @JvmOverloads constructor(data: ObservableList<Data> = 
 	}
 	legend.items.setAll(legendList)
 	if (legendList.size > 0) {
+	  @Suppress("SENSELESS_COMPARISON")
 	  if (legendNode == null) {
 		setLegend(legend)
 	  }
@@ -825,7 +831,7 @@ class PieChartForWrapper @JvmOverloads constructor(data: ObservableList<Data> = 
   }
 
   private val dataSize: Int
-	private get() {
+	get() {
 	  var count = 0
 	  var d = begin
 	  while (d != null) {
@@ -837,14 +843,14 @@ class PieChartForWrapper @JvmOverloads constructor(data: ObservableList<Data> = 
 
   // -------------- INNER CLASSES --------------------------------------------
   // Class holding label line layout info for collision detection and removal
-  private class LabelLayoutInfo internal constructor(
+  private class LabelLayoutInfo(
 	var startX: Double, var startY: Double, var endX: Double, var endY: Double,
 	var textX: Double, var textY: Double, var text: Text, var size: Double
   ) {
-	override fun equals(o: Any?): Boolean {
-	  if (this === o) return true
-	  if (o == null || javaClass != o.javaClass) return false
-	  val that = o as LabelLayoutInfo
+	override fun equals(other: Any?): Boolean {
+	  if (this === other) return true
+	  if (other == null || javaClass != other.javaClass) return false
+	  val that = other as LabelLayoutInfo
 	  return (java.lang.Double.compare(that.startX, startX) == 0) && (
 		  java.lang.Double.compare(that.startY, startY) == 0) && (
 		  java.lang.Double.compare(that.endX, endX) == 0) && (
@@ -889,7 +895,7 @@ class PieChartForWrapper @JvmOverloads constructor(data: ObservableList<Data> = 
 	  chart.value = value
 	}
 
-	fun chartProperty(): ReadOnlyObjectProperty<PieChartForWrapper?> {
+	@Suppress("unused") fun chartProperty(): ReadOnlyObjectProperty<PieChartForWrapper?> {
 	  return chart.readOnlyProperty
 	}
 

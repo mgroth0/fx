@@ -454,10 +454,10 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
    */
   init {
 //	xAxis = xAxis
-	if (xAxis.side == null) xAxis.setSide(  BOTTOM)
+	if (xAxis.side.value == null) xAxis.setSide(  BOTTOM)
 	xAxis.setEffectiveOrientation(HORIZONTAL)
 	this.yAxis = yAxis
-	if (yAxis.side == null) yAxis.setSide( LEFT)
+	if (yAxis.side.value == null) yAxis.setSide( LEFT)
 	yAxis.setEffectiveOrientation(VERTICAL)
 	// RT-23123 autoranging leads to charts incorrect appearance.
 	xAxis.autoRangingProperty()
@@ -508,6 +508,7 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 	 */
 	get() {
 	  val data = getData()
+	  @Suppress("UNNECESSARY_SAFE_CALL", "USELESS_ELVIS")
 	  return data?.size ?: 0
 	}
 
@@ -521,8 +522,7 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 	series: Series<X, Y>,
 	removed: List<Data<X, Y>>,
 	addedFrom: Int,
-	addedTo: Int,
-	permutation: Boolean
+	addedTo: Int
   ) {
 	for (item in removed) {
 	  dataItemRemoved(item, series)
@@ -552,11 +552,12 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
   /**
    * This is called whenever a series is added or removed and the legend needs to be updated
    */
+  @Suppress("SENSELESS_COMPARISON")
   protected fun updateLegend() {
 	val legendList: MutableList<LegendItem> = ArrayList()
 	if (getData() != null) {
-	  for (seriesIndex in getData()!!.indices) {
-		val series = getData()!![seriesIndex]
+	  for (seriesIndex in getData().indices) {
+		val series = getData()[seriesIndex]
 		legendList.add(createLegendItemForSeries(series, seriesIndex))
 	  }
 	}
@@ -1558,7 +1559,7 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 			// inform chart
 			chart.dataItemsChanged(
 			  this@Series,
-			  c.removed as List<Data<X, Y>>, c.from, c.to, c.wasPermutated()
+			  c.removed as List<Data<X, Y>>, c.from, c.to
 			)
 		  } else {
 			val dupCheck: MutableSet<Data<X, Y>?> = HashSet()
