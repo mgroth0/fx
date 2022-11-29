@@ -4,7 +4,6 @@ import javafx.scene.chart.Axis
 import javafx.scene.chart.LineChart
 import matt.collect.itr.applyEach
 import matt.fx.control.wrapper.chart.axis.AxisWrapper
-import matt.fx.control.wrapper.chart.axis.value.OldValueAxisWrapper
 import matt.fx.control.wrapper.chart.axis.value.ValueAxisWrapper
 import matt.fx.control.wrapper.chart.axis.value.axis.AxisForPackagePrivateProps
 import matt.fx.control.wrapper.chart.axis.value.number.NumberAxisWrapper
@@ -52,14 +51,14 @@ open class HighPerformanceLineChart<X: MathAndComparable<X>, Y: MathAndComparabl
 		  maximizeTickUnit()
 		}
 	  }
-	  (this as? OldValueAxisWrapper)?.apply {
+	  /*(this as? OldValuesAxisWrapper)?.apply {
 		error("dont use this")
-		/*isMinorTickVisible = false
+		*//*isMinorTickVisible = false
 		minorTickCount = 0
 		(this as? OldNumberAxisWrapper)?.apply{
 		  maximizeTickUnit()
-		}*/
-	  }
+		}*//*
+	  }*/
 	}
   }
 

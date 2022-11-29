@@ -34,9 +34,9 @@ import javafx.collections.ObservableList
 import javafx.event.ActionEvent
 import javafx.event.EventHandler
 import javafx.scene.AccessibleRole.TEXT
-import javafx.scene.chart.Axis
 import javafx.scene.layout.StackPane
 import javafx.util.Duration
+import matt.fx.control.wrapper.chart.axis.value.axis.AxisForPackagePrivateProps
 import matt.fx.control.wrapper.chart.line.highperf.relinechart.xy.XYChartForPackagePrivateProps
 
 /**
@@ -44,12 +44,12 @@ import matt.fx.control.wrapper.chart.line.highperf.relinechart.xy.XYChartForPack
  * @since JavaFX 2.0
  */
 class ScatterChartForWrapper<X, Y> @JvmOverloads constructor(
-  @NamedArg("xAxis") xAxis: Axis<X>?,
-  @NamedArg("yAxis") yAxis: Axis<Y>?,
+  @NamedArg("xAxis") xAxis: AxisForPackagePrivateProps<X>,
+  @NamedArg("yAxis") yAxis: AxisForPackagePrivateProps<Y>,
   @NamedArg("data")
-  data: ObservableList<Series<X, Y>?>? = FXCollections.observableArrayList()
+  data: ObservableList<Series<X, Y>> = FXCollections.observableArrayList()
 ):
-  XYChartForPackagePrivateProps<X?, Y?>(xAxis, yAxis) {
+  XYChartForPackagePrivateProps<X, Y>(xAxis, yAxis) {
   /**
    * Construct a new ScatterChart with the given axis and data.
    *
@@ -69,19 +69,19 @@ class ScatterChartForWrapper<X, Y> @JvmOverloads constructor(
   }
   // -------------- METHODS ------------------------------------------------------------------------------------------
   /** {@inheritDoc}  */
-  override fun dataItemAdded(series: Series<X?, Y?>, itemIndex: Int, item: Data<X?, Y?>) {
-	var symbol = item.node
+  override fun dataItemAdded(series: Series<X, Y>, itemIndex: Int, item: Data<X, Y>) {
+	var symbol = item.node.value
 	// check if symbol has already been created
 	if (symbol == null) {
 	  symbol = StackPane()
 	  symbol.setAccessibleRole(TEXT)
 	  symbol.setAccessibleRoleDescription("Point")
 	  symbol.focusTraversableProperty().bind(Platform.accessibilityActiveProperty())
-	  item.node = symbol
+	  item.node.value = symbol
 	}
 	// set symbol styles
 	symbol.styleClass.setAll(
-	  "chart-symbol", "series" + data.indexOf(series), "data$itemIndex",
+	  "chart-symbol", "series" + data.value.indexOf(series), "data$itemIndex",
 	  series.defaultColorStyleClass
 	)
 	// add and fade in new symbol if animated
@@ -97,8 +97,8 @@ class ScatterChartForWrapper<X, Y> @JvmOverloads constructor(
   }
 
   /** {@inheritDoc}  */
-  override fun dataItemRemoved(item: Data<X?, Y?>, series: Series<X?, Y?>) {
-	val symbol = item.node
+  override fun dataItemRemoved(item: Data<X, Y>, series: Series<X, Y>) {
+	val symbol = item.node.value
 	symbol?.focusTraversableProperty()?.unbind()
 	if (shouldAnimate()) {
 	  // fade out old symbol
@@ -117,18 +117,18 @@ class ScatterChartForWrapper<X, Y> @JvmOverloads constructor(
   }
 
   /** {@inheritDoc}  */
-  override fun dataItemChanged(item: Data<X?, Y?>) {}
+  override fun dataItemChanged(item: Data<X, Y>) {}
 
   /** {@inheritDoc}  */
-  override fun seriesAdded(series: Series<X?, Y?>, seriesIndex: Int) {
+  override fun seriesAdded(series: Series<X, Y>, seriesIndex: Int) {
 	// handle any data already in series
-	for (j in series.data.indices) {
-	  dataItemAdded(series, j, series.data[j])
+	for (j in series.data.value.indices) {
+	  dataItemAdded(series, j, series.data.value[j])
 	}
   }
 
   /** {@inheritDoc}  */
-  override fun seriesRemoved(series: Series<X?, Y?>) {
+  override fun seriesRemoved(series: Series<X, Y>) {
 	// remove all symbol nodes
 	if (shouldAnimate()) {
 	  val pt = ParallelTransition()
@@ -137,8 +137,8 @@ class ScatterChartForWrapper<X, Y> @JvmOverloads constructor(
 		  series
 		)
 	  }
-	  for (d in series.data) {
-		val symbol = d.node
+	  for (d in series.data.value) {
+		val symbol = d.node.value
 		// fade out old symbol
 		val ft = FadeTransition(Duration.millis(500.0), symbol)
 		ft.toValue = 0.0
@@ -150,8 +150,8 @@ class ScatterChartForWrapper<X, Y> @JvmOverloads constructor(
 	  }
 	  pt.play()
 	} else {
-	  for (d in series.data) {
-		val symbol = d.node
+	  for (d in series.data.value) {
+		val symbol = d.node.value
 		plotChildren.remove(symbol)
 	  }
 	  removeSeriesFromDisplay(series)
@@ -162,16 +162,16 @@ class ScatterChartForWrapper<X, Y> @JvmOverloads constructor(
   override fun layoutPlotChildren() {
 	// update symbol positions
 	for (seriesIndex in 0 until dataSize) {
-	  val series = data[seriesIndex]
+	  val series = data.value[seriesIndex]
 	  val it = getDisplayedDataIterator(series)
 	  while (it.hasNext()) {
 		val item = it.next()
-		val x = xAxis.getDisplayPosition(item.currentX)
-		val y = yAxis.getDisplayPosition(item.currentY)
+		val x = xAxis.getDisplayPosition(item.currentX.value)
+		val y = yAxis.getDisplayPosition(item.currentY.value)
 		if (java.lang.Double.isNaN(x) || java.lang.Double.isNaN(y)) {
 		  continue
 		}
-		val symbol = item.node
+		val symbol = item.node.value
 		if (symbol != null) {
 		  val w = symbol.prefWidth(-1.0)
 		  val h = symbol.prefHeight(-1.0)
@@ -181,11 +181,11 @@ class ScatterChartForWrapper<X, Y> @JvmOverloads constructor(
 	}
   }
 
-  public override fun createLegendItemForSeries(series: Series<X?, Y?>, seriesIndex: Int): LegendItem {
-	val legendItem = LegendItem(series.name)
-	val node = if (series.data.isEmpty()) null else series.data[0].node
+  public override fun createLegendItemForSeries(series: Series<X, Y>, seriesIndex: Int): LegendItem {
+	val legendItem = LegendItem(series.name.value)
+	val node = if (series.data.value.isEmpty()) null else series.data.value[0].node
 	if (node != null) {
-	  legendItem.symbol.styleClass.addAll(node.styleClass)
+	  legendItem.symbol.styleClass.addAll(node.value.styleClass)
 	}
 	return legendItem
   }

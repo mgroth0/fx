@@ -148,7 +148,7 @@ class PieChartForWrapper @JvmOverloads constructor(data: ObservableList<Data> = 
   }
   // -------------- PUBLIC PROPERTIES ----------------------------------------
   /** PieCharts data  */
-  private val data: ObjectProperty<ObservableList<Data>> = object: ObjectPropertyBase<ObservableList<Data>>() {
+  internal val data: ObjectProperty<ObservableList<Data>> = object: ObjectPropertyBase<ObservableList<Data>>() {
 	private var old: ObservableList<Data>? = null
 	override fun invalidated() {
 	  val current: ObservableList<Data>? = value

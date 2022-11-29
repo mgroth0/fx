@@ -2,7 +2,6 @@ package matt.fx.control.wrapper.chart.line.highperf.relinechart.xy.area
 
 import com.sun.javafx.charts.Legend.LegendItem
 import javafx.animation.FadeTransition
-import javafx.animation.Interpolator
 import javafx.animation.KeyFrame
 import javafx.animation.KeyValue
 import javafx.animation.Timeline
@@ -24,9 +23,6 @@ import javafx.event.EventHandler
 import javafx.scene.AccessibleRole.TEXT
 import javafx.scene.Group
 import javafx.scene.Node
-import javafx.scene.chart.LineChart.SortingPolicy
-import javafx.scene.chart.LineChart.SortingPolicy.X_AXIS
-import javafx.scene.chart.LineChart.SortingPolicy.Y_AXIS
 import javafx.scene.layout.StackPane
 import javafx.scene.shape.ClosePath
 import javafx.scene.shape.LineTo
@@ -173,7 +169,7 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
 		//                //1. y intercept of the line : y = ((y3-y1)/(x3-x1)) * x2 + (x3y1 - y3x1)/(x3 -x1)
 		val y = (y3 - y1)/(x3 - x1)*x2 + (x3*y1 - y3*x1)/(x3 - x1)
 		item.currentY.value = yAxis.toRealValue(y)
-		item.setCurrentX(xAxis.toRealValue(x2))
+		item.setCurrentX(xAxis.toRealValue(x2)!!)
 		//2. we can simply use the midpoint on the line as well..
 		//                double x = (x3 + x1)/2;
 		//                double y = (y3 + y1)/2;
@@ -263,7 +259,7 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
 		item.currentX.value = xAxis.toRealValue(x2)
 		item.currentY.value = yAxis.toRealValue(y2)
 		item.xValue.value = xAxis.toRealValue(x2)
-		item.setYValue(yAxis.toRealValue(y))
+		item.setYValue(yAxis.toRealValue(y)!!)
 		//2.  we can simply use the midpoint on the line as well..
 		//                double x = (x3 + x1)/2;
 		//                double y = (y3 + y1)/2;
@@ -336,8 +332,8 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
 	// Note: is there a more efficient way of doing this?
 	for (i in 0 until dataSize) {
 	  val s = data.value[i]
-	  val seriesLine = (s.node as Group).children[1] as Path
-	  val fillPath = (s.node as Group).children[0] as Path
+	  val seriesLine = (s.node.value as Group).children[1] as Path
+	  val fillPath = (s.node.value as Group).children[0] as Path
 	  seriesLine.styleClass.setAll("chart-series-area-line", "series$i", s.defaultColorStyleClass)
 	  fillPath.styleClass.setAll("chart-series-area-fill", "series$i", s.defaultColorStyleClass)
 	  for (j in s.data.value.indices) {
@@ -428,12 +424,12 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
 	for (seriesIndex in 0 until dataSize) {
 	  val series = data.value[seriesIndex]
 	  val seriesYAnimMultiplier = seriesYMultiplierMap[series]
-	  val children = (series.node as Group).children
+	  val children = (series.node.value as Group).children
 	  val fillPath = children[0] as Path
 	  val linePath = children[1] as Path
 	  makePaths(
 		this, series, constructedPath, fillPath, linePath,
-		seriesYAnimMultiplier!!.get(), X_AXIS
+		seriesYAnimMultiplier!!.get(), MorePerfOptionsLineChart.SortingPolicy.X_AXIS
 	  )
 	}
   }
@@ -514,8 +510,8 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
 	  val axisX = chart.xAxis
 	  val axisY = chart.yAxis
 	  val hlw = linePath.strokeWidth/2.0
-	  val sortX = sortAxis == X_AXIS
-	  val sortY = sortAxis == Y_AXIS
+	  val sortX = sortAxis == MorePerfOptionsLineChart.SortingPolicy.X_AXIS
+	  val sortY = sortAxis == MorePerfOptionsLineChart.SortingPolicy.Y_AXIS
 	  val dataXMin = if (sortX) -hlw else Double.NEGATIVE_INFINITY
 	  val dataXMax = if (sortX) axisX.width + hlw else Double.POSITIVE_INFINITY
 	  val dataYMin = if (sortY) -hlw else Double.NEGATIVE_INFINITY
@@ -528,7 +524,7 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
 		val item = it.next()
 		val x = axisX.getDisplayPosition(item.currentX.value)
 		val y = axisY.getDisplayPosition(
-		  axisY.toRealValue(axisY.toNumericValue(item.currentY.value)*yAnimMultiplier)
+		  axisY.toRealValue(axisY.toNumericValue(item.currentY.value)*yAnimMultiplier)!!
 		)
 		val skip = java.lang.Double.isNaN(x) || java.lang.Double.isNaN(y)
 		val symbol = item.node.value
@@ -600,7 +596,7 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
 		if (fillPath != null) {
 		  val fillElements = fillPath.elements
 		  fillElements.clear()
-		  val yOrigin = axisY.getDisplayPosition(axisY.toRealValue(0.0))
+		  val yOrigin = axisY.getDisplayPosition(axisY.toRealValue(0.0)!!)
 		  fillElements.add(MoveTo(first.x, yOrigin))
 		  fillElements.addAll(constructedPath)
 		  fillElements.add(LineTo(last.x, yOrigin))

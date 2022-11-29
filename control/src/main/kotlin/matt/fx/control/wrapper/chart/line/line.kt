@@ -1,9 +1,9 @@
 package matt.fx.control.wrapper.chart.line
 
 import matt.fx.control.wrapper.chart.line.highperf.relinechart.MorePerfOptionsLineChart
-import matt.fx.control.wrapper.chart.line.highperf.relinechart.xy.XYChart.Data
 import matt.fx.control.wrapper.chart.axis.MAxis
 import matt.fx.control.wrapper.chart.axis.value.number.NumberAxisWrapper
+import matt.fx.control.wrapper.chart.line.highperf.relinechart.xy.XYChartForPackagePrivateProps.Data
 import matt.fx.control.wrapper.chart.xy.XYChartWrapper
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.attachTo

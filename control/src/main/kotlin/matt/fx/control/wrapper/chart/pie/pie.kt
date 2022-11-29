@@ -1,9 +1,9 @@
 package matt.fx.control.wrapper.chart.pie
 
 import javafx.collections.ObservableList
-import matt.fx.control.wrapper.chart.pie.pie.PieChart
-import matt.fx.control.wrapper.chart.pie.pie.PieChart.Data
 import matt.fx.control.wrapper.chart.ChartWrapper
+import matt.fx.control.wrapper.chart.pie.pie.PieChartForWrapper
+import matt.fx.control.wrapper.chart.pie.pie.PieChartForWrapper.Data
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.attach
 
@@ -27,7 +27,7 @@ open class PieChartWrapper(
   constructor(data: ObservableList<Data>): this(PieChartForWrapper(data))
 
 
-  val data: ObservableList<Data> = node.data
+  val data: ObservableList<Data> = node.data.value
 
 
   /**
@@ -36,7 +36,7 @@ open class PieChartWrapper(
    *
    * @return The new Data entry
    */
-  fun data(name: String, value: Double, op: PieChart.Data.() -> Unit = {}) = PieChart.Data(name, value).apply {
+  fun data(name: String, value: Double, op: PieChartForWrapper.Data.() -> Unit = {}) = PieChartForWrapper.Data(name, value).apply {
     data.add(this)
     op(this)
   }

@@ -2,6 +2,7 @@ package matt.fx.control.wrapper.chart.scatter
 
 import javafx.scene.chart.ScatterChart
 import matt.fx.control.wrapper.chart.axis.MAxis
+import matt.fx.control.wrapper.chart.scatter.scatter.ScatterChartForWrapper
 import matt.fx.control.wrapper.chart.xy.XYChartWrapper
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.attachTo
@@ -18,9 +19,9 @@ fun <X, Y> ET.scatterchart(
   ScatterChartWrapper(x, y).attachTo(this, op) { it.title = title }
 
 open class ScatterChartWrapper<X, Y>(
-  node: ScatterChart<X, Y>
+  node: ScatterChartForWrapper<X, Y>
 ): XYChartWrapper<X, Y, ScatterChartForWrapper<X, Y>>(node) {
 
-  constructor(x: MAxis<X>, y: MAxis<Y>): this(ScatterChart(x.node, y.node))
+  constructor(x: MAxis<X>, y: MAxis<Y>): this(ScatterChartForWrapper(x.node, y.node))
 
 }
