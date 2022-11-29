@@ -1610,7 +1610,7 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 	  }
 	}
 
-	fun getName(): String {
+	fun getName(): String? {
 	  return name.get()
 	}
 

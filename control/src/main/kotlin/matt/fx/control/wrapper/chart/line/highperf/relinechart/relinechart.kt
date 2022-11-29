@@ -319,12 +319,12 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
 	  } else if (itemIndex == 0 && dataListSize > 1) {
 		animate = true
 		item.xValueProp.value = series.data.value[0].xValueProp.value
-		item.yValue=(series.data.value[0].yValueProp.value)
+		item.yValue = (series.data.value[0].yValueProp.value)
 	  } else if (itemIndex == dataSize - 1 && dataListSize > 1) {
 		animate = true
 		val last = dataListSize - 1
 		item.xValueProp.value = series.data.value[last].xValueProp.value
-		item.yValue=(series.data.value[last].yValueProp.value)
+		item.yValue = (series.data.value[last].yValueProp.value)
 	  } else if (symbol != null) {
 		// fade out symbol
 		fadeSymbolTransition = FadeTransition(Duration.millis(500.0), symbol)
@@ -365,7 +365,7 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
 	  seriesNode?.styleClass?.setAll("chart-series-line", "series$i", s.defaultColorStyleClass)
 	  for (j in s.data.value.indices) {
 		val symbol = s.data.value[j].node.value
-		symbol.styleClass?.setAll("chart-line-symbol", "series$i", "data$j", s.defaultColorStyleClass)
+		symbol?.styleClass?.setAll("chart-line-symbol", "series$i", "data$j", s.defaultColorStyleClass)
 	  }
 	}
   }
@@ -418,8 +418,14 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
 		plotChildren.add(symbol)
 		if (shouldAnimate()) {
 		  // fade in new symbol
-		  keyFrames.add(KeyFrame(Duration.ZERO, KeyValue(symbol.opacityProperty(), 0,MyInterpolator.MY_DEFAULT_INTERPOLATOR)))
-		  keyFrames.add(KeyFrame(Duration.millis(200.0), KeyValue(symbol.opacityProperty(), 1,MyInterpolator.MY_DEFAULT_INTERPOLATOR)))
+		  keyFrames.add(
+			KeyFrame(Duration.ZERO, KeyValue(symbol.opacityProperty(), 0, MyInterpolator.MY_DEFAULT_INTERPOLATOR))
+		  )
+		  keyFrames.add(
+			KeyFrame(
+			  Duration.millis(200.0), KeyValue(symbol.opacityProperty(), 1, MyInterpolator.MY_DEFAULT_INTERPOLATOR)
+			)
+		  )
 		}
 	  }
 	}
@@ -481,7 +487,7 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
 	val value = XYValueMap[item]
 	if (value != null) {
 	  @Suppress("UNCHECKED_CAST")
-	  item.yValue=(value as Y)
+	  item.yValue = (value as Y)
 	  @Suppress("UNCHECKED_CAST")
 	  item.setCurrentY(value as Y)
 	}
@@ -507,10 +513,10 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
 	  KeyFrame(
 		Duration.ZERO, KeyValue(
 		  item.currentYProperty(),
-		  item.currentY.value,MyInterpolator.MY_DEFAULT_INTERPOLATOR
+		  item.currentY.value, MyInterpolator.MY_DEFAULT_INTERPOLATOR
 		), KeyValue(
 		  item.currentXProperty(),
-		  item.currentX.value,MyInterpolator.MY_DEFAULT_INTERPOLATOR
+		  item.currentX.value, MyInterpolator.MY_DEFAULT_INTERPOLATOR
 		)
 	  ),
 	  KeyFrame(
@@ -532,7 +538,7 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
 	return t
   }
 
-  private fun createSymbol(series: Series<X, Y>, seriesIndex: Int, item: Data<X, Y>, itemIndex: Int): Node {
+  private fun createSymbol(series: Series<X, Y>, seriesIndex: Int, item: Data<X, Y>, itemIndex: Int): Node? {
 	var symbol = item.getNode()
 	// check if symbol has already been created
 	if (symbol == null && getCreateSymbols()) {
@@ -547,7 +553,7 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
 	  "chart-line-symbol", "series$seriesIndex",
 	  "data$itemIndex", series.defaultColorStyleClass
 	)
-	return symbol!!
+	return symbol
   }
 
   override fun createLegendItemForSeries(series: Series<X, Y>, seriesIndex: Int): LegendItem {
