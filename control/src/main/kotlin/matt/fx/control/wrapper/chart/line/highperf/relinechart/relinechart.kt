@@ -20,7 +20,6 @@ import javafx.css.Styleable
 import javafx.css.StyleableBooleanProperty
 import javafx.css.StyleableProperty
 import javafx.css.converter.BooleanConverter
-import javafx.event.ActionEvent
 import javafx.event.EventHandler
 import javafx.scene.AccessibleRole.TEXT
 import javafx.scene.Node
@@ -243,7 +242,7 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
 		animate(
 		  KeyFrame(
 			Duration.ZERO,
-			{ e: ActionEvent? ->
+			{
 			  @Suppress("SENSELESS_COMPARISON")
 			  if (symbol != null && !plotChildren.contains(
 				  symbol
@@ -330,7 +329,7 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
 		// fade out symbol
 		fadeSymbolTransition = FadeTransition(Duration.millis(500.0), symbol)
 		fadeSymbolTransition!!.toValue = 0.0
-		fadeSymbolTransition!!.onFinished = EventHandler { actionEvent: ActionEvent? ->
+		fadeSymbolTransition!!.onFinished = EventHandler {
 		  item.setSeries(null)
 		  plotChildren.remove(symbol)
 		  removeDataItemFromDisplay(series, item)
@@ -515,7 +514,7 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
 		)
 	  ),
 	  KeyFrame(
-		Duration.millis(500.0), { actionEvent: ActionEvent? ->
+		Duration.millis(500.0), {
 		  if (symbol != null) plotChildren.remove(symbol)
 		  removeDataItemFromDisplay(series, item)
 		  XYValueMap.clear()

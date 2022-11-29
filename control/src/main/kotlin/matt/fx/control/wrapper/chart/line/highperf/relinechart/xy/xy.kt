@@ -24,7 +24,6 @@ import javafx.css.Styleable
 import javafx.css.StyleableBooleanProperty
 import javafx.css.StyleableProperty
 import javafx.css.converter.BooleanConverter
-import javafx.event.ActionEvent
 import javafx.geometry.Orientation.HORIZONTAL
 import javafx.geometry.Orientation.VERTICAL
 import javafx.geometry.Side.BOTTOM
@@ -442,7 +441,7 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 	 *
 	 * @return Observable list of plot children
 	 */
-	protected get() = plotContent.children
+	get() = plotContent.children
   // -------------- CONSTRUCTOR --------------------------------------------------------------------------------------
   /**
    * Constructs a XYChart given the two axes. The initial content for the chart
@@ -461,9 +460,9 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 	yAxis.setEffectiveOrientation(VERTICAL)
 	// RT-23123 autoranging leads to charts incorrect appearance.
 	xAxis.autoRangingProperty()
-	  .addListener { ov: ObservableValue<out Boolean?>?, t: Boolean?, t1: Boolean? -> updateAxisRange() }
+	  .addListener { _: ObservableValue<out Boolean?>?, _: Boolean?, _: Boolean? -> updateAxisRange() }
 	yAxis.autoRangingProperty()
-	  .addListener { ov: ObservableValue<out Boolean?>?, t: Boolean?, t1: Boolean? -> updateAxisRange() }
+	  .addListener { _: ObservableValue<out Boolean?>?, _: Boolean?, _: Boolean? -> updateAxisRange() }
 	// add initial content to chart content
 	chartChildren.addAll(plotBackground, plotArea, xAxis, yAxis)
 	// We don't want plotArea or plotContent to autoSize or do layout
@@ -492,7 +491,7 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 	plotContent.isManaged = false
 	plotArea.isManaged = false
 	// listen to animation on/off and sync to axis
-	animatedProperty().addListener { valueModel: ObservableValue<out Boolean?>?, oldValue: Boolean?, newValue: Boolean? ->
+	animatedProperty().addListener { _: ObservableValue<out Boolean?>?, _: Boolean?, newValue: Boolean? ->
 	  if (getXAxis() != null) getXAxis()!!.setAnimated( newValue!!)
 	  if (getYAxis() != null) getYAxis()!!.setAnimated( newValue!!)
 	}
@@ -670,7 +669,7 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 	if (xa!!.isAutoRanging()) xData = ArrayList()
 	if (ya!!.isAutoRanging()) yData = ArrayList()
 	if (xData != null || yData != null) {
-	  for (series in getData()!!) {
+	  for (series in getData()) {
 		for (data in series.getData()) {
 		  xData?.add(data!!.getXValue())
 		  yData?.add(data!!.getYValue())
@@ -689,12 +688,15 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
   protected abstract fun layoutPlotChildren()
 
   /** {@inheritDoc}  */
+  @Suppress("NAME_SHADOWING")
   override fun layoutChartChildren(top: Double, left: Double, width: Double, height: Double) {
 	var top = top
 	var left = left
+	@Suppress("SENSELESS_COMPARISON")
 	if (getData() == null) return
 	if (!rangeValid) {
 	  rangeValid = true
+	  @Suppress("SENSELESS_COMPARISON")
 	  if (getData() != null) updateAxisRange()
 	}
 	// snap top and left to pixels
@@ -706,6 +708,7 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 	val ya = getYAxis()
 	val yaTickMarks = ya!!.tickMarks
 	// check we have 2 axises and know their sides
+	@Suppress("SENSELESS_COMPARISON")
 	if (xa == null || ya == null) return
 	// try and work out width and height of axises
 	var xAxisWidth = 0.0
@@ -841,7 +844,7 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 	  val tickPositionsPositive: MutableList<Double> = ArrayList()
 	  val tickPositionsNegative: MutableList<Double> = ArrayList()
 	  for (i in xaTickMarks.indices) {
-		val pos = xa.getDisplayPosition(xaTickMarks[i].getValue() as X)
+		val pos = xa.getDisplayPosition(xaTickMarks[i].getValue())
 		if (pos == xAxisZero) {
 		  tickPositionsPositive.add(pos)
 		  tickPositionsNegative.add(pos)
@@ -984,7 +987,7 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 	 *
 	 * @return iterator over currently displayed series
 	 */
-	protected get() = Collections.unmodifiableList(displayedSeries).iterator()
+	get() = Collections.unmodifiableList(displayedSeries).iterator()
 
   /**
    * Creates an array of KeyFrames for fading out nodes representing a series
@@ -1010,7 +1013,7 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 	}
 	return arrayOf(
 	  KeyFrame(Duration.ZERO, *startValues),
-	  KeyFrame(Duration.millis(fadeOutTime.toDouble()), { actionEvent: ActionEvent? ->
+	  KeyFrame(Duration.millis(fadeOutTime.toDouble()), {
 		plotChildren.removeAll(nodes)
 		removeSeriesFromDisplay(series)
 	  }, *endValues)
@@ -1146,11 +1149,12 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 		BooleanConverter.getInstance(), true
 	  ) {
 		override fun isSettable(node: XYChartForPackagePrivateProps<*, *>): Boolean {
-		  return node.horizontalGridLinesVisible == null ||
+		  return node.horizontalGridLinesVisible.value == null ||
 			  !node.horizontalGridLinesVisible.isBound
 		}
 
 		override fun getStyleableProperty(node: XYChartForPackagePrivateProps<*, *>): StyleableProperty<Boolean?> {
+		  @Suppress("UNCHECKED_CAST")
 		  return node.horizontalGridLinesVisibleProperty() as StyleableProperty<Boolean?>
 		}
 	  }
@@ -1160,11 +1164,12 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 		BooleanConverter.getInstance(), java.lang.Boolean.TRUE
 	  ) {
 		override fun isSettable(node: XYChartForPackagePrivateProps<*, *>): Boolean {
-		  return node.horizontalZeroLineVisible == null ||
+		  return node.horizontalZeroLineVisible.value == null ||
 			  !node.horizontalZeroLineVisible.isBound
 		}
 
 		override fun getStyleableProperty(node: XYChartForPackagePrivateProps<*, *>): StyleableProperty<Boolean?> {
+		  @Suppress("UNCHECKED_CAST")
 		  return node.horizontalZeroLineVisibleProperty() as StyleableProperty<Boolean?>
 		}
 	  }
@@ -1174,11 +1179,12 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 		BooleanConverter.getInstance(), java.lang.Boolean.TRUE
 	  ) {
 		override fun isSettable(node: XYChartForPackagePrivateProps<*, *>): Boolean {
-		  return node.alternativeRowFillVisible == null ||
+		  return node.alternativeRowFillVisible.value == null ||
 			  !node.alternativeRowFillVisible.isBound
 		}
 
 		override fun getStyleableProperty(node: XYChartForPackagePrivateProps<*, *>): StyleableProperty<Boolean?> {
+		  @Suppress("UNCHECKED_CAST")
 		  return node.alternativeRowFillVisibleProperty() as StyleableProperty<Boolean?>
 		}
 	  }
@@ -1187,11 +1193,12 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 	  BooleanConverter.getInstance(), true
 	) {
 	  override fun isSettable(node: XYChartForPackagePrivateProps<*, *>): Boolean {
-		return node.verticalGridLinesVisible == null ||
+		return node.verticalGridLinesVisible.value == null ||
 			!node.verticalGridLinesVisible.isBound
 	  }
 
 	  override fun getStyleableProperty(node: XYChartForPackagePrivateProps<*, *>): StyleableProperty<Boolean?> {
+		@Suppress("UNCHECKED_CAST")
 		return node.verticalGridLinesVisibleProperty() as StyleableProperty<Boolean?>
 	  }
 	}
@@ -1200,11 +1207,12 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 	  BooleanConverter.getInstance(), true
 	) {
 	  override fun isSettable(node: XYChartForPackagePrivateProps<*, *>): Boolean {
-		return node.verticalZeroLineVisible == null ||
+		return node.verticalZeroLineVisible.value == null ||
 			!node.verticalZeroLineVisible.isBound
 	  }
 
 	  override fun getStyleableProperty(node: XYChartForPackagePrivateProps<*, *>): StyleableProperty<Boolean?> {
+		@Suppress("UNCHECKED_CAST")
 		return node.verticalZeroLineVisibleProperty() as StyleableProperty<Boolean?>
 	  }
 	}
@@ -1214,11 +1222,12 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 		BooleanConverter.getInstance(), true
 	  ) {
 		override fun isSettable(node: XYChartForPackagePrivateProps<*, *>): Boolean {
-		  return node.alternativeColumnFillVisible == null ||
+		  return node.alternativeColumnFillVisible.value == null ||
 			  !node.alternativeColumnFillVisible.isBound
 		}
 
 		override fun getStyleableProperty(node: XYChartForPackagePrivateProps<*, *>): StyleableProperty<Boolean?> {
+		  @Suppress("UNCHECKED_CAST")
 		  return node.alternativeColumnFillVisibleProperty() as StyleableProperty<Boolean?>
 		}
 	  }

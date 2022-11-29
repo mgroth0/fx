@@ -18,7 +18,6 @@ import javafx.css.Styleable
 import javafx.css.StyleableDoubleProperty
 import javafx.css.StyleableProperty
 import javafx.css.converter.SizeConverter
-import javafx.event.ActionEvent
 import javafx.event.EventHandler
 import javafx.geometry.Orientation
 import javafx.geometry.Orientation.HORIZONTAL
@@ -184,7 +183,7 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
 	if (shouldAnimate()) {
 	  XYValueMap.clear()
 	  dataRemoveTimeline = createDataRemoveTimeline(item, bar, series)
-	  dataRemoveTimeline!!.onFinished = EventHandler { event: ActionEvent? ->
+	  dataRemoveTimeline!!.onFinished = EventHandler {
 		item.setSeries(null)
 		removeDataItemFromDisplay(series, item)
 	  }
@@ -263,7 +262,7 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
 	// remove all symbol nodes
 	if (shouldAnimate()) {
 	  pt = ParallelTransition()
-	  pt!!.onFinished = EventHandler { event: ActionEvent? ->
+	  pt!!.onFinished = EventHandler {
 		removeSeriesFromDisplay(
 		  series
 		)
@@ -280,7 +279,7 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
 		  val ft = FadeTransition(Duration.millis(700.0), bar)
 		  ft.fromValue = 1.0
 		  ft.toValue = 0.0
-		  ft.onFinished = EventHandler { actionEvent: ActionEvent? ->
+		  ft.onFinished = EventHandler {
 			processDataRemove(series, d)
 			bar.opacity = 1.0
 		  }
@@ -447,13 +446,14 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
 	}
   }
 
+  @Suppress("UNUSED_PARAMETER")
   private fun createDataRemoveTimeline(item: Data<X, Y>, bar: Node?, series: Series<X, Y>): Timeline {
 	val t = Timeline()
 	if (orientation == VERTICAL) {
 	  //            item.setYValue(getYAxis().toRealValue(getYAxis().getZeroPosition()));
 
 	  // save data values in case the same data item gets added immediately.
-	  XYValueMap[item] = (item.yValue as Number?)!!.toDouble()
+	  XYValueMap[item] = (item.yValue.value as Number?)!!.toDouble()
 	  item.yValue.value = yAxis.toRealValue(bottomPos)
 	  t.keyFrames.addAll(
 		KeyFrame(
@@ -463,7 +463,7 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
 		  )
 		),
 		KeyFrame(
-		  Duration.millis(700.0), { actionEvent: ActionEvent? ->
+		  Duration.millis(700.0), {
 			processDataRemove(series, item)
 			XYValueMap.clear()
 		  }, KeyValue(
@@ -475,7 +475,7 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
 	  )
 	} else {
 	  // save data values in case the same data item gets added immediately.
-	  XYValueMap[item] = (item.xValue as Number?)!!.toDouble()
+	  XYValueMap[item] = (item.xValue.value as Number?)!!.toDouble()
 	  item.xValue.value = xAxis.toRealValue(xAxis.zeroPosition)
 	  t.keyFrames.addAll(
 		KeyFrame(
@@ -485,7 +485,7 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
 		  )
 		),
 		KeyFrame(
-		  Duration.millis(700.0), { actionEvent: ActionEvent? ->
+		  Duration.millis(700.0), {
 			processDataRemove(series, item)
 			XYValueMap.clear()
 		  }, KeyValue(
@@ -561,6 +561,7 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
 	return bar
   }
 
+  @Suppress("UNUSED_PARAMETER")
   private fun getDataItem(series: Series<X, Y>, seriesIndex: Int, itemIndex: Int, category: String): Data<X, Y>? {
 	val catmap: Map<String?, Data<X, Y>>? =
 	  seriesCategoryMap[series]
@@ -580,9 +581,10 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
 
 
 	  override fun isSettable(node: BarChartForWrapper<*, *>): Boolean {
-		return node.barGap == null || !node.barGap.isBound
+		return node.barGap.value == null || !node.barGap.isBound
 	  }
 
+	  @Suppress("UNCHECKED_CAST")
 	  override fun getStyleableProperty(node: BarChartForWrapper<*, *>): StyleableProperty<Number?> {
 		return node.barGapProperty() as StyleableProperty<Number?>
 	  }
@@ -592,10 +594,11 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
 	  SizeConverter.getInstance(), 10.0
 	) {
 	  override fun isSettable(node: BarChartForWrapper<*, *>): Boolean {
-		return node.categoryGap == null || !node.categoryGap.isBound
+		return node.categoryGap.value == null || !node.categoryGap.isBound
 	  }
 
 	  override fun getStyleableProperty(node: BarChartForWrapper<*, *>): StyleableProperty<Number?> {
+		@Suppress("UNCHECKED_CAST")
 		return node.categoryGapProperty() as StyleableProperty<Number?>
 	  }
 	}

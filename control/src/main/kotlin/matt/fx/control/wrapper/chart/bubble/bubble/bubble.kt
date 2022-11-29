@@ -7,7 +7,6 @@ import javafx.application.Platform
 import javafx.beans.NamedArg
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
-import javafx.event.ActionEvent
 import javafx.event.EventHandler
 import javafx.scene.AccessibleAttribute
 import javafx.scene.AccessibleAttribute.TEXT
@@ -171,7 +170,7 @@ class BubbleChartForWrapper<X, Y> @JvmOverloads constructor(
 		// fade out old bubble
 		val ft = FadeTransition(Duration.millis(500.0), bubble)
 		ft.toValue = 0.0
-		ft.onFinished = EventHandler { actionEvent: ActionEvent? ->
+		ft.onFinished = EventHandler {
 		  plotChildren.remove(bubble)
 		  bubble.opacity = 1.0
 		}

@@ -735,7 +735,7 @@ abstract class AxisForPackagePrivateProps<T>: Region() {
 		if (shouldAnimate()) {
 		  val ft = FadeTransition(Duration.millis(250.0), tick.textNode)
 		  ft.toValue = 0.0
-		  ft.onFinished = EventHandler { actionEvent: ActionEvent? ->
+		  ft.onFinished = EventHandler {
 			children.remove(
 			  tick.textNode
 			)

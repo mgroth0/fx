@@ -196,7 +196,7 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
 		animate(
 		  KeyFrame(
 			Duration.ZERO,
-			{ e: ActionEvent? ->
+			{
 			  if (symbol != null && !plotChildren.contains(symbol)) {
 				plotChildren.add(symbol)
 			  }
@@ -278,7 +278,7 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
 		symbol.opacity = 0.0
 		val ft = FadeTransition(Duration.millis(500.0), symbol)
 		ft.toValue = 0.0
-		ft.onFinished = EventHandler { actionEvent: ActionEvent? ->
+		ft.onFinished = EventHandler {
 		  plotChildren.remove(symbol)
 		  removeDataItemFromDisplay(series, item)
 		}
@@ -300,7 +300,7 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
 			)
 		  ),
 		  KeyFrame(
-			Duration.millis(800.0), { actionEvent: ActionEvent? ->
+			Duration.millis(800.0), {
 			  item.setSeries(null)
 			  plotChildren.remove(symbol)
 			  removeDataItemFromDisplay(series, item)

@@ -19,7 +19,6 @@ import javafx.css.Styleable
 import javafx.css.StyleableDoubleProperty
 import javafx.css.StyleableProperty
 import javafx.css.converter.SizeConverter
-import javafx.event.ActionEvent
 import javafx.event.EventHandler
 import javafx.geometry.Orientation
 import javafx.geometry.Orientation.HORIZONTAL
@@ -161,7 +160,7 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
 	bar?.focusTraversableProperty()?.unbind()
 	if (shouldAnimate()) {
 	  val t = createDataRemoveTimeline(item, bar, series)
-	  t.onFinished = EventHandler { event: ActionEvent? ->
+	  t.onFinished = EventHandler {
 		removeDataItemFromDisplay(
 		  series, item
 		)
@@ -245,7 +244,7 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
 	// remove all symbol nodes
 	if (shouldAnimate()) {
 	  val pt = ParallelTransition()
-	  pt.onFinished = EventHandler { event: ActionEvent? ->
+	  pt.onFinished = EventHandler {
 		removeSeriesFromDisplay(series)
 		requestChartLayout()
 	  }
@@ -260,7 +259,7 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
 		  val ft = FadeTransition(Duration.millis(700.0), bar)
 		  ft.fromValue = 1.0
 		  ft.toValue = 0.0
-		  ft.onFinished = EventHandler { actionEvent: ActionEvent? ->
+		  ft.onFinished = EventHandler {
 			processDataRemove(series, d)
 			bar.opacity = 1.0
 		  }
@@ -305,7 +304,7 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
 			@Suppress("SENSELESS_COMPARISON")
 			if (item != null) {
 			  val isNegative = item.node.value.styleClass.contains("negative")
-			  val value = (if (categoryIsX) item.yValue.value else item.xValue.value) as Number?
+			  @Suppress("IMPLICIT_CAST_TO_ANY") val value = (if (categoryIsX) item.yValue.value else item.xValue.value) as Number?
 			  if (!isNegative) {
 				totalXP += toNumericValueFromValueAxis(value)
 			  } else {
@@ -502,7 +501,7 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
 		),
 		KeyFrame(
 		  Duration.millis(700.0),
-		  { actionEvent: ActionEvent? ->
+		  {
 			processDataRemove(
 			  series, item
 			)
@@ -524,7 +523,7 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
 		),
 		KeyFrame(
 		  Duration.millis(700.0),
-		  { actionEvent: ActionEvent? ->
+		  {
 			processDataRemove(
 			  series, item
 			)

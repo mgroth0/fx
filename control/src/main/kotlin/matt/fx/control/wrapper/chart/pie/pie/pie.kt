@@ -453,7 +453,7 @@ class PieChartForWrapper @JvmOverloads constructor(data: ObservableList<Data> = 
 		),
 		KeyFrame(
 		  Duration.millis(500.0),
-		  { actionEvent: ActionEvent? ->
+		  {
 			text.setOpacity(0.0)
 			// RT-23597 : item's chart might have been set to null if
 			// this item is added and removed before its add animation finishes.
@@ -504,7 +504,7 @@ class PieChartForWrapper @JvmOverloads constructor(data: ObservableList<Data> = 
 	  ),
 	  KeyFrame(
 		Duration.millis(500.0),
-		{ actionEvent: ActionEvent? ->
+		{
 		  // removing item
 		  colorBits.clear(item.defaultColorIndex)
 		  chartChildren.remove(shape)
@@ -573,27 +573,27 @@ class PieChartForWrapper @JvmOverloads constructor(data: ObservableList<Data> = 
 	  fullPie = ArrayList()
 	  var index = 0
 	  var start = getStartAngle()
-	  var item = begin
-	  while (item != null) {
+	  var item2 = begin
+	  while (item2 != null) {
 
 		// remove any scale on the text node
-		item.textNode.transforms.clear()
+		item2.textNode.transforms.clear()
 		val size =
-		  if (isClockwise()) -scale*Math.abs(item.getCurrentPieValue()) else scale*Math.abs(item.getCurrentPieValue())
+		  if (isClockwise()) -scale*Math.abs(item2.getCurrentPieValue()) else scale*Math.abs(item2.getCurrentPieValue())
 		labelAngles[index] = normalizeAngle(start + size/2)
 		val sproutX = calcX(labelAngles.get(index), getLabelLineLength(), 0.0)
 		val sproutY = calcY(labelAngles.get(index), getLabelLineLength(), 0.0)
 		labelsX[index] = sproutX
 		labelsY[index] = sproutY
-		xPad = Math.max(xPad, 2*(item.textNode.layoutBounds.width + LABEL_TICK_GAP + Math.abs(sproutX)))
+		xPad = Math.max(xPad, 2*(item2.textNode.layoutBounds.width + LABEL_TICK_GAP + Math.abs(sproutX)))
 		if (sproutY > 0) { // on bottom
-		  yPad = Math.max(yPad, 2*Math.abs(sproutY + item.textNode.layoutBounds.maxY))
+		  yPad = Math.max(yPad, 2*Math.abs(sproutY + item2.textNode.layoutBounds.maxY))
 		} else { // on top
-		  yPad = Math.max(yPad, 2*Math.abs(sproutY + item.textNode.layoutBounds.minY))
+		  yPad = Math.max(yPad, 2*Math.abs(sproutY + item2.textNode.layoutBounds.minY))
 		}
 		start += size
 		index++
-		item = item.next
+		item2 = item2.next
 	  }
 	  pieRadius = Math.min(contentWidth - xPad, contentHeight - yPad)/2
 	  // check if this makes the pie too small
@@ -633,12 +633,12 @@ class PieChartForWrapper @JvmOverloads constructor(data: ObservableList<Data> = 
 		while (item2 != null) {
 
 		  // layout labels for pie slice
-		  item2.textNode.setVisible(shouldShowLabels)
+		  item2!!.textNode.setVisible(shouldShowLabels)
 		  if (shouldShowLabels) {
 			val size: Double = if ((isClockwise())) (-scale*Math.abs(
-			  item2.getCurrentPieValue()
+			  item2!!.getCurrentPieValue()
 			)) else (scale*Math.abs(
-			  item2.getCurrentPieValue()
+			  item2!!.getCurrentPieValue()
 			))
 			val isLeftSide: Boolean = !(labelAngles!!.get(index) > -90 && labelAngles.get(index) < 90)
 			val sliceCenterEdgeX: Double =
@@ -646,43 +646,43 @@ class PieChartForWrapper @JvmOverloads constructor(data: ObservableList<Data> = 
 			val sliceCenterEdgeY: Double =
 			  calcY(labelAngles.get(index), pieRadius, centerY)
 			val xval: Double =
-			  if (isLeftSide) ((labelsX!!.get(index) + sliceCenterEdgeX) - item2.textNode.getLayoutBounds()
+			  if (isLeftSide) ((labelsX!!.get(index) + sliceCenterEdgeX) - item2!!.textNode.getLayoutBounds()
 				.getMaxX() - LABEL_TICK_GAP) else (labelsX!!.get(
 				index
-			  ) + sliceCenterEdgeX - item2.textNode.getLayoutBounds()
+			  ) + sliceCenterEdgeX - item2!!.textNode.getLayoutBounds()
 				.getMinX() + LABEL_TICK_GAP)
 			val yval: Double =
-			  (labelsY!!.get(index) + sliceCenterEdgeY) - (item2.textNode.getLayoutBounds().getMinY()/2) - 2
+			  (labelsY!!.get(index) + sliceCenterEdgeY) - (item2!!.textNode.getLayoutBounds().getMinY()/2) - 2
 
 			// do the line (Path)for labels
 			val lineEndX: Double = sliceCenterEdgeX + labelsX.get(index)
 			val lineEndY: Double = sliceCenterEdgeY + labelsY.get(index)
 			val info: LabelLayoutInfo = LabelLayoutInfo(
 			  sliceCenterEdgeX,
-			  sliceCenterEdgeY, lineEndX, lineEndY, xval, yval, item2.textNode, Math.abs(size)
+			  sliceCenterEdgeY, lineEndX, lineEndY, xval, yval, item2!!.textNode, Math.abs(size)
 			)
 			fullPie!!.add(info)
 
 			// set label scales
 			if (labelScale < 1) {
-			  item2.textNode.getTransforms().add(
+			  item2!!.textNode.getTransforms().add(
 				Scale(
 				  labelScale, labelScale,
-				  if (isLeftSide) item2.textNode.getLayoutBounds().getWidth() else 0.0, 0.0
+				  if (isLeftSide) item2!!.textNode.getLayoutBounds().getWidth() else 0.0, 0.0
 				)
 			  )
 			}
 		  }
 		  index++
-		  item2 = item2.next
+		  item2 = item2!!.next
 		}
 	  }
 
 	  // update/draw pie slices
 	  var sAngle = getStartAngle()
-	  var item = begin
-	  while (item != null) {
-		val node: Node = item.getNode()
+	  var item2 = begin
+	  while (item2 != null) {
+		val node: Node = item2!!.getNode()
 		var arc: Arc? = null
 		@Suppress("SENSELESS_COMPARISON")
 		if (node != null) {
@@ -699,19 +699,19 @@ class PieChartForWrapper @JvmOverloads constructor(data: ObservableList<Data> = 
 			arcRegion.isCacheShape = false
 		  }
 		}
-		val size = if (isClockwise()) -scale*Math.abs(item.getCurrentPieValue()) else scale*Math.abs(
-		  item.getCurrentPieValue()
+		val size = if (isClockwise()) -scale*Math.abs(item2!!.getCurrentPieValue()) else scale*Math.abs(
+		  item2!!.getCurrentPieValue()
 		)
 		// update slice arc size
 		arc!!.startAngle = sAngle
 		arc.length = size
 		arc.type = ROUND
-		arc.radiusX = pieRadius*item.getRadiusMultiplier()
-		arc.radiusY = pieRadius*item.getRadiusMultiplier()
+		arc.radiusX = pieRadius*item2!!.getRadiusMultiplier()
+		arc.radiusY = pieRadius*item2!!.getRadiusMultiplier()
 		node.layoutX = centerX
 		node.layoutY = centerY
 		sAngle += size
-		item = item.next
+		item2 = item2!!.next
 	  }
 	  // finally draw the text and line
 	  if (fullPie != null) {
@@ -953,7 +953,7 @@ class PieChartForWrapper @JvmOverloads constructor(data: ObservableList<Data> = 
 	  pieValue.value = value
 	}
 
-	fun pieValueProperty(): DoubleProperty {
+	@Suppress("unused") fun pieValueProperty(): DoubleProperty {
 	  return pieValue
 	}
 
@@ -1056,10 +1056,11 @@ class PieChartForWrapper @JvmOverloads constructor(data: ObservableList<Data> = 
 	  BooleanConverter.getInstance(), java.lang.Boolean.TRUE
 	) {
 	  override fun isSettable(node: PieChartForWrapper): Boolean {
-		return node.clockwise == null || !node.clockwise.isBound
+		return node.clockwise.value == null || !node.clockwise.isBound
 	  }
 
 	  override fun getStyleableProperty(node: PieChartForWrapper): StyleableProperty<Boolean?> {
+		@Suppress("UNCHECKED_CAST")
 		return node.clockwiseProperty() as StyleableProperty<Boolean?>
 	  }
 	}
@@ -1068,10 +1069,11 @@ class PieChartForWrapper @JvmOverloads constructor(data: ObservableList<Data> = 
 	  BooleanConverter.getInstance(), java.lang.Boolean.TRUE
 	) {
 	  override fun isSettable(node: PieChartForWrapper): Boolean {
-		return node.labelsVisible == null || !node.labelsVisible.isBound
+		return node.labelsVisible.value == null || !node.labelsVisible.isBound
 	  }
 
 	  override fun getStyleableProperty(node: PieChartForWrapper): StyleableProperty<Boolean?> {
+		@Suppress("UNCHECKED_CAST")
 		return node.labelsVisibleProperty() as StyleableProperty<Boolean?>
 	  }
 	}
@@ -1080,10 +1082,11 @@ class PieChartForWrapper @JvmOverloads constructor(data: ObservableList<Data> = 
 	  SizeConverter.getInstance(), 20.0
 	) {
 	  override fun isSettable(node: PieChartForWrapper): Boolean {
-		return node.labelLineLength == null || !node.labelLineLength.isBound
+		return node.labelLineLength.value == null || !node.labelLineLength.isBound
 	  }
 
 	  override fun getStyleableProperty(node: PieChartForWrapper): StyleableProperty<Number?> {
+		@Suppress("UNCHECKED_CAST")
 		return node.labelLineLengthProperty() as StyleableProperty<Number?>
 	  }
 	}
@@ -1092,10 +1095,11 @@ class PieChartForWrapper @JvmOverloads constructor(data: ObservableList<Data> = 
 	  SizeConverter.getInstance(), 0.0
 	) {
 	  override fun isSettable(node: PieChartForWrapper): Boolean {
-		return node.startAngle == null || !node.startAngle.isBound
+		return node.startAngle.value == null || !node.startAngle.isBound
 	  }
 
 	  override fun getStyleableProperty(node: PieChartForWrapper): StyleableProperty<Number?> {
+		@Suppress("UNCHECKED_CAST")
 		return node.startAngleProperty() as StyleableProperty<Number?>
 	  }
 	}

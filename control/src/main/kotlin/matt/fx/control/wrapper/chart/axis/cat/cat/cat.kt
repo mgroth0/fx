@@ -267,7 +267,7 @@ class CategoryAxisForCatAxisWrapper: AxisForPackagePrivateProps<String> {
 
   private fun calculateNewFirstPos(length: Double, catSpacing: Double): Double {
 	val side = effectiveSide
-	var newPos = 1.0
+	@Suppress("VARIABLE_WITH_REDUNDANT_INITIALIZER") var newPos = 1.0
 	val offset: Double = if (isGapStartAndEnd()) catSpacing/2 else 0.0
 	newPos = if (side.isHorizontal) {
 	  0 + getStartMargin() + offset
