@@ -564,7 +564,7 @@ abstract class AxisForPackagePrivateProps<T>: Region() {
    * @param animate If true animate the change in range
    */
   protected abstract fun setRange(range: Any, animate: Boolean)
-  protected abstract val range: Any
+  protected abstract val range: RangeProps
 
   /**
    * Get the display position of the zero line along this axis.

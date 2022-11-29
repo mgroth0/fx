@@ -26,6 +26,7 @@ import javafx.scene.shape.MoveTo
 import javafx.scene.shape.Path
 import javafx.util.StringConverter
 import matt.fx.control.wrapper.chart.axis.value.axis.AxisForPackagePrivateProps
+import matt.fx.control.wrapper.chart.axis.value.axis.NullRangeProp
 import matt.fx.control.wrapper.chart.axis.value.axis.RangeProps
 import matt.lang.anno.See
 import matt.math.hz.Hz
@@ -324,7 +325,7 @@ abstract class MoreGenericValueAxis<T: UpperBound>(
 	return if (isAutoRanging()) {
 	  // guess a sensible starting size for label size, that is approx 2 lines vertically or 2 charts horizontally
 	  val labelSize = tickLabelFont.value.size*2
-	  autoRange(dataMinValue, dataMaxValue, length, labelSize)!!
+	  autoRange(dataMinValue, dataMaxValue, length, labelSize)
 	} else {
 	  range
 	}
@@ -364,7 +365,7 @@ abstract class MoreGenericValueAxis<T: UpperBound>(
    * @return The calculated range
    */
   protected open fun autoRange(minValue: Double, maxValue: Double, length: Double, labelSize: Double): RangeProps {
-	return null // this method should have been abstract as there is no way for it to
+	return NullRangeProp // this method should have been abstract as there is no way for it to
 	// return anything correct. so just return null.
   }
 
