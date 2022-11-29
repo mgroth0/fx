@@ -18,9 +18,6 @@ import javafx.scene.Scene
 import javafx.scene.SpotLight
 import javafx.scene.SubScene
 import javafx.scene.canvas.Canvas
-import matt.fx.control.wrapper.chart.bar.bar.BarChart
-import matt.fx.control.wrapper.chart.bubble.bubble.BubbleChart
-import matt.fx.control.wrapper.chart.pie.pie.PieChart
 import javafx.scene.chart.ScatterChart
 import javafx.scene.chart.StackedBarChart
 import javafx.scene.control.Accordion
@@ -135,11 +132,14 @@ import matt.fx.control.wrapper.chart.axis.value.moregenval.MoreGenericValueAxis
 import matt.fx.control.wrapper.chart.axis.value.number.NumberAxisWrapper
 import matt.fx.control.wrapper.chart.axis.value.number.moregennum.MoreGenericNumberAxis
 import matt.fx.control.wrapper.chart.bar.BarChartWrapper
+import matt.fx.control.wrapper.chart.bar.bar.BarChartForWrapper
 import matt.fx.control.wrapper.chart.bubble.BubbleChartWrapper
+import matt.fx.control.wrapper.chart.bubble.bubble.BubbleChartForWrapper
 import matt.fx.control.wrapper.chart.line.LineChartWrapper
 import matt.fx.control.wrapper.chart.line.highperf.relinechart.MorePerfOptionsLineChart
 import matt.fx.control.wrapper.chart.line.highperf.relinechart.xy.area.AreaChartForPrivateProps
 import matt.fx.control.wrapper.chart.pie.PieChartWrapper
+import matt.fx.control.wrapper.chart.pie.pie.PieChartForWrapper
 import matt.fx.control.wrapper.chart.scatter.ScatterChartWrapper
 import matt.fx.control.wrapper.chart.stackedbar.StackedBarChartWrapper
 import matt.fx.control.wrapper.checkbox.CheckBoxWrapper
@@ -434,8 +434,8 @@ fun Button.wrapped(): ButtonWrapper = findWrapper() ?: ButtonWrapper(this@wrappe
 
 
 fun AreaChartForPrivateProps<*, *>.wrapped(): AreaChartWrapper<*, *> = findWrapper() ?: AreaChartWrapper(this@wrapped)
-fun BarChart<*, *>.wrapped(): BarChartWrapper<*, *> = findWrapper() ?: BarChartWrapper(this@wrapped)
-fun BubbleChart<*, *>.wrapped(): BubbleChartWrapper<*, *> = findWrapper() ?: BubbleChartWrapper(this@wrapped)
+fun BarChartForWrapper<*, *>.wrapped(): BarChartWrapper<*, *> = findWrapper() ?: BarChartWrapper(this@wrapped)
+fun BubbleChartForWrapper<*, *>.wrapped(): BubbleChartWrapper<*, *> = findWrapper() ?: BubbleChartWrapper(this@wrapped)
 fun ScatterChart<*, *>.wrapped(): ScatterChartWrapper<*, *> = findWrapper() ?: ScatterChartWrapper(this@wrapped)
 fun StackedBarChart<*, *>.wrapped(): StackedBarChartWrapper<*, *> =
   findWrapper() ?: StackedBarChartWrapper(this@wrapped)
@@ -507,9 +507,9 @@ fun Region.wrapped(): RegionWrapper<*> = findWrapper() ?: when (this) {
   is GridPane                      -> wrapped()
   is FlowPane                      -> wrapped()
   is VBox                          -> wrapped()
-  is HBox       -> wrapped()
-  is PieChart   -> wrapped()
-  is AnchorPane -> wrapped()
+  is HBox                          -> wrapped()
+  is PieChartForWrapper            -> wrapped()
+  is AnchorPane                    -> wrapped()
   is StackPane                     -> wrapped()
   is CategoryAxisForCatAxisWrapper -> wrapped()
   is TilePane                      -> wrapped()
@@ -568,7 +568,7 @@ fun Parent.wrapped(): ParentWrapper<*> = findWrapper() ?: when (this) {
   else      -> cannotFindWrapper()
 }
 
-fun PieChart.wrapped(): PieChartWrapper = findWrapper() ?: PieChartWrapper(this@wrapped)
+fun PieChartForWrapper.wrapped(): PieChartWrapper = findWrapper() ?: PieChartWrapper(this@wrapped)
 
 fun Sphere.wrapped(): SphereWrapper = findWrapper() ?: SphereWrapper(this@wrapped)
 fun Box.wrapped(): BoxWrapper3D = findWrapper() ?: BoxWrapper3D(this@wrapped)
