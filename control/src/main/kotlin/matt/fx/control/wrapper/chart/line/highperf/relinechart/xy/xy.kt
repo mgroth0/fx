@@ -675,8 +675,8 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 	if (xData != null || yData != null) {
 	  for (series in getData()) {
 		for (data in series.getData()) {
-		  xData?.add(data!!.getXValue())
-		  yData?.add(data!!.getYValue())
+		  xData?.add(data!!.xValue)
+		  yData?.add(data!!.yValue)
 		}
 	  }
 	  if (xData != null) xa.invalidateRange(xData)
@@ -1468,8 +1468,8 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 	 * @param yValue The Y axis data value
 	 */
 	constructor(xValue: X, yValue: Y) {
-	  setXValue(xValue)
-	  setYValue(yValue)
+	  this.xValue = xValue
+	  this.yValue = yValue
 	  setCurrentX(xValue)
 	  setCurrentY(yValue)
 	}
@@ -1483,8 +1483,8 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 	 * @param extraValue Chart extra value.
 	 */
 	constructor(xValue: X, yValue: Y, extraValue: Any) {
-	  setXValue(xValue)
-	  setYValue(yValue)
+	  this.xValue = xValue
+	  this.yValue = yValue
 	  setExtraValue(extraValue)
 	  setCurrentX(xValue)
 	  setCurrentY(yValue)
@@ -1496,7 +1496,7 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 	 * @return a string representation of this `Data` object.
 	 */
 	override fun toString(): String {
-	  return "Data[" + getXValue() + "," + getYValue() + "," + getExtraValue() + "]"
+	  return "Data[" + xValue + "," + yValue + "," + getExtraValue() + "]"
 	}
   }
 

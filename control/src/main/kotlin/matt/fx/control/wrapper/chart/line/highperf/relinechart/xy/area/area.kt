@@ -257,7 +257,7 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
 		item.currentX.value = xAxis.toRealValue(x2)
 		item.currentY.value = yAxis.toRealValue(y2)
 		item.xValueProp.value = xAxis.toRealValue(x2)
-		item.setYValue(yAxis.toRealValue(y)!!)
+		item.yValue=(yAxis.toRealValue(y)!!)
 		//2.  we can simply use the midpoint on the line as well..
 		//                double x = (x3 + x1)/2;
 		//                double y = (y3 + y1)/2;
@@ -266,12 +266,12 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
 	  } else if (itemIndex == 0 && dataListSize > 1) {
 		animate = true
 		item.xValueProp.value = series.data.value[0].xValueProp.value
-		item.setYValue(series.data.value[0].yValueProp.value)
+		item.yValue=(series.data.value[0].yValueProp.value)
 	  } else if (itemIndex == dataSize - 1 && dataListSize > 1) {
 		animate = true
 		val last = dataListSize - 1
 		item.xValueProp.value = series.data.value[last].xValueProp.value
-		item.setYValue(series.data.value[last].yValueProp.value)
+		item.yValue=(series.data.value[last].yValueProp.value)
 	  } else if (symbol != null) {
 		// fade out symbol
 		symbol.opacity = 0.0

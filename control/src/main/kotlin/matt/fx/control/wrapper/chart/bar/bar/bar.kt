@@ -315,7 +315,6 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
   }
 
 
-
   /** {@inheritDoc}  */
   override fun layoutPlotChildren() {
 	val catSpace = categoryAxis!!.categorySpacing.value
@@ -323,7 +322,9 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
 	val availableBarSpace = catSpace - (getCategoryGap() + getBarGap())
 	var barWidth = availableBarSpace/seriesSize - getBarGap()
 	val barOffset = -((catSpace - getCategoryGap())/2)
-	val zeroPos = if (valueAxis!!.lowerBound.value as Double > 0.0) valueAxisGetDisplayPosition(valueAxis!!.lowerBound) else valueAxis!!.zeroPosition
+	val zeroPos = if (valueAxis!!.lowerBound.value as Double > 0.0) valueAxisGetDisplayPosition(
+	  valueAxis!!.lowerBound
+	) else valueAxis!!.zeroPosition
 	// RT-24813 : if the data in a series gets too large, barWidth can get negative.
 	if (barWidth <= 0) barWidth = 1.0
 	// update bar positions and sizes
@@ -517,10 +518,10 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
 	  // Restoring original X/Y values
 	  @Suppress("UNCHECKED_CAST")
 	  if (orientation == VERTICAL) {
-		item.setYValue(value as Y)
+		item.yValue = (value as Y)
 		item.setCurrentY(value)
 	  } else {
-		item.setXValue(value as X)
+		item.xValue = (value as X)
 		item.setCurrentX(value)
 	  }
 	}
@@ -573,35 +574,36 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
      * Super-lazy instantiation pattern from Bill Pugh.
      */
   internal object StyleableProperties {
-	internal val BAR_GAP: CssMetaData<BarChartForWrapper<*, *>, Number> = object: CssMetaData<BarChartForWrapper<*, *>, Number>(
-	  "-fx-bar-gap",
-	  SizeConverter.getInstance(), 4.0
-	) {
+	internal val BAR_GAP: CssMetaData<BarChartForWrapper<*, *>, Number> =
+	  object: CssMetaData<BarChartForWrapper<*, *>, Number>(
+		"-fx-bar-gap",
+		SizeConverter.getInstance(), 4.0
+	  ) {
 
 
+		override fun isSettable(node: BarChartForWrapper<*, *>): Boolean {
+		  return node.barGap.value == null || !node.barGap.isBound
+		}
 
-	  override fun isSettable(node: BarChartForWrapper<*, *>): Boolean {
-		return node.barGap.value == null || !node.barGap.isBound
-	  }
-
-	  @Suppress("UNCHECKED_CAST")
-	  override fun getStyleableProperty(node: BarChartForWrapper<*, *>): StyleableProperty<Number?> {
-		return node.barGapProperty() as StyleableProperty<Number?>
-	  }
-	}
-	internal val CATEGORY_GAP: CssMetaData<BarChartForWrapper<*, *>, Number> = object: CssMetaData<BarChartForWrapper<*, *>, Number>(
-	  "-fx-category-gap",
-	  SizeConverter.getInstance(), 10.0
-	) {
-	  override fun isSettable(node: BarChartForWrapper<*, *>): Boolean {
-		return node.categoryGap.value == null || !node.categoryGap.isBound
-	  }
-
-	  override fun getStyleableProperty(node: BarChartForWrapper<*, *>): StyleableProperty<Number?> {
 		@Suppress("UNCHECKED_CAST")
-		return node.categoryGapProperty() as StyleableProperty<Number?>
+		override fun getStyleableProperty(node: BarChartForWrapper<*, *>): StyleableProperty<Number?> {
+		  return node.barGapProperty() as StyleableProperty<Number?>
+		}
 	  }
-	}
+	internal val CATEGORY_GAP: CssMetaData<BarChartForWrapper<*, *>, Number> =
+	  object: CssMetaData<BarChartForWrapper<*, *>, Number>(
+		"-fx-category-gap",
+		SizeConverter.getInstance(), 10.0
+	  ) {
+		override fun isSettable(node: BarChartForWrapper<*, *>): Boolean {
+		  return node.categoryGap.value == null || !node.categoryGap.isBound
+		}
+
+		override fun getStyleableProperty(node: BarChartForWrapper<*, *>): StyleableProperty<Number?> {
+		  @Suppress("UNCHECKED_CAST")
+		  return node.categoryGapProperty() as StyleableProperty<Number?>
+		}
+	  }
 	val classCssMetaData: List<CssMetaData<out Styleable?, *>>? by lazy {
 	  val styleables: MutableList<CssMetaData<out Styleable?, *>> = ArrayList(getClassCssMetaData())
 	  styleables.add(BAR_GAP)
