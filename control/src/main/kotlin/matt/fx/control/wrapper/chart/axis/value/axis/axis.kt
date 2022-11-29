@@ -1305,7 +1305,7 @@ class CategoryRangeProps(
 class NumberRangeProps(
   val lowerBound: Double,
   val upperBound: Double,
-  val tickUnit: Double
+  val tickUnit: Double,
   val scale: Double,
   val formatter: String? = null
 ): RangeProps
