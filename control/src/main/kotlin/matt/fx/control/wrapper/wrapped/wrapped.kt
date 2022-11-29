@@ -141,7 +141,9 @@ import matt.fx.control.wrapper.chart.line.highperf.relinechart.xy.area.AreaChart
 import matt.fx.control.wrapper.chart.pie.PieChartWrapper
 import matt.fx.control.wrapper.chart.pie.pie.PieChartForWrapper
 import matt.fx.control.wrapper.chart.scatter.ScatterChartWrapper
+import matt.fx.control.wrapper.chart.scatter.scatter.ScatterChartForWrapper
 import matt.fx.control.wrapper.chart.stackedbar.StackedBarChartWrapper
+import matt.fx.control.wrapper.chart.stackedbar.stackedb.StackedBarChartForWrapper
 import matt.fx.control.wrapper.checkbox.CheckBoxWrapper
 import matt.fx.control.wrapper.contextmenu.ContextMenuWrapper
 import matt.fx.control.wrapper.control.ControlWrapper
@@ -436,8 +438,8 @@ fun Button.wrapped(): ButtonWrapper = findWrapper() ?: ButtonWrapper(this@wrappe
 fun AreaChartForPrivateProps<*, *>.wrapped(): AreaChartWrapper<*, *> = findWrapper() ?: AreaChartWrapper(this@wrapped)
 fun BarChartForWrapper<*, *>.wrapped(): BarChartWrapper<*, *> = findWrapper() ?: BarChartWrapper(this@wrapped)
 fun BubbleChartForWrapper<*, *>.wrapped(): BubbleChartWrapper<*, *> = findWrapper() ?: BubbleChartWrapper(this@wrapped)
-fun ScatterChart<*, *>.wrapped(): ScatterChartWrapper<*, *> = findWrapper() ?: ScatterChartWrapper(this@wrapped)
-fun StackedBarChart<*, *>.wrapped(): StackedBarChartWrapper<*, *> =
+fun ScatterChartForWrapper<*, *>.wrapped(): ScatterChartWrapper<*, *> = findWrapper() ?: ScatterChartWrapper(this@wrapped)
+fun StackedBarChartForWrapper<*, *>.wrapped(): StackedBarChartWrapper<*, *> =
   findWrapper() ?: StackedBarChartWrapper(this@wrapped)
 
 fun CheckBox.wrapped(): CheckBoxWrapper = findWrapper() ?: CheckBoxWrapper(this@wrapped)
