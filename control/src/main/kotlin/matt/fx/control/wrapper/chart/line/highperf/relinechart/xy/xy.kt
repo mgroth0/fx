@@ -898,7 +898,7 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 	  val tickPositionsPositive: MutableList<Double> = ArrayList()
 	  val tickPositionsNegative: MutableList<Double> = ArrayList()
 	  for (i in yaTickMarks.indices) {
-		val pos = ya.getDisplayPosition(yaTickMarks[i].getValue() as Y)
+		val pos = ya.getDisplayPosition(yaTickMarks[i].getValue())
 		if (pos == yAxisZero) {
 		  tickPositionsPositive.add(pos)
 		  tickPositionsNegative.add(pos)
@@ -1525,7 +1525,7 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 	val displayedData: MutableList<Data<X, Y>> = ArrayList()
 	private val dataChangeListener: ListChangeListener<Data<X, Y>> =
 	  ListChangeListener { c ->
-		val data = c.list
+		val data2 = c.list
 		val chart = getChart()
 		while (c.next()) {
 		  if (chart != null) {
@@ -1533,9 +1533,9 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 			if (c.wasPermutated()) {
 			  displayedData.sortWith(
 				java.util.Comparator { o1: Data<X, Y>?, o2: Data<X, Y>? ->
-				  data.indexOf(
+				  data2.indexOf(
 					o2
-				  ) - data.indexOf(o1)
+				  ) - data2.indexOf(o1)
 				})
 			  return@ListChangeListener
 			}
@@ -1552,6 +1552,7 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 			if (c.addedSize > 0) {
 			  for (itemPtr in c.addedSubList) {
 				if (itemPtr!!.setToRemove) {
+				  @Suppress("SENSELESS_COMPARISON")
 				  if (chart != null) chart.dataBeingRemovedIsAdded(itemPtr, this@Series)
 				  itemPtr.setToRemove = false
 				}
@@ -1562,7 +1563,7 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 			  if (c.from == 0) {
 				displayedData.addAll(0, c.addedSubList)
 			  } else {
-				displayedData.addAll(displayedData.indexOf(data[c.from - 1]) + 1, c.addedSubList)
+				displayedData.addAll(displayedData.indexOf(data2[c.from - 1]) + 1, c.addedSubList)
 			  }
 			}
 			// inform chart
@@ -1572,7 +1573,7 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 			)
 		  } else {
 			val dupCheck: MutableSet<Data<X, Y>?> = HashSet()
-			for (d in data) {
+			for (d in data2) {
 			  require(dupCheck.add(d)) { "Duplicate data added" }
 			}
 			for (d in c.addedSubList) {
@@ -1653,6 +1654,8 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 	}
 
 	/** ObservableList of data items that make up this series  */
+
+	@Suppress("UNNECESSARY_SAFE_CALL")
 	internal val data: ObjectProperty<ObservableList<Data<X, Y>>> =
 	  object: ObjectPropertyBase<ObservableList<Data<X, Y>>>() {
 		private var old: ObservableList<Data<X, Y>>? = null
@@ -1662,8 +1665,11 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 		  if (old != null) old!!.removeListener(dataChangeListener)
 		  current.addListener(dataChangeListener)
 		  // fire data change event if series are added or removed
+		  @Suppress("KotlinConstantConditions", "SENSELESS_COMPARISON")
 		  if (old != null || current != null) {
 			val removed = if (old != null) old!! else emptyList()
+			@Suppress("USELESS_ELVIS")
+
 			val toIndex = current?.size ?: 0
 			// let data listener know all old data have been removed and new data that has been added
 			if (toIndex > 0 || !removed.isEmpty()) {
