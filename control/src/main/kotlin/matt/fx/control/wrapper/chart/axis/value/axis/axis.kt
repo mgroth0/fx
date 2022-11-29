@@ -54,7 +54,6 @@ import javafx.css.converter.BooleanConverter
 import javafx.css.converter.EnumConverter
 import javafx.css.converter.PaintConverter
 import javafx.css.converter.SizeConverter
-import javafx.event.ActionEvent
 import javafx.event.EventHandler
 import javafx.geometry.Dimension2D
 import javafx.geometry.Orientation
@@ -555,7 +554,7 @@ abstract class AxisForPackagePrivateProps<T>: Region() {
    * @param length The length of the axis in screen coordinates
    * @return Range information, this is implementation dependent
    */
-  protected abstract fun autoRange(length: Double): Any
+  protected abstract fun autoRange(length: Double): RangeProps
 
   /**
    * Called to set the current axis range to the given range. If isAnimating() is true then this method should
@@ -628,7 +627,7 @@ abstract class AxisForPackagePrivateProps<T>: Region() {
    * @param range A range object returned from autoRange()
    * @return A list of tick marks that fit along the axis if it was the given length
    */
-  protected abstract fun calculateTickValues(length: Double, range: Any): List<T>
+  protected abstract fun calculateTickValues(length: Double, range: RangeProps): List<T>
 
   /**
    * Computes the preferred height of this axis for the given width. If axis orientation
@@ -1296,4 +1295,12 @@ abstract class AxisForPackagePrivateProps<T>: Region() {
 
 
 
-class RangeProps()
+sealed interface RangeProps
+class CategoryRangeProps(
+  val allDataCategories: List<String>,
+  val newCategorySpacing: Double,
+  val newFirstPos: Double,
+  val tickLabelRotation: Double
+): RangeProps
+
+object NullRangeProp: RangeProps

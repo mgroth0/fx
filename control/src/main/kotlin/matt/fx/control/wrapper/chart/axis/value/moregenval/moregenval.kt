@@ -26,6 +26,7 @@ import javafx.scene.shape.MoveTo
 import javafx.scene.shape.Path
 import javafx.util.StringConverter
 import matt.fx.control.wrapper.chart.axis.value.axis.AxisForPackagePrivateProps
+import matt.fx.control.wrapper.chart.axis.value.axis.RangeProps
 import matt.lang.anno.See
 import matt.math.hz.Hz
 import matt.model.data.volt.MicroVolt
@@ -318,7 +319,7 @@ abstract class MoreGenericValueAxis<T: UpperBound>(
    * @param length The length of the axis in screen coordinates
    * @return Range information, this is implementation dependent
    */
-  override fun autoRange(length: Double): Any {
+  override fun autoRange(length: Double): RangeProps {
 	// guess a sensible starting size for label size, that is approx 2 lines vertically or 2 charts horizontally
 	return if (isAutoRanging()) {
 	  // guess a sensible starting size for label size, that is approx 2 lines vertically or 2 charts horizontally
@@ -362,7 +363,7 @@ abstract class MoreGenericValueAxis<T: UpperBound>(
    * @param labelSize The approximate average size a label takes along the axis
    * @return The calculated range
    */
-  protected open fun autoRange(minValue: Double, maxValue: Double, length: Double, labelSize: Double): Any? {
+  protected open fun autoRange(minValue: Double, maxValue: Double, length: Double, labelSize: Double): RangeProps {
 	return null // this method should have been abstract as there is no way for it to
 	// return anything correct. so just return null.
   }
