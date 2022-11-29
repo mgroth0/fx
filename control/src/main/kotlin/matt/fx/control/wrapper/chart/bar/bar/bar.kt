@@ -147,9 +147,9 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
   override fun dataItemAdded(series: Series<X, Y>, itemIndex: Int, item: Data<X, Y>) {
 	val category: String?
 	category = if (orientation == VERTICAL) {
-	  item.xValue.value as String?
+	  item.xValueProp.value as String?
 	} else {
-	  item.yValue.value as String?
+	  item.yValueProp.value as String?
 	}
 	var categoryMap = seriesCategoryMap[series]
 	if (categoryMap == null) {
@@ -199,10 +199,10 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
 	val barVal: Double
 	val currentVal: Double
 	if (orientation == VERTICAL) {
-	  barVal = (item.yValue.value as Number?)!!.toDouble()
+	  barVal = (item.yValueProp.value as Number?)!!.toDouble()
 	  currentVal = (item.currentY.value as Number?)!!.toDouble()
 	} else {
-	  barVal = (item.xValue.value as Number?)!!.toDouble()
+	  barVal = (item.xValueProp.value as Number?)!!.toDouble()
 	  currentVal = (item.currentX.value as Number?)!!.toDouble()
 	}
 	if (currentVal > 0 && barVal < 0) { // going from positive to negative
@@ -238,9 +238,9 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
 	  val bar = createBar(series, seriesIndex, item, j)
 	  var category: String?
 	  category = if (orientation == VERTICAL) {
-		item.xValue.value as String?
+		item.xValueProp.value as String?
 	  } else {
-		item.yValue.value as String?
+		item.yValueProp.value as String?
 	  }
 	  categoryMap[category] = item
 	  if (shouldAnimate()) {
@@ -248,7 +248,7 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
 	  } else {
 		// RT-21164 check if bar value is negative to add NEGATIVE_STYLE style class
 		val barVal =
-		  if (orientation == VERTICAL) (item.yValue.value as Number?)!!.toDouble() else (item.xValue.value as Number?)!!.toDouble()
+		  if (orientation == VERTICAL) (item.yValueProp.value as Number?)!!.toDouble() else (item.xValueProp.value as Number?)!!.toDouble()
 		if (barVal < 0) {
 		  bar.styleClass.add(NEGATIVE_STYLE)
 		}
@@ -380,7 +380,7 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
 
   // -------------- PRIVATE METHODS ------------------------------------------
   private fun updateMap(series: Series<X, Y>, item: Data<X, Y>) {
-	val category = if (orientation == VERTICAL) item.xValue.value as String? else item.yValue.value as String?
+	val category = if (orientation == VERTICAL) item.xValueProp.value as String? else item.yValueProp.value as String?
 	val categoryMap = seriesCategoryMap[series]
 	if (categoryMap != null) {
 	  categoryMap.remove(category)
@@ -398,13 +398,13 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
   private fun animateDataAdd(item: Data<X, Y>, bar: Node) {
 	val barVal: Double
 	if (orientation == VERTICAL) {
-	  barVal = (item.yValue.value as Number?)!!.toDouble()
+	  barVal = (item.yValueProp.value as Number?)!!.toDouble()
 	  if (barVal < 0) {
 		bar.styleClass.add(NEGATIVE_STYLE)
 	  }
 	  item.currentY.value = yAxis.toRealValue(if (barVal < 0) -bottomPos else bottomPos)
 	  plotChildren.add(bar)
-	  item.yValue.value = yAxis.toRealValue(barVal)
+	  item.yValueProp.value = yAxis.toRealValue(barVal)
 	  animate(
 		KeyFrame(
 		  Duration.ZERO, KeyValue(
@@ -416,18 +416,18 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
 		KeyFrame(
 		  Duration.millis(700.0), KeyValue(
 			item.currentYProperty(),
-			item.yValue.value, MyInterpolator.EASE_BOTH
+			item.yValueProp.value, MyInterpolator.EASE_BOTH
 		  )
 		)
 	  )
 	} else {
-	  barVal = (item.xValue.value as Number?)!!.toDouble()
+	  barVal = (item.xValueProp.value as Number?)!!.toDouble()
 	  if (barVal < 0) {
 		bar.styleClass.add(NEGATIVE_STYLE)
 	  }
 	  item.currentX.value = xAxis.toRealValue(if (barVal < 0) -bottomPos else bottomPos)
 	  plotChildren.add(bar)
-	  item.xValue.value = xAxis.toRealValue(barVal)
+	  item.xValueProp.value = xAxis.toRealValue(barVal)
 	  animate(
 		KeyFrame(
 		  Duration.ZERO, KeyValue(
@@ -439,7 +439,7 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
 		KeyFrame(
 		  Duration.millis(700.0), KeyValue(
 			item.currentXProperty(),
-			item.xValue.value, MyInterpolator.EASE_BOTH
+			item.xValueProp.value, MyInterpolator.EASE_BOTH
 		  )
 		)
 	  )
@@ -453,8 +453,8 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
 	  //            item.setYValue(getYAxis().toRealValue(getYAxis().getZeroPosition()));
 
 	  // save data values in case the same data item gets added immediately.
-	  XYValueMap[item] = (item.yValue.value as Number?)!!.toDouble()
-	  item.yValue.value = yAxis.toRealValue(bottomPos)
+	  XYValueMap[item] = (item.yValueProp.value as Number?)!!.toDouble()
+	  item.yValueProp.value = yAxis.toRealValue(bottomPos)
 	  t.keyFrames.addAll(
 		KeyFrame(
 		  Duration.ZERO, KeyValue(
@@ -468,15 +468,15 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
 			XYValueMap.clear()
 		  }, KeyValue(
 			item.currentYProperty(),
-			item.yValue.value,
+			item.yValueProp.value,
 			MyInterpolator.EASE_BOTH
 		  )
 		)
 	  )
 	} else {
 	  // save data values in case the same data item gets added immediately.
-	  XYValueMap[item] = (item.xValue.value as Number?)!!.toDouble()
-	  item.xValue.value = xAxis.toRealValue(xAxis.zeroPosition)
+	  XYValueMap[item] = (item.xValueProp.value as Number?)!!.toDouble()
+	  item.xValueProp.value = xAxis.toRealValue(xAxis.zeroPosition)
 	  t.keyFrames.addAll(
 		KeyFrame(
 		  Duration.ZERO, KeyValue(
@@ -490,7 +490,7 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
 			XYValueMap.clear()
 		  }, KeyValue(
 			item.currentXProperty(),
-			item.xValue.value,
+			item.xValueProp.value,
 			MyInterpolator.EASE_BOTH
 		  )
 		)

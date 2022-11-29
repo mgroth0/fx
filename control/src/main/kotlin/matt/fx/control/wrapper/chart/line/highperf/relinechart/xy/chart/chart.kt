@@ -48,7 +48,7 @@ abstract class ChartForPrivateProps: Region() {
    * This is the Pane that Chart subclasses use to contain the chart content,
    * It is sized to be inside the chart area leaving space for the title and legend.
    */
-  private val chartContent: Pane = object: Pane() {
+  val chartContent: Pane = object: Pane() {
 	override fun layoutChildren() {
 	  val top = snappedTopInset()
 	  val left = snappedLeftInset()

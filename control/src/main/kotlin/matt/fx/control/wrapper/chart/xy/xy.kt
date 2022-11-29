@@ -103,5 +103,5 @@ fun <X, Y, ChartType: XYChartWrapper<X, Y, *>> ChartType.multiseries(
   return multiSeries
 }
 
-operator fun <X, Y> Data<X, Y>.component1(): X = xValue.value
-operator fun <X, Y> Data<X, Y>.component2(): Y = yValue.value
+operator fun <X, Y> Data<X, Y>.component1(): X = xValueProp.value
+operator fun <X, Y> Data<X, Y>.component2(): Y = yValueProp.value

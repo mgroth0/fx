@@ -165,8 +165,8 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
 	if (xData != null || yData != null) {
 	  for (series in data.value) {
 		for (data in series.data.value) {
-		  xData?.add(data.xValue.value)
-		  yData?.add(data.yValue.value)
+		  xData?.add(data.xValueProp.value)
+		  yData?.add(data.yValueProp.value)
 		}
 	  }
 	  // RT-32838 No need to invalidate range if there is one data item - whose value is zero.
@@ -202,11 +202,11 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
 		val p1 = series.data.value[itemIndex - 1]
 		val p2 = series.data.value[itemIndex + 1]
 		if (p1 != null && p2 != null) {
-		  val x1 = xAxis.toNumericValue(p1.xValue.value)
-		  val y1 = yAxis.toNumericValue(p1.yValue.value)
-		  val x3 = xAxis.toNumericValue(p2.xValue.value)
-		  val y3 = yAxis.toNumericValue(p2.yValue.value)
-		  val x2 = xAxis.toNumericValue(item.xValue.value)
+		  val x1 = xAxis.toNumericValue(p1.xValueProp.value)
+		  val y1 = yAxis.toNumericValue(p1.yValueProp.value)
+		  val x3 = xAxis.toNumericValue(p2.xValueProp.value)
+		  val y3 = yAxis.toNumericValue(p2.yValueProp.value)
+		  val x2 = xAxis.toNumericValue(item.xValueProp.value)
 		  //double y2 = getYAxis().toNumericValue(item.getYValue());
 		  if (x2 > x1 && x2 < x3) {
 			//1. y intercept of the line : y = ((y3-y1)/(x3-x1)) * x2 + (x3y1 - y3x1)/(x3 -x1)
@@ -223,13 +223,13 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
 		}
 	  } else if (itemIndex == 0 && series.data.value.size > 1) {
 		animate = true
-		item.currentX.value = series.data.value[1].xValue.value
-		item.setCurrentY(series.data.value[1].yValue.value)
+		item.currentX.value = series.data.value[1].xValueProp.value
+		item.setCurrentY(series.data.value[1].yValueProp.value)
 	  } else if (itemIndex == series.data.value.size - 1 && series.data.value.size > 1) {
 		animate = true
 		val last = series.data.value.size - 2
-		item.currentX.value = series.data.value[last].xValue.value
-		item.setCurrentY(series.data.value[last].yValue.value)
+		item.currentX.value = series.data.value[last].xValueProp.value
+		item.setCurrentY(series.data.value[last].yValueProp.value)
 	  } else if (symbol != null) {
 		// fade in new symbol
 		symbol.opacity = 0.0
@@ -263,11 +263,11 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
 		  KeyFrame(
 			Duration.millis(700.0), KeyValue(
 			  item.currentYProperty(),
-			  item.yValue.value, MyInterpolator.EASE_BOTH
+			  item.yValueProp.value, MyInterpolator.EASE_BOTH
 			),
 			KeyValue(
 			  item.currentXProperty(),
-			  item.xValue.value, MyInterpolator.EASE_BOTH
+			  item.xValueProp.value, MyInterpolator.EASE_BOTH
 			)
 		  )
 		)
@@ -296,18 +296,18 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
 		animate = true
 		val p1 = series.getItem(itemIndex - 1)
 		val p2 = series.getItem(itemIndex + 1)
-		val x1 = xAxis.toNumericValue(p1!!.xValue.value)
-		val y1 = yAxis.toNumericValue(p1.yValue.value)
-		val x3 = xAxis.toNumericValue(p2!!.xValue.value)
-		val y3 = yAxis.toNumericValue(p2.yValue.value)
-		val x2 = xAxis.toNumericValue(item.xValue.value)
-		val y2 = yAxis.toNumericValue(item.yValue.value)
+		val x1 = xAxis.toNumericValue(p1!!.xValueProp.value)
+		val y1 = yAxis.toNumericValue(p1.yValueProp.value)
+		val x3 = xAxis.toNumericValue(p2!!.xValueProp.value)
+		val y3 = yAxis.toNumericValue(p2.yValueProp.value)
+		val x2 = xAxis.toNumericValue(item.xValueProp.value)
+		val y2 = yAxis.toNumericValue(item.yValueProp.value)
 		if (x2 > x1 && x2 < x3) {
 		  //                //1.  y intercept of the line : y = ((y3-y1)/(x3-x1)) * x2 + (x3y1 - y3x1)/(x3 -x1)
 		  val y = (y3 - y1)/(x3 - x1)*x2 + (x3*y1 - y3*x1)/(x3 - x1)
 		  item.currentX.value = xAxis.toRealValue(x2)
 		  item.currentY.value = yAxis.toRealValue(y2)
-		  item.xValue.value = xAxis.toRealValue(x2)
+		  item.xValueProp.value = xAxis.toRealValue(x2)
 		  item.setYValue(yAxis.toRealValue(y)!!)
 		} else {
 		  //2.  we can simply use the midpoint on the line as well..
@@ -318,13 +318,13 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
 		}
 	  } else if (itemIndex == 0 && dataListSize > 1) {
 		animate = true
-		item.xValue.value = series.data.value[0].xValue.value
-		item.setYValue(series.data.value[0].yValue.value)
+		item.xValueProp.value = series.data.value[0].xValueProp.value
+		item.setYValue(series.data.value[0].yValueProp.value)
 	  } else if (itemIndex == dataSize - 1 && dataListSize > 1) {
 		animate = true
 		val last = dataListSize - 1
-		item.xValue.value = series.data.value[last].xValue.value
-		item.setYValue(series.data.value[last].yValue.value)
+		item.xValueProp.value = series.data.value[last].xValueProp.value
+		item.setYValue(series.data.value[last].yValueProp.value)
 	  } else if (symbol != null) {
 		// fade out symbol
 		fadeSymbolTransition = FadeTransition(Duration.millis(500.0), symbol)
@@ -502,7 +502,7 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
   private fun createDataRemoveTimeline(item: Data<X, Y>, symbol: Node?, series: Series<X, Y>): Timeline {
 	val t = Timeline()
 	// save data values in case the same data item gets added immediately.
-	XYValueMap[item] = (item.yValue.value as Number?)!!.toDouble()
+	XYValueMap[item] = (item.yValueProp.value as Number?)!!.toDouble()
 	t.keyFrames.addAll(
 	  KeyFrame(
 		Duration.ZERO, KeyValue(
@@ -521,11 +521,11 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
 		},
 		KeyValue(
 		  item.currentYProperty(),
-		  item.yValue.value, MyInterpolator.EASE_BOTH
+		  item.yValueProp.value, MyInterpolator.EASE_BOTH
 		),
 		KeyValue(
 		  item.currentXProperty(),
-		  item.xValue.value, MyInterpolator.EASE_BOTH
+		  item.xValueProp.value, MyInterpolator.EASE_BOTH
 		)
 	  )
 	)

@@ -250,18 +250,18 @@ class BubbleChartForWrapper<X, Y> @JvmOverloads constructor(
 		for (data in series.data.value) {
 		  if (xData != null) {
 			if (xIsCategory) {
-			  xData.add(data.xValue.value)
+			  xData.add(data.xValueProp.value)
 			} else {
-			  xData.add(xa.toRealValue(xa.toNumericValue(data.xValue.value) + getDoubleValue(data.extraValue, 0.0))!!)
-			  xData.add(xa.toRealValue(xa.toNumericValue(data.xValue.value) - getDoubleValue(data.extraValue, 0.0))!!)
+			  xData.add(xa.toRealValue(xa.toNumericValue(data.xValueProp.value) + getDoubleValue(data.extraValue, 0.0))!!)
+			  xData.add(xa.toRealValue(xa.toNumericValue(data.xValueProp.value) - getDoubleValue(data.extraValue, 0.0))!!)
 			}
 		  }
 		  if (yData != null) {
 			if (yIsCategory) {
-			  yData.add(data.yValue.value)
+			  yData.add(data.yValueProp.value)
 			} else {
-			  yData.add(ya.toRealValue(ya.toNumericValue(data.yValue.value) + getDoubleValue(data.extraValue, 0.0))!!)
-			  yData.add(ya.toRealValue(ya.toNumericValue(data.yValue.value) - getDoubleValue(data.extraValue, 0.0))!!)
+			  yData.add(ya.toRealValue(ya.toNumericValue(data.yValueProp.value) + getDoubleValue(data.extraValue, 0.0))!!)
+			  yData.add(ya.toRealValue(ya.toNumericValue(data.yValueProp.value) - getDoubleValue(data.extraValue, 0.0))!!)
 			}
 		  }
 		}

@@ -62,7 +62,7 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
 		for (cat in c.removed) {
 		  for (series in getData()) {
 			for (data2 in series.data.value) {
-			  if (cat == if (orientation == VERTICAL) data2.xValue.value else data2.yValue.value) {
+			  if (cat == if (orientation == VERTICAL) data2.xValueProp.value else data2.yValueProp.value) {
 				val animatedOn = animated.value
 				setAnimated(false)
 				dataItemRemoved(data2, series)
@@ -130,9 +130,9 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
   override fun dataItemAdded(series: Series<X, Y>, itemIndex: Int, item: Data<X, Y>) {
 	val category: String?
 	category = if (orientation == VERTICAL) {
-	  item.xValue.value as String?
+	  item.xValueProp.value as String?
 	} else {
-	  item.yValue.value as String?
+	  item.yValueProp.value as String?
 	}
 	// Don't plot if category does not already exist ?
 	//        if (!categoryAxis.getCategories().contains(category)) return;
@@ -177,10 +177,10 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
 	val barVal: Double
 	val currentVal: Double
 	if (orientation == VERTICAL) {
-	  barVal = (item.yValue.value as Number?)!!.toDouble()
+	  barVal = (item.yValueProp.value as Number?)!!.toDouble()
 	  currentVal = (getCurrentDisplayedYValue(item) as Number?)!!.toDouble()
 	} else {
-	  barVal = (item.xValue.value as Number?)!!.toDouble()
+	  barVal = (item.xValueProp.value as Number?)!!.toDouble()
 	  currentVal = (getCurrentDisplayedXValue(item) as Number?)!!.toDouble()
 	}
 	if (currentVal > 0 && barVal < 0) { // going from positive to negative
@@ -215,9 +215,9 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
 	  val bar = createBar(series, seriesIndex, item, j)
 	  var category: String?
 	  category = if (orientation == VERTICAL) {
-		item.xValue.value as String?
+		item.xValueProp.value as String?
 	  } else {
-		item.yValue.value as String?
+		item.yValueProp.value as String?
 	  }
 	  // list of two item positive and negative
 	  val itemList: MutableList<Data<X, Y>>? =
@@ -228,7 +228,7 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
 		animateDataAdd(item, bar)
 	  } else {
 		val barVal =
-		  if (orientation == VERTICAL) (item.yValue.value as Number?)!!.toDouble() else (item.xValue.value as Number?)!!.toDouble()
+		  if (orientation == VERTICAL) (item.yValueProp.value as Number?)!!.toDouble() else (item.xValueProp.value as Number?)!!.toDouble()
 		if (barVal < 0) {
 		  bar.styleClass.add("negative")
 		}
@@ -285,7 +285,7 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
 	  val cData = ArrayList<Any?>()
 	  for (series in data.value) {
 		for (data in series.data.value) {
-		  if (data != null) cData.add(if (categoryIsX) data.xValue.value else data.yValue.value)
+		  if (data != null) cData.add(if (categoryIsX) data.xValueProp.value else data.yValueProp.value)
 		}
 	  }
 	  @Suppress("UNCHECKED_CAST")
@@ -304,7 +304,7 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
 			@Suppress("SENSELESS_COMPARISON")
 			if (item != null) {
 			  val isNegative = item.node.value.styleClass.contains("negative")
-			  @Suppress("IMPLICIT_CAST_TO_ANY") val value = (if (categoryIsX) item.yValue.value else item.xValue.value) as Number?
+			  @Suppress("IMPLICIT_CAST_TO_ANY") val value = (if (categoryIsX) item.yValueProp.value else item.xValueProp.value) as Number?
 			  if (!isNegative) {
 				totalXP += toNumericValueFromValueAxis(value)
 			  } else {
@@ -418,7 +418,7 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
   }
 
   private fun updateMap(series: Series<X, Y>, item: Data<X, Y>) {
-	val category = if (orientation == VERTICAL) item.xValue.value as String? else item.yValue.value as String?
+	val category = if (orientation == VERTICAL) item.xValueProp.value as String? else item.yValueProp.value as String?
 	val categoryMap = seriesCategoryMap[series]
 	if (categoryMap != null) {
 	  categoryMap.remove(category)
@@ -436,14 +436,14 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
   private fun animateDataAdd(item: Data<X, Y>, bar: Node) {
 	val barVal: Double
 	if (orientation == VERTICAL) {
-	  barVal = (item.yValue.value as Number?)!!.toDouble()
+	  barVal = (item.yValueProp.value as Number?)!!.toDouble()
 	  if (barVal < 0) {
 		bar.styleClass.add("negative")
 	  }
-	  item.yValue.value = yAxis.toRealValue(yAxis.zeroPosition)
+	  item.yValueProp.value = yAxis.toRealValue(yAxis.zeroPosition)
 	  setCurrentDisplayedYValue(item, yAxis.toRealValue(yAxis.zeroPosition)!!)
 	  plotChildren.add(bar)
-	  item.yValue.value = yAxis.toRealValue(barVal)
+	  item.yValueProp.value = yAxis.toRealValue(barVal)
 	  animate(
 		KeyFrame(
 		  Duration.ZERO, KeyValue(
@@ -455,19 +455,19 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
 		KeyFrame(
 		  Duration.millis(700.0), KeyValue(
 			currentDisplayedYValueProperty(item),
-			item.yValue.value, MyInterpolator.EASE_BOTH
+			item.yValueProp.value, MyInterpolator.EASE_BOTH
 		  )
 		)
 	  )
 	} else {
-	  barVal = (item.xValue.value as Number?)!!.toDouble()
+	  barVal = (item.xValueProp.value as Number?)!!.toDouble()
 	  if (barVal < 0) {
 		bar.styleClass.add("negative")
 	  }
-	  item.xValue.value = xAxis.toRealValue(xAxis.zeroPosition)
+	  item.xValueProp.value = xAxis.toRealValue(xAxis.zeroPosition)
 	  setCurrentDisplayedXValue(item, xAxis.toRealValue(xAxis.zeroPosition)!!)
 	  plotChildren.add(bar)
-	  item.xValue.value = xAxis.toRealValue(barVal)
+	  item.xValueProp.value = xAxis.toRealValue(barVal)
 	  animate(
 		KeyFrame(
 		  Duration.ZERO, KeyValue(
@@ -479,7 +479,7 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
 		KeyFrame(
 		  Duration.millis(700.0), KeyValue(
 			currentDisplayedXValueProperty(item),
-			item.xValue.value, MyInterpolator.EASE_BOTH
+			item.xValueProp.value, MyInterpolator.EASE_BOTH
 		  )
 		)
 	  )
@@ -490,7 +490,7 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
   private fun createDataRemoveTimeline(item: Data<X, Y>, bar: Node?, series: Series<X, Y>): Timeline {
 	val t = Timeline()
 	if (orientation == VERTICAL) {
-	  item.yValue.value = yAxis.toRealValue(yAxis.zeroPosition)
+	  item.yValueProp.value = yAxis.toRealValue(yAxis.zeroPosition)
 	  t.keyFrames.addAll(
 		KeyFrame(
 		  Duration.ZERO, KeyValue(
@@ -507,12 +507,12 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
 			)
 		  }, KeyValue(
 			currentDisplayedYValueProperty(item),
-			item.yValue.value, MyInterpolator.EASE_BOTH
+			item.yValueProp.value, MyInterpolator.EASE_BOTH
 		  )
 		)
 	  )
 	} else {
-	  item.xValue.value = xAxis.toRealValue(xAxis.zeroPosition)
+	  item.xValueProp.value = xAxis.toRealValue(xAxis.zeroPosition)
 	  t.keyFrames.addAll(
 		KeyFrame(
 		  Duration.ZERO, KeyValue(
@@ -529,7 +529,7 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
 			)
 		  }, KeyValue(
 			currentDisplayedXValueProperty(item),
-			item.xValue.value, MyInterpolator.EASE_BOTH
+			item.xValueProp.value, MyInterpolator.EASE_BOTH
 		  )
 		)
 	  )

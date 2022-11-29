@@ -1,10 +1,6 @@
 package matt.fx.node.proto.annochart
 
 import javafx.geometry.Insets
-import javafx.scene.Group
-import javafx.scene.chart.Chart
-import matt.fx.control.wrapper.chart.line.highperf.relinechart.xy.XYChart
-import matt.fx.control.wrapper.chart.line.highperf.relinechart.xy.XYChart.Data
 import javafx.scene.layout.Border
 import javafx.scene.layout.Pane
 import javafx.scene.layout.Region
@@ -14,6 +10,7 @@ import matt.async.safe.with
 import matt.fx.control.wrapper.chart.axis.value.number.NumberAxisWrapper
 import matt.fx.control.wrapper.chart.axis.value.number.tickconfig.showBestTicksIn
 import matt.fx.control.wrapper.chart.line.highperf.HighPerformanceLineChart
+import matt.fx.control.wrapper.chart.line.highperf.relinechart.xy.XYChartForPackagePrivateProps.Data
 import matt.fx.control.wrapper.chart.xy.series.SeriesWrapper
 import matt.fx.control.wrapper.label.label
 import matt.fx.graphics.fxthread.ensureInFXThreadInPlace
@@ -220,23 +217,14 @@ open class AnnotateableChart<X: MathAndComparable<X>, Y: MathAndComparable<Y>> p
   private val annotationColor: Color = Color.YELLOW
 
   private val chartContent by lazy {
-	(Chart::class.java.getDeclaredField("chartContent").run {
-	  isAccessible = true
-	  get(chart.node)
-	} as Pane)
+	chart.node.chartContent
   }
 
   private val plotContent by lazy {
-	(XYChart::class.java.getDeclaredField("plotContent").run {
-	  isAccessible = true
-	  get(chart.node)
-	} as Group)
+	chart.node.plotContent
   }
   private val plotArea by lazy {
-	(XYChart::class.java.getDeclaredField("plotArea").run {
-	  isAccessible = true
-	  get(chart.node)
-	} as Group)
+	chart.node.plotArea
   }
 
   fun layoutXOf(v: X) = xAxis.displayPixelOf(v) + plotArea.boundsInParent.minX + chartContent.boundsInParent.minX

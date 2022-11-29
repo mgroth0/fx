@@ -79,10 +79,10 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
   private val horizontalRowFill = Path()
   private val verticalRowFill = Path()
   private val plotBackground = Region()
-  private val plotArea: Group = object: Group() {
+  val plotArea: Group = object: Group() {
 	override fun requestLayout() {} // suppress layout requests
   }
-  private val plotContent = Group()
+  val plotContent = Group()
   private val plotAreaClip = Rectangle()
   private val displayedSeries: MutableList<Series<X, Y>> = ArrayList()
   private val legend = Legend()
@@ -157,7 +157,8 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
   }
 
   /** XYCharts data  */
-  internal val data: ObjectProperty<ObservableList<Series<X, Y>>> = object: ObjectPropertyBase<ObservableList<Series<X, Y>>>() {
+  internal val data: ObjectProperty<ObservableList<Series<X, Y>>> =
+	object: ObjectPropertyBase<ObservableList<Series<X, Y>>>() {
 	  private var old: ObservableList<Series<X, Y>>? = null
 	  override fun invalidated() {
 		val current: ObservableList<Series<X, Y>>? = value
@@ -171,7 +172,7 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 		  // RT-21295 - disable animated only when current is also not null.
 		  if (current != null && old!!.size > 0) {
 			saveAnimationState = if (old!![0].getChart()!!.animatedProperty().value) 1 else 2
-			old!![0].getChart()!!.setAnimated( false)
+			old!![0].getChart()!!.setAnimated(false)
 		  }
 		}
 		current?.addListener(seriesChanged)
@@ -191,7 +192,7 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 			  }
 			})
 		  }
-		} else if (old?.let {  it.size > 0} ?: false) {
+		} else if (old?.let { it.size > 0 } ?: false) {
 		  // let series listener know all old series have been removed
 		  seriesChanged.onChanged(object: NonIterableChange<Series<X, Y>?>(0, 0, current) {
 			override fun getRemoved(): List<Series<X, Y>> {
@@ -205,7 +206,7 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 		}
 		// restore animated on chart.
 		if (current != null && current.size > 0 && saveAnimationState != -1) {
-		  current[0].getChart()!!.setAnimated ( if (saveAnimationState == 1) true else false)
+		  current[0].getChart()!!.setAnimated(if (saveAnimationState == 1) true else false)
 		}
 		old = current
 	  }
@@ -452,11 +453,11 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
    * @param yAxis Y Axis for this XY chart
    */
   init {
-//	xAxis = xAxis
-	if (xAxis.side.value == null) xAxis.setSide(  BOTTOM)
+	//	xAxis = xAxis
+	if (xAxis.side.value == null) xAxis.setSide(BOTTOM)
 	xAxis.setEffectiveOrientation(HORIZONTAL)
 	this.yAxis = yAxis
-	if (yAxis.side.value == null) yAxis.setSide( LEFT)
+	if (yAxis.side.value == null) yAxis.setSide(LEFT)
 	yAxis.setEffectiveOrientation(VERTICAL)
 	// RT-23123 autoranging leads to charts incorrect appearance.
 	xAxis.autoRangingProperty()
@@ -492,8 +493,8 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 	plotArea.isManaged = false
 	// listen to animation on/off and sync to axis
 	animatedProperty().addListener { _: ObservableValue<out Boolean?>?, _: Boolean?, newValue: Boolean? ->
-	  if (getXAxis() != null) getXAxis()!!.setAnimated( newValue!!)
-	  if (getYAxis() != null) getYAxis()!!.setAnimated( newValue!!)
+	  if (getXAxis() != null) getXAxis()!!.setAnimated(newValue!!)
+	  if (getYAxis() != null) getYAxis()!!.setAnimated(newValue!!)
 	}
 	setLegend(legend)
   }
@@ -539,7 +540,10 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 	dataItemChanged(item)
 	if (shouldAnimate()) {
 	  animate(
-		KeyFrame(Duration.ZERO, KeyValue(currentValueProperty, currentValueProperty.get(),MyInterpolator.MY_DEFAULT_INTERPOLATOR)),
+		KeyFrame(
+		  Duration.ZERO,
+		  KeyValue(currentValueProperty, currentValueProperty.get(), MyInterpolator.MY_DEFAULT_INTERPOLATOR)
+		),
 		KeyFrame(Duration.millis(700.0), KeyValue(currentValueProperty, newValue, MyInterpolator.EASE_BOTH))
 	  )
 	} else {
@@ -1008,8 +1012,8 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 	val startValues = arrayOfNulls<KeyValue>(nodes.size)
 	val endValues = arrayOfNulls<KeyValue>(nodes.size)
 	for (j in nodes.indices) {
-	  startValues[j] = KeyValue(nodes[j]!!.opacityProperty(), 1,MyInterpolator.MY_DEFAULT_INTERPOLATOR)
-	  endValues[j] = KeyValue(nodes[j]!!.opacityProperty(), 0,MyInterpolator.MY_DEFAULT_INTERPOLATOR)
+	  startValues[j] = KeyValue(nodes[j]!!.opacityProperty(), 1, MyInterpolator.MY_DEFAULT_INTERPOLATOR)
+	  endValues[j] = KeyValue(nodes[j]!!.opacityProperty(), 0, MyInterpolator.MY_DEFAULT_INTERPOLATOR)
 	}
 	return arrayOf(
 	  KeyFrame(Duration.ZERO, *startValues),
@@ -1188,34 +1192,36 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 		  return node.alternativeRowFillVisibleProperty() as StyleableProperty<Boolean?>
 		}
 	  }
-	val VERTICAL_GRID_LINE_VISIBLE: CssMetaData<XYChartForPackagePrivateProps<*, *>, Boolean> = object: CssMetaData<XYChartForPackagePrivateProps<*, *>, Boolean>(
-	  "-fx-vertical-grid-lines-visible",
-	  BooleanConverter.getInstance(), true
-	) {
-	  override fun isSettable(node: XYChartForPackagePrivateProps<*, *>): Boolean {
-		return node.verticalGridLinesVisible.value == null ||
-			!node.verticalGridLinesVisible.isBound
-	  }
+	val VERTICAL_GRID_LINE_VISIBLE: CssMetaData<XYChartForPackagePrivateProps<*, *>, Boolean> =
+	  object: CssMetaData<XYChartForPackagePrivateProps<*, *>, Boolean>(
+		"-fx-vertical-grid-lines-visible",
+		BooleanConverter.getInstance(), true
+	  ) {
+		override fun isSettable(node: XYChartForPackagePrivateProps<*, *>): Boolean {
+		  return node.verticalGridLinesVisible.value == null ||
+			  !node.verticalGridLinesVisible.isBound
+		}
 
-	  override fun getStyleableProperty(node: XYChartForPackagePrivateProps<*, *>): StyleableProperty<Boolean?> {
-		@Suppress("UNCHECKED_CAST")
-		return node.verticalGridLinesVisibleProperty() as StyleableProperty<Boolean?>
+		override fun getStyleableProperty(node: XYChartForPackagePrivateProps<*, *>): StyleableProperty<Boolean?> {
+		  @Suppress("UNCHECKED_CAST")
+		  return node.verticalGridLinesVisibleProperty() as StyleableProperty<Boolean?>
+		}
 	  }
-	}
-	val VERTICAL_ZERO_LINE_VISIBLE: CssMetaData<XYChartForPackagePrivateProps<*, *>, Boolean> = object: CssMetaData<XYChartForPackagePrivateProps<*, *>, Boolean>(
-	  "-fx-vertical-zero-line-visible",
-	  BooleanConverter.getInstance(), true
-	) {
-	  override fun isSettable(node: XYChartForPackagePrivateProps<*, *>): Boolean {
-		return node.verticalZeroLineVisible.value == null ||
-			!node.verticalZeroLineVisible.isBound
-	  }
+	val VERTICAL_ZERO_LINE_VISIBLE: CssMetaData<XYChartForPackagePrivateProps<*, *>, Boolean> =
+	  object: CssMetaData<XYChartForPackagePrivateProps<*, *>, Boolean>(
+		"-fx-vertical-zero-line-visible",
+		BooleanConverter.getInstance(), true
+	  ) {
+		override fun isSettable(node: XYChartForPackagePrivateProps<*, *>): Boolean {
+		  return node.verticalZeroLineVisible.value == null ||
+			  !node.verticalZeroLineVisible.isBound
+		}
 
-	  override fun getStyleableProperty(node: XYChartForPackagePrivateProps<*, *>): StyleableProperty<Boolean?> {
-		@Suppress("UNCHECKED_CAST")
-		return node.verticalZeroLineVisibleProperty() as StyleableProperty<Boolean?>
+		override fun getStyleableProperty(node: XYChartForPackagePrivateProps<*, *>): StyleableProperty<Boolean?> {
+		  @Suppress("UNCHECKED_CAST")
+		  return node.verticalZeroLineVisibleProperty() as StyleableProperty<Boolean?>
+		}
 	  }
-	}
 	val ALTERNATIVE_COLUMN_FILL_VISIBLE: CssMetaData<XYChartForPackagePrivateProps<*, *>, Boolean> =
 	  object: CssMetaData<XYChartForPackagePrivateProps<*, *>, Boolean>(
 		"-fx-alternative-column-fill-visible",
@@ -1267,7 +1273,7 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 	}
 
 	/** The generic data value to be plotted on the X axis  */
-	internal val xValue: ObjectProperty<X> = object: SimpleObjectProperty<X>(this@Data, "XValue") {
+	internal val xValueProp: ObjectProperty<X> = object: SimpleObjectProperty<X>(this@Data, "XValue") {
 	  override fun invalidated() {
 		if (series != null) {
 		  val chart = series!!.getChart()
@@ -1279,13 +1285,17 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 		}
 	  }
 	}
+	var xValue: X
+	  get() = getXValue()
+	  set(value) = setXValue(value)
+
 
 	/**
 	 * Gets the generic data value to be plotted on the X axis.
 	 * @return the generic data value to be plotted on the X axis.
 	 */
 	fun getXValue(): X {
-	  return xValue.get()
+	  return xValueProp.get()
 	}
 
 	/**
@@ -1293,7 +1303,7 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 	 * @param value the generic data value to be plotted on the X axis.
 	 */
 	fun setXValue(value: X) {
-	  xValue.set(value)
+	  xValueProp.set(value)
 	  // handle the case where this is a init because the default constructor was used
 	  // and the case when series is not associated to a chart due to a remove series
 	  if (currentX.get() == null || series != null && series!!.getChart() == null) currentX.value = value
@@ -1304,11 +1314,11 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 	 * @return The XValue property
 	 */
 	fun XValueProperty(): ObjectProperty<X> {
-	  return xValue
+	  return xValueProp
 	}
 
 	/** The generic data value to be plotted on the Y axis  */
-	internal val yValue: ObjectProperty<Y> = object: SimpleObjectProperty<Y>(this@Data, "YValue") {
+	val yValueProp: ObjectProperty<Y> = object: SimpleObjectProperty<Y>(this@Data, "YValue") {
 	  override fun invalidated() {
 		if (series != null) {
 		  val chart = series!!.getChart()
@@ -1321,12 +1331,16 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 	  }
 	}
 
+	var yValue: Y
+	  get() = yValueProp.get()
+	  set(value) = setYValue(value)
+
 	/**
 	 * Gets the generic data value to be plotted on the Y axis.
 	 * @return the generic data value to be plotted on the Y axis.
 	 */
 	fun getYValue(): Y {
-	  return yValue.get()
+	  return yValueProp.get()
 	}
 
 	/**
@@ -1334,7 +1348,7 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 	 * @param value the generic data value to be plotted on the Y axis.
 	 */
 	fun setYValue(value: Y) {
-	  yValue.set(value)
+	  yValueProp.set(value)
 	  // handle the case where this is a init because the default constructor was used
 	  // and the case when series is not associated to a chart due to a remove series
 	  if (currentY.get() == null || series != null && series!!.getChart() == null) currentY.value = value
@@ -1345,7 +1359,7 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 	 * @return the YValue property
 	 */
 	fun YValueProperty(): ObjectProperty<Y> {
-	  return yValue
+	  return yValueProp
 	}
 
 	/**
@@ -1668,6 +1682,7 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 		  @Suppress("KotlinConstantConditions", "SENSELESS_COMPARISON")
 		  if (old != null || current != null) {
 			val removed = if (old != null) old!! else emptyList()
+
 			@Suppress("USELESS_ELVIS")
 
 			val toIndex = current?.size ?: 0
@@ -1683,7 +1698,7 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 				}
 			  })
 			}
-		  } else if (old?.let {it.size > 0} ?: false) {
+		  } else if (old?.let { it.size > 0 } ?: false) {
 			// let series listener know all old series have been removed
 			dataChangeListener.onChanged(object: NonIterableChange<Data<X, Y>>(0, 0, current) {
 			  override fun getRemoved(): List<Data<X, Y>> {
