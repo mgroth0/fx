@@ -470,7 +470,7 @@ abstract class AxisForPackagePrivateProps<T>: Region() {
   /**
    * Rotation in degrees of tick mark labels from their normal horizontal.
    */
-  private val tickLabelRotation: DoubleProperty = object: DoublePropertyBase(0.0) {
+  internal val tickLabelRotation: DoubleProperty = object: DoublePropertyBase(0.0) {
 	override fun invalidated() {
 	  if (isAutoRanging()) {
 		invalidateRange() // NumberAxis and CategoryAxis use this property in autorange
@@ -540,7 +540,7 @@ abstract class AxisForPackagePrivateProps<T>: Region() {
    *
    * @param data The current set of all data that needs to be plotted on this axis
    */
-  fun invalidateRange(data: List<T>?) {
+  open fun invalidateRange(data: List<T>) {
 	invalidateRange()
 	requestAxisLayout()
   }
@@ -563,7 +563,7 @@ abstract class AxisForPackagePrivateProps<T>: Region() {
    * @param range A range object returned from autoRange()
    * @param animate If true animate the change in range
    */
-  protected abstract fun setRange(range: Any?, animate: Boolean)
+  protected abstract fun setRange(range: Any, animate: Boolean)
   protected abstract val range: Any
 
   /**
@@ -594,7 +594,7 @@ abstract class AxisForPackagePrivateProps<T>: Region() {
    * @return the nearest data value to the given pixel position or
    * null if not on axis;
    */
-  abstract fun getValueForDisplay(displayPosition: Double): T
+  abstract fun getValueForDisplay(displayPosition: Double): T?
 
   /**
    * Checks if the given value is plottable on this axis
@@ -618,7 +618,7 @@ abstract class AxisForPackagePrivateProps<T>: Region() {
    * @param value The numeric value to convert
    * @return Data value for given numeric value
    */
-  abstract fun toRealValue(value: Double): T
+  abstract fun toRealValue(value: Double): T?
 
   /**
    * Calculate a list of all the data values for each tick mark in range
@@ -627,7 +627,7 @@ abstract class AxisForPackagePrivateProps<T>: Region() {
    * @param range A range object returned from autoRange()
    * @return A list of tick marks that fit along the axis if it was the given length
    */
-  protected abstract fun calculateTickValues(length: Double, range: Any?): List<T>
+  protected abstract fun calculateTickValues(length: Double, range: Any): List<T>
 
   /**
    * Computes the preferred height of this axis for the given width. If axis orientation
@@ -1027,7 +1027,7 @@ abstract class AxisForPackagePrivateProps<T>: Region() {
    * @param range range to use during calculations
    * @return size of tick mark label for given value
    */
-  protected fun measureTickMarkSize(value: T, range: Any?): Dimension2D {
+  protected open fun measureTickMarkSize(value: T, range: Any): Dimension2D {
 	return measureTickMarkSize(value, effectiveTickLabelRotation)
   }
 

@@ -22,7 +22,7 @@ import matt.fx.control.wrapper.chart.line.highperf.relinechart.xy.area.AreaChart
 import matt.fx.control.wrapper.chart.axis.value.axis.Axis
 import javafx.scene.chart.BarChart
 import javafx.scene.chart.BubbleChart
-import javafx.scene.chart.CategoryAxis
+import matt.fx.control.wrapper.chart.axis.cat.cat.CategoryAxis
 import matt.fx.control.wrapper.chart.line.highperf.relinechart.MorePerfOptionsLineChart
 import javafx.scene.chart.NumberAxis
 import javafx.scene.chart.PieChart
@@ -509,9 +509,9 @@ fun Region.wrapped(): RegionWrapper<*> = findWrapper() ?: when (this) {
   is HBox              -> wrapped()
   is PieChart          -> wrapped()
   is AnchorPane        -> wrapped()
-  is StackPane         -> wrapped()
-  is CategoryAxis      -> wrapped()
-  is TilePane          -> wrapped()
+  is StackPane    -> wrapped()
+  is CategoryAxis -> wrapped()
+  is TilePane     -> wrapped()
   is Pane              -> wrapped()
   is TableColumnHeader -> wrapped()
   is Control           -> wrapped()

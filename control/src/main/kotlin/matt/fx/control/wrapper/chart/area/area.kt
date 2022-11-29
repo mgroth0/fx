@@ -1,6 +1,5 @@
 package matt.fx.control.wrapper.chart.area
 
-import matt.fx.control.wrapper.chart.line.highperf.relinechart.xy.area.AreaChart
 import matt.fx.control.wrapper.chart.axis.MAxis
 import matt.fx.control.wrapper.chart.line.highperf.relinechart.xy.area.AreaChartForPrivateProps
 import matt.fx.control.wrapper.chart.xy.XYChartWrapper
@@ -15,8 +14,8 @@ fun <X, Y> ET.areachart(title: String? = null, x: MAxis<X>, y: MAxis<Y>, op: Are
 
 open class AreaChartWrapper<X, Y>(
   node: AreaChartForPrivateProps<X, Y>,
-): XYChartWrapper<X, Y, AreaChart<X, Y>>(node) {
+): XYChartWrapper<X, Y, AreaChartForPrivateProps<X, Y>>(node) {
 
-  constructor(x: MAxis<X>, y: MAxis<Y>): this(AreaChart(x.node, y.node))
+  constructor(x: MAxis<X>, y: MAxis<Y>): this(AreaChartForPrivateProps(x.node, y.node))
 
 }
