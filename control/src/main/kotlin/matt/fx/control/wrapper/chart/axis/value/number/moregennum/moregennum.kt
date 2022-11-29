@@ -10,6 +10,7 @@ import javafx.css.Styleable
 import javafx.geometry.Dimension2D
 import javafx.util.Duration
 import javafx.util.StringConverter
+import matt.fx.control.wrapper.chart.axis.value.axis.RangeProps
 import matt.fx.control.wrapper.chart.axis.value.moregenval.MoreGenericValueAxis
 import matt.fx.control.wrapper.chart.axis.value.moregenval.ValueAxisConverter
 import matt.fx.graphics.anim.interp.MyInterpolator.Companion.MY_DEFAULT_INTERPOLATOR
@@ -289,9 +290,7 @@ class MoreGenericNumberAxis<T: Any>(
    * @param range range to use during calculations
    * @return size of tick mark label for given value
    */
-  override fun measureTickMarkSize(value: T, range: Any): Dimension2D {
-	@Suppress("UNCHECKED_CAST", "UNUSED_VARIABLE")
-	val rangeProps = range as Array<Any>
+  override fun measureTickMarkSize(value: T, range: RangeProps): Dimension2D {
 	//	val formatter = rangeProps[4] as String
 	return measureTickMarkSize(value, tickLabelRotation/*, formatter*/)
   }

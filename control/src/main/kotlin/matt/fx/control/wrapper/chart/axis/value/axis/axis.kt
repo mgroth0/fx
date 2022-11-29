@@ -1028,7 +1028,7 @@ abstract class AxisForPackagePrivateProps<T>: Region() {
    * @param range range to use during calculations
    * @return size of tick mark label for given value
    */
-  protected open fun measureTickMarkSize(value: T, range: Any): Dimension2D {
+  protected open fun measureTickMarkSize(value: T, range: RangeProps): Dimension2D {
 	return measureTickMarkSize(value, effectiveTickLabelRotation)
   }
 
@@ -1293,3 +1293,7 @@ abstract class AxisForPackagePrivateProps<T>: Region() {
 	private val RIGHT_PSEUDOCLASS_STATE = PseudoClass.getPseudoClass("right")
   }
 }
+
+
+
+class RangeProps()
