@@ -1286,28 +1286,14 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 	  }
 	}
 	var xValue: X
-	  get() = getXValue()
-	  set(value) = setXValue(value)
+	  get() = xValueProp.get()
+	  set(value) {
+		xValueProp.set(value)
+		// handle the case where this is a init because the default constructor was used
+		// and the case when series is not associated to a chart due to a remove series
+		if (currentX.get() == null || series != null && series!!.getChart() == null) currentX.value = value
+	  }
 
-
-	/**
-	 * Gets the generic data value to be plotted on the X axis.
-	 * @return the generic data value to be plotted on the X axis.
-	 */
-	fun getXValue(): X {
-	  return xValueProp.get()
-	}
-
-	/**
-	 * Sets the generic data value to be plotted on the X axis.
-	 * @param value the generic data value to be plotted on the X axis.
-	 */
-	fun setXValue(value: X) {
-	  xValueProp.set(value)
-	  // handle the case where this is a init because the default constructor was used
-	  // and the case when series is not associated to a chart due to a remove series
-	  if (currentX.get() == null || series != null && series!!.getChart() == null) currentX.value = value
-	}
 
 	/**
 	 * The generic data value to be plotted on the X axis.
@@ -1333,26 +1319,13 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 
 	var yValue: Y
 	  get() = yValueProp.get()
-	  set(value) = setYValue(value)
+	  set(value) {
+		yValueProp.set(value)
+		// handle the case where this is a init because the default constructor was used
+		// and the case when series is not associated to a chart due to a remove series
+		if (currentY.get() == null || series != null && series!!.getChart() == null) currentY.value = value
+	  }
 
-	/**
-	 * Gets the generic data value to be plotted on the Y axis.
-	 * @return the generic data value to be plotted on the Y axis.
-	 */
-	fun getYValue(): Y {
-	  return yValueProp.get()
-	}
-
-	/**
-	 * Sets the generic data value to be plotted on the Y axis.
-	 * @param value the generic data value to be plotted on the Y axis.
-	 */
-	fun setYValue(value: Y) {
-	  yValueProp.set(value)
-	  // handle the case where this is a init because the default constructor was used
-	  // and the case when series is not associated to a chart due to a remove series
-	  if (currentY.get() == null || series != null && series!!.getChart() == null) currentY.value = value
-	}
 
 	/**
 	 * The generic data value to be plotted on the Y axis.
