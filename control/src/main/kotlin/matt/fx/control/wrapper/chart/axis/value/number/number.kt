@@ -3,7 +3,6 @@ package matt.fx.control.wrapper.chart.axis.value.number
 import javafx.scene.chart.NumberAxis
 import matt.fx.control.wrapper.chart.axis.value.OldValueAxisWrapper
 import matt.fx.control.wrapper.chart.axis.value.ValueAxisWrapper
-import matt.fx.control.wrapper.chart.axis.value.moregenval.DoubleAxisConverter
 import matt.fx.control.wrapper.chart.axis.value.moregenval.HzConverter
 import matt.fx.control.wrapper.chart.axis.value.moregenval.MicroVoltConverter
 import matt.fx.control.wrapper.chart.axis.value.moregenval.ValueAxisConverter
@@ -14,7 +13,6 @@ import matt.fx.control.wrapper.chart.axis.value.number.tickconfig.DefaultTickCon
 import matt.fx.control.wrapper.chart.axis.value.number.tickconfig.DurationWrapperTickConfigurer
 import matt.fx.control.wrapper.chart.axis.value.number.tickconfig.TickConfigurer
 import matt.fx.control.wrapper.chart.axis.value.number.tickconfig.UnitLessTickConfigurer
-import matt.fx.control.wrapper.chart.axis.value.number.tickconfig.unitless.UnitLessConverter
 import matt.fx.graphics.dur.MilliSecondDurationWrapperConverter
 import matt.math.index.IndexWrapperConverter
 import matt.math.index.IndexWrapperIntConverter

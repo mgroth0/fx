@@ -6,33 +6,37 @@ import matt.collect.itr.applyEach
 import matt.fx.control.wrapper.chart.axis.AxisWrapper
 import matt.fx.control.wrapper.chart.axis.value.OldValueAxisWrapper
 import matt.fx.control.wrapper.chart.axis.value.ValueAxisWrapper
+import matt.fx.control.wrapper.chart.axis.value.axis.AxisForPackagePrivateProps
 import matt.fx.control.wrapper.chart.axis.value.number.NumberAxisWrapper
 import matt.fx.control.wrapper.chart.line.LineChartWrapper
-import matt.lang.err
+import matt.fx.control.wrapper.chart.line.highperf.relinechart.MorePerfOptionsLineChart
 import matt.model.data.mathable.MathAndComparable
 
 /*https://stackoverflow.com/questions/34771612/javafx-linechart-performance*/
 
 open class HighPerformanceLineChart<X: MathAndComparable<X>, Y: MathAndComparable<Y>>(
   extraHighPerf: Boolean = true,
-  xAxis: AxisWrapper<X, out Axis<X>>,
-  yAxis: AxisWrapper<Y, out Axis<Y>>
+  xAxis: AxisWrapper<X, out AxisForPackagePrivateProps<X>>,
+  yAxis: AxisWrapper<Y, out AxisForPackagePrivateProps<Y>>
 ): LineChartWrapper<X, Y>(
-  if (extraHighPerf) HighPerformanceFXLineChart(
+  if (extraHighPerf) MorePerfOptionsLineChart(
 	xAxis.node, yAxis.node
-  ) else LineChart(xAxis.node, yAxis.node)
+  ) else MorePerfOptionsLineChart(xAxis.node, yAxis.node)
 ) {
   init {
+	node.enableDataItemAdded = false
 	animated = false
 	if (extraHighPerf) animatedProperty.onChange {
 	  if (it) {
-		err("${this::class.simpleName} is unable to animate because dataItemAdded was NOPed")
+		node.enableDataItemAdded = true
+		/*err("${this::class.simpleName} is unable to animate because dataItemAdded was NOPed")*/
 	  }
 	}
 	createSymbols = false
 	if (extraHighPerf) createSymbolsProperty.onChange {
 	  if (it) {
-		err("${this::class.simpleName} is unable to create symbols because dataItemAdded was NOPed")
+		node.enableDataItemAdded = true
+	/*	err("${this::class.simpleName} is unable to create symbols because dataItemAdded was NOPed")*/
 	  }
 	}
 	isLegendVisible = false
@@ -65,7 +69,8 @@ open class HighPerformanceLineChart<X: MathAndComparable<X>, Y: MathAndComparabl
 
 }
 
-private class HighPerformanceFXLineChart<X, Y>(
+
+private class OldHighPerformanceFXLineChart<X, Y>(
   xAxis: Axis<X>, yAxis: Axis<Y>
 ): LineChart<X, Y>(xAxis, yAxis) {
   override fun dataItemAdded(series: Series<X, Y>?, itemIndex: Int, item: Data<X, Y>?) {    /*NOP*/

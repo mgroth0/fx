@@ -3,8 +3,8 @@ package matt.fx.node.proto.annochart
 import javafx.geometry.Insets
 import javafx.scene.Group
 import javafx.scene.chart.Chart
-import javafx.scene.chart.XYChart
-import javafx.scene.chart.XYChart.Data
+import matt.fx.control.wrapper.chart.line.highperf.relinechart.xy.XYChart
+import matt.fx.control.wrapper.chart.line.highperf.relinechart.xy.XYChart.Data
 import javafx.scene.layout.Border
 import javafx.scene.layout.Pane
 import javafx.scene.layout.Region
@@ -68,6 +68,11 @@ open class AnnotateableChart<X: MathAndComparable<X>, Y: MathAndComparable<Y>> p
   val chart = HighPerformanceLineChart<X, Y>(
 	extraHighPerf = extraHighPerf, xAxis = xAxis, yAxis = yAxis
   )
+
+  val createSymbolsProp by lazy {
+	chart.createSymbolsProperty
+  }
+  var createSymbols by chart::createSymbols
 
   val title = chart.titleProperty
 

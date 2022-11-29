@@ -20,20 +20,17 @@ import javafx.geometry.Side
 import javafx.geometry.Side.LEFT
 import javafx.geometry.Side.RIGHT
 import javafx.geometry.Side.TOP
-import javafx.scene.chart.Axis
 import javafx.scene.chart.ValueAxis
 import javafx.scene.shape.LineTo
 import javafx.scene.shape.MoveTo
 import javafx.scene.shape.Path
 import javafx.util.StringConverter
+import matt.fx.control.wrapper.chart.axis.value.axis.AxisForPackagePrivateProps
 import matt.lang.anno.See
 import matt.math.hz.Hz
-import matt.model.data.mathable.DoubleWrapper
 import matt.model.data.volt.MicroVolt
 import matt.model.op.convert.Converter
 import matt.obs.prop.BindableProperty
-import java.lang.reflect.Field
-import java.lang.reflect.Method
 import java.util.Collections
 
 
@@ -97,23 +94,7 @@ abstract class MoreGenericValueAxis<T: UpperBound>(
   lowerBound: T? = null,
   upperBound: T? = null,
   protected val converter: ValueAxisConverter<T>
-): Axis<T>() {
-
-
-  companion object {
-	protected val measureInvalidProp: Field by lazy {
-	  Axis::class.java.getDeclaredField("measureInvalid").also {
-		it.isAccessible = true
-	  }
-	}
-
-	@JvmStatic
-	protected val getEffectiveSideMethod: Method by lazy {
-	  Axis::class.java.getDeclaredMethod("getEffectiveSide").also {
-		it.isAccessible = true
-	  }
-	}
-  }
+): AxisForPackagePrivateProps<T>() {
 
   protected fun T.convert() = converter.convertToB(this)
   protected fun InternalData.convert() = converter.convertToA(this)
@@ -178,8 +159,7 @@ abstract class MoreGenericValueAxis<T: UpperBound>(
   protected val scale: ReadOnlyDoubleWrapper = object: ReadOnlyDoubleWrapper(this, "scale", 0.0) {
 	override fun invalidated() {
 	  requestAxisLayout()
-	  measureInvalidProp.set(this@MoreGenericValueAxis, true)
-	  /*measureInvalid = true*/
+	  measureInvalid = true
 	}
   }
 
@@ -203,7 +183,7 @@ abstract class MoreGenericValueAxis<T: UpperBound>(
   /** The value for the upper bound of this axis (maximum value). This is automatically set if auto ranging is on.  */
   val upperBound = BindableProperty(converter.convertToA(100.0)).apply {
 	onChange {
-	  if (!isAutoRanging) {
+	  if (!isAutoRanging()) {
 		invalidateRange()
 		requestAxisLayout()
 	  }
@@ -213,7 +193,7 @@ abstract class MoreGenericValueAxis<T: UpperBound>(
   /** The value for the lower bound of this axis (minimum value). This is automatically set if auto ranging is on.  */
   val lowerBound = BindableProperty(converter.convertToA(0.0)).apply {
 	onChange {
-	  if (!isAutoRanging) {
+	  if (!isAutoRanging()) {
 		invalidateRange()
 		requestAxisLayout()
 	  }
@@ -325,7 +305,7 @@ abstract class MoreGenericValueAxis<T: UpperBound>(
 	  require(upperBound != null && lowerBound != null)
 	  this.lowerBound.value = lowerBound
 	  this.upperBound.value = upperBound
-	  isAutoRanging = false
+		setAutoRanging(false)
 	}
   }
   // -------------- PROTECTED METHODS --------------------------------------------------------------------------------
@@ -340,9 +320,9 @@ abstract class MoreGenericValueAxis<T: UpperBound>(
    */
   override fun autoRange(length: Double): Any {
 	// guess a sensible starting size for label size, that is approx 2 lines vertically or 2 charts horizontally
-	return if (isAutoRanging) {
+	return if (isAutoRanging()) {
 	  // guess a sensible starting size for label size, that is approx 2 lines vertically or 2 charts horizontally
-	  val labelSize = tickLabelFont.size*2
+	  val labelSize = tickLabelFont.value.size*2
 	  autoRange(dataMinValue, dataMaxValue, length, labelSize)!!
 	} else {
 	  range
@@ -359,7 +339,7 @@ abstract class MoreGenericValueAxis<T: UpperBound>(
    */
   protected fun calculateNewScale(length: Double, lowerBound: InternalData, upperBound: InternalData): Double {
 	val newScale: Double
-	val side = getEffectiveSideMethod.invoke(this) as Side
+	val side = effectiveSide
 	/*val side = getEffectiveSide()*/
 	if (side.isVertical) {
 	  offset = length
@@ -409,11 +389,11 @@ abstract class MoreGenericValueAxis<T: UpperBound>(
    * Invoked during the layout pass to layout this axis and all its content.
    */
   override fun layoutChildren() {
-	val side = getEffectiveSideMethod.invoke(this) as Side
+	val side = effectiveSide
 	/*val side = getEffectiveSide()*/
 	val length = if (side.isVertical) height else width
 	// if we are not auto ranging we need to calculate the new scale
-	if (!isAutoRanging) {
+	if (!isAutoRanging()) {
 	  // calculate new scale
 	  setScale(calculateNewScale(length, lowerBound.value.convert(), upperBound.value.convert()))
 	  // update current lower bound
@@ -499,7 +479,7 @@ abstract class MoreGenericValueAxis<T: UpperBound>(
    *
    * @param data The current set of all data that needs to be plotted on this axis
    */
-  override fun invalidateRange(data: List<T?>) {
+  override fun invalidateRange(data: List<T>) {
 	if (data.isEmpty()) {
 	  dataMaxValue = upperBound.value.convert()
 	  dataMinValue = lowerBound.value.convert()
@@ -536,7 +516,7 @@ abstract class MoreGenericValueAxis<T: UpperBound>(
    * @return the nearest data value to the given pixel position or
    * null if not on axis;
    */
-  override fun getValueForDisplay(displayPosition: Double): T? {
+  override fun getValueForDisplay(displayPosition: Double): T {
 	return toRealValue((displayPosition - offset)/getScale() + currentLowerBound.get())
   }
 

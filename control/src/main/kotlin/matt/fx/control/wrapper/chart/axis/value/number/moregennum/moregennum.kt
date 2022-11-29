@@ -40,7 +40,7 @@ class MoreGenericNumberAxis<T: Any>(
   private val forceZeroInRange: BooleanProperty = object: BooleanPropertyBase(true) {
 	override fun invalidated() {
 	  // This will affect layout if we are auto ranging
-	  if (isAutoRanging) {
+	  if (isAutoRanging()) {
 		requestAxisLayout()
 		invalidateRange()
 	  }

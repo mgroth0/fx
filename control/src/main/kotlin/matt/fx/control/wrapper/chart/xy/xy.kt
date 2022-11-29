@@ -1,7 +1,7 @@
 package matt.fx.control.wrapper.chart.xy
 
-import javafx.scene.chart.XYChart
-import javafx.scene.chart.XYChart.Data
+import matt.fx.control.wrapper.chart.line.highperf.relinechart.xy.XYChart
+import matt.fx.control.wrapper.chart.line.highperf.relinechart.xy.XYChart.Data
 import matt.fx.control.wrapper.chart.ChartWrapper
 import matt.fx.control.wrapper.chart.axis.MAxis
 import matt.fx.control.wrapper.chart.xy.series.SeriesConverter

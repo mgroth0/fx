@@ -1,11 +1,11 @@
 package matt.fx.control.wrapper.chart.xy.series
 
 import javafx.scene.Node
-import javafx.scene.chart.XYChart.Data
-import javafx.scene.chart.XYChart.Series
 import javafx.scene.paint.Color
 import javafx.scene.shape.Path
 import matt.collect.weak.WeakMap
+import matt.fx.control.wrapper.chart.line.highperf.relinechart.xy.XYChartForPackagePrivateProps.Data
+import matt.fx.control.wrapper.chart.line.highperf.relinechart.xy.XYChartForPackagePrivateProps.Series
 import matt.fx.control.wrapper.chart.xy.series.SeriesWrapper.Companion.wrappers
 import matt.hurricanefx.eye.wrapper.obs.collect.mfxMutableListConverter
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
@@ -63,6 +63,8 @@ class SeriesWrapper<X, Y>(val series: Series<X, Y> = Series<X, Y>()) {
 
   private var strokeListener: Listener? = null
   private var strokeThatWasSet: Color? = null
+
+
   var stroke: Color
 	get() = strokeThatWasSet ?: error("no stroke was set")
 	set(value) {

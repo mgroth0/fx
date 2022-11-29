@@ -1,7 +1,7 @@
 package matt.fx.control.wrapper.chart.line
 
-import javafx.scene.chart.LineChart
-import javafx.scene.chart.XYChart.Data
+import matt.fx.control.wrapper.chart.line.highperf.relinechart.MorePerfOptionsLineChart
+import matt.fx.control.wrapper.chart.line.highperf.relinechart.xy.XYChart.Data
 import matt.fx.control.wrapper.chart.axis.MAxis
 import matt.fx.control.wrapper.chart.axis.value.number.NumberAxisWrapper
 import matt.fx.control.wrapper.chart.xy.XYChartWrapper
@@ -24,9 +24,9 @@ fun <X: MathAndComparable<X>, Y: MathAndComparable<Y>> ET.linechart(
   LineChartWrapper(x, y).attachTo(this, op) { it.title = title }
 
 open class LineChartWrapper<X: MathAndComparable<X>, Y: MathAndComparable<Y>>(
-  node: LineChart<X, Y>
-): XYChartWrapper<X, Y, LineChart<X, Y>>(node) {
-  constructor(x: MAxis<X>, y: MAxis<Y>): this(LineChart(x.node, y.node))
+  node: MorePerfOptionsLineChart<X, Y>
+): XYChartWrapper<X, Y, MorePerfOptionsLineChart<X, Y>>(node) {
+  constructor(x: MAxis<X>, y: MAxis<Y>): this(MorePerfOptionsLineChart(x.node, y.node))
 
   val createSymbolsProperty by lazy { node.createSymbolsProperty().toNonNullableProp() }
   var createSymbols by createSymbolsProperty

@@ -1,13 +1,13 @@
 package matt.fx.control.wrapper.chart.axis
 
-import javafx.scene.chart.Axis
+import matt.fx.control.wrapper.chart.axis.value.axis.AxisForPackagePrivateProps
 import matt.fx.graphics.wrapper.node.NodeWrapper
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.graphics.wrapper.region.RegionWrapperImpl
+import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 
-typealias MAxis<T> = AxisWrapper<T, out Axis<T>>
+typealias MAxis<T> = AxisWrapper<T, out AxisForPackagePrivateProps<T>>
 
-abstract class AxisWrapper<T, N: Axis<T>>(node: N): RegionWrapperImpl<N, NodeWrapper>(node) {
+abstract class AxisWrapper<T, N: AxisForPackagePrivateProps<T>>(node: N): RegionWrapperImpl<N, NodeWrapper>(node) {
   val autoRangingProperty by lazy { node.autoRangingProperty().toNonNullableProp() }
   var isAutoRanging by autoRangingProperty
   val tickMarkVisibleProperty by lazy { node.tickMarkVisibleProperty().toNonNullableProp() }

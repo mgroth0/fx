@@ -18,12 +18,12 @@ import javafx.scene.Scene
 import javafx.scene.SpotLight
 import javafx.scene.SubScene
 import javafx.scene.canvas.Canvas
-import javafx.scene.chart.AreaChart
-import javafx.scene.chart.Axis
+import matt.fx.control.wrapper.chart.line.highperf.relinechart.xy.area.AreaChart
+import matt.fx.control.wrapper.chart.axis.value.axis.Axis
 import javafx.scene.chart.BarChart
 import javafx.scene.chart.BubbleChart
 import javafx.scene.chart.CategoryAxis
-import javafx.scene.chart.LineChart
+import matt.fx.control.wrapper.chart.line.highperf.relinechart.MorePerfOptionsLineChart
 import javafx.scene.chart.NumberAxis
 import javafx.scene.chart.PieChart
 import javafx.scene.chart.ScatterChart
@@ -350,7 +350,7 @@ fun Hyperlink.wrapped(): HyperlinkWrapper = findWrapper() ?: HyperlinkWrapper(th
 
 fun TableColumnHeader.wrapped(): TableColumnHeaderWrapper = findWrapper() ?: TableColumnHeaderWrapper(this@wrapped)
 
-fun <X: MathAndComparable<X>, Y: MathAndComparable<Y>> LineChart<X, Y>.wrapped(): LineChartWrapper<X, Y> = findWrapper() ?: LineChartWrapper(this@wrapped)
+fun <X: MathAndComparable<X>, Y: MathAndComparable<Y>> MorePerfOptionsLineChart<X, Y>.wrapped(): LineChartWrapper<X, Y> = findWrapper() ?: LineChartWrapper(this@wrapped)
 
 fun Group.wrapped(): GroupWrapper<*> = findWrapper() ?: GroupWrapper<NodeWrapper>(this@wrapped)
 
@@ -515,9 +515,9 @@ fun Region.wrapped(): RegionWrapper<*> = findWrapper() ?: when (this) {
   is Pane              -> wrapped()
   is TableColumnHeader -> wrapped()
   is Control           -> wrapped()
-  is VirtualFlow<*>    -> wrapped()
-  is Axis<*>           -> wrapped()
-  else                 -> when (this::class.qualifiedName) {
+  is VirtualFlow<*> -> wrapped()
+  is Axis<*>        -> wrapped()
+  else              -> when (this::class.qualifiedName) {
 	CLIPPED_CONTAINER_QNAME                                              -> ClippedContainerWrapper(this@wrapped)
 	"org.fxmisc.richtext.ParagraphBox"                                   -> ParagraphBoxWrapper(this@wrapped)
 	"org.fxmisc.flowless.Navigator"                                      -> NavigatorWrapper(this@wrapped)
