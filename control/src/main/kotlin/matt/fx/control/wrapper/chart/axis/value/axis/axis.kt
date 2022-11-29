@@ -563,7 +563,7 @@ abstract class AxisForPackagePrivateProps<T>: Region() {
    * @param range A range object returned from autoRange()
    * @param animate If true animate the change in range
    */
-  protected abstract fun setRange(range: Any, animate: Boolean)
+  protected abstract fun setRange(range: RangeProps, animate: Boolean)
   protected abstract val range: RangeProps
 
   /**
@@ -1301,6 +1301,13 @@ class CategoryRangeProps(
   val newCategorySpacing: Double,
   val newFirstPos: Double,
   val tickLabelRotation: Double
+): RangeProps
+class NumberRangeProps(
+  val lowerBound: Double,
+  val upperBound: Double,
+  val tickUnit: Double
+  val scale: Double,
+  val formatter: String? = null
 ): RangeProps
 
 object NullRangeProp: RangeProps

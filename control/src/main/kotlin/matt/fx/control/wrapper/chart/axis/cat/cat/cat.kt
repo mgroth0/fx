@@ -287,11 +287,14 @@ class CategoryAxisForCatAxisWrapper: AxisForPackagePrivateProps<String> {
    */
 
 
-  override val range: Any
-	get() = arrayOf(
-	  getCategories(), categorySpacing.get(), firstCategoryPos.get(),
-	  effectiveTickLabelRotation
+  override val range: RangeProps
+	get() = CategoryRangeProps(
+	  allDataCategories = getCategories()!!,
+	  newCategorySpacing = categorySpacing.get(),
+	  newFirstPos = firstCategoryPos.get(),
+	  tickLabelRotation = effectiveTickLabelRotation
 	)
+
 
   /**
    * Called to set the current axis range to the given range. If isAnimating() is true then this method should
