@@ -525,11 +525,12 @@ abstract class MoreGenericValueAxis<T: UpperBound>(
    *
    * @return display position or Double.NaN if zero is not in current range;
    */
-  override fun getZeroPosition(): Double {
-	return if (0 < lowerBound.value.convert() || 0 > upperBound.value.convert()) Double.NaN else getDisplayPosition(
+
+
+  override val zeroPosition: Double
+	get() = if (0 < lowerBound.value.convert() || 0 > upperBound.value.convert()) Double.NaN else getDisplayPosition(
 	  0.0.convert()
 	)
-  }
 
   /**
    * Checks if the given value is plottable on this axis

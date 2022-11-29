@@ -1,8 +1,8 @@
 package matt.fx.control.wrapper.chart.pie
 
 import javafx.collections.ObservableList
-import javafx.scene.chart.PieChart
-import javafx.scene.chart.PieChart.Data
+import matt.fx.control.wrapper.chart.pie.pie.PieChart
+import matt.fx.control.wrapper.chart.pie.pie.PieChart.Data
 import matt.fx.control.wrapper.chart.ChartWrapper
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.attach
@@ -21,10 +21,10 @@ fun ET.piechart(
 
 
 open class PieChartWrapper(
-   node: PieChart = PieChart(),
-): ChartWrapper<PieChart>(node) {
+  node: PieChartForWrapper = PieChartForWrapper(),
+): ChartWrapper<PieChartForWrapper>(node) {
 
-  constructor(data: ObservableList<Data>): this(PieChart(data))
+  constructor(data: ObservableList<Data>): this(PieChartForWrapper(data))
 
 
   val data: ObservableList<Data> = node.data

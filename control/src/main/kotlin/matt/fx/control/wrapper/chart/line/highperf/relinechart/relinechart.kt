@@ -212,13 +212,13 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
 			//1. y intercept of the line : y = ((y3-y1)/(x3-x1)) * x2 + (x3y1 - y3x1)/(x3 -x1)
 			val y = (y3 - y1)/(x3 - x1)*x2 + (x3*y1 - y3*x1)/(x3 - x1)
 			item.currentY.value = yAxis.toRealValue(y)
-			item.setCurrentX(xAxis.toRealValue(x2))
+			item.setCurrentX(xAxis.toRealValue(x2)!!)
 		  } else {
 			//2. we can simply use the midpoint on the line as well..
 			val x = (x3 + x1)/2
 			val y = (y3 + y1)/2
 			item.currentX.value = xAxis.toRealValue(x)
-			item.setCurrentY(yAxis.toRealValue(y))
+			item.setCurrentY(yAxis.toRealValue(y)!!)
 		  }
 		}
 	  } else if (itemIndex == 0 && series.data.value.size > 1) {
@@ -306,13 +306,13 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
 		  item.currentX.value = xAxis.toRealValue(x2)
 		  item.currentY.value = yAxis.toRealValue(y2)
 		  item.xValue.value = xAxis.toRealValue(x2)
-		  item.setYValue(yAxis.toRealValue(y))
+		  item.setYValue(yAxis.toRealValue(y)!!)
 		} else {
 		  //2.  we can simply use the midpoint on the line as well..
 		  val x = (x3 + x1)/2
 		  val y = (y3 + y1)/2
 		  item.currentX.value = xAxis.toRealValue(x)
-		  item.setCurrentY(yAxis.toRealValue(y))
+		  item.setCurrentY(yAxis.toRealValue(y)!!)
 		}
 	  } else if (itemIndex == 0 && dataListSize > 1) {
 		animate = true

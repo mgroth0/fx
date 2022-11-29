@@ -1,9 +1,9 @@
 package matt.fx.control.wrapper.chart.xy
 
-import matt.fx.control.wrapper.chart.line.highperf.relinechart.xy.XYChart
-import matt.fx.control.wrapper.chart.line.highperf.relinechart.xy.XYChart.Data
 import matt.fx.control.wrapper.chart.ChartWrapper
 import matt.fx.control.wrapper.chart.axis.MAxis
+import matt.fx.control.wrapper.chart.line.highperf.relinechart.xy.XYChartForPackagePrivateProps
+import matt.fx.control.wrapper.chart.line.highperf.relinechart.xy.XYChartForPackagePrivateProps.Data
 import matt.fx.control.wrapper.chart.xy.series.SeriesConverter
 import matt.fx.control.wrapper.chart.xy.series.SeriesWrapper
 import matt.fx.control.wrapper.wrapped.wrapped
@@ -14,11 +14,11 @@ import matt.obs.col.olist.mappedlist.toSyncedList
 
 fun <X, Y> MutableList<Data<X, Y>>.add(x: X, y: Y) = add(Data(x, y))
 
-open class XYChartWrapper<X, Y, N: XYChart<X, Y>>(node: N): ChartWrapper<N>(node) {
+open class XYChartWrapper<X, Y, N: XYChartForPackagePrivateProps<X, Y>>(node: N): ChartWrapper<N>(node) {
 
 
   val data: MutableObsList<SeriesWrapper<X, Y>> by lazy {
-	node.data.createMutableWrapper().toSyncedList(SeriesConverter<X, Y>())
+	node.data.value.createMutableWrapper().toSyncedList(SeriesConverter<X, Y>())
   }
 
 
@@ -68,7 +68,7 @@ fun <X, Y, ChartType: XYChartWrapper<X, Y, *>> ChartType.series(
  */
 fun <X, Y> SeriesWrapper<X, Y>.data(x: X, y: Y, extra: Any? = null, op: (Data<X, Y>).()->Unit = {}) =
   Data(x, y).apply {
-	if (extra != null) extraValue = extra
+	if (extra != null) setExtraValue(extra)
 	data.add(this)
 	op(this)
   }
@@ -103,5 +103,5 @@ fun <X, Y, ChartType: XYChartWrapper<X, Y, *>> ChartType.multiseries(
   return multiSeries
 }
 
-operator fun <X, Y> Data<X, Y>.component1(): X = xValue
-operator fun <X, Y> Data<X, Y>.component2(): Y = yValue
+operator fun <X, Y> Data<X, Y>.component1(): X = xValue.value
+operator fun <X, Y> Data<X, Y>.component2(): Y = yValue.value

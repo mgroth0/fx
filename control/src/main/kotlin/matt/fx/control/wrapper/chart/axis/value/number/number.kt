@@ -1,7 +1,5 @@
 package matt.fx.control.wrapper.chart.axis.value.number
 
-import javafx.scene.chart.NumberAxis
-import matt.fx.control.wrapper.chart.axis.value.OldValueAxisWrapper
 import matt.fx.control.wrapper.chart.axis.value.ValueAxisWrapper
 import matt.fx.control.wrapper.chart.axis.value.moregenval.HzConverter
 import matt.fx.control.wrapper.chart.axis.value.moregenval.MicroVoltConverter

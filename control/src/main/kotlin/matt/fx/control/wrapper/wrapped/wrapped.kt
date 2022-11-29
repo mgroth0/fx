@@ -18,9 +18,9 @@ import javafx.scene.Scene
 import javafx.scene.SpotLight
 import javafx.scene.SubScene
 import javafx.scene.canvas.Canvas
-import javafx.scene.chart.BarChart
-import javafx.scene.chart.BubbleChart
-import javafx.scene.chart.PieChart
+import matt.fx.control.wrapper.chart.bar.bar.BarChart
+import matt.fx.control.wrapper.chart.bubble.bubble.BubbleChart
+import matt.fx.control.wrapper.chart.pie.pie.PieChart
 import javafx.scene.chart.ScatterChart
 import javafx.scene.chart.StackedBarChart
 import javafx.scene.control.Accordion
@@ -507,9 +507,9 @@ fun Region.wrapped(): RegionWrapper<*> = findWrapper() ?: when (this) {
   is GridPane                      -> wrapped()
   is FlowPane                      -> wrapped()
   is VBox                          -> wrapped()
-  is HBox                          -> wrapped()
-  is PieChart                      -> wrapped()
-  is AnchorPane                    -> wrapped()
+  is HBox       -> wrapped()
+  is PieChart   -> wrapped()
+  is AnchorPane -> wrapped()
   is StackPane                     -> wrapped()
   is CategoryAxisForCatAxisWrapper -> wrapped()
   is TilePane                      -> wrapped()

@@ -1,6 +1,7 @@
 package matt.fx.control.wrapper.chart.stackedbar
 
 import javafx.scene.chart.StackedBarChart
+import matt.fx.control.wrapper.chart.stackedbar.stackedb.StackedBarChartForWrapper
 import matt.fx.control.wrapper.chart.axis.MAxis
 import matt.fx.control.wrapper.chart.xy.XYChartWrapper
 import matt.fx.graphics.wrapper.ET
@@ -17,7 +18,7 @@ fun <X, Y> ET.stackedbarchart(
 
 open class StackedBarChartWrapper<X, Y>(
   node: StackedBarChart<X, Y>,
-): XYChartWrapper<X, Y, StackedBarChart<X, Y>>(node) {
+): XYChartWrapper<X, Y, StackedBarChartForWrapper<X, Y>>(node) {
 
   constructor(x: MAxis<X>, y: MAxis<Y>): this(StackedBarChart(x.node, y.node))
 

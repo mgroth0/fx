@@ -21,18 +21,18 @@ abstract class ValueAxisWrapper<T: Any>(node: MoreGenericValueAxis<T>): AxisWrap
   var isMinorTickVisible by minorTickVisibleProperty
 }
 
-abstract class OldValueAxisWrapper<T: Number>(node: ValueAxis<T>): AxisWrapper<T, ValueAxis<T>>(node) {
+/*abstract class OldValueAxisWrapper<T: Number>(node: ValueAxis<T>): AxisWrapper<T, Value<T>>(node) {
   val minorTickCountProperty by lazy { node.minorTickCountProperty().toNonNullableProp() }
   var minorTickCount by minorTickCountProperty
-  /*val lowerBoundProperty get() = node.lowerBound
+  *//*val lowerBoundProperty get() = node.lowerBound
   var lowerBound by lowerBoundProperty
   val upperBoundProperty get() = node.upperBound
-  var upperBound by upperBoundProperty*/
+  var upperBound by upperBoundProperty*//*
   val tickLabelFormatterProperty by lazy { node.tickLabelFormatterProperty().toNullableProp() }
   var tickLabelFormatter by tickLabelFormatterProperty
   val minorTickVisibleProperty by lazy { node.minorTickVisibleProperty().toNonNullableProp() }
   var isMinorTickVisible by minorTickVisibleProperty
-}
+}*/
 
 
 

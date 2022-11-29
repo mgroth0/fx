@@ -8,7 +8,6 @@ import javafx.beans.property.BooleanPropertyBase
 import javafx.css.CssMetaData
 import javafx.css.Styleable
 import javafx.geometry.Dimension2D
-import javafx.geometry.Side
 import javafx.util.Duration
 import javafx.util.StringConverter
 import matt.fx.control.wrapper.chart.axis.value.moregenval.MoreGenericValueAxis
@@ -75,7 +74,7 @@ class MoreGenericNumberAxis<T: Any>(
   /**  The value between each major tick mark in data units. This is automatically set if we are auto-ranging.  */
   val tickUnit = BindableProperty(5.0.convert()).apply {
 	onChange {
-	  if (!isAutoRanging) {
+	  if (!isAutoRanging()) {
 		invalidateRange()
 		requestAxisLayout()
 	  }
@@ -132,15 +131,16 @@ class MoreGenericNumberAxis<T: Any>(
    *
    * @return A range object that can be passed to setRange() and calculateTickValues()
    */
-  override fun getRange(): Any {
-	return arrayOf<Any>(
+
+
+  override val range: Any
+	get() = arrayOf<Any>(
 	  lowerBound.value.convert(),
 	  upperBound.value.convert(),
 	  tickUnit.value.convert(),
 	  scale,
 	  /*currentFormatterProperty.get()*/
 	)
-  }
 
   /**
    * Called to set the current axis range to the given range. If isAnimating() is true then this method should
@@ -336,7 +336,7 @@ class MoreGenericNumberAxis<T: Any>(
 	@Suppress("NAME_SHADOWING")
 	var maxValue = maxValue
 
-	val side = getEffectiveSideMethod.invoke(this) as Side
+	val side = effectiveSide
 	// check if we need to force zero into range
 	if (isForceZeroInRange()) {
 	  if (maxValue < 0) {
