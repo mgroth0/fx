@@ -1,7 +1,11 @@
 package matt.fx.control.wrapper.chart.xy
 
+import matt.collect.itr.applyEach
 import matt.fx.control.wrapper.chart.ChartWrapper
 import matt.fx.control.wrapper.chart.axis.MAxis
+import matt.fx.control.wrapper.chart.axis.value.ValueAxisWrapper
+import matt.fx.control.wrapper.chart.axis.value.number.NumberAxisWrapper
+import matt.fx.control.wrapper.chart.line.LineChartWrapper
 import matt.fx.control.wrapper.chart.line.highperf.relinechart.xy.XYChartForPackagePrivateProps
 import matt.fx.control.wrapper.chart.line.highperf.relinechart.xy.XYChartForPackagePrivateProps.Data
 import matt.fx.control.wrapper.chart.xy.series.SeriesConverter
@@ -41,6 +45,25 @@ open class XYChartWrapper<X, Y, N: XYChartForPackagePrivateProps<X, Y>>(node: N)
 
   val horizontalZeroLineVisibleProperty by lazy { node.horizontalZeroLineVisibleProperty().toNonNullableProp() }
   val verticalZeroLineVisibleProperty by lazy { node.verticalZeroLineVisibleProperty().toNonNullableProp() }
+
+  fun configureForHighPerformance() {
+	animated = false
+	(this as? LineChartWrapper)?.createSymbols = false
+	isLegendVisible = false
+	(listOf(yAxis) + xAxis).applyEach {
+	  animated = false
+	  isAutoRanging = false
+	  isTickMarkVisible = false
+	  isTickLabelsVisible = false
+	  (this as? ValueAxisWrapper)?.apply {
+		isMinorTickVisible = false
+		minorTickCount = 0
+		(this as? NumberAxisWrapper)?.apply {
+		  maximizeTickUnit()
+		}
+	  }
+	}
+  }
 
 }
 

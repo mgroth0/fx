@@ -1,8 +1,6 @@
 package matt.fx.control.wrapper.chart.line
 
-import matt.collect.itr.applyEach
 import matt.fx.control.wrapper.chart.axis.MAxis
-import matt.fx.control.wrapper.chart.axis.value.ValueAxisWrapper
 import matt.fx.control.wrapper.chart.axis.value.number.NumberAxisWrapper
 import matt.fx.control.wrapper.chart.line.highperf.relinechart.MorePerfOptionsLineChart
 import matt.fx.control.wrapper.chart.line.highperf.relinechart.xy.XYChartForPackagePrivateProps.Data
@@ -47,24 +45,7 @@ open class LineChartWrapper<X: MathAndComparable<X>, Y: MathAndComparable<Y>>(
 	)
   }
 
-  fun configureForHighPerformance() {
-	animated = false
-	createSymbols = false
-	isLegendVisible = false
-	(listOf(yAxis) + xAxis).applyEach {
-	  animated = false
-	  isAutoRanging = false
-	  isTickMarkVisible = false
-	  isTickLabelsVisible = false
-	  (this as? ValueAxisWrapper)?.apply {
-		isMinorTickVisible = false
-		minorTickCount = 0
-		(this as? NumberAxisWrapper)?.apply {
-		  maximizeTickUnit()
-		}
-	  }
-	}
-  }
+
 
 
 }

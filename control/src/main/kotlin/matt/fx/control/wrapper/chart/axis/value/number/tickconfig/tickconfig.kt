@@ -6,6 +6,7 @@ import matt.fx.control.wrapper.chart.axis.value.number.NumberAxisWrapper
 import matt.fx.control.wrapper.chart.axis.value.number.tickconfig.unitless.UnitLess
 import matt.fx.control.wrapper.chart.axis.value.number.tickconfig.unitless.UnitLessConverter
 import matt.fx.control.wrapper.chart.line.LineChartWrapper
+import matt.fx.control.wrapper.chart.xy.XYChartWrapper
 import matt.fx.graphics.dur.DurationWrapper
 import matt.fx.graphics.dur.wrapped
 import matt.lang.function.Convert
@@ -34,7 +35,7 @@ fun <T: MathAndComparable<T>> NumberAxisWrapper<T>.showBestTicksNoLayout() {
   tickConfigurer.showBestTicksNoLayout(this)
 }
 
-fun <T: MathAndComparable<T>> NumberAxisWrapper<T>.showBestTicksIn(chart: LineChartWrapper<*, *>) {
+fun <T: MathAndComparable<T>> NumberAxisWrapper<T>.showBestTicksIn(chart: XYChartWrapper<*, *, *>) {
   showBestTicksNoLayout()
   chart.requestLayout()
 }

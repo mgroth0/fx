@@ -11,6 +11,7 @@ import matt.fx.control.wrapper.chart.axis.value.number.NumberAxisWrapper
 import matt.fx.control.wrapper.chart.axis.value.number.tickconfig.showBestTicksIn
 import matt.fx.control.wrapper.chart.line.LineChartWrapper
 import matt.fx.control.wrapper.chart.line.highperf.relinechart.xy.XYChartForPackagePrivateProps.Data
+import matt.fx.control.wrapper.chart.scatter.ScatterChartWrapper
 import matt.fx.control.wrapper.chart.xy.series.SeriesWrapper
 import matt.fx.control.wrapper.label.label
 import matt.fx.graphics.fxthread.ensureInFXThreadInPlace
@@ -49,6 +50,7 @@ open class AnnotateableChart<X: MathAndComparable<X>, Y: MathAndComparable<Y>> p
   stack: StackPane,
   xAxis: NumberAxisWrapper<X>,
   yAxis: NumberAxisWrapper<Y>,
+  scatter: Boolean = false
 ): RegionWrapperImpl<Region, NW>(stack) {
 
   constructor(
@@ -59,16 +61,16 @@ open class AnnotateableChart<X: MathAndComparable<X>, Y: MathAndComparable<Y>> p
   )
 
 
-  val chart = LineChartWrapper<X, Y>(
+  val chart = (if (scatter) ScatterChartWrapper(x=xAxis,y=yAxis) else  LineChartWrapper<X, Y>(
 	x = xAxis, y = yAxis
-  ).apply {
+  )).apply {
 	configureForHighPerformance()
   }
 
-  val createSymbolsProp by lazy {
+/*  val createSymbolsProp by lazy {
 	chart.createSymbolsProperty
   }
-  var createSymbols by chart::createSymbols
+  var createSymbols by chart::createSymbols*/
 
   val title = chart.titleProperty
 

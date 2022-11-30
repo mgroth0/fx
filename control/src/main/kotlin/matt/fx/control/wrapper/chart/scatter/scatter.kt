@@ -1,6 +1,5 @@
 package matt.fx.control.wrapper.chart.scatter
 
-import javafx.scene.chart.ScatterChart
 import matt.fx.control.wrapper.chart.axis.MAxis
 import matt.fx.control.wrapper.chart.scatter.scatter.ScatterChartForWrapper
 import matt.fx.control.wrapper.chart.xy.XYChartWrapper
