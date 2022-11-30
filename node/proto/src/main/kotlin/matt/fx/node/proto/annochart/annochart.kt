@@ -50,27 +50,28 @@ open class AnnotateableChart<X: MathAndComparable<X>, Y: MathAndComparable<Y>> p
   stack: StackPane,
   xAxis: NumberAxisWrapper<X>,
   yAxis: NumberAxisWrapper<Y>,
-  scatter: Boolean = false
+  scatter: Boolean
 ): RegionWrapperImpl<Region, NW>(stack) {
 
   constructor(
 	xAxis: NumberAxisWrapper<X>,
 	yAxis: NumberAxisWrapper<Y>,
+	scatter: Boolean = false
   ): this(
-	StackPane(), xAxis = xAxis, yAxis = yAxis
+	StackPane(), xAxis = xAxis, yAxis = yAxis, scatter = scatter
   )
 
 
-  val chart = (if (scatter) ScatterChartWrapper(x=xAxis,y=yAxis) else  LineChartWrapper<X, Y>(
+  val chart = (if (scatter) ScatterChartWrapper(x = xAxis, y = yAxis) else LineChartWrapper<X, Y>(
 	x = xAxis, y = yAxis
   )).apply {
 	configureForHighPerformance()
   }
 
-/*  val createSymbolsProp by lazy {
-	chart.createSymbolsProperty
-  }
-  var createSymbols by chart::createSymbols*/
+  /*  val createSymbolsProp by lazy {
+	  chart.createSymbolsProperty
+	}
+	var createSymbols by chart::createSymbols*/
 
   val title = chart.titleProperty
 
