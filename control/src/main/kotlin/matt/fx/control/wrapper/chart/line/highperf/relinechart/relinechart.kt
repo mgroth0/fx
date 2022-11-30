@@ -179,10 +179,7 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
 	}
   }
 
-  /*MATT WAS HERE*/
-  var enableDataItemAdded = true
   override fun dataItemAdded(series: Series<X, Y>, itemIndex: Int, item: Data<X, Y>) {
-	if (!enableDataItemAdded) return
 	val symbol = createSymbol(series, data.value.indexOf(series), item, itemIndex)
 	if (shouldAnimate()) {
 	  if (dataRemoveTimeline != null && dataRemoveTimeline!!.status == RUNNING) {
@@ -196,7 +193,6 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
 		}
 	  }
 	  var animate = false
-	  @Suppress("SENSELESS_COMPARISON")
 	  if (itemIndex > 0 && itemIndex < series.data.value.size - 1) {
 		animate = true
 		val p1 = series.data.value[itemIndex - 1]
@@ -273,7 +269,6 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
 		)
 	  }
 	} else {
-	  @Suppress("SENSELESS_COMPARISON")
 	  if (symbol != null) plotChildren.add(symbol)
 	}
   }

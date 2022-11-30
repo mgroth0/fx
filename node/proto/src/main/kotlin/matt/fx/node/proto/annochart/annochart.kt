@@ -9,7 +9,7 @@ import javafx.scene.paint.Color
 import matt.async.safe.with
 import matt.fx.control.wrapper.chart.axis.value.number.NumberAxisWrapper
 import matt.fx.control.wrapper.chart.axis.value.number.tickconfig.showBestTicksIn
-import matt.fx.control.wrapper.chart.line.highperf.HighPerformanceLineChart
+import matt.fx.control.wrapper.chart.line.LineChartWrapper
 import matt.fx.control.wrapper.chart.line.highperf.relinechart.xy.XYChartForPackagePrivateProps.Data
 import matt.fx.control.wrapper.chart.xy.series.SeriesWrapper
 import matt.fx.control.wrapper.label.label
@@ -41,30 +41,29 @@ fun <X: MathAndComparable<X>, Y: MathAndComparable<Y>> ET.annoChart(
   yAxis: NumberAxisWrapper<Y>,
   op: AnnotateableChart<X, Y>.()->Unit = {}
 ) = AnnotateableChart(
-  extraHighPerf = false,
   xAxis = xAxis.minimal(),
   yAxis = yAxis.minimal(),
 ).attachTo(this, op)
 
 open class AnnotateableChart<X: MathAndComparable<X>, Y: MathAndComparable<Y>> private constructor(
   stack: StackPane,
-  extraHighPerf: Boolean,
   xAxis: NumberAxisWrapper<X>,
   yAxis: NumberAxisWrapper<Y>,
 ): RegionWrapperImpl<Region, NW>(stack) {
 
   constructor(
-	extraHighPerf: Boolean = true,
 	xAxis: NumberAxisWrapper<X>,
 	yAxis: NumberAxisWrapper<Y>,
   ): this(
-	StackPane(), extraHighPerf = extraHighPerf, xAxis = xAxis, yAxis = yAxis
+	StackPane(), xAxis = xAxis, yAxis = yAxis
   )
 
 
-  val chart = HighPerformanceLineChart<X, Y>(
-	extraHighPerf = extraHighPerf, xAxis = xAxis, yAxis = yAxis
-  )
+  val chart = LineChartWrapper<X, Y>(
+	x = xAxis, y = yAxis
+  ).apply {
+	configureForHighPerformance()
+  }
 
   val createSymbolsProp by lazy {
 	chart.createSymbolsProperty

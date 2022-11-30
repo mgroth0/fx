@@ -42,7 +42,8 @@ interface ColumnsDSL<E: Any> {
 
   fun <P> column(
 	title: String,
-	observableFn: KFunction<ObsVal<P>>
+	observableFn: KFunction<ObsVal<P>>,
+	op: TableColumnWrapper<E, P>.()->Unit
   ): TableColumnWrapper<E, P>
 
   fun <P> column(
@@ -63,26 +64,53 @@ class ColumnsDSLImpl<E: Any>(private val columns: ObservableList<TableColumn<E, 
 	title: String,
 	prop: KMutableProperty1<E, P>,
 	op: TableColumnWrapper<E, P>.()->Unit
-  ): TableColumnWrapper<E, P> {
-	val column = TableColumnWrapper<E, P>(title)
-	column.cellValueFactory = Callback {
-	  prop.call(it.value).toVarProp()
-	}
-	columns.add(column.node)
-	return column.also(op)
-  }
+  ) = column(title) {
+	prop.call(it.value).toVarProp()
+  }.also(op)
+
+  override fun <P> column(
+	title: String,
+	observableFn: KFunction<ObsVal<P>>,
+	op: TableColumnWrapper<E, P>.()->Unit
+  ) = column(title) {
+	observableFn.call(it.value)
+  }.also(op)
+
+  override fun <P> column(
+	getter: KFunction<P>,
+	op: TableColumnWrapper<E, P>.()->Unit
+  ) = column(getter.name) {
+	getter.call(it.value).toVarProp()
+  }.apply(op)
 
 
   override fun <P> column(
 	title: String,
 	prop: KProperty1<E, ObsVal<P>>,
 	op: TableColumnWrapper<E, P>.()->Unit
-  ): TableColumnWrapper<E, P> {
-	val column = TableColumnWrapper<E, P>(title)
-	column.cellValueFactory = Callback { prop.call(it.value) }
-	columns.add(column.node)
-	return column.also(op)
+  ) = column(title) {
+	prop.call(it.value)
+  }.also(op)
+
+
+  override fun nodeColumn(
+	title: String,
+	prefWidth: Double?,
+	nodeProvider: (E)->NodeWrapper,
+  ) = column(title, prefWidth = prefWidth) {
+	BindableProperty(nodeProvider(it.value))
+  }.apply {
+	simpleCellFactory(SimpleFactory {
+	  "" to it
+	})
   }
+
+  override fun <P> column(
+	getter: KProperty1<E, P>,
+	op: TableColumnWrapper<E, P>.()->Unit
+  ) = column(getter.name) {
+	getter.call(it.value).toVarProp()
+  }.apply(op)
 
   override fun <P> column(
 	title: String,
@@ -96,53 +124,7 @@ class ColumnsDSLImpl<E: Any>(private val columns: ObservableList<TableColumn<E, 
 	return column
   }
 
-  override fun nodeColumn(
-	title: String,
-	prefWidth: Double? ,
-	nodeProvider: (E)->NodeWrapper,
-  ): TableColumnWrapper<E, NodeWrapper> {
-	val column = TableColumnWrapper<E, NodeWrapper>(title)
-	column.cellValueFactory = Callback {
-	  BindableProperty(nodeProvider(it.value))
-	}
-	column.simpleCellFactory(SimpleFactory {
-	  "" to it
-	})
-	prefWidth?.let { column.prefWidth = it }
-	columns.add(column.node)
-	return column
-  }
 
-
-  override fun <P> column(
-	title: String,
-	observableFn: KFunction<ObsVal<P>>
-  ): TableColumnWrapper<E, P> {
-	val column = TableColumnWrapper<E, P>(title)
-	column.cellValueFactory = Callback { observableFn.call(it.value) }
-	columns.add(column.node)
-	return column
-  }
-
-
-  override fun <P> column(
-	getter: KFunction<P>,
-	op: TableColumnWrapper<E, P>.()->Unit
-  ): TableColumnWrapper<E, P> {
-	return column(getter.name) {
-	  BindableProperty(getter.call(it.value))
-	}.apply(op)
-  }
-
-
-  override fun <P> column(
-	getter: KProperty1<E, P>,
-	op: TableColumnWrapper<E, P>.()->Unit
-  ): TableColumnWrapper<E, P> {
-	return column(getter.name) {
-	  BindableProperty(getter.call(it.value))
-	}.apply(op)
-  }
 }
 
 

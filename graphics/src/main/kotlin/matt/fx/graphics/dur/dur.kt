@@ -99,3 +99,7 @@ object MilliSecondDurationWrapperConverter: Converter<DurationWrapper, Double> {
 
 
 
+
+
+@Suppress("NOTHING_TO_INLINE")
+inline operator fun Int.times(duration: DurationWrapper): DurationWrapper = duration * this
