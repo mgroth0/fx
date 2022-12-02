@@ -69,11 +69,11 @@ class BubbleChartForWrapper<X, Y> @JvmOverloads constructor(
 		if (java.lang.Double.isNaN(x) || java.lang.Double.isNaN(y)) {
 		  continue
 		}
-		val bubble = item.node.value
+		val bubble = item.nodeProp.value
 		var ellipse: Ellipse
 		if (bubble != null) {
 		  if (bubble is StackPane) {
-			val region = item.node.value as StackPane
+			val region = item.nodeProp.value as StackPane
 			ellipse = if (region.shape == null) {
 			  Ellipse(
 				getDoubleValue(item.extraValue.value, 1.0), getDoubleValue(item.extraValue.value, 1.0)
@@ -119,7 +119,7 @@ class BubbleChartForWrapper<X, Y> @JvmOverloads constructor(
   }
 
   override fun dataItemRemoved(item: Data<X, Y>, series: Series<X, Y>) {
-	val bubble = item.node.value
+	val bubble = item.nodeProp.value
 	if (shouldAnimate()) {
 	  // fade out old bubble
 	  val ft = FadeTransition(Duration.millis(500.0), bubble)
@@ -166,7 +166,7 @@ class BubbleChartForWrapper<X, Y> @JvmOverloads constructor(
 		)
 	  }
 	  for (d in series.data.value) {
-		val bubble = d.node.value
+		val bubble = d.nodeProp.value
 		// fade out old bubble
 		val ft = FadeTransition(Duration.millis(500.0), bubble)
 		ft.toValue = 0.0
@@ -179,7 +179,7 @@ class BubbleChartForWrapper<X, Y> @JvmOverloads constructor(
 	  pt.play()
 	} else {
 	  for (d in series.data.value) {
-		val bubble = d.node.value
+		val bubble = d.nodeProp.value
 		plotChildren.remove(bubble)
 	  }
 	  removeSeriesFromDisplay(series)
@@ -197,7 +197,7 @@ class BubbleChartForWrapper<X, Y> @JvmOverloads constructor(
    * @return Node used for given data item
    */
   private fun createBubble(series: Series<X, Y>, seriesIndex: Int, item: Data<X, Y>, itemIndex: Int): Node {
-	var bubble = item.node.value
+	var bubble = item.nodeProp.value
 	// check if bubble has already been created
 	if (bubble == null) {
 	  bubble = object: StackPane() {
@@ -219,7 +219,7 @@ class BubbleChartForWrapper<X, Y> @JvmOverloads constructor(
 	  bubble.setAccessibleRole(AccessibleRole.TEXT)
 	  bubble.setAccessibleRoleDescription("Bubble")
 	  bubble.focusTraversableProperty().bind(Platform.accessibilityActiveProperty())
-	  item.node.value = bubble
+	  item.nodeProp.value = bubble
 	}
 	// set bubble styles
 	bubble.styleClass.setAll(

@@ -3,14 +3,17 @@ package matt.fx.graphics.anim.interp
 import javafx.animation.Interpolatable
 import javafx.animation.Interpolator
 import matt.model.data.interp.BasicInterpolatable
+import java.lang.reflect.Method
 
 
 fun Interpolator.wrap() = InterpolatorWrapper(this)
 
 class InterpolatorWrapper(private val curver: Interpolator): MyInterpolator() {
   companion object {
-	private val curveFun by lazy {
-	  Interpolator::class.java.getDeclaredMethod("curve", Double::class.java)
+	private val curveFun: Method by lazy {
+	  Interpolator::class.java.getDeclaredMethod("curve", Double::class.java).apply {
+		isAccessible = true
+	  }
 	}
   }
 

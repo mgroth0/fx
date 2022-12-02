@@ -13,7 +13,6 @@ import javafx.beans.property.ObjectProperty
 import javafx.beans.property.ObjectPropertyBase
 import javafx.beans.property.SimpleDoubleProperty
 import javafx.collections.FXCollections
-import javafx.collections.ListChangeListener.Change
 import javafx.collections.ObservableList
 import javafx.css.CssMetaData
 import javafx.css.Styleable
@@ -58,13 +57,13 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
 		val series = getData()[seriesIndex]
 		for (itemIndex in series.data.value.indices) {
 		  val item = series.data.value[itemIndex]
-		  var symbol = item.node.value
+		  var symbol = item.nodeProp.value
 		  if (get() && symbol == null) { // create any symbols
 			symbol = createSymbol(series, getData().indexOf(series), item, itemIndex)
 			plotChildren.add(symbol)
 		  } else if (!get() && symbol != null) { // remove symbols
 			plotChildren.remove(symbol)
-			item.node.value = null
+			item.nodeProp.value = null
 		  }
 		}
 	  }
@@ -186,7 +185,7 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
 		if (seriesOfDataRemoved == series) {
 		  dataRemoveTimeline!!.stop()
 		  dataRemoveTimeline = null
-		  plotChildren.remove(dataItemBeingRemoved!!.node.value)
+		  plotChildren.remove(dataItemBeingRemoved!!.nodeProp.value)
 		  removeDataItemFromDisplay(seriesOfDataRemoved!!, dataItemBeingRemoved)
 		  seriesOfDataRemoved = null
 		  dataItemBeingRemoved = null
@@ -274,7 +273,7 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
   }
 
   override fun dataItemRemoved(item: Data<X, Y>, series: Series<X, Y>) {
-	val symbol = item.node.value
+	val symbol = item.nodeProp.value
 	symbol?.focusTraversableProperty()?.unbind()
 
 	// remove item from sorted list
@@ -351,19 +350,47 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
 
   /** {@inheritDoc}  */
   override fun dataItemChanged(item: Data<X, Y>) {}
-  override fun seriesChanged(c: Change<out Series<*, *>>) {
-	// Update style classes for all series lines and symbols
-	// Note: is there a more efficient way of doing this?
-	for (i in 0 until dataSize) {
-	  val s = data.value[i]
-	  val seriesNode = s.node.value
-	  seriesNode?.styleClass?.setAll("chart-series-line", "series$i", s.defaultColorStyleClass)
-	  for (j in s.data.value.indices) {
-		val symbol = s.data.value[j].node.value
-		symbol?.styleClass?.setAll("chart-line-symbol", "series$i", "data$j", s.defaultColorStyleClass)
-	  }
+
+
+  override fun updateStyleClassOf(s: Series<X, Y>, i: Int) {
+	val seriesNode = s.node.value
+	seriesNode?.styleClass?.setAll("chart-series-line", "series$i", s.defaultColorStyleClass)
+	for (j in s.data.value.indices) {
+	  val symbol = s.data.value[j].nodeProp.value
+	  symbol?.styleClass?.setAll("`chart-line-symbol`", "series$i", "data$j", s.defaultColorStyleClass)
 	}
   }
+
+//  private fun updateStyleClassOf(s: Series<X, Y>, i: Int) {
+//	val seriesNode = s.node.value
+//	seriesNode?.styleClass?.setAll("chart-series-line", "series$i", s.defaultColorStyleClass)
+//	for (j in s.data.value.indices) {
+//	  val symbol = s.data.value[j].nodeProp.value
+//	  symbol?.styleClass?.setAll("`chart-line-symbol`", "series$i", "data$j", s.defaultColorStyleClass)
+//	}
+//  }
+//
+//
+//  private val lastSeriesIndices = WeakMap<Series<*, *>, Int>()
+//  override fun seriesChanged(c: Change<out Series<*, *>>) {
+//	// Update style classes for all series lines and symbols
+//	// Note: is there a more efficient way of doing this?
+//	/*Matt: Yes, there is.*/
+//
+//	synchronized(lastSeriesIndices) {
+//
+//	  data.value.forEach {
+//		val previous = lastSeriesIndices[it]
+//		val i = c.list.indexOf(it)
+//		if (previous == null || previous != i) {
+//		  updateStyleClassOf(it as Series<X, Y>, i)
+//		  lastSeriesIndices[it] = i
+//		}
+//	  }
+//
+//	}
+//  }
+
 
   override fun seriesAdded(series: Series<X, Y>, seriesIndex: Int) {
 	// create new path for series
@@ -435,7 +462,7 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
 	  seriesRemoveTimeline!!.play()
 	} else {
 	  plotChildren.remove(series.node.value)
-	  for (d in series.data.value) plotChildren.remove(d.node.value)
+	  for (d in series.data.value) plotChildren.remove(d.nodeProp.value)
 	  removeSeriesFromDisplay(series)
 	}
   }
@@ -473,7 +500,7 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
 	  dataRemoveTimeline!!.onFinished = null
 	  dataRemoveTimeline!!.stop()
 	}
-	val symbol = item.node.value
+	val symbol = item.nodeProp.value
 	if (symbol != null) plotChildren.remove(symbol)
 	item.setSeries(null)
 	removeDataItemFromDisplay(series, item)
@@ -495,7 +522,7 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
 	  seriesRemoveTimeline!!.onFinished = null
 	  seriesRemoveTimeline!!.stop()
 	  plotChildren.remove(series.node.value)
-	  for (d in series.data.value) plotChildren.remove(d.node.value)
+	  for (d in series.data.value) plotChildren.remove(d.nodeProp.value)
 	  removeSeriesFromDisplay(series)
 	}
   }
@@ -534,14 +561,14 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
   }
 
   private fun createSymbol(series: Series<X, Y>, seriesIndex: Int, item: Data<X, Y>, itemIndex: Int): Node? {
-	var symbol = item.getNode()
+	var symbol = item.node
 	// check if symbol has already been created
 	if (symbol == null && getCreateSymbols()) {
 	  symbol = StackPane()
 	  symbol.setAccessibleRole(TEXT)
 	  symbol.setAccessibleRoleDescription("Point")
 	  symbol.focusTraversableProperty().bind(Platform.accessibilityActiveProperty())
-	  item.node.value = symbol
+	  item.nodeProp.value = symbol
 	}
 	// set symbol styles
 	symbol?.styleClass?.addAll(

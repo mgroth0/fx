@@ -38,25 +38,18 @@ import matt.obs.math.double.op.times
 
 
 fun <X: MathAndComparable<X>, Y: MathAndComparable<Y>> ET.annoChart(
-  xAxis: NumberAxisWrapper<X>,
-  yAxis: NumberAxisWrapper<Y>,
-  op: AnnotateableChart<X, Y>.()->Unit = {}
+  xAxis: NumberAxisWrapper<X>, yAxis: NumberAxisWrapper<Y>, op: AnnotateableChart<X, Y>.()->Unit = {}
 ) = AnnotateableChart(
   xAxis = xAxis.minimal(),
   yAxis = yAxis.minimal(),
 ).attachTo(this, op)
 
 open class AnnotateableChart<X: MathAndComparable<X>, Y: MathAndComparable<Y>> private constructor(
-  stack: StackPane,
-  xAxis: NumberAxisWrapper<X>,
-  yAxis: NumberAxisWrapper<Y>,
-  scatter: Boolean
+  stack: StackPane, xAxis: NumberAxisWrapper<X>, yAxis: NumberAxisWrapper<Y>, scatter: Boolean
 ): RegionWrapperImpl<Region, NW>(stack) {
 
   constructor(
-	xAxis: NumberAxisWrapper<X>,
-	yAxis: NumberAxisWrapper<Y>,
-	scatter: Boolean = false
+	xAxis: NumberAxisWrapper<X>, yAxis: NumberAxisWrapper<Y>, scatter: Boolean = false
   ): this(
 	StackPane(), xAxis = xAxis, yAxis = yAxis, scatter = scatter
   )
@@ -151,8 +144,7 @@ open class AnnotateableChart<X: MathAndComparable<X>, Y: MathAndComparable<Y>> p
   }
 
   private inner class BoundCalcResult(
-	val lowerBound: Y,
-	val upperBound: Y
+	val lowerBound: Y, val upperBound: Y
   )
 
   fun autoRangeY(
@@ -165,8 +157,7 @@ open class AnnotateableChart<X: MathAndComparable<X>, Y: MathAndComparable<Y>> p
 	  val range = mx - mn
 	  val margin = range*0.1
 	  BoundCalcResult(
-		lowerBound = forceMin ?: (mn - margin),
-		upperBound = mx + margin
+		lowerBound = forceMin ?: (mn - margin), upperBound = mx + margin
 	  )
 	}
 	r?.go {
@@ -243,10 +234,7 @@ open class AnnotateableChart<X: MathAndComparable<X>, Y: MathAndComparable<Y>> p
 	val minXPixel = layoutXOf(minX)
 	val maxXPixel = layoutXOf(maxX)
 	return annotationLayer.rectangle(
-	  x = minXPixel,
-	  width = maxXPixel - minXPixel,
-	  y = 0.0,
-	  height = this@AnnotateableChart.height
+	  x = minXPixel, width = maxXPixel - minXPixel, y = 0.0, height = this@AnnotateableChart.height
 	) {
 	  heightProperty.bind(this@AnnotateableChart.heightProperty)
 	  stroke = this@AnnotateableChart.annotationColor
@@ -254,7 +242,9 @@ open class AnnotateableChart<X: MathAndComparable<X>, Y: MathAndComparable<Y>> p
 	}
   }
 
-  fun staticText(minX: X, text: String): TextWrapper {
+  fun staticText(
+	minX: X, text: String
+  ): TextWrapper {
 	val minXPixel = layoutXOf(minX)
 	return annotationLayer.text(
 	  text
@@ -263,6 +253,33 @@ open class AnnotateableChart<X: MathAndComparable<X>, Y: MathAndComparable<Y>> p
 	  yProperty.bind(this@AnnotateableChart.heightProperty*.90)
 
 	}
+  }
+
+  fun dynamicText(
+	minX: X, text: String
+  ): TextWrapper {
+	var minXPixel = layoutXOf(minX)
+	val txt = annotationLayer.text(
+	  text
+	) {
+	  x = minXPixel
+	  yProperty.bind(this@AnnotateableChart.heightProperty*.90)
+	}
+
+	fun update(tw: TextWrapper) {
+	  minXPixel = layoutXOf(minX)
+	  tw.isVisible = minXPixel >= -100 && minXPixel < annotationLayer.width + 100
+	  if (tw.isVisible) {
+		tw.x = minXPixel
+	  }
+	}
+	xAxis.upperBoundProperty.onChangeWithWeak(txt) { w, _ ->
+	  update(w)
+	}
+	yAxis.lowerBoundProperty.onChangeWithWeak(txt) { w, _ ->
+	  update(w)
+	}
+	return txt
   }
 
 

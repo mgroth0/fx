@@ -10,7 +10,6 @@ import javafx.application.Platform
 import javafx.beans.NamedArg
 import javafx.beans.property.DoubleProperty
 import javafx.collections.FXCollections
-import javafx.collections.ListChangeListener.Change
 import javafx.collections.ObservableList
 import javafx.css.CssMetaData
 import javafx.css.PseudoClass
@@ -163,7 +162,7 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
 	} else if (categoryMap.containsKey(category)) {
 	  // RT-21162 : replacing the previous data, first remove the node from scenegraph.
 	  val data = categoryMap[category]!!
-	  plotChildren.remove(data.node.value)
+	  plotChildren.remove(data.nodeProp.value)
 	  removeDataItemFromDisplay(series, data)
 	  requestChartLayout()
 	  categoryMap.remove(category)
@@ -178,7 +177,7 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
   }
 
   override fun dataItemRemoved(item: Data<X, Y>, series: Series<X, Y>) {
-	val bar = item.node.value
+	val bar = item.nodeProp.value
 	bar?.focusTraversableProperty()?.unbind()
 	if (shouldAnimate()) {
 	  XYValueMap.clear()
@@ -207,25 +206,21 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
 	}
 	if (currentVal > 0 && barVal < 0) { // going from positive to negative
 	  // add style class negative
-	  item.node.value.styleClass.add(NEGATIVE_STYLE)
+	  item.nodeProp.value.styleClass.add(NEGATIVE_STYLE)
 	} else if (currentVal < 0 && barVal > 0) { // going from negative to positive
 	  // remove style class negative
 	  // RT-21164 upside down bars: was adding NEGATIVE_STYLE styleclass
 	  // instead of removing it; when going from negative to positive
-	  item.node.value.styleClass.remove(NEGATIVE_STYLE)
+	  item.nodeProp.value.styleClass.remove(NEGATIVE_STYLE)
 	}
   }
 
-  override fun seriesChanged(c: Change<out Series<*, *>>) {
-	// Update style classes for all series lines and symbols
-	// Note: is there a more efficient way of doing this?
-	for (i in 0 until dataSize) {
-	  val series = data.value[i]
-	  for (j in series.data.value.indices) {
-		val item = series.data.value[j]
-		val bar = item.node.value
-		bar.styleClass.setAll("chart-bar", "series$i", "data$j", series.defaultColorStyleClass)
-	  }
+
+  override fun updateStyleClassOf(s: Series<X, Y>, i: Int) {
+	for (j in s.data.value.indices) {
+	  val item = s.data.value[j]
+	  val bar = item.nodeProp.value
+	  bar.styleClass.setAll("chart-bar", "series$i", "data$j", s.defaultColorStyleClass)
 	}
   }
 
@@ -269,7 +264,7 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
 	  }
 	  XYValueMap.clear()
 	  for (d in series.data.value) {
-		val bar = d.node.value
+		val bar = d.nodeProp.value
 		// Animate series deletion
 		if (seriesSize > 1) {
 		  val t = createDataRemoveTimeline(d, bar, series)
@@ -336,7 +331,7 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
 		val series = sit.next()
 		val item = getDataItem(series, index, catIndex, category)
 		if (item != null) {
-		  val bar = item.node.value
+		  val bar = item.nodeProp.value
 		  val categoryPos: Double
 		  val valPos: Double
 		  if (orientation == VERTICAL) {
@@ -391,7 +386,7 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
   }
 
   private fun processDataRemove(series: Series<X, Y>, item: Data<X, Y>) {
-	val bar = item.node.value
+	val bar = item.nodeProp.value
 	plotChildren.remove(bar)
 	updateMap(series, item)
   }
@@ -550,13 +545,13 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
   }
 
   private fun createBar(series: Series<X, Y>, seriesIndex: Int, item: Data<X, Y>, itemIndex: Int): Node {
-	var bar = item.node.value
+	var bar = item.nodeProp.value
 	if (bar == null) {
 	  bar = StackPane()
 	  bar.setAccessibleRole(TEXT)
 	  bar.setAccessibleRoleDescription("Bar")
 	  bar.focusTraversableProperty().bind(Platform.accessibilityActiveProperty())
-	  item.node.value = bar
+	  item.nodeProp.value = bar
 	}
 	bar.styleClass.setAll("chart-bar", "series$seriesIndex", "data$itemIndex", series.defaultColorStyleClass)
 	return bar

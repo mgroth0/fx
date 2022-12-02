@@ -11,7 +11,6 @@ import javafx.beans.property.BooleanProperty
 import javafx.beans.property.DoubleProperty
 import javafx.beans.property.SimpleDoubleProperty
 import javafx.collections.FXCollections
-import javafx.collections.ListChangeListener.Change
 import javafx.collections.ObservableList
 import javafx.css.CssMetaData
 import javafx.css.Styleable
@@ -62,7 +61,7 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
 		val series = getData()[seriesIndex]
 		for (itemIndex in series.data.value.indices) {
 		  val item = series.data.value[itemIndex]
-		  var symbol = item.node.value
+		  var symbol = item.nodeProp.value
 		  if (get() && symbol == null) { // create any symbols
 			symbol = createSymbol(series, getData().indexOf(series), item, itemIndex)
 			if (null != symbol) {
@@ -70,7 +69,7 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
 			}
 		  } else if (!get() && symbol != null) { // remove symbols
 			plotChildren.remove(symbol)
-			item.node.value = null
+			item.nodeProp.value = null
 		  }
 		}
 	  }
@@ -181,7 +180,7 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
 		animate = true
 		val last = series.data.value.size - 2
 		item.currentX.value = series.data.value[last].xValueProp.value
-		item.currentY .value= series.data.value[last].yValueProp.value
+		item.currentY.value = series.data.value[last].yValueProp.value
 	  }
 	  if (symbol != null) {
 		// fade in new symbol
@@ -229,7 +228,7 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
   }
 
   override fun dataItemRemoved(item: Data<X, Y>, series: Series<X, Y>) {
-	val symbol = item.node.value
+	val symbol = item.nodeProp.value
 	symbol?.focusTraversableProperty()?.unbind()
 
 	// remove item from sorted list
@@ -257,7 +256,7 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
 		item.currentX.value = xAxis.toRealValue(x2)
 		item.currentY.value = yAxis.toRealValue(y2)
 		item.xValueProp.value = xAxis.toRealValue(x2)
-		item.yValue=(yAxis.toRealValue(y)!!)
+		item.yValue = (yAxis.toRealValue(y)!!)
 		//2.  we can simply use the midpoint on the line as well..
 		//                double x = (x3 + x1)/2;
 		//                double y = (y3 + y1)/2;
@@ -266,12 +265,12 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
 	  } else if (itemIndex == 0 && dataListSize > 1) {
 		animate = true
 		item.xValueProp.value = series.data.value[0].xValueProp.value
-		item.yValue=(series.data.value[0].yValueProp.value)
+		item.yValue = (series.data.value[0].yValueProp.value)
 	  } else if (itemIndex == dataSize - 1 && dataListSize > 1) {
 		animate = true
 		val last = dataListSize - 1
 		item.xValueProp.value = series.data.value[last].xValueProp.value
-		item.yValue=(series.data.value[last].yValueProp.value)
+		item.yValue = (series.data.value[last].yValueProp.value)
 	  } else if (symbol != null) {
 		// fade out symbol
 		symbol.opacity = 0.0
@@ -295,7 +294,7 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
 			  MyInterpolator.MY_DEFAULT_INTERPOLATOR
 			), KeyValue(
 			  item.currentXProperty(),
-			  item.currentX.value,MyInterpolator.MY_DEFAULT_INTERPOLATOR
+			  item.currentX.value, MyInterpolator.MY_DEFAULT_INTERPOLATOR
 			)
 		  ),
 		  KeyFrame(
@@ -325,20 +324,17 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
 
   /** {@inheritDoc}  */
   override fun dataItemChanged(item: Data<X, Y>) {}
-  override fun seriesChanged(c: Change<out Series<*, *>>) {
-	// Update style classes for all series lines and symbols
-	// Note: is there a more efficient way of doing this?
-	for (i in 0 until dataSize) {
-	  val s = data.value[i]
-	  val seriesLine = (s.node.value as Group).children[1] as Path
-	  val fillPath = (s.node.value as Group).children[0] as Path
-	  seriesLine.styleClass.setAll("chart-series-area-line", "series$i", s.defaultColorStyleClass)
-	  fillPath.styleClass.setAll("chart-series-area-fill", "series$i", s.defaultColorStyleClass)
-	  for (j in s.data.value.indices) {
-		val item = s.data.value[j]
-		val node = item.node.value
-		node?.styleClass?.setAll("chart-area-symbol", "series$i", "data$j", s.defaultColorStyleClass)
-	  }
+
+
+  override fun updateStyleClassOf(s: Series<X, Y>, i: Int) {
+	val seriesLine = (s.node.value as Group).children[1] as Path
+	val fillPath = (s.node.value as Group).children[0] as Path
+	seriesLine.styleClass.setAll("chart-series-area-line", "series$i", s.defaultColorStyleClass)
+	fillPath.styleClass.setAll("chart-series-area-fill", "series$i", s.defaultColorStyleClass)
+	for (j in s.data.value.indices) {
+	  val item = s.data.value[j]
+	  val node = item.nodeProp.value
+	  node?.styleClass?.setAll("chart-area-symbol", "series$i", "data$j", s.defaultColorStyleClass)
 	}
   }
 
@@ -348,7 +344,7 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
 	val fillPath = Path()
 	seriesLine.strokeLineJoin = BEVEL
 	val areaGroup = Group(fillPath, seriesLine)
-	series.node.value= areaGroup
+	series.node.value = areaGroup
 	// create series Y multiplier
 	val seriesYAnimMultiplier: DoubleProperty = SimpleDoubleProperty(this, "seriesYMultiplier")
 	seriesYMultiplierMap[series] = seriesYAnimMultiplier
@@ -365,20 +361,20 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
 	  keyFrames.add(
 		KeyFrame(
 		  Duration.ZERO,
-		  KeyValue(areaGroup.opacityProperty(), 0,MyInterpolator.MY_DEFAULT_INTERPOLATOR),
-		  KeyValue(seriesYAnimMultiplier, 0,MyInterpolator.MY_DEFAULT_INTERPOLATOR)
+		  KeyValue(areaGroup.opacityProperty(), 0, MyInterpolator.MY_DEFAULT_INTERPOLATOR),
+		  KeyValue(seriesYAnimMultiplier, 0, MyInterpolator.MY_DEFAULT_INTERPOLATOR)
 		)
 	  )
 	  keyFrames.add(
 		KeyFrame(
 		  Duration.millis(200.0),
-		  KeyValue(areaGroup.opacityProperty(), 1,MyInterpolator.MY_DEFAULT_INTERPOLATOR)
+		  KeyValue(areaGroup.opacityProperty(), 1, MyInterpolator.MY_DEFAULT_INTERPOLATOR)
 		)
 	  )
 	  keyFrames.add(
 		KeyFrame(
 		  Duration.millis(500.0),
-		  KeyValue(seriesYAnimMultiplier, 1,MyInterpolator.MY_DEFAULT_INTERPOLATOR)
+		  KeyValue(seriesYAnimMultiplier, 1, MyInterpolator.MY_DEFAULT_INTERPOLATOR)
 		)
 	  )
 	}
@@ -390,8 +386,14 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
 		  symbol.opacity = 0.0
 		  plotChildren.add(symbol)
 		  // fade in new symbol
-		  keyFrames.add(KeyFrame(Duration.ZERO, KeyValue(symbol.opacityProperty(), 0,MyInterpolator.MY_DEFAULT_INTERPOLATOR)))
-		  keyFrames.add(KeyFrame(Duration.millis(200.0), KeyValue(symbol.opacityProperty(), 1,MyInterpolator.MY_DEFAULT_INTERPOLATOR)))
+		  keyFrames.add(
+			KeyFrame(Duration.ZERO, KeyValue(symbol.opacityProperty(), 0, MyInterpolator.MY_DEFAULT_INTERPOLATOR))
+		  )
+		  keyFrames.add(
+			KeyFrame(
+			  Duration.millis(200.0), KeyValue(symbol.opacityProperty(), 1, MyInterpolator.MY_DEFAULT_INTERPOLATOR)
+			)
+		  )
 		} else {
 		  plotChildren.add(symbol)
 		}
@@ -409,7 +411,7 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
 	  tl.play()
 	} else {
 	  plotChildren.remove(series.node.value)
-	  for (d in series.data.value) plotChildren.remove(d.node.value)
+	  for (d in series.data.value) plotChildren.remove(d.nodeProp.value)
 	  removeSeriesFromDisplay(series)
 	}
   }
@@ -433,14 +435,14 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
   }
 
   private fun createSymbol(series: Series<X, Y>, seriesIndex: Int, item: Data<X, Y>, itemIndex: Int): Node? {
-	var symbol = item.node.value
+	var symbol = item.nodeProp.value
 	// check if symbol has already been created
 	if (symbol == null && getCreateSymbols()) {
 	  symbol = StackPane()
 	  symbol.setAccessibleRole(TEXT)
 	  symbol.setAccessibleRoleDescription("Point")
 	  symbol.focusTraversableProperty().bind(Platform.accessibilityActiveProperty())
-	  item.node.value = symbol
+	  item.nodeProp.value = symbol
 	}
 	// set symbol styles
 	// Note: not sure if we want to add or check, ie be more careful and efficient here
@@ -462,19 +464,20 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
 
   // -------------- STYLESHEET HANDLING --------------------------------------
   private object StyleableProperties {
-	val CREATE_SYMBOLS: CssMetaData<AreaChartForPrivateProps<*, *>, Boolean> = object: CssMetaData<AreaChartForPrivateProps<*, *>, Boolean>(
-	  "-fx-create-symbols",
-	  BooleanConverter.getInstance(), java.lang.Boolean.TRUE
-	) {
-	  override fun isSettable(node: AreaChartForPrivateProps<*, *>): Boolean {
-		return node.createSymbols.value == null || !node.createSymbols.isBound
-	  }
+	val CREATE_SYMBOLS: CssMetaData<AreaChartForPrivateProps<*, *>, Boolean> =
+	  object: CssMetaData<AreaChartForPrivateProps<*, *>, Boolean>(
+		"-fx-create-symbols",
+		BooleanConverter.getInstance(), java.lang.Boolean.TRUE
+	  ) {
+		override fun isSettable(node: AreaChartForPrivateProps<*, *>): Boolean {
+		  return node.createSymbols.value == null || !node.createSymbols.isBound
+		}
 
-	  override fun getStyleableProperty(node: AreaChartForPrivateProps<*, *>): StyleableProperty<Boolean> {
-		@Suppress("UNCHECKED_CAST")
-		return node.createSymbolsProperty() as StyleableProperty<Boolean>
+		override fun getStyleableProperty(node: AreaChartForPrivateProps<*, *>): StyleableProperty<Boolean> {
+		  @Suppress("UNCHECKED_CAST")
+		  return node.createSymbolsProperty() as StyleableProperty<Boolean>
+		}
 	  }
-	}
 	val classCssMetaData: List<CssMetaData<out Styleable?, *>> by lazy {
 	  val styleables: MutableList<CssMetaData<out Styleable?, *>> = ArrayList(getClassCssMetaData())
 	  styleables.add(CREATE_SYMBOLS)
@@ -527,7 +530,7 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
 		  axisY.toRealValue(axisY.toNumericValue(item.currentY.value)*yAnimMultiplier)!!
 		)
 		val skip = java.lang.Double.isNaN(x) || java.lang.Double.isNaN(y)
-		val symbol = item.node.value
+		val symbol = item.nodeProp.value
 		if (symbol != null) {
 		  val w = symbol.prefWidth(-1.0)
 		  val h = symbol.prefHeight(-1.0)

@@ -158,7 +158,7 @@ abstract class ChartForPrivateProps: Region() {
 	}
   }
 
-  protected fun getLegend(): Node {
+  protected fun getLegend(): Node? {
 	return legend.value
   }
 

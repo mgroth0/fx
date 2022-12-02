@@ -69,14 +69,14 @@ class ScatterChartForWrapper<X, Y> @JvmOverloads constructor(
   // -------------- METHODS ------------------------------------------------------------------------------------------
   /** {@inheritDoc}  */
   override fun dataItemAdded(series: Series<X, Y>, itemIndex: Int, item: Data<X, Y>) {
-	var symbol = item.node.value
+	var symbol = item.nodeProp.value
 	// check if symbol has already been created
 	if (symbol == null) {
 	  symbol = StackPane()
 	  symbol.setAccessibleRole(TEXT)
 	  symbol.setAccessibleRoleDescription("Point")
 	  symbol.focusTraversableProperty().bind(Platform.accessibilityActiveProperty())
-	  item.node.value = symbol
+	  item.nodeProp.value = symbol
 	}
 	// set symbol styles
 	symbol.styleClass.setAll(
@@ -97,7 +97,7 @@ class ScatterChartForWrapper<X, Y> @JvmOverloads constructor(
 
   /** {@inheritDoc}  */
   override fun dataItemRemoved(item: Data<X, Y>, series: Series<X, Y>) {
-	val symbol = item.node.value
+	val symbol = item.nodeProp.value
 	symbol?.focusTraversableProperty()?.unbind()
 	if (shouldAnimate()) {
 	  // fade out old symbol
@@ -137,7 +137,7 @@ class ScatterChartForWrapper<X, Y> @JvmOverloads constructor(
 		)
 	  }
 	  for (d in series.data.value) {
-		val symbol = d.node.value
+		val symbol = d.nodeProp.value
 		// fade out old symbol
 		val ft = FadeTransition(Duration.millis(500.0), symbol)
 		ft.toValue = 0.0
@@ -150,7 +150,7 @@ class ScatterChartForWrapper<X, Y> @JvmOverloads constructor(
 	  pt.play()
 	} else {
 	  for (d in series.data.value) {
-		val symbol = d.node.value
+		val symbol = d.nodeProp.value
 		plotChildren.remove(symbol)
 	  }
 	  removeSeriesFromDisplay(series)
@@ -170,7 +170,7 @@ class ScatterChartForWrapper<X, Y> @JvmOverloads constructor(
 		if (java.lang.Double.isNaN(x) || java.lang.Double.isNaN(y)) {
 		  continue
 		}
-		val symbol = item.node.value
+		val symbol = item.nodeProp.value
 		if (symbol != null) {
 		  val w = symbol.prefWidth(-1.0)
 		  val h = symbol.prefHeight(-1.0)
@@ -182,7 +182,7 @@ class ScatterChartForWrapper<X, Y> @JvmOverloads constructor(
 
   override fun createLegendItemForSeries(series: Series<X, Y>, seriesIndex: Int): LegendItem {
 	val legendItem = LegendItem(series.name.value)
-	val node = if (series.data.value.isEmpty()) null else series.data.value[0].node
+	val node = if (series.data.value.isEmpty()) null else series.data.value[0].nodeProp
 	if (node != null) {
 	  legendItem.symbol.styleClass.addAll(node.value.styleClass)
 	}

@@ -40,6 +40,7 @@ import javafx.scene.shape.MoveTo
 import javafx.scene.shape.Path
 import javafx.scene.shape.Rectangle
 import javafx.util.Duration
+import matt.collect.weak.WeakMap
 import matt.fx.control.wrapper.chart.axis.value.axis.AxisForPackagePrivateProps
 import matt.fx.control.wrapper.chart.line.highperf.relinechart.xy.XYChartForPackagePrivateProps.StyleableProperties.classCssMetaData
 import matt.fx.control.wrapper.chart.line.highperf.relinechart.xy.chart.ChartForPrivateProps
@@ -651,7 +652,32 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
    * Called when each atomic change is made to the list of series for this chart
    * @param c a Change instance representing the changes to the series
    */
-  protected open fun seriesChanged(c: Change<out Series<*, *>>) {}
+  //  protected open fun seriesChanged(c: Change<out Series<*, *>>) {}
+
+
+  protected open fun updateStyleClassOf(s: Series<X, Y>, i: Int)  {}
+
+
+  private val lastSeriesIndices = WeakMap<Series<*, *>, Int>()
+  protected fun seriesChanged(c: Change<out Series<*, *>>) {
+	// Update style classes for all series lines and symbols
+	// Note: is there a more efficient way of doing this?
+	/*Matt: Yes, there is.*/
+
+	synchronized(lastSeriesIndices) {
+
+	  data.value.forEach {
+		val previous = lastSeriesIndices[it]
+		val i = c.list.indexOf(it)
+		if (previous == null || previous != i) {
+		  updateStyleClassOf(it as Series<X, Y>, i)
+		  lastSeriesIndices[it] = i
+		}
+	  }
+
+	}
+  }
+
 
   /**
    * This is called when a data change has happened that may cause the range to be invalid.
@@ -1004,8 +1030,8 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 	val nodes: MutableList<Node?> = ArrayList()
 	nodes.add(series.getNode())
 	for (d in series.getData()) {
-	  if (d!!.getNode() != null) {
-		nodes.add(d.getNode())
+	  if (d!!.node != null) {
+		nodes.add(d.node)
 	  }
 	}
 	// fade out series node and symbols
@@ -1368,7 +1394,7 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 	 * appropriately, for example on a Line or Scatter chart this node will be positioned centered on the data
 	 * values position. For a bar chart this is positioned and resized as the bar for this data item.
 	 */
-	internal val node: ObjectProperty<Node> = object: SimpleObjectProperty<Node>(this, "node") {
+	val nodeProp: ObjectProperty<Node> = object: SimpleObjectProperty<Node>(this, "node") {
 	  override fun invalidated() {
 		val node = get()
 		if (node != null) {
@@ -1387,17 +1413,10 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 	  }
 	}
 
-	fun getNode(): Node? {
-	  return node.get()
-	}
+	var node: Node?
+	  get() = nodeProp.get()
+	  set(value) = nodeProp.set(value)
 
-	fun setNode(value: Node) {
-	  node.set(value)
-	}
-
-	fun nodeProperty(): ObjectProperty<Node> {
-	  return node
-	}
 
 	/**
 	 * The current displayed data value plotted on the X axis. This may be the same as xValue or different. It is

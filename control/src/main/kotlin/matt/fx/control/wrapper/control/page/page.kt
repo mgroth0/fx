@@ -20,10 +20,19 @@ fun ET.pagination(
 }
 
 class PaginationWrapper(node: Pagination = Pagination()): ControlWrapperImpl<Pagination>(node) {
-  val pageCountProperty = node.pageCountProperty().toNonNullableProp()
+  val pageCountProperty = node.pageCountProperty().toNonNullableProp().cast<Int>()
   var pageCount by pageCountProperty
   val currentPageIndexProperty = node.currentPageIndexProperty().toNonNullableProp()
   var currentPageIndex by currentPageIndexProperty
+
+/*  init {
+	currentPageIndexProperty.onChange {
+	  println("changed current page index to $it")
+	  if (it == 0) {
+		dumpStack()
+	  }
+	}
+  }*/
 
   val pageFactoryProperty by lazy { node.pageFactoryProperty().toNullableProp() }
   var pageFactory by pageFactoryProperty
@@ -37,7 +46,11 @@ class PaginationWrapper(node: Pagination = Pagination()): ControlWrapperImpl<Pag
 		pageFactory = null
 		runLater {
 		  pageFactory = oldPageFactory
-		  refreshSem.release()
+		  runLater {
+			currentPageIndex = pageCount - 1
+			refreshSem.release()
+		  }
+
 		}
 	  }
 	}
