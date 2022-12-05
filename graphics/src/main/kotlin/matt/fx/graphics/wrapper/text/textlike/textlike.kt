@@ -24,6 +24,10 @@ interface TextLike: EventTargetWrapper {
 	  fontProperty v value
 	}
 
+  fun monospace() {
+	font = Font.font("monospaced")
+  }
+
 }
 
 interface ColoredText: TextLike, NodeWrapper {

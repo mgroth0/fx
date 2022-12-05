@@ -8,6 +8,7 @@ import matt.cbor.ser.MyCborSerializer
 import matt.hurricanefx.eye.time.toFXDuration
 import matt.model.data.mathable.MathAndComparable
 import matt.model.op.convert.Converter
+import matt.time.toUnixTime
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
@@ -83,6 +84,7 @@ value class DurationWrapper(val dur: Duration): Interpolatable<DurationWrapper>,
   }
 
   fun toFXDuration() = dur.toFXDuration()
+  fun toUnixTime() = dur.toUnixTime()
 
 }
 
@@ -98,8 +100,5 @@ object MilliSecondDurationWrapperConverter: Converter<DurationWrapper, Double> {
 }
 
 
-
-
-
 @Suppress("NOTHING_TO_INLINE")
-inline operator fun Int.times(duration: DurationWrapper): DurationWrapper = duration * this
+inline operator fun Int.times(duration: DurationWrapper): DurationWrapper = duration*this

@@ -22,7 +22,7 @@ open class WindowWrapper<W: Window>(override val node: W): SingularEventTargetWr
 
   companion object {
 	fun windows() = Window.getWindows().map { it.wrapped() as WindowWrapper<*> }
-	fun guessMainStage() = windows().firstOrNull {it is StageWrapper }
+	fun guessMainStage() = windows().filterIsInstance<StageWrapper>().firstOrNull()
   }
 
   override fun removeFromParent(): Unit = NOT_IMPLEMENTED

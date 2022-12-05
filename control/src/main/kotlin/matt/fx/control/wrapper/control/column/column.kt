@@ -1,7 +1,5 @@
 package matt.fx.control.wrapper.control.column
 
-import matt.fx.control.wrapper.control.table.cols.ColumnsDSL
-import matt.fx.control.wrapper.control.table.cols.ColumnsDSLImpl
 import javafx.beans.binding.Bindings
 import javafx.beans.value.ObservableValue
 import javafx.beans.value.WritableValue
@@ -23,6 +21,8 @@ import matt.fx.control.wrapper.cellfact.cellvalfact.CellValueFactory
 import matt.fx.control.wrapper.control.colbase.TableColumnBaseWrapper
 import matt.fx.control.wrapper.control.hascols.HasCols
 import matt.fx.control.wrapper.control.table.TableViewWrapper
+import matt.fx.control.wrapper.control.table.cols.ColumnsDSL
+import matt.fx.control.wrapper.control.table.cols.ColumnsDSLImpl
 import matt.fx.control.wrapper.wrapped.wrapped
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.hurricanefx.eye.converter.callbackConverter
@@ -45,8 +45,14 @@ class TableColumnWrapper<E: Any, P>(
    HasCols<E>,
    ColumnsDSL<E> by ColumnsDSLImpl(node.columns) {
 
+
+
   constructor(name: String): this(TableColumn<E, P>(name))
 
+  val sortTypeProp by lazy {
+	node.sortTypeProperty().toNonNullableProp()
+  }
+  var sortType by sortTypeProp
 
   override val tableView: TableViewWrapper<E>? get() = node.tableView?.wrapped()
   override fun addChild(child: NodeWrapper, index: Int?) {
@@ -103,6 +109,11 @@ class TableColumnWrapper<E: Any, P>(
 	  }
 	}
   }
+
+  val comparatorProp by lazy {
+	node.comparatorProperty().toNonNullableProp()
+  }
+  var comparator by comparatorProp
 
   fun setOnEditCommit(value: EventHandler<CellEditEvent<E, P?>>) = node.setOnEditCommit(value)
 

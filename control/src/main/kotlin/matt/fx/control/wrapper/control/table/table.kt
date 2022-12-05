@@ -24,10 +24,12 @@ import matt.fx.control.wrapper.control.tablelike.TableLikeWrapper
 import matt.fx.control.wrapper.selects.wrap
 import matt.fx.control.wrapper.wrapped.wrapped
 import matt.fx.graphics.fxWidth
+import matt.fx.graphics.service.uncheckedWrapperConverter
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NW
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
+import matt.hurricanefx.eye.wrapper.obs.collect.createMutableWrapper
 import matt.hurricanefx.eye.wrapper.obs.collect.mfxMutableListConverter
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
@@ -39,6 +41,7 @@ import matt.obs.bind.binding
 import matt.obs.bindings.bool.ObsB
 import matt.obs.col.olist.MutableObsList
 import matt.obs.col.olist.ObsList
+import matt.obs.col.olist.mappedlist.toSyncedList
 import matt.obs.col.olist.toMutableObsList
 import matt.obs.prop.ObsVal
 import matt.obs.prop.VarProp
@@ -84,7 +87,14 @@ open class TableViewWrapper<E: Any>(
 
   var isEditable by editableProperty
 
-  val sortOrder: ObservableList<TableColumn<E, *>> get() = node.sortOrder
+  fun refresh() = node.refresh()
+
+
+  val sortOrder by lazy {
+	node.sortOrder.createMutableWrapper().toSyncedList(
+	  uncheckedWrapperConverter()
+	)
+  }
 
   val columnResizePolicyProperty by lazy { node.columnResizePolicyProperty().toNonNullableProp() }
   var columnResizePolicy by columnResizePolicyProperty
@@ -94,6 +104,7 @@ open class TableViewWrapper<E: Any>(
   var items by itemsProperty
 
   val comparatorProperty by lazy { node.comparatorProperty().toNullableROProp() }
+  val comparator by comparatorProperty
 
   override val columns: ObservableList<TableColumn<E, *>> get() = node.columns
 

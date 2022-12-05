@@ -23,7 +23,13 @@ interface ColumnsDSL<E: Any> {
   ): TableColumnWrapper<E, P>
 
   fun <P> column(
-	title: String,
+	title: String? = null,
+	prop: KProperty1<E, ObsVal<P>>,
+	op: TableColumnWrapper<E, P>.()->Unit = {}
+  ): TableColumnWrapper<E, P>
+
+
+  fun <P> propCol(
 	prop: KProperty1<E, ObsVal<P>>,
 	op: TableColumnWrapper<E, P>.()->Unit = {}
   ): TableColumnWrapper<E, P>
@@ -56,9 +62,11 @@ interface ColumnsDSL<E: Any> {
 	op: TableColumnWrapper<E, P>.()->Unit = {}
   ): TableColumnWrapper<E, P>
 
+
 }
 
 class ColumnsDSLImpl<E: Any>(private val columns: ObservableList<TableColumn<E, *>>): ColumnsDSL<E> {
+
 
   override fun <P> column(
 	title: String,
@@ -85,13 +93,19 @@ class ColumnsDSLImpl<E: Any>(private val columns: ObservableList<TableColumn<E, 
 
 
   override fun <P> column(
-	title: String,
+	title: String?,
 	prop: KProperty1<E, ObsVal<P>>,
 	op: TableColumnWrapper<E, P>.()->Unit
-  ) = column(title) {
+  ) = column(title ?: prop.name) {
 	prop.call(it.value)
   }.also(op)
 
+  override fun <P> propCol(
+	prop: KProperty1<E, ObsVal<P>>,
+	op: TableColumnWrapper<E, P>.()->Unit
+  ) = column(prop.name) {
+	prop.call(it.value)
+  }.also(op)
 
   override fun nodeColumn(
 	title: String,
@@ -118,7 +132,9 @@ class ColumnsDSLImpl<E: Any>(private val columns: ObservableList<TableColumn<E, 
 	valueProvider: (TableColumn.CellDataFeatures<E, P>)->ObsVal<P>,
   ): TableColumnWrapper<E, P> {
 	val column = TableColumnWrapper<E, P>(title)
-	column.cellValueFactory = Callback { valueProvider(it) }
+	column.cellValueFactory = Callback {
+	  valueProvider(it)
+	}
 	prefWidth?.let { column.prefWidth = it }
 	columns.add(column.node)
 	return column

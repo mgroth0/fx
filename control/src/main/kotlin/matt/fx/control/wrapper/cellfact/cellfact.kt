@@ -47,7 +47,7 @@ interface CellFactory<N, T, C: Cell<T>> {
 	simpleCellFactoryFromProps(op2)
   }
 
-  fun simpleCellFactory(op: FirstPropFactory<T>) {
+  fun firstPropCellFact(op: FirstPropFactory<T>) {
 	val op2: (T)->Pair<ObsS, ObsVal<NodeWrapper?>> = {
 	  val pair = op.call(it)
 	  pair.first to BindableProperty(pair.second)
@@ -55,7 +55,7 @@ interface CellFactory<N, T, C: Cell<T>> {
 	simpleCellFactoryFromProps(op2)
   }
 
-  fun simpleCellFactory(op: SecondPropFactory<T>) {
+  fun secondPropCellFact(op: SecondPropFactory<T>) {
 	val op2: (T)->Pair<ObsS, ObsVal<NodeWrapper?>> = {
 	  val pair = op.call(it)
 	  BindableProperty(pair.first) to pair.second
@@ -63,7 +63,7 @@ interface CellFactory<N, T, C: Cell<T>> {
 	simpleCellFactoryFromProps(op2)
   }
 
-  fun simpleCellFactory(op: BothPropFactory<T>) {
+  fun bothPropCellFact(op: BothPropFactory<T>) {
 	val op2: (T)->Pair<ObsS, ObsVal<NodeWrapper?>> = {
 	  val pair = op.call(it)
 	  pair.first to pair.second

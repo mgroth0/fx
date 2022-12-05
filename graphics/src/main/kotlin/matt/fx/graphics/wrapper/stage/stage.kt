@@ -15,7 +15,7 @@ import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
 import matt.log.warn.warn
 
-open class StageWrapper(node: Stage): WindowWrapper<Stage>(node), Titled {
+open class StageWrapper(node: Stage = Stage()): WindowWrapper<Stage>(node), Titled {
 
   constructor(stageStyle: StageStyle): this(Stage(stageStyle))
 

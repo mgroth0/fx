@@ -38,6 +38,7 @@ import matt.obs.col.olist.mappedlist.toSyncedList
 import matt.obs.prop.BindableProperty
 import matt.obs.prop.Var
 import matt.obs.prop.VarProp
+import matt.obs.prop.proxy.ProxyProp
 import matt.reflect.access
 import kotlin.reflect.full.declaredMemberFunctions
 
@@ -229,7 +230,7 @@ open class RegionWrapperImpl<N: Region, C: NodeWrapper>(node: N): ParentWrapperI
   override val paddingProperty by lazy { node.paddingProperty().toNonNullableProp() }
   override var padding by paddingProperty
 
-  override val paddingVerticalProperty by lazy {
+  final override val paddingVerticalProperty: ProxyProp<Insets, Double> by lazy {
 	paddingProperty.proxy(object: Converter<Insets, Double> {
 	  override fun convertToB(a: Insets): Double {
 		return a.vertical
@@ -241,10 +242,10 @@ open class RegionWrapperImpl<N: Region, C: NodeWrapper>(node: N): ParentWrapperI
 
 	})
   }
-  override var paddingVertical by paddingVerticalProperty
+  final override var paddingVertical by paddingVerticalProperty
 
-  override val backgroundProperty by lazy { node.backgroundProperty().toNullableStyleProp() }
-  override var background by backgroundProperty
+  final override val backgroundProperty by lazy { node.backgroundProperty().toNullableStyleProp() }
+  final override var background by backgroundProperty
 
   override val exactWidthProperty by lazy {
 	BindableProperty<Double>(0.0).also {

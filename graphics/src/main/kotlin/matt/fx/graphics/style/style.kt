@@ -12,6 +12,7 @@ import matt.color.hex
 import matt.css.MyStyleDsl
 import matt.fx.graphics.wrapper.node.NodeWrapperImpl
 import matt.fx.graphics.wrapper.style.toAwtColor
+import matt.log.warn.dumpStack
 import matt.log.warn.warn
 import matt.obs.prop.BindableProperty
 import java.util.logging.Level
@@ -185,7 +186,10 @@ val Insets.horizontal: Double
   }
 val Insets.vertical: Double
   get() {
-	require(top == bottom)
+	if (top != bottom) {
+	  warn("top($top) != bottom($bottom)")
+	  dumpStack()
+	}
 	return top
   }
 val Insets.all: Double
