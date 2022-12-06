@@ -561,22 +561,14 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
 		  }
 		}
 	  }
-	  if (!constructedPath.isEmpty() || prevDataPoint != null || nextDataPoint != null) {
+	  if (constructedPath.isNotEmpty() || prevDataPoint != null || nextDataPoint != null) {
 		if (sortX) {
-		  Collections.sort(
-			constructedPath
-		  ) { e1: LineTo, e2: LineTo ->
-			java.lang.Double.compare(
-			  e1.x, e2.x
-			)
+		  constructedPath.sortWith { e1: LineTo, e2: LineTo ->
+			e1.x.compareTo(e2.x)
 		  }
 		} else if (sortY) {
-		  Collections.sort(
-			constructedPath
-		  ) { e1: LineTo, e2: LineTo ->
-			java.lang.Double.compare(
-			  e1.y, e2.y
-			)
+		  constructedPath.sortWith { e1: LineTo, e2: LineTo ->
+			e1.y.compareTo(e2.y)
 		  }
 		} else {
 		  // assert prevDataPoint == null && nextDataPoint == null

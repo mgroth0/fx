@@ -25,6 +25,16 @@ open class LineWrapper(
   ): this(Line(startX, startY, endX, endY))
 
 
+  var bothXs: Double
+	get() = run {
+	  require(startX == endX)
+	  startX
+	}
+	set(value) {
+	  startX = value
+	  endX = value
+	}
+
   var startX
 	get() = node.startX
 	set(value) {

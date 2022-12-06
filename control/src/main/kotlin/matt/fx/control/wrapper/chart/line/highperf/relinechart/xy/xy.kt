@@ -45,6 +45,8 @@ import matt.fx.control.wrapper.chart.axis.value.axis.AxisForPackagePrivateProps
 import matt.fx.control.wrapper.chart.line.highperf.relinechart.xy.XYChartForPackagePrivateProps.StyleableProperties.classCssMetaData
 import matt.fx.control.wrapper.chart.line.highperf.relinechart.xy.chart.ChartForPrivateProps
 import matt.fx.graphics.anim.interp.MyInterpolator
+import matt.model.data.xyz.Dim2D
+import matt.obs.prop.BindableProperty
 import java.util.BitSet
 import java.util.Collections
 
@@ -536,6 +538,9 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 	requestChartLayout()
   }
 
+  val dataItemChangedAnimDur = BindableProperty(Duration.millis(700.0))
+  val dataItemChangedAnimInterp = BindableProperty(MyInterpolator.EASE_BOTH)
+
   private fun <T> dataValueChanged(item: Data<X, Y>, newValue: T, currentValueProperty: ObjectProperty<T>) {
 	if (currentValueProperty.get() !== newValue) invalidateRange()
 	dataItemChanged(item)
@@ -545,7 +550,9 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 		  Duration.ZERO,
 		  KeyValue(currentValueProperty, currentValueProperty.get(), MyInterpolator.MY_DEFAULT_INTERPOLATOR)
 		),
-		KeyFrame(Duration.millis(700.0), KeyValue(currentValueProperty, newValue, MyInterpolator.EASE_BOTH))
+		KeyFrame(
+		  dataItemChangedAnimDur.value, KeyValue(currentValueProperty, newValue, dataItemChangedAnimInterp.value)
+		)
 	  )
 	} else {
 	  currentValueProperty.set(newValue)
@@ -655,7 +662,7 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
   //  protected open fun seriesChanged(c: Change<out Series<*, *>>) {}
 
 
-  protected open fun updateStyleClassOf(s: Series<X, Y>, i: Int)  {}
+  protected open fun updateStyleClassOf(s: Series<X, Y>, i: Int) {}
 
 
   private val lastSeriesIndices = WeakMap<Series<*, *>, Int>()
@@ -1361,6 +1368,11 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 	  return yValueProp
 	}
 
+	fun valueOfDim(dim: Dim2D): Any? = when (dim) {
+	  Dim2D.X -> xValue
+	  Dim2D.Y -> yValue
+	}
+
 	/**
 	 * The generic data value to be plotted in any way the chart needs. For example used as the radius
 	 * for BubbleChart.
@@ -1538,7 +1550,7 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 			// RT-25187 Probably a sort happened, just reorder the pointers and return.
 			if (c.wasPermutated()) {
 			  displayedData.sortWith(
-				java.util.Comparator { o1: Data<X, Y>?, o2: Data<X, Y>? ->
+				{ o1: Data<X, Y>?, o2: Data<X, Y>? ->
 				  data2.indexOf(
 					o2
 				  ) - data2.indexOf(o1)
@@ -1601,17 +1613,13 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 		}
 	  }
 
-	fun getChart(): XYChartForPackagePrivateProps<X, Y>? {
-	  return chart.get()
-	}
+	fun getChart(): XYChartForPackagePrivateProps<X, Y>? = chart.get()
 
 	fun setChart(value: XYChartForPackagePrivateProps<X, Y>?) {
 	  chart.set(value)
 	}
 
-	fun chartProperty(): ReadOnlyObjectProperty<XYChartForPackagePrivateProps<X, Y>> {
-	  return chart.readOnlyProperty
-	}
+	fun chartProperty(): ReadOnlyObjectProperty<XYChartForPackagePrivateProps<X, Y>> = chart.readOnlyProperty
 
 	/** The user displayable name for this series  */
 	internal val name: StringProperty = object: StringPropertyBase() {
@@ -1620,26 +1628,18 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 		if (getChart() != null) getChart()!!.seriesNameChanged()
 	  }
 
-	  override fun getBean(): Any {
-		return this@Series
-	  }
+	  override fun getBean(): Any = this@Series
 
-	  override fun getName(): String {
-		return "name"
-	  }
+	  override fun getName(): String = "name"
 	}
 
-	fun getName(): String? {
-	  return name.get()
-	}
+	fun getName(): String? = name.get()
 
 	fun setName(value: String) {
 	  name.set(value)
 	}
 
-	fun nameProperty(): StringProperty {
-	  return name
-	}
+	fun nameProperty(): StringProperty = name
 
 	/**
 	 * The node to display for this series. This is created by the chart if it uses nodes to represent the whole
@@ -1651,13 +1651,9 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 	  return node.get()
 	}
 
-	fun setNode(value: Node) {
-	  node.set(value)
-	}
+	fun setNode(value: Node) = node.set(value)
 
-	fun nodeProperty(): ObjectProperty<Node> {
-	  return node
-	}
+	fun nodeProperty(): ObjectProperty<Node> = node
 
 	/** ObservableList of data items that make up this series  */
 
@@ -1771,9 +1767,7 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 	  return displayedData.indexOf(item)
 	}
 
-	fun getItem(i: Int): Data<X, Y>? {
-	  return displayedData[i]
-	}
+	fun getItem(i: Int): Data<X, Y>? = displayedData[i]
 
 	val dataSize: Int
 	  get() = displayedData.size

@@ -15,7 +15,7 @@ fun actionbutton(text: String = "", graphic: NodeWrapper? = null, action: Button
 	}
   }
 
-fun NodeWrapper.actionbutton(
+fun EventTargetWrapper.actionbutton(
   text: String = "",
   graphic: NodeWrapper? = null,
   action: ButtonWrapper.(ActionEvent)->Unit

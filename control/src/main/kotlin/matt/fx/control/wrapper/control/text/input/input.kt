@@ -8,7 +8,6 @@ import javafx.beans.property.StringProperty
 import javafx.beans.value.ObservableValue
 import javafx.scene.control.TextInputControl
 import javafx.scene.paint.Paint
-import matt.fx.control.tfx.control.mutateOnChange
 import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
@@ -19,6 +18,7 @@ import matt.fx.graphics.wrapper.text.textlike.ColoredText
 import matt.lang.err
 import matt.log.warn.warn
 import matt.obs.prop.BindableProperty
+import matt.obs.prop.mutateOnChange
 
 open class TextInputControlWrapper<N: TextInputControl>(node: N): ControlWrapperImpl<N>(node), ColoredText {
 

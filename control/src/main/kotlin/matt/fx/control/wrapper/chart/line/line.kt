@@ -8,6 +8,7 @@ import matt.fx.control.wrapper.chart.xy.XYChartWrapper
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.log.warn.warnOnce
 import matt.math.point.BasicPoint
 import matt.model.data.mathable.MathAndComparable
 
@@ -46,7 +47,23 @@ open class LineChartWrapper<X: MathAndComparable<X>, Y: MathAndComparable<Y>>(
   }
 
 
-
-
 }
 
+class NumericChartLocater<X: MathAndComparable<X>, Y: MathAndComparable<Y>>(
+  private val lineChart: XYChartWrapper<X, Y, *>,
+  private val xAxis: NumberAxisWrapper<X>,
+  private val yAxis: NumberAxisWrapper<Y>
+): ChartLocater<X, Y> {
+  override fun layoutXOf(x: X): Double =
+	xAxis.displayPixelOf(x) + lineChart.plotArea.boundsInParent.minX + lineChart.chartContent.boundsInParent.minX
+
+  override fun layoutYOf(y: Y): Double {
+	warnOnce("layoutYOf probably needs work since layoutXOf was so complicated")
+	return yAxis.displayPixelOf(y) + (yAxis.boundsInScene.minY - lineChart.boundsInScene.minY)
+  }
+}
+
+interface ChartLocater<X: MathAndComparable<X>, Y: MathAndComparable<Y>> {
+  fun layoutXOf(x: X): Double
+  fun layoutYOf(y: Y): Double
+}

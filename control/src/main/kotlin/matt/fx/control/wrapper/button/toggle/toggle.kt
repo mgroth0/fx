@@ -3,7 +3,7 @@ package matt.fx.control.wrapper.button.toggle
 import javafx.scene.control.ToggleButton
 import matt.fx.control.inter.select.Selectable
 import matt.fx.control.inter.select.SelectableValue
-import matt.fx.control.tfx.control.ToggleMechanism
+import matt.fx.control.toggle.mech.ToggleMechanism
 import matt.fx.control.wrapper.control.button.base.ButtonBaseWrapper
 import matt.fx.control.wrapper.control.value.HasWritableValue
 import matt.fx.graphics.wrapper.ET

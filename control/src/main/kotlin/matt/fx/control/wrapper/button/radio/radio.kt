@@ -2,7 +2,7 @@ package matt.fx.control.wrapper.button.radio
 
 import javafx.scene.control.RadioButton
 import matt.fx.control.inter.select.SelectableValue
-import matt.fx.control.tfx.control.ToggleMechanism
+import matt.fx.control.toggle.mech.ToggleMechanism
 import matt.fx.control.wrapper.button.toggle.ToggleButtonWrapper
 import matt.fx.control.wrapper.control.value.HasWritableValue
 import matt.fx.graphics.wrapper.ET

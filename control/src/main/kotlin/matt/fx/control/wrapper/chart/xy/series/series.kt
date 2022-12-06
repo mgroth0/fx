@@ -3,6 +3,7 @@ package matt.fx.control.wrapper.chart.xy.series
 import javafx.scene.Node
 import javafx.scene.paint.Color
 import javafx.scene.shape.Path
+import matt.collect.list.downSampled
 import matt.collect.weak.WeakMap
 import matt.fx.control.wrapper.chart.line.highperf.relinechart.xy.XYChartForPackagePrivateProps.Data
 import matt.fx.control.wrapper.chart.line.highperf.relinechart.xy.XYChartForPackagePrivateProps.Series
@@ -16,6 +17,7 @@ import matt.model.op.convert.Converter
 import matt.model.op.convert.NullToBlankStringConverter
 import matt.obs.col.olist.MutableObsList
 import matt.obs.listen.Listener
+import matt.obs.prop.BindableProperty
 
 fun <X, Y> List<Data<X, Y>>.toSeries() = SeriesWrapper<X, Y>().apply {
   data.setAll(this@toSeries)
@@ -51,6 +53,8 @@ class SeriesWrapper<X, Y>(val series: Series<X, Y> = Series<X, Y>()) {
   }
   var data by dataProperty
 
+
+
   fun setTheData(theData: MutableObsList<Data<X, Y>>) {
 	data = theData
   }
@@ -62,61 +66,39 @@ class SeriesWrapper<X, Y>(val series: Series<X, Y> = Series<X, Y>()) {
   var node by nodeProperty
 
   private var strokeListener: Listener? = null
-  private var strokeThatWasSet: Color? = null
-
-
-  var stroke: Color
-	get() = strokeThatWasSet ?: error("no stroke was set")
-	set(value) {
-
+  val strokeProp = BindableProperty<Color?>(null).apply {
+	onChange {
 	  fun update(node: Node) {
-		//		println("updating ${node}")
-		//		val l = node.lookup(".chart-series-line")
-		//
-		//		println("lookup=$l setting color to ${value.hex()}")
-		//		/*l?.style = "-fx-stroke: ${value.hex()}"*/
-		//		if (l != null) {
-		//		  (l as Path).apply {
-		//			runLater {
-		//			  stroke = value
-		//			  fill = value
-		//			  strokeWidth = 100.0
-		//			}
-		//		  }
-		//		}
 		(node as Path).apply {
-		  stroke = value
+		  stroke = it
 		  strokeProperty().addListener { _, _, n ->
 			/*yup need to do it this way so javafx cannot get their colors in*/
-			if (n != value) {
-			  stroke = value
+			if (n != it) {
+			  stroke = it
 			}
 		  }
-
-		  //		  runLater { /*removing this runLater breaks this*/
-		  //			runLater { /*wow... i need 2. this is filthy*/
-		  //			  stroke = value
-		  //			}
-		  //		  }
-
-
 		}
 	  }
-
 	  strokeListener?.let(nodeProperty::removeListener)
-
 	  nodeProperty.onNonNullChange {
 		update(it)
 	  }
 	  node?.let(::update)
-	  strokeThatWasSet = value
-	  //	  require(chart != null) {
-	  //		"""
-	  //		this stuff must be done AFTER series are added to chart, or else NPE
-	  //		see: https://stackoverflow.com/questions/11153370/how-to-set-specific-color-to-javafx-xychart-series
-	  //	  """.trimIndent()
-	  //	  }
-	  //	  node!!.lookup(".chart-series-line").style = "-fx-stroke: ${value.hex()}"
 	}
+  }
+
+  var stroke by strokeProp
+
+
+  val downsampled by lazy {
+	val ds = SeriesWrapper<X, Y>()
+	data.onChange {
+	  ds.data.setAll(data.downSampled())
+	}
+	ds.nameProperty.bind(nameProperty)
+	ds.strokeProp.bind(strokeProp)
+	ds
+  }
+
 
 }

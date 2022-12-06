@@ -1,40 +1,33 @@
 package matt.fx.node.proto.annochart
 
-import javafx.geometry.Insets
-import javafx.scene.layout.Border
-import javafx.scene.layout.Pane
 import javafx.scene.layout.Region
 import javafx.scene.layout.StackPane
-import javafx.scene.paint.Color
-import matt.async.safe.with
+import matt.collect.map.lazyMap
 import matt.fx.control.wrapper.chart.axis.value.number.NumberAxisWrapper
 import matt.fx.control.wrapper.chart.axis.value.number.tickconfig.showBestTicksIn
+import matt.fx.control.wrapper.chart.line.ChartLocater
 import matt.fx.control.wrapper.chart.line.LineChartWrapper
-import matt.fx.control.wrapper.chart.line.highperf.relinechart.xy.XYChartForPackagePrivateProps.Data
+import matt.fx.control.wrapper.chart.line.NumericChartLocater
 import matt.fx.control.wrapper.chart.scatter.ScatterChartWrapper
 import matt.fx.control.wrapper.chart.xy.series.SeriesWrapper
-import matt.fx.control.wrapper.label.label
-import matt.fx.graphics.fxthread.ensureInFXThreadInPlace
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NW
 import matt.fx.graphics.wrapper.node.attachTo
-import matt.fx.graphics.wrapper.node.line.line
-import matt.fx.graphics.wrapper.node.shape.circle.circle
-import matt.fx.graphics.wrapper.node.shape.rect.RectangleWrapper
-import matt.fx.graphics.wrapper.node.shape.rect.rectangle
-import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
-import matt.fx.graphics.wrapper.pane.grid.gridpane
 import matt.fx.graphics.wrapper.region.RegionWrapperImpl
-import matt.fx.graphics.wrapper.text.TextWrapper
-import matt.fx.graphics.wrapper.text.text
+import matt.fx.node.proto.annochart.AnnotateableChart.VisibleDataMode.DownSampled
+import matt.fx.node.proto.annochart.AnnotateableChart.VisibleDataMode.Source
+import matt.fx.node.proto.annochart.annopane.Annotateable
+import matt.fx.node.proto.annochart.annopane.AnnotationPane
+import matt.fx.node.proto.annochart.inner.applyBounds
+import matt.fx.node.proto.annochart.inner.calcAutoBounds
 import matt.lang.go
-import matt.lang.setAll
-import matt.log.warn.warnOnce
 import matt.model.data.mathable.MathAndComparable
-import matt.obs.col.change.mirror
+import matt.model.data.xyz.Dim2D
+import matt.obs.col.olist.ObsList
 import matt.obs.col.olist.basicMutableObservableListOf
-import matt.obs.math.double.op.div
-import matt.obs.math.double.op.times
+import matt.obs.col.olist.cat.concatenatedTo
+import matt.obs.col.olist.mappedlist.toMappedList
+import matt.obs.prop.BindableProperty
 
 
 fun <X: MathAndComparable<X>, Y: MathAndComparable<Y>> ET.annoChart(
@@ -46,7 +39,7 @@ fun <X: MathAndComparable<X>, Y: MathAndComparable<Y>> ET.annoChart(
 
 open class AnnotateableChart<X: MathAndComparable<X>, Y: MathAndComparable<Y>> private constructor(
   stack: StackPane, xAxis: NumberAxisWrapper<X>, yAxis: NumberAxisWrapper<Y>, scatter: Boolean
-): RegionWrapperImpl<Region, NW>(stack) {
+): RegionWrapperImpl<Region, NW>(stack), Annotateable<X, Y>, ChartLocater<X,Y> {
 
   constructor(
 	xAxis: NumberAxisWrapper<X>, yAxis: NumberAxisWrapper<Y>, scatter: Boolean = false
@@ -61,11 +54,6 @@ open class AnnotateableChart<X: MathAndComparable<X>, Y: MathAndComparable<Y>> p
 	configureForHighPerformance()
   }
 
-  /*  val createSymbolsProp by lazy {
-	  chart.createSymbolsProperty
-	}
-	var createSymbols by chart::createSymbols*/
-
   val title = chart.titleProperty
 
   val xAxis = chart.xAxis as NumberAxisWrapper
@@ -74,12 +62,37 @@ open class AnnotateableChart<X: MathAndComparable<X>, Y: MathAndComparable<Y>> p
   var animated by chart::animated
   val horizontalZeroLineVisibleProperty get() = chart.horizontalZeroLineVisibleProperty
   val verticalZeroLineVisibleProperty get() = chart.verticalZeroLineVisibleProperty
-
-  private val annotationLayer = PaneWrapperImpl<Pane, NW>(Pane())
-
   private val annotationSeries = basicMutableObservableListOf<SeriesWrapper<X, Y>>()
-
   val realData = basicMutableObservableListOf<SeriesWrapper<X, Y>>()
+  private val annoPane = AnnotationPane(
+	NumericChartLocater(
+	  lineChart = chart,
+	  xAxis = xAxis,
+	  yAxis = yAxis
+	),
+	chartBoundsProp = chart.layoutBoundsProperty,
+	chartHeightProp = chart.heightProperty,
+	chartWidthProp = chart.widthProperty,
+	xAxis = xAxis,
+	yAxis = yAxis,
+	annotationSeries = annotationSeries,
+	realData = realData
+  )
+
+  override fun layoutXOf(x: X) = annoPane.layoutXOf(x)
+  override fun layoutYOf(y: Y) = annoPane.layoutYOf(y)
+
+  override fun staticRectangle(minX: X, maxX: X) = annoPane.staticRectangle(minX, maxX)
+  override fun dynamicRectangle(minX: X, maxX: X) = annoPane.dynamicRectangle(minX, maxX)
+  override fun dynamicVerticalLine(x: X) = annoPane.dynamicVerticalLine(x)
+  override fun staticText(minX: X, text: String) = annoPane.staticText(minX, text)
+  override fun dynamicText(minX: X, text: String) = annoPane.dynamicText(minX, text)
+  override fun staticVerticalLine(x: X) = annoPane.staticVerticalLine(x)
+
+
+  private val downSampledRealData by lazy {
+	realData.toMappedList { it.downsampled }
+  }
 
 
   fun showBestTicks() {
@@ -88,230 +101,63 @@ open class AnnotateableChart<X: MathAndComparable<X>, Y: MathAndComparable<Y>> p
   }
 
 
-  init {
-	stack.children.addAll(chart.node, annotationLayer.node)
-
-	/*javaFX has an INTERNAL bug, which I found (logic is bad in XYChart line 131) which means I have to make changes one at a time*/
-	var annoPartStart = 0
-	var annoPartEndExclusive = annotationSeries.size
-	var realPartStart = annotationSeries.size
-	var realPartEndExclusive = annotationSeries.size + realData.size
-
-	val sem = java.util.concurrent.Semaphore(1)
-
-	chart.data.setAll(annotationSeries + realData)
-
-	annotationSeries.onChange {
-	  sem.with {
-		chart.data.subList(annoPartStart, annoPartEndExclusive).mirror(it)
-		annoPartStart = 0
-		annoPartEndExclusive = annotationSeries.size
-		realPartStart = annotationSeries.size
-		realPartEndExclusive = annotationSeries.size + realData.size
-	  }
-	}
-	realData.onChange {
-	  sem.with {
-		chart.data.subList(realPartStart, realPartEndExclusive).mirror(it)
-		annoPartStart = 0
-		annoPartEndExclusive = annotationSeries.size
-		realPartStart = annotationSeries.size
-		realPartEndExclusive = annotationSeries.size + realData.size
-	  }
-	}
-
-	/*	fun updateData() {
-		  //		  sem.acquire()
-
-		  //
-		  //		  chart.data.clear()
-		  //		  runLater {
-		  chart.data.setAll(annotationSeries + realData)
-		  //			sem.release()
-		  //		  }
-		}
-		updateData()
-		listOf(annotationSeries, realData).forEach {
-		  it.onChange {
-			updateData()
-		  }
-		}*/
+  enum class VisibleDataMode {
+	Source, DownSampled
   }
+
+  private val dataViews = lazyMap<VisibleDataMode, ObsList<SeriesWrapper<X, Y>>>() {
+	when (it) {
+	  Source      -> annotationSeries.concatenatedTo(realData)
+	  DownSampled -> annotationSeries.concatenatedTo(downSampledRealData)
+	}
+  }
+
+  @Suppress("MemberVisibilityCanBePrivate") val visibleDataModeProp = BindableProperty(Source).apply {
+	chart.data.bind(dataViews[value])
+	onChange {
+	  chart.data.bind(dataViews[it])
+	}
+  }
+  var visibleDataMode by visibleDataModeProp
+
+  init {
+	stack.children.addAll(chart.node, annoPane.annotationLayer.node)
+  }
+
 
   fun autoRangeBothAxes() {
 	autoRangeY()
 	autoRangeX()
   }
 
-  private inner class BoundCalcResult(
-	val lowerBound: Y, val upperBound: Y
-  )
 
+  private fun yValues() = realData.asSequence().flatMap { it.data.map { it.yValue } }
+  private fun xValues() = realData.asSequence().flatMap { it.data.map { it.xValue } }
   fun autoRangeY(
 	forceMin: Y? = null,
   ) {
-	val mn = realData.mapNotNull { it.data.minOfOrNull { it.yValue } }.minOrNull()
-	val mx = realData.mapNotNull { it.data.maxOfOrNull { it.yValue } }.maxOrNull()
-	val r = run {
-	  if (mn == null || mx == null) return@run null
-	  val range = mx - mn
-	  val margin = range*0.1
-	  BoundCalcResult(
-		lowerBound = forceMin ?: (mn - margin), upperBound = mx + margin
-	  )
-	}
-	r?.go {
-	  ensureInFXThreadInPlace {
-		yAxis.apply {
-		  lowerBound = r.lowerBound
-		  upperBound = r.upperBound
-		}
-	  }
-	}
+	calcAutoBounds(
+	  mn = yValues().minOrNull(), mx = yValues().maxOrNull(), forceMin = forceMin
+	)?.go(yAxis::applyBounds)
   }
 
-  fun autoRangeX() {
-	val mn = realData.mapNotNull { it.data.minOfOrNull { it.xValue } }.minOrNull()
-	val mx = realData.mapNotNull { it.data.maxOfOrNull { it.xValue } }.maxOrNull()
-	if (mn == null || mx == null) return
-	val range = mx - mn
-	val margin = range*0.1
-	xAxis.apply {
-	  lowerBound = mn - margin
-	  upperBound = mx + margin
-	}
+  fun autoRangeX(forceMin: X? = null) {
+	calcAutoBounds(
+	  mn = xValues().minOrNull(), mx = xValues().maxOrNull(), forceMin = forceMin
+	)?.go(xAxis::applyBounds)
   }
 
-
-  fun addLegend() {
-	annotationLayer.gridpane<NW> {
-	  border = Border.stroke(Color.WHITE)
-	  padding = Insets(8.0)
-	  layoutXProperty.bind(this@AnnotateableChart.widthProperty/2.0)
-	  layoutYProperty.bind(this@AnnotateableChart.heightProperty/2.0)
-	  this@AnnotateableChart.realData.forEach {
-		row {
-		  circle(radius = 10.0) {
-			fill = it.stroke
-		  }
-		  label(it.name) {
-			padding = Insets(5.0)
-		  }
-		}
-	  }
-	}
+  private fun autoRange(dim: Dim2D) = when (dim) {
+	Dim2D.X -> autoRangeX()
+	Dim2D.Y -> autoRangeY()
   }
+
 
   fun clearAnnotations() {
 	annotationSeries.clear()
-	annotationLayer.clear()
-  }
-
-  private val annotationColor: Color = Color.YELLOW
-
-  private val chartContent by lazy {
-	chart.node.chartContent
-  }
-
-  private val plotContent by lazy {
-	chart.node.plotContent
-  }
-  private val plotArea by lazy {
-	chart.node.plotArea
-  }
-
-  fun layoutXOf(v: X) = xAxis.displayPixelOf(v) + plotArea.boundsInParent.minX + chartContent.boundsInParent.minX
-
-  fun layoutYOf(v: Y): Double {
-	warnOnce("layoutYOf probably needs work since layoutXOf was so complicated")
-	return yAxis.displayPixelOf(v) + (yAxis.boundsInScene.minY - boundsInScene.minY)
-  }
-
-
-  fun staticRectangle(minX: X, maxX: X): RectangleWrapper {
-	require(width == annotationLayer.width)
-	require(width == chart.width)
-	val minXPixel = layoutXOf(minX)
-	val maxXPixel = layoutXOf(maxX)
-	return annotationLayer.rectangle(
-	  x = minXPixel, width = maxXPixel - minXPixel, y = 0.0, height = this@AnnotateableChart.height
-	) {
-	  heightProperty.bind(this@AnnotateableChart.heightProperty)
-	  stroke = this@AnnotateableChart.annotationColor
-	  fill = Color.TRANSPARENT
-	}
-  }
-
-  fun staticText(
-	minX: X, text: String
-  ): TextWrapper {
-	val minXPixel = layoutXOf(minX)
-	return annotationLayer.text(
-	  text
-	) {
-	  x = minXPixel
-	  yProperty.bind(this@AnnotateableChart.heightProperty*.90)
-
-	}
-  }
-
-  fun dynamicText(
-	minX: X, text: String
-  ): TextWrapper {
-	var minXPixel = layoutXOf(minX)
-	val txt = annotationLayer.text(
-	  text
-	) {
-	  x = minXPixel
-	  yProperty.bind(this@AnnotateableChart.heightProperty*.90)
-	}
-
-	fun update(tw: TextWrapper) {
-	  minXPixel = layoutXOf(minX)
-	  tw.isVisible = minXPixel >= -100 && minXPixel < annotationLayer.width + 100
-	  if (tw.isVisible) {
-		tw.x = minXPixel
-	  }
-	}
-	xAxis.upperBoundProperty.onChangeWithWeak(txt) { w, _ ->
-	  update(w)
-	}
-	yAxis.lowerBoundProperty.onChangeWithWeak(txt) { w, _ ->
-	  update(w)
-	}
-	return txt
-  }
-
-
-  fun staticVerticalLine(x: X) {
-	val xPixel = layoutXOf(x)
-	annotationLayer.line(
-	  startX = xPixel, startY = 0.0, endX = xPixel, endY = 10.0
-	) {
-	  startYProperty.bind(this@AnnotateableChart.annotationLayer.heightProperty*0.25)
-	  endYProperty.bind(this@AnnotateableChart.annotationLayer.heightProperty*0.75)
-	  stroke = this@AnnotateableChart.annotationColor
-	}
-  }
-
-  fun dynamicVerticalLine(x: X) {
-	val lineSeries = SeriesWrapper<X, Y>()
-	annotationSeries.add(lineSeries.apply {
-	  data.setAll(listOf(Data(x, yAxis.upperBound).apply {
-		yAxis.upperBoundProperty.onChangeUntilExclusive({ this !in lineSeries.data || lineSeries !in annotationSeries },
-		  {
-			yValue = it
-		  })
-	  }, Data(x, yAxis.lowerBound).apply {
-		yAxis.lowerBoundProperty.onChangeUntilExclusive({ this !in lineSeries.data || lineSeries !in annotationSeries },
-		  {
-			yValue = it
-		  })
-	  }))
-	}.apply {
-	  stroke = annotationColor
-	})
+	annoPane.clear()
   }
 
 
 }
+

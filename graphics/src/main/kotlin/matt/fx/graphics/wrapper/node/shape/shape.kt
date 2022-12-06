@@ -9,15 +9,15 @@ import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapperImpl
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.NonNullFXBackedBindableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
 
 abstract class ShapeWrapper<N: Shape>(node: N): NodeWrapperImpl<N>(node) {
-  var stroke: Paint?
-	get() = node.stroke
-	set(value) {
-	  node.stroke = value
-	}
 
-  fun strokeProperty(): ObjectProperty<Paint> = node.strokeProperty()
+  val strokeProperty by lazy {
+	node.strokeProperty().toNullableProp()
+  }
+  var stroke by strokeProperty
+
 
 
   var strokeWidth

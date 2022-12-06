@@ -12,6 +12,7 @@ import matt.fx.control.wrapper.chart.xy.series.SeriesConverter
 import matt.fx.control.wrapper.chart.xy.series.SeriesWrapper
 import matt.fx.control.wrapper.wrapped.wrapped
 import matt.hurricanefx.eye.wrapper.obs.collect.createMutableWrapper
+import matt.hurricanefx.eye.wrapper.obs.obsval.prop.NonNullFXBackedBindableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.obs.col.olist.MutableObsList
 import matt.obs.col.olist.mappedlist.toSyncedList
@@ -22,7 +23,7 @@ open class XYChartWrapper<X, Y, N: XYChartForPackagePrivateProps<X, Y>>(node: N)
 
 
   val data: MutableObsList<SeriesWrapper<X, Y>> by lazy {
-	node.data.value.createMutableWrapper().toSyncedList(SeriesConverter<X, Y>())
+	node.data.value.createMutableWrapper().toSyncedList(SeriesConverter())
   }
 
 
@@ -43,8 +44,8 @@ open class XYChartWrapper<X, Y, N: XYChartForPackagePrivateProps<X, Y>>(node: N)
   //	}
 
 
-  val horizontalZeroLineVisibleProperty by lazy { node.horizontalZeroLineVisibleProperty().toNonNullableProp() }
-  val verticalZeroLineVisibleProperty by lazy { node.verticalZeroLineVisibleProperty().toNonNullableProp() }
+  val horizontalZeroLineVisibleProperty: NonNullFXBackedBindableProp<Boolean> by lazy { node.horizontalZeroLineVisibleProperty().toNonNullableProp() }
+  val verticalZeroLineVisibleProperty: NonNullFXBackedBindableProp<Boolean> by lazy { node.verticalZeroLineVisibleProperty().toNonNullableProp() }
 
   fun configureForHighPerformance() {
 	animated = false
@@ -64,6 +65,23 @@ open class XYChartWrapper<X, Y, N: XYChartForPackagePrivateProps<X, Y>>(node: N)
 	  }
 	}
   }
+
+
+  internal val chartContent by lazy {
+	node.chartContent
+  }
+
+  private val plotContent by lazy {
+	node.plotContent
+  }
+  internal val plotArea by lazy {
+	node.plotArea
+  }
+
+
+  val dataItemChangedAnimDur = node.dataItemChangedAnimDur
+  val dataItemChangedAnimInterp = node.dataItemChangedAnimInterp
+
 
 }
 
