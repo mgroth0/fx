@@ -34,6 +34,7 @@ interface Annotateable<X: MathAndComparable<X>, Y: MathAndComparable<Y>> {
   fun dynamicVerticalLine(x: X)
   fun dynamicText(minX: X, text: String): TextWrapper
   fun staticVerticalLine(x: X): LineWrapper
+  fun addLegend()
 }
 
 class AnnotationPane<X: MathAndComparable<X>, Y: MathAndComparable<Y>>(
@@ -175,7 +176,7 @@ class AnnotationPane<X: MathAndComparable<X>, Y: MathAndComparable<Y>>(
   }
 
 
-  fun addLegend() {
+  override fun addLegend() {
 	annotationLayer.gridpane<NW> {
 	  border = Border.stroke(Color.WHITE)
 	  padding = Insets(8.0)

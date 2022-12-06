@@ -39,7 +39,7 @@ fun <X: MathAndComparable<X>, Y: MathAndComparable<Y>> ET.annoChart(
 
 open class AnnotateableChart<X: MathAndComparable<X>, Y: MathAndComparable<Y>> private constructor(
   stack: StackPane, xAxis: NumberAxisWrapper<X>, yAxis: NumberAxisWrapper<Y>, scatter: Boolean
-): RegionWrapperImpl<Region, NW>(stack), Annotateable<X, Y>, ChartLocater<X,Y> {
+): RegionWrapperImpl<Region, NW>(stack), Annotateable<X, Y>, ChartLocater<X, Y> {
 
   constructor(
 	xAxis: NumberAxisWrapper<X>, yAxis: NumberAxisWrapper<Y>, scatter: Boolean = false
@@ -88,6 +88,7 @@ open class AnnotateableChart<X: MathAndComparable<X>, Y: MathAndComparable<Y>> p
   override fun staticText(minX: X, text: String) = annoPane.staticText(minX, text)
   override fun dynamicText(minX: X, text: String) = annoPane.dynamicText(minX, text)
   override fun staticVerticalLine(x: X) = annoPane.staticVerticalLine(x)
+  override fun addLegend() = annoPane.addLegend()
 
 
   private val downSampledRealData by lazy {
