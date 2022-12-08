@@ -1,21 +1,29 @@
 package matt.fx.control
 
 import javafx.scene.Node
+import javafx.scene.control.Alert.AlertType.CONFIRMATION
+import javafx.scene.control.ButtonType
 import javafx.scene.control.TreeTableView
 import javafx.scene.input.ContextMenuEvent
 import javafx.scene.layout.ColumnConstraints
 import javafx.scene.layout.Pane
 import javafx.scene.layout.RowConstraints
+import matt.fx.control.tfx.dialog.alert
+import matt.fx.control.win.interact.dialog
 import matt.fx.control.wrapper.checkbox.CheckBoxWrapper
 import matt.fx.control.wrapper.control.tab.TabWrapper
+import matt.fx.control.wrapper.control.text.field.textfield
 import matt.fx.control.wrapper.scroll.ScrollPaneWrapper
+import matt.fx.graphics.fxthread.ensureInFXThreadInPlace
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapperImpl
+import matt.fx.graphics.wrapper.text.text
 import matt.hurricanefx.eye.mtofx.createROFXPropWrapper
 import matt.lang.NEVER
 import matt.log.warn.warn
 import matt.obs.prop.BindableProperty
 import matt.obs.prop.Var
+import matt.service.action.ActionAbilitiesService
 
 
 interface Scrolls {
@@ -88,6 +96,29 @@ class TreeTableTreeView<T>(val table: Boolean): TreeTableView<T>() {
 	  header.prefHeight = 0.0
 	  header.maxHeight = 0.0
 	  header.isVisible = false
+	}
+  }
+}
+
+
+object FXActionAbilitiesService: ActionAbilitiesService {
+  override fun confirm(s: String) {
+	ensureInFXThreadInPlace {
+	  alert(CONFIRMATION, s) {
+		if (it != ButtonType.OK) error("confirmation denied")
+	  }
+	}
+  }
+
+  override fun input(prompt: String): String {
+	return ensureInFXThreadInPlace {
+	  dialog<String> {
+		text(prompt)
+		val t = textfield()
+		setResultConverter {
+		  t.text
+		}
+	  } ?: NEVER
 	}
   }
 }
