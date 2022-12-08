@@ -9,6 +9,8 @@ import javafx.scene.control.Alert.AlertType.INFORMATION
 import javafx.scene.control.Alert.AlertType.WARNING
 import javafx.scene.control.ButtonType
 import javafx.scene.control.Dialog
+import javafx.scene.input.KeyCode
+import javafx.scene.input.KeyEvent
 import javafx.stage.DirectoryChooser
 import javafx.stage.FileChooser
 import javafx.stage.Modality
@@ -67,7 +69,8 @@ fun asyncAlert(
   vararg buttons: ButtonType,
   owner: WindowWrapper<*>? = WindowWrapper.guessMainStage(),
   title: String? = null,
-  op: Alert.() -> Unit = {}
+  closeOnEscape: Boolean = true,
+  op: Alert.()->Unit = {}
 ): Run<ButtonType> {
   val result = LoadedValueSlot<ButtonType>()
   val run = ResultRun(result)
@@ -77,6 +80,11 @@ fun asyncAlert(
   owner?.also { alert.initOwner(it.node) }
   alert.initModality(Modality.NONE)
   alert.show()
+  if (!closeOnEscape) {
+	alert.dialogPane.scene.window.addEventFilter(KeyEvent.KEY_PRESSED) {
+	  if (it.code == KeyCode.ESCAPE) it.consume()
+	}
+  }
   alert.setOnHidden {
 	alert.result?.let {
 	  result.putLoadedValue(it)
@@ -134,7 +142,7 @@ fun chooseFile(
   filters: Array<out FileChooser.ExtensionFilter>,
   initialDirectory: MFile? = null,
   mode: FileChooserMode = Single,
-  owner: WindowWrapper<*>?= WindowWrapper.guessMainStage(),
+  owner: WindowWrapper<*>? = WindowWrapper.guessMainStage(),
   op: FileChooser.()->Unit = {}
 ): List<MFile> {
   val chooser = FileChooser()

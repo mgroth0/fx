@@ -32,6 +32,7 @@ import javafx.scene.layout.HBox
 import javafx.scene.layout.Priority
 import javafx.scene.layout.VBox
 import javafx.stage.FileChooser
+import matt.collect.itr.recurse.recurse
 import matt.file.MFile
 import matt.file.construct.toMFile
 import matt.fx.graphics.fxthread.ts.nonBlockingFXWatcher
@@ -41,6 +42,7 @@ import matt.fx.graphics.wrapper.EventTargetWrapper
 import matt.fx.graphics.wrapper.SingularEventTargetWrapper
 import matt.fx.graphics.wrapper.node.parent.ParentWrapper
 import matt.fx.graphics.wrapper.node.parent.parent
+import matt.fx.graphics.wrapper.region.RegionWrapper
 import matt.fx.graphics.wrapper.scene.SceneWrapper
 import matt.fx.graphics.wrapper.stage.StageWrapper
 import matt.fx.graphics.wrapper.style.StyleableWrapper
@@ -61,6 +63,11 @@ import matt.obs.prop.ValProp
 import matt.obs.prop.Var
 import kotlin.contracts.InvocationKind.EXACTLY_ONCE
 import kotlin.contracts.contract
+
+
+inline fun <reified T: NodeWrapper> NW.findRecursivelyFirstOrNull(): T? {
+  return recurse { (it as? RegionWrapper<*>)?.children ?: listOf() }.filterIsInstance<T>().firstOrNull()
+}
 
 
 typealias NW = NodeWrapper

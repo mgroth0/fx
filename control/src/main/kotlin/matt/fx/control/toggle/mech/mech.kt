@@ -69,11 +69,12 @@ class ToggleMechanism<V: Any>() {
 
   init {
 	val rBlocker = RecursionBlocker()
-	selectedToggle.onChange {
-	  it?.selectedProperty?.value = true
-	  require(it == null || it in derefToggles())
+	selectedToggle.onChangeWithOld { old, new ->
+	  old?.selectedProperty?.value = false
+	  new?.selectedProperty?.value = true
+	  require(new == null || new in derefToggles())
 	  rBlocker.with {
-		selectedValue.value = it?.value
+		selectedValue.value = new?.value
 	  }
 	}
 	selectedValue.onChange { newVal ->
