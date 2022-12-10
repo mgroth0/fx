@@ -6,6 +6,7 @@ package matt.fx.control.toggle.mech
 
 import matt.collect.weak.WeakMap
 import matt.fx.control.inter.select.SelectableValue
+import matt.fx.control.wrapper.button.radio.RadioButtonWrapper
 import matt.fx.control.wrapper.button.radio.radiobutton
 import matt.fx.graphics.wrapper.FXNodeWrapperDSL
 import matt.fx.graphics.wrapper.node.NW
@@ -32,7 +33,8 @@ fun <V: Any> NW.toggles(
 
 @FXNodeWrapperDSL class ToggleDSL<V: Any>(private val nw: NodeWrapper) {
   internal val mech = ToggleMechanism<V>()
-  fun radio(text: String, v: V) = nw.radiobutton(text = text, group = mech, value = v)
+  fun radio(text: String, v: V, op: RadioButtonWrapper.()->Unit = {}) =
+	nw.radiobutton(text = text, group = mech, value = v, op = op)
 }
 
 

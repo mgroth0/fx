@@ -10,8 +10,8 @@ import matt.obs.bind.smartBind
 import matt.obs.prop.Var
 
 fun ET.checkbox(
-  text: String? = null, property: Var<Boolean>? = null, op: CheckBoxWrapper.()->Unit = {}
-) = CheckBoxWrapper().apply { this.text = text!! }.attachTo(this, op) {
+  text: String = "", property: Var<Boolean>? = null, op: CheckBoxWrapper.()->Unit = {}
+) = CheckBoxWrapper().apply { this.text = text }.attachTo(this, op) {
   if (property != null) it.bind(property)
 }
 
