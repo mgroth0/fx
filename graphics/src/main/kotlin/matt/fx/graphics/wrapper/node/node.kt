@@ -686,7 +686,13 @@ fun <T: NodeWrapper> T.visibleWhen(predicate: ObsB) = apply {
   visibleProperty.bind(predicate)
 }
 
+fun <T: NodeWrapper> T.visibleAndManagedWhen(predicate: ObsB) = apply {
+
+  visibleAndManagedProp.bind(predicate)
+}
+
 fun <T: NodeWrapper> T.visibleWhen(expr: ()->ObsB): T = visibleWhen(expr())
+fun <T: NodeWrapper> T.visibleAndManagedWhen(expr: ()->ObsB): T = visibleAndManagedWhen(expr())
 
 fun <T: NodeWrapper> T.hiddenWhen(expr: ()->ObsB): T = hiddenWhen(expr())
 
