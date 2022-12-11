@@ -13,6 +13,7 @@ import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNullableROProp
 import matt.lang.setAll
+import matt.log.SystemOutLogger
 import matt.model.op.convert.Converter
 import matt.model.op.convert.NullToBlankStringConverter
 import matt.obs.col.olist.MutableObsList
@@ -54,7 +55,6 @@ class SeriesWrapper<X, Y>(val series: Series<X, Y> = Series<X, Y>()) {
   var data by dataProperty
 
 
-
   fun setTheData(theData: MutableObsList<Data<X, Y>>) {
 	data = theData
   }
@@ -67,14 +67,14 @@ class SeriesWrapper<X, Y>(val series: Series<X, Y> = Series<X, Y>()) {
 
   private var strokeListener: Listener? = null
   val strokeProp = BindableProperty<Color?>(null).apply {
-	onChange {
+	strokeListener = onChange {
 	  fun update(node: Node) {
 		(node as Path).apply {
 		  stroke = it
 		  strokeProperty().addListener { _, _, n ->
 			/*yup need to do it this way so javafx cannot get their colors in*/
-			if (n != it) {
-			  stroke = it
+			if (n != value) {
+			  stroke = value
 			}
 		  }
 		}

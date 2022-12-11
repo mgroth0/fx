@@ -8,6 +8,7 @@ import matt.fx.graphics.wrapper.EventTargetWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.obs.prop.Var
 
+val MONO_FONT by lazy { Font.font("monospaced") }
 
 interface TextLike: EventTargetWrapper {
   val textProperty: Var<String?>
@@ -25,7 +26,7 @@ interface TextLike: EventTargetWrapper {
 	}
 
   fun monospace() {
-	font = Font.font("monospaced")
+	font = MONO_FONT
   }
 
 }

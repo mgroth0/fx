@@ -31,7 +31,7 @@ interface Annotateable<X: MathAndComparable<X>, Y: MathAndComparable<Y>> {
   fun staticRectangle(minX: X, maxX: X): RectangleWrapper
   fun dynamicRectangle(minX: X, maxX: X): RectangleWrapper
   fun staticText(minX: X, text: String): TextWrapper
-  fun dynamicVerticalLine(x: X)
+  fun dynamicVerticalLine(x: X): AnnotationPane<X,Y>.DynamicVerticalLine
   fun dynamicText(minX: X, text: String): TextWrapper
   fun staticVerticalLine(x: X): LineWrapper
   fun addLegend()
@@ -46,7 +46,7 @@ class AnnotationPane<X: MathAndComparable<X>, Y: MathAndComparable<Y>>(
   private val yAxis: NumberAxisWrapper<Y>,
   private val annotationSeries: MutableObsList<SeriesWrapper<X, Y>>,
   private val realData: MutableObsList<SeriesWrapper<X, Y>>
-): ChartLocater<X, Y> by loc, Annotateable<X,Y> {
+): ChartLocater<X, Y> by loc, Annotateable<X, Y> {
 
   val chartBounds by chartBoundsProp
 
@@ -157,7 +157,28 @@ class AnnotationPane<X: MathAndComparable<X>, Y: MathAndComparable<Y>>(
 	}
   }
 
-  override fun dynamicVerticalLine(x: X) {
+  inner class DynamicVerticalLine(private val lineSeries: SeriesWrapper<X, Y>) {
+	var x: X
+	  get() = lineSeries.data.first().xValue
+	  set(value) {
+		lineSeries.data.forEach {
+		  it.xValue = value
+		}
+	  }
+	var visible get() = lineSeries in annotationSeries
+	  set(value) {
+		if (value) {
+		  if (lineSeries !in annotationSeries) {
+			annotationSeries += lineSeries
+		  }
+		}  else {
+		  annotationSeries -= lineSeries
+		}
+	  }
+	val stroke = lineSeries.strokeProp
+  }
+
+  override fun dynamicVerticalLine(x: X): DynamicVerticalLine {
 	val lineSeries = SeriesWrapper<X, Y>()
 	annotationSeries.add(lineSeries.apply {
 	  val points = listOf(
@@ -173,6 +194,7 @@ class AnnotationPane<X: MathAndComparable<X>, Y: MathAndComparable<Y>>(
 	}.apply {
 	  stroke = Color.YELLOW
 	})
+	return DynamicVerticalLine(lineSeries)
   }
 
 
