@@ -9,6 +9,7 @@ import javafx.event.Event
 import javafx.event.EventHandler
 import javafx.event.EventType
 import javafx.geometry.Bounds
+import javafx.geometry.Insets
 import javafx.geometry.Point3D
 import javafx.scene.CacheHint
 import javafx.scene.Cursor
@@ -399,7 +400,7 @@ interface NodeWrapper: EventTargetWrapper, StyleableWrapper {
   var hgrow: Priority?
 	get() = HBox.getHgrow(this.node)
 	set(value) {
-	  val toSet = mutableSetOf<NodeWrapper>(this)
+	  val toSet = mutableSetOf(this)
 	  var toSearch = layoutProxies.toSet()
 	  do {
 		toSet += toSearch
@@ -412,7 +413,7 @@ interface NodeWrapper: EventTargetWrapper, StyleableWrapper {
   var vgrow: Priority?
 	get() = VBox.getVgrow(this.node)
 	set(value) {
-	  val toSet = mutableSetOf<NodeWrapper>(this)
+	  val toSet = mutableSetOf(this)
 	  var toSearch = layoutProxies.toSet()
 	  do {
 		toSet += toSearch
@@ -420,6 +421,33 @@ interface NodeWrapper: EventTargetWrapper, StyleableWrapper {
 	  } while (toSearch.isNotEmpty())
 	  toSet.forEach {
 		VBox.setVgrow(it.node, value)
+	  }
+	}
+
+  var hMargin: Insets?
+	get() = HBox.getMargin(this.node)
+	set(value) {
+	  val toSet = mutableSetOf(this)
+	  var toSearch = layoutProxies.toSet()
+	  do {
+		toSet += toSearch
+		toSearch = toSearch.flatMap { it.layoutProxies }.filter { it !in toSet }.toSet()
+	  } while (toSearch.isNotEmpty())
+	  toSet.forEach {
+		HBox.setMargin(it.node, value)
+	  }
+	}
+  var vMargin: Insets?
+	get() = VBox.getMargin(this.node)
+	set(value) {
+	  val toSet = mutableSetOf(this)
+	  var toSearch = layoutProxies.toSet()
+	  do {
+		toSet += toSearch
+		toSearch = toSearch.flatMap { it.layoutProxies }.filter { it !in toSet }.toSet()
+	  } while (toSearch.isNotEmpty())
+	  toSet.forEach {
+		VBox.setMargin(it.node, value)
 	  }
 	}
 
@@ -479,14 +507,12 @@ interface NodeWrapper: EventTargetWrapper, StyleableWrapper {
 //}
 abstract class NodeWrapperImpl<out N: Node>(
   node: N
-): SingularEventTargetWrapper<N>(node),
-   StyleableWrapper by object: StyleableWrapperImpl(node) {
-	 override fun setTheStyle(value: String) {
-	   node.style = value
-	   node.style
-	 }
-   },
-   NodeWrapper {
+): SingularEventTargetWrapper<N>(node), StyleableWrapper by object: StyleableWrapperImpl(node) {
+  override fun setTheStyle(value: String) {
+	node.style = value
+	node.style
+  }
+}, NodeWrapper {
 
 
   final override val sceneProperty by lazy {
@@ -495,8 +521,7 @@ abstract class NodeWrapperImpl<out N: Node>(
 	)
   }
 
-  override val scene by lazyDelegate {
-	/*lazy because there is an issue where the inner mechanics of this property causes the wrong scene wrapper to be built during the SceneWrapper's initialization*/
+  override val scene by lazyDelegate {	/*lazy because there is an issue where the inner mechanics of this property causes the wrong scene wrapper to be built during the SceneWrapper's initialization*/
 	sceneProperty
   }
 
@@ -583,9 +608,7 @@ inline fun <T: NodeWrapper> T.attachTo(parent: EventTargetWrapper, op: T.()->Uni
  * Because the framework sometimes needs to setup the node, another lambda can be provided
  */
 inline fun <T: NodeWrapper> T.attachTo(
-  parent: EventTargetWrapper,
-  after: T.()->Unit,
-  before: (T)->Unit
+  parent: EventTargetWrapper, after: T.()->Unit, before: (T)->Unit
 ): T {
   contract {
 	callsInPlace(before, EXACTLY_ONCE)
@@ -598,13 +621,11 @@ inline fun <T: NodeWrapper> T.attachTo(
 fun NodeWrapper.setOnDoubleClick(filter: Boolean = false, action: (MouseEvent)->Unit) {
   if (filter) {
 	addEventFilter(MouseEvent.MOUSE_CLICKED) {
-	  if (it.clickCount == 2)
-		action(it)
+	  if (it.clickCount == 2) action(it)
 	}
   } else {
 	setOnMouseClicked {
-	  if (it.clickCount == 2)
-		action(it)
+	  if (it.clickCount == 2) action(it)
 	}
   }
 
@@ -614,13 +635,11 @@ fun NodeWrapper.setOnDoubleClick(filter: Boolean = false, action: (MouseEvent)->
 fun NodeWrapper.onLeftClick(clickCount: Int = 1, filter: Boolean = false, action: (MouseEvent)->Unit) {
   if (filter) {
 	addEventFilter(MouseEvent.MOUSE_CLICKED) {
-	  if (it.clickCount == clickCount && it.button === MouseButton.PRIMARY)
-		action(it)
+	  if (it.clickCount == clickCount && it.button === MouseButton.PRIMARY) action(it)
 	}
   } else {
 	setOnMouseClicked {
-	  if (it.clickCount == clickCount && it.button === MouseButton.PRIMARY)
-		action(it)
+	  if (it.clickCount == clickCount && it.button === MouseButton.PRIMARY) action(it)
 	}
   }
 }
@@ -628,13 +647,11 @@ fun NodeWrapper.onLeftClick(clickCount: Int = 1, filter: Boolean = false, action
 fun NodeWrapper.onRightClick(clickCount: Int = 1, filter: Boolean = false, action: (MouseEvent)->Unit) {
   if (filter) {
 	addEventFilter(MouseEvent.MOUSE_CLICKED) {
-	  if (it.clickCount == clickCount && it.button === MouseButton.SECONDARY)
-		action(it)
+	  if (it.clickCount == clickCount && it.button === MouseButton.SECONDARY) action(it)
 	}
   } else {
 	setOnMouseClicked {
-	  if (it.clickCount == clickCount && it.button === MouseButton.SECONDARY)
-		action(it)
+	  if (it.clickCount == clickCount && it.button === MouseButton.SECONDARY) action(it)
 	}
   }
 }
