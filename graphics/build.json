@@ -17,16 +17,6 @@
 	  "path" : ":k:obs:math"
 	},
 	{
-	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
-	  "cfg" :  "api",
-	  "path" : ":k:service"
-	},
-	{
-	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
-	  "cfg" :  "api",
-	  "path" : ":k:reflect"
-	},
-	{
 	  "type" : "matt.mstruct.bj.BuildJsonLibDependency",
 	  "cfg" :  "api",
 	  "key" :  "fx-graphics"
@@ -50,11 +40,6 @@
 	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
 	  "cfg" :  "api",
 	  "path" : ":k:hurricanefx:eye"
-	},
-	{
-	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
-	  "cfg" :  "api",
-	  "path" : ":k:async"
 	},
 	{
 	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
