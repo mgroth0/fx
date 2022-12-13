@@ -8,16 +8,6 @@
 	},
 	{
 	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
-	  "cfg" :  "api",
-	  "path" : ":k:fx:graphics"
-	},
-	{
-	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
-	  "cfg" :  "implementation",
-	  "path" : ":k:hurricanefx:eye"
-	},
-	{
-	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
 	  "cfg" :  "implementation",
 	  "path" : ":k:fx:control"
 	},
