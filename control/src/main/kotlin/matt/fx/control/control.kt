@@ -102,12 +102,21 @@ class TreeTableTreeView<T>(val table: Boolean): TreeTableView<T>() {
 
 
 object FXActionAbilitiesService: ActionAbilitiesService {
-  override fun confirm(s: String) {
-	ensureInFXThreadInPlace {
+  override fun confirm(s: String): Boolean {
+
+	return ensureInFXThreadInPlace {
+
+	  var ok = false
+
 	  alert(CONFIRMATION, s) {
-		if (it != ButtonType.OK) error("confirmation denied")
+		ok = it == ButtonType.OK
 	  }
+
+	  ok
+
 	}
+
+
   }
 
   override fun input(prompt: String): String {
