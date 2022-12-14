@@ -175,10 +175,11 @@ inline fun <reified T> jsonEditor(json: String? = null) = dialog<T?> {
 
 fun popupTextInput(
   prompt: String,
+  default: String = ""
 ) = ensureInFXThreadInPlace {
   dialog<String> {
 	text(prompt)
-	val t = textfield()
+	val t = textfield(default)
 	setResultConverter {
 	  t.text
 	}
