@@ -2,19 +2,9 @@
   "type": "matt.mstruct.bj.BasicJvmOnlyMod",
   "dependencies" : [
 	{
-	  "type" : "matt.mstruct.bj.BuildJsonLibDependency",
-	  "cfg" :  "implementation",
-	  "key" :  "fx-controls"
-	},
-	{
 	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
 	  "cfg" :  "implementation",
 	  "path" : ":k:fx:web"
-	},
-	{
-	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
-	  "cfg" :  "implementation",
-	  "path" : ":k:async"
 	},
 	{
 	  "type" : "matt.mstruct.bj.BuildJsonLibDependency",
