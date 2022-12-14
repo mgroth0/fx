@@ -86,6 +86,9 @@ value class DurationWrapper(val dur: Duration): Interpolatable<DurationWrapper>,
   fun toFXDuration() = dur.toFXDuration()
   fun toUnixTime() = dur.toUnixTime()
 
+  @Suppress("NOTHING_TO_INLINE")
+  inline fun sleep() = matt.time.dur.sleep(dur)
+
 }
 
 object MilliSecondDurationWrapperConverter: Converter<DurationWrapper, Double> {

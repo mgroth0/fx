@@ -203,6 +203,7 @@ fun WebViewWrapper.specialZooming(par: RegionWrapper<*>? = null) {
   }
   setOnZoom {
 
+
 	if (zoom == 0.0) zoom = 1.0
 
 	zoom *= it.zoomFactor

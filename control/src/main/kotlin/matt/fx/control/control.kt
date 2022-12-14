@@ -10,6 +10,7 @@ import javafx.scene.layout.Pane
 import javafx.scene.layout.RowConstraints
 import matt.fx.control.tfx.dialog.alert
 import matt.fx.control.win.interact.dialog
+import matt.fx.control.win.interact.popupTextInput
 import matt.fx.control.wrapper.checkbox.CheckBoxWrapper
 import matt.fx.control.wrapper.control.tab.TabWrapper
 import matt.fx.control.wrapper.control.text.field.textfield
@@ -119,15 +120,5 @@ object FXActionAbilitiesService: ActionAbilitiesService {
 
   }
 
-  override fun input(prompt: String): String {
-	return ensureInFXThreadInPlace {
-	  dialog<String> {
-		text(prompt)
-		val t = textfield()
-		setResultConverter {
-		  t.text
-		}
-	  } ?: NEVER
-	}
-  }
+  override fun input(prompt: String) = popupTextInput(prompt) ?: NEVER
 }

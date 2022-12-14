@@ -31,7 +31,9 @@ import matt.fx.control.win.interact.WinOwn.Auto
 import matt.fx.control.wrapper.control.button.ButtonWrapper
 import matt.fx.control.wrapper.control.button.button
 import matt.fx.control.wrapper.control.text.area.textarea
+import matt.fx.control.wrapper.control.text.field.textfield
 import matt.fx.control.wrapper.wrapped.wrapped
+import matt.fx.graphics.fxthread.ensureInFXThreadInPlace
 import matt.fx.graphics.win.bindgeom.bindGeometry
 import matt.fx.graphics.wrapper.imageview.ImageViewWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
@@ -45,8 +47,10 @@ import matt.fx.graphics.wrapper.region.RegionWrapper
 import matt.fx.graphics.wrapper.region.border.FXBorder
 import matt.fx.graphics.wrapper.region.border.solidBorder
 import matt.fx.graphics.wrapper.stage.StageWrapper
+import matt.fx.graphics.wrapper.text.text
 import matt.fx.graphics.wrapper.window.WindowWrapper
 import matt.json.prim.isValidJson
+import matt.lang.NEVER
 import matt.lang.noExceptions
 import matt.lang.nullIfExceptions
 import matt.obs.bind.binding
@@ -169,6 +173,17 @@ inline fun <reified T> jsonEditor(json: String? = null) = dialog<T?> {
   }
 }
 
+fun popupTextInput(
+  prompt: String,
+) = ensureInFXThreadInPlace {
+  dialog<String> {
+	text(prompt)
+	val t = textfield()
+	setResultConverter {
+	  t.text
+	}
+  }
+}
 
 fun <R> dialog(
   cfg: MDialog<R>.()->Unit
