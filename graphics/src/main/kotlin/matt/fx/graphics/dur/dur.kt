@@ -74,6 +74,9 @@ value class DurationWrapper(val dur: Duration): Interpolatable<DurationWrapper>,
 	return (dur*n.toDouble()).wrapped()
   }
 
+  override val abs: DurationWrapper
+	get() = this.dur.absoluteValue.wrapped()
+
 
   override fun compareTo(other: DurationWrapper): Int {
 	return dur.compareTo(other.dur)
