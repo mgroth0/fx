@@ -13,11 +13,13 @@ import matt.fx.control.wrapper.chart.xy.series.SeriesWrapper
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NW
 import matt.fx.graphics.wrapper.node.attachTo
+import matt.fx.graphics.wrapper.node.line.LineWrapper
 import matt.fx.graphics.wrapper.region.RegionWrapperImpl
 import matt.fx.node.proto.annochart.AnnotateableChart.VisibleDataMode.DownSampled
 import matt.fx.node.proto.annochart.AnnotateableChart.VisibleDataMode.Source
 import matt.fx.node.proto.annochart.annopane.Annotateable
 import matt.fx.node.proto.annochart.annopane.AnnotationPane
+import matt.fx.node.proto.annochart.annopane.AnnotationPane.DynamicHorizontalLine
 import matt.fx.node.proto.annochart.inner.applyBounds
 import matt.fx.node.proto.annochart.inner.calcAutoBounds
 import matt.lang.go
@@ -85,9 +87,11 @@ open class AnnotateableChart<X: MathAndComparable<X>, Y: MathAndComparable<Y>> p
   override fun staticRectangle(minX: X, maxX: X) = annoPane.staticRectangle(minX, maxX)
   override fun dynamicRectangle(minX: X, maxX: X) = annoPane.dynamicRectangle(minX, maxX)
   override fun dynamicVerticalLine(x: X) = annoPane.dynamicVerticalLine(x)
+  override fun dynamicHorizontalLine(y: Y) = annoPane.dynamicHorizontalLine(y)
   override fun staticText(minX: X, text: String) = annoPane.staticText(minX, text)
   override fun dynamicText(minX: X, text: String) = annoPane.dynamicText(minX, text)
   override fun staticVerticalLine(x: X) = annoPane.staticVerticalLine(x)
+  override fun staticHorizontalLine(y: Y) = annoPane.staticHorizontalLine(y)
   override fun addLegend() = annoPane.addLegend()
 
 

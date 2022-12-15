@@ -3,6 +3,7 @@ package matt.fx.control.wrapper.chart.axis.value.number.tickconfig
 import javafx.util.StringConverter
 import matt.fx.control.wrapper.chart.axis.value.moregenval.ValueAxisConverter
 import matt.fx.control.wrapper.chart.axis.value.number.NumberAxisWrapper
+import matt.fx.control.wrapper.chart.axis.value.number.tickconfig.calcticks.calcBestTicks
 import matt.fx.control.wrapper.chart.axis.value.number.tickconfig.unitless.UnitLess
 import matt.fx.control.wrapper.chart.axis.value.number.tickconfig.unitless.UnitLessConverter
 import matt.fx.control.wrapper.chart.line.LineChartWrapper
@@ -52,29 +53,7 @@ open class DefaultTickConfigurer<T: DoubleWrapper<T>>(val converter: ValueAxisCo
   private val zero = converter.convertToA(0.0)
   private val two = converter.convertToA(2.0)
 
-  override fun bestTickUnit(range: T): T {
-	if (range == zero) return default
-	else {
-	  val theAbs = converter.convertToA(kotlin.math.abs(range.asDouble))
-	  val goodDecimalAbove = if (theAbs < two) {
-		var maybeGoodDecimalAbove = converter.convertToA(1.0)
-		while (theAbs < maybeGoodDecimalAbove/5.0) {
-		  maybeGoodDecimalAbove /= 10.0
-		}
-		maybeGoodDecimalAbove
-
-	  } else {
-		var maybeGoodDecimalAbove = converter.convertToA(10.0)
-		while (theAbs > maybeGoodDecimalAbove*1.2) {
-		  maybeGoodDecimalAbove *= 10.0
-		}
-		maybeGoodDecimalAbove
-
-	  }
-	  return goodDecimalAbove/10.0
-	}
-
-  }
+  override fun bestTickUnit(range: T) = calcBestTicks(range) ?: default
 
   override fun tickLabelConverter(range: T) = labelConvert
 }
@@ -90,29 +69,7 @@ open class DefaultIntTickConfigurer<T: IntWrapper<T>>(val converter: Converter<T
   private val zero = converter.convertToA(0)
   private val two = converter.convertToA(2)
 
-  override fun bestTickUnit(range: T): T {
-	if (range == zero) return default
-	else {
-	  val theAbs = converter.convertToA(kotlin.math.abs(range.asInt))
-	  val goodDecimalAbove = if (theAbs < two) {
-		var maybeGoodDecimalAbove = converter.convertToA(1)
-		while (theAbs < maybeGoodDecimalAbove/5.0) {
-		  maybeGoodDecimalAbove /= 10.0
-		}
-		maybeGoodDecimalAbove
-
-	  } else {
-		var maybeGoodDecimalAbove = converter.convertToA(10)
-		while (theAbs > maybeGoodDecimalAbove*1.2) {
-		  maybeGoodDecimalAbove *= 10.0
-		}
-		maybeGoodDecimalAbove
-
-	  }
-	  return goodDecimalAbove/10.0
-	}
-
-  }
+  override fun bestTickUnit(range: T) = calcBestTicks(range) ?: default
 
   override fun tickLabelConverter(range: T) = labelConvert
 }

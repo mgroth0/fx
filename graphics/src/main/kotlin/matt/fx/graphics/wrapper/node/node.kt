@@ -52,6 +52,7 @@ import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNullableROProp
+import matt.lang.NOT_IMPLEMENTED
 import matt.lang.delegation.lazyDelegate
 import matt.model.flowlogic.recursionblocker.RecursionBlocker
 import matt.obs.bind.binding
@@ -346,7 +347,6 @@ interface NodeWrapper: EventTargetWrapper, StyleableWrapper {
 
 
   val layoutXProperty: BindableProperty<Double>
-	get() = node.layoutXProperty().toNonNullableProp().cast<Double>()
 
 
   var layoutY
@@ -356,7 +356,6 @@ interface NodeWrapper: EventTargetWrapper, StyleableWrapper {
 	}
 
   val layoutYProperty: BindableProperty<Double>
-	get() = node.layoutYProperty().toNonNullableProp().cast<Double>()
 
 
   var scaleX
@@ -366,7 +365,6 @@ interface NodeWrapper: EventTargetWrapper, StyleableWrapper {
 	}
 
   val scaleXProperty: BindableProperty<Double>
-	get() = node.scaleXProperty().toNonNullableProp().cast()
   var scaleY
 	get() = node.scaleY
 	set(value) {
@@ -374,7 +372,6 @@ interface NodeWrapper: EventTargetWrapper, StyleableWrapper {
 	}
 
   val scaleYProperty: BindableProperty<Double>
-	get() = node.scaleYProperty().toNonNullableProp().cast()
 
   fun requestFocus() = node.requestFocus()
 
@@ -424,6 +421,12 @@ interface NodeWrapper: EventTargetWrapper, StyleableWrapper {
 	  }
 	}
 
+  var hMarginAll: Double?
+	get() = NOT_IMPLEMENTED
+	set(value) {
+	  hMargin = value?.let{Insets(it)}
+	}
+
   var hMargin: Insets?
 	get() = HBox.getMargin(this.node)
 	set(value) {
@@ -436,6 +439,11 @@ interface NodeWrapper: EventTargetWrapper, StyleableWrapper {
 	  toSet.forEach {
 		HBox.setMargin(it.node, value)
 	  }
+	}
+  var vMarginAll: Double?
+	get() = NOT_IMPLEMENTED
+	set(value) {
+	  vMargin = value?.let{Insets(it)}
 	}
   var vMargin: Insets?
 	get() = VBox.getMargin(this.node)
@@ -514,6 +522,19 @@ abstract class NodeWrapperImpl<out N: Node>(
   }
 }, NodeWrapper {
 
+
+  override val layoutYProperty: BindableProperty<Double> by lazy {
+	node.layoutYProperty().toNonNullableProp().cast()
+  }
+  override val layoutXProperty: BindableProperty<Double> by lazy {
+	node.layoutXProperty().toNonNullableProp().cast()
+  }
+  override val scaleXProperty: BindableProperty<Double> by lazy {
+	node.scaleXProperty().toNonNullableProp().cast()
+  }
+  override val scaleYProperty: BindableProperty<Double> by lazy {
+	node.scaleYProperty().toNonNullableProp().cast()
+  }
 
   final override val sceneProperty by lazy {
 	node.sceneProperty().toNullableROProp().binding(

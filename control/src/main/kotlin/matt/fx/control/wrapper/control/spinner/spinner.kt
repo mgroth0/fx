@@ -22,7 +22,6 @@ import matt.obs.prop.Var
 /**
  * Create a spinner for an arbitrary type. This spinner requires you to configure a value factory, or it will throw an exception.
  */
-/*MATT NOTE: SPINNER INTERNALS USES NULL IN VARIOUS MECHANISMS. SPINNER TYPES CANNOT BE NULLABLE.*/
 fun <T: Any> ET.spinner(
   editable: Boolean = false,
   property: Var<T>? = null,
@@ -44,7 +43,6 @@ fun <T: Any> ET.spinner(
 }
 
 
-/*MATT NOTE: SPINNER INTERNALS USES NULL IN VARIOUS MECHANISMS. SPINNER TYPES CANNOT BE NULLABLE.*/
 inline fun <reified T: Number> ET.spinner(
   min: T? = null,
   max: T? = null,
@@ -82,7 +80,6 @@ inline fun <reified T: Number> ET.spinner(
   return spinner.attachTo(this, op)
 }
 
-/*MATT NOTE: SPINNER INTERNALS USES NULL IN VARIOUS MECHANISMS. SPINNER TYPES CANNOT BE NULLABLE.*/
 fun <T: Any> ET.spinner(
   items: ObsList<T>,
   editable: Boolean = false,
@@ -100,7 +97,6 @@ fun <T: Any> ET.spinner(
 }
 
 
-/*MATT NOTE: SPINNER INTERNALS USES NULL IN VARIOUS MECHANISMS. SPINNER TYPES CANNOT BE NULLABLE.*/
 fun <T: Any> ET.spinner(
   valueFactory: SpinnerValueFactory<T>,
   editable: Boolean = false,
@@ -129,7 +125,6 @@ internal fun SpinnerWrapper<*>.initialConfig(
   if (editable) tfxWeirdEditableThing()
 }
 
-/*MATT NOTE: SPINNER INTERNALS USES NULL IN VARIOUS MECHANISMS. SPINNER TYPES CANNOT BE NULLABLE.*/
 class SpinnerWrapper<T: Any>(
   node: Spinner<T> = Spinner<T>(),
 ): ControlWrapperImpl<Spinner<T>>(node) {
