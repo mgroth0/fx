@@ -5,7 +5,7 @@ import matt.model.data.mathable.MathAndComparable
 internal fun <T: MathAndComparable<T>> calcBestTicks(
   range: MathAndComparable<T>
 ): T? {
-  if (range.isZero || range.isInfinity || range.isNaN) return null
+  if (range.isZero || range.isInfinite || range.isNaN) return null
   val absRange = range.abs
   val goodDecimalAbove = if (absRange < range.of(2)) {
 	var maybeGoodDecimalAbove = range.of(1)
