@@ -5,6 +5,7 @@ import com.sun.javafx.charts.Legend.LegendItem
 import com.sun.javafx.collections.NonIterableChange
 import javafx.animation.KeyFrame
 import javafx.animation.KeyValue
+import javafx.animation.Timeline
 import javafx.beans.binding.StringBinding
 import javafx.beans.property.BooleanProperty
 import javafx.beans.property.ObjectProperty
@@ -45,6 +46,8 @@ import matt.fx.control.wrapper.chart.axis.value.axis.AxisForPackagePrivateProps
 import matt.fx.control.wrapper.chart.line.highperf.relinechart.xy.XYChartForPackagePrivateProps.StyleableProperties.classCssMetaData
 import matt.fx.control.wrapper.chart.line.highperf.relinechart.xy.chart.ChartForPrivateProps
 import matt.fx.graphics.anim.interp.MyInterpolator
+import matt.lang.function.Op
+import matt.lang.go
 import matt.model.data.xyz.Dim2D
 import matt.obs.prop.BindableProperty
 import java.util.BitSet
@@ -94,19 +97,37 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
   private val seriesChanged = ListChangeListener { c: Change<out Series<X, Y>?> ->
 	val series = c.list
 	while (c.next()) {
-	  // RT-12069, linked list pointers should update when list is permutated.
+	  // RT-12069, linked list pointers should update when list is permuted.
 	  if (c.wasPermutated()) {
-		displayedSeries.sortWith(java.util.Comparator { o1: Series<X, Y>?, o2: Series<X, Y>? ->
+		displayedSeries.sortWith { o1: Series<X, Y>?, o2: Series<X, Y>? ->
 		  series.indexOf(
 			o2
 		  ) - series.indexOf(o1)
-		})
+		}
 	  }
-	  if (c.removed.size > 0) updateLegend()
-	  val dupCheck: MutableSet<Series<X, Y>?> = HashSet(displayedSeries)
-	  dupCheck.removeAll(c.removed)
-	  for (d in c.addedSubList) {
-		require(dupCheck.add(d)) { "Duplicate series added" }
+	  if (c.removed.isNotEmpty()) updateLegend()
+	  val dupCheck = HashSet(displayedSeries) - c.removed.toSet()
+	  c.addedSubList.forEach { sery ->
+		if (sery in dupCheck) {
+		  mattsBeingRemovedSet.firstOrNull {
+			it.seriesBeingRemoved == sery
+		  }?.go {
+			it.timeline!!.stop()
+			it.finalRemovalOp()
+		  } ?: error(
+			"""
+			Duplicate series added
+				$sery
+				displayedSize = ${displayedSeries.size}
+				change.list.size = ${c.list.size}
+				change.removed.size=${c.removed.size}
+				change.added.size=${c.addedSubList.size}
+				mattFixes.size=${mattsBeingRemovedSet.size}
+				index=${c.list.indexOf(sery)}
+				setToRemove=${sery?.setToRemove}
+		  """.trimIndent()
+		  )
+		}
 	  }
 	  for (s in c.removed) {
 		s!!.setToRemove = true
@@ -145,9 +166,7 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
    * Get the X axis, by default it is along the bottom of the plot
    * @return the X axis of the chart
    */
-  fun getXAxis(): AxisForPackagePrivateProps<X>? {
-	return xAxis
-  }
+  fun getXAxis(): AxisForPackagePrivateProps<X>? = xAxis
 
   internal val yAxis: AxisForPackagePrivateProps<Y>
 
@@ -155,9 +174,7 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
    * Get the Y axis, by default it is along the left of the plot
    * @return the Y axis of this chart
    */
-  fun getYAxis(): AxisForPackagePrivateProps<Y>? {
-	return yAxis
-  }
+  fun getYAxis(): AxisForPackagePrivateProps<Y>? = yAxis
 
   /** XYCharts data  */
   internal val data: ObjectProperty<ObservableList<Series<X, Y>>> =
@@ -209,31 +226,23 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 		}
 		// restore animated on chart.
 		if (current != null && current.size > 0 && saveAnimationState != -1) {
-		  current[0].getChart()!!.setAnimated(if (saveAnimationState == 1) true else false)
+		  current[0].getChart()!!.setAnimated(saveAnimationState == 1)
 		}
 		old = current
 	  }
 
-	  override fun getBean(): Any {
-		return this@XYChartForPackagePrivateProps
-	  }
+	  override fun getBean(): Any = this@XYChartForPackagePrivateProps
 
-	  override fun getName(): String {
-		return "data"
-	  }
+	  override fun getName(): String = "data"
 	}
 
-  fun getData(): ObservableList<Series<X, Y>> {
-	return data.value
-  }
+  fun getData(): ObservableList<Series<X, Y>> = data.value
 
   fun setData(value: ObservableList<Series<X, Y>>) {
 	data.value = value
   }
 
-  fun dataProperty(): ObjectProperty<ObservableList<Series<X, Y>>> {
-	return data
-  }
+  fun dataProperty(): ObjectProperty<ObservableList<Series<X, Y>>> = data
 
   /** True if vertical grid lines should be drawn  */
   private val verticalGridLinesVisible: BooleanProperty = object: StyleableBooleanProperty(true) {
@@ -241,13 +250,9 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 	  requestChartLayout()
 	}
 
-	override fun getBean(): Any {
-	  return this@XYChartForPackagePrivateProps
-	}
+	override fun getBean(): Any = this@XYChartForPackagePrivateProps
 
-	override fun getName(): String {
-	  return "verticalGridLinesVisible"
-	}
+	override fun getName(): String = "verticalGridLinesVisible"
 
 	override fun getCssMetaData(): CssMetaData<XYChartForPackagePrivateProps<*, *>, Boolean> {
 	  return StyleableProperties.VERTICAL_GRID_LINE_VISIBLE
@@ -260,17 +265,13 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
    * @return true if verticalGridLines are visible else false.
    * @see .verticalGridLinesVisibleProperty
    */
-  fun getVerticalGridLinesVisible(): Boolean {
-	return verticalGridLinesVisible.get()
-  }
+  fun getVerticalGridLinesVisible(): Boolean = verticalGridLinesVisible.get()
 
   fun setVerticalGridLinesVisible(value: Boolean) {
 	verticalGridLinesVisible.set(value)
   }
 
-  fun verticalGridLinesVisibleProperty(): BooleanProperty {
-	return verticalGridLinesVisible
-  }
+  fun verticalGridLinesVisibleProperty(): BooleanProperty = verticalGridLinesVisible
 
   /** True if horizontal grid lines should be drawn  */
   private val horizontalGridLinesVisible: BooleanProperty = object: StyleableBooleanProperty(true) {
@@ -282,9 +283,7 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 	  return this@XYChartForPackagePrivateProps
 	}
 
-	override fun getName(): String {
-	  return "horizontalGridLinesVisible"
-	}
+	override fun getName(): String = "horizontalGridLinesVisible"
 
 	override fun getCssMetaData(): CssMetaData<XYChartForPackagePrivateProps<*, *>, Boolean> {
 	  return StyleableProperties.HORIZONTAL_GRID_LINE_VISIBLE
@@ -1026,6 +1025,18 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 	 */
 	get() = Collections.unmodifiableList(displayedSeries).iterator()
 
+
+  protected inner class MattFix(
+	val seriesBeingRemoved: Series<X, Y>,
+	val finalRemovalOp: Op
+  ) {
+
+	var timeline: Timeline? = null
+  }
+
+  protected val mattsBeingRemovedSet = mutableSetOf<MattFix>()
+
+
   /**
    * Creates an array of KeyFrames for fading out nodes representing a series
    *
@@ -1048,11 +1059,17 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 	  startValues[j] = KeyValue(nodes[j]!!.opacityProperty(), 1, MyInterpolator.MY_DEFAULT_INTERPOLATOR)
 	  endValues[j] = KeyValue(nodes[j]!!.opacityProperty(), 0, MyInterpolator.MY_DEFAULT_INTERPOLATOR)
 	}
+	val removeOp = {
+	  plotChildren.removeAll(nodes)
+	  removeSeriesFromDisplay(series)
+	}
+	val mattFix = MattFix(series, removeOp)
+	mattsBeingRemovedSet += mattFix
 	return arrayOf(
 	  KeyFrame(Duration.ZERO, *startValues),
 	  KeyFrame(Duration.millis(fadeOutTime.toDouble()), {
-		plotChildren.removeAll(nodes)
-		removeSeriesFromDisplay(series)
+		removeOp()
+		mattsBeingRemovedSet -= mattFix
 	  }, *endValues)
 	)
   }
@@ -1701,26 +1718,19 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 		  old = current
 		}
 
-		override fun getBean(): Any {
-		  return this@Series
-		}
+		override fun getBean(): Any = this@Series
 
-		override fun getName(): String {
-		  return "data"
-		}
+		override fun getName(): String = "data"
 	  }
 
-	fun getData(): ObservableList<Data<X, Y>> {
-	  return data.value
-	}
+	fun getData(): ObservableList<Data<X, Y>> = data.value
 
 	fun setData(value: ObservableList<Data<X, Y>>) {
 	  data.value = value
 	}
 
-	fun dataProperty(): ObjectProperty<ObservableList<Data<X, Y>>> {
-	  return data
-	}
+
+	fun dataProperty(): ObjectProperty<ObservableList<Data<X, Y>>> = data
 	/**
 	 * Constructs a Series and populates it with the given [ObservableList] data.
 	 *

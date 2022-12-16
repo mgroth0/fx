@@ -14,7 +14,6 @@ import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
 import matt.fx.graphics.wrapper.region.RegionWrapper
 import matt.fx.graphics.wrapper.region.RegionWrapperImpl
 import matt.hurricanefx.eye.wrapper.obs.collect.createMutableWrapper
-import matt.log.warn.warnOnce
 import matt.model.data.corner.Corner
 import matt.model.data.corner.Corner.NE
 import matt.model.data.corner.Corner.NW
@@ -135,12 +134,11 @@ interface PaneWrapper<C: NodeWrapper>: RegionWrapper<C> {
 }
 
 fun <C: NodeWrapper> PaneWrapper<C>.spacer(size: Double = 20.0) {
-  warnOnce("UNCHECKED ADD C SPACER")
-  @Suppress("UNCHECKED_CAST")
-  this.children.add(SimplePaneWrapper<VBoxWrapperImpl<*>>().apply {
+
+  addChild(SimplePaneWrapper<VBoxWrapperImpl<*>>().apply {
 	minWidth = size
 	minHeight = size
-  } as C)
+  })
 }
 
 fun <C: NodeWrapper> SimplePaneWrapper() = PaneWrapperImpl<_, C>(Pane())

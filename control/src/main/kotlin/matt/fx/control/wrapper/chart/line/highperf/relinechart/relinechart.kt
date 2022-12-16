@@ -459,6 +459,7 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
 	seriesYMultiplierMap.remove(series)
 	if (shouldAnimate()) {
 	  seriesRemoveTimeline = Timeline(*createSeriesRemoveTimeLine(series, 900))
+	  mattsBeingRemovedSet.first { it.seriesBeingRemoved == series }.timeline = seriesRemoveTimeline
 	  seriesRemoveTimeline!!.play()
 	} else {
 	  plotChildren.remove(series.node.value)

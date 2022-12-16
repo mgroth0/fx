@@ -84,7 +84,7 @@ class ListPagination<E>(
 
   init {
 	allSides = paginator
-	list.onChangeWithWeak(this) { lp ->
+	list.onChangeWithWeak(this) { lp,_ ->
 	  lp.refresh()
 	}
 	refresh()

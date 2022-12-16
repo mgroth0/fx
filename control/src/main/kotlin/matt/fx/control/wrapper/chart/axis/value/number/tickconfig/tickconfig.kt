@@ -14,7 +14,7 @@ import matt.lang.function.Convert
 import matt.math.jmath.decimalOrScientificNotation
 import matt.model.data.byte.ByteSize
 import matt.model.data.byte.gigabytes
-import matt.model.data.byte.killobytes
+import matt.model.data.byte.kilobytes
 import matt.model.data.byte.megabytes
 import matt.model.data.mathable.DoubleWrapper
 import matt.model.data.mathable.IntWrapper
@@ -117,12 +117,12 @@ object ByteSizeTickConfigurer: TickConfigurer<ByteSize>(minorTickCount = 10) {
 	range.bytes < 10       -> ByteSize(1)
 	range.bytes < 100      -> ByteSize(10)
 
-	range < 1.killobytes   -> ByteSize(100)
-	range < 10.killobytes  -> 1.killobytes
-	range < 100.killobytes -> 10.killobytes
+	range < 1.kilobytes   -> ByteSize(100)
+	range < 10.kilobytes  -> 1.kilobytes
+	range < 100.kilobytes -> 10.kilobytes
 
-	range < 1.megabytes    -> 100.killobytes
-	range < 10.megabytes   -> 1.megabytes
+	range < 1.megabytes   -> 100.kilobytes
+	range < 10.megabytes  -> 1.megabytes
 	range < 100.megabytes  -> 10.megabytes
 
 	range < 1.gigabytes    -> 100.megabytes

@@ -13,13 +13,11 @@ import matt.fx.control.wrapper.chart.xy.series.SeriesWrapper
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NW
 import matt.fx.graphics.wrapper.node.attachTo
-import matt.fx.graphics.wrapper.node.line.LineWrapper
 import matt.fx.graphics.wrapper.region.RegionWrapperImpl
 import matt.fx.node.proto.annochart.AnnotateableChart.VisibleDataMode.DownSampled
 import matt.fx.node.proto.annochart.AnnotateableChart.VisibleDataMode.Source
 import matt.fx.node.proto.annochart.annopane.Annotateable
 import matt.fx.node.proto.annochart.annopane.AnnotationPane
-import matt.fx.node.proto.annochart.annopane.AnnotationPane.DynamicHorizontalLine
 import matt.fx.node.proto.annochart.inner.applyBounds
 import matt.fx.node.proto.annochart.inner.calcAutoBounds
 import matt.lang.go
@@ -99,10 +97,10 @@ open class AnnotateableChart<X: MathAndComparable<X>, Y: MathAndComparable<Y>> p
 	realData.toMappedList { it.downsampled }
   }
 
-
+  fun showBestYTicks() = yAxis.showBestTicksIn(chart)
   fun showBestTicks() {
 	xAxis.showBestTicksIn(chart)
-	yAxis.showBestTicksIn(chart)
+	showBestYTicks()
   }
 
 
