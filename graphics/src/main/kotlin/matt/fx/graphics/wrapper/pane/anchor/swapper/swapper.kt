@@ -105,23 +105,13 @@ open class Swapper<P, C: NodeWrapper>: RegionWrapperImpl<Region, C>(AnchorPane()
 	  anchor.children.clear()
 	  if (value == null) {
 		if (nullMessage != null) {
-		  val node = TextWrapper(nullMessage)
-		  setAsLayoutProxyForAndProxiedFrom(node)
-		  if (node.node !in anchor.children) anchor.children.add(node.node)
-		  node.setAsTopAnchor(0.0)
-		  node.setAsBottomAnchor(0.0)
-		  node.setAsLeftAnchor(0.0)
-		  node.setAsRightAnchor(0.0)
+		  setInnerNode(TextWrapper(nullMessage))
+		} else {
+		  clearLayoutProxyNetwork()
 		}
 	  } else {
 		val proxy = ProxyEventTargetWrapper {
-		  anchor.children.clear()
-		  if (it.node !in anchor.children) anchor.children.add(it.node)
-		  it.setAsTopAnchor(0.0)
-		  it.setAsBottomAnchor(0.0)
-		  it.setAsLeftAnchor(0.0)
-		  it.setAsRightAnchor(0.0)
-		  setAsLayoutProxyForAndProxiedFrom(it)
+		  setInnerNode(it)
 		}
 		proxy.op(value)
 	  }
@@ -144,28 +134,29 @@ open class Swapper<P, C: NodeWrapper>: RegionWrapperImpl<Region, C>(AnchorPane()
 	  anchor.children.clear()
 	  if (value == null) {
 		if (nullMessage != null) {
-		  val node = TextWrapper(nullMessage)
-		  setAsLayoutProxyForAndProxiedFrom(node)
-		  if (node.node !in anchor.children) anchor.children.add(node.node)
-		  node.setAsTopAnchor(0.0)
-		  node.setAsBottomAnchor(0.0)
-		  node.setAsLeftAnchor(0.0)
-		  node.setAsRightAnchor(0.0)
+		  setInnerNode(TextWrapper(nullMessage))
+		} else {
+		  clearLayoutProxyNetwork()
 		}
 	  } else {
-		val node = op(value)
-		setAsLayoutProxyForAndProxiedFrom(node)
-		if (node.node !in anchor.children) anchor.children.add(node.node)
-		node.setAsTopAnchor(0.0)
-		node.setAsBottomAnchor(0.0)
-		node.setAsLeftAnchor(0.0)
-		node.setAsRightAnchor(0.0)
+		setInnerNode(op(value))
 	  }
 	}
 	this.listener = fxWatcherProp!!.onChange {
 	  refresh(it)
 	}
 	refresh(fxWatcherProp!!.value)
+  }
+
+
+  private fun setInnerNode(node: NodeWrapper) {
+	anchor.children.removeAll { it != node.node }
+	setAsLayoutProxyForAndProxiedFrom(node)
+	if (node.node !in anchor.children) anchor.children.add(node.node)
+	node.setAsTopAnchor(0.0)
+	node.setAsBottomAnchor(0.0)
+	node.setAsLeftAnchor(0.0)
+	node.setAsRightAnchor(0.0)
   }
 
   override fun addChild(child: NodeWrapper, index: Int?) {

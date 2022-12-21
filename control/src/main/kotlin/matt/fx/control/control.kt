@@ -1,5 +1,7 @@
 package matt.fx.control
 
+import javafx.application.Platform
+import javafx.application.Platform.runLater
 import javafx.scene.Node
 import javafx.scene.control.Alert.AlertType.CONFIRMATION
 import javafx.scene.control.ButtonType
@@ -9,19 +11,22 @@ import javafx.scene.layout.ColumnConstraints
 import javafx.scene.layout.Pane
 import javafx.scene.layout.RowConstraints
 import matt.fx.control.tfx.dialog.alert
-import matt.fx.control.win.interact.dialog
+import matt.fx.control.tfx.dialog.asyncAlert
 import matt.fx.control.win.interact.popupTextInput
 import matt.fx.control.wrapper.checkbox.CheckBoxWrapper
 import matt.fx.control.wrapper.control.tab.TabWrapper
-import matt.fx.control.wrapper.control.text.field.textfield
 import matt.fx.control.wrapper.scroll.ScrollPaneWrapper
 import matt.fx.graphics.fxthread.ensureInFXThreadInPlace
+import matt.fx.graphics.fxthread.runLaterReturn
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapperImpl
-import matt.fx.graphics.wrapper.text.text
+import matt.fx.graphics.wrapper.stage.StageWrapper
 import matt.hurricanefx.eye.mtofx.createROFXPropWrapper
 import matt.lang.NEVER
 import matt.log.warn.warn
+import matt.model.data.dir.YesOrNo
+import matt.model.data.dir.YesOrNo.NO
+import matt.model.data.dir.YesOrNo.YES
 import matt.obs.prop.BindableProperty
 import matt.obs.prop.Var
 import matt.service.action.ActionAbilitiesService
@@ -104,20 +109,86 @@ class TreeTableTreeView<T>(val table: Boolean): TreeTableView<T>() {
 
 object FXActionAbilitiesService: ActionAbilitiesService {
   override fun confirm(s: String): Boolean {
-
 	return ensureInFXThreadInPlace {
-
 	  var ok = false
-
 	  alert(CONFIRMATION, s) {
 		ok = it == ButtonType.OK
 	  }
-
 	  ok
+	}
+  }
 
+  override fun yesOrNo(s: String): YesOrNo {
+	return ensureInFXThreadInPlace {
+	  var ok: YesOrNo? = null
+	  alert(
+		CONFIRMATION,
+		s
+	  ) {
+		ok = when (it) {
+		  ButtonType.YES -> YES
+		  ButtonType.NO  -> NO
+		  else           -> NEVER
+		}
+	  }
+	  ok!!
+	}
+  }
+
+  override fun input(prompt: String) = popupTextInput(prompt) ?: NEVER
+}
+
+
+class AsyncFXActionAbilitiesService(
+  private val stage: StageWrapper
+): ActionAbilitiesService {
+  override fun confirm(s: String): Boolean {
+	require(!Platform.isFxApplicationThread())
+	val response = runLaterReturn {
+	  asyncAlert(
+		CONFIRMATION,
+		"Confirmation",
+		s,
+		closeOnEscape = false,
+		owner = stage
+	  ) {
+		runLater {
+		  x = stage.x + (stage.width/2.0) - (width/2.0)
+		  y = stage.y - height
+		}
+	  }
 	}
 
+	return response.join {
+	  it == ButtonType.OK
+	}
 
+  }
+
+  override fun yesOrNo(s: String): YesOrNo {
+	require(!Platform.isFxApplicationThread())
+	val response = ensureInFXThreadInPlace {
+	  asyncAlert(
+		CONFIRMATION,
+		"Yes or No?",
+		s,
+		buttons = arrayOf(ButtonType.NO, ButtonType.YES),
+		closeOnEscape = false,
+		owner = stage,
+	  ) {
+		runLater {
+		  x = stage.x + (stage.width/2.0) - (width/2.0)
+		  y = stage.y - height
+		}
+	  }
+	}
+	return response.join {
+	  when (it) {
+		ButtonType.YES -> YES
+		ButtonType.NO  -> NO
+		else           -> NEVER
+	  }
+	}
   }
 
   override fun input(prompt: String) = popupTextInput(prompt) ?: NEVER

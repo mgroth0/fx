@@ -36,6 +36,7 @@ import javafx.stage.FileChooser
 import matt.collect.itr.recurse.recurse
 import matt.file.MFile
 import matt.file.construct.toMFile
+import matt.fx.graphics.fxthread.ensureInFXThreadInPlace
 import matt.fx.graphics.fxthread.ts.nonBlockingFXWatcher
 import matt.fx.graphics.service.uncheckedNullableWrapperConverter
 import matt.fx.graphics.service.wrapped
@@ -66,9 +67,22 @@ import matt.obs.prop.Var
 import kotlin.contracts.InvocationKind.EXACTLY_ONCE
 import kotlin.contracts.contract
 
+inline fun <reified T: NodeWrapper> NW.findRecursivelyFirstOrNull(
+  shuffleChildrenOrders: Boolean = false
+): T? =
+  ensureInFXThreadInPlace {/*has to be in FX thread since I'm searching through all nodes in a huge tree. any could change at any time on the FX thread causing concurrent mod errors (and it has, I think)*/
+	recurseSelfAndChildNodes<T>(shuffleChildrenOrders = shuffleChildrenOrders).firstOrNull()
+  }
 
-inline fun <reified T: NodeWrapper> NW.findRecursivelyFirstOrNull(): T? {
-  return recurse { (it as? RegionWrapper<*>)?.children ?: listOf() }.filterIsInstance<T>().firstOrNull()
+
+inline fun <reified T: NodeWrapper> NW.recurseSelfAndChildNodes(
+  shuffleChildrenOrders: Boolean = false
+): Sequence<T> {
+  return recurse {
+	(it as? RegionWrapper<*>)?.children?.let {
+	  if (shuffleChildrenOrders) it.shuffled() else it
+	} ?: listOf()
+  }.filterIsInstance<T>()
 }
 
 
@@ -375,7 +389,9 @@ interface NodeWrapper: EventTargetWrapper, StyleableWrapper {
 
   fun requestFocus() = node.requestFocus()
 
-  fun setAsLayoutProxyForAndProxiedFrom(other: NodeWrapper) {
+  fun setAsLayoutProxyForAndProxiedFrom(
+	other: NodeWrapper, removeAllOtherProxiesOnBoth: Boolean = true /*critical to avoid memory leaks*/
+  ) {
 
 	require(this.node != other.node)
 
@@ -387,6 +403,11 @@ interface NodeWrapper: EventTargetWrapper, StyleableWrapper {
 	if (vgrow != null) other.vgrow = vgrow
 	else if (other.vgrow != null) vgrow = other.vgrow
 
+	if (removeAllOtherProxiesOnBoth) {
+	  layoutProxies.clear()
+	  other.layoutProxies.clear()
+	}
+
 	layoutProxies.add(other)
 	other.layoutProxies.add(this)
   }
@@ -397,26 +418,14 @@ interface NodeWrapper: EventTargetWrapper, StyleableWrapper {
   var hgrow: Priority?
 	get() = HBox.getHgrow(this.node)
 	set(value) {
-	  val toSet = mutableSetOf(this)
-	  var toSearch = layoutProxies.toSet()
-	  do {
-		toSet += toSearch
-		toSearch = toSearch.flatMap { it.layoutProxies }.filter { it !in toSet }.toSet()
-	  } while (toSearch.isNotEmpty())
-	  toSet.forEach {
+	  layoutProxyNetwork().forEach {
 		HBox.setHgrow(it.node, value)
 	  }
 	}
   var vgrow: Priority?
 	get() = VBox.getVgrow(this.node)
 	set(value) {
-	  val toSet = mutableSetOf(this)
-	  var toSearch = layoutProxies.toSet()
-	  do {
-		toSet += toSearch
-		toSearch = toSearch.flatMap { it.layoutProxies }.filter { it !in toSet }.toSet()
-	  } while (toSearch.isNotEmpty())
-	  toSet.forEach {
+	  layoutProxyNetwork().forEach {
 		VBox.setVgrow(it.node, value)
 	  }
 	}
@@ -424,40 +433,44 @@ interface NodeWrapper: EventTargetWrapper, StyleableWrapper {
   var hMarginAll: Double?
 	get() = NOT_IMPLEMENTED
 	set(value) {
-	  hMargin = value?.let{Insets(it)}
+	  hMargin = value?.let { Insets(it) }
 	}
 
   var hMargin: Insets?
 	get() = HBox.getMargin(this.node)
 	set(value) {
-	  val toSet = mutableSetOf(this)
-	  var toSearch = layoutProxies.toSet()
-	  do {
-		toSet += toSearch
-		toSearch = toSearch.flatMap { it.layoutProxies }.filter { it !in toSet }.toSet()
-	  } while (toSearch.isNotEmpty())
-	  toSet.forEach {
+	  layoutProxyNetwork().forEach {
 		HBox.setMargin(it.node, value)
 	  }
 	}
   var vMarginAll: Double?
 	get() = NOT_IMPLEMENTED
 	set(value) {
-	  vMargin = value?.let{Insets(it)}
+	  vMargin = value?.let { Insets(it) }
 	}
   var vMargin: Insets?
 	get() = VBox.getMargin(this.node)
 	set(value) {
-	  val toSet = mutableSetOf(this)
-	  var toSearch = layoutProxies.toSet()
-	  do {
-		toSet += toSearch
-		toSearch = toSearch.flatMap { it.layoutProxies }.filter { it !in toSet }.toSet()
-	  } while (toSearch.isNotEmpty())
-	  toSet.forEach {
+	  layoutProxyNetwork().forEach {
 		VBox.setMargin(it.node, value)
 	  }
 	}
+
+  fun layoutProxyNetwork(): Set<NW> {
+	val net = mutableSetOf(this)
+	var toSearch = layoutProxies.toSet()
+	do {
+	  net += toSearch
+	  toSearch = toSearch.flatMap { it.layoutProxies }.filter { it !in net }.toSet()
+	} while (toSearch.isNotEmpty())
+	return net
+  }
+
+  fun clearLayoutProxyNetwork() {
+	layoutProxyNetwork().forEach {
+	  it.layoutProxies.clear()
+	}
+  }
 
 
   fun saveChoose(
@@ -542,7 +555,7 @@ abstract class NodeWrapperImpl<out N: Node>(
 	)
   }
 
-  override val scene by lazyDelegate {	/*lazy because there is an issue where the inner mechanics of this property causes the wrong scene wrapper to be built during the SceneWrapper's initialization*/
+  override val scene by lazyDelegate {    /*lazy because there is an issue where the inner mechanics of this property causes the wrong scene wrapper to be built during the SceneWrapper's initialization*/
 	sceneProperty
   }
 
