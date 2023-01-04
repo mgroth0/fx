@@ -7,9 +7,7 @@ import matt.obs.bind.binding
 
 fun indicatorCircle(booleanProperty: ValProp<Boolean>) = CircleWrapper(8.0).apply {
   fillProperty.bind(booleanProperty.binding {
-	val colo = if (it == true) Color.LIGHTGREEN else Color.DARKRED
-	//	val colo = if (it == true) null else Color.DARKRED
-	//	println("colo=$colo")
-	colo
+	if (it) Color.LIGHTGREEN else Color.BLUE
+//	if (it) Color.LIGHTGREEN else Color.DARKRED
   })
 }
