@@ -196,7 +196,7 @@ open class TableViewWrapper<E: Any>(
 	columnResizePolicy = TableView.UNCONSTRAINED_RESIZE_POLICY
 	columns.associateWith { column ->
 
-	  val dataList = (0 until items!!.size).map {
+	  val dataList = (0 ..< items!!.size).map {
 		column.getCellData(it)
 	  }
 	  if (dataList.any { it is NW }) {

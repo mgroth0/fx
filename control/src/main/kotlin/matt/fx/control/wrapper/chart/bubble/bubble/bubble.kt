@@ -58,7 +58,7 @@ class BubbleChartForWrapper<X, Y> @JvmOverloads constructor(
   /** {@inheritDoc}  */
   override fun layoutPlotChildren() {
 	// update bubble positions
-	for (seriesIndex in 0 until dataSize) {
+	for (seriesIndex in 0 ..< dataSize) {
 	  val series = data.value[seriesIndex]
 	  //            for (Data<X,Y> item = series.begin; item != null; item = item.next) {
 	  val iter = getDisplayedDataIterator(series)

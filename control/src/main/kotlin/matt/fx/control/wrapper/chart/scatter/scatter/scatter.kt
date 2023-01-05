@@ -160,7 +160,7 @@ class ScatterChartForWrapper<X, Y> @JvmOverloads constructor(
   /** {@inheritDoc}  */
   override fun layoutPlotChildren() {
 	// update symbol positions
-	for (seriesIndex in 0 until dataSize) {
+	for (seriesIndex in 0 ..< dataSize) {
 	  val series = data.value[seriesIndex]
 	  val it = getDisplayedDataIterator(series)
 	  while (it.hasNext()) {

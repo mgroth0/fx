@@ -392,7 +392,7 @@ class MoreGenericNumberAxis<T: Any>(
 		val formatterB = StringBuilder("0")
 		val n = if (ratioHasFrac) Math.abs(exp) + 1 else Math.abs(exp)
 		if (n > 0) formatterB.append(".")
-		for (i in 0 until n) {
+		for (i in 0 ..< n) {
 		  formatterB.append("0")
 		}
 		formatter = formatterB.toString()

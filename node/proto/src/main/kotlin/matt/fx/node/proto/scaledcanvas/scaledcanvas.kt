@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalStdlibApi::class)
+
 package matt.fx.node.proto.scaledcanvas
 
 import javafx.scene.layout.Pane
@@ -36,10 +38,10 @@ fun EventTargetWrapper.scaledCanvas(
 ) = scaledCanvas(height = hw, width = hw, scale = scale, op = op)
 
 
-fun BufferedImage.toScaledCanvas(): ScaledCanvas {
+@OptIn(ExperimentalStdlibApi::class) fun BufferedImage.toScaledCanvas(): ScaledCanvas {
   val canv = ScaledCanvas(width = width, height = height)
-  (0 until width).forEach { x ->
-	(0 until height).forEach { y ->
+  (0 ..< width).forEach { x ->
+	(0 ..< height).forEach { y ->
 	  canv[x, y] = intColorToFXColor(getRGB(x, y))
 	}
   }
