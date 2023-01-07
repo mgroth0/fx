@@ -18,8 +18,6 @@ fun NodeWrapperImpl<Parent>.svgpath(
 open class SVGPathWrapper(
   node: SVGPath = SVGPath(),
 ): ShapeWrapper<SVGPath>(node) {
-
-
   var content: String
 	get() = node.content
 	set(value) {
@@ -30,6 +28,4 @@ open class SVGPathWrapper(
 	set(value) {
 	  node.fillRule = value
 	}
-
-
 }

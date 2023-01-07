@@ -64,6 +64,11 @@
 	{
 	  "type" : "matt.mstruct.bj.BuildJsonLibDependency",
 	  "cfg" :  "implementation",
+	  "key" :  "batik"
+	},
+	{
+	  "type" : "matt.mstruct.bj.BuildJsonLibDependency",
+	  "cfg" :  "implementation",
 	  "key" :  "guava"
 	}
   ],

@@ -21,6 +21,8 @@ open class StageWrapper(node: Stage = Stage()): WindowWrapper<Stage>(node), Titl
 
   override val titleProperty: NullableFXBackedBindableProp<String> by lazy { node.titleProperty().toNullableProp() }
 
+  val icons get() = node.icons
+
   fun showAndWait() = node.showAndWait()
 
   val owner: WindowWrapper<*>? get() = node.owner?.wrapped() as? WindowWrapper<*>
