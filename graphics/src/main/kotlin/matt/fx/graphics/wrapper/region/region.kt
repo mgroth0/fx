@@ -255,7 +255,7 @@ open class RegionWrapperImpl<N: Region, C: NodeWrapper>(node: N): ParentWrapperI
   }
 
   override val exactHeightProperty by lazy {
-	BindableProperty<Double>(0.0).also {
+	BindableProperty(0.0).also {
 	  minHeightProperty.bind(it)
 	  maxHeightProperty.bind(it)
 	}

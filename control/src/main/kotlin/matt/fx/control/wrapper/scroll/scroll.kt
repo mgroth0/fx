@@ -1,9 +1,7 @@
 package matt.fx.control.wrapper.scroll
 
-import javafx.beans.property.BooleanProperty
 import javafx.geometry.Bounds
 import javafx.scene.control.ScrollPane
-import javafx.scene.control.ScrollPane.ScrollBarPolicy
 import matt.collect.itr.recurse.chain
 import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.control.wrapper.wrapped.wrapped
@@ -106,32 +104,25 @@ open class ScrollPaneWrapper<C: NodeWrapper>(node: ScrollPane = ScrollPane()): C
 	}
 
 
-  var vbarPolicy: ScrollBarPolicy
-	get() = node.vbarPolicy
-	set(value) {
-	  node.vbarPolicy = value
-	}
+  val vbarPolicyProperty by lazy {
+	node.vbarPolicyProperty().toNonNullableProp()
+  }
 
-  var hbarPolicy: ScrollBarPolicy
-	get() = node.hbarPolicy
-	set(value) {
-	  node.hbarPolicy = value
-	}
+  var vbarPolicy by vbarPolicyProperty
 
-  var isFitToWidth
-	get() = node.isFitToWidth
-	set(value) {
-	  node.isFitToWidth = value
-	}
+  val hbarPolicyProp by lazy {
+	node.hbarPolicyProperty().toNonNullableProp()
+  }
 
-  fun fitToWidthProperty(): BooleanProperty = node.fitToWidthProperty()
-  var isFitToHeight
-	get() = node.isFitToHeight
-	set(value) {
-	  node.isFitToHeight = value
-	}
+  var hbarPolicy by hbarPolicyProp
 
-  fun fitToHeightProperty(): BooleanProperty = node.fitToHeightProperty()
+
+
+  val fitToWidthProperty by lazy { node.fitToWidthProperty().toNonNullableProp() }
+  var isFitToWidth by fitToWidthProperty
+
+  val fitToHeightProperty by lazy { node.fitToHeightProperty().toNonNullableProp() }
+  var isFitToHeight by fitToHeightProperty
 
   var prefViewportWidth
 	get() = node.prefViewportWidth
