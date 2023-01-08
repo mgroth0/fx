@@ -180,7 +180,7 @@ sealed class Console(
 
 	consoleTextFlow.padding = Insets(15.0, 30.0, 15.0, 15.0)
 	fitToWidthProperty.bind(hscrollOption.not())
- 
+
 	var old = consoleTextFlow.height
 	consoleTextFlow.heightProperty.onChange { newValue ->
 	  if ((newValue.toDouble() > old.toDouble()) && autoscroll) {
