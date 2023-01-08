@@ -26,7 +26,6 @@ import matt.fx.graphics.wrapper.node.parent.ParentWrapper
 import matt.fx.node.console.Console.RefreshRate.NORMAL
 import matt.fx.node.console.mem.ConsoleMemory
 import matt.fx.node.console.text.ConsoleTextFlow
-import matt.hurricanefx.eye.mtofx.createROFXPropWrapper
 import matt.kjlib.shell.forEachErrChar
 import matt.kjlib.shell.forEachOutChar
 import matt.lang.err
@@ -181,7 +180,7 @@ sealed class Console(
 
 	consoleTextFlow.padding = Insets(15.0, 30.0, 15.0, 15.0)
 	fitToWidthProperty.bind(hscrollOption.not())
-
+ z
 	var old = consoleTextFlow.height
 	consoleTextFlow.heightProperty.onChange { newValue ->
 	  if ((newValue.toDouble() > old.toDouble()) && autoscroll) {
