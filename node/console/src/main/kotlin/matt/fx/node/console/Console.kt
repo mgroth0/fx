@@ -180,7 +180,7 @@ sealed class Console(
 	hbarPolicy = ScrollBarPolicy.NEVER
 
 	consoleTextFlow.padding = Insets(15.0, 30.0, 15.0, 15.0)
-	fitToWidthProperty().bind(hscrollOption.not().createROFXPropWrapper())
+	fitToWidthProperty.bind(hscrollOption.not())
 
 	var old = consoleTextFlow.height
 	consoleTextFlow.heightProperty.onChange { newValue ->
