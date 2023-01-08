@@ -18,7 +18,7 @@ import matt.fx.graphics.mag.VarJson
 import matt.fx.graphics.style.DarkModeController
 import matt.fx.graphics.wrapper.node.parent.ParentWrapper
 import matt.fx.graphics.wrapper.region.RegionWrapper
-import matt.fx.graphics.wrapper.region.border.FXBorder
+import matt.fx.graphics.style.border.FXBorder
 import matt.fx.graphics.wrapper.scene.SceneWrapper
 import matt.fx.graphics.wrapper.style.StyleableWrapper
 import matt.fx.graphics.wrapper.style.findName

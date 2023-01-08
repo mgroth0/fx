@@ -4,10 +4,7 @@ import com.jthemedetecor.OsThemeDetector
 import javafx.application.Platform.runLater
 import javafx.geometry.Insets
 import javafx.scene.Node
-import javafx.scene.layout.Background
-import javafx.scene.layout.BackgroundFill
 import javafx.scene.paint.Color
-import javafx.scene.paint.Paint
 import matt.color.hex
 import matt.css.MyStyleDsl
 import matt.fx.graphics.wrapper.node.NodeWrapperImpl
@@ -127,9 +124,6 @@ fun intColorToFXColor(i: Int): Color {
   return Color.rgb(i shr 16 and 0xFF, i shr 8 and 0xFF, i and 0xFF)
 }
 
-
-fun backgroundFill(c: Paint) = BackgroundFill(c, null, null)
-fun backgroundFromColor(c: Paint) = Background(backgroundFill(c))
 
 
 /*part of this file was taken from tornadofx*/

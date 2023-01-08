@@ -34,6 +34,10 @@ typealias ET = EventTargetWrapper
 	addChild(node)
   }
 
+  operator fun NW.unaryPlus() {
+	this@EventTargetWrapper.add(this)
+  }
+
   fun add(nw: NodeWrapper) = plusAssign(nw)
 
   fun replaceChildren(vararg node: Node) {

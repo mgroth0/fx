@@ -10,7 +10,6 @@ import matt.color.AColor
 import matt.color.findName
 import matt.color.hex
 import matt.color.mostContrastingForMe
-import matt.color.name.ColorUtils
 import matt.fx.graphics.wrapper.style.FXStyle.fill
 import matt.fx.graphics.wrapper.style.FXStyle.`text-fill`
 import matt.lang.NOT_IMPLEMENTED

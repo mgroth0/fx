@@ -34,6 +34,14 @@ fun <P> ET.swapperR(
   return attach(swapper)
 }
 
+fun <P> ET.swapperRNullable(
+  prop: ObsVal<P>,
+  op: (ET).(P)->Unit
+): Swapper<P, NW> {
+  val swapper = Swapper<P, NW>()
+  swapper.setupSwappingWithReceiverNullable(prop, op)
+  return attach(swapper)
+}
 
 open class Swapper<P, C: NodeWrapper>: RegionWrapperImpl<Region, C>(AnchorPane()) {
 
@@ -115,6 +123,27 @@ open class Swapper<P, C: NodeWrapper>: RegionWrapperImpl<Region, C>(AnchorPane()
 		}
 		proxy.op(value)
 	  }
+	}
+	listener = fxWatcherProp!!.onChange {
+	  refresh(it)
+	}
+	refresh(fxWatcherProp!!.value)
+  }
+
+  @Synchronized
+  fun setupSwappingWithReceiverNullable(
+	prop: ObsVal<P>,
+	op: (ET).(P)->Unit
+  ) {
+	fxWatcherProp?.removeListener(listener!!)
+	fxWatcherProp = prop.nonBlockingFXWatcher()
+
+	fun refresh(value: P) {
+	  anchor.children.clear()
+	  val proxy = ProxyEventTargetWrapper {
+		setInnerNode(it)
+	  }
+	  proxy.op(value)
 	}
 	listener = fxWatcherProp!!.onChange {
 	  refresh(it)

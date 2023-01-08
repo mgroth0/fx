@@ -1,15 +1,19 @@
 package matt.fx.control.wrapper.button.toggle
 
 import javafx.scene.control.ToggleButton
+import javafx.scene.paint.Color
+import javafx.scene.paint.Paint
 import matt.fx.control.inter.select.Selectable
 import matt.fx.control.inter.select.SelectableValue
 import matt.fx.control.toggle.mech.ToggleMechanism
 import matt.fx.control.wrapper.control.button.base.ButtonBaseWrapper
 import matt.fx.control.wrapper.control.value.HasWritableValue
+import matt.fx.graphics.style.background.ensureLastFillIsIfPresent
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.lang.go
+import matt.obs.bind.binding
 import matt.obs.listen.OldAndNewListenerImpl
 import matt.obs.prop.BindableProperty
 import matt.obs.prop.VarProp
@@ -84,6 +88,20 @@ open class ToggleButtonWrapper(
 
   fun whenSelected(op: ()->Unit) {
 	selectedProperty.onChange { if (it) op() }
+  }
+
+  fun setupSelectionColor(p: Paint) {
+    val shouldBe = selectedProperty.binding {
+      if (it == true) p else Color.TRANSPARENT
+    }
+    fun update() = backgroundProperty.ensureLastFillIsIfPresent(shouldBe.value)
+    update()
+    shouldBe.onChange {
+      update()
+    }
+    backgroundProperty.onChange {
+      update()
+    }
   }
 
 }

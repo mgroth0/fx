@@ -29,7 +29,7 @@ import matt.fx.graphics.mag.topleft
 import matt.fx.graphics.mag.topright
 import matt.fx.graphics.wrapper.region.RegionWrapper
 import matt.fx.graphics.wrapper.region.RegionWrapperImpl
-import matt.fx.graphics.wrapper.region.border.FXBorder
+import matt.fx.graphics.style.border.FXBorder
 import matt.fx.graphics.wrapper.stage.StageWrapper
 import matt.lang.go
 import java.lang.Thread.sleep

@@ -1,4 +1,4 @@
-package matt.fx.graphics.wrapper.region.border
+package matt.fx.graphics.style.border
 
 import javafx.geometry.Insets
 import javafx.scene.layout.Border
@@ -13,7 +13,9 @@ fun Paint.solidBorder() = FXBorder.solid(this)
 fun Paint.dashedBorder() = FXBorder.solid(this)
 
 object FXBorder {
-  fun solid(color: Paint, widths: Double? = null) = Border(BorderStroke(color, BorderStrokeStyle.SOLID, null, widths?.let { BorderWidths(widths) }))
+  fun solid(color: Paint, widths: Double? = null) =
+	Border(BorderStroke(color, BorderStrokeStyle.SOLID, null, widths?.let { BorderWidths(widths) }))
+
   fun dashed(color: Paint) = Border(BorderStroke(color, BorderStrokeStyle.DASHED, null, null))
   val EMPTY: Border by lazy { Border.EMPTY }
 }

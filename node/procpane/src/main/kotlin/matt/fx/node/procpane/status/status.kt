@@ -70,7 +70,7 @@ class StatusFolderWatchPane(val folder: MFile): TileableTabPane(
 		hbarPolicy = NEVER
 		content = TextFlowWrapper<NodeWrapper>().apply {
 		  padding = Insets(5.0)
-		  //                backgroundFill = matt.css.Color.BLACK
+		  //                matt.fx.graphics.style.background.backgroundFill = matt.css.Color.BLACK
 		  this minBind sp
 		}
 		backgroundProperty.bindBidirectional(content!!.backgroundProperty)
@@ -78,7 +78,7 @@ class StatusFolderWatchPane(val folder: MFile): TileableTabPane(
 	  }
 	  //	  TextFlowWrapper<NodeWrapper>().apply {
 	  //		padding = Insets(5.0)
-	  //		//                backgroundFill = matt.css.Color.BLACK
+	  //		//                matt.fx.graphics.style.background.backgroundFill = matt.css.Color.BLACK
 	  //	  } wrappedIn ScrollPaneNoBars<TextFlowWrapper<NodeWrapper>>().apply {
 	  //		this@StatusFolderWatchPane.filenodes[file.name] = this
 	  //	  }

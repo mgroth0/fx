@@ -280,9 +280,7 @@ interface NodeWrapper: EventTargetWrapper, StyleableWrapper {
   val sceneProperty: ObsVal<SceneWrapper<*>?>
 
 
-  operator fun NW.unaryPlus() {
-	this@NodeWrapper.add(this)
-  }
+
 
 
   var isEnabled

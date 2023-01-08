@@ -14,7 +14,8 @@ import javafx.scene.paint.Paint
 import matt.file.MFile
 import matt.file.construct.toMFile
 import matt.fx.graphics.service.uncheckedWrapperConverter
-import matt.fx.graphics.style.backgroundFromColor
+import matt.fx.graphics.style.background.backgroundFromColor
+import matt.fx.graphics.style.border.FXBorder
 import matt.fx.graphics.style.copy
 import matt.fx.graphics.style.vertical
 import matt.fx.graphics.stylelock.toNullableStyleProp
@@ -23,7 +24,6 @@ import matt.fx.graphics.wrapper.node.parent.ParentWrapper
 import matt.fx.graphics.wrapper.node.parent.ParentWrapperImpl
 import matt.fx.graphics.wrapper.node.parent.parent
 import matt.fx.graphics.wrapper.region.RegionWrapper.Companion.computePrefWidthFun
-import matt.fx.graphics.wrapper.region.border.FXBorder
 import matt.fx.graphics.wrapper.sizeman.SizeManaged
 import matt.hurricanefx.eye.wrapper.obs.collect.createImmutableWrapper
 import matt.hurricanefx.eye.wrapper.obs.collect.createMutableWrapper
