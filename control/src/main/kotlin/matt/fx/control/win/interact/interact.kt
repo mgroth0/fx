@@ -4,6 +4,7 @@ import javafx.application.Platform.runLater
 import javafx.geometry.Pos
 import javafx.scene.Scene
 import javafx.scene.control.Alert
+import javafx.scene.control.Alert.AlertType.WARNING
 import javafx.scene.control.TextInputDialog
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
@@ -34,6 +35,8 @@ import matt.fx.control.wrapper.control.text.area.textarea
 import matt.fx.control.wrapper.control.text.field.textfield
 import matt.fx.control.wrapper.wrapped.wrapped
 import matt.fx.graphics.fxthread.ensureInFXThreadInPlace
+import matt.fx.graphics.style.border.FXBorder
+import matt.fx.graphics.style.border.solidBorder
 import matt.fx.graphics.win.bindgeom.bindGeometry
 import matt.fx.graphics.wrapper.imageview.ImageViewWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
@@ -44,8 +47,6 @@ import matt.fx.graphics.wrapper.pane.anchor.AnchorPaneWrapperImpl
 import matt.fx.graphics.wrapper.pane.hbox.hbox
 import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
 import matt.fx.graphics.wrapper.region.RegionWrapper
-import matt.fx.graphics.style.border.FXBorder
-import matt.fx.graphics.style.border.solidBorder
 import matt.fx.graphics.wrapper.stage.StageWrapper
 import matt.fx.graphics.wrapper.text.text
 import matt.fx.graphics.wrapper.window.WindowWrapper
@@ -159,8 +160,8 @@ inline fun <reified T> jsonEditor(json: String? = null) = dialog<T?> {
   val goodBind = ta.textProperty.binding {
 
 	it != null
-		&& it.isValidJson()
-		&& noExceptions { Json.decodeFromString<T>(it) }
+	&& it.isValidJson()
+	&& noExceptions { Json.decodeFromString<T>(it) }
   }
   readyWhen(goodBind)
   ta.border = Color.BLACK.solidBorder() /*so it does not jitter*/
@@ -170,6 +171,10 @@ inline fun <reified T> jsonEditor(json: String? = null) = dialog<T?> {
   setResultConverter {
 	ta.text.takeIf { it.isValidJson() }?.let { nullIfExceptions { Json.decodeFromString<T>(it) } }
   }
+}
+
+fun popupWarning(string: String) = ensureInFXThreadInPlace {
+  alert(WARNING, string).showAndWait()
 }
 
 fun popupTextInput(
