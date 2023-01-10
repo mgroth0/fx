@@ -73,7 +73,7 @@ inline fun <reified T: Number> ET.spinner(
 	)
   }
   if (property != null) {
-	spinner.valueFactory.valueProperty.bindBidirectional(property)
+	spinner.valueFactory!!.valueProperty.bindBidirectional(property)
   }
   spinner.initialConfig(
 	editable = editable,
@@ -90,7 +90,7 @@ fun <T: Any> ET.spinner(
   enableScroll: Boolean = false,
   op: SpinnerWrapper<T>.()->Unit = {}
 ) = SpinnerWrapper(items).attachTo(this, op) {
-  if (property != null) it.valueFactory.valueProperty.apply {
+  if (property != null) it.valueFactory!!.valueProperty.apply {
 	bindBidirectional(property)
   }
   it.initialConfig(
@@ -107,7 +107,7 @@ fun <T: Any> ET.spinner(
   enableScroll: Boolean = false,
   op: SpinnerWrapper<T>.()->Unit = {}
 ) = SpinnerWrapper(valueFactory).attachTo(this, op) {
-  if (property != null) it.valueFactory.valueProperty.apply {
+  if (property != null) it.valueFactory!!.valueProperty.apply {
 	bindBidirectional(property)
   }
   it.initialConfig(
