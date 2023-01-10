@@ -2,7 +2,7 @@ package matt.fx.graphics.wrapper.node.shape.poly
 
 import javafx.scene.shape.Polygon
 import matt.fx.graphics.wrapper.node.shape.ShapeWrapper
-import matt.hurricanefx.eye.wrapper.obs.collect.createMutableWrapper
+import matt.hurricanefx.eye.wrapper.obs.collect.list.createMutableWrapper
 
 open class PolygonWrapper(
   node: Polygon = Polygon(),

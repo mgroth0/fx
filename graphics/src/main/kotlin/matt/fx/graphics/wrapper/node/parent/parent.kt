@@ -5,12 +5,12 @@ import javafx.scene.Parent
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapperImpl
 import matt.fx.graphics.wrapper.node.attachTo
-import matt.hurricanefx.eye.wrapper.obs.collect.createImmutableWrapper
 import matt.fx.graphics.wrapper.node.line.poly.PolylineWrapper
 import matt.fx.graphics.wrapper.node.line.quad.QuadCurveWrapper
 import matt.fx.graphics.wrapper.node.shape.poly.PolygonWrapper
 import matt.obs.col.olist.mappedlist.toMappedList
 import matt.fx.graphics.service.wrapped
+import matt.hurricanefx.eye.wrapper.obs.collect.list.createImmutableWrapper
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNullableROProp
 import matt.obs.bind.binding

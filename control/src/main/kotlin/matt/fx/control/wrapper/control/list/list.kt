@@ -12,7 +12,7 @@ import matt.fx.control.wrapper.selects.wrap
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
-import matt.hurricanefx.eye.wrapper.obs.collect.createFXWrapper
+import matt.hurricanefx.eye.wrapper.obs.collect.list.createFXWrapper
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
 import matt.obs.col.olist.ObsList
 

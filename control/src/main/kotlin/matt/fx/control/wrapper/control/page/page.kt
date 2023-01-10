@@ -32,7 +32,7 @@ class PaginationWrapper(node: Pagination = Pagination()): ControlWrapperImpl<Pag
   var currentPageIndex by currentPageIndexProperty
 
   /*  init {
-	  currentPageIndexProperty.onChange {
+	  currentPageIndexProperty.matt.hurricanefx.eye.wrapper.obs.collect.list.onChange {
 		println("changed current page index to $it")
 		if (it == 0) {
 		  dumpStack()

@@ -13,7 +13,7 @@ import matt.fx.graphics.wrapper.node.shape.rect.RectangleWrapper
 import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
 import matt.fx.graphics.wrapper.region.RegionWrapper
 import matt.fx.graphics.wrapper.region.RegionWrapperImpl
-import matt.hurricanefx.eye.wrapper.obs.collect.createMutableWrapper
+import matt.hurricanefx.eye.wrapper.obs.collect.list.createMutableWrapper
 import matt.model.data.corner.Corner
 import matt.model.data.corner.Corner.NE
 import matt.model.data.corner.Corner.NW

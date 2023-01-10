@@ -1,7 +1,6 @@
 package matt.fx.graphics.wrapper.style
 
 import javafx.collections.ObservableList
-import javafx.collections.ObservableSet
 import javafx.css.CssMetaData
 import javafx.css.PseudoClass
 import javafx.css.Styleable
@@ -12,8 +11,10 @@ import matt.color.hex
 import matt.color.mostContrastingForMe
 import matt.fx.graphics.wrapper.style.FXStyle.fill
 import matt.fx.graphics.wrapper.style.FXStyle.`text-fill`
+import matt.hurricanefx.eye.wrapper.obs.collect.set.createImmutableWrapper
 import matt.lang.NOT_IMPLEMENTED
 import matt.lang.err
+import matt.obs.col.oset.ObsSet
 import matt.prim.str.LineAppender
 
 typealias FXColor = Color
@@ -29,7 +30,9 @@ abstract class StyleableWrapperImpl(private val node: Styleable): StyleableWrapp
   override val id: String? get() = node.id
   override val cssMetaData: MutableList<CssMetaData<out Styleable, *>> get() = node.cssMetaData
   override val styleableParent: Styleable? get() = node.styleableParent
-  override val pseudoClassStates: ObservableSet<PseudoClass> get() = node.pseudoClassStates
+  override val pseudoClassStates by lazy {
+	node.pseudoClassStates.createImmutableWrapper()
+  }
   override val styleClass: ObservableList<String> get() = node.styleClass
   override fun getTheStyle(): String? = node.style
 }
@@ -40,7 +43,7 @@ interface StyleableWrapper {
 
   val cssMetaData: List<CssMetaData<out Styleable, *>>
   val styleableParent: Styleable?
-  val pseudoClassStates: ObservableSet<PseudoClass>
+  val pseudoClassStates: ObsSet<PseudoClass>
 
   val styleClass: ObservableList<String>
 

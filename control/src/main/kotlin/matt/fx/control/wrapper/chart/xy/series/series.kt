@@ -8,7 +8,7 @@ import matt.collect.weak.WeakMap
 import matt.fx.control.wrapper.chart.line.highperf.relinechart.xy.XYChartForPackagePrivateProps.Data
 import matt.fx.control.wrapper.chart.line.highperf.relinechart.xy.XYChartForPackagePrivateProps.Series
 import matt.fx.control.wrapper.chart.xy.series.SeriesWrapper.Companion.wrappers
-import matt.hurricanefx.eye.wrapper.obs.collect.mfxMutableListConverter
+import matt.hurricanefx.eye.wrapper.obs.collect.list.mfxMutableListConverter
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNullableROProp

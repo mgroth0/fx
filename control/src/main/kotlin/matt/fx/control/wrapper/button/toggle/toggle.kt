@@ -1,6 +1,9 @@
 package matt.fx.control.wrapper.button.toggle
 
+import javafx.css.StyleOrigin.AUTHOR
+import javafx.css.StyleableObjectProperty
 import javafx.scene.control.ToggleButton
+import javafx.scene.layout.Background
 import javafx.scene.paint.Color
 import javafx.scene.paint.Paint
 import matt.fx.control.inter.select.Selectable
@@ -8,6 +11,7 @@ import matt.fx.control.inter.select.SelectableValue
 import matt.fx.control.toggle.mech.ToggleMechanism
 import matt.fx.control.wrapper.control.button.base.ButtonBaseWrapper
 import matt.fx.control.wrapper.control.value.HasWritableValue
+import matt.fx.graphics.style.background.backgroundFill
 import matt.fx.graphics.style.background.ensureLastFillIsIfPresent
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.attachTo
@@ -71,8 +75,8 @@ class ValuedToggleButton<V: Any>(value: V): ToggleButtonWrapper(ToggleButton()),
 
   override val toggleMechanism = BindableProperty<ToggleMechanism<V>?>(null).apply {
 	addListener(OldAndNewListenerImpl { old, new ->
-      old?.removeToggle(this@ValuedToggleButton)
-      new?.addToggle(this@ValuedToggleButton)
+	  old?.removeToggle(this@ValuedToggleButton)
+	  new?.addToggle(this@ValuedToggleButton)
 	})
   }
 
@@ -83,25 +87,148 @@ open class ToggleButtonWrapper(
 ): ButtonBaseWrapper<ToggleButton>(node), Selectable {
 
   override val selectedProperty by lazy {
-    node.selectedProperty().toNonNullableProp()
+	node.selectedProperty().toNonNullableProp()
   }
 
   fun whenSelected(op: ()->Unit) {
 	selectedProperty.onChange { if (it) op() }
   }
 
+
+  /*attempts to copy style logic from modena.css*/
+  /*ignores mnemonics*/
   fun setupSelectionColor(p: Paint) {
-    val shouldBe = selectedProperty.binding {
-      if (it == true) p else Color.TRANSPARENT
-    }
-    fun update() = backgroundProperty.ensureLastFillIsIfPresent(shouldBe.value)
-    update()
-    shouldBe.onChange {
-      update()
-    }
-    backgroundProperty.onChange {
-      update()
-    }
+
+	/*pseudoClassStates
+
+
+	pseudoClassStates.onChange {
+
+	}
+	node.pseudoClassStates
+
+	node.pseudoClassStateChanged()*/
+
+
+	var updating = false
+	fun update() {
+	  updating = true
+	  val s = selectedProperty.value
+	  val sProp = (node.backgroundProperty() as StyleableObjectProperty<Background>)
+	  val v = sProp.value
+	  if (v != null) {
+		val lastIsCurrentlyP = v.fills.last().fill == p
+		if (s) {
+		  if (lastIsCurrentlyP) {
+			/*do nothing*/
+		  } else {
+			sProp.applyStyle(AUTHOR, Background(*v.fills.toTypedArray(), backgroundFill(p)))
+		  }
+		} else {
+		  if (lastIsCurrentlyP) {
+			sProp.applyStyle(
+			  AUTHOR, Background(
+				*v.fills.subList(0, v.fills.size - 1).toTypedArray()
+			  )
+			)
+		  } else {
+			/*do nothing*/
+		  }
+		}
+	  }
+	  updating = false
+	}
+	update()
+	pseudoClassStates.onChange {
+	  update()
+	}
+	node.backgroundProperty().addListener { _, _, _ ->
+	  if (!updating) {
+		update()
+	  }
+	}
+	/*selectedProperty.onChange {
+	  update()
+	}*/
+
+
+	//	backgroundProperty.bind(
+	//
+	//	)
+	//	selectedProperty
+
+	//
+	//	@Suppress("UNCHECKED_CAST")
+	//	val BACKGROUND: CssMetaData<Region, Background> = object: CssMetaData<Region, Background>(
+	//	  "-fx-region-background",
+	//	  MyBackgroundConverter.INSTANCE,
+	//	  null,
+	//	  false,
+	//	  Background.getClassCssMetaData()
+	//	) {
+	//	  override fun isSettable(node: Region): Boolean {
+	//		return !node.backgroundProperty().isBound
+	//	  }
+	//
+	//
+	//	  override fun getStyleableProperty(node: Region): StyleableProperty<Background?> {
+	//		return node.backgroundProperty() as StyleableProperty<Background?>
+	//	  }
+	//	}
+	//
+	//	BACKGROUND.getInitialValue()
+	//	BACKGROUND.getStyleableProperty()
+	//	BACKGROUND.converter
+	//	BACKGROUND.isSettable()
+	//	(node.backgroundProperty() as StyleableObjectProperty<Background>).also {
+	//	  it.applyStyle()
+	//	  it.cssMetaData
+	//	  it.styleOrigin
+	//	}
+	//
+	//	node.lookup()
+	//
+	//
+	//
+	//	backgroundProperty.bind(
+	//	  selectedProperty.binding(
+	//		armedProp,
+	//		hoverProperty,
+	//		focusedProperty,
+	//		disableProperty
+	//	  ) {
+	//		backgroundFromColor(Color.TRANSPARENT)
+	//	  }
+	//	)
+	//
+	//	val shouldBe = selectedProperty.binding {
+	//	  if (it == true) p else Color.TRANSPARENT
+	//	}
+	//
+	//	fun update() = backgroundProperty.ensureLastFillIsIfPresent(shouldBe.value)
+	//	update()
+	//	shouldBe.matt.hurricanefx.eye.wrapper.obs.collect.list.onChange {
+	//	  update()
+	//	}
+	//	backgroundProperty.matt.hurricanefx.eye.wrapper.obs.collect.list.onChange {
+	//	  update()
+	//	}
+  }
+
+  @Deprecated("tries to use style sheets, but fails and looks wrong on MaxOSX Light Mode... besides I'd rather do things programmatically")
+  fun setupSelectionColorOldWay(p: Paint) {
+	val shouldBe = selectedProperty.binding {
+	  if (it == true) p else Color.TRANSPARENT
+	}
+
+	fun update() = backgroundProperty.ensureLastFillIsIfPresent(shouldBe.value)
+	update()
+	shouldBe.onChange {
+	  update()
+	}
+	backgroundProperty.onChange {
+	  update()
+	}
   }
 
 }

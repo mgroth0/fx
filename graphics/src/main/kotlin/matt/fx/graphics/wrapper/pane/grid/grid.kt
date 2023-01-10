@@ -17,7 +17,7 @@ import matt.fx.graphics.wrapper.node.attach
 import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
 import matt.fx.graphics.wrapper.pane.grid.GridPaneWrapper.GridDSLType.COL
 import matt.fx.graphics.wrapper.pane.grid.GridPaneWrapper.GridDSLType.ROW
-import matt.hurricanefx.eye.wrapper.obs.collect.createMutableWrapper
+import matt.hurricanefx.eye.wrapper.obs.collect.list.createMutableWrapper
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 
 

@@ -11,7 +11,7 @@ import matt.fx.control.wrapper.chart.line.highperf.relinechart.xy.XYChartForPack
 import matt.fx.control.wrapper.chart.xy.series.SeriesConverter
 import matt.fx.control.wrapper.chart.xy.series.SeriesWrapper
 import matt.fx.control.wrapper.wrapped.wrapped
-import matt.hurricanefx.eye.wrapper.obs.collect.createMutableWrapper
+import matt.hurricanefx.eye.wrapper.obs.collect.list.createMutableWrapper
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.NonNullFXBackedBindableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.obs.col.olist.MutableObsList

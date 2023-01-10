@@ -1,7 +1,6 @@
 package matt.fx.graphics.wrapper.scene
 
 import javafx.beans.property.ObjectProperty
-import javafx.collections.ObservableList
 import javafx.event.Event
 import javafx.event.EventHandler
 import javafx.event.EventType
@@ -16,6 +15,7 @@ import matt.fx.graphics.wrapper.node.parent.ParentWrapper
 import matt.fx.graphics.wrapper.scenelike.SceneLikeWrapper
 import matt.fx.graphics.wrapper.stage.StageWrapper
 import matt.fx.graphics.wrapper.window.WindowWrapper
+import matt.hurricanefx.eye.wrapper.obs.collect.list.createMutableWrapper
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNullableROProp
 import matt.obs.bind.binding
@@ -37,7 +37,9 @@ open class SceneWrapper<R: ParentWrapper<*>>(
   override val widthProperty get() = node.widthProperty().toNonNullableROProp().cast<Double>()
   override val heightProperty get() = node.heightProperty().toNonNullableROProp().cast<Double>()
 
-  val stylesheets: ObservableList<String> get() = node.stylesheets
+  val stylesheets by lazy {
+	node.stylesheets.createMutableWrapper()
+  }
 
   override val rootProperty: ObjectProperty<Parent> get() = node.rootProperty()
   override val fillProperty: ObjectProperty<Paint> get() = node.fillProperty()
@@ -91,4 +93,62 @@ open class SceneWrapper<R: ParentWrapper<*>>(
 	}
 	stylesheets.addAll(styles)
   }
+
+
+  /*val parsedStyleSheets by lazy {
+	val parser = CssParser()
+	stylesheets.toLazyMappedList {
+	  parser.parse(URI(it).toURL())
+	}
+  }*/
+
+  /*inner class ParsedStyles internal constructor() {
+	val fxBase by lazy {
+	  parsedStyleSheets.mapNotNull {
+		it.rules.filter {
+		  it.selectors
+		}
+	  }
+	  parsedStyleSheets.forEach {
+		it
+		it.rules.forEach {
+		  it.selectors.forEach {
+			it.applies()
+		  }
+		  it.declarations.forEach {
+			it.property
+			it.parsedValue
+		  }
+
+		}
+	  }
+	}
+  }
+
+  val parsedStyles by lazy { ParsedStyles() }
+
+
+  class Modena {
+	val fxBase by lazy {
+
+	  node.style
+
+	  scene.stylesheets
+
+	  DarkModeController.darkModeProp.binding {
+		if (it) {
+		  fxColorFromHex()
+		} else {
+
+		}
+	  }
+	}
+	val fxBackground by lazy {
+	  DarkModeController.darkModeProp.binding {
+
+	  }
+	}
+  }*/
+
+
 }

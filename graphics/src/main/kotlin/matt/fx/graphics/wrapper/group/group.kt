@@ -5,8 +5,8 @@ import matt.fx.graphics.service.uncheckedWrapperConverter
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attach
-import matt.hurricanefx.eye.wrapper.obs.collect.createMutableWrapper
 import matt.fx.graphics.wrapper.node.parent.ParentWrapperImpl
+import matt.hurricanefx.eye.wrapper.obs.collect.list.createMutableWrapper
 import matt.log.warn.warn
 import matt.obs.col.olist.mappedlist.toSyncedList
 

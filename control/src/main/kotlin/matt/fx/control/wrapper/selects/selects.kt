@@ -10,7 +10,7 @@ import javafx.scene.control.TreeTableView.TreeTableViewSelectionModel
 import matt.fx.control.wrapper.control.ControlWrapper
 import matt.fx.control.wrapper.control.colbase.TableColumnBaseWrapper
 import matt.fx.control.wrapper.control.column.TableColumnWrapper
-import matt.hurricanefx.eye.wrapper.obs.collect.createImmutableWrapper
+import matt.hurricanefx.eye.wrapper.obs.collect.list.createImmutableWrapper
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNullableROProp

@@ -2,13 +2,15 @@ package matt.fx.control.wrapper.control.spinner
 
 import javafx.scene.control.Spinner
 import javafx.scene.control.SpinnerValueFactory
+import javafx.scene.control.SpinnerValueFactory.IntegerSpinnerValueFactory
 import matt.fx.control.wrapper.control.ControlWrapperImpl
+import matt.fx.control.wrapper.control.spinner.fact.int.MyIntegerSpinnerValueFactory
 import matt.fx.control.wrapper.wrapped.wrapped
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.hurricanefx.eye.converter.ConverterConverter
-import matt.hurricanefx.eye.wrapper.obs.collect.createFXWrapper
+import matt.hurricanefx.eye.wrapper.obs.collect.list.createFXWrapper
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
 import matt.lang.err
@@ -32,7 +34,7 @@ fun <T: Any> ET.spinner(
 
   if (property != null) requireNotNull(it.valueFactory) {
 	"You must configure the value factory or use the Number based spinner builder " +
-		"which configures a default value factory along with min, max and initialValue!"
+	"which configures a default value factory along with min, max and initialValue!"
   }.valueProperty.apply {
 	bindBidirectional(property)
   }
@@ -55,7 +57,7 @@ inline fun <reified T: Number> ET.spinner(
 ): SpinnerWrapper<T> {
   /*property is IntegerProperty && property !is DoubleProperty && property !is FloatProperty) ||*/
   val isInt = min is Int || max is Int || initialValue is Int ||
-	  T::class == Int::class || T::class == java.lang.Integer::class || T::class.javaPrimitiveType == java.lang.Integer::class.java
+			  T::class == Int::class || T::class == java.lang.Integer::class || T::class.javaPrimitiveType == java.lang.Integer::class.java
   val spinner = if (isInt) {
 	SpinnerWrapper<T>(
 	  min?.toInt() ?: 0,
@@ -66,7 +68,7 @@ inline fun <reified T: Number> ET.spinner(
   } else {
 	SpinnerWrapper(
 	  min?.toDouble() ?: 0.0, max?.toDouble() ?: 100.0, initialValue?.toDouble()
-		?: 0.0, amountToStepBy?.toDouble() ?: 1.0
+														?: 0.0, amountToStepBy?.toDouble() ?: 1.0
 	)
   }
   if (property != null) {
@@ -173,6 +175,22 @@ class SpinnerWrapper<T: Any>(
   }
 
   var valueFactory by valueFactoryProperty
+
+  init {
+	val svf = valueFactory.svf
+	if (svf is IntegerSpinnerValueFactory) {
+
+	  val newSVF = MyIntegerSpinnerValueFactory(
+		min = svf.min,
+		max = svf.max,
+		initialValue = svf.value,
+		amountToStepBy = svf.amountToStepBy
+	  )
+
+	  @Suppress("UNCHECKED_CAST")
+	  valueFactory = SpinnerValueFactoryWrapper(newSVF as SpinnerValueFactory<T>)
+	}
+  }
 
 
   var isEditable

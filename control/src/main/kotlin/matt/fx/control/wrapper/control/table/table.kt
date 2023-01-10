@@ -29,8 +29,8 @@ import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NW
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
-import matt.hurricanefx.eye.wrapper.obs.collect.createMutableWrapper
-import matt.hurricanefx.eye.wrapper.obs.collect.mfxMutableListConverter
+import matt.hurricanefx.eye.wrapper.obs.collect.list.createMutableWrapper
+import matt.hurricanefx.eye.wrapper.obs.collect.list.mfxMutableListConverter
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNullableROProp

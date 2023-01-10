@@ -493,7 +493,7 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 	// mark plotContent as unmanaged as its preferred size changes do not effect our layout
 	plotContent.isManaged = false
 	plotArea.isManaged = false
-	// listen to animation on/off and sync to axis
+	// matt.hurricanefx.eye.wrapper.obs.collect.list.listen to animation on/off and sync to axis
 	animatedProperty().addListener { _: ObservableValue<out Boolean?>?, _: Boolean?, newValue: Boolean? ->
 	  if (getXAxis() != null) getXAxis()!!.setAnimated(newValue!!)
 	  if (getYAxis() != null) getYAxis()!!.setAnimated(newValue!!)
