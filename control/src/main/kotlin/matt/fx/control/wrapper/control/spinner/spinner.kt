@@ -12,6 +12,7 @@ import matt.fx.graphics.wrapper.node.attachTo
 import matt.hurricanefx.eye.converter.ConverterConverter
 import matt.hurricanefx.eye.wrapper.obs.collect.list.createFXWrapper
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
 import matt.lang.err
 import matt.model.op.convert.Converter
@@ -160,14 +161,14 @@ class SpinnerWrapper<T: Any>(
   val valueProperty by lazy { node.valueProperty().toNonNullableROProp() }
 
   val valueFactoryProperty by lazy {
-	node.valueFactoryProperty().toNonNullableProp().proxy(
-	  object: Converter<SpinnerValueFactory<T>, SpinnerValueFactoryWrapper<T>> {
-		override fun convertToB(a: SpinnerValueFactory<T>): SpinnerValueFactoryWrapper<T> {
-		  return a.wrap()
+	node.valueFactoryProperty().toNullableProp().proxy(
+	  object: Converter<SpinnerValueFactory<T>?, SpinnerValueFactoryWrapper<T>?> {
+		override fun convertToB(a: SpinnerValueFactory<T>?): SpinnerValueFactoryWrapper<T>? {
+		  return a?.wrap()
 		}
 
-		override fun convertToA(b: SpinnerValueFactoryWrapper<T>): SpinnerValueFactory<T> {
-		  return b.svf
+		override fun convertToA(b: SpinnerValueFactoryWrapper<T>?): SpinnerValueFactory<T>? {
+		  return b?.svf
 		}
 
 	  }
@@ -177,7 +178,7 @@ class SpinnerWrapper<T: Any>(
   var valueFactory by valueFactoryProperty
 
   init {
-	val svf = valueFactory.svf
+	val svf = valueFactory?.svf
 	if (svf is IntegerSpinnerValueFactory) {
 
 	  val newSVF = MyIntegerSpinnerValueFactory(
@@ -227,7 +228,7 @@ class SpinnerWrapper<T: Any>(
 }
 
 fun <T: Any> SpinnerWrapper<T>.bind(property: ObsVal<T>, readonly: Boolean = false) =
-  valueFactory.valueProperty.smartBind(property, readonly)
+  valueFactory!!.valueProperty.smartBind(property, readonly)
 
 
 fun <T: Any> SpinnerValueFactory<T>.wrap() = SpinnerValueFactoryWrapper(this)
