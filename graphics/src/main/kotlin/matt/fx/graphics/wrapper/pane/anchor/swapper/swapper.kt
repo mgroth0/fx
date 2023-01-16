@@ -10,7 +10,6 @@ import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attach
 import matt.fx.graphics.wrapper.region.RegionWrapperImpl
 import matt.fx.graphics.wrapper.text.TextWrapper
-import matt.obs.listen.MyListener
 import matt.obs.listen.MyListenerInter
 import matt.obs.prop.ObsVal
 
