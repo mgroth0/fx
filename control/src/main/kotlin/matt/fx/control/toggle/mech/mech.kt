@@ -17,8 +17,8 @@ import matt.model.flowlogic.keypass.KeyPass
 import matt.model.flowlogic.recursionblocker.RecursionBlocker
 import matt.obs.col.change.AdditionBase
 import matt.obs.col.change.RemovalBase
-import matt.obs.col.change.addedElements
-import matt.obs.col.change.removedElements
+import matt.obs.col.change.SetAdditionBase
+import matt.obs.col.change.SetRemovalBase
 import matt.obs.col.oset.basicObservableSetOf
 import matt.obs.listen.Listener
 import matt.obs.prop.BindableProperty
@@ -124,7 +124,7 @@ class ToggleMechanism<V: Any>() {
 
   init {
 	toggles.onChange { change ->
-	  (change as? AdditionBase)?.addedElements?.forEach { toggle ->
+	  (change as? SetAdditionBase)?.addedElements?.forEach { toggle ->
 		val togg = toggle.deref()!!
 		listeners[togg] = togg.selectedProperty.onChangeWithAlreadyWeak(toggle) { tog: SelectableValue<V>, sel ->        /*println("selectedProperty of toggle ${toggle} changed to ${it}")
 		  println("selectedToggle.value=${selectedToggle.value}")
@@ -138,7 +138,7 @@ class ToggleMechanism<V: Any>() {
 		  else selectedToggle.value = togg
 		}
 	  }
-	  (change as? RemovalBase)?.removedElements?.forEach { toggle ->
+	  (change as? SetRemovalBase)?.removedElements?.forEach { toggle ->
 		if (selectedToggle.value == toggle) {
 		  selectedToggle.value = null
 		}
