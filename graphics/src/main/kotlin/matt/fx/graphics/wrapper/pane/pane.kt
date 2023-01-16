@@ -19,7 +19,7 @@ import matt.model.data.corner.Corner.NE
 import matt.model.data.corner.Corner.NW
 import matt.model.data.corner.Corner.SE
 import matt.model.data.corner.Corner.SW
-import matt.obs.col.olist.ObsList
+import matt.obs.col.olist.MutableObsList
 import matt.obs.col.olist.sync.toSyncedList
 
 fun <C: NodeWrapper> ET.pane(op: PaneWrapperImpl<*, C>.()->Unit = {}) = attach(SimplePaneWrapper(), op)
@@ -41,7 +41,7 @@ interface PaneWrapper<C: NodeWrapper>: RegionWrapper<C> {
   }
 
 
-  override val children: ObsList<C>
+  override val children: MutableObsList<C>
 
 
   fun resizer(corner: Corner) {/*var y = 0.0

@@ -7,7 +7,7 @@ import matt.lang.function.Op
 import matt.obs.bind.MyBinding
 import matt.obs.col.change.mirror
 import matt.obs.col.olist.BasicObservableListImpl
-import matt.obs.col.olist.ObsList
+import matt.obs.col.olist.MutableObsList
 import matt.obs.prop.BindableProperty
 import matt.obs.prop.ObsVal
 import matt.obs.watch.PropertyWatcher
@@ -48,7 +48,7 @@ fun <T> ObsVal<T>.blockingFXWatcher(): ObsVal<T> {
 }
 
 
-private class NonBlockingFXListWatcher<E>(source: ObsList<E>): BasicObservableListImpl<E>(source) {
+private class NonBlockingFXListWatcher<E>(source: MutableObsList<E>): BasicObservableListImpl<E>(source) {
   init {
 	source.onChange {
 	  ensureInFXThreadOrRunLater {
@@ -58,7 +58,7 @@ private class NonBlockingFXListWatcher<E>(source: ObsList<E>): BasicObservableLi
   }
 }
 
-private class BlockingFXListWatcher<E>(source: ObsList<E>): BasicObservableListImpl<E>(source) {
+private class BlockingFXListWatcher<E>(source: MutableObsList<E>): BasicObservableListImpl<E>(source) {
   init {
 	source.onChange {
 	  ensureInFXThreadInPlace {
@@ -69,13 +69,13 @@ private class BlockingFXListWatcher<E>(source: ObsList<E>): BasicObservableListI
 }
 
 
-fun <E> ObsList<E>.nonBlockingFXWatcher(): ObsList<E> {
+fun <E> MutableObsList<E>.nonBlockingFXWatcher(): MutableObsList<E> {
 
   return (this as? NonBlockingFXListWatcher<E>) ?: NonBlockingFXListWatcher(this)
 
 }
 
-fun <E> ObsList<E>.blockingFXWatcher(): ObsList<E> {
+fun <E> MutableObsList<E>.blockingFXWatcher(): MutableObsList<E> {
 
 
   return (this as? BlockingFXListWatcher<E>) ?: BlockingFXListWatcher(this)

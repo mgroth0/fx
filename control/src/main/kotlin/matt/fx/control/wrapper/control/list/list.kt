@@ -14,10 +14,10 @@ import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.hurricanefx.eye.wrapper.obs.collect.list.createFXWrapper
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
-import matt.obs.col.olist.ObsList
+import matt.obs.col.olist.MutableObsList
 
 
-fun <T: Any> ET.listview(values: ObsList<T>? = null, op: ListViewWrapper<T>.()->Unit = {}) =
+fun <T: Any> ET.listview(values: MutableObsList<T>? = null, op: ListViewWrapper<T>.()->Unit = {}) =
   ListViewWrapper<T>().attachTo(this, op) {
 	if (values != null) {
 	  it.items = values.createFXWrapper()

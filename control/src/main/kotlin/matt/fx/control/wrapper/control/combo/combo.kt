@@ -20,7 +20,7 @@ import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
 import matt.obs.bind.smartBind
 import matt.obs.col.olist.MutableObsList
-import matt.obs.col.olist.ObsList
+import matt.obs.col.olist.MutableObsList
 import matt.obs.col.olist.toBasicObservableList
 import matt.obs.prop.ObsVal
 import matt.obs.prop.ValProp
@@ -46,7 +46,7 @@ class ComboBoxWrapper<E: Any>(
   node: ComboBox<E> = ComboBox<E>(),
 ): ComboBoxBaseWrapper<E, ComboBox<E>>(node), SelectingControl<E>, ListCellFactory<ListView<E>, E> {
 
-  constructor(items: ObsList<E>): this(ComboBox<E>(items.createFXWrapper()))
+  constructor(items: MutableObsList<E>): this(ComboBox<E>(items.createFXWrapper()))
 
 
   override val cellFactoryProperty by lazy { node.cellFactoryProperty().toNullableProp() }

@@ -17,7 +17,7 @@ import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
 import matt.lang.err
 import matt.model.op.convert.Converter
 import matt.obs.bind.smartBind
-import matt.obs.col.olist.ObsList
+import matt.obs.col.olist.MutableObsList
 import matt.obs.prop.BindableProperty
 import matt.obs.prop.ObsVal
 import matt.obs.prop.Var
@@ -84,7 +84,7 @@ inline fun <reified T: Number> ET.spinner(
 }
 
 fun <T: Any> ET.spinner(
-  items: ObsList<T>,
+  items: MutableObsList<T>,
   editable: Boolean = false,
   property: Var<T>? = null,
   enableScroll: Boolean = false,
@@ -151,7 +151,7 @@ class SpinnerWrapper<T: Any>(
 	initialVal: Double
   ): this(Spinner(min, max, initialVal))
 
-  constructor(items: ObsList<T>): this(Spinner(items.createFXWrapper()))
+  constructor(items: MutableObsList<T>): this(Spinner(items.createFXWrapper()))
   constructor(valueFactory: SpinnerValueFactory<T>): this(Spinner(valueFactory))
 
 

@@ -21,7 +21,7 @@ import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
 import matt.lang.go
 import matt.obs.bind.smartBind
 import matt.obs.col.olist.MutableObsList
-import matt.obs.col.olist.ObsList
+import matt.obs.col.olist.MutableObsList
 import matt.obs.col.olist.toBasicObservableList
 import matt.obs.prop.BindableProperty
 import matt.obs.prop.ValProp
@@ -62,7 +62,7 @@ class ChoiceBoxWrapper<T: Any>(
   node: ChoiceBox<T> = ChoiceBox(),
 ): ControlWrapperImpl<ChoiceBox<T>>(node), SelectingControl<T>, HasWritableValue<T?> {
 
-  constructor(items: ObsList<T>): this(ChoiceBox(items.createFXWrapper()))
+  constructor(items: MutableObsList<T>): this(ChoiceBox(items.createFXWrapper()))
 
 
   var converter: StringConverter<T?>?

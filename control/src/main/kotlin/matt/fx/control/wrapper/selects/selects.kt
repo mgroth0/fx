@@ -17,7 +17,7 @@ import matt.hurricanefx.eye.wrapper.obs.obsval.toNullableROProp
 import matt.model.op.convert.Converter
 import matt.obs.bind.binding
 import matt.obs.col.olist.ImmutableObsList
-import matt.obs.col.olist.ObsList
+import matt.obs.col.olist.MutableObsList
 import matt.obs.col.olist.mappedlist.toMappedList
 import matt.obs.prop.ObsVal
 import matt.obs.prop.Var
@@ -130,7 +130,7 @@ interface MultiSelectControls<W: Any>: SelectionControls<W> {
 	  selectionModeProperty.value = value
 	}
 
-  fun selectedIndices(): ObsList<Int>
+  fun selectedIndices(): MutableObsList<Int>
   fun selectIndices(index: Int, vararg indices: Int)
   fun selectRange(start: Int, end: Int)
   fun selectAll()

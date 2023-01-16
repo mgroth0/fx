@@ -40,7 +40,7 @@ import matt.lang.setAll
 import matt.obs.bind.binding
 import matt.obs.bindings.bool.ObsB
 import matt.obs.col.olist.MutableObsList
-import matt.obs.col.olist.ObsList
+import matt.obs.col.olist.MutableObsList
 import matt.obs.col.olist.sync.toSyncedList
 import matt.obs.col.olist.toMutableObsList
 import matt.obs.prop.ObsVal
@@ -48,7 +48,7 @@ import matt.obs.prop.VarProp
 import matt.time.dur.sleep
 import kotlin.time.Duration.Companion.milliseconds
 
-fun <T: Any> ET.tableview(items: ObsList<T>? = null, op: TableViewWrapper<T>.()->Unit = {}) =
+fun <T: Any> ET.tableview(items: MutableObsList<T>? = null, op: TableViewWrapper<T>.()->Unit = {}) =
   TableViewWrapper<T>().attachTo(this, op) {
 	if (items != null) {
 	  if (items is MutableObsList<T>) {

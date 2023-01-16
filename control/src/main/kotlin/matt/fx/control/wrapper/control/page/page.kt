@@ -13,7 +13,7 @@ import matt.fx.graphics.wrapper.pane.anchor.AnchorPaneWrapperImpl
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
 import matt.lang.function.Op
-import matt.obs.col.olist.ObsList
+import matt.obs.col.olist.MutableObsList
 
 fun ET.pagination(
   pageCount: Int? = null, pageIndex: Int? = null, op: PaginationWrapper.()->Unit = {}
@@ -67,10 +67,10 @@ class PaginationWrapper(node: Pagination = Pagination()): ControlWrapperImpl<Pag
   }
 }
 
-fun listPagination(list: ObsList<out NodeWrapper>) = ListPagination(list) { it }
+fun listPagination(list: MutableObsList<out NodeWrapper>) = ListPagination(list) { it }
 
 class ListPagination<E>(
-  private val list: ObsList<E>,
+  private val list: MutableObsList<E>,
   factory: (E)->NodeWrapper
 ): AnchorPaneWrapperImpl<NW>() {
 
