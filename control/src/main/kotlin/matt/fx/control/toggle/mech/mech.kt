@@ -15,8 +15,6 @@ import matt.lang.weak.WeakRef
 import matt.log.warn.warn
 import matt.model.flowlogic.keypass.KeyPass
 import matt.model.flowlogic.recursionblocker.RecursionBlocker
-import matt.obs.col.change.AdditionBase
-import matt.obs.col.change.RemovalBase
 import matt.obs.col.change.SetAdditionBase
 import matt.obs.col.change.SetRemovalBase
 import matt.obs.col.oset.basicObservableSetOf
