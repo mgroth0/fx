@@ -33,7 +33,6 @@ import matt.lang.NEVER
 import matt.lang.err
 import matt.model.op.convert.Converter
 import matt.obs.col.olist.ImmutableObsList
-import matt.obs.col.olist.MutableObsList
 import matt.obs.col.olist.mappedlist.toLazyMappedList
 import matt.obs.col.olist.sync.toSyncedList
 import matt.obs.prop.BindableProperty

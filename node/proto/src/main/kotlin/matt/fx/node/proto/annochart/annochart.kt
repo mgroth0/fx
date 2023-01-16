@@ -24,7 +24,6 @@ import matt.lang.go
 import matt.model.data.mathable.MathAndComparable
 import matt.model.data.xyz.Dim2D
 import matt.obs.col.olist.ImmutableObsList
-import matt.obs.col.olist.MutableObsList
 import matt.obs.col.olist.basicMutableObservableListOf
 import matt.obs.col.olist.cat.concatenatedTo
 import matt.obs.col.olist.mappedlist.toMappedList

@@ -2,7 +2,6 @@ package matt.fx.control.wrapper.control.combo
 
 import javafx.beans.property.ObjectProperty
 import javafx.beans.property.StringProperty
-import javafx.collections.ObservableList
 import javafx.scene.control.ComboBox
 import javafx.scene.control.ComboBoxBase
 import javafx.scene.control.ListView
@@ -19,7 +18,6 @@ import matt.hurricanefx.eye.wrapper.obs.collect.list.mfxMutableListConverter
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
 import matt.obs.bind.smartBind
-import matt.obs.col.olist.MutableObsList
 import matt.obs.col.olist.MutableObsList
 import matt.obs.col.olist.toBasicObservableList
 import matt.obs.prop.ObsVal

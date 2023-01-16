@@ -21,7 +21,6 @@ import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
 import matt.lang.go
 import matt.obs.bind.smartBind
 import matt.obs.col.olist.MutableObsList
-import matt.obs.col.olist.MutableObsList
 import matt.obs.col.olist.toBasicObservableList
 import matt.obs.prop.BindableProperty
 import matt.obs.prop.ValProp

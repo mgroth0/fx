@@ -8,7 +8,6 @@ import matt.fx.graphics.wrapper.node.NW
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.pane.grid.GridPaneWrapper
 import matt.obs.col.olist.MutableObsList
-import matt.obs.col.olist.MutableObsList
 
 class MyLegend(
   val items: MutableObsList<LegendItem>

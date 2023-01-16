@@ -40,7 +40,6 @@ import matt.lang.setAll
 import matt.obs.bind.binding
 import matt.obs.bindings.bool.ObsB
 import matt.obs.col.olist.MutableObsList
-import matt.obs.col.olist.MutableObsList
 import matt.obs.col.olist.sync.toSyncedList
 import matt.obs.col.olist.toMutableObsList
 import matt.obs.prop.ObsVal
