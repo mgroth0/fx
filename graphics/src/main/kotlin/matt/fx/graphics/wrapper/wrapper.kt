@@ -65,6 +65,8 @@ sealed class EventTargetWrapperImpl<out N: EventTarget>: EventTargetWrapper {
   override var hotKeyHandler: HotKeyEventHandler? = null
   override var hotKeyFilter: HotKeyEventHandler? = null
 
+  override fun toString() = super.toString().substringAfterLast(".")
+
 }
 
 abstract class SingularEventTargetWrapper<out N: EventTarget>(/*TODO: node must be made internal...? then protected...*/

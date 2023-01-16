@@ -363,10 +363,10 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
 
 //  private fun updateStyleClassOf(s: Series<X, Y>, i: Int) {
 //	val seriesNode = s.node.value
-//	seriesNode?.styleClass?.setAll("chart-series-line", "series$i", s.defaultColorStyleClass)
+//	seriesNode?.styleClass?.matt.lang.setall.setAll("chart-series-line", "series$i", s.defaultColorStyleClass)
 //	for (j in s.data.value.indices) {
 //	  val symbol = s.data.value[j].nodeProp.value
-//	  symbol?.styleClass?.setAll("`chart-line-symbol`", "series$i", "data$j", s.defaultColorStyleClass)
+//	  symbol?.styleClass?.matt.lang.setall.setAll("`chart-line-symbol`", "series$i", "data$j", s.defaultColorStyleClass)
 //	}
 //  }
 //

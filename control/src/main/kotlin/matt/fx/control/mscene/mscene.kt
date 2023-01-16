@@ -85,9 +85,9 @@ open class MScene<R: ParentWrapper<*>>(
 		/*this is controlled from the OS from now on*/        /*matt.fx.graphics.menu.actionitem("toggle darkMode") {
 		  darkMode = !darkMode
 		  if (darkMode) {
-			stylesheets.setAll(DARK_MODENA_CSS, CUSTOM_CSS)
+			stylesheets.matt.lang.setall.setAll(DARK_MODENA_CSS, CUSTOM_CSS)
 		  } else {
-			stylesheets.setAll()
+			stylesheets.matt.lang.setall.setAll()
 		  }
 		  darkModeListeners.forEach { it() }
 		}*/
