@@ -36,7 +36,7 @@ import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNullableROProp
 import matt.lang.function.Op
 import matt.lang.go
-import matt.lang.setAll
+import matt.lang.setall.setAll
 import matt.obs.bind.binding
 import matt.obs.bindings.bool.ObsB
 import matt.obs.col.olist.ImmutableObsList

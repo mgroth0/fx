@@ -10,7 +10,7 @@ import matt.fx.control.wrapper.treeitem.TreeItemWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.region.RegionWrapper
 import matt.fx.graphics.wrapper.sizeman.SizeManaged
-import matt.lang.setAll
+import matt.lang.setall.setAll
 import matt.obs.prop.Var
 
 fun <T> TreeItem<T>.treeitem(value: T? = null, op: TreeItem<T>.()->Unit = {}): TreeItem<T> {

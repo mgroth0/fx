@@ -12,7 +12,7 @@ import matt.hurricanefx.eye.wrapper.obs.collect.list.mfxMutableListConverter
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNullableROProp
-import matt.lang.setAll
+import matt.lang.setall.setAll
 import matt.log.SystemOutLogger
 import matt.model.op.convert.Converter
 import matt.model.op.convert.NullToBlankStringConverter
