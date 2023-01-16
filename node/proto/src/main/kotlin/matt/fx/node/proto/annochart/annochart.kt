@@ -23,6 +23,7 @@ import matt.fx.node.proto.annochart.inner.calcAutoBounds
 import matt.lang.go
 import matt.model.data.mathable.MathAndComparable
 import matt.model.data.xyz.Dim2D
+import matt.obs.col.olist.ImmutableObsList
 import matt.obs.col.olist.ObsList
 import matt.obs.col.olist.basicMutableObservableListOf
 import matt.obs.col.olist.cat.concatenatedTo
@@ -108,7 +109,7 @@ open class AnnotateableChart<X: MathAndComparable<X>, Y: MathAndComparable<Y>> p
 	Source, DownSampled
   }
 
-  private val dataViews = lazyMap<VisibleDataMode, ObsList<SeriesWrapper<X, Y>>>() {
+  private val dataViews = lazyMap<VisibleDataMode, ImmutableObsList<SeriesWrapper<X, Y>>>() {
 	when (it) {
 	  Source      -> annotationSeries.concatenatedTo(realData)
 	  DownSampled -> annotationSeries.concatenatedTo(downSampledRealData)
