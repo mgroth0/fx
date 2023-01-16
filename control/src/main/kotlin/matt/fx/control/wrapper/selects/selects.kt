@@ -16,6 +16,7 @@ import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNullableROProp
 import matt.model.op.convert.Converter
 import matt.obs.bind.binding
+import matt.obs.col.olist.ImmutableObsList
 import matt.obs.col.olist.ObsList
 import matt.obs.col.olist.mappedlist.toMappedList
 import matt.obs.prop.ObsVal
@@ -133,7 +134,7 @@ interface MultiSelectControls<W: Any>: SelectionControls<W> {
   fun selectIndices(index: Int, vararg indices: Int)
   fun selectRange(start: Int, end: Int)
   fun selectAll()
-  val selectedItems: ObsList<W>
+  val selectedItems: ImmutableObsList<W>
 }
 
 typealias MultiSelectWrap<T> = MultipleSelectionModelWrapperBase<*, T>
@@ -146,7 +147,7 @@ abstract class MultipleSelectionModelWrapperBase<T: Any, W: Any>(
   override fun selectIndices(index: Int, vararg indices: Int) = sm.selectIndices(index, *indices)
   override fun selectRange(start: Int, end: Int) = sm.selectRange(start, end)
   override fun selectAll() = sm.selectAll()
-  abstract override val selectedItems: ObsList<W>
+  abstract override val selectedItems: ImmutableObsList<W>
 }
 
 fun <T: Any> MultipleSelectionModel<T>.wrap() = MultipleSelectionModelWrapperImpl(this)
