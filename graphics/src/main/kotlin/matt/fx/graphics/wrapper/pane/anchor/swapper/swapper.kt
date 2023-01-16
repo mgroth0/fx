@@ -11,6 +11,7 @@ import matt.fx.graphics.wrapper.node.attach
 import matt.fx.graphics.wrapper.region.RegionWrapperImpl
 import matt.fx.graphics.wrapper.text.TextWrapper
 import matt.obs.listen.MyListener
+import matt.obs.listen.MyListenerInter
 import matt.obs.prop.ObsVal
 
 
@@ -98,7 +99,7 @@ open class Swapper<P, C: NodeWrapper>: RegionWrapperImpl<Region, C>(AnchorPane()
   //  }
 
   private var fxWatcherProp: ObsVal<P>? = null
-  private var listener: (MyListener<*>)? = null
+  private var listener: (MyListenerInter<*>)? = null
 
   @Synchronized
   fun setupSwappingWithReceiver(
