@@ -3,7 +3,7 @@ package matt.fx.graphics.lang
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.scene.SceneWrapper
 import matt.lang.err
-import matt.lang.setAll
+import matt.lang.setall.setAll
 
 fun NodeWrapper.setOnFocusLost(op: ()->Unit) {
   focusedProperty.onChange { it: Boolean? ->
