@@ -33,6 +33,7 @@ import matt.lang.NEVER
 import matt.lang.err
 import matt.model.op.convert.Converter
 import matt.obs.col.olist.ImmutableObsList
+import matt.obs.col.olist.ObsList
 import matt.obs.col.olist.mappedlist.toLazyMappedList
 import matt.obs.col.olist.sync.toSyncedList
 import matt.obs.prop.BindableProperty
@@ -221,7 +222,7 @@ open class RegionWrapperImpl<N: Region, C: NodeWrapper>(node: N): ParentWrapperI
 	)
   }
 
-  override val children by lazy {
+  override val children: ImmutableObsList<C> by lazy {
 	/*trying to avoid initializing wrappers to quickly (and getting the wrong ones as a result)*/
 	node.childrenUnmodifiable.createImmutableWrapper()
 	  .toLazyMappedList { uncheckedWrapperConverter<Node, C>().convertToB(it) }
