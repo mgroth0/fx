@@ -17,6 +17,8 @@ import matt.model.flowlogic.keypass.KeyPass
 import matt.model.flowlogic.recursionblocker.RecursionBlocker
 import matt.obs.col.change.AdditionBase
 import matt.obs.col.change.RemovalBase
+import matt.obs.col.change.addedElements
+import matt.obs.col.change.removedElements
 import matt.obs.col.oset.basicObservableSetOf
 import matt.obs.listen.Listener
 import matt.obs.prop.BindableProperty

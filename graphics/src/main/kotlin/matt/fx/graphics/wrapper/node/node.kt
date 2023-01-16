@@ -40,7 +40,6 @@ import matt.fx.graphics.fxthread.ensureInFXThreadInPlace
 import matt.fx.graphics.fxthread.ts.nonBlockingFXWatcher
 import matt.fx.graphics.service.uncheckedNullableWrapperConverter
 import matt.fx.graphics.service.wrapped
-import matt.fx.graphics.style.DarkModeController
 import matt.fx.graphics.wrapper.EventTargetWrapper
 import matt.fx.graphics.wrapper.SingularEventTargetWrapper
 import matt.fx.graphics.wrapper.node.parent.ParentWrapper
@@ -561,6 +560,7 @@ abstract class NodeWrapperImpl<out N: Node>(
 
   final override val focusedProperty by lazy { node.focusedProperty().toNonNullableROProp() }
   final override val isFocused by focusedProperty
+
 
   override val layoutBoundsProperty by lazy { node.layoutBoundsProperty().toNonNullableROProp() }
   override val hoverProperty by lazy { node.hoverProperty().toNonNullableROProp() }

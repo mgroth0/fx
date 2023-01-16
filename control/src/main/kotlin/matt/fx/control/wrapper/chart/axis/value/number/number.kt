@@ -12,8 +12,8 @@ import matt.fx.control.wrapper.chart.axis.value.number.tickconfig.DurationWrappe
 import matt.fx.control.wrapper.chart.axis.value.number.tickconfig.TickConfigurer
 import matt.fx.control.wrapper.chart.axis.value.number.tickconfig.UnitLessTickConfigurer
 import matt.fx.graphics.dur.MilliSecondDurationWrapperConverter
-import matt.math.index.IndexWrapperConverter
-import matt.math.index.IndexWrapperIntConverter
+import matt.model.data.index.IndexWrapperConverter
+import matt.model.data.index.IndexWrapperIntConverter
 import matt.model.data.byte.ByteSizeDoubleConverter
 import matt.model.data.mathable.DoubleWrapper
 import matt.model.data.mathable.MathAndComparable
