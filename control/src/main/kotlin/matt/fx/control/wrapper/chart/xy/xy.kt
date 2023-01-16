@@ -15,7 +15,7 @@ import matt.hurricanefx.eye.wrapper.obs.collect.list.createMutableWrapper
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.NonNullFXBackedBindableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.obs.col.olist.MutableObsList
-import matt.obs.col.olist.mappedlist.toSyncedList
+import matt.obs.col.olist.sync.toSyncedList
 
 fun <X, Y> MutableList<Data<X, Y>>.add(x: X, y: Y) = add(Data(x, y))
 

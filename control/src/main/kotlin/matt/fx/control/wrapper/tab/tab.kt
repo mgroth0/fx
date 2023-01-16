@@ -15,7 +15,7 @@ import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapper
 import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
 import matt.hurricanefx.eye.wrapper.obs.collect.list.createMutableWrapper
 import matt.log.warn.warn
-import matt.obs.col.olist.mappedlist.toSyncedList
+import matt.obs.col.olist.sync.toSyncedList
 
 
 fun <T: TabWrapper<*>> ET.tabpane(op: TabPaneWrapper<T>.()->Unit = {}) = TabPaneWrapper<T>().attachTo(this, op)
