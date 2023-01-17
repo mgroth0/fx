@@ -365,6 +365,7 @@ fun ParentWrapper<*>.openInNewWindow(
   beforeShowing: StageWrapper.()->Unit = {},
   border: Boolean = true,
   decorated: Boolean = false,
+  alwaysOnTop: Boolean = false,
   title: String? = null
 ): MStage {
   return MStage(
@@ -373,6 +374,7 @@ fun ParentWrapper<*>.openInNewWindow(
 	EnterClosable = EnterClosable,
 	decorated = decorated
   ).apply {
+	isAlwaysOnTop = alwaysOnTop
 	if (title != null) {
 	  require(decorated)
 	  this.title = title

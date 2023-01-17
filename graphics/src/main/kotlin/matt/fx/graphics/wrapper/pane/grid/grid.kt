@@ -42,6 +42,12 @@ open class GridPaneWrapper<C: NodeWrapper>(node: GridPane = GridPane()): PaneWra
 	ROW, COL
   }
 
+
+  val gridLinesVisibleProp by lazy {
+	node.gridLinesVisibleProperty().toNonNullableProp()
+  }
+  var gridLinesVisible by gridLinesVisibleProp
+
   private var dslType: GridDSLType? = null
 
   private var globalRowIndex = 0

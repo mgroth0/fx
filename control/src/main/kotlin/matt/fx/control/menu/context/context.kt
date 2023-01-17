@@ -16,12 +16,15 @@ import matt.collect.itr.recurse.chain
 import matt.collect.map.lazyMap
 import matt.fx.control.menu.context.EventHandlerType.Filter
 import matt.fx.control.menu.context.EventHandlerType.Handler
+import matt.fx.control.menu.context.debug.SceneDebugger
+import matt.fx.control.win.interact.openInNewWindow
 import matt.fx.control.wrapper.contextmenu.ContextMenuWrapper
 import matt.fx.control.wrapper.menu.MenuWrapper
 import matt.fx.control.wrapper.menu.checkitem.CheckMenuItemWrapper
 import matt.fx.control.wrapper.menu.item.MenuItemWrapper
 import matt.fx.control.wrapper.menu.item.SimpleMenuItem
 import matt.fx.control.wrapper.wrapped.wrapped
+import matt.fx.control.wrapper.wrapped.wrapper
 import matt.fx.graphics.wrapper.EventTargetWrapper
 import matt.fx.graphics.wrapper.node.NW
 import matt.fx.graphics.wrapper.node.NodeWrapper
@@ -178,19 +181,12 @@ fun SceneWrapper<*>.showMContextMenu(
   target: Node, /*cannot be [NodeWrapper] because event targets are not wrappers?*/
   xy: Pair<Double, Double>
 ) {
-
   sequenceOf(1, 2, 3)
-
   CmFix()
-
-
   val devMenu = MenuWrapper("dev")
-
-
   devMenu.actionitem("test exception") {
 	throw Exception("test exception")
   }
-
   devMenu.actionitem("print nodes") {
 	println("NODES:")
 	tab("TARGET:\t${target::class.simpleName}")
@@ -200,8 +196,17 @@ fun SceneWrapper<*>.showMContextMenu(
 	  parent = parent.parent
 	}
   }
-
-
+  devMenu.actionitem("open FX Debugger") {
+	SceneDebugger().apply{
+	  navTo(target.wrapper as NodeWrapper)
+	}.openInNewWindow(
+	  decorated = true,
+	  alwaysOnTop = true,
+	).apply {
+	  width = 1000.0
+	  height = 1500.0
+	}
+  }
   contextMenus[this.node].apply {
 	items.clear()
 	var node: EventTarget = target
@@ -225,7 +230,6 @@ fun SceneWrapper<*>.showMContextMenu(
 		items.add(MenuItem("Got weird null parent in context menu generator! see log for stack trace"))
 		break
 	  }
-
 	}
 	if (items.isNotEmpty()) separator()
 	items += target.wrapped().hotkeyInfoMenu().node
