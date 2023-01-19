@@ -5,7 +5,6 @@ package matt.fx.control.wrapper.titled
 import javafx.scene.Node
 import javafx.scene.control.TitledPane
 import javafx.scene.layout.Pane
-import javafx.scene.layout.VBox
 import javafx.util.StringConverter
 import matt.fx.control.inter.graphic
 import matt.fx.control.wrapper.labeled.LabeledWrapper
@@ -14,11 +13,12 @@ import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.inter.titled.Titled
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attach
+import matt.fx.graphics.wrapper.pane.vbox.VBoxW
 import matt.lang.err
+import matt.lang.go
 import matt.obs.prop.MObservableValNewAndOld
 import matt.obs.prop.ValProp
 import java.text.Format
-import matt.fx.control.inter.graphic
 
 
 fun ET.titledpane(
@@ -49,10 +49,10 @@ open class TitledPaneWrapper(
 
   override val titleProperty by lazy { textProperty }
 
-  var content: Node?
-	get() = node.content
+  var content: NodeWrapper?
+	get() = node.content?.wrapped()
 	set(value) {
-	  node.content = value
+	  node.content = value?.node
 	}
 
   var isCollapsible: Boolean
@@ -68,16 +68,19 @@ open class TitledPaneWrapper(
 
   override fun addChild(child: NodeWrapper, index: Int?) {
 	when (content) {
-	  is Pane -> content!!.wrapped().addChild(child, index)
+	  is Pane -> content!!.addChild(child, index)
 
 	  is Node -> {
-		val container = VBox()
-		container.children.addAll(content, child.node)
+		val container = VBoxW()
+		content?.go {
+		  container.children.add(it)
+		}
+		container.children.add(child)
 		content = container
 	  }
 
 	  else    -> {
-		content = child.node
+		content = child
 	  }
 	}
   }

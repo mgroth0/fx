@@ -124,9 +124,16 @@ class ToggleMechanism<V: Any>() {
 	toggles.onChange { change ->
 	  (change as? SetAdditionBase)?.addedElements?.forEach { toggle ->
 		val togg = toggle.deref()!!
-		listeners[togg] = togg.selectedProperty.onChangeWithAlreadyWeak(toggle) { tog: SelectableValue<V>, sel ->        /*println("selectedProperty of toggle ${toggle} changed to ${it}")
+		println("adding tog listener")
+		listeners[togg] = togg.selectedProperty.onChangeWithAlreadyWeak(toggle) { tog: SelectableValue<V>, sel ->        /*println("selectedProperty of
+
+
+		 toggle ${toggle} changed to ${it}")
 		  println("selectedToggle.value=${selectedToggle.value}")
 		  println("selectedValue.value=${selectedValue.value}")*/
+
+		  println("tog selected: $tog, $sel")
+
 
 		  if (sel) didSelectToggle(tog)
 		  else didUnSelectToggle(tog)
