@@ -104,6 +104,8 @@ class MinimalFXApp: Application() {
 	try {
 	  fxBlock(parameters.raw)
 	} catch (e: Exception) {
+	  val bugText = BugReport(t = Thread.currentThread(), e = e).text
+	  println("\n\n$bugText\n\n")
 	  val debugScene = Scene(
 		VBox(
 		  Label(ERROR_POP_UP_TEXT).apply {
@@ -114,7 +116,7 @@ class MinimalFXApp: Application() {
 		  VBox().apply {
 			minHeight = 50.0
 		  },
-		  TextArea(BugReport(t = Thread.currentThread(), e = e).text).apply {
+		  TextArea(bugText).apply {
 			insets(25.0)
 		  }
 		).apply {
@@ -129,6 +131,7 @@ class MinimalFXApp: Application() {
 		centerOnScreen()
 	  }
 	  primaryStage.show()
+
 	}
 
 	fxStopwatch?.toc("finished starting main app")
