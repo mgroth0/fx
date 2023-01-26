@@ -14,7 +14,7 @@ import matt.async.thread.daemon
 import matt.auto.macapp.SublimeText
 import matt.file.MFile
 import matt.file.commons.DATA_FOLDER
-import matt.file.commons.LOG_FOLDER
+import matt.file.commons.mattLogContext
 import matt.file.construct.mFile
 import matt.fx.control.menu.context.mcontextmenu
 import matt.fx.control.wrapper.scroll.ScrollPaneWrapper
@@ -85,7 +85,7 @@ sealed class Console(
   }
 
   private val hscrollOption = BindableProperty(true)
-  private val myLogFolder = LOG_FOLDER + name
+  private val myLogFolder = mattLogContext.logFolder + name
   protected val logfile = myLogFolder + "$name.log"
   protected val errFile = mFile(logfile.absolutePath + ".err")
   protected var writer: BufferedWriter? = null
