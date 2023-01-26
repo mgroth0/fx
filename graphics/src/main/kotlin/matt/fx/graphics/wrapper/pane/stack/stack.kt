@@ -7,6 +7,7 @@ import javafx.scene.Node
 import javafx.scene.layout.StackPane
 import matt.fx.graphics.style.inset.MarginableConstraints
 import matt.fx.graphics.wrapper.ET
+import matt.fx.graphics.wrapper.node.NW
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attach
 import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
@@ -14,6 +15,8 @@ import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
 inline fun <C: NodeWrapper> ET.stackpane(initialChildren: Iterable<C>? = null, op: StackPaneWrapper<C>.()->Unit = {}) = attach(
   StackPaneWrapper<C>().apply { if (initialChildren != null) children.addAll(initialChildren) }, op
 )
+
+open class StackPaneW: StackPaneWrapper<NW>()
 
 open class StackPaneWrapper<C: NodeWrapper>(node: StackPane = StackPane()): PaneWrapperImpl<StackPane, C>(node) {
 

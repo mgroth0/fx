@@ -15,6 +15,7 @@ import matt.fx.control.inter.TextAndGraphic
 import matt.fx.control.inter.graphic
 import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.graphics.service.nullableNodeConverter
+import matt.fx.graphics.stylelock.toNonNullableStyleProp
 import matt.fx.graphics.wrapper.node.NW
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.window.WindowWrapper
@@ -24,7 +25,6 @@ import matt.lang.go
 import matt.lang.sync
 import matt.obs.prop.Var
 import matt.obs.prop.VarProp
-import matt.fx.graphics.stylelock.toNonNullableStyleProp
 
 fun NW.install(newToolTip: TooltipWrapper) {
   if (this is ControlWrapperImpl<*>) {
@@ -39,7 +39,7 @@ fun NW.install(newToolTip: TooltipWrapper) {
 fun NW.tooltip(text: String = "", graphic: NW? = null, op: TooltipWrapper.()->Unit = {}): TooltipWrapper {
   val newToolTip = TooltipWrapper(text).apply {
 	this.graphic = graphic
-	comfortableShowAndHideSettingsForMatt()
+	comfortablyShowForeverUntilEscaped()
 	op()
   }
   install(newToolTip)
@@ -65,10 +65,13 @@ open class TooltipWrapper(node: Tooltip = Tooltip()): WindowWrapper<Tooltip>(nod
   }
 
 
-  fun comfortableShowAndHideSettingsForMatt() {
+  fun comfortablyShowForeverUntilMouseMoved() {
 	showDelay = Duration.millis(100.0)
-	hideDelay = Duration.INDEFINITE
 	showDuration = Duration.INDEFINITE
+  }
+  fun comfortablyShowForeverUntilEscaped() {
+	comfortablyShowForeverUntilMouseMoved()
+	hideDelay = Duration.INDEFINITE
   }
 
   var showDelay by node::showDelay
