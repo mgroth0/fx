@@ -12,7 +12,7 @@ import matt.obs.prop.BindableProperty
 import matt.obs.prop.ObsVal
 import matt.obs.watch.PropertyWatcher
 
-private class BlockingFXWatcher<T>(source: ObsVal<T>): MyBinding<T>(calc = {
+private class BlockingFXWatcher<T>(source: ObsVal<T>): MyBinding<T>(calcArg = {
   source.value
 }) {
   init {
@@ -24,7 +24,7 @@ private class BlockingFXWatcher<T>(source: ObsVal<T>): MyBinding<T>(calc = {
   }
 }
 
-private class NonBlockingFXWatcher<T>(source: ObsVal<T>): MyBinding<T>(calc = {
+private class NonBlockingFXWatcher<T>(source: ObsVal<T>): MyBinding<T>(calcArg = {
   source.value
 }) {
   init {
