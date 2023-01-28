@@ -48,6 +48,9 @@ fun EventTargetWrapper.scaledCanvas(
   return canv
 }
 
+
+
+
 open class ScaledCanvas(
   canvas: CanvasWrapper = CanvasWrapper(),
   initialScale: Double = 1.0,
@@ -80,3 +83,45 @@ open class ScaledCanvas(
   override val height: Double get() = actualHeight.value
   override val width: Double get() = actualWidth.value
 }
+
+
+/*
+open class PixelSizedCanvas(
+  canvas: CanvasWrapper = CanvasWrapper(),
+  initialPixelWidth: Double = 32.0,
+): RegionWrapperImpl<Pane, CanvasWrapper>(Pane()), Canv by canvas {
+
+  constructor(
+	height: Number,
+	width: Number,
+	initialScale: Double = 1.0,
+  ): this(CanvasWrapper(width = width.toDouble(), height = height.toDouble()), initialScale)
+
+  constructor(hw: Number, scale: Double): this(height = hw.toDouble(), width = hw.toDouble(), initialScale = scale)
+
+  val pixelWidth = BindableProperty(initialPixelWidth)
+
+  init {
+
+	canvas.node.also {
+	  it.graphicsContext2D.also {
+		it.scale()
+	  }
+	}
+
+	canvas.apply {
+	  layoutXProperty.bind((widthProperty*this@PixelSizedCanvas.scale - widthProperty)/2.0)
+	  layoutYProperty.bind((heightProperty*this@PixelSizedCanvas.scale - heightProperty)/2.0)
+	  scaleXProperty.bind(this@PixelSizedCanvas.scale)
+	  scaleYProperty.bind(this@PixelSizedCanvas.scale)
+	  this@PixelSizedCanvas.regionChildren.add(this)
+	}
+	exactHeightProperty.bind(actualHeight)
+	exactWidthProperty.bind(actualWidth)
+  }
+
+  override fun addChild(child: NodeWrapper, index: Int?) = NEVER
+
+  override val height: Double get() = actualHeight.value
+  override val width: Double get() = actualWidth.value
+}*/

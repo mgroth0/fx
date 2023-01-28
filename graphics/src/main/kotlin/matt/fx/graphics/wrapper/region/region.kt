@@ -247,14 +247,14 @@ open class RegionWrapperImpl<N: Region, C: NodeWrapper>(node: N): ParentWrapperI
   final override val backgroundProperty by lazy { node.backgroundProperty().toNullableStyleProp() }
   final override var background by backgroundProperty
 
-  override val exactWidthProperty by lazy {
+  final override val exactWidthProperty by lazy {
 	BindableProperty<Double>(0.0).also {
 	  minWidthProperty.bind(it)
 	  maxWidthProperty.bind(it)
 	}
   }
 
-  override val exactHeightProperty by lazy {
+  final override val exactHeightProperty by lazy {
 	BindableProperty(0.0).also {
 	  minHeightProperty.bind(it)
 	  maxHeightProperty.bind(it)

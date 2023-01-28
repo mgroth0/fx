@@ -8,9 +8,9 @@ import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapperImpl
 import matt.fx.graphics.wrapper.node.attach
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.graphics.wrapper.sizeman.HasHeight
 import matt.fx.graphics.wrapper.sizeman.HasWidth
+import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.lang.NOT_IMPLEMENTED
 import matt.obs.math.double.ObsD
 import matt.obs.math.double.op.times
@@ -60,8 +60,8 @@ open class CanvasWrapper(node: Canvas = Canvas()): NodeWrapperImpl<Canvas>(node)
   final override val heightProperty = node.heightProperty().toNonNullableProp().cast<Double>()
   override var pixelHeight by heightProperty
 
-  override val actualWidth by lazy { widthProperty*scaleXProperty }
-  override val actualHeight by lazy { heightProperty*scaleYProperty }
+  final override val actualWidth by lazy { widthProperty*scaleXProperty }
+  final override val actualHeight by lazy { heightProperty*scaleYProperty }
 
   override val graphicsContext: GraphicsContext get() = node.graphicsContext2D
   override fun addChild(child: NodeWrapper, index: Int?) = NOT_IMPLEMENTED
