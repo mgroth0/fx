@@ -30,6 +30,7 @@ import matt.hurricanefx.eye.wrapper.obs.collect.list.createMutableWrapper
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
 import matt.lang.NEVER
+import matt.lang.delegation.lazyVarDelegate
 import matt.lang.err
 import matt.model.op.convert.Converter
 import matt.obs.col.olist.ImmutableObsList
@@ -240,7 +241,12 @@ open class RegionWrapperImpl<N: Region, C: NodeWrapper>(node: N): ParentWrapperI
   }
 
   override val paddingProperty by lazy { node.paddingProperty().toNonNullableProp() }
-  override var padding by paddingProperty
+
+  override var padding by lazyVarDelegate {
+	paddingProperty
+  }
+
+
 
   final override val paddingVerticalProperty: ProxyProp<Insets, Double> by lazy {
 	paddingProperty.proxy(object: Converter<Insets, Double> {
