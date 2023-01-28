@@ -9,6 +9,7 @@ import matt.fx.graphics.wrapper.node.attachTo
 import matt.fx.graphics.wrapper.node.shape.ShapeWrapper
 import matt.fx.graphics.wrapper.text.textlike.ColoredText
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.lang.delegation.lazyVarDelegate
 import matt.obs.bindings.str.ObsS
 
 fun ET.text(op: TextWrapper.()->Unit = {}) = TextWrapper().attachTo(this, op)
@@ -44,10 +45,10 @@ open class TextWrapper(
 
   fun textAlignmentProperty(): ObjectProperty<TextAlignment> = node.textAlignmentProperty()
 
-  val xProperty by lazy {node.xProperty().toNonNullableProp().cast<Double>()}
-  var x by xProperty
-  val yProperty by lazy {node.yProperty().toNonNullableProp().cast<Double>()}
-  var y by yProperty
+  val xProperty by lazy { node.xProperty().toNonNullableProp().cast<Double>() }
+  var x by lazyVarDelegate { xProperty }
+  val yProperty by lazy { node.yProperty().toNonNullableProp().cast<Double>() }
+  var y by lazyVarDelegate { yProperty }
 
 
 }

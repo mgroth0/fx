@@ -8,6 +8,7 @@ import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.region.RegionWrapper
 import matt.fx.graphics.wrapper.region.RegionWrapperImpl
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
+import matt.lang.delegation.lazyVarDelegate
 import matt.obs.prop.Var
 
 interface ControlWrapper: RegionWrapper<NodeWrapper> {
@@ -22,6 +23,6 @@ abstract class ControlWrapperImpl<N: Control>(node: N): RegionWrapperImpl<N, Nod
   final override val tooltipProp by lazy {
 	node.tooltipProperty().toNullableProp().proxy(uncheckedWrapperConverter<Tooltip, TooltipWrapper>().nullable())
   }
-  final override var tooltip by tooltipProp
+  final override var tooltip by lazyVarDelegate { tooltipProp }
 
 }

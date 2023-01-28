@@ -8,6 +8,7 @@ import matt.fx.graphics.wrapper.node.attachTo
 import matt.fx.graphics.wrapper.node.shape.ShapeWrapper
 import matt.fx.graphics.wrapper.sizeman.SizeControlled
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.lang.delegation.lazyVarDelegate
 
 fun NodeWrapperImpl<Parent>.rectangle(
   x: Number = 0.0,
@@ -46,11 +47,11 @@ open class RectangleWrapper(
   val xProperty by lazy {
 	node.xProperty().toNonNullableProp().cast<Double>()
   }
-  var x by xProperty
+  var x by lazyVarDelegate { xProperty }
   val yProperty by lazy {
 	node.yProperty().toNonNullableProp().cast<Double>()
   }
-  var y by yProperty
+  var y by lazyVarDelegate { yProperty }
 
 
   override var height

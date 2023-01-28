@@ -7,6 +7,7 @@ import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.lang.delegation.lazyVarDelegate
 import matt.obs.bind.smartBind
 import matt.obs.prop.ObsVal
 
@@ -32,7 +33,6 @@ fun <T> ET.slider(
 class SliderWrapper(
   node: Slider = Slider(),
 ): ControlWrapperImpl<Slider>(node) {
-
 
 
   var max
@@ -62,31 +62,26 @@ class SliderWrapper(
   val valueProperty by lazy { node.valueProperty().toNonNullableProp().cast<Double>() }
 
 
-
   val valueChangingProperty by lazy { node.valueChangingProperty().toNonNullableProp() }
-  var valueChanging by valueChangingProperty
-
+  var valueChanging by lazyVarDelegate { valueChangingProperty }
 
 
   val snapToTicksProperty by lazy { node.snapToTicksProperty().toNonNullableProp() }
-  var isSnapToTicks by snapToTicksProperty
-
-
+  var isSnapToTicks by lazyVarDelegate { snapToTicksProperty }
 
 
   val showTickMarksProperty by lazy { node.showTickMarksProperty().toNonNullableProp() }
-  var isShowTickMarks by showTickMarksProperty
-
+  var isShowTickMarks by lazyVarDelegate { showTickMarksProperty }
 
 
   val showTickLabelsProperty by lazy { node.showTickLabelsProperty().toNonNullableProp() }
-  var isShowTickLabels by showTickLabelsProperty
+  var isShowTickLabels by lazyVarDelegate { showTickLabelsProperty }
 
   val majorTickUnitProperty by lazy { node.majorTickUnitProperty().toNonNullableProp() }
-  var majorTickUnit by majorTickUnitProperty
+  var majorTickUnit by lazyVarDelegate { majorTickUnitProperty }
 
   val minorTickCountProperty by lazy { node.minorTickCountProperty().toNonNullableProp() }
-  var minorTickCount by minorTickCountProperty
+  var minorTickCount by lazyVarDelegate { minorTickCountProperty }
   override fun addChild(child: NodeWrapper, index: Int?) {
 	TODO("Not yet implemented")
   }

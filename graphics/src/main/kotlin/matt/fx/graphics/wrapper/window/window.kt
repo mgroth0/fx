@@ -17,6 +17,7 @@ import matt.fx.graphics.wrapper.stage.StageWrapper
 import matt.hurricanefx.eye.wrapper.obs.obsval.NonNullFXBackedReadOnlyBindableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
 import matt.lang.NOT_IMPLEMENTED
+import matt.lang.delegation.lazyDelegate
 
 open class WindowWrapper<W: Window>(override val node: W): SingularEventTargetWrapper<W>(node), SizeControlled {
 
@@ -57,7 +58,7 @@ open class WindowWrapper<W: Window>(override val node: W): SingularEventTargetWr
 	require(node != null) /*debug*/
 	node.focusedProperty().toNonNullableROProp()
   }
-  val focused by focusedProperty
+  val focused by lazyDelegate { focusedProperty }
 
   fun setOnCloseRequest(value: EventHandler<WindowEvent>) = node.setOnCloseRequest(value)
   fun setOnHidden(value: EventHandler<WindowEvent>) = node.setOnHidden(value)

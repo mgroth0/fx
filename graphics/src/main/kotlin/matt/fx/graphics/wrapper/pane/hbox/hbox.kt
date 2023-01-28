@@ -16,6 +16,7 @@ import matt.fx.graphics.wrapper.pane.box.BoxWrapper
 import matt.fx.graphics.wrapper.pane.box.BoxWrapperImpl
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.lang.B
+import matt.lang.delegation.lazyVarDelegate
 import matt.obs.prop.Var
 
 fun ET.h(
@@ -47,13 +48,12 @@ open class HBoxWrapperImpl<C: NodeWrapper>(node: HBox = HBox()): BoxWrapperImpl<
   final override val fillHeightProperty by lazy {
 	node.fillHeightProperty().toNonNullableProp()
   }
-  override var isFillHeight by fillHeightProperty
+  override var isFillHeight by lazyVarDelegate { fillHeightProperty }
 
 }
 
 fun HBoxWrapperImpl<NodeWrapper>.spacer(prio: Priority = Priority.ALWAYS, op: PaneWrapperImpl<*, *>.()->Unit = {}) =
   attach(SimplePaneWrapper<NodeWrapper>().apply { hGrow = prio }, op)
-
 
 
 inline fun <T: Node> T.hboxConstraints(op: (HBoxConstraint.()->Unit)): T {
@@ -69,9 +69,9 @@ class HBoxConstraint(
 ): MarginableConstraints() {
 
   fun <T: Node> applyToNode(node: T): T {
-    margin?.let { HBox.setMargin(node, it) }
-    hGrow?.let { HBox.setHgrow(node, it) }
-    return node
+	margin?.let { HBox.setMargin(node, it) }
+	hGrow?.let { HBox.setHgrow(node, it) }
+	return node
   }
 }
 

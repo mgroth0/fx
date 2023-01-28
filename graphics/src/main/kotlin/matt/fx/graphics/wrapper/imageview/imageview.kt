@@ -10,6 +10,7 @@ import matt.fx.graphics.wrapper.node.attachTo
 import matt.fx.graphics.wrapper.region.RegionWrapperImpl
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
+import matt.lang.delegation.lazyVarDelegate
 import matt.obs.bind.binding
 import matt.obs.prop.BindableProperty
 import matt.obs.prop.ObsVal
@@ -46,11 +47,11 @@ class ImageViewWrapper(
 
 
   val imageProperty by lazy { node.imageProperty().toNullableProp() }
-  var image by imageProperty
+  var image by lazyVarDelegate { imageProperty }
 
 
   val preserveRatioProperty by lazy { node.preserveRatioProperty().toNonNullableProp() }
-  var isPreserveRatio by preserveRatioProperty
+  var isPreserveRatio by lazyVarDelegate { preserveRatioProperty }
 
 
   var fitWidth
@@ -59,7 +60,7 @@ class ImageViewWrapper(
 	  node.fitWidth = value
 	}
 
-  val fitWidthProperty = node.fitWidthProperty().toNonNullableProp().cast<Double>()
+  val fitWidthProperty by lazy { node.fitWidthProperty().toNonNullableProp().cast<Double>() }
 
   var fitHeight
 	get() = node.fitHeight
@@ -67,7 +68,7 @@ class ImageViewWrapper(
 	  node.fitHeight = value
 	}
 
-  val fitHeightProperty = node.fitHeightProperty().toNonNullableProp().cast<Double>()
+  val fitHeightProperty by lazy { node.fitHeightProperty().toNonNullableProp().cast<Double>() }
 
 
   var isSmooth

@@ -10,14 +10,14 @@ import matt.fx.graphics.wrapper.node.NodeWrapperImpl
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.NonNullFXBackedBindableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
+import matt.lang.delegation.lazyVarDelegate
 
 abstract class ShapeWrapper<N: Shape>(node: N): NodeWrapperImpl<N>(node) {
 
   val strokeProperty by lazy {
 	node.strokeProperty().toNullableProp()
   }
-  var stroke by strokeProperty
-
+  var stroke by lazyVarDelegate { strokeProperty }
 
 
   var strokeWidth

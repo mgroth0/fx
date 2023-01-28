@@ -12,6 +12,7 @@ import matt.fx.graphics.wrapper.sizeman.HasHeight
 import matt.fx.graphics.wrapper.sizeman.HasWidth
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.lang.NOT_IMPLEMENTED
+import matt.lang.delegation.lazyVarDelegate
 import matt.obs.math.double.ObsD
 import matt.obs.math.double.op.times
 
@@ -56,9 +57,9 @@ open class CanvasWrapper(node: Canvas = Canvas()): NodeWrapperImpl<Canvas>(node)
 
 
   final override val widthProperty = node.widthProperty().toNonNullableProp().cast<Double>()
-  override var pixelWidth by widthProperty
+  override var pixelWidth by lazyVarDelegate { widthProperty }
   final override val heightProperty = node.heightProperty().toNonNullableProp().cast<Double>()
-  override var pixelHeight by heightProperty
+  override var pixelHeight by lazyVarDelegate { heightProperty }
 
   final override val actualWidth by lazy { widthProperty*scaleXProperty }
   final override val actualHeight by lazy { heightProperty*scaleYProperty }

@@ -226,12 +226,11 @@ open class RegionWrapperImpl<N: Region, C: NodeWrapper>(node: N): ParentWrapperI
   override val widthProperty by lazy { node.widthProperty().toNonNullableROProp().cast<Double>() }
   override val prefWidthProperty by lazy { node.prefWidthProperty().toNonNullableProp().cast<Double>() }
   override val minWidthProperty by lazy { node.minWidthProperty().toNonNullableProp().cast<Double>() }
-  override val maxWidthProperty by lazy {node.maxWidthProperty().toNonNullableProp().cast<Double>() }
+  override val maxWidthProperty by lazy { node.maxWidthProperty().toNonNullableProp().cast<Double>() }
   override val heightProperty by lazy { node.heightProperty().toNonNullableROProp().cast<Double>() }
   override val prefHeightProperty by lazy { node.prefHeightProperty().toNonNullableProp().cast<Double>() }
   override val minHeightProperty by lazy { node.minHeightProperty().toNonNullableProp().cast<Double>() }
   override val maxHeightProperty by lazy { node.maxHeightProperty().toNonNullableProp().cast<Double>() }
-
 
 
   override val children: ImmutableObsList<C> by lazy {
@@ -245,7 +244,6 @@ open class RegionWrapperImpl<N: Region, C: NodeWrapper>(node: N): ParentWrapperI
   override var padding by lazyVarDelegate {
 	paddingProperty
   }
-
 
 
   final override val paddingVerticalProperty: ProxyProp<Insets, Double> by lazy {
@@ -263,7 +261,7 @@ open class RegionWrapperImpl<N: Region, C: NodeWrapper>(node: N): ParentWrapperI
   final override var paddingVertical by paddingVerticalProperty
 
   final override val backgroundProperty by lazy { node.backgroundProperty().toNullableStyleProp() }
-  final override var background by backgroundProperty
+  final override var background by lazyVarDelegate { backgroundProperty }
 
   final override val exactWidthProperty by lazy {
 	BindableProperty<Double>(0.0).also {

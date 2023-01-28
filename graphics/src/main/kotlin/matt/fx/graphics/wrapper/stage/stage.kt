@@ -13,6 +13,7 @@ import matt.fx.graphics.wrapper.window.WindowWrapper
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.NullableFXBackedBindableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
+import matt.lang.delegation.lazyDelegate
 import matt.log.warn.warn
 
 open class StageWrapper(node: Stage = Stage()): WindowWrapper<Stage>(node), Titled {
@@ -31,7 +32,7 @@ open class StageWrapper(node: Stage = Stage()): WindowWrapper<Stage>(node), Titl
   fun initModality(m: Modality) = node.initModality(m)
 
   val iconifiedProperty by lazy { node.iconifiedProperty().toNonNullableROProp() }
-  val isIconified by iconifiedProperty
+  val isIconified by lazyDelegate { iconifiedProperty }
 
   fun makeIconinfied() {
 	node.isIconified = true
@@ -77,7 +78,6 @@ open class StageWrapper(node: Stage = Stage()): WindowWrapper<Stage>(node), Titl
   }
 
   override fun isInsideRow() = false
-
 
 
   var isAlwaysOnTop

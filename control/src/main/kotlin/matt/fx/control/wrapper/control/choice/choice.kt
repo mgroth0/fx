@@ -18,6 +18,7 @@ import matt.hurricanefx.eye.wrapper.obs.collect.list.createFXWrapper
 import matt.hurricanefx.eye.wrapper.obs.collect.list.mfxMutableListConverter
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.NullableFXBackedBindableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
+import matt.lang.delegation.lazyVarDelegate
 import matt.lang.go
 import matt.obs.bind.smartBind
 import matt.obs.col.olist.MutableObsList
@@ -74,7 +75,7 @@ class ChoiceBoxWrapper<T: Any>(
 
 
   val itemsProperty by lazy { node.itemsProperty().toNullableProp().proxy(mfxMutableListConverter<T>().nullable()) }
-  var items by itemsProperty
+  var items by lazyVarDelegate { itemsProperty }
 
 
   override val valueProperty: NullableFXBackedBindableProp<T> by lazy { node.valueProperty().toNullableProp() }

@@ -15,10 +15,9 @@ import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
 import matt.fx.graphics.wrapper.pane.SimplePaneWrapper
 import matt.fx.graphics.wrapper.pane.box.BoxWrapper
 import matt.fx.graphics.wrapper.pane.box.BoxWrapperImpl
-import matt.fx.graphics.wrapper.pane.hbox.HBoxWrapper
-import matt.fx.graphics.wrapper.pane.hbox.hbox
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.lang.B
+import matt.lang.delegation.lazyVarDelegate
 import matt.obs.prop.Var
 
 fun ET.v(
@@ -51,13 +50,11 @@ open class VBoxWrapperImpl<C: NodeWrapper>(node: VBox = VBox()): BoxWrapperImpl<
   final override val fillWidthProperty by lazy {
 	node.fillWidthProperty().toNonNullableProp()
   }
-  override var isFillWidth by fillWidthProperty
+  override var isFillWidth by lazyVarDelegate { fillWidthProperty }
 }
 
 fun VBoxWrapperImpl<PaneWrapper<*>>.spacer(prio: Priority = Priority.ALWAYS, op: PaneWrapperImpl<*, *>.()->Unit = {}) =
   attach(SimplePaneWrapper<NodeWrapper>().apply { vGrow = prio }, op)
-
-
 
 
 class VBoxConstraint(
@@ -67,12 +64,11 @@ class VBoxConstraint(
 
 ): MarginableConstraints() {
   fun <T: Node> applyToNode(node: T): T {
-    margin?.let { VBox.setMargin(node, it) }
-    vGrow?.let { VBox.setVgrow(node, it) }
-    return node
+	margin?.let { VBox.setMargin(node, it) }
+	vGrow?.let { VBox.setVgrow(node, it) }
+	return node
   }
 }
-
 
 
 inline fun <T: Node> T.vboxConstraints(op: (VBoxConstraint.()->Unit)): T {
