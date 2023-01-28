@@ -36,6 +36,7 @@ import matt.obs.col.olist.ImmutableObsList
 import matt.obs.col.olist.mappedlist.toLazyMappedList
 import matt.obs.col.olist.sync.toSyncedList
 import matt.obs.prop.BindableProperty
+import matt.obs.prop.ObsVal
 import matt.obs.prop.Var
 import matt.obs.prop.VarProp
 import matt.obs.prop.proxy.ProxyProp
@@ -79,14 +80,14 @@ interface RegionWrapper<C: NodeWrapper>: ParentWrapper<C>, SizeManaged {
   val backgroundProperty: Var<Background?>
   var background: Background?
 
-  override val widthProperty get() = node.widthProperty().toNonNullableROProp().cast<Double>()
-  override val prefWidthProperty get() = node.prefWidthProperty().toNonNullableProp().cast<Double>()
-  override val minWidthProperty get() = node.minWidthProperty().toNonNullableProp().cast<Double>()
-  override val maxWidthProperty get() = node.maxWidthProperty().toNonNullableProp().cast<Double>()
-  override val heightProperty get() = node.heightProperty().toNonNullableROProp().cast<Double>()
-  override val prefHeightProperty get() = node.prefHeightProperty().toNonNullableProp().cast<Double>()
-  override val minHeightProperty get() = node.minHeightProperty().toNonNullableProp().cast<Double>()
-  override val maxHeightProperty get() = node.maxHeightProperty().toNonNullableProp().cast<Double>()
+  override val widthProperty: ObsVal<Double>
+  override val prefWidthProperty: Var<Double>
+  override val minWidthProperty: Var<Double>
+  override val maxWidthProperty: Var<Double>
+  override val heightProperty: ObsVal<Double>
+  override val prefHeightProperty: Var<Double>
+  override val minHeightProperty: Var<Double>
+  override val maxHeightProperty: Var<Double>
 
   fun setOnFilesDropped(op: (List<MFile>)->Unit) {
 	node.setOnDragEntered {
@@ -220,6 +221,17 @@ open class RegionWrapperImpl<N: Region, C: NodeWrapper>(node: N): ParentWrapperI
 	  uncheckedWrapperConverter()
 	)
   }
+
+  override val widthProperty by lazy { node.widthProperty().toNonNullableROProp().cast<Double>() }
+  override val prefWidthProperty by lazy { node.prefWidthProperty().toNonNullableProp().cast<Double>() }
+  override val minWidthProperty by lazy { node.minWidthProperty().toNonNullableProp().cast<Double>() }
+  override val maxWidthProperty by lazy {node.maxWidthProperty().toNonNullableProp().cast<Double>() }
+  override val heightProperty by lazy { node.heightProperty().toNonNullableROProp().cast<Double>() }
+  override val prefHeightProperty by lazy { node.prefHeightProperty().toNonNullableProp().cast<Double>() }
+  override val minHeightProperty by lazy { node.minHeightProperty().toNonNullableProp().cast<Double>() }
+  override val maxHeightProperty by lazy { node.maxHeightProperty().toNonNullableProp().cast<Double>() }
+
+
 
   override val children: ImmutableObsList<C> by lazy {
 	/*trying to avoid initializing wrappers to quickly (and getting the wrong ones as a result)*/
