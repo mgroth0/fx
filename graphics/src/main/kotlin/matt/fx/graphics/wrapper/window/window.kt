@@ -68,7 +68,7 @@ open class WindowWrapper<W: Window>(override val node: W): SingularEventTargetWr
 	  node.x = value
 	}
 
-  val xProperty get() = node.xProperty().toNonNullableROProp()
+  val xProperty by lazy { node.xProperty().toNonNullableROProp() }
 
   var y
 	get() = node.y
@@ -76,7 +76,7 @@ open class WindowWrapper<W: Window>(override val node: W): SingularEventTargetWr
 	  node.y = value
 	}
 
-  val yProperty get() = node.yProperty().toNonNullableROProp()
+  val yProperty by lazy { node.yProperty().toNonNullableROProp() }
 
 
   //
@@ -86,7 +86,7 @@ open class WindowWrapper<W: Window>(override val node: W): SingularEventTargetWr
   //	  node.height = value
   //	}
 
-  override val heightProperty get() = node.heightProperty().toNonNullableROProp().cast<Double>()
+  override val heightProperty by lazy { node.heightProperty().toNonNullableROProp().cast<Double>() }
 
 
   //  var width
@@ -95,7 +95,7 @@ open class WindowWrapper<W: Window>(override val node: W): SingularEventTargetWr
   //	  node.width = value
   //	}
 
-  override val widthProperty get() = node.widthProperty().toNonNullableROProp().cast<Double>()
+  override val widthProperty by lazy { node.widthProperty().toNonNullableROProp().cast<Double>() }
 
   fun setOnShowing(value: EventHandler<WindowEvent>) = node.setOnShowing(value)
 

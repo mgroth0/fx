@@ -559,7 +559,9 @@ abstract class NodeWrapperImpl<out N: Node>(
 
 
   final override val focusedProperty by lazy { node.focusedProperty().toNonNullableROProp() }
-  final override val isFocused by focusedProperty
+  final override val isFocused by lazyDelegate {
+	focusedProperty
+  }
 
 
   override val layoutBoundsProperty by lazy { node.layoutBoundsProperty().toNonNullableROProp() }
