@@ -73,6 +73,15 @@ class NodeDebugger(
 	  text("min height: ${debugNode.minHeight}")
 	  text("pref height: ${debugNode.prefHeight}")
 	  text("max height: ${debugNode.maxHeight}")
+
+	  text("width: ${debugNode.width}")
+	  text("min width: ${debugNode.minWidth}")
+	  text("pref width: ${debugNode.prefWidth}")
+	  text("max width: ${debugNode.maxWidth}")
+
+	  text("layoutX: ${debugNode.layoutX}")
+	  text("layoutY: ${debugNode.layoutY}")
+
 	  text("visible: ${debugNode.isVisible}")
 	  text("managed: ${debugNode.isManaged}")
 	  checkbox("blue") {

@@ -1,6 +1,5 @@
 package matt.fx.graphics.wrapper.pane.grid
 
-import javafx.collections.ObservableList
 import javafx.geometry.HPos
 import javafx.geometry.Insets
 import javafx.geometry.VPos
@@ -27,6 +26,7 @@ fun <T: NodeWrapper> T.gridpaneConstraints(op: (GridPaneConstraint.()->Unit)): T
   return gpc.applyToNode(this)
 }
 
+fun ET.grid(op: GridPaneWrapper<NW>.()->Unit = {}) = gridpane<NW>(op)
 
 fun <C: NodeWrapper> ET.gridpane(op: GridPaneWrapper<C>.()->Unit = {}) = attach(GridPaneWrapper(), op)
 open class GridPaneWrapper<C: NodeWrapper>(node: GridPane = GridPane()): PaneWrapperImpl<GridPane, C>(node) {

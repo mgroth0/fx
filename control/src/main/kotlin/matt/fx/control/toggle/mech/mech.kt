@@ -11,7 +11,7 @@ import matt.fx.control.wrapper.button.radio.radiobutton
 import matt.fx.graphics.wrapper.FXNodeWrapperDSL
 import matt.fx.graphics.wrapper.node.NW
 import matt.fx.graphics.wrapper.node.NodeWrapper
-import matt.lang.weak.WeakRef
+import matt.lang.weak.MyWeakRef
 import matt.log.warn.warn
 import matt.model.flowlogic.keypass.KeyPass
 import matt.model.flowlogic.recursionblocker.RecursionBlocker
@@ -42,7 +42,7 @@ fun <V: Any> NW.toggles(
 class ToggleMechanism<V: Any>() {
 
 
-  val toggles = basicObservableSetOf<WeakRef<SelectableValue<V>>>()
+  val toggles = basicObservableSetOf<MyWeakRef<SelectableValue<V>>>()
   fun derefToggles(): Set<SelectableValue<V>> {
 	val itr = toggles.iterator()
 	val r = mutableSetOf<SelectableValue<V>>()
@@ -117,7 +117,7 @@ class ToggleMechanism<V: Any>() {
   }
 
   fun addToggle(s: SelectableValue<V>) {
-	toggles.add(WeakRef(s))
+	toggles.add(MyWeakRef(s))
   }
 
   init {

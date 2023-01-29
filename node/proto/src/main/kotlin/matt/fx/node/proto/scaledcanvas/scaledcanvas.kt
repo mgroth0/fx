@@ -3,6 +3,9 @@
 package matt.fx.node.proto.scaledcanvas
 
 import javafx.scene.layout.Pane
+import matt.async.schedule.SchedulingDaemon
+import matt.fx.control.wrapper.progressindicator.PerformantProgressIndicator
+import matt.fx.graphics.fxthread.runLater
 import matt.fx.graphics.style.intColorToFXColor
 import matt.fx.graphics.wrapper.EventTargetWrapper
 import matt.fx.graphics.wrapper.canvas.Canv
@@ -11,11 +14,15 @@ import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attach
 import matt.fx.graphics.wrapper.region.RegionWrapperImpl
 import matt.lang.NEVER
+import matt.lang.go
 import matt.obs.math.double.op.div
 import matt.obs.math.double.op.minus
 import matt.obs.math.double.op.times
 import matt.obs.prop.BindableProperty
+import matt.time.UnixTime
 import java.awt.image.BufferedImage
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
 
 fun EventTargetWrapper.scaledCanvas(
   width: Number,
@@ -40,8 +47,8 @@ fun EventTargetWrapper.scaledCanvas(
 
 @OptIn(ExperimentalStdlibApi::class) fun BufferedImage.toScaledCanvas(): ScaledCanvas {
   val canv = ScaledCanvas(width = width, height = height)
-  (0 ..< width).forEach { x ->
-	(0 ..< height).forEach { y ->
+  (0..<width).forEach { x ->
+	(0..<height).forEach { y ->
 	  canv[x, y] = intColorToFXColor(getRGB(x, y))
 	}
   }
@@ -49,12 +56,17 @@ fun EventTargetWrapper.scaledCanvas(
 }
 
 
-
-
 open class ScaledCanvas(
-  canvas: CanvasWrapper = CanvasWrapper(),
+  private val canvas: CanvasWrapper = CanvasWrapper(),
   initialScale: Double = 1.0,
+  initializeInLoadingMode: Boolean = false,
+  progressIndicatorWidthAndHeight: Double? = null,
+  delayLoadingIndicatorBy: Duration? = null
 ): RegionWrapperImpl<Pane, CanvasWrapper>(Pane()), Canv by canvas {
+
+  companion object {
+	private val worker = SchedulingDaemon(500.milliseconds, "ScaledCanvas Worker")
+  }
 
   constructor(
 	height: Number,
@@ -66,16 +78,57 @@ open class ScaledCanvas(
 
   val scale = BindableProperty(initialScale)
 
+
+
+  private val loadingIndicator = lazy {
+
+	/*val prog = ProgressIndicatorWrapper()*/
+	val prog = PerformantProgressIndicator()
+
+	prog.apply {
+
+	  if (delayLoadingIndicatorBy != null) {
+		isVisible = false
+		worker.schedule(UnixTime() + delayLoadingIndicatorBy) {
+		  runLater {
+			isVisible = true
+		  }
+		}
+	  }
+
+	  //	  this.progress = 0.5 /*to prevent animation*/
+	  progressIndicatorWidthAndHeight?.go {
+		this.exactWidth = it
+		this.exactHeight = it
+	  }
+	}.node
+
+  }
+
+  private val paneChildren = this@ScaledCanvas.node.children
+
+  fun showAsLoading() {
+	paneChildren.remove(canvas.node)
+	paneChildren.add(loadingIndicator.value)
+  }
+
+  fun showCanvas() {
+	if (loadingIndicator.isInitialized()) paneChildren.remove(loadingIndicator.value)
+	paneChildren.add(canvas.node)
+	exactHeightProperty.bindWeakly(actualHeight)
+	exactWidthProperty.bindWeakly(actualWidth)
+  }
+
   init {
 	canvas.apply {
-	  layoutXProperty.bind((widthProperty*this@ScaledCanvas.scale - widthProperty)/2.0)
-	  layoutYProperty.bind((heightProperty*this@ScaledCanvas.scale - heightProperty)/2.0)
-	  scaleXProperty.bind(this@ScaledCanvas.scale)
-	  scaleYProperty.bind(this@ScaledCanvas.scale)
-	  this@ScaledCanvas.regionChildren.add(this)
+	  layoutXProperty.bindWeakly((widthProperty*this@ScaledCanvas.scale - widthProperty)/2.0)
+	  layoutYProperty.bindWeakly((heightProperty*this@ScaledCanvas.scale - heightProperty)/2.0)
+	  scaleXProperty.bindWeakly(this@ScaledCanvas.scale)
+	  scaleYProperty.bindWeakly(this@ScaledCanvas.scale)
 	}
-	exactHeightProperty.bind(actualHeight)
-	exactWidthProperty.bind(actualWidth)
+	if (initializeInLoadingMode) showAsLoading()
+	else showCanvas()
+
   }
 
   override fun addChild(child: NodeWrapper, index: Int?) = NEVER
@@ -85,43 +138,3 @@ open class ScaledCanvas(
 }
 
 
-/*
-open class PixelSizedCanvas(
-  canvas: CanvasWrapper = CanvasWrapper(),
-  initialPixelWidth: Double = 32.0,
-): RegionWrapperImpl<Pane, CanvasWrapper>(Pane()), Canv by canvas {
-
-  constructor(
-	height: Number,
-	width: Number,
-	initialScale: Double = 1.0,
-  ): this(CanvasWrapper(width = width.toDouble(), height = height.toDouble()), initialScale)
-
-  constructor(hw: Number, scale: Double): this(height = hw.toDouble(), width = hw.toDouble(), initialScale = scale)
-
-  val pixelWidth = BindableProperty(initialPixelWidth)
-
-  init {
-
-	canvas.node.also {
-	  it.graphicsContext2D.also {
-		it.scale()
-	  }
-	}
-
-	canvas.apply {
-	  layoutXProperty.bind((widthProperty*this@PixelSizedCanvas.scale - widthProperty)/2.0)
-	  layoutYProperty.bind((heightProperty*this@PixelSizedCanvas.scale - heightProperty)/2.0)
-	  scaleXProperty.bind(this@PixelSizedCanvas.scale)
-	  scaleYProperty.bind(this@PixelSizedCanvas.scale)
-	  this@PixelSizedCanvas.regionChildren.add(this)
-	}
-	exactHeightProperty.bind(actualHeight)
-	exactWidthProperty.bind(actualWidth)
-  }
-
-  override fun addChild(child: NodeWrapper, index: Int?) = NEVER
-
-  override val height: Double get() = actualHeight.value
-  override val width: Double get() = actualWidth.value
-}*/

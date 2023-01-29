@@ -4,6 +4,7 @@ import javafx.beans.property.ObjectProperty
 import javafx.collections.ObservableList
 import javafx.geometry.Insets
 import javafx.scene.Node
+import javafx.scene.Parent
 import javafx.scene.input.DataFormat
 import javafx.scene.input.TransferMode
 import javafx.scene.layout.Background
@@ -33,6 +34,7 @@ import matt.lang.NEVER
 import matt.lang.delegation.lazyVarDelegate
 import matt.lang.err
 import matt.model.op.convert.Converter
+import matt.obs.bindhelp.bindMultipleTargetsTogether
 import matt.obs.col.olist.ImmutableObsList
 import matt.obs.col.olist.mappedlist.toLazyMappedList
 import matt.obs.col.olist.sync.toSyncedList
@@ -41,15 +43,15 @@ import matt.obs.prop.ObsVal
 import matt.obs.prop.Var
 import matt.obs.prop.VarProp
 import matt.obs.prop.proxy.ProxyProp
-import matt.reflect.access
-import kotlin.reflect.full.declaredMemberFunctions
+import kotlin.reflect.full.declaredMemberProperties
+import kotlin.reflect.jvm.isAccessible
 
 
 interface RegionWrapper<C: NodeWrapper>: ParentWrapper<C>, SizeManaged {
 
   companion object {
-	internal val computePrefWidthFun =
-	  Region::class.java.getDeclaredMethod("computePrefWidth", Double::class.java).apply {
+	internal val computePrefWidthFun = Region::class.java.getDeclaredMethod("computePrefWidth", Double::class.java)
+	  .apply {
 		isAccessible = true
 	  }
   }
@@ -213,12 +215,18 @@ open class RegionWrapperImpl<N: Region, C: NodeWrapper>(node: N): ParentWrapperI
   /*any temporary border changes might want to come back to this after*//*used to be an ugly lazy map that lead to errors. manual is better for this.*/
   var defaultBorder: Border = Border.EMPTY
 
+  companion object {
+	private val regionChildrenProp by lazy {
+	  Parent::class.declaredMemberProperties.first {
+		it.name == "children"
+	  }.apply {
+		isAccessible = true
+	  }
+	}
+  }
+
   @Suppress("UNCHECKED_CAST") protected val regionChildren by lazy {
-	(node::class.declaredMemberFunctions.first {
-	  it.name == "getChildren"
-	}.access {
-	  call(this@RegionWrapperImpl.node)
-	} as ObservableList<Node>).createMutableWrapper().toSyncedList(
+	(regionChildrenProp.call(this@RegionWrapperImpl.node) as ObservableList<Node>).createMutableWrapper().toSyncedList(
 	  uncheckedWrapperConverter()
 	)
   }
@@ -233,8 +241,7 @@ open class RegionWrapperImpl<N: Region, C: NodeWrapper>(node: N): ParentWrapperI
   override val maxHeightProperty by lazy { node.maxHeightProperty().toNonNullableProp().cast<Double>() }
 
 
-  override val children: ImmutableObsList<C> by lazy {
-	/*trying to avoid initializing wrappers to quickly (and getting the wrong ones as a result)*/
+  override val children: ImmutableObsList<C> by lazy {	/*trying to avoid initializing wrappers to quickly (and getting the wrong ones as a result)*/
 	node.childrenUnmodifiable.createImmutableWrapper()
 	  .toLazyMappedList { uncheckedWrapperConverter<Node, C>().convertToB(it) }
   }
@@ -252,28 +259,31 @@ open class RegionWrapperImpl<N: Region, C: NodeWrapper>(node: N): ParentWrapperI
 		return a.vertical
 	  }
 
+
 	  override fun convertToA(b: Double): Insets {
 		return padding.copy(vertical = b)
 	  }
 
 	})
   }
-  final override var paddingVertical by paddingVerticalProperty
+  final override var paddingVertical by lazyVarDelegate { paddingVerticalProperty }
 
   final override val backgroundProperty by lazy { node.backgroundProperty().toNullableStyleProp() }
   final override var background by lazyVarDelegate { backgroundProperty }
 
   final override val exactWidthProperty by lazy {
-	BindableProperty<Double>(0.0).also {
-	  minWidthProperty.bind(it)
-	  maxWidthProperty.bind(it)
+	BindableProperty(0.0).also {
+	  bindMultipleTargetsTogether(
+		setOf(minWidthProperty, maxWidthProperty), it
+	  )
 	}
   }
 
   final override val exactHeightProperty by lazy {
 	BindableProperty(0.0).also {
-	  minHeightProperty.bind(it)
-	  maxHeightProperty.bind(it)
+	  bindMultipleTargetsTogether(
+		setOf(minHeightProperty, maxHeightProperty), it
+	  )
 	}
   }
 

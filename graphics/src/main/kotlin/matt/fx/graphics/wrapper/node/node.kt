@@ -129,6 +129,9 @@ interface NodeWrapper: EventTargetWrapper, StyleableWrapper {
   fun setOnMouseMoved(listener: (MouseEvent)->Unit) {
 	node.setOnMouseMoved(listener)
   }
+  fun setOnMouseEntered(listener: (MouseEvent)->Unit) {
+	node.setOnMouseEntered(listener)
+  }
 
   fun setOnMouseExited(listener: (MouseEvent)->Unit) {
 	node.setOnMouseExited(listener)
