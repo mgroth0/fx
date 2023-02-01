@@ -13,9 +13,15 @@ import matt.fx.graphics.wrapper.region.RegionWrapperImpl
 import matt.fx.graphics.wrapper.text.TextWrapper
 import matt.hurricanefx.eye.time.toFXDuration
 import matt.obs.listen.MyListenerInter
+import matt.obs.prop.BindableProperty
 import matt.obs.prop.ObsVal
 import kotlin.time.Duration
 
+fun ET.swap(nodeProp: BindableProperty<out NW?>) = swapper(
+  prop = nodeProp
+) {
+  this
+}
 
 fun <P, N: NodeWrapper> ET.swapper(
   prop: ObsVal<P>,
@@ -74,7 +80,7 @@ open class Swapper<P, C: NodeWrapper>: RegionWrapperImpl<Region, C>(AnchorPane()
 	fun refresh(value: P?) {
 	  if (value == null) {
 		if (nullMessage != null) {
-		  setInnerNode(TextWrapper(nullMessage), fadeOutDur = fadeOutDur, fadeInDur = fadeInDur)
+		  setInnerNode(nullMessageNode(nullMessage), fadeOutDur = fadeOutDur, fadeInDur = fadeInDur)
 		} else {
 		  clearLayoutProxyNetwork()
 		}
@@ -125,7 +131,7 @@ open class Swapper<P, C: NodeWrapper>: RegionWrapperImpl<Region, C>(AnchorPane()
 	fun refresh(value: P?) {
 	  if (value == null) {
 		if (nullMessage != null) {
-		  setInnerNode(TextWrapper(nullMessage), fadeOutDur = fadeOutDur, fadeInDur = fadeInDur)
+		  setInnerNode(nullMessageNode(nullMessage), fadeOutDur = fadeOutDur, fadeInDur = fadeInDur)
 		} else {
 		  clearLayoutProxyNetwork()
 		}
@@ -145,8 +151,14 @@ open class Swapper<P, C: NodeWrapper>: RegionWrapperImpl<Region, C>(AnchorPane()
 	fxWatcherProp = prop.nonBlockingFXWatcher()
   }
 
+  val nullNodeFact = BindableProperty<(String)->NodeWrapper> {
+	TextWrapper(it)
+  }
 
-  private fun setInnerNode(
+  private fun nullMessageNode(nullMessage: String) = nullNodeFact.value(nullMessage)
+
+
+  fun setInnerNode(
 	node: NodeWrapper,
 	fadeOutDur: Duration? = null,
 	fadeInDur: Duration? = null
@@ -157,7 +169,7 @@ open class Swapper<P, C: NodeWrapper>: RegionWrapperImpl<Region, C>(AnchorPane()
 		opacity = 0.0
 	  ) {
 		setOnFinished {
-//		  println("half way! opacity is now $opacity")
+		  //		  println("half way! opacity is now $opacity")
 		  anchor.children.removeAll { it != node.node }
 		  addInnerNode(node, fadeInDur = fadeInDur)
 		}
@@ -180,7 +192,7 @@ open class Swapper<P, C: NodeWrapper>: RegionWrapperImpl<Region, C>(AnchorPane()
 		opacity = 1.0,
 	  ) {
 		setOnFinished {
-//		  println("done! opacity is now $opacity")
+		  //		  println("done! opacity is now $opacity")
 		  node.setAsTopAnchor(0.0)
 		  node.setAsBottomAnchor(0.0)
 		  node.setAsLeftAnchor(0.0)

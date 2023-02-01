@@ -65,6 +65,10 @@ open class TooltipWrapper(node: Tooltip = Tooltip()): WindowWrapper<Tooltip>(nod
   }
 
 
+  val wrapTextProp by lazy {
+	node.wrapTextProperty().toNonNullableProp()
+  }
+
   fun comfortablyShowForeverUntilMouseMoved() {
 	showDelay = Duration.millis(100.0)
 	showDuration = Duration.INDEFINITE

@@ -141,6 +141,23 @@ fun <C: NodeWrapper> PaneWrapper<C>.spacer(size: Double = 20.0) {
   })
 }
 
+fun <C: NodeWrapper> PaneWrapper<C>.hSpacer(size: Double = 20.0) {
+
+  addChild(SimplePaneWrapper<VBoxWrapperImpl<*>>().apply {
+	minWidth = size
+	minHeight = 1.0
+  })
+}
+
+fun <C: NodeWrapper> PaneWrapper<C>.vSpacer(size: Double = 20.0) {
+
+  addChild(SimplePaneWrapper<VBoxWrapperImpl<*>>().apply {
+	minWidth = 1.0
+	minHeight = size
+  })
+}
+
+
 fun <C: NodeWrapper> SimplePaneWrapper() = PaneWrapperImpl<_, C>(Pane())
 
 

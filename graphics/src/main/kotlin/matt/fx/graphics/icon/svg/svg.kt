@@ -28,7 +28,9 @@ fun svgToImage(
   svg: InputStream,
   width: Int = ICON_WIDTH.toInt(),
   height: Int = ICON_WIDTH.toInt()
-) = SVGUniverse().let { svgToImage(it, it.loadSVG(svg, "name?"), width = width, height = height) }
+) = SVGUniverse().let {
+  svgToImage(it, it.loadSVG(svg, "name?"), width = width, height = height)
+}
 
 @SeeURL("https://github.com/blackears/svgSalamander/issues/75#issuecomment-877706802")
 fun svgToImage(

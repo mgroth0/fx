@@ -142,7 +142,7 @@ open class ScrollPaneWrapper<C: NodeWrapper>(node: ScrollPane = ScrollPane()): C
   var vvalue by vValueProp
 
   @Suppress("UNCHECKED_CAST") var content: C?
-	get() = node.content?.wrapped() as C
+	get() = node.content?.wrapped() as C?
 	set(value) {
 	  node.content = value?.node
 	}
@@ -162,8 +162,10 @@ open class ScrollPaneWrapper<C: NodeWrapper>(node: ScrollPane = ScrollPane()): C
 
   val vValueConvertedMax get() = vValueConverted + viewportBounds.height
   override fun addChild(child: NodeWrapper, index: Int?) {
-	require(index == null)    /*content = node*/ /*TORNADOFX DEFAULT*/
+	require(index == null)
+	/*content = node*/ /*TORNADOFX DEFAULT*/
 	content!!.addChild(child) /*MATT'S WAY*/
+
 
   }
 

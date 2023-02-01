@@ -15,7 +15,7 @@ fun ET.progressbar(initialValue: Double? = null, op: ProgressBarWrapper.()->Unit
 	if (initialValue != null) it.progress = initialValue
   }
 
-fun ET.progressbar(property: ObsVal<Number>, op: ProgressBarWrapper.()->Unit = {}) = progressbar().apply {
+fun ET.progressbar(property: ObsVal<Double>, op: ProgressBarWrapper.()->Unit = {}) = progressbar().apply {
   bind(property)
   op(this)
 }
@@ -31,11 +31,11 @@ class ProgressBarWrapper(
 	  node.progress = value
 	}
 
-  val progressProperty by lazy { node.progressProperty().toNonNullableProp() }
+  val progressProperty by lazy { node.progressProperty().toNonNullableProp().cast<Double>() }
   override fun addChild(child: NodeWrapper, index: Int?) {
 	TODO("Not yet implemented")
   }
 }
 
-fun ProgressBarWrapper.bind(property: ObsVal<Number>, readonly: Boolean = false) =
+fun ProgressBarWrapper.bind(property: ObsVal<Double>, readonly: Boolean = false) =
   progressProperty.smartBind(property, readonly)
