@@ -1,7 +1,7 @@
 package matt.fx.graphics.file
 
 import matt.caching.cache.LRUCache
-import matt.collect.dmap.withStoringDefault
+import matt.collect.map.dmap.withStoringDefault
 import matt.file.MFile
 import matt.file.thismachine.thisMachine
 import matt.fx.image.jswingIconToImage

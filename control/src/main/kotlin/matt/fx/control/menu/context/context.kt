@@ -10,9 +10,10 @@ import javafx.scene.canvas.Canvas
 import javafx.scene.control.ContextMenu
 import javafx.scene.control.MenuItem
 import javafx.scene.shape.Shape
-import matt.collect.dmap.withStoringDefault
+import matt.collect.map.dmap.withStoringDefault
 import matt.collect.itr.recurse.chain
 import matt.collect.map.lazyMap
+import matt.collect.map.sync.synchronized
 import matt.fx.control.menu.context.EventHandlerType.Filter
 import matt.fx.control.menu.context.EventHandlerType.Handler
 import matt.fx.control.menu.context.debug.SceneDebugger
@@ -270,6 +271,8 @@ private fun NodeWrapper.hotkeyInfoMenu() = MenuWrapper("Click For Hotkey Info").
 	items.clear()
 	addInfo(Handler)
 	addInfo(Filter)
+
+
   }
   //  setOnMouseClicked {
   //
@@ -279,5 +282,7 @@ private fun NodeWrapper.hotkeyInfoMenu() = MenuWrapper("Click For Hotkey Info").
 
 
 private val contextMenuItems = WeakHashMap<EventTarget, MutableList<MenuItemWrapper<*>>>().withStoringDefault { mutableListOf() }
+  .synchronized()
 
 private val contextMenuItemGens = WeakHashMap<EventTarget, MutableList<MContextMenuBuilder.()->Unit>>().withStoringDefault { mutableListOf() }
+  .synchronized()
