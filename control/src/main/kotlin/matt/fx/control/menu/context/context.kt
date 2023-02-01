@@ -10,7 +10,6 @@ import javafx.scene.canvas.Canvas
 import javafx.scene.control.ContextMenu
 import javafx.scene.control.MenuItem
 import javafx.scene.shape.Shape
-import matt.collect.dmap.DefaultStoringMap
 import matt.collect.dmap.withStoringDefault
 import matt.collect.itr.recurse.chain
 import matt.collect.map.lazyMap
@@ -39,7 +38,6 @@ import java.lang.Thread.sleep
 import java.util.WeakHashMap
 import kotlin.concurrent.thread
 import kotlin.reflect.KClass
-
 
 
 fun EventTargetWrapper.mcontextmenu(op: MContextMenuBuilder.()->Unit) = MContextMenuBuilder(this.node).apply(op)
@@ -197,7 +195,7 @@ fun SceneWrapper<*>.showMContextMenu(
 	}
   }
   devMenu.actionitem("open FX Debugger") {
-	SceneDebugger().apply{
+	SceneDebugger().apply {
 	  navTo(target.wrapper as NodeWrapper)
 	}.openInNewWindow(
 	  decorated = true,
@@ -280,19 +278,6 @@ private fun NodeWrapper.hotkeyInfoMenu() = MenuWrapper("Click For Hotkey Info").
 }
 
 
-private val contextMenuItems: DefaultStoringMap<EventTarget, MutableList<MenuItemWrapper<*>>> =
-  WeakHashMap<EventTarget, MutableList<MenuItemWrapper<*>>>().withStoringDefault { mutableListOf() }
+private val contextMenuItems = WeakHashMap<EventTarget, MutableList<MenuItemWrapper<*>>>().withStoringDefault { mutableListOf() }
 
-private val contextMenuItemGens: DefaultStoringMap<EventTarget, MutableList<MContextMenuBuilder.()->Unit>> =
-  WeakHashMap<EventTarget, MutableList<MContextMenuBuilder.()->Unit>>().withStoringDefault { mutableListOf() }
-//
-//
-//private val contextMenuItemsByKey = WeakHashMap<
-//	EventTarget,
-//	Map<
-//		Any?,
-//		MutableList<MenuItem>
-//		>
-//	>().withStoringDefault {
-//  mutableMapOf<Any?, MutableList<MenuItem>>().withStoringDefault { mutableListOf() }
-//}
+private val contextMenuItemGens = WeakHashMap<EventTarget, MutableList<MContextMenuBuilder.()->Unit>>().withStoringDefault { mutableListOf() }
