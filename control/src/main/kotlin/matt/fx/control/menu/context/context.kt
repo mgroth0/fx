@@ -10,8 +10,8 @@ import javafx.scene.canvas.Canvas
 import javafx.scene.control.ContextMenu
 import javafx.scene.control.MenuItem
 import javafx.scene.shape.Shape
-import matt.collect.map.dmap.withStoringDefault
 import matt.collect.itr.recurse.chain
+import matt.collect.map.dmap.withStoringDefault
 import matt.collect.map.lazyMap
 import matt.collect.map.sync.synchronized
 import matt.fx.control.menu.context.EventHandlerType.Filter
@@ -91,14 +91,14 @@ class MContextMenuBuilder(
 	if (isGen) {
 	  genList.add(item)
 	} else {
-	  contextMenuItems[node].add(item)
+	  contextMenuItems[node]!!.add(item)
 	}
   }
 
 
   fun onRequest(op: MContextMenuBuilder.()->Unit) {
 	require(!isGen)
-	contextMenuItemGens[node].add(op)
+	contextMenuItemGens[node]!!.add(op)
 
   }
   //
@@ -111,8 +111,8 @@ class MContextMenuBuilder(
 }
 
 private fun getCMItems(node: EventTarget): List<MenuItemWrapper<*>>? {
-  val normal = contextMenuItems[node]
-  val gen = contextMenuItemGens[node].flatMap {
+  val normal = contextMenuItems[node]!!
+  val gen = contextMenuItemGens[node]!!.flatMap {
 	MContextMenuBuilder(node, isGen = true).apply(it).genList
   }
   //  val keyGen = contextMenuItemsByKey[node]!!
