@@ -77,7 +77,7 @@ open class Swapper<P, C: NodeWrapper>: RegionWrapperImpl<Region, C>(AnchorPane()
 
 	) {
 	initSetup(prop)
-	fun refresh(value: P?) {
+	fun Swapper<P, C>.refresh(value: P?) {
 	  if (value == null) {
 		if (nullMessage != null) {
 		  setInnerNode(nullMessageNode(nullMessage), fadeOutDur = fadeOutDur, fadeInDur = fadeInDur)
@@ -91,8 +91,8 @@ open class Swapper<P, C: NodeWrapper>: RegionWrapperImpl<Region, C>(AnchorPane()
 		proxy.op(value)
 	  }
 	}
-	listener = fxWatcherProp!!.onChange {
-	  refresh(it)
+	listener = fxWatcherProp!!.onChangeWithWeak(this) { swap, it ->
+	  swap.refresh(it)
 	}
 	refresh(fxWatcherProp!!.value)
   }
@@ -106,14 +106,14 @@ open class Swapper<P, C: NodeWrapper>: RegionWrapperImpl<Region, C>(AnchorPane()
 
 	) {
 	initSetup(prop)
-	fun refresh(value: P) {
+	fun Swapper<P, C>.refresh(value: P) {
 	  val proxy = ProxyEventTargetWrapper {
 		setInnerNode(it, fadeOutDur = fadeOutDur, fadeInDur = fadeInDur)
 	  }
 	  proxy.op(value)
 	}
-	listener = fxWatcherProp!!.onChange {
-	  refresh(it)
+	listener = fxWatcherProp!!.onChangeWithWeak(this) { swap, it ->
+	  swap.refresh(it)
 	}
 	refresh(fxWatcherProp!!.value)
   }
@@ -128,7 +128,7 @@ open class Swapper<P, C: NodeWrapper>: RegionWrapperImpl<Region, C>(AnchorPane()
 
 	) {
 	initSetup(prop)
-	fun refresh(value: P?) {
+	fun Swapper<P, C>.refresh(value: P?) {
 	  if (value == null) {
 		if (nullMessage != null) {
 		  setInnerNode(nullMessageNode(nullMessage), fadeOutDur = fadeOutDur, fadeInDur = fadeInDur)
@@ -139,8 +139,8 @@ open class Swapper<P, C: NodeWrapper>: RegionWrapperImpl<Region, C>(AnchorPane()
 		setInnerNode(op(value), fadeOutDur = fadeOutDur, fadeInDur = fadeInDur)
 	  }
 	}
-	this.listener = fxWatcherProp!!.onChange {
-	  refresh(it)
+	this.listener = fxWatcherProp!!.onChangeWithWeak(this) { swap, it ->
+	  swap.refresh(it)
 	}
 	refresh(fxWatcherProp!!.value)
   }
