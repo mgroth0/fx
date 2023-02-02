@@ -3,6 +3,7 @@
 package matt.fx.node.proto.scaledcanvas
 
 import javafx.scene.layout.Pane
+import javafx.scene.paint.Color
 import matt.async.schedule.SchedulingDaemon
 import matt.fx.control.wrapper.progressindicator.PerformantProgressIndicator
 import matt.fx.graphics.fxthread.runLater
@@ -23,6 +24,18 @@ import matt.time.UnixTime
 import java.awt.image.BufferedImage
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
+
+fun Array<Array<Color?>>.toCanvas() = ScaledCanvas(
+  width = this[0].size.toDouble(),
+  height = this.size.toDouble(),
+  initialScale = 1.0
+).apply {
+  this@toCanvas.forEachIndexed { x, row ->
+	row.forEachIndexed { y, c ->
+	  this[y, x]/*dont understand why this is reversed*/ = c!!
+	}
+  }
+}
 
 fun EventTargetWrapper.scaledCanvas(
   width: Number,
