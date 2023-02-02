@@ -4,17 +4,12 @@
 	{
 	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
 	  "cfg" :  "implementation",
-	  "path" : ":k:fx:control"
+	  "path" : ":k:fx:graphics"
 	},
 	{
 	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
 	  "cfg" :  "implementation",
 	  "path" : ":k:fx:node:proto"
-	},
-	{
-	  "type" : "matt.mstruct.bj.BuildJsonLibDependency",
-	  "cfg" :  "implementation",
-	  "key" :  "fx-media"
 	},
 	{
 	  "type" : "matt.mstruct.bj.BuildJsonLibDependency",

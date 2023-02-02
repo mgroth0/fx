@@ -1,74 +1,74 @@
-@file:OptIn(ExperimentalStdlibApi::class)
-
 package matt.fx.node.tex
 
 import javafx.scene.paint.Color
 import matt.caching.cache.LRUCache
 import matt.collect.map.dmap.withStoringDefault
-import matt.fx.graphics.style.intColorToFXColor
-import matt.log.warn.warn
-import org.scilab.forge.jlatexmath.TeXFormula
-import java.awt.image.PixelGrabber
-import java.text.ParseException
+import matt.fx.graphics.wrapper.pane.vbox.VBoxW
+import matt.fx.node.proto.scaledcanvas.ScaledCanvas
+import matt.fx.node.proto.scaledcanvas.toCanvas
+import matt.fx.node.tex.internal.isValidTeX
+import matt.fx.node.tex.internal.texToPixels
+import matt.obs.math.double.op.times
+import matt.obs.prop.BindableProperty
 
-/*set all to 1 for a working default*/
 private const val RESOLUTION_CONTROL = 2f
-private const val SCALE_CONTROL = 1.5
-private const val INLINE_SCALE_CONTROL = 0.5
-/*private const val HEIGHT_CONTROL = 1
-private const val WIDTH_CONTROL = 5*/
-
 private const val TEX_FONT_SIZE = 50f*RESOLUTION_CONTROL
-private const val TEX_SCALE_COEF = SCALE_CONTROL*0.05f/RESOLUTION_CONTROL
-private const val TEX_SCALE_COEF_INLINE = INLINE_SCALE_CONTROL*0.05f/RESOLUTION_CONTROL
+
+class TexNodeFactory(
+
+  val scale: Double,
+  //  val scale: BindableProperty<Double>
+
+  /*set all to 1 for a working default*/
+
+  //  private const val SCALE_CONTROL = 1.5
+  //	  private const val INLINE_SCALE_CONTROL = 0.5
 
 
-class TexNodeFactory
+  /*private const val HEIGHT_CONTROL = 1
+	private const val WIDTH_CONTROL = 5*/
 
 
-private val validTeXCache by lazy {
-  LRUCache<String, Boolean>(100).withStoringDefault {
-	try {
-	  TeXFormula(it)
-	  true
-	} catch (e: ParseException) {
-	  false
-	}
+) {
+
+
+  private val scaleCoef = scale*0.05f/RESOLUTION_CONTROL
+
+
+  fun isValidTex(code: String) = code.isValidTeX()
+
+  /*private fun toPixels(code: String) = code.texToPixels(texFontSize = TEX_FONT_SIZE)*/
+
+  fun toCanvas(code: String) = texPixels[code]?.toCanvas()?.let {
+	TexCanvas(it, scaleCoef)
+	/*scale.bind(
+	  (fontSizeProp*scaleCoef)
+	)*/
+  }
+  //  code.texToPixels(
+  //	texFontSize = TEX_FONT_SIZE
+  //  )
+
+  private val texPixels by lazy {
+	LRUCache<String, Array<Array<Color?>>?>(100)
+	  .withStoringDefault {
+		it.texToPixels(
+		  texFontSize = TEX_FONT_SIZE
+		)
+	  }
   }
 }
 
-private fun String.isValidTeX() = validTeXCache[this]
+class TexCanvas(
+  innerCanv: ScaledCanvas,
+  someScaleThing: Double
+): VBoxW() {
+  val fontSizeSortOf = BindableProperty(12.0)
 
-
-private fun String.texToPixels(): Array<Array<Color?>>? {
-  return try {
-	val tf = TeXFormula(this)
-	val img = tf.createBufferedImage(
-	  TeXFormula.SERIF, TEX_FONT_SIZE,
-	  java.awt.Color.CYAN,
-	  java.awt.Color.BLACK
+  init {
+	innerCanv.scale.bind(
+	  fontSizeSortOf*someScaleThing
 	)
-
-	val width = img.getWidth(null)
-	val height = img.getHeight(null)
-	val pix = IntArray(width*height) { 16711680 }
-	PixelGrabber(img, 0, 0, width, height, pix, 0, width).grabPixels()
-	val li = Array<Array<Color?>>(height) { Array(width) { null } }
-
-	warn("if the file icon method works, this is unnecessary")
-
-	(0..<width).forEach { j ->
-	  (0..<height).forEach { i ->
-		val index = if (i == 0) j else ((i*width) + j)
-		val rgb = pix[index]
-		li[i][j] =
-		  intColorToFXColor(rgb).takeIf { it != Color.BLACK }
-		  ?: Color.TRANSPARENT
-	  }
-	}
-	li
-  } catch (e: ParseException) {
-	println(e.message)
-	null
+	+innerCanv
   }
 }
