@@ -18,9 +18,12 @@ private const val INLINE_SCALE_CONTROL = 0.5
 /*private const val HEIGHT_CONTROL = 1
 private const val WIDTH_CONTROL = 5*/
 
-const val TEX_FONT_SIZE = 50f*RESOLUTION_CONTROL
-const val TEX_SCALE_COEF = SCALE_CONTROL*0.05f/RESOLUTION_CONTROL
-const val TEX_SCALE_COEF_INLINE = INLINE_SCALE_CONTROL*0.05f/RESOLUTION_CONTROL
+private const val TEX_FONT_SIZE = 50f*RESOLUTION_CONTROL
+private const val TEX_SCALE_COEF = SCALE_CONTROL*0.05f/RESOLUTION_CONTROL
+private const val TEX_SCALE_COEF_INLINE = INLINE_SCALE_CONTROL*0.05f/RESOLUTION_CONTROL
+
+
+class TexNodeFactory
 
 
 private val validTeXCache by lazy {
@@ -34,10 +37,10 @@ private val validTeXCache by lazy {
   }
 }
 
-fun String.isValidTeX() = validTeXCache[this]
+private fun String.isValidTeX() = validTeXCache[this]
 
 
-fun String.texToPixels(): Array<Array<Color?>>? {
+private fun String.texToPixels(): Array<Array<Color?>>? {
   return try {
 	val tf = TeXFormula(this)
 	val img = tf.createBufferedImage(
