@@ -4,26 +4,16 @@ import javafx.application.Platform
 import javafx.beans.property.DoubleProperty
 import javafx.beans.property.ReadOnlyDoubleProperty
 import javafx.beans.property.SimpleDoubleProperty
-import javafx.event.EventHandler
-import javafx.event.EventTarget
 import javafx.scene.input.KeyCode
 import javafx.scene.layout.Priority
-import javafx.scene.web.HTMLEditor
 import javafx.scene.web.WebEngine
 import javafx.scene.web.WebView
-import kotlinx.coroutines.NonCancellable
-import matt.async.thread.daemon
 import matt.file.MFile
-import matt.file.construct.toMFile
 import matt.fx.control.lang.actionbutton
 import matt.fx.control.menu.context.mcontextmenu
 import matt.fx.control.win.interact.openInNewWindow
-import matt.fx.control.wrapper.control.ControlWrapperImpl
-import matt.fx.control.wrapper.wrapped.wrapped
 import matt.fx.graphics.clip.copyToClipboard
 import matt.fx.graphics.fxthread.runLater
-import matt.fx.graphics.fxthread.runLaterReturn
-import matt.fx.graphics.refresh.refreshWhileInSceneEvery
 import matt.fx.graphics.wrapper.node.NW
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
@@ -34,12 +24,11 @@ import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
 import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
 import matt.fx.graphics.wrapper.region.RegionWrapper
 import matt.fx.graphics.wrapper.stage.StageWrapper
+import matt.fx.web.img.ImageRefreshingWebView
 import matt.hurricanefx.eye.mtofx.createROFXPropWrapper
 import matt.lang.NEVER
-import matt.time.dur.sec
 import netscape.javascript.JSObject
 import org.intellij.lang.annotations.Language
-import org.jsoup.Jsoup
 import kotlin.contracts.ExperimentalContracts
 
 fun NW.testWebView(op: WebViewWrapper.() -> Unit = {}) = webview {
@@ -88,10 +77,6 @@ fun NW.webview(
 }.attachTo(this, op)
 
 
-fun EventTarget.htmleditor(html: String? = null, op: HTMLEditorWrapper.()->Unit = {}) =
-  HTMLEditorWrapper().attachTo(this.wrapped(), op) {
-	if (html != null) it.htmlText = html
-  }
 
 infix fun WebViewWrapper.perfectBind(other: RegionWrapper<*>) {
   this minBind other
@@ -381,57 +366,6 @@ fun WebViewWrapper.interceptConsole() {
 }
 
 
-fun ImageRefreshingWebView(file: MFile) = WebViewWrapper().apply {
-
-  engine.onError = EventHandler { event -> System.err.println(event) }
-
-
-  var refreshThisCycle = false
-
-  interceptConsole()
-
-  engine.loadWorker.stateProperty().addListener { _, _, new ->
-	println("${file.name}:loadstate:${new}")
-	refreshThisCycle = true
-  }
-
-
-  engine.load(file.toURI().toString())
-  daemon {
-	val imgFiles = mutableMapOf<MFile, Long>()
-	Jsoup.parse(file.readText()).allElements.forEach {
-	  if (it.tag().name == "img") {
-		val src = it.attributes()["src"]
-		val imgFile = file.parentFile!!.toPath().resolve(src).normalize().toFile().toMFile()
-		imgFiles[imgFile] = imgFile.lastModified()
-	  }
-	}
-	println("watching mtimes of:")
-	for (entry in imgFiles) {
-	  println("\t" + entry.key.toString())
-	}
-
-	refreshWhileInSceneEvery(2.sec) {
-	  @Suppress("DEPRECATION")
-	  if (!file.exists()) NonCancellable.cancel() // NOSONAR
-
-	  for (entry in imgFiles) {
-		if (entry.key.lastModified() != entry.value) {
-		  imgFiles[entry.key] = entry.key.lastModified()
-		  refreshThisCycle = true
-		}
-	  }
-	  if (refreshThisCycle) {
-		refreshThisCycle = false
-		//                println("refresh2(${file.absolutePath})")
-		runLaterReturn {
-		  println("executing js refresh!")
-		  engine.executeScript(refreshImages)
-		}
-	  }
-	}
-  }
-}
 
 
 @Suppress("unused")
@@ -446,17 +380,7 @@ class JavaBridge {
 }
 
 
-class HTMLEditorWrapper(node: HTMLEditor = HTMLEditor()): ControlWrapperImpl<HTMLEditor>(node) {
-  var htmlText: String?
-	get() = node.htmlText
-	set(value) {
-	  node.htmlText = value
-	}
 
-  override fun addChild(child: NodeWrapper, index: Int?) {
-	TODO("Not yet implemented")
-  }
-}
 
 class WebViewWrapper(node: WebView = WebView()): ParentWrapperImpl<WebView, NodeWrapper>(node) {
 
