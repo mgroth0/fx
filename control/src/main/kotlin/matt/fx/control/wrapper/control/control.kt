@@ -1,28 +1,24 @@
 package matt.fx.control.wrapper.control
 
 import javafx.scene.control.Control
-import javafx.scene.control.Tooltip
-import matt.fx.control.wrapper.tooltip.TooltipWrapper
-import matt.fx.graphics.service.uncheckedWrapperConverter
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.region.RegionWrapper
 import matt.fx.graphics.wrapper.region.RegionWrapperImpl
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
-import matt.lang.delegation.lazyVarDelegate
-import matt.obs.prop.Var
 
 interface ControlWrapper: RegionWrapper<NodeWrapper> {
   override val node: Control
-  val tooltipProp: Var<TooltipWrapper?>
-  var tooltip: TooltipWrapper?
+  /*val tooltipProp: Var<matt.fx.control.wrapper.tooltip.fixed.TooltipWrapper?>
+  var matt.fx.control.wrapper.tooltip.fixed.tooltip: matt.fx.control.wrapper.tooltip.fixed.TooltipWrapper?*/
 }
 
 abstract class ControlWrapperImpl<N: Control>(node: N): RegionWrapperImpl<N, NodeWrapper>(node),
 														ControlWrapper {
 
-  final override val tooltipProp by lazy {
-	node.tooltipProperty().toNullableProp().proxy(uncheckedWrapperConverter<Tooltip, TooltipWrapper>().nullable())
+
+  /*Don't use this. It requires that I use the built in Tooltip, which I do not*/
+/*  final override val tooltipProp by lazy {
+	node.tooltipProperty().toNullableProp().proxy(uncheckedWrapperConverter<Tooltip, matt.fx.control.wrapper.tooltip.fixed.TooltipWrapper>().nullable())
   }
-  final override var tooltip by lazyVarDelegate { tooltipProp }
+  final override var matt.fx.control.wrapper.tooltip.fixed.tooltip by lazyVarDelegate { tooltipProp }*/
 
 }

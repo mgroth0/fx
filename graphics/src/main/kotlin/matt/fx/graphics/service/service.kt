@@ -2,6 +2,7 @@ package matt.fx.graphics.service
 
 import javafx.event.EventTarget
 import javafx.scene.Node
+import javafx.scene.Parent
 import matt.fx.graphics.fxthread.runLaterReturn
 import matt.fx.graphics.wrapper.EventTargetWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
@@ -42,6 +43,7 @@ fun <E: EventTarget, W: EventTargetWrapper> uncheckedNullableWrapperConverter():
   uncheckedWrapperConverter<E, W>().nullable()
 
 val nullableNodeConverter by lazy { uncheckedNullableWrapperConverter<Node, NodeWrapper>() }
+val nullableParentConverter by lazy { uncheckedNullableWrapperConverter<Parent, NodeWrapper>() }
 
 
 

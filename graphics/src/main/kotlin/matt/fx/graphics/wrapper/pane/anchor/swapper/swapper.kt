@@ -82,7 +82,7 @@ open class Swapper<P, C: NodeWrapper>: RegionWrapperImpl<Region, C>(AnchorPane()
 		if (nullMessage != null) {
 		  setInnerNode(nullMessageNode(nullMessage), fadeOutDur = fadeOutDur, fadeInDur = fadeInDur)
 		} else {
-		  clearLayoutProxyNetwork()
+		  nullValueButNoMessage()
 		}
 	  } else {
 		val proxy = ProxyEventTargetWrapper {
@@ -133,7 +133,7 @@ open class Swapper<P, C: NodeWrapper>: RegionWrapperImpl<Region, C>(AnchorPane()
 		if (nullMessage != null) {
 		  setInnerNode(nullMessageNode(nullMessage), fadeOutDur = fadeOutDur, fadeInDur = fadeInDur)
 		} else {
-		  clearLayoutProxyNetwork()
+		  nullValueButNoMessage()
 		}
 	  } else {
 		setInnerNode(op(value), fadeOutDur = fadeOutDur, fadeInDur = fadeInDur)
@@ -158,7 +158,12 @@ open class Swapper<P, C: NodeWrapper>: RegionWrapperImpl<Region, C>(AnchorPane()
   private fun nullMessageNode(nullMessage: String) = nullNodeFact.value(nullMessage)
 
 
-  fun setInnerNode(
+  private fun nullValueButNoMessage() {
+	anchor.children.clear()
+	clearLayoutProxyNetwork()
+  }
+
+  private fun setInnerNode(
 	node: NodeWrapper,
 	fadeOutDur: Duration? = null,
 	fadeInDur: Duration? = null

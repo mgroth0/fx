@@ -530,23 +530,23 @@ interface NodeWrapper: EventTargetWrapper, StyleableWrapper {
 abstract class NodeWrapperImpl<out N: Node>(
   node: N
 ): SingularEventTargetWrapper<N>(node), StyleableWrapper by object: StyleableWrapperImpl(node) {
-  override fun setTheStyle(value: String) {
+  final override fun setTheStyle(value: String) {
 	node.style = value
 	node.style
   }
 }, NodeWrapper {
 
 
-  override val layoutYProperty: BindableProperty<Double> by lazy {
+  final override val layoutYProperty: BindableProperty<Double> by lazy {
 	node.layoutYProperty().toNonNullableProp().cast()
   }
-  override val layoutXProperty: BindableProperty<Double> by lazy {
+  final override val layoutXProperty: BindableProperty<Double> by lazy {
 	node.layoutXProperty().toNonNullableProp().cast()
   }
-  override val scaleXProperty: BindableProperty<Double> by lazy {
+  final override val scaleXProperty: BindableProperty<Double> by lazy {
 	node.scaleXProperty().toNonNullableProp().cast()
   }
-  override val scaleYProperty: BindableProperty<Double> by lazy {
+  final override val scaleYProperty: BindableProperty<Double> by lazy {
 	node.scaleYProperty().toNonNullableProp().cast()
   }
 
@@ -556,7 +556,7 @@ abstract class NodeWrapperImpl<out N: Node>(
 	)
   }
 
-  override val scene by lazyDelegate {    /*lazy because there is an issue where the inner mechanics of this property causes the wrong scene wrapper to be built during the SceneWrapper's initialization*/
+  final override val scene by lazyDelegate {    /*lazy because there is an issue where the inner mechanics of this property causes the wrong scene wrapper to be built during the SceneWrapper's initialization*/
 	sceneProperty
   }
 
@@ -567,12 +567,12 @@ abstract class NodeWrapperImpl<out N: Node>(
   }
 
 
-  override val layoutBoundsProperty by lazy { node.layoutBoundsProperty().toNonNullableROProp() }
-  override val hoverProperty by lazy { node.hoverProperty().toNonNullableROProp() }
-  override val effectProperty by lazy { node.effectProperty().toNullableProp() }
-  override val disabledProperty by lazy { node.disabledProperty().toNonNullableROProp() }
-  override val disableProperty by lazy { node.disableProperty().toNonNullableProp() }
-  override val enableProperty by lazy {
+  final override val layoutBoundsProperty by lazy { node.layoutBoundsProperty().toNonNullableROProp() }
+  final override val hoverProperty by lazy { node.hoverProperty().toNonNullableROProp() }
+  final override val effectProperty by lazy { node.effectProperty().toNullableProp() }
+  final override val disabledProperty by lazy { node.disabledProperty().toNonNullableROProp() }
+  final override val disableProperty by lazy { node.disableProperty().toNonNullableProp() }
+  final override val enableProperty by lazy {
 	val r = BindableProperty(!disableProperty.value)
 	val rBlocker = RecursionBlocker()
 	disableProperty.onChange {
@@ -587,13 +587,13 @@ abstract class NodeWrapperImpl<out N: Node>(
 	}
 	r
   }
-  override val managedProperty by lazy { node.managedProperty().toNonNullableProp() }
-  override val visibleProperty by lazy { node.visibleProperty().toNonNullableProp() }
+  final override val managedProperty by lazy { node.managedProperty().toNonNullableProp() }
+  final override val visibleProperty by lazy { node.visibleProperty().toNonNullableProp() }
 
 
-  override val layoutProxies = mutableSetOf<NodeWrapper>()
+  final override val layoutProxies = mutableSetOf<NodeWrapper>()
 
-  override fun setTheStyle(value: String) {
+  final override fun setTheStyle(value: String) {
 	node.style = value
   }
 

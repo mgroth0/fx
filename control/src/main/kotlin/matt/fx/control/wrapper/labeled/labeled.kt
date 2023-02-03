@@ -8,12 +8,12 @@ import matt.fx.control.inter.TextAndGraphic
 import matt.fx.control.inter.graphic
 import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.graphics.service.nullableNodeConverter
+import matt.fx.graphics.stylelock.toNonNullableStyleProp
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.text.textlike.ColoredText
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.NullableFXBackedBindableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
-import matt.fx.graphics.stylelock.toNonNullableStyleProp
 
 open class LabeledWrapper<N: Labeled>(node: N): ControlWrapperImpl<N>(node), ColoredText, TextAndGraphic {
 
@@ -52,7 +52,7 @@ open class LabeledWrapper<N: Labeled>(node: N): ControlWrapperImpl<N>(node), Col
 	  node.isWrapText = value
 	}
 
-  fun wrapTextProperty(): BooleanProperty = node.wrapTextProperty()
+  val wrapTextProperty by lazy { node.wrapTextProperty().toNonNullableProp() }
 
   override val textFillProperty by lazy { node.textFillProperty().toNonNullableProp() }
   override fun addChild(child: NodeWrapper, index: Int?) {

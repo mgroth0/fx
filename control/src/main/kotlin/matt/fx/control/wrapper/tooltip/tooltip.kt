@@ -5,7 +5,6 @@ import com.sun.javafx.scene.NodeHelper
 import com.sun.javafx.scene.input.PickResultChooser
 import javafx.event.EventHandler
 import javafx.scene.Scene
-import javafx.scene.control.Tooltip
 import javafx.scene.input.MouseEvent
 import javafx.scene.input.PickResult
 import javafx.scene.text.Font
@@ -13,27 +12,26 @@ import javafx.stage.Window
 import javafx.util.Duration
 import matt.fx.control.inter.TextAndGraphic
 import matt.fx.control.inter.graphic
-import matt.fx.control.wrapper.control.ControlWrapperImpl
+import matt.fx.control.wrapper.popupcontrol.PopupControlWrapper
+import matt.fx.control.wrapper.tooltip.node.MyTooltip
 import matt.fx.graphics.service.nullableNodeConverter
 import matt.fx.graphics.stylelock.toNonNullableStyleProp
-import matt.fx.graphics.wrapper.node.NW
 import matt.fx.graphics.wrapper.node.NodeWrapper
-import matt.fx.graphics.wrapper.window.WindowWrapper
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
 import matt.lang.go
 import matt.lang.sync
 import matt.obs.prop.Var
 import matt.obs.prop.VarProp
-
+/*
 fun NW.install(newToolTip: TooltipWrapper) {
-  if (this is ControlWrapperImpl<*>) {
-	tooltip = newToolTip
-  } else {
-	Tooltip.install(
-	  this.node, newToolTip.node
-	)
-  }
+  *//*if (this is ControlWrapperImpl<*>) {
+	matt.fx.control.wrapper.tooltip.fixed.tooltip = newToolTip
+  } else {*//*
+  MyTooltip.install(
+	this.node, newToolTip.node
+  )
+  *//*}*//*
 }
 
 fun NW.tooltip(text: String = "", graphic: NW? = null, op: TooltipWrapper.()->Unit = {}): TooltipWrapper {
@@ -44,12 +42,12 @@ fun NW.tooltip(text: String = "", graphic: NW? = null, op: TooltipWrapper.()->Un
   }
   install(newToolTip)
   return newToolTip
-}
+}*/
 
 
-open class TooltipWrapper(node: Tooltip = Tooltip()): WindowWrapper<Tooltip>(node), TextAndGraphic {
+open class TooltipWrapper(node: MyTooltip = MyTooltip()): PopupControlWrapper<MyTooltip>(node), TextAndGraphic {
 
-  constructor(s: String): this(Tooltip(s))
+  constructor(s: String): this(MyTooltip(s))
 
 
   override val textProperty: Var<String?> by lazy { node.textProperty().toNullableProp() }
@@ -73,14 +71,27 @@ open class TooltipWrapper(node: Tooltip = Tooltip()): WindowWrapper<Tooltip>(nod
 	showDelay = Duration.millis(100.0)
 	showDuration = Duration.INDEFINITE
   }
+
   fun comfortablyShowForeverUntilEscaped() {
 	comfortablyShowForeverUntilMouseMoved()
 	hideDelay = Duration.INDEFINITE
   }
 
-  var showDelay by node::showDelay
-  var hideDelay by node::hideDelay
-  var showDuration by node::showDuration
+  var showDelay: Duration
+	get() = node.showDelay
+	set(value) {
+	  node.setShowDelay(value)
+	}
+  var hideDelay: Duration
+	get() = node.hideDelay
+	set(value) {
+	  node.setHideDelay(value)
+	}
+  var showDuration: Duration
+	get() = node.showDuration
+	set(value) {
+	  node.setShowDuration(value)
+	}
   var consumeAutoHidingEvents by node::consumeAutoHidingEvents
   var isAutoFix by node.autoFixProperty().toNonNullableProp()
   var isAutoHide by node.autoHideProperty().toNonNullableProp()
@@ -99,7 +110,7 @@ open class TooltipWrapper(node: Tooltip = Tooltip()): WindowWrapper<Tooltip>(nod
 		} else {
 
 		  addEventFilter(MouseEvent.ANY, EventHandler<MouseEvent> {
-			correctNativeMouseEvent(
+			correctTooltipNativeMouseEvent(
 			  it, target = when (opt) {
 				AutoDetectUnderlyingScene -> null
 				is Owner                  -> node.ownerWindow.scene
@@ -132,7 +143,7 @@ private val processMouseEvent by lazy {
   }
 }
 
-private fun correctNativeMouseEvent(
+internal fun correctTooltipNativeMouseEvent(
   event: MouseEvent, target: Scene? = null, exclude: Scene
 ): Boolean {
   val targetScene = target ?: getTargetScene(event, exclude)

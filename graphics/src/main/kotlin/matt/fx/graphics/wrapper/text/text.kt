@@ -6,6 +6,7 @@ import javafx.scene.text.TextAlignment
 import matt.fx.graphics.fxthread.ts.nonBlockingFXWatcher
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.attachTo
+import matt.fx.graphics.wrapper.node.onHover
 import matt.fx.graphics.wrapper.node.shape.ShapeWrapper
 import matt.fx.graphics.wrapper.text.textlike.ColoredText
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
@@ -50,5 +51,15 @@ open class TextWrapper(
   val yProperty by lazy { node.yProperty().toNonNullableProp().cast<Double>() }
   var y by lazyVarDelegate { yProperty }
 
+  fun highlightOnHover() {
+	onHover {
+	  val dark = matt.fx.graphics.style.DarkModeController.darkModeProp.value
+	  fill = when {
+		it   -> if (dark) javafx.scene.paint.Color.YELLOW else javafx.scene.paint.Color.BLUE
+		dark -> javafx.scene.paint.Color.WHITE
+		else -> javafx.scene.paint.Color.BLACK
+	  }
+	}
+  }
 
 }

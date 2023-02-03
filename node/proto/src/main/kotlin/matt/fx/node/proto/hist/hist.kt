@@ -5,15 +5,15 @@ import javafx.scene.layout.Region
 import javafx.scene.layout.VBox
 import javafx.scene.paint.Color
 import matt.fx.control.wrapper.label.label
-import matt.fx.control.wrapper.tooltip.tooltip
+import matt.fx.control.wrapper.tooltip.fixed.tooltip
 import matt.fx.graphics.wrapper.inter.titled.Titled
 import matt.fx.graphics.wrapper.node.NW
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.shape.rect.rectangle
 import matt.fx.graphics.wrapper.pane.pane
 import matt.fx.graphics.wrapper.region.RegionWrapperImpl
-import matt.model.data.mathable.MathAndComparable
 import matt.model.code.idea.MChartIdea
+import matt.model.data.mathable.MathAndComparable
 import matt.obs.bind.binding
 import matt.obs.math.double.op.div
 import matt.obs.math.double.op.minus

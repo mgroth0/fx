@@ -4,7 +4,7 @@ import javafx.scene.Node
 import javafx.scene.control.Label
 import matt.fx.control.inter.graphic
 import matt.fx.control.wrapper.labeled.LabeledWrapper
-import matt.fx.control.wrapper.tooltip.tooltip
+import matt.fx.control.wrapper.tooltip.fixed.tooltip
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NW
 import matt.fx.graphics.wrapper.node.NodeWrapper
@@ -37,7 +37,9 @@ inline fun <reified T> ET.label(
   }
   if (tooltip) {
 	tooltip {
-	  textProperty.bind(this@apply.textProperty)
+	  content = LabelWrapper().also {
+		it.textProperty.bind(this@apply.textProperty)
+	  }
 	}
   }
   op(this)
