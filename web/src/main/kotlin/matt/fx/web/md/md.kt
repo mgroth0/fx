@@ -1,5 +1,6 @@
 package matt.fx.web.md
 
+import javafx.scene.layout.Priority.ALWAYS
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.fx.graphics.wrapper.pane.vbox.VBoxW
@@ -13,6 +14,7 @@ fun ET.markdownViewer(op: DSL<MarkDownViewer> = {}) = MarkDownViewer().attachTo(
 
 class MarkDownViewer(): VBoxW() {
   private val wv = webview {
+	vgrow = ALWAYS
 	engine.loadContent(
 	  """
 		<body style="background: black">
@@ -21,6 +23,7 @@ class MarkDownViewer(): VBoxW() {
 	)
   }
   val markdown = BindableProperty("").apply {
+
 	onChange {
 	  @SeeURL("https://stackoverflow.com/questions/37770620/how-to-include-markdown-md-files-inside-html-files")
 	  @SeeURL("https://zerodevx.github.io/zero-md/basic-usage/")
