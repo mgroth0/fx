@@ -4,10 +4,10 @@ import javafx.animation.Timeline
 import javafx.scene.paint.Color
 import javafx.scene.text.Text
 import matt.async.schedule.AccurateTimer
-import matt.fx.graphics.font.fixed
-import matt.fx.graphics.lang.removeAllButLastN
 import matt.fx.graphics.anim.animation.keyframe
 import matt.fx.graphics.anim.animation.timeline
+import matt.fx.graphics.font.fixed
+import matt.fx.graphics.lang.removeAllButLastN
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.text.TextWrapper
 import matt.fx.graphics.wrapper.text.textlike.applyConsoleStyle
@@ -30,6 +30,7 @@ class ConsoleTextFlow(val takesInput: Boolean = true): TextFlowWrapper<NodeWrapp
   fun hasText() = children.size > 3
 
   fun tryIncreaseFontSize() {
+	println("trying to increase font size")
 	if (fontSize < MAX_FONT_SIZE) {
 	  fontSize += 1
 	  updateFonts()
@@ -37,6 +38,7 @@ class ConsoleTextFlow(val takesInput: Boolean = true): TextFlowWrapper<NodeWrapp
   }
 
   fun tryDecreaseFontSize() {
+	println("trying to decrease font size")
 	if (fontSize > MIN_FONT_SIZE) {
 	  fontSize -= 1
 	  updateFonts()
