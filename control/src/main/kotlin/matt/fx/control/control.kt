@@ -135,6 +135,10 @@ object FXActionAbilitiesService: ActionAbilitiesService {
 	}
   }
 
+  override fun <E: Enum<E>> enum(enumOptions: Array<E>, prompt: String): E {
+	TODO("Not yet implemented")
+  }
+
   override fun input(prompt: String) = popupTextInput(prompt) ?: NEVER
 }
 
@@ -189,6 +193,10 @@ class AsyncFXActionAbilitiesService(
 		else           -> NEVER
 	  }
 	}
+  }
+
+  override fun <E: Enum<E>> enum(enumOptions: Array<E>, prompt: String): E {
+	TODO("Not yet implemented")
   }
 
   override fun input(prompt: String) = popupTextInput(prompt) ?: NEVER
