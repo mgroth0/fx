@@ -10,8 +10,6 @@ import javafx.scene.web.WebEngine
 import javafx.scene.web.WebView
 import matt.file.MFile
 import matt.fx.control.lang.actionbutton
-import matt.fx.control.menu.context.mcontextmenu
-import matt.fx.control.win.interact.openInNewWindow
 import matt.fx.graphics.clip.copyToClipboard
 import matt.fx.graphics.fxthread.runLater
 import matt.fx.graphics.wrapper.node.NW
@@ -25,6 +23,7 @@ import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
 import matt.fx.graphics.wrapper.region.RegionWrapper
 import matt.fx.graphics.wrapper.stage.StageWrapper
 import matt.fx.web.img.ImageRefreshingWebView
+import matt.gui.interact.openInNewWindow
 import matt.hurricanefx.eye.mtofx.createROFXPropWrapper
 import matt.lang.NEVER
 import netscape.javascript.JSObject

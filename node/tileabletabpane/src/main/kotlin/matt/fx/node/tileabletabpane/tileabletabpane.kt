@@ -12,6 +12,7 @@ import matt.fx.graphics.wrapper.pane.PaneWrapper
 import matt.fx.graphics.wrapper.pane.hbox.hbox
 import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
 import matt.fx.graphics.wrapper.region.RegionWrapper
+import matt.gui.menu.context.mcontextmenu
 import matt.obs.math.double.op.div
 import matt.obs.prop.VarProp
 import java.util.concurrent.Semaphore

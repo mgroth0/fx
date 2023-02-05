@@ -25,6 +25,7 @@ import matt.fx.graphics.wrapper.node.parent.ParentWrapper
 import matt.fx.node.console.Console.RefreshRate.NORMAL
 import matt.fx.node.console.mem.ConsoleMemory
 import matt.fx.node.console.text.ConsoleTextFlow
+import matt.gui.menu.context.mcontextmenu
 import matt.kjlib.shell.forEachErrChar
 import matt.kjlib.shell.forEachOutChar
 import matt.lang.err

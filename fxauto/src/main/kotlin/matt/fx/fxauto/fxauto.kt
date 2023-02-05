@@ -7,6 +7,7 @@ import matt.fx.control.wrapper.menu.item.MenuItemWrapper
 import matt.fx.graphics.clip.copyToClipboard
 import matt.fx.graphics.wrapper.node.NW
 import matt.gui.menu.context.MContextMenuBuilder
+import matt.gui.menu.context.mcontextmenu
 import kotlin.concurrent.thread
 
 fun MFile.fxActions() = listOf(AutoAction("copy full path") {
