@@ -27,7 +27,7 @@ import matt.fx.control.wrapper.wrapped.cannotFindWrapper
 import matt.fx.control.wrapper.wrapped.findWrapper
 import matt.model.data.mathable.MathAndComparable
 
-fun PieChart.wrapped(): PieChartWrapper = findWrapper() ?: PieChartWrapper(this@wrapped)
+/*fun PieChart.wrapped(): PieChartWrapper = findWrapper() ?: PieChartWrapper(this@wrapped)*/
 
 
 fun <X: MathAndComparable<X>, Y: MathAndComparable<Y>> MorePerfOptionsLineChart<X, Y>.wrapped(): LineChartWrapper<X, Y> =
