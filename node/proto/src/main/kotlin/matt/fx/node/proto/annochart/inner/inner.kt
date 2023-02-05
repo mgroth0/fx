@@ -1,6 +1,6 @@
 package matt.fx.node.proto.annochart.inner
 
-import matt.fx.control.wrapper.chart.axis.value.number.NumberAxisWrapper
+import matt.fx.control.chart.axis.value.number.NumberAxisWrapper
 import matt.fx.graphics.fxthread.ensureInFXThreadInPlace
 import matt.model.data.mathable.MathAndComparable
 

@@ -121,27 +121,27 @@ import javafx.stage.Window
 import matt.fx.control.wrapper.button.radio.RadioButtonWrapper
 import matt.fx.control.wrapper.button.toggle.ToggleButtonWrapper
 import matt.fx.control.wrapper.buttonbar.ButtonBarWrapper
-import matt.fx.control.wrapper.chart.area.AreaChartWrapper
-import matt.fx.control.wrapper.chart.axis.AxisWrapper
-import matt.fx.control.wrapper.chart.axis.cat.CategoryAxisWrapper
-import matt.fx.control.wrapper.chart.axis.cat.cat.CategoryAxisForCatAxisWrapper
-import matt.fx.control.wrapper.chart.axis.value.axis.AxisForPackagePrivateProps
-import matt.fx.control.wrapper.chart.axis.value.moregenval.MoreGenericValueAxis
-import matt.fx.control.wrapper.chart.axis.value.number.NumberAxisWrapper
-import matt.fx.control.wrapper.chart.axis.value.number.moregennum.MoreGenericNumberAxis
-import matt.fx.control.wrapper.chart.bar.BarChartWrapper
-import matt.fx.control.wrapper.chart.bar.bar.BarChartForWrapper
-import matt.fx.control.wrapper.chart.bubble.BubbleChartWrapper
-import matt.fx.control.wrapper.chart.bubble.bubble.BubbleChartForWrapper
-import matt.fx.control.wrapper.chart.line.LineChartWrapper
-import matt.fx.control.wrapper.chart.line.highperf.relinechart.MorePerfOptionsLineChart
-import matt.fx.control.wrapper.chart.line.highperf.relinechart.xy.area.AreaChartForPrivateProps
-import matt.fx.control.wrapper.chart.pie.PieChartWrapper
-import matt.fx.control.wrapper.chart.pie.pie.PieChartForWrapper
-import matt.fx.control.wrapper.chart.scatter.ScatterChartWrapper
-import matt.fx.control.wrapper.chart.scatter.scatter.ScatterChartForWrapper
-import matt.fx.control.wrapper.chart.stackedbar.StackedBarChartWrapper
-import matt.fx.control.wrapper.chart.stackedbar.stackedb.StackedBarChartForWrapper
+//import matt.fx.control.chart.area.AreaChartWrapper
+//import matt.fx.control.chart.axis.AxisWrapper
+//import matt.fx.control.chart.axis.cat.CategoryAxisWrapper
+//import matt.fx.control.chart.axis.cat.cat.CategoryAxisForCatAxisWrapper
+//import matt.fx.control.chart.axis.value.axis.AxisForPackagePrivateProps
+//import matt.fx.control.chart.axis.value.moregenval.MoreGenericValueAxis
+//import matt.fx.control.chart.axis.value.number.NumberAxisWrapper
+//import matt.fx.control.chart.axis.value.number.moregennum.MoreGenericNumberAxis
+//import matt.fx.control.chart.bar.BarChartWrapper
+//import matt.fx.control.chart.bar.bar.BarChartForWrapper
+//import matt.fx.control.chart.bubble.BubbleChartWrapper
+//import matt.fx.control.chart.bubble.bubble.BubbleChartForWrapper
+//import matt.fx.control.chart.line.LineChartWrapper
+//import matt.fx.control.chart.line.highperf.relinechart.MorePerfOptionsLineChart
+//import matt.fx.control.chart.line.highperf.relinechart.xy.area.AreaChartForPrivateProps
+//import matt.fx.control.chart.pie.PieChartWrapper
+//import matt.fx.control.chart.pie.pie.PieChartForWrapper
+//import matt.fx.control.chart.scatter.ScatterChartWrapper
+//import matt.fx.control.chart.scatter.scatter.ScatterChartForWrapper
+//import matt.fx.control.chart.stackedbar.StackedBarChartWrapper
+//import matt.fx.control.chart.stackedbar.stackedb.StackedBarChartForWrapper
 import matt.fx.control.wrapper.checkbox.CheckBoxWrapper
 import matt.fx.control.wrapper.contextmenu.ContextMenuWrapper
 import matt.fx.control.wrapper.control.ControlWrapper
@@ -348,8 +348,8 @@ fun Hyperlink.wrapped(): HyperlinkWrapper = findWrapper() ?: HyperlinkWrapper(th
 
 fun TableColumnHeader.wrapped(): TableColumnHeaderWrapper = findWrapper() ?: TableColumnHeaderWrapper(this@wrapped)
 
-fun <X: MathAndComparable<X>, Y: MathAndComparable<Y>> MorePerfOptionsLineChart<X, Y>.wrapped(): LineChartWrapper<X, Y> =
-  findWrapper() ?: LineChartWrapper(this@wrapped)
+//fun <X: MathAndComparable<X>, Y: MathAndComparable<Y>> MorePerfOptionsLineChart<X, Y>.wrapped(): LineChartWrapper<X, Y> =
+//  findWrapper() ?: LineChartWrapper(this@wrapped)
 
 fun Group.wrapped(): GroupWrapper<*> = findWrapper() ?: GroupWrapper<NodeWrapper>(this@wrapped)
 
@@ -378,11 +378,11 @@ val constructorMap = lazyMap<KType, KFunction<EventTargetWrapper>> { typ ->
 }*/
 
 
-fun <T: MathAndComparable<T>> MoreGenericNumberAxis<T>.wrapped(): NumberAxisWrapper<*> =
-  findWrapper() ?: error("not implemented: NumberAxisWrapper(this@wrapped)")
+//fun <T: MathAndComparable<T>> MoreGenericNumberAxis<T>.wrapped(): NumberAxisWrapper<*> =
+//  findWrapper() ?: error("not implemented: NumberAxisWrapper(this@wrapped)")
 
 //fun NumberAxis.wrapped(): OldNumberAxisWrapper = findWrapper() ?: OldNumberAxisWrapper(this@wrapped)
-fun CategoryAxisForCatAxisWrapper.wrapped(): CategoryAxisWrapper = findWrapper() ?: CategoryAxisWrapper(this@wrapped)
+//fun CategoryAxisForCatAxisWrapper.wrapped(): CategoryAxisWrapper = findWrapper() ?: CategoryAxisWrapper(this@wrapped)
 
 fun ToolBar.wrapped(): ToolBarWrapper = findWrapper() ?: ToolBarWrapper(this@wrapped)
 
@@ -394,14 +394,14 @@ fun ToolBar.wrapped(): ToolBarWrapper = findWrapper() ?: ToolBarWrapper(this@wra
 //  }
 
 
-@Suppress("UNCHECKED_CAST")
-fun <T> AxisForPackagePrivateProps<T>.wrapped(): AxisWrapper<T, AxisForPackagePrivateProps<T>> =
-  findWrapper() ?: when (this) {
-	is MoreGenericNumberAxis         -> wrapped()
-	is MoreGenericValueAxis          -> (this as MoreGenericValueAxis<out Number>).wrapped() as AxisWrapper<T, AxisForPackagePrivateProps<T>>
-	is CategoryAxisForCatAxisWrapper -> wrapped() as AxisWrapper<T, AxisForPackagePrivateProps<T>>
-	else                             -> cannotFindWrapper()
-  }
+//@Suppress("UNCHECKED_CAST")
+//fun <T> AxisForPackagePrivateProps<T>.wrapped(): AxisWrapper<T, AxisForPackagePrivateProps<T>> =
+//  findWrapper() ?: when (this) {
+//	is MoreGenericNumberAxis         -> wrapped()
+//	is MoreGenericValueAxis          -> (this as MoreGenericValueAxis<out Number>).wrapped() as AxisWrapper<T, AxisForPackagePrivateProps<T>>
+//	is CategoryAxisForCatAxisWrapper -> wrapped() as AxisWrapper<T, AxisForPackagePrivateProps<T>>
+//	else                             -> cannotFindWrapper()
+//  }
 
 //fun TableRow<T>.wrapped()
 
@@ -435,12 +435,12 @@ fun MenuButton.wrapped(): MenuButtonWrapper = findWrapper() ?: when (this) {
 fun Button.wrapped(): ButtonWrapper = findWrapper() ?: ButtonWrapper(this@wrapped)
 
 
-fun AreaChartForPrivateProps<*, *>.wrapped(): AreaChartWrapper<*, *> = findWrapper() ?: AreaChartWrapper(this@wrapped)
-fun BarChartForWrapper<*, *>.wrapped(): BarChartWrapper<*, *> = findWrapper() ?: BarChartWrapper(this@wrapped)
-fun BubbleChartForWrapper<*, *>.wrapped(): BubbleChartWrapper<*, *> = findWrapper() ?: BubbleChartWrapper(this@wrapped)
-fun ScatterChartForWrapper<*, *>.wrapped(): ScatterChartWrapper<*, *> = findWrapper() ?: ScatterChartWrapper(this@wrapped)
-fun StackedBarChartForWrapper<*, *>.wrapped(): StackedBarChartWrapper<*, *> =
-  findWrapper() ?: StackedBarChartWrapper(this@wrapped)
+//fun AreaChartForPrivateProps<*, *>.wrapped(): AreaChartWrapper<*, *> = findWrapper() ?: AreaChartWrapper(this@wrapped)
+//fun BarChartForWrapper<*, *>.wrapped(): BarChartWrapper<*, *> = findWrapper() ?: BarChartWrapper(this@wrapped)
+//fun BubbleChartForWrapper<*, *>.wrapped(): BubbleChartWrapper<*, *> = findWrapper() ?: BubbleChartWrapper(this@wrapped)
+//fun ScatterChartForWrapper<*, *>.wrapped(): ScatterChartWrapper<*, *> = findWrapper() ?: ScatterChartWrapper(this@wrapped)
+//fun StackedBarChartForWrapper<*, *>.wrapped(): StackedBarChartWrapper<*, *> =
+//  findWrapper() ?: StackedBarChartWrapper(this@wrapped)
 
 fun CheckBox.wrapped(): CheckBoxWrapper = findWrapper() ?: CheckBoxWrapper(this@wrapped)
 fun PasswordField.wrapped(): PasswordFieldWrapper = findWrapper() ?: PasswordFieldWrapper(this@wrapped)
@@ -510,7 +510,7 @@ fun Region.wrapped(): RegionWrapper<*> = findWrapper() ?: when (this) {
   is FlowPane                      -> wrapped()
   is VBox                          -> wrapped()
   is HBox                          -> wrapped()
-  is PieChartForWrapper            -> wrapped()
+//  is PieChartForWrapper            -> wrapped()
   is AnchorPane                    -> wrapped()
   is StackPane                     -> wrapped()
   is CategoryAxisForCatAxisWrapper -> wrapped()
@@ -519,7 +519,7 @@ fun Region.wrapped(): RegionWrapper<*> = findWrapper() ?: when (this) {
   is TableColumnHeader             -> wrapped()
   is Control                       -> wrapped()
   is VirtualFlow<*>                -> wrapped()
-  is AxisForPackagePrivateProps<*> -> wrapped()
+//  is AxisForPackagePrivateProps<*> -> wrapped()
   else                             -> when (this::class.qualifiedName) {
 	CLIPPED_CONTAINER_QNAME                                              -> ClippedContainerWrapper(this@wrapped)
 	"org.fxmisc.richtext.ParagraphBox"                                   -> ParagraphBoxWrapper(this@wrapped)
@@ -570,7 +570,7 @@ fun Parent.wrapped(): ParentWrapper<*> = findWrapper() ?: when (this) {
   else      -> cannotFindWrapper()
 }
 
-fun PieChartForWrapper.wrapped(): PieChartWrapper = findWrapper() ?: PieChartWrapper(this@wrapped)
+//fun PieChartForWrapper.wrapped(): PieChartWrapper = findWrapper() ?: PieChartWrapper(this@wrapped)
 
 fun Sphere.wrapped(): SphereWrapper = findWrapper() ?: SphereWrapper(this@wrapped)
 fun Box.wrapped(): BoxWrapper3D = findWrapper() ?: BoxWrapper3D(this@wrapped)

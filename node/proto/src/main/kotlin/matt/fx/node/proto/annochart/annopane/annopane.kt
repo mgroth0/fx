@@ -3,10 +3,10 @@ package matt.fx.node.proto.annochart.annopane
 import javafx.geometry.Bounds
 import javafx.scene.layout.Pane
 import javafx.scene.paint.Color
-import matt.fx.control.wrapper.chart.axis.value.number.NumberAxisWrapper
-import matt.fx.control.wrapper.chart.line.ChartLocater
-import matt.fx.control.wrapper.chart.line.highperf.relinechart.xy.XYChartForPackagePrivateProps.Data
-import matt.fx.control.wrapper.chart.xy.series.SeriesWrapper
+import matt.fx.control.chart.axis.value.number.NumberAxisWrapper
+import matt.fx.control.chart.line.ChartLocater
+import matt.fx.control.chart.line.highperf.relinechart.xy.XYChartForPackagePrivateProps.Data
+import matt.fx.control.chart.xy.series.SeriesWrapper
 import matt.fx.graphics.wrapper.node.NW
 import matt.fx.graphics.wrapper.node.line.LineWrapper
 import matt.fx.graphics.wrapper.node.line.line
