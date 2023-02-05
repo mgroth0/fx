@@ -19,7 +19,11 @@ import matt.lang.function.DSL
 import matt.obs.bind.binding
 
 
-abstract class HoverableSymbol(char: String, tooltipText: String): StackPaneW() {
+abstract class HoverableSymbol(
+  char: String,
+  tooltipText: String,
+  baseColor: String? = null
+): StackPaneW() {
   companion object {
 	private const val SIZE = 11.0
 	val hoverColor by lazy {
@@ -31,7 +35,9 @@ abstract class HoverableSymbol(char: String, tooltipText: String): StackPaneW() 
 
   private val circ = circle(radius = SIZE) {
 	stroke = Color.GRAY
+	strokeWidth = 2.0
 	fill = Color.TRANSPARENT
+	style = baseColor?.let { "-fx-stroke: $it" } ?: ""
   }
   private val txt = text(char) {
 	font = Font.font("Georgia").fixed().copy(
@@ -39,25 +45,26 @@ abstract class HoverableSymbol(char: String, tooltipText: String): StackPaneW() 
 	  size = SIZE,
 	  weight = BOLD
 	).fx()
+	style = baseColor?.let { "-fx-fill: $it" } ?: ""
   }
   private var builtTT = false
 
   init {
-	hoverProperty.onChange {
+	hoverProperty.onChange { isHovering ->
 
 	  if (!builtTT) {
 		tt
 		builtTT = true
 	  }
-	  val e = if (it) Color.YELLOW else null
+	  val e = if (isHovering) Color.YELLOW else null
 	  if (e != null) {
 		circ.style = "-fx-stroke: ${hoverColor.value}"
 		/*circ.stroke = e*/
 		/*txt.fill = e*/
 		txt.style = "-fx-fill: ${hoverColor.value}"
 	  } else {
-		circ.style = ""
-		txt.style = ""
+		circ.style = baseColor?.let { "-fx-stroke: $it" } ?: ""
+		txt.style = baseColor?.let { "-fx-fill: $it" } ?: ""
 		/*(circ.node.strokeProperty() as StyleableObjectProperty).*/
 	  }
 
@@ -103,4 +110,4 @@ open class InfoSymbol(info: String): HoverableSymbol(
 
 fun ET.warningSymbol(text: String, op: DSL<WarningSymbol> = {}) = WarningSymbol(text).attachTo(this, op)
 
-open class WarningSymbol(text: String): HoverableSymbol(char = "!!", tooltipText = text)
+open class WarningSymbol(text: String): HoverableSymbol(char = "!!", tooltipText = text, baseColor = "red")

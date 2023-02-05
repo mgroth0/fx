@@ -1,7 +1,5 @@
 package matt.fx.graphics.wrapper.node.shape
 
-import javafx.beans.property.DoubleProperty
-import javafx.beans.property.ObjectProperty
 import javafx.scene.paint.Paint
 import javafx.scene.shape.Shape
 import javafx.scene.shape.StrokeType
@@ -26,7 +24,7 @@ abstract class ShapeWrapper<N: Shape>(node: N): NodeWrapperImpl<N>(node) {
 	  node.strokeWidth = value
 	}
 
-  fun strokeWidthProperty(): DoubleProperty = node.strokeWidthProperty()
+  val strokeWidthProperty by lazy {node.strokeWidthProperty().toNonNullableProp()}
 
   var strokeType: StrokeType
 	get() = node.strokeType
@@ -34,7 +32,7 @@ abstract class ShapeWrapper<N: Shape>(node: N): NodeWrapperImpl<N>(node) {
 	  node.strokeType = value
 	}
 
-  fun strokeTypeProperty(): ObjectProperty<StrokeType> = node.strokeTypeProperty()
+  val strokeTypeProperty by lazy { node.strokeTypeProperty().toNonNullableProp() }
 
 
   var fill: Paint?
