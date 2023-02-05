@@ -25,7 +25,7 @@ import matt.fx.control.wrapper.control.table.cols.ColumnsDSL
 import matt.fx.control.wrapper.control.table.cols.ColumnsDSLImpl
 import matt.fx.control.wrapper.wrapped.wrapped
 import matt.fx.graphics.wrapper.node.NodeWrapper
-import matt.hurricanefx.eye.converter.callbackConverter
+import matt.fx.base.converter.callbackConverter
 import matt.hurricanefx.eye.prop.stringBinding
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp

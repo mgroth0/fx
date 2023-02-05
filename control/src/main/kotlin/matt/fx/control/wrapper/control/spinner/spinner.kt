@@ -10,7 +10,7 @@ import matt.fx.graphics.fxthread.runLater
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
-import matt.hurricanefx.eye.converter.ConverterConverter
+import matt.fx.base.converter.ConverterConverter
 import matt.hurricanefx.eye.wrapper.obs.collect.list.createFXWrapper
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
