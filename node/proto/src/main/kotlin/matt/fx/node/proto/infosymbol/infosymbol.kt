@@ -65,8 +65,8 @@ abstract class HoverableSymbol(char: String, tooltipText: String): StackPaneW() 
   }
 
 
-  protected open fun buildTooltipGraphic(info: String): ParentWrapper<*> {
-	return LabelWrapper(info)
+  protected open fun buildTooltipGraphic(text: String): ParentWrapper<*> {
+	return LabelWrapper(text)
   }
 
   val content: ParentWrapper<*> by lazy {
