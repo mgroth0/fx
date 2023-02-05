@@ -6,11 +6,7 @@
 	  "cfg" :  "api",
 	  "key" :  "kt-stdlib"
 	},
-	{
-	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
-	  "cfg" :  "api",
-	  "path" : ":k:auto"
-	},
+
 	{
 	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
 	  "cfg" :  "api",
