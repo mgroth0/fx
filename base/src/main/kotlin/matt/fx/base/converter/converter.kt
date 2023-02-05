@@ -3,8 +3,7 @@ package matt.fx.base.converter
 import javafx.beans.value.ObservableValue
 import javafx.util.Callback
 import javafx.util.StringConverter
-import matt.hurricanefx.eye.mtofx.createROFXPropWrapper
-import matt.hurricanefx.eye.wrapper.obs.obsval.toNullableROProp
+import matt.fx.base.mtofx.createROFXPropWrapper
 import matt.model.op.convert.Converter
 import matt.obs.prop.ObsVal
 
