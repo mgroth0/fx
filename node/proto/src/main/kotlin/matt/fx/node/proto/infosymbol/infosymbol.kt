@@ -103,4 +103,4 @@ open class InfoSymbol(info: String): HoverableSymbol(
 
 fun ET.warningSymbol(text: String, op: DSL<WarningSymbol> = {}) = WarningSymbol(text).attachTo(this, op)
 
-class WarningSymbol(text: String): HoverableSymbol(char = "!!", tooltipText = text)
+open class WarningSymbol(text: String): HoverableSymbol(char = "!!", tooltipText = text)
