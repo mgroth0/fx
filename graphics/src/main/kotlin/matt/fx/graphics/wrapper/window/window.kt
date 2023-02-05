@@ -14,8 +14,8 @@ import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.scene.SceneWrapper
 import matt.fx.graphics.wrapper.sizeman.SizeControlled
 import matt.fx.graphics.wrapper.stage.StageWrapper
-import matt.hurricanefx.eye.wrapper.obs.obsval.NonNullFXBackedReadOnlyBindableProp
-import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
+import matt.fx.base.wrapper.obs.obsval.NonNullFXBackedReadOnlyBindableProp
+import matt.fx.base.wrapper.obs.obsval.toNonNullableROProp
 import matt.lang.NOT_IMPLEMENTED
 import matt.lang.delegation.lazyDelegate
 

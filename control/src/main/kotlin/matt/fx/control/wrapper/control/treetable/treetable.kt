@@ -34,7 +34,7 @@ import matt.fx.graphics.service.uncheckedNullableWrapperConverter
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
+import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
 import matt.lang.go
 import matt.obs.prop.ObsVal
 import matt.obs.prop.VarProp

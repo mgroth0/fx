@@ -9,7 +9,7 @@ import javafx.scene.control.cell.CheckBoxListCell
 import javafx.util.Callback
 import javafx.util.StringConverter
 import matt.fx.graphics.wrapper.node.NodeWrapper
-import matt.hurricanefx.eye.mtofx.createROFXPropWrapper
+import matt.fx.base.mtofx.createROFXPropWrapper
 import matt.obs.bind.binding
 import matt.obs.bindings.bool.ObsB
 import matt.obs.bindings.str.ObsS

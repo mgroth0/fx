@@ -9,7 +9,7 @@ import matt.fx.graphics.wrapper.node.attachTo
 import matt.fx.graphics.wrapper.node.onHover
 import matt.fx.graphics.wrapper.node.shape.ShapeWrapper
 import matt.fx.graphics.wrapper.text.textlike.ColoredText
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.lang.delegation.lazyVarDelegate
 import matt.obs.bindings.str.ObsS
 

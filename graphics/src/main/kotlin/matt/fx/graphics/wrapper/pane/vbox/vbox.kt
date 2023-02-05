@@ -15,7 +15,7 @@ import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
 import matt.fx.graphics.wrapper.pane.SimplePaneWrapper
 import matt.fx.graphics.wrapper.pane.box.BoxWrapper
 import matt.fx.graphics.wrapper.pane.box.BoxWrapperImpl
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.lang.B
 import matt.lang.delegation.lazyVarDelegate
 import matt.obs.prop.Var

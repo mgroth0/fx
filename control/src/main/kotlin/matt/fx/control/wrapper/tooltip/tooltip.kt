@@ -17,8 +17,8 @@ import matt.fx.control.wrapper.tooltip.node.MyTooltip
 import matt.fx.graphics.service.nullableNodeConverter
 import matt.fx.graphics.stylelock.toNonNullableStyleProp
 import matt.fx.graphics.wrapper.node.NodeWrapper
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
+import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
 import matt.lang.go
 import matt.lang.sync
 import matt.obs.prop.Var

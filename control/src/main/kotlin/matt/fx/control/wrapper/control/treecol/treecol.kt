@@ -11,8 +11,8 @@ import matt.fx.control.wrapper.control.hascols.HasCols
 import matt.fx.control.wrapper.control.treetable.TreeTableViewWrapper
 import matt.fx.control.wrapper.wrapped.wrapped
 import matt.fx.base.converter.callbackConverter
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
+import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
 
 
 class TreeTableColumnWrapper<E: Any, P>(

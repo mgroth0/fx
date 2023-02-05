@@ -12,8 +12,8 @@ import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
 import matt.fx.graphics.wrapper.text.text
 import matt.gui.mscene.MScene
 import matt.gui.mstage.MStage
-import matt.hurricanefx.eye.mtofx.createWritableFXPropWrapper
-import matt.hurricanefx.eye.time.toFXDuration
+import matt.fx.base.mtofx.createWritableFXPropWrapper
+import matt.fx.base.time.toFXDuration
 import matt.obs.prop.VarProp
 import matt.time.dur.sec
 import java.util.WeakHashMap

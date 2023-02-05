@@ -7,7 +7,7 @@ import matt.fx.graphics.wrapper.node.impl.NodeWrapperImpl
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.fx.graphics.wrapper.node.shape.ShapeWrapper
 import matt.fx.graphics.wrapper.sizeman.SizeControlled
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.lang.delegation.lazyVarDelegate
 
 fun NodeWrapperImpl<Parent>.rectangle(

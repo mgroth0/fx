@@ -8,8 +8,8 @@ import matt.fx.graphics.wrapper.node.impl.NodeWrapperImpl
 import matt.fx.graphics.wrapper.node.line.poly.PolylineWrapper
 import matt.fx.graphics.wrapper.node.line.quad.QuadCurveWrapper
 import matt.fx.graphics.wrapper.node.shape.poly.PolygonWrapper
-import matt.hurricanefx.eye.wrapper.obs.collect.list.createImmutableWrapper
-import matt.hurricanefx.eye.wrapper.obs.obsval.toNullableROProp
+import matt.fx.base.wrapper.obs.collect.list.createImmutableWrapper
+import matt.fx.base.wrapper.obs.obsval.toNullableROProp
 import matt.obs.bind.binding
 import matt.obs.col.olist.mappedlist.toMappedList
 

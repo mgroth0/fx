@@ -6,8 +6,8 @@ import javafx.scene.media.MediaView
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.impl.NodeWrapperImpl
 import matt.fx.graphics.wrapper.pane.grid.GridPaneWrapper
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
+import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
 
 fun Media.play(): java.lang.Exception {
   MediaPlayer(this).play()

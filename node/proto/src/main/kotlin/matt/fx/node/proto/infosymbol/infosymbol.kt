@@ -14,7 +14,7 @@ import matt.fx.graphics.wrapper.node.parent.ParentWrapper
 import matt.fx.graphics.wrapper.node.shape.circle.circle
 import matt.fx.graphics.wrapper.pane.stack.StackPaneW
 import matt.fx.graphics.wrapper.text.text
-import matt.hurricanefx.eye.time.FXDuration
+import matt.fx.base.time.FXDuration
 import matt.lang.function.DSL
 import matt.obs.bind.binding
 

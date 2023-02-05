@@ -5,9 +5,9 @@ import javafx.scene.control.TabPane
 import matt.fx.control.wrapper.wrapped.wrapped
 import matt.fx.graphics.wrapper.SingularEventTargetWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
-import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
+import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
+import matt.fx.base.wrapper.obs.obsval.toNonNullableROProp
 import matt.obs.bindings.bool.ObsB
 import matt.obs.bindings.bool.not
 

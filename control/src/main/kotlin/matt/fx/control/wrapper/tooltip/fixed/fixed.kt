@@ -14,8 +14,8 @@ import matt.fx.control.wrapper.tooltip.node.simple.MyFixedTooltip
 import matt.fx.graphics.service.nullableParentConverter
 import matt.fx.graphics.wrapper.node.NW
 import matt.fx.graphics.wrapper.node.NodeWrapper
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
+import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
 import matt.lang.delegation.lazyVarDelegate
 import matt.lang.go
 import matt.lang.sync

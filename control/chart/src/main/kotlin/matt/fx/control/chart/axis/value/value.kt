@@ -2,8 +2,8 @@ package matt.fx.control.chart.axis.value
 
 import matt.fx.control.chart.axis.AxisWrapper
 import matt.fx.control.chart.axis.value.moregenval.MoreGenericValueAxis
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
+import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
 
 
 abstract class ValueAxisWrapper<T: Any>(node: MoreGenericValueAxis<T>): AxisWrapper<T, MoreGenericValueAxis<T>>(node) {

@@ -11,7 +11,7 @@ import matt.color.hex
 import matt.color.mostContrastingForMe
 import matt.fx.graphics.wrapper.style.FXStyle.fill
 import matt.fx.graphics.wrapper.style.FXStyle.`text-fill`
-import matt.hurricanefx.eye.wrapper.obs.collect.set.createImmutableWrapper
+import matt.fx.base.wrapper.obs.collect.set.createImmutableWrapper
 import matt.lang.NOT_IMPLEMENTED
 import matt.lang.err
 import matt.obs.col.oset.ObsSet

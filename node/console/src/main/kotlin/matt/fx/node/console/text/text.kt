@@ -12,8 +12,8 @@ import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.text.TextWrapper
 import matt.fx.graphics.wrapper.text.textlike.applyConsoleStyle
 import matt.fx.graphics.wrapper.textflow.TextFlowWrapper
-import matt.hurricanefx.eye.mtofx.createWritableFXPropWrapper
-import matt.hurricanefx.eye.time.toFXDuration
+import matt.fx.base.mtofx.createWritableFXPropWrapper
+import matt.fx.base.time.toFXDuration
 import matt.lang.ifTrueOrNull
 import matt.obs.bind.deepBinding
 import matt.obs.prop.VarProp

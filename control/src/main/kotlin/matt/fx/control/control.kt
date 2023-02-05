@@ -11,7 +11,7 @@ import matt.fx.control.wrapper.control.tab.TabWrapper
 import matt.fx.control.wrapper.scroll.ScrollPaneWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.impl.NodeWrapperImpl
-import matt.hurricanefx.eye.mtofx.createROFXPropWrapper
+import matt.fx.base.mtofx.createROFXPropWrapper
 import matt.lang.NEVER
 import matt.log.warn.warn
 import matt.obs.prop.BindableProperty

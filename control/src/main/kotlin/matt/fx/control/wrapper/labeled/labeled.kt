@@ -11,9 +11,9 @@ import matt.fx.graphics.service.nullableNodeConverter
 import matt.fx.graphics.stylelock.toNonNullableStyleProp
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.text.textlike.ColoredText
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.NullableFXBackedBindableProp
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
+import matt.fx.base.wrapper.obs.obsval.prop.NullableFXBackedBindableProp
+import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
 
 open class LabeledWrapper<N: Labeled>(node: N): ControlWrapperImpl<N>(node), ColoredText, TextAndGraphic {
 

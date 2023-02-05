@@ -8,8 +8,8 @@ import matt.fx.graphics.wrapper.node.impl.NodeWrapperImpl
 import matt.fx.graphics.wrapper.node.attach
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.fx.graphics.wrapper.region.RegionWrapperImpl
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
+import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
 import matt.lang.delegation.lazyVarDelegate
 import matt.obs.bind.binding
 import matt.obs.prop.BindableProperty

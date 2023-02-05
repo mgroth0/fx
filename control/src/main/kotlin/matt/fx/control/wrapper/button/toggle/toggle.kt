@@ -15,7 +15,7 @@ import matt.fx.graphics.style.background.backgroundFill
 import matt.fx.graphics.style.background.ensureLastFillIsIfPresent
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.attachTo
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.lang.go
 import matt.obs.bind.binding
 import matt.obs.listen.OldAndNewListenerImpl

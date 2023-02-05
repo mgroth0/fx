@@ -10,7 +10,7 @@ import matt.fx.graphics.wrapper.node.attach
 import matt.fx.graphics.wrapper.node.impl.NodeWrapperImpl
 import matt.fx.graphics.wrapper.sizeman.HasHeight
 import matt.fx.graphics.wrapper.sizeman.HasWidth
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.lang.NOT_IMPLEMENTED
 import matt.lang.delegation.lazyVarDelegate
 import matt.obs.math.double.ObsD

@@ -5,9 +5,9 @@ import javafx.scene.shape.Shape
 import javafx.scene.shape.StrokeType
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.impl.NodeWrapperImpl
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.NonNullFXBackedBindableProp
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
+import matt.fx.base.wrapper.obs.obsval.prop.NonNullFXBackedBindableProp
+import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
 import matt.lang.delegation.lazyVarDelegate
 
 abstract class ShapeWrapper<N: Shape>(node: N): NodeWrapperImpl<N>(node) {

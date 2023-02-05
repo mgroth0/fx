@@ -7,7 +7,7 @@ import matt.fx.graphics.fxthread.ts.periodicFXUpdates
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.model.op.convert.StringConverter
 import matt.obs.bindings.str.ObsS
 import matt.obs.prop.VarProp

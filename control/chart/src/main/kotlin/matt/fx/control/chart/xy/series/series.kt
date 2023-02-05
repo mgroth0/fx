@@ -8,10 +8,10 @@ import matt.collect.weak.WeakMap
 import matt.fx.control.chart.line.highperf.relinechart.xy.XYChartForPackagePrivateProps.Data
 import matt.fx.control.chart.line.highperf.relinechart.xy.XYChartForPackagePrivateProps.Series
 import matt.fx.control.chart.xy.series.SeriesWrapper.Companion.wrappers
-import matt.hurricanefx.eye.wrapper.obs.collect.list.mfxMutableListConverter
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
-import matt.hurricanefx.eye.wrapper.obs.obsval.toNullableROProp
+import matt.fx.base.wrapper.obs.collect.list.mfxMutableListConverter
+import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
+import matt.fx.base.wrapper.obs.obsval.toNullableROProp
 import matt.lang.setall.setAll
 import matt.model.op.convert.Converter
 import matt.model.op.convert.NullToBlankStringConverter

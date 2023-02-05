@@ -8,8 +8,8 @@ import matt.fx.control.wrapper.control.tablelike.TableLikeWrapper
 import matt.fx.graphics.wrapper.SingularEventTargetWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.sizeman.WidthManaged
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
-import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
+import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.fx.base.wrapper.obs.obsval.toNonNullableROProp
 
 
 abstract class TableColumnBaseWrapper<E: Any, P, F: TableColumnBase<E, P>>(

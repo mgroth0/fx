@@ -4,9 +4,9 @@ import matt.fx.graphics.stylelock.NonNullFXBackedUserStyleProp.Companion.originP
 import javafx.beans.property.Property
 import javafx.css.StyleOrigin
 import javafx.css.StyleableObjectProperty
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.NonNullFXBackedBindableProp
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.NullableFXBackedBindableProp
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.WritableFXBackedProp
+import matt.fx.base.wrapper.obs.obsval.prop.NonNullFXBackedBindableProp
+import matt.fx.base.wrapper.obs.obsval.prop.NullableFXBackedBindableProp
+import matt.fx.base.wrapper.obs.obsval.prop.WritableFXBackedProp
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.jvm.isAccessible
 import kotlin.reflect.jvm.javaField
@@ -34,8 +34,8 @@ class NullableFXBackedUserStyleProp<T>(private val o: StyleableObjectProperty<T>
 }
 
 class NonNullFXBackedUserStyleProp<T: Any>(private val o: StyleableObjectProperty<T>):
-  NonNullFXBackedBindableProp<T>(o),
-  WritableFXBackedProp<T> {
+	NonNullFXBackedBindableProp<T>(o),
+	WritableFXBackedProp<T> {
 
   companion object {
 	val originProp = StyleableObjectProperty::class.declaredMemberProperties.first {

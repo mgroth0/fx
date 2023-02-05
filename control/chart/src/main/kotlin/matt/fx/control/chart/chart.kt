@@ -4,10 +4,10 @@ import matt.fx.control.chart.line.highperf.relinechart.xy.chart.ChartForPrivateP
 import matt.fx.graphics.wrapper.inter.titled.Titled
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.region.RegionWrapperImpl
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.NonNullFXBackedBindableProp
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.NullableFXBackedBindableProp
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
+import matt.fx.base.wrapper.obs.obsval.prop.NonNullFXBackedBindableProp
+import matt.fx.base.wrapper.obs.obsval.prop.NullableFXBackedBindableProp
+import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
 import matt.lang.NOT_IMPLEMENTED
 
 open class ChartWrapper<N: ChartForPrivateProps>(node: N): RegionWrapperImpl<N, NodeWrapper>(node), Titled {

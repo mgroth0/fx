@@ -9,7 +9,7 @@ import javafx.scene.control.TreeCell
 import javafx.scene.control.TreeItem
 import javafx.scene.control.TreeTableRow
 import matt.fx.control.wrapper.labeled.LabeledWrapper
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
+import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
 
 open class CellWrapper<E, N: Cell<E>>(
   node: N

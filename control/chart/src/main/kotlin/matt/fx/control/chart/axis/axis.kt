@@ -3,7 +3,7 @@ package matt.fx.control.chart.axis
 import matt.fx.control.chart.axis.value.axis.AxisForPackagePrivateProps
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.region.RegionWrapperImpl
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 
 typealias MAxis<T> = AxisWrapper<T, out AxisForPackagePrivateProps<T>>
 

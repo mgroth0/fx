@@ -13,10 +13,10 @@ import matt.fx.control.wrapper.selects.wrap
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
-import matt.hurricanefx.eye.wrapper.obs.collect.list.createFXWrapper
-import matt.hurricanefx.eye.wrapper.obs.collect.list.mfxMutableListConverter
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.NullableFXBackedBindableProp
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
+import matt.fx.base.wrapper.obs.collect.list.createFXWrapper
+import matt.fx.base.wrapper.obs.collect.list.mfxMutableListConverter
+import matt.fx.base.wrapper.obs.obsval.prop.NullableFXBackedBindableProp
+import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
 import matt.lang.delegation.lazyVarDelegate
 import matt.lang.go
 import matt.obs.bind.smartBind

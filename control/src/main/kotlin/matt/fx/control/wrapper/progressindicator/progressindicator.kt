@@ -16,7 +16,7 @@ import matt.fx.graphics.wrapper.pane.vbox.VBoxW
 import matt.fx.graphics.wrapper.text.TextWrapper
 import matt.fx.graphics.wrapper.text.text
 import matt.fx.graphics.wrapper.text.textlike.MONO_FONT
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.lang.NEVER
 import matt.obs.bind.smartBind
 import matt.obs.math.double.op.times

@@ -26,10 +26,10 @@ import matt.fx.control.wrapper.control.table.cols.ColumnsDSLImpl
 import matt.fx.control.wrapper.wrapped.wrapped
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.base.converter.callbackConverter
-import matt.hurricanefx.eye.prop.stringBinding
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
-import matt.hurricanefx.eye.wrapper.obs.obsval.toNullableROProp
+import matt.fx.base.prop.stringBinding
+import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
+import matt.fx.base.wrapper.obs.obsval.toNullableROProp
 import matt.obs.prop.BindableProperty
 import matt.obs.prop.ObsVal
 import matt.obs.prop.Var

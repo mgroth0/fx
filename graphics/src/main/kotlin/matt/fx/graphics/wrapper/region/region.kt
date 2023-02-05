@@ -26,10 +26,10 @@ import matt.fx.graphics.wrapper.node.parent.ParentWrapperImpl
 import matt.fx.graphics.wrapper.node.parent.parent
 import matt.fx.graphics.wrapper.region.RegionWrapper.Companion.computePrefWidthFun
 import matt.fx.graphics.wrapper.sizeman.SizeManaged
-import matt.hurricanefx.eye.wrapper.obs.collect.list.createImmutableWrapper
-import matt.hurricanefx.eye.wrapper.obs.collect.list.createMutableWrapper
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
-import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
+import matt.fx.base.wrapper.obs.collect.list.createImmutableWrapper
+import matt.fx.base.wrapper.obs.collect.list.createMutableWrapper
+import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.fx.base.wrapper.obs.obsval.toNonNullableROProp
 import matt.lang.NEVER
 import matt.lang.delegation.lazyVarDelegate
 import matt.lang.err

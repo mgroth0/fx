@@ -29,11 +29,11 @@ import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NW
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
-import matt.hurricanefx.eye.wrapper.obs.collect.list.createMutableWrapper
-import matt.hurricanefx.eye.wrapper.obs.collect.list.mfxMutableListConverter
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
-import matt.hurricanefx.eye.wrapper.obs.obsval.toNullableROProp
+import matt.fx.base.wrapper.obs.collect.list.createMutableWrapper
+import matt.fx.base.wrapper.obs.collect.list.mfxMutableListConverter
+import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
+import matt.fx.base.wrapper.obs.obsval.toNullableROProp
 import matt.lang.function.Op
 import matt.lang.go
 import matt.lang.setall.setAll

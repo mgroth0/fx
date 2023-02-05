@@ -7,7 +7,7 @@ import matt.fx.control.chart.line.highperf.relinechart.xy.XYChartForPackagePriva
 import matt.fx.control.chart.xy.XYChartWrapper
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.attachTo
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.log.warn.warnOnce
 import matt.math.point.BasicPoint
 import matt.model.data.mathable.MathAndComparable

@@ -11,8 +11,8 @@ import matt.fx.graphics.service.uncheckedNullableWrapperConverter
 import matt.fx.graphics.wrapper.SingularEventTargetWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.window.WindowWrapper
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
-import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
+import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
+import matt.fx.base.wrapper.obs.obsval.toNonNullableROProp
 import matt.lang.NOT_IMPLEMENTED
 
 open class DialogWrapper<R>(dialog: Dialog<R> = Dialog()): SingularEventTargetWrapper<Dialog<R>>(dialog) {

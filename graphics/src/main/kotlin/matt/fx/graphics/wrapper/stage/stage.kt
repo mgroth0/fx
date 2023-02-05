@@ -10,9 +10,9 @@ import matt.fx.graphics.wrapper.inter.titled.Titled
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.scene.SceneWrapper
 import matt.fx.graphics.wrapper.window.WindowWrapper
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.NullableFXBackedBindableProp
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
-import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
+import matt.fx.base.wrapper.obs.obsval.prop.NullableFXBackedBindableProp
+import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
+import matt.fx.base.wrapper.obs.obsval.toNonNullableROProp
 import matt.lang.delegation.lazyDelegate
 import matt.log.warn.warn
 

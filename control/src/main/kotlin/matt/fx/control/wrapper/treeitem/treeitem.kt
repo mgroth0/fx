@@ -7,8 +7,8 @@ import matt.fx.control.wrapper.wrapped.wrapped
 import matt.fx.graphics.service.uncheckedWrapperConverter
 import matt.fx.graphics.wrapper.SingularEventTargetWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
-import matt.hurricanefx.eye.wrapper.obs.collect.list.createMutableWrapper
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.fx.base.wrapper.obs.collect.list.createMutableWrapper
+import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.obs.col.olist.sync.toSyncedList
 
 open class TreeItemWrapper<T: Any>(node: TreeItem<T> = TreeItem()): SingularEventTargetWrapper<TreeItem<T>>(node) {

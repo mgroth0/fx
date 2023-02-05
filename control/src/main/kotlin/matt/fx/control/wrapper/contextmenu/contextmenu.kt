@@ -18,7 +18,7 @@ import matt.fx.control.wrapper.menu.radioitem.ValuedRadioMenuItem
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.window.WindowWrapper
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.obs.bindings.str.ObsS
 import kotlin.concurrent.thread
 

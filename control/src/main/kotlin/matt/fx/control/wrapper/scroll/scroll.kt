@@ -14,7 +14,7 @@ import matt.fx.graphics.wrapper.node.maxYRelativeTo
 import matt.fx.graphics.wrapper.node.minYRelativeTo
 import matt.fx.graphics.wrapper.node.parent.parent
 import matt.fx.graphics.wrapper.region.RegionWrapper
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 
 
 fun NW.isFullyVisibleIn(sp: ScrollPaneWrapper<*>): Boolean {

@@ -6,7 +6,7 @@ import matt.fx.control.inter.graphic
 import matt.fx.control.wrapper.labeled.LabeledWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.http.url.MURL
-import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
+import matt.fx.base.wrapper.obs.obsval.toNonNullableROProp
 import matt.lang.NOT_IMPLEMENTED
 import java.awt.Desktop
 import java.net.URI

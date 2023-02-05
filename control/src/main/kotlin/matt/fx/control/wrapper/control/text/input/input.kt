@@ -10,7 +10,7 @@ import javafx.scene.control.TextInputControl
 import javafx.scene.paint.Paint
 import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.graphics.wrapper.node.NodeWrapper
-import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.graphics.wrapper.style.FXStyle
 import matt.fx.graphics.wrapper.style.parseFXStyle
 import matt.fx.graphics.wrapper.style.toStyleString
