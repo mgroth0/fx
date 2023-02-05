@@ -16,7 +16,7 @@ import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
 import matt.fx.graphics.wrapper.pane.box.BoxWrapperImpl
 import matt.fx.graphics.wrapper.pane.hbox.HBoxWrapperImpl
 import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
-import matt.hurricanefx.eye.collect.toObservable
+import matt.fx.base.collect.toObservable
 
 
 class InspectionView<N: PaneWrapperImpl<*, *>, T: Inspectable<N>>(

@@ -1,34 +1,21 @@
 package matt.fx.control
 
-import javafx.application.Platform
-import javafx.application.Platform.runLater
 import javafx.scene.Node
-import javafx.scene.control.Alert.AlertType.CONFIRMATION
-import javafx.scene.control.ButtonType
 import javafx.scene.control.TreeTableView
 import javafx.scene.input.ContextMenuEvent
 import javafx.scene.layout.ColumnConstraints
 import javafx.scene.layout.Pane
 import javafx.scene.layout.RowConstraints
-import matt.fx.control.tfx.dialog.alert
-import matt.fx.control.tfx.dialog.asyncAlert
 import matt.fx.control.wrapper.checkbox.CheckBoxWrapper
 import matt.fx.control.wrapper.control.tab.TabWrapper
 import matt.fx.control.wrapper.scroll.ScrollPaneWrapper
-import matt.fx.graphics.fxthread.ensureInFXThreadInPlace
-import matt.fx.graphics.fxthread.runLaterReturn
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.impl.NodeWrapperImpl
-import matt.fx.graphics.wrapper.stage.StageWrapper
 import matt.hurricanefx.eye.mtofx.createROFXPropWrapper
 import matt.lang.NEVER
 import matt.log.warn.warn
-import matt.model.data.dir.YesOrNo
-import matt.model.data.dir.YesOrNo.NO
-import matt.model.data.dir.YesOrNo.YES
 import matt.obs.prop.BindableProperty
 import matt.obs.prop.Var
-import matt.service.action.ActionAbilitiesService
 
 
 interface Scrolls {
