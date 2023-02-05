@@ -1,9 +1,9 @@
 {
-  "type": "matt.mstruct.bj.BasicJvmOnlyMod",
+  "type" :         "matt.mstruct.bj.BasicJvmOnlyMod",
   "dependencies" : [
 	{
 	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
-	  "cfg" :  "implementation",
+	  "cfg" :  "api",
 	  "path" : ":k:fx:control:chart"
 	}
   ]
