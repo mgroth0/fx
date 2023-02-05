@@ -1,5 +1,26 @@
 package matt.fx.control.wrapper.wrapped
 
+//import matt.fx.control.chart.area.AreaChartWrapper
+//import matt.fx.control.chart.axis.AxisWrapper
+//import matt.fx.control.chart.axis.cat.CategoryAxisWrapper
+//import matt.fx.control.chart.axis.cat.cat.CategoryAxisForCatAxisWrapper
+//import matt.fx.control.chart.axis.value.axis.AxisForPackagePrivateProps
+//import matt.fx.control.chart.axis.value.moregenval.MoreGenericValueAxis
+//import matt.fx.control.chart.axis.value.number.NumberAxisWrapper
+//import matt.fx.control.chart.axis.value.number.moregennum.MoreGenericNumberAxis
+//import matt.fx.control.chart.bar.BarChartWrapper
+//import matt.fx.control.chart.bar.bar.BarChartForWrapper
+//import matt.fx.control.chart.bubble.BubbleChartWrapper
+//import matt.fx.control.chart.bubble.bubble.BubbleChartForWrapper
+//import matt.fx.control.chart.line.LineChartWrapper
+//import matt.fx.control.chart.line.highperf.relinechart.MorePerfOptionsLineChart
+//import matt.fx.control.chart.line.highperf.relinechart.xy.area.AreaChartForPrivateProps
+//import matt.fx.control.chart.pie.PieChartWrapper
+//import matt.fx.control.chart.pie.pie.PieChartForWrapper
+//import matt.fx.control.chart.scatter.ScatterChartWrapper
+//import matt.fx.control.chart.scatter.scatter.ScatterChartForWrapper
+//import matt.fx.control.chart.stackedbar.StackedBarChartWrapper
+//import matt.fx.control.chart.stackedbar.stackedb.StackedBarChartForWrapper
 import com.sun.javafx.scene.control.DoubleField
 import com.sun.javafx.scene.control.FakeFocusTextField
 import com.sun.javafx.scene.control.IntegerField
@@ -121,27 +142,6 @@ import javafx.stage.Window
 import matt.fx.control.wrapper.button.radio.RadioButtonWrapper
 import matt.fx.control.wrapper.button.toggle.ToggleButtonWrapper
 import matt.fx.control.wrapper.buttonbar.ButtonBarWrapper
-//import matt.fx.control.chart.area.AreaChartWrapper
-//import matt.fx.control.chart.axis.AxisWrapper
-//import matt.fx.control.chart.axis.cat.CategoryAxisWrapper
-//import matt.fx.control.chart.axis.cat.cat.CategoryAxisForCatAxisWrapper
-//import matt.fx.control.chart.axis.value.axis.AxisForPackagePrivateProps
-//import matt.fx.control.chart.axis.value.moregenval.MoreGenericValueAxis
-//import matt.fx.control.chart.axis.value.number.NumberAxisWrapper
-//import matt.fx.control.chart.axis.value.number.moregennum.MoreGenericNumberAxis
-//import matt.fx.control.chart.bar.BarChartWrapper
-//import matt.fx.control.chart.bar.bar.BarChartForWrapper
-//import matt.fx.control.chart.bubble.BubbleChartWrapper
-//import matt.fx.control.chart.bubble.bubble.BubbleChartForWrapper
-//import matt.fx.control.chart.line.LineChartWrapper
-//import matt.fx.control.chart.line.highperf.relinechart.MorePerfOptionsLineChart
-//import matt.fx.control.chart.line.highperf.relinechart.xy.area.AreaChartForPrivateProps
-//import matt.fx.control.chart.pie.PieChartWrapper
-//import matt.fx.control.chart.pie.pie.PieChartForWrapper
-//import matt.fx.control.chart.scatter.ScatterChartWrapper
-//import matt.fx.control.chart.scatter.scatter.ScatterChartForWrapper
-//import matt.fx.control.chart.stackedbar.StackedBarChartWrapper
-//import matt.fx.control.chart.stackedbar.stackedb.StackedBarChartForWrapper
 import matt.fx.control.wrapper.checkbox.CheckBoxWrapper
 import matt.fx.control.wrapper.contextmenu.ContextMenuWrapper
 import matt.fx.control.wrapper.control.ControlWrapper
@@ -268,7 +268,6 @@ import matt.fx.graphics.wrapper.transform.TransformWrapper
 import matt.fx.graphics.wrapper.transform.TranslateWrapper
 import matt.fx.graphics.wrapper.window.WindowWrapper
 import matt.lang.NEVER
-import matt.model.data.mathable.MathAndComparable
 import kotlin.reflect.KClass
 
 
