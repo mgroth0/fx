@@ -1,7 +1,5 @@
 package matt.fx.control.chart.wrap
 
-import javafx.scene.chart.NumberAxis
-import javafx.scene.chart.PieChart
 import matt.fx.control.chart.area.AreaChartWrapper
 import matt.fx.control.chart.axis.AxisWrapper
 import matt.fx.control.chart.axis.cat.CategoryAxisWrapper
