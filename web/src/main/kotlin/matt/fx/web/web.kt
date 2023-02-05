@@ -24,6 +24,7 @@ import matt.fx.graphics.wrapper.region.RegionWrapper
 import matt.fx.graphics.wrapper.stage.StageWrapper
 import matt.fx.web.img.ImageRefreshingWebView
 import matt.gui.interact.openInNewWindow
+import matt.gui.menu.context.mcontextmenu
 import matt.hurricanefx.eye.mtofx.createROFXPropWrapper
 import matt.lang.NEVER
 import netscape.javascript.JSObject
