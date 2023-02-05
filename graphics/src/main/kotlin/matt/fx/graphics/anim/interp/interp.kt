@@ -23,7 +23,7 @@ class InterpolatorWrapper(private val curver: Interpolator): MyInterpolator() {
 }
 
 
-abstract class MyInterpolator(): Interpolator() {
+abstract class MyInterpolator: Interpolator() {
 
   companion object {
 
