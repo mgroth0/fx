@@ -15,25 +15,25 @@ import matt.lang.go
 
 
 fun NodeWrapper.openFile(
-  op: DSL<ChooseFileDSL>
+  op: DSL<ChooseFileDSL> = {}
 ) = openFile(stage, op)
 
 fun NodeWrapper.openFiles(
-  op: DSL<ChoseMultipleFilesDSL>
+  op: DSL<ChoseMultipleFilesDSL> = {}
 ) = openFiles(stage, op)
 
 fun NodeWrapper.saveFile(
-  op: DSL<ChooseFileDSL>
+  op: DSL<ChooseFileDSL> = {}
 ) = saveFile(stage, op)
 
 fun NodeWrapper.chooseFolder(
-  op: DSL<ChooseFolderDSL>
+  op: DSL<ChooseFolderDSL> = {}
 ) = chooseFolder(stage, op)
 
 
 fun openFile(
   stage: StageWrapper? = WindowWrapper.guessMainStage(),
-  op: DSL<ChooseFileDSL>
+  op: DSL<ChooseFileDSL> = {}
 ): MFile? {
   val dsl = ChooseFileDSL(OPEN, stage)
   dsl.apply(op)
@@ -42,7 +42,7 @@ fun openFile(
 
 fun openFiles(
   stage: StageWrapper? = WindowWrapper.guessMainStage(),
-  op: DSL<ChoseMultipleFilesDSL>
+  op: DSL<ChoseMultipleFilesDSL> = {}
 
 ): List<MFile>? {
   val dsl = ChoseMultipleFilesDSL(stage)
@@ -52,7 +52,7 @@ fun openFiles(
 
 fun saveFile(
   stage: StageWrapper? = WindowWrapper.guessMainStage(),
-  op: DSL<ChooseFileDSL>
+  op: DSL<ChooseFileDSL> = {}
 
 ): MFile? {
   val dsl = ChooseFileDSL(SAVE, stage)
@@ -62,7 +62,7 @@ fun saveFile(
 
 fun chooseFolder(
   stage: StageWrapper? = WindowWrapper.guessMainStage(),
-  op: DSL<ChooseFolderDSL>
+  op: DSL<ChooseFolderDSL> = {}
 ): MFile? {
   val dsl = ChooseFolderDSL(stage)
   dsl.apply(op)
