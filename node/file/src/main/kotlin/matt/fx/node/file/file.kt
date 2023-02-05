@@ -22,12 +22,6 @@ import matt.file.LogFile
 import matt.file.MFile
 import matt.file.SvgFile
 import matt.fx.control.lang.actionbutton
-import matt.fx.control.menu.context.mcontextmenu
-import matt.fx.control.mstage.WMode.CLOSE
-import matt.fx.control.win.interact.doubleClickToOpenInWindow
-import matt.fx.control.win.interact.openImageInWindow
-import matt.fx.control.win.interact.openInNewWindow
-import matt.fx.control.win.interact.safe
 import matt.fx.control.wrapper.checkbox.checkbox
 import matt.fx.control.wrapper.control.button.button
 import matt.fx.control.wrapper.control.spinner.spinner
@@ -52,6 +46,12 @@ import matt.fx.node.file.tree.fileTreeAndViewerPane
 import matt.fx.web.WebViewPane
 import matt.fx.web.WebViewWrapper
 import matt.fx.web.specialZooming
+import matt.gui.interact.doubleClickToOpenInWindow
+import matt.gui.interact.openImageInWindow
+import matt.gui.interact.openInNewWindow
+import matt.gui.interact.safe
+import matt.gui.menu.context.mcontextmenu
+import matt.gui.mstage.WMode.CLOSE
 import matt.lang.err
 import matt.obs.bind.binding
 import matt.obs.prop.BindableProperty

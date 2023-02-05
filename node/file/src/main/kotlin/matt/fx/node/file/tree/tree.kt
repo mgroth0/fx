@@ -13,10 +13,6 @@ import matt.collect.map.lazyMap
 import matt.file.MFile
 import matt.file.construct.mFile
 import matt.fx.control.inter.graphic
-import matt.fx.control.menu.context.mcontextmenu
-import matt.fx.control.mstage.WMode.CLOSE
-import matt.fx.control.win.interact.WinGeom
-import matt.fx.control.win.interact.openInNewWindow
 import matt.fx.control.wrapper.cellfact.SimpleFactory
 import matt.fx.control.wrapper.control.row.TreeCellWrapper
 import matt.fx.control.wrapper.control.row.TreeTableRowWrapper
@@ -41,6 +37,10 @@ import matt.fx.node.file.createNode
 import matt.fx.node.file.draggableIcon
 import matt.fx.node.file.tree.FileTreePopulationStrategy.AUTOMATIC
 import matt.fx.web.specialTransferingToWindowAndBack
+import matt.gui.interact.WinGeom
+import matt.gui.interact.openInNewWindow
+import matt.gui.menu.context.mcontextmenu
+import matt.gui.mstage.WMode.CLOSE
 import matt.lang.NEVER
 import matt.lang.inList
 import matt.log.taball
