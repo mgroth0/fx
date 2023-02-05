@@ -9,7 +9,6 @@ import matt.auto.process.destroyNiceThenForceThenWait
 import matt.file.MFile
 import matt.file.commons.REGISTERED_FOLDER
 import matt.fx.control.lang.actionbutton
-import matt.fx.control.menu.context.mcontextmenu
 import matt.fx.control.wrapper.control.button.ButtonWrapper
 import matt.fx.control.wrapper.control.button.button
 import matt.fx.graphics.wrapper.node.NodeWrapper
@@ -19,6 +18,7 @@ import matt.fx.node.console.ProcessConsole
 import matt.fx.node.procpane.inspect.ProcessInspectPane
 import matt.fx.node.procpane.status.StatusFolderWatchPane
 import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
+import matt.gui.menu.context.mcontextmenu
 import matt.log.logInvocation
 import matt.obs.bindings.bool.not
 import matt.obs.math.double.op.times
