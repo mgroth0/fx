@@ -4,10 +4,9 @@ import javafx.beans.value.ObservableValue
 import javafx.util.Callback
 import javafx.util.StringConverter
 import matt.fx.base.mtofx.createROFXPropWrapper
+import matt.fx.base.wrapper.obs.obsval.toNullableROProp
 import matt.model.op.convert.Converter
 import matt.obs.prop.ObsVal
-
-import matt.fx.base.wrapper.obs.obsval.toNullableROProp
 
 fun <T> Converter<T, String>.toFXConverter() = object: StringConverter<T>() {
   override fun toString(`object`: T) = convertToB(`object`)

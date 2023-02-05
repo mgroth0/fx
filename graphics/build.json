@@ -26,11 +26,7 @@
 	  "cfg" :  "api",
 	  "path" : ":k:caching"
 	},
-	{
-	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
-	  "cfg" :  "api",
-	  "path" : ":k:hurricanefx:eye"
-	},
+
 	{
 	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
 	  "cfg" :  "api",
