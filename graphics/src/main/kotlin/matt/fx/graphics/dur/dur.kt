@@ -1,11 +1,11 @@
 package matt.fx.graphics.dur
 
-import javafx.animation.Interpolatable
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import matt.cbor.ser.MyCborSerializer
 import matt.hurricanefx.eye.time.toFXDuration
+import matt.model.data.interp.BasicInterpolatable
 import matt.model.data.mathable.MathAndComparable
 import matt.model.op.convert.Converter
 import matt.time.toUnixTime
@@ -31,7 +31,7 @@ fun Duration.wrapped() = DurationWrapper(this)
 
 @Serializable(with = DurationByTheSecondSerializer::class)
 @JvmInline
-value class DurationWrapper(val dur: Duration): Interpolatable<DurationWrapper>,
+value class DurationWrapper(val dur: Duration): BasicInterpolatable<DurationWrapper>,
 												MathAndComparable<DurationWrapper> {
 
   companion object {
@@ -41,6 +41,7 @@ value class DurationWrapper(val dur: Duration): Interpolatable<DurationWrapper>,
   override fun toString() = dur.toString()
 
   fun toString(unit: DurationUnit, decimals: Int = 0) = dur.toString(unit, decimals)
+
 
   override fun interpolate(endValue: DurationWrapper, t: Double): DurationWrapper {
 	if (t <= 0.0) return this
