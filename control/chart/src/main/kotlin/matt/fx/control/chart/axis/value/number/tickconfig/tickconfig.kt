@@ -8,8 +8,6 @@ import matt.fx.control.chart.axis.value.number.tickconfig.unitless.UnitLess
 import matt.fx.control.chart.axis.value.number.tickconfig.unitless.UnitLessConverter
 import matt.fx.control.chart.line.LineChartWrapper
 import matt.fx.control.chart.xy.XYChartWrapper
-import matt.fx.graphics.dur.DurationWrapper
-import matt.fx.graphics.dur.wrapped
 import matt.lang.function.Convert
 import matt.math.jmath.decimalOrScientificNotation
 import matt.model.data.byte.ByteSize
@@ -20,6 +18,8 @@ import matt.model.data.mathable.DoubleWrapper
 import matt.model.data.mathable.IntWrapper
 import matt.model.data.mathable.MathAndComparable
 import matt.model.op.convert.Converter
+import matt.time.dur.wrap.DurationWrapper
+import matt.time.dur.wrap.wrapped
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.minutes

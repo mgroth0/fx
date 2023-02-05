@@ -11,13 +11,13 @@ import matt.fx.control.chart.axis.value.number.tickconfig.DefaultTickConfigurer
 import matt.fx.control.chart.axis.value.number.tickconfig.DurationWrapperTickConfigurer
 import matt.fx.control.chart.axis.value.number.tickconfig.TickConfigurer
 import matt.fx.control.chart.axis.value.number.tickconfig.UnitLessTickConfigurer
-import matt.fx.graphics.dur.MilliSecondDurationWrapperConverter
 import matt.model.data.byte.ByteSizeDoubleConverter
 import matt.model.data.index.IndexWrapperConverter
 import matt.model.data.index.IndexWrapperIntConverter
 import matt.model.data.mathable.DoubleWrapper
 import matt.model.data.mathable.MathAndComparable
 import matt.model.data.percent.PercentDoubleConverter
+import matt.time.dur.wrap.MilliSecondDurationWrapperConverter
 
 
 fun timeAxis() = NumberAxisWrapper(MilliSecondDurationWrapperConverter, DurationWrapperTickConfigurer)
