@@ -23,6 +23,7 @@ import matt.fx.control.chart.scatter.ScatterChartWrapper
 import matt.fx.control.chart.scatter.scatter.ScatterChartForWrapper
 import matt.fx.control.chart.stackedbar.StackedBarChartWrapper
 import matt.fx.control.chart.stackedbar.stackedb.StackedBarChartForWrapper
+import matt.fx.control.wrapper.wrapped.cannotFindWrapper
 import matt.fx.control.wrapper.wrapped.findWrapper
 import matt.model.data.mathable.MathAndComparable
 
@@ -50,16 +51,16 @@ fun PieChartForWrapper.wrapped(): PieChartWrapper = findWrapper() ?: PieChartWra
 fun <T: MathAndComparable<T>> MoreGenericNumberAxis<T>.wrapped(): NumberAxisWrapper<*> =
   findWrapper() ?: error("not implemented: NumberAxisWrapper(this@wrapped)")
 
-fun NumberAxis.wrapped(): OldNumberAxisWrapper = findWrapper() ?: OldNumberAxisWrapper(this@wrapped)
+/*fun NumberAxis.wrapped(): OldNumberAxisWrapper = findWrapper() ?: OldNumberAxisWrapper(this@wrapped)*/
 fun CategoryAxisForCatAxisWrapper.wrapped(): CategoryAxisWrapper = findWrapper() ?: CategoryAxisWrapper(this@wrapped)
 
 
 
-@Suppress("UNCHECKED_CAST") fun <T: Number> MoreGenericValueAxis<T>.wrapped(): OldValueAxisWrapper<T> =
+/*@Suppress("UNCHECKED_CAST") fun <T: Number> MoreGenericValueAxis<T>.wrapped(): OldValueAxisWrapper<T> =
   findWrapper() ?: when (this) {
 	is MoreGenericNumberAxis -> wrapped() as OldValueAxisWrapper<T>
 	else                     -> cannotFindWrapper()
-  }
+  }*/
 
 
 @Suppress("UNCHECKED_CAST")

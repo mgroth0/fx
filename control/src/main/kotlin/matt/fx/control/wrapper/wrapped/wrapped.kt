@@ -328,7 +328,6 @@ fun Hyperlink.wrapped(): HyperlinkWrapper = findWrapper() ?: HyperlinkWrapper(th
 fun TableColumnHeader.wrapped(): TableColumnHeaderWrapper = findWrapper() ?: TableColumnHeaderWrapper(this@wrapped)
 
 
-
 fun Group.wrapped(): GroupWrapper<*> = findWrapper() ?: GroupWrapper<NodeWrapper>(this@wrapped)
 
 fun <T> Cell<T>.wrapped(): CellWrapper<T, *> = findWrapper() ?: CellWrapper(this@wrapped)
@@ -361,7 +360,6 @@ val constructorMap = lazyMap<KType, KFunction<EventTargetWrapper>> { typ ->
 fun ToolBar.wrapped(): ToolBarWrapper = findWrapper() ?: ToolBarWrapper(this@wrapped)
 
 
-
 //fun TableRow<T>.wrapped()
 
 fun Labeled.wrapped(): LabeledWrapper<*> = findWrapper() ?: when (this) {
@@ -392,7 +390,6 @@ fun MenuButton.wrapped(): MenuButtonWrapper = findWrapper() ?: when (this) {
 
 
 fun Button.wrapped(): ButtonWrapper = findWrapper() ?: ButtonWrapper(this@wrapped)
-
 
 
 fun CheckBox.wrapped(): CheckBoxWrapper = findWrapper() ?: CheckBoxWrapper(this@wrapped)
@@ -457,23 +454,22 @@ fun Control.wrapped(): ControlWrapper = findWrapper() ?: when (this) {
 }
 
 
-
 fun Region.wrapped(): RegionWrapper<*> = findWrapper() ?: when (this) {
-  is GridPane                      -> wrapped()
-  is FlowPane                      -> wrapped()
-  is VBox                          -> wrapped()
-  is HBox                          -> wrapped()
+  is GridPane          -> wrapped()
+  is FlowPane          -> wrapped()
+  is VBox              -> wrapped()
+  is HBox              -> wrapped()
   /*is PieChartForWrapper            -> wrapped()*/
-  is AnchorPane                    -> wrapped()
-  is StackPane                     -> wrapped()
+  is AnchorPane        -> wrapped()
+  is StackPane         -> wrapped()
   /*is CategoryAxisForCatAxisWrapper -> wrapped()*/
-  is TilePane                      -> wrapped()
-  is Pane                          -> wrapped()
-  is TableColumnHeader             -> wrapped()
-  is Control                       -> wrapped()
-  is VirtualFlow<*>                -> wrapped()
+  is TilePane          -> wrapped()
+  is Pane              -> wrapped()
+  is TableColumnHeader -> wrapped()
+  is Control           -> wrapped()
+  is VirtualFlow<*>    -> wrapped()
   /*is AxisForPackagePrivateProps<*> -> wrapped()*/
-  else                             -> when (this::class.qualifiedName) {
+  else                 -> when (this::class.qualifiedName) {
 	CLIPPED_CONTAINER_QNAME                                              -> ClippedContainerWrapper(this@wrapped)
 	"org.fxmisc.richtext.ParagraphBox"                                   -> ParagraphBoxWrapper(this@wrapped)
 	"org.fxmisc.flowless.Navigator"                                      -> NavigatorWrapper(this@wrapped)
@@ -481,7 +477,9 @@ fun Region.wrapped(): RegionWrapper<*> = findWrapper() ?: when (this) {
 	"eu.hansolo.fx.charts.CoxcombChart"                                  -> CoxCombWrapper(this@wrapped)
 	"eu.hansolo.fx.charts.matt.fx.control.wrapper.wrapped.SunburstChart" -> SunburstChart(this@wrapped)
 	else                                                                 -> findWrapper()
-	  ?: RegionWrapperImpl<Region, NodeWrapper>(this)
+																			?: RegionWrapperImpl<Region, NodeWrapper>(
+																			  this
+																			)
   }
 }
 
@@ -522,7 +520,6 @@ fun Parent.wrapped(): ParentWrapper<*> = findWrapper() ?: when (this) {
   is Group  -> wrapped()
   else      -> cannotFindWrapper()
 }
-
 
 
 fun Sphere.wrapped(): SphereWrapper = findWrapper() ?: SphereWrapper(this@wrapped)
@@ -602,8 +599,8 @@ fun MyPopupControl.wrapped(): PopupControlWrapper<*> = findWrapper() ?: PopupCon
 fun Popup.wrapped(): PopupWrapper = findWrapper() ?: PopupWrapper(this@wrapped)
 
 fun Window.wrapped(): WindowWrapper<*> = findWrapper() ?: when (this) {
-  is Stage       -> wrapped()
-  is Tooltip     -> wrapped()
+  is Stage        -> wrapped()
+  is Tooltip      -> wrapped()
   is ContextMenu  -> wrapped()
   is PopupControl -> wrapped()
   is Popup        -> wrapped()
@@ -686,7 +683,7 @@ fun EventTarget.wrapped(): EventTargetWrapper = findWrapper() ?: when (this) {
   else                     -> cannotFindWrapper()
 }
 
-private fun EventTarget.cannotFindWrapper(): Nothing = throw (CannotFindWrapperException(this::class))
+fun EventTarget.cannotFindWrapper(): Nothing = throw (CannotFindWrapperException(this::class))
 
 class CannotFindWrapperException(val cls: KClass<out EventTarget>): Exception(
   "what is the wrapper for ${cls.qualifiedName}?"
