@@ -4,9 +4,6 @@ import javafx.stage.Screen
 import kotlinx.serialization.Serializable
 import matt.file.commons.VAR_JSON_FILE
 import matt.fx.graphics.wrapper.window.WindowWrapper
-import matt.json.prim.loadJson
-import matt.json.prim.save
-import matt.json.toJson
 
 const val NEW_MAC_NOTCH_ESTIMATE = 32.0 /*35*/
 const val NEW_MAC_MENU_BAR_ESTIMATE = NEW_MAC_NOTCH_ESTIMATE + 2.0
