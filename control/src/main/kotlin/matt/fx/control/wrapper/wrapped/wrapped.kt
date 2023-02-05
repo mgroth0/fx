@@ -513,7 +513,7 @@ fun Region.wrapped(): RegionWrapper<*> = findWrapper() ?: when (this) {
 //  is PieChartForWrapper            -> wrapped()
   is AnchorPane                    -> wrapped()
   is StackPane                     -> wrapped()
-  is CategoryAxisForCatAxisWrapper -> wrapped()
+//  is CategoryAxisForCatAxisWrapper -> wrapped()
   is TilePane                      -> wrapped()
   is Pane                          -> wrapped()
   is TableColumnHeader             -> wrapped()
