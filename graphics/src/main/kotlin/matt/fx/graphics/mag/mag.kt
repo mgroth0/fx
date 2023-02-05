@@ -255,32 +255,3 @@ fun WindowWrapper<*>.eighth8() {
 	eigth()
   }
 }
-
-
-@Serializable
-class VarJson(
-  var reversedDisplays: Boolean = true,
-  var bib: String? = null
-) {
-  companion object {
-	fun load() = VAR_JSON_FILE.takeIf { it.exists() }?.loadJson() ?: VarJson()
-	var reversed_displays
-	  get() = load().reversedDisplays
-	  set(b) {
-		load().apply {
-		  reversedDisplays = b
-		}.save()
-	  }
-	var bib
-	  get() = load().bib
-	  set(b) {
-		load().apply {
-		  bib = b
-		}.save()
-	  }
-  }
-
-  fun save() {
-	VAR_JSON_FILE.save(toJson())
-  }
-}
