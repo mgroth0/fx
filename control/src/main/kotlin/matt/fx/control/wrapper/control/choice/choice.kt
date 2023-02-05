@@ -1,6 +1,5 @@
 package matt.fx.control.wrapper.control.choice
 
-import javafx.beans.property.ObjectProperty
 import javafx.event.ActionEvent
 import javafx.scene.control.ChoiceBox
 import javafx.scene.input.KeyCode.ENTER
@@ -71,8 +70,22 @@ class ChoiceBoxWrapper<T: Any>(
 	  node.converter = value
 	}
 
-  fun converterProperty(): ObjectProperty<StringConverter<T>> = node.converterProperty()
+  val converterProperty by lazy {
+	node.converterProperty()
+  }
 
+  fun <R> convertBy(op: (T)->R) {
+	converter = object: StringConverter<T?>() {
+	  override fun toString(`object`: T?): String {
+		return `object`?.let { op(it) }.toString()
+	  }
+
+	  override fun fromString(string: String?): T? {
+		TODO("Not yet implemented")
+	  }
+
+	}
+  }
 
   val itemsProperty by lazy { node.itemsProperty().toNullableProp().proxy(mfxMutableListConverter<T>().nullable()) }
   var items by lazyVarDelegate { itemsProperty }

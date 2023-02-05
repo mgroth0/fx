@@ -24,7 +24,7 @@ import java.text.Format
 fun ET.titledpane(
   title: String? = null, node: NodeWrapper? = null, collapsible: Boolean = true, op: (TitledPaneWrapper).()->Unit = {}
 ): TitledPaneWrapper {
-  val titledPane = TitledPaneWrapper().apply { text = title!!; graphic = node }
+  val titledPane = TitledPaneWrapper().apply { title?.let { text = it }; graphic = node }
   titledPane.isCollapsible = collapsible
   attach(titledPane, op)
   return titledPane
