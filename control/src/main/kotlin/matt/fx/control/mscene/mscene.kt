@@ -14,7 +14,6 @@ import matt.fx.control.menu.context.showMContextMenu
 import matt.fx.control.wrapper.wrapped.wrapped
 import matt.fx.graphics.core.scene.NEED_REVERSED_DISPLAYS_FEATURE
 import matt.fx.graphics.core.scene.reloadStyle
-import matt.fx.graphics.mag.VarJson
 import matt.fx.graphics.style.DarkModeController
 import matt.fx.graphics.wrapper.node.parent.ParentWrapper
 import matt.fx.graphics.wrapper.region.RegionWrapper

@@ -37,7 +37,6 @@ import matt.fx.control.wrapper.wrapped.wrapped
 import matt.fx.graphics.fxthread.ensureInFXThreadInPlace
 import matt.fx.graphics.style.border.FXBorder
 import matt.fx.graphics.style.border.solidBorder
-import matt.fx.graphics.win.bindgeom.bindGeometry
 import matt.fx.graphics.wrapper.imageview.ImageViewWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.disableWhen
@@ -50,7 +49,6 @@ import matt.fx.graphics.wrapper.region.RegionWrapper
 import matt.fx.graphics.wrapper.stage.StageWrapper
 import matt.fx.graphics.wrapper.text.text
 import matt.fx.graphics.wrapper.window.WindowWrapper
-import matt.json.prim.isValidJson
 import matt.lang.noExceptions
 import matt.lang.nullIfExceptions
 import matt.obs.bind.binding

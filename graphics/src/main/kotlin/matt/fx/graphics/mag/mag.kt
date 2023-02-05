@@ -1,8 +1,6 @@
 package matt.fx.graphics.mag
 
 import javafx.stage.Screen
-import kotlinx.serialization.Serializable
-import matt.file.commons.VAR_JSON_FILE
 import matt.fx.graphics.wrapper.window.WindowWrapper
 
 const val NEW_MAC_NOTCH_ESTIMATE = 32.0 /*35*/
