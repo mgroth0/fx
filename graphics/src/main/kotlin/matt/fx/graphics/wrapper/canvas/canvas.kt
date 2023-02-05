@@ -6,8 +6,8 @@ import javafx.scene.image.PixelWriter
 import javafx.scene.paint.Color
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
-import matt.fx.graphics.wrapper.node.NodeWrapperImpl
 import matt.fx.graphics.wrapper.node.attach
+import matt.fx.graphics.wrapper.node.impl.NodeWrapperImpl
 import matt.fx.graphics.wrapper.sizeman.HasHeight
 import matt.fx.graphics.wrapper.sizeman.HasWidth
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp

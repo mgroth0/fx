@@ -23,6 +23,18 @@ fun ET.swap(nodeProp: BindableProperty<out NW?>) = swapper(
   this
 }
 
+fun <P: Any, N: NodeWrapper> ET.swapperNeverNull(
+  prop: ObsVal<P>,
+  fadeOutDur: Duration? = null,
+  fadeInDur: Duration? = null,
+  op: (P).()->N,
+
+  ): Swapper<P, N> {
+  val swapper = Swapper<P, N>()
+  swapper.setupSwapping(prop, fadeOutDur = fadeOutDur, fadeInDur = fadeInDur, op = op)
+  return attach(swapper)
+}
+
 fun <P, N: NodeWrapper> ET.swapper(
   prop: ObsVal<P>,
   nullMessage: String? = null,

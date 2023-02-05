@@ -6,6 +6,7 @@ import javafx.scene.control.SpinnerValueFactory.IntegerSpinnerValueFactory
 import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.control.wrapper.control.spinner.fact.int.MyIntegerSpinnerValueFactory
 import matt.fx.control.wrapper.wrapped.wrapped
+import matt.fx.graphics.fxthread.runLater
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
@@ -14,8 +15,11 @@ import matt.hurricanefx.eye.wrapper.obs.collect.list.createFXWrapper
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.toNonNullableROProp
+import matt.lang.delegation.lazyVarDelegate
 import matt.lang.err
+import matt.lang.go
 import matt.model.op.convert.Converter
+import matt.model.op.convert.StringConverter
 import matt.obs.bind.smartBind
 import matt.obs.col.olist.MutableObsList
 import matt.obs.prop.BindableProperty
@@ -29,6 +33,7 @@ fun <T: Any> ET.spinner(
   editable: Boolean = false,
   property: Var<T>? = null,
   enableScroll: Boolean = false,
+  converter: StringConverter<T>? = null,
   op: SpinnerWrapper<T>.()->Unit = {}
 ) = SpinnerWrapper<T>().also {
   it.attachTo(this, op)
@@ -41,7 +46,8 @@ fun <T: Any> ET.spinner(
   }
   it.initialConfig(
 	editable = editable,
-	enableScroll = enableScroll
+	enableScroll = enableScroll,
+	converter = converter
   )
 }
 
@@ -54,6 +60,7 @@ inline fun <reified T: Number> ET.spinner(
   editable: Boolean = false,
   property: BindableProperty<T>? = null,
   enableScroll: Boolean = false,
+  converter: StringConverter<T>? = null,
   noinline op: SpinnerWrapper<T>.()->Unit = {}
 ): SpinnerWrapper<T> {
   /*property is IntegerProperty && property !is DoubleProperty && property !is FloatProperty) ||*/
@@ -77,7 +84,8 @@ inline fun <reified T: Number> ET.spinner(
   }
   spinner.initialConfig(
 	editable = editable,
-	enableScroll = enableScroll
+	enableScroll = enableScroll,
+	converter = converter
   )
 
   return spinner.attachTo(this, op)
@@ -88,6 +96,7 @@ fun <T: Any> ET.spinner(
   editable: Boolean = false,
   property: Var<T>? = null,
   enableScroll: Boolean = false,
+  converter: StringConverter<T>? = null,
   op: SpinnerWrapper<T>.()->Unit = {}
 ) = SpinnerWrapper(items).attachTo(this, op) {
   if (property != null) it.valueFactory!!.valueProperty.apply {
@@ -95,7 +104,8 @@ fun <T: Any> ET.spinner(
   }
   it.initialConfig(
 	editable = editable,
-	enableScroll = enableScroll
+	enableScroll = enableScroll,
+	converter = converter
   )
 }
 
@@ -105,6 +115,7 @@ fun <T: Any> ET.spinner(
   editable: Boolean = false,
   property: Var<T>? = null,
   enableScroll: Boolean = false,
+  converter: StringConverter<T>? = null,
   op: SpinnerWrapper<T>.()->Unit = {}
 ) = SpinnerWrapper(valueFactory).attachTo(this, op) {
   if (property != null) it.valueFactory!!.valueProperty.apply {
@@ -112,21 +123,35 @@ fun <T: Any> ET.spinner(
   }
   it.initialConfig(
 	editable = editable,
-	enableScroll = enableScroll
+	enableScroll = enableScroll,
+	converter = converter
   )
 }
 
 @PublishedApi
-internal fun SpinnerWrapper<*>.initialConfig(
+internal fun <T: Any> SpinnerWrapper<T>.initialConfig(
   editable: Boolean = false,
   enableScroll: Boolean = false,
+  converter: StringConverter<T>?,
 ) {
   isEditable = editable
 
   if (enableScroll) listenToScrolls()
 
   if (editable) tfxWeirdEditableThing()
+
+
+  converter?.go {
+	valueFactory!!.converter = it
+
+	/*causes converter to be used GUIs so first one converts to correct string...*/
+	node.editor.text = it.convertToA(value)
+
+  }
+
+
 }
+
 
 class SpinnerWrapper<T: Any>(
   node: Spinner<T> = Spinner<T>(),
@@ -156,6 +181,23 @@ class SpinnerWrapper<T: Any>(
 
 
   val editor by lazy { node.editor.wrapped() }
+
+
+  val textProperty by lazy {
+	editor.textProperty
+  }
+
+  fun autoCommitOnType() {
+	textProperty.onChangeWithWeak(this) { spinner, _ ->
+	  val oldSelection = spinner.node.editor.selection
+	  runLater {
+		spinner.node.commitValue()
+		runLater {
+		  spinner.node.editor.selectRange(oldSelection.start + 1, oldSelection.end + 1)
+		}
+	  }
+	}
+  }
 
   val value: T get() = node.value
   val valueProperty by lazy { node.valueProperty().toNonNullableROProp() }
@@ -237,6 +279,20 @@ class SpinnerValueFactoryWrapper<T: Any>(internal val svf: SpinnerValueFactory<T
   fun decrement(steps: Int) = svf.decrement(steps)
   val valueProperty by lazy { svf.valueProperty().toNonNullableProp() }
   var value by valueProperty
-  val converterProperty by lazy { svf.converterProperty().toNonNullableProp().proxy(ConverterConverter()) }
-  var converter by converterProperty
+
+
+  /*internal because if you set these later, gui does NOT automatically update. No easy way to fix this other than using the extension methods at the top of the file*/
+  internal val converterProperty by lazy {
+	svf.converterProperty().toNonNullableProp().proxy(ConverterConverter())
+  }
+  internal var converter by converterProperty
+
+  val wrapAroundProperty by lazy {
+	svf.wrapAroundProperty().toNonNullableProp()
+  }
+
+  var wrapAround by lazyVarDelegate {
+	wrapAroundProperty
+  }
+
 }

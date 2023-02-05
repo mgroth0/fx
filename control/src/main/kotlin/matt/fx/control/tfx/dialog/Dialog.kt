@@ -11,15 +11,8 @@ import javafx.scene.control.ButtonType
 import javafx.scene.control.Dialog
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
-import javafx.stage.DirectoryChooser
-import javafx.stage.FileChooser
 import javafx.stage.Modality
 import javafx.stage.Stage
-import matt.file.MFile
-import matt.file.construct.toMFile
-import matt.fx.control.tfx.dialog.FileChooserMode.Multi
-import matt.fx.control.tfx.dialog.FileChooserMode.Save
-import matt.fx.control.tfx.dialog.FileChooserMode.Single
 import matt.fx.graphics.wrapper.window.WindowWrapper
 import matt.model.flowlogic.latch.asyncloaded.LoadedValueSlot
 import matt.model.flowlogic.runner.ResultRun
@@ -135,48 +128,6 @@ inline fun confirmation(
 ) =
   alert(CONFIRMATION, header, content, *buttons, owner = owner, title = title, actionFn = actionFn)
 
-enum class FileChooserMode { None, Single, Multi, Save }
 
-fun chooseFile(
-  title: String? = null,
-  filters: Array<out FileChooser.ExtensionFilter>,
-  initialDirectory: MFile? = null,
-  mode: FileChooserMode = Single,
-  owner: WindowWrapper<*>? = WindowWrapper.guessMainStage(),
-  op: FileChooser.()->Unit = {}
-): List<MFile> {
-  val chooser = FileChooser()
-  if (title != null) chooser.title = title
-  chooser.extensionFilters.addAll(filters)
-  chooser.initialDirectory = initialDirectory
-  op(chooser)
-  return when (mode) {
-	Single -> {
-	  val result = chooser.showOpenDialog(owner?.node)?.toMFile()
-	  if (result == null) emptyList() else listOf(result)
-	}
-
-	Multi  -> chooser.showOpenMultipleDialog(owner?.node).map { it.toMFile() } /*?: emptyList()*/
-	Save   -> {
-	  val result = chooser.showSaveDialog(owner?.node)?.toMFile()
-	  if (result == null) emptyList() else listOf(result)
-	}
-
-	else   -> emptyList()
-  }
-}
-
-fun chooseDirectory(
-  title: String? = null,
-  initialDirectory: MFile? = null,
-  owner: WindowWrapper<*>? = WindowWrapper.guessMainStage(),
-  op: DirectoryChooser.()->Unit = {}
-): MFile? {
-  val chooser = DirectoryChooser()
-  if (title != null) chooser.title = title
-  if (initialDirectory != null) chooser.initialDirectory = initialDirectory
-  op(chooser)
-  return chooser.showDialog(owner?.node)?.toMFile()
-}
 
 fun Dialog<*>.toFront() = (dialogPane.scene.window as? Stage)?.toFront()

@@ -18,16 +18,10 @@ import matt.hurricanefx.eye.time.FXDuration
 import matt.lang.function.DSL
 import matt.obs.bind.binding
 
-/*fun ET.infoSymbol(text: ObsS, op: DSL<InfoSymbol> = {}) = InfoSymbol(text.value).attachTo(this) {
-  textProperty.bind(text)
-  op()
-}*/
 
-fun ET.infoSymbol(text: String, op: DSL<InfoSymbol> = {}) = InfoSymbol(text).attachTo(this, op)
-
-open class InfoSymbol(info: String): StackPaneW() {
-
+abstract class HoverableSymbol(char: String, tooltipText: String): StackPaneW() {
   companion object {
+	private const val SIZE = 11.0
 	val hoverColor by lazy {
 	  DarkModeController.darkModeProp.binding {
 		if (it) "yellow" else "blue"
@@ -35,19 +29,17 @@ open class InfoSymbol(info: String): StackPaneW() {
 	}
   }
 
-  private val circ = circle(radius = 15.0) {
+  private val circ = circle(radius = SIZE) {
 	stroke = Color.GRAY
 	fill = Color.TRANSPARENT
   }
-  private val txt = text("i") {
+  private val txt = text(char) {
 	font = Font.font("Georgia").fixed().copy(
 	  posture = ITALIC,
-	  size = 15.0,
+	  size = SIZE,
 	  weight = BOLD
 	).fx()
   }
-
-
   private var builtTT = false
 
   init {
@@ -78,7 +70,7 @@ open class InfoSymbol(info: String): StackPaneW() {
   }
 
   val content: ParentWrapper<*> by lazy {
-	buildTooltipGraphic(info)
+	buildTooltipGraphic(tooltipText)
   }
 
   /*text("\uD83D\uDEC8")*/
@@ -96,3 +88,19 @@ open class InfoSymbol(info: String): StackPaneW() {
 
   }
 }
+
+/*fun ET.infoSymbol(text: ObsS, op: DSL<InfoSymbol> = {}) = InfoSymbol(text.value).attachTo(this) {
+  textProperty.bind(text)
+  op()
+}*/
+
+fun ET.infoSymbol(text: String, op: DSL<InfoSymbol> = {}) = InfoSymbol(text).attachTo(this, op)
+
+open class InfoSymbol(info: String): HoverableSymbol(
+  char = "i",
+  tooltipText = info
+)
+
+fun ET.warningSymbol(text: String, op: DSL<WarningSymbol> = {}) = WarningSymbol(text).attachTo(this, op)
+
+class WarningSymbol(text: String): HoverableSymbol(char = "!!", tooltipText = text)
