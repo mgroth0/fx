@@ -6,7 +6,7 @@ import javafx.scene.paint.Paint
 import javafx.scene.shape.Shape
 import javafx.scene.shape.StrokeType
 import matt.fx.graphics.wrapper.node.NodeWrapper
-import matt.fx.graphics.wrapper.node.NodeWrapperImpl
+import matt.fx.graphics.wrapper.node.impl.NodeWrapperImpl
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.NonNullFXBackedBindableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNullableProp

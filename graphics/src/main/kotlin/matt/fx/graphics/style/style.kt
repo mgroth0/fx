@@ -7,7 +7,7 @@ import javafx.scene.Node
 import javafx.scene.paint.Color
 import matt.color.hex
 import matt.css.MyStyleDsl
-import matt.fx.graphics.wrapper.node.NodeWrapperImpl
+import matt.fx.graphics.wrapper.node.impl.NodeWrapperImpl
 import matt.fx.graphics.wrapper.style.toAwtColor
 import matt.log.warn.dumpStack
 import matt.log.warn.warn

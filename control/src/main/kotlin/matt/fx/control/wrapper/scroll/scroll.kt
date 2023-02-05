@@ -8,7 +8,7 @@ import matt.fx.control.wrapper.wrapped.wrapped
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NW
 import matt.fx.graphics.wrapper.node.NodeWrapper
-import matt.fx.graphics.wrapper.node.NodeWrapperImpl
+import matt.fx.graphics.wrapper.node.impl.NodeWrapperImpl
 import matt.fx.graphics.wrapper.node.attach
 import matt.fx.graphics.wrapper.node.maxYRelativeTo
 import matt.fx.graphics.wrapper.node.minYRelativeTo

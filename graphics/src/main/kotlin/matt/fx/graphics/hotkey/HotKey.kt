@@ -9,7 +9,7 @@ import matt.collect.itr.applyEach
 import matt.collect.itr.duplicates
 import matt.file.thismachine.thisMachine
 import matt.fx.graphics.wrapper.EventTargetWrapper
-import matt.fx.graphics.wrapper.node.NodeWrapperImpl
+import matt.fx.graphics.wrapper.node.impl.NodeWrapperImpl
 import matt.fx.graphics.wrapper.scene.SceneWrapper
 import matt.fx.graphics.wrapper.stage.StageWrapper
 import matt.hotkey.Hotkey

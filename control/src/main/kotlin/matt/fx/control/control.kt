@@ -19,7 +19,7 @@ import matt.fx.control.wrapper.scroll.ScrollPaneWrapper
 import matt.fx.graphics.fxthread.ensureInFXThreadInPlace
 import matt.fx.graphics.fxthread.runLaterReturn
 import matt.fx.graphics.wrapper.node.NodeWrapper
-import matt.fx.graphics.wrapper.node.NodeWrapperImpl
+import matt.fx.graphics.wrapper.node.impl.NodeWrapperImpl
 import matt.fx.graphics.wrapper.stage.StageWrapper
 import matt.hurricanefx.eye.mtofx.createROFXPropWrapper
 import matt.lang.NEVER

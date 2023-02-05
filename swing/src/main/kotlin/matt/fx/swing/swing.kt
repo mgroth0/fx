@@ -2,7 +2,7 @@ package matt.fx.swing
 
 import javafx.embed.swing.SwingNode
 import matt.fx.graphics.wrapper.node.NodeWrapper
-import matt.fx.graphics.wrapper.node.NodeWrapperImpl
+import matt.fx.graphics.wrapper.node.impl.NodeWrapperImpl
 
 class SwingNodeWrapper(node: SwingNode = SwingNode()): NodeWrapperImpl<SwingNode>(node) {
   override fun addChild(child: NodeWrapper, index: Int?) {

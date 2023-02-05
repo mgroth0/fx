@@ -3,7 +3,7 @@ package matt.fx.graphics.wrapper.node.parent
 import javafx.scene.Parent
 import matt.fx.graphics.service.wrapped
 import matt.fx.graphics.wrapper.node.NodeWrapper
-import matt.fx.graphics.wrapper.node.NodeWrapperImpl
+import matt.fx.graphics.wrapper.node.impl.NodeWrapperImpl
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.fx.graphics.wrapper.node.impl.NodeWrapperImpl
 import matt.fx.graphics.wrapper.node.line.poly.PolylineWrapper

@@ -2,7 +2,7 @@ package matt.fx.graphics.wrapper.node.shape.ellipse
 
 import javafx.scene.Parent
 import javafx.scene.shape.Ellipse
-import matt.fx.graphics.wrapper.node.NodeWrapperImpl
+import matt.fx.graphics.wrapper.node.impl.NodeWrapperImpl
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.graphics.wrapper.node.shape.ShapeWrapper

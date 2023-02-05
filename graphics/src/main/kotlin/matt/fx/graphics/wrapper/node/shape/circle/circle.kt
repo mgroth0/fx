@@ -3,7 +3,7 @@ package matt.fx.graphics.wrapper.node.shape.circle
 import javafx.scene.Parent
 import javafx.scene.paint.Paint
 import javafx.scene.shape.Circle
-import matt.fx.graphics.wrapper.node.NodeWrapperImpl
+import matt.fx.graphics.wrapper.node.impl.NodeWrapperImpl
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.graphics.wrapper.node.shape.ShapeWrapper

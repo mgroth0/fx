@@ -3,7 +3,7 @@ package matt.fx.graphics.wrapper.node.shape.rect
 import javafx.scene.Parent
 import javafx.scene.paint.Paint
 import javafx.scene.shape.Rectangle
-import matt.fx.graphics.wrapper.node.NodeWrapperImpl
+import matt.fx.graphics.wrapper.node.impl.NodeWrapperImpl
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.fx.graphics.wrapper.node.shape.ShapeWrapper
 import matt.fx.graphics.wrapper.sizeman.SizeControlled

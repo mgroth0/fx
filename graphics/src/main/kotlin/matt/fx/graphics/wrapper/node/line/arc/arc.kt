@@ -2,7 +2,7 @@ package matt.fx.graphics.wrapper.node.line.arc
 
 import javafx.scene.Parent
 import javafx.scene.shape.Arc
-import matt.fx.graphics.wrapper.node.NodeWrapperImpl
+import matt.fx.graphics.wrapper.node.impl.NodeWrapperImpl
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.fx.graphics.wrapper.node.shape.ShapeWrapper
 

@@ -2,7 +2,7 @@ package matt.fx.graphics.wrapper.node.shape.threed.mesh
 
 import javafx.scene.shape.MeshView
 import matt.fx.graphics.wrapper.node.NodeWrapper
-import matt.fx.graphics.wrapper.node.NodeWrapperImpl
+import matt.fx.graphics.wrapper.node.impl.NodeWrapperImpl
 
 class MeshViewWrapper(
   node: MeshView = MeshView(),

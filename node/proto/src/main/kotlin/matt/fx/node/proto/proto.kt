@@ -11,7 +11,7 @@ import matt.fx.graphics.icon.IconImage
 import matt.fx.graphics.wrapper.canvas.CanvasWrapper
 import matt.fx.graphics.wrapper.node.NW
 import matt.fx.graphics.wrapper.node.NodeWrapper
-import matt.fx.graphics.wrapper.node.NodeWrapperImpl
+import matt.fx.graphics.wrapper.node.impl.NodeWrapperImpl
 import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
 import matt.model.data.dir.Direction
 import matt.model.data.dir.Direction.BACKWARD

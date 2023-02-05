@@ -12,7 +12,7 @@ import javafx.scene.shape.Path
 import javafx.scene.shape.PathElement
 import javafx.scene.shape.QuadCurveTo
 import javafx.scene.shape.VLineTo
-import matt.fx.graphics.wrapper.node.NodeWrapperImpl
+import matt.fx.graphics.wrapper.node.impl.NodeWrapperImpl
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.fx.graphics.wrapper.node.shape.ShapeWrapper
 

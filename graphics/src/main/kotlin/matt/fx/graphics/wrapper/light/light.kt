@@ -6,7 +6,7 @@ import javafx.scene.LightBase
 import javafx.scene.PointLight
 import javafx.scene.SpotLight
 import matt.fx.graphics.wrapper.node.NodeWrapper
-import matt.fx.graphics.wrapper.node.NodeWrapperImpl
+import matt.fx.graphics.wrapper.node.impl.NodeWrapperImpl
 
 abstract class LightBaseWrapper(node: LightBase): NodeWrapperImpl<LightBase>(node)
 
