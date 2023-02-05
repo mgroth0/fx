@@ -5,7 +5,6 @@ import javafx.geometry.Orientation.HORIZONTAL
 import javafx.geometry.Orientation.VERTICAL
 import javafx.scene.layout.Priority.ALWAYS
 import matt.async.safe.with
-import matt.fx.control.menu.context.mcontextmenu
 import matt.fx.control.wrapper.control.tab.TabWrapper
 import matt.fx.control.wrapper.tab.TabPaneWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper

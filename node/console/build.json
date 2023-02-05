@@ -1,16 +1,15 @@
 {
-  "type": "matt.mstruct.bj.BasicJvmOnlyMod",
+  "type" :         "matt.mstruct.bj.BasicJvmOnlyMod",
   "dependencies" : [
 	{
 	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
 	  "cfg" :  "implementation",
-	  "path" : ":k:fx:control"
+	  "path" : ":k:gui"
 	},
 	{
 	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
 	  "cfg" :  "implementation",
 	  "path" : ":k:auto"
 	}
-  ],
-  "note" :         null
+  ]
 }

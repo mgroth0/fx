@@ -1,5 +1,5 @@
 {
-  "type": "matt.mstruct.bj.BasicJvmOnlyMod",
+  "type" :         "matt.mstruct.bj.BasicJvmOnlyMod",
   "dependencies" : [
 	{
 	  "type" : "matt.mstruct.bj.BuildJsonLibDependency",
@@ -10,6 +10,11 @@
 	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
 	  "cfg" :  "api",
 	  "path" : ":k:fx:control"
+	},
+	{
+	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
+	  "cfg" :  "api",
+	  "path" : ":k:gui"
 	}
   ]
 }

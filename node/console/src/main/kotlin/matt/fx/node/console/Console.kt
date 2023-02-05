@@ -16,7 +16,6 @@ import matt.file.MFile
 import matt.file.commons.DATA_FOLDER
 import matt.file.commons.mattLogContext
 import matt.file.construct.mFile
-import matt.fx.control.menu.context.mcontextmenu
 import matt.fx.control.wrapper.scroll.ScrollPaneWrapper
 import matt.fx.graphics.clip.copyToClipboard
 import matt.fx.graphics.hotkey.hotkeys

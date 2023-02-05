@@ -1,5 +1,5 @@
 {
-  "type": "matt.mstruct.bj.BasicJvmOnlyMod",
+  "type" :         "matt.mstruct.bj.BasicJvmOnlyMod",
   "dependencies" : [
 	{
 	  "type" : "matt.mstruct.bj.BuildJsonLibDependency",
@@ -25,6 +25,11 @@
 	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
 	  "cfg" :  "testImplementation",
 	  "path" : ":k:test"
+	},
+	{
+	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
+	  "cfg" :  "testImplementation",
+	  "path" : ":k:reflect"
 	}
   ]
 }
