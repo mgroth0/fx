@@ -8,9 +8,9 @@ import matt.fx.control.chart.axis.value.number.NumberAxisWrapper
 import matt.fx.control.chart.line.LineChartWrapper
 import matt.fx.control.chart.line.highperf.relinechart.xy.XYChartForPackagePrivateProps
 import matt.fx.control.chart.line.highperf.relinechart.xy.XYChartForPackagePrivateProps.Data
+import matt.fx.control.chart.wrap.wrapped
 import matt.fx.control.chart.xy.series.SeriesConverter
 import matt.fx.control.chart.xy.series.SeriesWrapper
-import matt.fx.control.wrapper.wrapped.wrapped
 import matt.hurricanefx.eye.wrapper.obs.collect.list.createMutableWrapper
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.NonNullFXBackedBindableProp
 import matt.hurricanefx.eye.wrapper.obs.obsval.prop.toNonNullableProp

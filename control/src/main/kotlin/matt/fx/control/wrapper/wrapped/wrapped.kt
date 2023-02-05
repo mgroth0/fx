@@ -356,30 +356,11 @@ val constructorMap = lazyMap<KType, KFunction<EventTargetWrapper>> { typ ->
 }*/
 
 
-//fun <T: MathAndComparable<T>> MoreGenericNumberAxis<T>.wrapped(): NumberAxisWrapper<*> =
-//  findWrapper() ?: error("not implemented: NumberAxisWrapper(this@wrapped)")
 
-//fun NumberAxis.wrapped(): OldNumberAxisWrapper = findWrapper() ?: OldNumberAxisWrapper(this@wrapped)
-//fun CategoryAxisForCatAxisWrapper.wrapped(): CategoryAxisWrapper = findWrapper() ?: CategoryAxisWrapper(this@wrapped)
 
 fun ToolBar.wrapped(): ToolBarWrapper = findWrapper() ?: ToolBarWrapper(this@wrapped)
 
 
-//@Suppress("UNCHECKED_CAST") fun <T: Number> MoreGenericValueAxis<T>.wrapped(): OldValueAxisWrapper<T> =
-//  findWrapper() ?: when (this) {
-//	is MoreGenericNumberAxis -> wrapped() as OldValueAxisWrapper<T>
-//	else          -> cannotFindWrapper()
-//  }
-
-
-//@Suppress("UNCHECKED_CAST")
-//fun <T> AxisForPackagePrivateProps<T>.wrapped(): AxisWrapper<T, AxisForPackagePrivateProps<T>> =
-//  findWrapper() ?: when (this) {
-//	is MoreGenericNumberAxis         -> wrapped()
-//	is MoreGenericValueAxis          -> (this as MoreGenericValueAxis<out Number>).wrapped() as AxisWrapper<T, AxisForPackagePrivateProps<T>>
-//	is CategoryAxisForCatAxisWrapper -> wrapped() as AxisWrapper<T, AxisForPackagePrivateProps<T>>
-//	else                             -> cannotFindWrapper()
-//  }
 
 //fun TableRow<T>.wrapped()
 
