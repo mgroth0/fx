@@ -1,7 +1,6 @@
 package matt.fx.control.iconify
 
 import matt.file.MFile
-import matt.fx.control.mscene.MScene
 import matt.fx.control.win.interact.WinGeom
 import matt.fx.control.win.interact.WinOwn
 import matt.fx.control.win.interact.openInNewWindow
@@ -54,4 +53,3 @@ fun SceneWrapper<*>.iconify(icon: MFile) {
   window!!.hide()
 }
 
-fun MScene<*>.iconify() = iconify(icon)
