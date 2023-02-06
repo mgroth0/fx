@@ -6,6 +6,7 @@ import com.sun.javafx.scene.control.FakeFocusTextField
 import com.sun.javafx.scene.control.IntegerField
 import com.sun.javafx.scene.control.WebColorField
 import com.sun.javafx.scene.control.skin.FXVK
+import javafx.collections.ObservableMap
 import javafx.event.EventTarget
 import javafx.scene.AmbientLight
 import javafx.scene.DirectionalLight
@@ -646,6 +647,7 @@ fun TableColumnBase<*, *>.wrapped(): TableColumnBaseWrapper<*, *, *> = findWrapp
   else                     -> cannotFindWrapper()
 }
 
+/*there is no guarantee that a wrapper which is specific to this node will be appropriately generated, since those wrappers might exist in outside modules*/
 fun EventTarget.wrapped(): EventTargetWrapper = findWrapper() ?: when (this) {
   is Node                  -> wrapped()
   is Scene                 -> wrapped()
@@ -659,11 +661,32 @@ fun EventTarget.wrapped(): EventTargetWrapper = findWrapper() ?: when (this) {
   else                     -> cannotFindWrapper()
 }
 
-fun EventTarget.cannotFindWrapper(): Nothing = throw (CannotFindWrapperException(this::class))
+/*
 
-class CannotFindWrapperException(val cls: KClass<out EventTarget>): Exception(
+todo: The bottom line is that currently, JavaFX Node classes may not ship with my wrapper classes. There is simply no way I can guarantee that I get the correct wrapper without creating some sort of complex external registry. Not happening. So let's just do this, and change our understanding of how the `wrapped` function works. It does NOT currently guarantee that I will get the "correct" (most specific possible) wrapper. This is unfortunate, but the best solution currently available. Maybe with some sort of external registry or ServiceLoaders I can ensure wrapper specificity in the future, but that is not a super high priority. For now, don't make any log depend on which class is outputted from the `wrapped` function.
+
+* */
+class UnknownEventTargetWrapper(et: EventTarget): SingularEventTargetWrapper<EventTarget>(et) {
+  override val properties: ObservableMap<Any, Any?> get() = TODO("Not yet implemented")
+
+  override fun addChild(child: NodeWrapper, index: Int?) {
+    TODO("Not yet implemented")
+  }
+
+  override fun removeFromParent() {
+    TODO("Not yet implemented")
+  }
+
+  override fun isInsideRow(): Boolean {
+    TODO("Not yet implemented")
+  }
+}
+
+fun EventTarget.cannotFindWrapper() =  UnknownEventTargetWrapper(this) /*Nothing = throw (CannotFindWrapperException(this::class))*/
+
+/*class CannotFindWrapperException(val cls: KClass<out EventTarget>): Exception(
   "what is the wrapper for ${cls.qualifiedName}?"
-)
+)*/
 
 /*?: run {
   val theMap = constructorMap
