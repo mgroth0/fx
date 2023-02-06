@@ -5,7 +5,6 @@ import javafx.event.EventTarget
 import matt.fx.control.fxapp.runFXAppBlocking
 import matt.fx.control.wrapper.wrapped.CannotFindWrapperException
 import matt.fx.control.wrapper.wrapped.wrapped
-import matt.log.warn.warn
 import matt.reflect.access
 import matt.reflect.noArgConstructor
 import matt.reflect.reflections.subclasses
@@ -17,11 +16,7 @@ import kotlin.reflect.KClass
 class SomeTests {
 
   /*DO NOT DELETE THIS TEST. DON'T BE LAZY ABOUT TESTS. ITS CRITICAL AS A SOLO-DEV TO TEST WELL SO MY RELEASES ARE BUG-FREE.*/
-  @Suppress("UNREACHABLE_CODE")
   @Test @ExperimentalContracts fun testWrappers() {
-
-	warn("skipping this test, because it doesn't make sense any more now that I'm splitting up the module")
-	return
 
 	yesIUseTestLibs()
 
