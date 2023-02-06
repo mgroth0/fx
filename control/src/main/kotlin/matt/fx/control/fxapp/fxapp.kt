@@ -1,6 +1,5 @@
 package matt.fx.control.fxapp
 
-import matt.log.report.BugReport
 import com.sun.javafx.application.LauncherImpl
 import com.sun.javafx.util.Logging
 import javafx.application.Application
@@ -19,6 +18,7 @@ import matt.fx.control.wrapper.wrapped.WrapperServiceImpl
 import matt.fx.graphics.service.WrapperServiceHub
 import matt.fx.graphics.style.insets
 import matt.log.logger.Logger
+import matt.log.report.BugReport
 import matt.log.reporter.TracksTime
 import matt.model.code.report.Reporter
 import kotlin.concurrent.thread
