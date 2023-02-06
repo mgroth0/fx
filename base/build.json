@@ -9,11 +9,6 @@
 	{
 	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
 	  "cfg" :  "api",
-	  "path" : ":k:log"
-	},
-	{
-	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
-	  "cfg" :  "api",
 	  "path" : ":k:collect"
 	},
 	{
