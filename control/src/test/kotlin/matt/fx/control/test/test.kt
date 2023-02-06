@@ -1,5 +1,5 @@
 package matt.fx.control.test
-
+/*TEST FILE PATHS MUST BE DISTINGUISHABLE FROM MAIN FILE PATHS OR INTELLIJ WONT NAV TO THEM*/
 import javafx.application.Platform
 import javafx.event.EventTarget
 import matt.fx.control.fxapp.runFXAppBlocking
@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test
 import kotlin.contracts.ExperimentalContracts
 import kotlin.reflect.KClass
 
-/*TEST FILE PATHS MUST BE DISTINGUISHABLE FROM MAIN FILE PATHS OR INTELLIJ WONT NAV TO THEM*/
+
 
 class SomeTests {
 

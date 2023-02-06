@@ -193,6 +193,7 @@ import matt.fx.graphics.wrapper.light.DirectionalLightWrapper
 import matt.fx.graphics.wrapper.light.PointLightWrapper
 import matt.fx.graphics.wrapper.light.SpotLightWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
+import matt.fx.graphics.wrapper.node.impl.NodeWrapperImpl
 import matt.fx.graphics.wrapper.node.line.LineWrapper
 import matt.fx.graphics.wrapper.node.line.arc.ArcWrapper
 import matt.fx.graphics.wrapper.node.line.cubic.CubicCurveWrapper
@@ -575,7 +576,7 @@ fun Node.wrapped(): NodeWrapper = findWrapper() ?: when (this) {
   is Canvas            -> wrapped()
   is ImageView         -> wrapped()
   is DirectionalLight  -> wrapped()
-  else                 -> cannotFindWrapper()
+  else                 -> unknownWrapper() /*for SwingNode*/
 }
 
 
@@ -655,7 +656,7 @@ fun EventTarget.wrapped(): EventTargetWrapper = findWrapper() ?: when (this) {
   is TreeItem<*>           -> wrapped()
   is TableColumnBase<*, *> -> wrapped()
   is Transform             -> wrapped()
-  else                     -> unknownWrapper()
+  else                     -> unknownWrapper() /*For Dialog*/
 }
 
 /*
@@ -681,6 +682,15 @@ class UnknownEventTargetWrapper(et: EventTarget): SingularEventTargetWrapper<Eve
   }
 }
 
+/*At least I can be slightly specific*/
+class UnknownNodeWrapper(node: Node): NodeWrapperImpl<Node>(node) {
+  override fun addChild(child: NodeWrapper, index: Int?) {
+	TODO("Not yet implemented")
+  }
+
+}
+
+fun Node.unknownWrapper() = UnknownNodeWrapper(this)
 fun EventTarget.unknownWrapper() = UnknownEventTargetWrapper(this)
 
 fun EventTarget.cannotFindWrapper(): Nothing = throw (CannotFindWrapperException(this::class))
