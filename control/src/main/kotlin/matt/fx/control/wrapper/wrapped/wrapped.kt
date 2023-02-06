@@ -34,7 +34,6 @@ import javafx.scene.control.ContextMenu
 import javafx.scene.control.Control
 import javafx.scene.control.CustomMenuItem
 import javafx.scene.control.DatePicker
-import javafx.scene.control.Dialog
 import javafx.scene.control.Hyperlink
 import javafx.scene.control.IndexedCell
 import javafx.scene.control.Label
@@ -46,7 +45,6 @@ import javafx.scene.control.MenuButton
 import javafx.scene.control.MenuItem
 import javafx.scene.control.Pagination
 import javafx.scene.control.PasswordField
-import javafx.scene.control.PopupControl
 import javafx.scene.control.ProgressBar
 import javafx.scene.control.ProgressIndicator
 import javafx.scene.control.RadioButton
@@ -70,7 +68,6 @@ import javafx.scene.control.TextField
 import javafx.scene.control.TitledPane
 import javafx.scene.control.ToggleButton
 import javafx.scene.control.ToolBar
-import javafx.scene.control.Tooltip
 import javafx.scene.control.TreeItem
 import javafx.scene.control.TreeTableColumn
 import javafx.scene.control.TreeTableRow
@@ -114,7 +111,6 @@ import javafx.scene.transform.Scale
 import javafx.scene.transform.Shear
 import javafx.scene.transform.Transform
 import javafx.scene.transform.Translate
-import javafx.stage.Popup
 import javafx.stage.Stage
 import javafx.stage.Window
 import matt.fx.control.wrapper.button.radio.RadioButtonWrapper
@@ -585,10 +581,11 @@ fun Node.wrapped(): NodeWrapper = findWrapper() ?: when (this) {
 
 fun Window.wrapped(): WindowWrapper<*> = findWrapper() ?: when (this) {
   is Stage        -> wrapped()
-  is Tooltip      -> wrapped()
+
   is ContextMenu  -> wrapped()
+  /*is Tooltip      -> wrapped()
   is PopupControl -> wrapped()
-  is Popup        -> wrapped()
+  is Popup        -> wrapped()*/
   else            -> findWrapper() ?: WindowWrapper(this)
 }
 
@@ -653,7 +650,7 @@ fun EventTarget.wrapped(): EventTargetWrapper = findWrapper() ?: when (this) {
   is Node                  -> wrapped()
   is Scene                 -> wrapped()
   is Window                -> wrapped()
-  is Dialog<*>             -> wrapped()
+  /*is Dialog<*>             -> wrapped()*/
   is Tab                   -> wrapped()
   is MenuItem              -> wrapped()
   is TreeItem<*>           -> wrapped()
