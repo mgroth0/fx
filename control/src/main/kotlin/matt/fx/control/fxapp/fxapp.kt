@@ -1,5 +1,6 @@
 package matt.fx.control.fxapp
 
+import matt.log.report.BugReport
 import com.sun.javafx.application.LauncherImpl
 import com.sun.javafx.util.Logging
 import javafx.application.Application
@@ -18,7 +19,6 @@ import matt.fx.control.wrapper.wrapped.WrapperServiceImpl
 import matt.fx.graphics.service.WrapperServiceHub
 import matt.fx.graphics.style.insets
 import matt.log.logger.Logger
-import matt.log.profile.err.BugReport
 import matt.log.reporter.TracksTime
 import matt.model.code.report.Reporter
 import kotlin.concurrent.thread
@@ -83,7 +83,7 @@ class FirstPreloader: Preloader() {
 }
 
 
- val ERROR_POP_UP_TEXT = """
+val ERROR_POP_UP_TEXT = """
   This JavaFX Application encountered an error. Please contact the developer via the bug tracker for this application or email (mgroth49@gmail.com) and include the following information:
   1. Copy and paste the text below
   2. Provide a list of steps, to the best of your ability, that lead you to this error. This way we can reproduce the issue on our end and have an easier time getting to the bottom of it.
