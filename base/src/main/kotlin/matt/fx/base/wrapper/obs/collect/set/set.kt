@@ -158,9 +158,6 @@ class FXBackedMutableObservableSetBase<E>(obs: ObservableSet<E>): ObservableSetW
   @Synchronized
   override fun addListener(listener: SetListenerBase<E>): SetListenerBase<E> {
 	val oListener = SetChangeListener<E> {
-	  val t = tic(prefix = "invoking $listener for $this", enabled = debugger != null)
-	  t.toc("start")
-
 	  if (it.wasRemoved()) {
 		listener.notify(SetUpdate(RemoveElementFromSet(obs, it.elementRemoved)))
 	  }
