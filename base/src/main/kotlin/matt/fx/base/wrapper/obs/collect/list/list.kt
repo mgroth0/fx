@@ -11,7 +11,6 @@ import matt.fx.base.wrapper.obs.collect.list.change.toFXChange
 import matt.lang.ILLEGAL
 import matt.lang.function.Consume
 import matt.lang.setall.setAll
-import matt.log.profile.stopwatch.tic
 import matt.model.op.convert.Converter
 import matt.model.op.prints.Prints
 import matt.obs.bindhelp.BindableList
@@ -174,10 +173,7 @@ interface FXOLMutableListWrapperAndBasic<E>: FXOListWrapperAndBasic<E>, MutableL
   @Synchronized
   override fun addListener(listener: ListListenerBase<E>): ListListenerBase<E> {
 	val oListener = ListChangeListener<E> {
-	  val t = tic(prefix = "invoking $listener for $this", enabled = debugger != null)
-	  t.toc("start")
 	  while (it.next()) {
-		t.toc("another update")
 		if (it.wasRemoved()) when (it.removedSize) {
 		  0    -> Unit
 		  1    -> listener.notify(ListUpdate(RemoveAt(obs, it.removed[0], it.from)))
@@ -195,7 +191,6 @@ interface FXOLMutableListWrapperAndBasic<E>: FXOListWrapperAndBasic<E>, MutableL
 		  1    -> listener.notify(ListUpdate(AddAt(obs, it.addedSubList[0], it.from)))
 		  else -> listener.notify(ListUpdate(MultiAddAt(obs, it.addedSubList, it.from)))
 		}
-		t.toc("finished update update")
 	  }
 	}
 	addListener(oListener)

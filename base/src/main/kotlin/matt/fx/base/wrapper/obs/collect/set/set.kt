@@ -6,7 +6,6 @@ import javafx.collections.ObservableSet
 import javafx.collections.SetChangeListener
 import matt.collect.map.FakeMutableSet
 import matt.lang.function.Consume
-import matt.log.profile.stopwatch.tic
 import matt.model.op.convert.Converter
 import matt.model.op.prints.Prints
 import matt.obs.bindhelp.BindableSet
