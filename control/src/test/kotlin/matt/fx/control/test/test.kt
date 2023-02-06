@@ -1,4 +1,4 @@
-package matt.fx.control
+package matt.fx.control.test
 
 import javafx.application.Platform
 import javafx.event.EventTarget
@@ -12,6 +12,8 @@ import matt.test.yesIUseTestLibs
 import org.junit.jupiter.api.Test
 import kotlin.contracts.ExperimentalContracts
 import kotlin.reflect.KClass
+
+/*TEST FILE PATHS MUST BE DISTINGUISHABLE FROM MAIN FILE PATHS OR INTELLIJ WONT NAV TO THEM*/
 
 class SomeTests {
 
