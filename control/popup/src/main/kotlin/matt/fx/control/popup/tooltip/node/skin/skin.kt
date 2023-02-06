@@ -4,7 +4,7 @@ import javafx.scene.Node
 import javafx.scene.control.Label
 import javafx.scene.control.Skin
 import javafx.scene.control.Tooltip
-import matt.fx.control.wrapper.tooltip.node.MyTooltip
+import matt.fx.control.popup.tooltip.node.MyTooltip
 
 /**
  * CSS based skin for Tooltip. It deals mostly with show hide logic for
