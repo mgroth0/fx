@@ -4,8 +4,9 @@ import javafx.scene.paint.Color
 import javafx.scene.text.Font
 import javafx.scene.text.FontPosture.ITALIC
 import javafx.scene.text.FontWeight.BOLD
+import matt.fx.base.time.FXDuration
+import matt.fx.control.popup.tooltip.fixed.tooltip
 import matt.fx.control.wrapper.label.LabelWrapper
-import matt.fx.control.wrapper.tooltip.fixed.tooltip
 import matt.fx.graphics.font.fixed
 import matt.fx.graphics.style.DarkModeController
 import matt.fx.graphics.wrapper.ET
@@ -14,7 +15,6 @@ import matt.fx.graphics.wrapper.node.parent.ParentWrapper
 import matt.fx.graphics.wrapper.node.shape.circle.circle
 import matt.fx.graphics.wrapper.pane.stack.StackPaneW
 import matt.fx.graphics.wrapper.text.text
-import matt.fx.base.time.FXDuration
 import matt.lang.function.DSL
 import matt.obs.bind.binding
 
