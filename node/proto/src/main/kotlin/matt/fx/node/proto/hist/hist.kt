@@ -5,7 +5,7 @@ import javafx.scene.layout.Region
 import javafx.scene.layout.VBox
 import javafx.scene.paint.Color
 import matt.fx.control.wrapper.label.label
-import matt.fx.control.wrapper.tooltip.fixed.tooltip
+import matt.fx.control.popup.tooltip.fixed.tooltip
 import matt.fx.graphics.wrapper.inter.titled.Titled
 import matt.fx.graphics.wrapper.node.NW
 import matt.fx.graphics.wrapper.node.NodeWrapper
