@@ -33,8 +33,8 @@ interface WritableFXBackedProp<FX_T>: FXBackedProp<FX_T>,
 
 
   override val bindManager: BindableValue<FX_T>
-  override fun bindBidirectional(source: Var<FX_T>, checkEquality: Boolean, clean: Boolean , debug: Boolean) =
-	bindManager.bindBidirectional(source, checkEquality = checkEquality, clean=clean,debug = debug)
+  override fun bindBidirectional(source: Var<FX_T>, checkEquality: Boolean, clean: Boolean , debug: Boolean, weak: Boolean) =
+	bindManager.bindBidirectional(source, checkEquality = checkEquality, clean=clean,debug = debug, weak = weak)
 
   override fun <S> bindBidirectional(source: Var<S>, converter: Converter<FX_T, S>) =
 	bindManager.bindBidirectional(source, converter)
@@ -54,7 +54,7 @@ open class NullableFXBackedBindableProp<T>(private val o: Property<T>): Nullable
 
   //  override var boundTo: MObservableROPropBase<out T?>? = null
 
-  override val bindManager = BindableValueHelper(this)
+  final override val bindManager = BindableValueHelper(this)
   override var theBind by bindManager::theBind
 
   //  override val isBound get() = o.isBound

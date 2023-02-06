@@ -1,16 +1,14 @@
 package matt.fx.graphics.wrapper.pane.flow
 
-import javafx.beans.property.DoubleProperty
-import javafx.beans.property.ObjectProperty
 import javafx.geometry.HPos
 import javafx.geometry.Orientation
 import javafx.geometry.Pos
 import javafx.geometry.VPos
 import javafx.scene.layout.FlowPane
+import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attach
-import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
 
 fun <C: NodeWrapper> ET.flowpane(op: FlowPaneWrapper<C>.()->Unit = {}) = attach(FlowPaneWrapper(), op)
@@ -23,7 +21,7 @@ open class FlowPaneWrapper<C: NodeWrapper>(node: FlowPane = FlowPane()): PaneWra
 	  node.orientation = value
 	}
 
-  fun orientationProperty(): ObjectProperty<Orientation> = node.orientationProperty()
+  val orientationProperty by lazy { node.orientationProperty().toNonNullableProp() }
 
   var alignment: Pos
 	get() = node.alignment
@@ -31,7 +29,7 @@ open class FlowPaneWrapper<C: NodeWrapper>(node: FlowPane = FlowPane()): PaneWra
 	  node.alignment = value
 	}
 
-  fun alignmentProperty(): ObjectProperty<Pos> = node.alignmentProperty()
+  val alignmentProperty by lazy { node.alignmentProperty().toNonNullableProp() }
 
   var rowValignment: VPos
 	get() = node.rowValignment
@@ -39,7 +37,7 @@ open class FlowPaneWrapper<C: NodeWrapper>(node: FlowPane = FlowPane()): PaneWra
 	  node.rowValignment = value
 	}
 
-  fun rowValignmentProperty(): ObjectProperty<VPos> = node.rowValignmentProperty()
+  val rowValignmentProperty by lazy { node.rowValignmentProperty().toNonNullableProp() }
 
   var columnHalignment: HPos
 	get() = node.columnHalignment
@@ -47,7 +45,7 @@ open class FlowPaneWrapper<C: NodeWrapper>(node: FlowPane = FlowPane()): PaneWra
 	  node.columnHalignment = value
 	}
 
-  fun columnHalignmentProperty(): ObjectProperty<HPos> = node.columnHalignmentProperty()
+  val columnHalignmentProperty by lazy { node.columnHalignmentProperty().toNonNullableProp() }
 
 
   var hgap
@@ -56,7 +54,7 @@ open class FlowPaneWrapper<C: NodeWrapper>(node: FlowPane = FlowPane()): PaneWra
 	  node.hgap = value
 	}
 
-  fun hgapProperty(): DoubleProperty = node.hgapProperty()
+  val hgapProperty by lazy { node.hgapProperty().toNonNullableProp() }
 
 
   var vgap
@@ -65,7 +63,7 @@ open class FlowPaneWrapper<C: NodeWrapper>(node: FlowPane = FlowPane()): PaneWra
 	  node.vgap = value
 	}
 
-  fun vgapProperty(): DoubleProperty = node.vgapProperty()
+  val vgapProperty by lazy { node.vgapProperty().toNonNullableProp() }
 
 
   var prefWrapLength

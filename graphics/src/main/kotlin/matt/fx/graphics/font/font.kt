@@ -44,7 +44,7 @@ data class FixedFont internal constructor(
   val weight: FontWeight? = null,
   val posture: FontPosture? = null
 ) {
-  fun fx() = Font.font(family, weight, posture, size)
+  fun fx(): Font = Font.font(family, weight, posture, size)
 }
 
 

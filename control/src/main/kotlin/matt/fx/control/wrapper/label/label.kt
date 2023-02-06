@@ -4,7 +4,6 @@ import javafx.scene.Node
 import javafx.scene.control.Label
 import matt.fx.control.inter.graphic
 import matt.fx.control.wrapper.labeled.LabeledWrapper
-import matt.fx.control.wrapper.tooltip.fixed.tooltip
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NW
 import matt.fx.graphics.wrapper.node.NodeWrapper
@@ -19,7 +18,7 @@ inline fun <reified T> ET.label(
   observable: ObsVal<T>,
   graphicProperty: ValProp<out NW?>? = null,
   converter: StringConverter<T>? = null,
-  tooltip: Boolean = false,
+  /*tooltip: Boolean = false,*/
   noinline op: LabelWrapper.()->Unit = {}
 ) = label().apply {
   if (converter == null) {
@@ -35,13 +34,13 @@ inline fun <reified T> ET.label(
   if (graphicProperty != null) {
 	this.graphicProperty.bind(graphicProperty)
   }
-  if (tooltip) {
+/*  if (tooltip) {
 	tooltip {
 	  content = LabelWrapper().also {
 		it.textProperty.bind(this@apply.textProperty)
 	  }
 	}
-  }
+  }*/
   op(this)
 }
 

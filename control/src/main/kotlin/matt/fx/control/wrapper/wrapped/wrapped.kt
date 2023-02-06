@@ -28,7 +28,6 @@ import javafx.scene.control.CheckBox
 import javafx.scene.control.CheckBoxTreeItem
 import javafx.scene.control.CheckMenuItem
 import javafx.scene.control.ChoiceBox
-import javafx.scene.control.ChoiceDialog
 import javafx.scene.control.ColorPicker
 import javafx.scene.control.ComboBox
 import javafx.scene.control.ContextMenu
@@ -68,7 +67,6 @@ import javafx.scene.control.TableRow
 import javafx.scene.control.TableView
 import javafx.scene.control.TextArea
 import javafx.scene.control.TextField
-import javafx.scene.control.TextInputDialog
 import javafx.scene.control.TitledPane
 import javafx.scene.control.ToggleButton
 import javafx.scene.control.ToolBar
@@ -157,9 +155,6 @@ import matt.fx.control.wrapper.control.text.field.pass.PasswordFieldWrapper
 import matt.fx.control.wrapper.control.tree.TreeViewWrapper
 import matt.fx.control.wrapper.control.treecol.TreeTableColumnWrapper
 import matt.fx.control.wrapper.control.treetable.TreeTableViewWrapper
-import matt.fx.control.wrapper.dialog.ChoiceDialogWrapper
-import matt.fx.control.wrapper.dialog.DialogWrapper
-import matt.fx.control.wrapper.dialog.TextInputDialogWrapper
 import matt.fx.control.wrapper.label.LabelWrapper
 import matt.fx.control.wrapper.labeled.LabeledWrapper
 import matt.fx.control.wrapper.link.HyperlinkWrapper
@@ -172,9 +167,6 @@ import matt.fx.control.wrapper.menu.item.sep.SeparatorMenuItemWrapper
 import matt.fx.control.wrapper.menu.radioitem.RadioMenuItemWrapper
 import matt.fx.control.wrapper.menu.splitbutton.SplitMenuButtonWrapper
 import matt.fx.control.wrapper.menubar.MenuBarWrapper
-import matt.fx.control.wrapper.popup.PopupWrapper
-import matt.fx.control.wrapper.popupcontrol.PopupControlWrapper
-import matt.fx.control.wrapper.popupcontrol.node.MyPopupControl
 import matt.fx.control.wrapper.progressbar.ProgressBarWrapper
 import matt.fx.control.wrapper.progressindicator.ProgressIndicatorWrapper
 import matt.fx.control.wrapper.scroll.ScrollPaneWrapper
@@ -184,8 +176,6 @@ import matt.fx.control.wrapper.split.SplitPaneWrapper
 import matt.fx.control.wrapper.tab.TabPaneWrapper
 import matt.fx.control.wrapper.titled.TitledPaneWrapper
 import matt.fx.control.wrapper.toolbar.ToolBarWrapper
-import matt.fx.control.wrapper.tooltip.TooltipWrapper
-import matt.fx.control.wrapper.tooltip.node.MyTooltip
 import matt.fx.control.wrapper.treeitem.CheckBoxTreeItemWrapper
 import matt.fx.control.wrapper.treeitem.TreeItemWrapper
 import matt.fx.control.wrapper.virtualflow.FlowLessVirtualFlowWrapper
@@ -591,12 +581,7 @@ fun Node.wrapped(): NodeWrapper = findWrapper() ?: when (this) {
   else                 -> cannotFindWrapper()
 }
 
-/*fun Tooltip.wrapped(): matt.fx.control.wrapper.tooltip.fixed.TooltipWrapper = findWrapper() ?: matt.fx.control.wrapper.tooltip.fixed.TooltipWrapper(this@wrapped)*/
-fun Tooltip.wrapped(): WindowWrapper<*> = findWrapper() ?: WindowWrapper(this@wrapped)
-fun MyTooltip.wrapped(): TooltipWrapper = findWrapper() ?: TooltipWrapper(this@wrapped)
-fun PopupControl.wrapped(): WindowWrapper<*> = findWrapper() ?: WindowWrapper(this@wrapped)
-fun MyPopupControl.wrapped(): PopupControlWrapper<*> = findWrapper() ?: PopupControlWrapper(this@wrapped)
-fun Popup.wrapped(): PopupWrapper = findWrapper() ?: PopupWrapper(this@wrapped)
+
 
 fun Window.wrapped(): WindowWrapper<*> = findWrapper() ?: when (this) {
   is Stage        -> wrapped()
@@ -655,14 +640,8 @@ fun MenuItem.wrapped(): MenuItemWrapper<out MenuItem> = findWrapper() ?: when (t
   else                 -> findWrapper() ?: MenuItemWrapper(this@wrapped)
 }
 
-fun ChoiceDialog<*>.wrapped(): ChoiceDialogWrapper<*> = findWrapper() ?: ChoiceDialogWrapper(this@wrapped)
-fun TextInputDialog.wrapped(): TextInputDialogWrapper = findWrapper() ?: TextInputDialogWrapper(this@wrapped)
 
-fun Dialog<*>.wrapped(): DialogWrapper<*> = findWrapper() ?: when (this) {
-  is ChoiceDialog<*> -> wrapped()
-  is TextInputDialog -> wrapped()
-  else               -> findWrapper() ?: DialogWrapper(this)
-}
+
 
 fun TableColumnBase<*, *>.wrapped(): TableColumnBaseWrapper<*, *, *> = findWrapper() ?: when (this) {
   is TreeTableColumn<*, *> -> wrapped()

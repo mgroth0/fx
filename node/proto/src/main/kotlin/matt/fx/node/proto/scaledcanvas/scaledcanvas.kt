@@ -22,6 +22,7 @@ import matt.obs.math.double.op.times
 import matt.obs.prop.BindableProperty
 import matt.time.UnixTime
 import java.awt.image.BufferedImage
+import java.lang.ref.WeakReference
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -102,9 +103,12 @@ open class ScaledCanvas(
 
 	  if (delayLoadingIndicatorBy != null) {
 		isVisible = false
+		val weakThis = WeakReference(this)
 		worker.schedule(UnixTime() + delayLoadingIndicatorBy) {
-		  runLater {
-			isVisible = true
+		  weakThis.get()?.go {
+			runLater {
+			  it.isVisible = true
+			}
 		  }
 		}
 	  }
@@ -123,6 +127,7 @@ open class ScaledCanvas(
   fun showAsLoading() {
 	paneChildren.remove(canvas.node)
 	paneChildren.add(loadingIndicator.value)
+
   }
 
   fun showCanvas() {

@@ -4,24 +4,24 @@ import javafx.geometry.Pos.CENTER_LEFT
 import javafx.scene.control.ProgressIndicator
 import javafx.scene.text.TextAlignment
 import matt.async.schedule.every
+import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.graphics.font.fixed
 import matt.fx.graphics.fxthread.runLaterReturn
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
-import matt.fx.graphics.wrapper.node.parent.parentProperty
 import matt.fx.graphics.wrapper.pane.hbox.h
 import matt.fx.graphics.wrapper.pane.vbox.VBoxW
 import matt.fx.graphics.wrapper.text.TextWrapper
 import matt.fx.graphics.wrapper.text.text
 import matt.fx.graphics.wrapper.text.textlike.MONO_FONT
-import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.lang.NEVER
 import matt.obs.bind.smartBind
 import matt.obs.math.double.op.times
 import matt.obs.prop.ObsVal
 import matt.obs.prop.Var
+import java.lang.ref.WeakReference
 import kotlin.time.Duration.Companion.milliseconds
 
 fun ET.progressindicator(op: ProgressIndicatorWrapper.()->Unit = {}) = ProgressIndicatorWrapper().attachTo(this, op)
@@ -54,10 +54,10 @@ fun ProgressIndicatorWrapper.bind(property: ObsVal<Double>, readonly: Boolean = 
   progressProperty.smartBind(property, readonly)
 
 
-class PerformantProgressIndicator(): VBoxW() {
+class PerformantProgressIndicator: VBoxW() {
 
   companion object {
-	private var instances = mutableSetOf<TextWrapper>()
+	private var instances = mutableSetOf<WeakReference<TextWrapper>>()
 
 	init {
 	  var next = ".."
@@ -66,8 +66,20 @@ class PerformantProgressIndicator(): VBoxW() {
 		  instances.toSet()
 		}
 		runLaterReturn {
+		  val toRemove = mutableSetOf<WeakReference<TextWrapper>>()
 		  toChange.forEach {
-			it.text = next
+			val deRefed = it.get()
+			if (deRefed == null) {
+			  toRemove += it
+			} else {
+			  deRefed.text = next
+			}
+
+		  }
+		  if (toRemove.isNotEmpty()) {
+			synchronized(PerformantProgressIndicator) {
+			  instances.removeAll(toRemove)
+			}
 		  }
 		}
 		next = when (next) {
@@ -78,6 +90,7 @@ class PerformantProgressIndicator(): VBoxW() {
 		}
 	  }
 	}
+
 	private val myFont by lazy {
 	  MONO_FONT.fixed().copy(size = 18.0).fx()
 	}
@@ -91,22 +104,41 @@ class PerformantProgressIndicator(): VBoxW() {
 	  exactWidthProperty.bindWeakly(widthProperty*0.25)
 	}
 
-	val t = text(".") {
-	  textAlignment = TextAlignment.LEFT
-	  font = myFont
-	}
 
-	parentProperty().onChange {
-	  synchronized(PerformantProgressIndicator) {
-		if (it != null) {
-		  instances += t
-		} else {
-		  instances -= t
-		  if (instances.isEmpty()) {
-			instances = mutableSetOf() /*reduce memory consumption*/
+	/*	parentProperty().onChange {
+		  synchronized(PerformantProgressIndicator) {
+			if (it != null) {
+			  instances += t
+			} else {
+			  instances -= t
+			  if (instances.isEmpty()) {
+				instances = mutableSetOf() *//*reduce memory consumption*//*
 		  }
 		}
 	  }
+	}*/
+  }
+
+  private val t = text(".") {
+	textAlignment = TextAlignment.LEFT
+	font = myFont
+  }
+
+  init {
+	synchronized(PerformantProgressIndicator) {
+	  instances += WeakReference(t)
 	}
   }
+
+  /*  fun start() {
+	  synchronized(PerformantProgressIndicator) {
+		instances += t
+	  }
+	}
+  
+	fun stop() {
+	  synchronized(PerformantProgressIndicator) {
+		instances -= t
+	  }
+	}*/
 }
