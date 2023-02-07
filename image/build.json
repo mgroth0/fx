@@ -2,12 +2,12 @@
   "type": "matt.mstruct.bj.BasicJvmOnlyMod",
   "dependencies" : [
 	{
-	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
+	  "type" : "Project",
 	  "cfg" :  "api",
 	  "path" : ":k:file"
 	},
 	{
-	  "type" : "matt.mstruct.bj.BuildJsonLibDependency",
+	  "type" : "Lib",
 	  "cfg" :  "implementation",
 	  "key" :  "fx-swing"
 	}

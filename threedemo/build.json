@@ -3,12 +3,12 @@
   "jvmExec" :      {"type":"Typical"},
   "dependencies" : [
 	{
-	  "type" : "matt.mstruct.bj.BuildJsonLibDependency",
+	  "type" : "Lib",
 	  "cfg" :  "api",
 	  "key" :  "kt-stdlib"
 	},
 	{
-	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
+	  "type" : "Project",
 	  "cfg" :  "implementation",
 	  "path" : ":k:gui"
 	}
