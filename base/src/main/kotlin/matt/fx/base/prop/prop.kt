@@ -14,10 +14,12 @@ import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.property.adapter.JavaBeanObjectPropertyBuilder
 import javafx.beans.value.ObservableValue
 import matt.fx.base.prop.SingleAssignThreadSafetyMode.SYNCHRONIZED
+import matt.lang.disabledButDefinitelyStillInByteCodeCode
 import matt.obs.bind.binding
 import matt.obs.col.olist.ImmutableObsList
 import matt.obs.col.olist.MutableObsList
 import matt.prim.str.decap
+import matt.reflect.YesIUseReflect
 import java.lang.reflect.Field
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KClass
@@ -134,6 +136,10 @@ fun <S: Any, T: Any> S.observable(
   if (getter == null && propertyName == null) throw AssertionError("Either getter or propertyName must be provided")
   val propName = propertyName
 				 ?: getter?.name?.substring(3)?.decap()
+
+  disabledButDefinitelyStillInByteCodeCode {
+	YesIUseReflect
+  }
 
   return JavaBeanObjectPropertyBuilder.create().apply {
 	bean(this@observable)
