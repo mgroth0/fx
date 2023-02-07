@@ -15,6 +15,11 @@
 	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
 	  "cfg" :  "api",
 	  "path" : ":k:obs"
+	},
+	{
+	  "type" : "matt.mstruct.bj.BuildJsonProjectDependency",
+	  "cfg" :  "api",
+	  "path" : ":k:reflect"
 	}
   ]
 }
