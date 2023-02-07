@@ -14,6 +14,7 @@ import kotlinx.html.stream.createHTML
 import matt.async.schedule.AccurateTimer
 import matt.async.schedule.every
 import matt.async.thread.daemon
+import matt.auto.openInFinder
 import matt.css.Color.black
 import matt.css.sty
 import matt.file.Folder
@@ -27,8 +28,6 @@ import matt.fx.control.wrapper.control.button.button
 import matt.fx.control.wrapper.control.spinner.spinner
 import matt.fx.control.wrapper.control.text.area.textarea
 import matt.fx.graphics.drag.BetterTransferMode
-import matt.fx.graphics.drag.DragType
-import matt.fx.graphics.drag.drags
 import matt.fx.graphics.drag.dragsFile
 import matt.fx.graphics.fxthread.runLaterReturn
 import matt.fx.graphics.icon.Icon
@@ -86,6 +85,9 @@ fun MFile.createNode(renderHTMLAndSVG: Boolean = false): RegionWrapper<NodeWrapp
   val node = createNodeInner(renderHTMLAndSVG = renderHTMLAndSVG)
   node.mcontextmenu {
 	item(s = "", g = draggableIcon())
+	actionitem("show in finder") {
+	  openInFinder()
+	}
   }
   return node
 }
