@@ -26,6 +26,7 @@ import kotlin.reflect.KFunction2
 import kotlin.reflect.KMutableProperty1
 import kotlin.reflect.KProperty
 import kotlin.reflect.KProperty1
+import kotlin.reflect.jvm.javaMethod
 
 fun <T> property(value: T? = null): FXPropertyDelegate<T> = FXPropertyDelegate(SimpleObjectProperty<T>(value))
 fun <T> property(block: ()->Property<T>) = FXPropertyDelegate(block())
