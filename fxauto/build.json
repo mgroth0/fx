@@ -5,6 +5,11 @@
 	  "type" : "Project",
 	  "cfg" :  "api",
 	  "path" : ":k:gui"
+	},
+	{
+	  "type" : "Project",
+	  "cfg" :  "api",
+	  "path" : ":k:auto"
 	}
   ],
   "note" :         null
