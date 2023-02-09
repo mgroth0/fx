@@ -1,16 +1,20 @@
 {
-  "type": "matt.mstruct.bj.BasicJvmOnlyMod",
+  "type" :         "matt.mstruct.bj.BasicJvmOnlyMod",
   "dependencies" : [
 	{
 	  "type" : "Lib",
 	  "cfg" :  "api",
 	  "key" :  "kt-stdlib"
 	},
-
 	{
 	  "type" : "Project",
 	  "cfg" :  "api",
 	  "path" : ":k:fx:node:console"
+	},
+	{
+	  "type" : "Project",
+	  "cfg" :  "api",
+	  "path" : ":k:auto"
 	},
 	{
 	  "type" : "Project",
