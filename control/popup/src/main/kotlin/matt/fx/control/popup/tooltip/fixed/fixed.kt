@@ -23,7 +23,7 @@ import matt.obs.prop.VarProp
 
 fun NW.install(newToolTip: FixedTooltipWrapper) {
   /*if (this is ControlWrapperImpl<*>) {
-	matt.fx.control.wrapper.tooltip.fixed.tooltip = newToolTip
+	tooltip = newToolTip
   } else {*/
   MyFixedTooltip.install(
 	this.node, newToolTip.node

@@ -17,7 +17,7 @@ import matt.fx.control.wrapper.wrapped.findWrapper
 import matt.fx.graphics.wrapper.window.WindowWrapper
 
 
-/*fun Tooltip.wrapped(): matt.fx.control.wrapper.tooltip.fixed.TooltipWrapper = findWrapper() ?: matt.fx.control.wrapper.tooltip.fixed.TooltipWrapper(this@wrapped)*/
+/*fun Tooltip.wrapped(): tooltipWrapper = findWrapper() ?: tooltipWrapper(this@wrapped)*/
 fun Tooltip.wrapped(): WindowWrapper<*> = findWrapper() ?: WindowWrapper(this@wrapped)
 fun MyTooltip.wrapped(): TooltipWrapper = findWrapper() ?: TooltipWrapper(this@wrapped)
 fun PopupControl.wrapped(): WindowWrapper<*> = findWrapper() ?: WindowWrapper(this@wrapped)

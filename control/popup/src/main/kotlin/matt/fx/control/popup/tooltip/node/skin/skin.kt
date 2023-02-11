@@ -8,10 +8,10 @@ import matt.fx.control.popup.tooltip.node.MyTooltip
 
 /**
  * CSS based skin for Tooltip. It deals mostly with show hide logic for
- * Popup based controls, and specifically in this case for matt.fx.control.wrapper.tooltip.fixed.tooltip. It also
+ * Popup based controls, and specifically in this case for tooltip. It also
  * implements some of the Skin interface methods.
  *
- * TooltipContent class is the actual skin implementation of the matt.fx.control.wrapper.tooltip.fixed.tooltip.
+ * TooltipContent class is the actual skin implementation of the tooltip
  */
 class MyTooltipSkin(t: MyTooltip): Skin<MyTooltip?> {
   /* *************************************************************************
@@ -28,7 +28,7 @@ class MyTooltipSkin(t: MyTooltip): Skin<MyTooltip?> {
      **************************************************************************/
   /**
    * Creates a new TooltipSkin instance for the given [Tooltip].
-   * @param t the matt.fx.control.wrapper.tooltip.fixed.tooltip
+   * @param t the tooltip
    */
   init {
 	tooltip = t

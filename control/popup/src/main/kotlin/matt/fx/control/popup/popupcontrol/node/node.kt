@@ -39,7 +39,7 @@ import java.util.Collections
 
 Why Matt had to override this class:
 
-because the bridge thing is the source of all my matt.fx.control.wrapper.tooltip.fixed.tooltip style issues, and it is package private
+because the bridge thing is the source of all my tooltip style issues, and it is package private
 
 this is the original reason, but not the only
 

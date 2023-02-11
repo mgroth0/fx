@@ -7,8 +7,8 @@ import matt.fx.graphics.wrapper.region.RegionWrapperImpl
 
 interface ControlWrapper: RegionWrapper<NodeWrapper> {
   override val node: Control
-  /*val tooltipProp: Var<matt.fx.control.wrapper.tooltip.fixed.TooltipWrapper?>
-  var matt.fx.control.wrapper.tooltip.fixed.tooltip: matt.fx.control.wrapper.tooltip.fixed.TooltipWrapper?*/
+  /*val tooltipProp: Var<TooltipWrapper?>
+  var tooltip: tooltipWrapper?*/
 }
 
 abstract class ControlWrapperImpl<N: Control>(node: N): RegionWrapperImpl<N, NodeWrapper>(node),
@@ -17,8 +17,8 @@ abstract class ControlWrapperImpl<N: Control>(node: N): RegionWrapperImpl<N, Nod
 
   /*Don't use this. It requires that I use the built in Tooltip, which I do not*/
 /*  final override val tooltipProp by lazy {
-	node.tooltipProperty().toNullableProp().proxy(uncheckedWrapperConverter<Tooltip, matt.fx.control.wrapper.tooltip.fixed.TooltipWrapper>().nullable())
+	node.tooltipProperty().toNullableProp().proxy(uncheckedWrapperConverter<Tooltip, tooltipWrapper>().nullable())
   }
-  final override var matt.fx.control.wrapper.tooltip.fixed.tooltip by lazyVarDelegate { tooltipProp }*/
+  final override var tooltip by lazyVarDelegate { tooltipProp }*/
 
 }
