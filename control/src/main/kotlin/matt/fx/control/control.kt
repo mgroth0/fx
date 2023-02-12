@@ -6,12 +6,14 @@ import javafx.scene.input.ContextMenuEvent
 import javafx.scene.layout.ColumnConstraints
 import javafx.scene.layout.Pane
 import javafx.scene.layout.RowConstraints
+import matt.fx.base.mtofx.createROFXPropWrapper
 import matt.fx.control.wrapper.checkbox.CheckBoxWrapper
 import matt.fx.control.wrapper.control.tab.TabWrapper
 import matt.fx.control.wrapper.scroll.ScrollPaneWrapper
+import matt.fx.control.wrapper.tab.TabPaneWrapper
+import matt.fx.graphics.wrapper.node.NW
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.impl.NodeWrapperImpl
-import matt.fx.base.mtofx.createROFXPropWrapper
 import matt.lang.NEVER
 import matt.log.warn.warn
 import matt.obs.prop.BindableProperty
@@ -50,7 +52,8 @@ var RowConstraints.exactHeight: Number
   get() = NEVER
 
 
-fun lazyTab(name: String, nodeOp: ()->NodeWrapper) = TabWrapper<NodeWrapper>(name).apply {
+fun TabPaneWrapper<TabWrapper<*>>.lazyTab(name: String, nodeOp: ()->NodeWrapper) = TabWrapper<NW>(name).apply {
+
   if (isSelected) {
 	content = nodeOp()
   } else {
@@ -60,6 +63,7 @@ fun lazyTab(name: String, nodeOp: ()->NodeWrapper) = TabWrapper<NodeWrapper>(nam
 	  }
 	}
   }
+  this@lazyTab.tabs += this
 }
 
 

@@ -8,17 +8,67 @@ import matt.fx.graphics.icon.ICON_HEIGHT
 import matt.fx.graphics.icon.ICON_WIDTH
 import matt.fx.graphics.icon.Icon
 import matt.fx.graphics.icon.IconImage
+import matt.fx.graphics.icon.svg.svgToImage2
+import matt.fx.graphics.style.DarkModeController
 import matt.fx.graphics.wrapper.canvas.CanvasWrapper
+import matt.fx.graphics.wrapper.imageview.ImageViewWrapper
+import matt.fx.graphics.wrapper.imageview.imageview
 import matt.fx.graphics.wrapper.node.NW
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.impl.NodeWrapperImpl
+import matt.fx.graphics.wrapper.node.line.line
+import matt.fx.graphics.wrapper.pane.SimplePaneWrapper
 import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
+import matt.fx.graphics.wrapper.style.FXColor
+import matt.fx.image.toFXImage
+import matt.lang.l
 import matt.model.data.dir.Direction
 import matt.model.data.dir.Direction.BACKWARD
 import matt.model.data.dir.Direction.FORWARD
 import matt.model.flowlogic.recursionblocker.RecursionBlocker
+import matt.mstruct.rstruct.resourceStream
+import matt.obs.bind.binding
+import matt.obs.math.double.op.times
+import matt.obs.prop.ObsVal
 import matt.obs.prop.VarProp
 import kotlin.reflect.KClass
+
+fun NW.svgIcon(
+  file: String,
+  size: Int
+): ImageViewWrapper {
+  val fullName = if (".svg" !in file) "$file.svg" else file
+  return imageview(
+	svgToImage2(
+	  resourceStream(fullName)!!,
+	  width = size*2,
+	  height = size*2
+	).toFXImage()
+  ).apply {
+	isPreserveRatio = true
+	fitWidth = size.toDouble()
+  }
+}
+
+fun navDrawerButtonGraphic(prefHeight: ObsVal<Double>) = SimplePaneWrapper<NW>().apply {
+  val pn = this
+  prefHeightProperty.bind(prefHeight)
+  val w = 30
+  prefWidth = w.toDouble()
+  val hM = 4
+  repeat(3) { y ->
+	line(startX = hM, startY = 0.0, endX = w - hM, endY = 0.0) {
+	  l(startYProperty, endYProperty).forEach {
+		it.bind(
+		  pn.heightProperty*(0.25 + y*0.25)
+		)
+	  }
+	  strokeProperty.bind(DarkModeController.darkModeProp.binding {
+		if (it) FXColor.WHITE else FXColor.BLACK
+	  })
+	}
+  }
+}
 
 fun iconSpacer() = VBoxWrapperImpl<NodeWrapper>().apply {
   exactHeight = 20.0
@@ -59,7 +109,7 @@ class LinePrintTextArea: TextAreaWrapper() {
 
 
 class EnumTabPane<E: Enum<E>, C: NW>(cls: KClass<E>, builder: (E)->C):
-  TabPaneWrapper<EnumTab<E, C>>() {
+	TabPaneWrapper<EnumTab<E, C>>() {
   init {
 	cls.java.enumConstants.forEach {
 	  tabs += EnumTab(it, builder(it)).apply { isClosable = false }

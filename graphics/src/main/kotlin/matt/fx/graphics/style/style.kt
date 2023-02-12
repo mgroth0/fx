@@ -112,6 +112,8 @@ class StyleClassDSL(val s: Node): MyStyleDsl() {
   }
 
   var fxTextFill: Color? by custom({ Color.valueOf(this) }, { toAwtColor().hex() })
+  var fxStroke: Color? by custom({ Color.valueOf(this) }, { toAwtColor().hex() })
+  var fxFill: Color? by custom({ Color.valueOf(this) }, { toAwtColor().hex() })
 
 }
 

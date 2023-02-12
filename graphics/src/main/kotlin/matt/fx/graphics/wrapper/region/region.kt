@@ -29,6 +29,7 @@ import matt.fx.graphics.wrapper.sizeman.SizeManaged
 import matt.fx.base.wrapper.obs.collect.list.createImmutableWrapper
 import matt.fx.base.wrapper.obs.collect.list.createMutableWrapper
 import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
 import matt.fx.base.wrapper.obs.obsval.toNonNullableROProp
 import matt.lang.NEVER
 import matt.lang.delegation.lazyVarDelegate
@@ -63,18 +64,18 @@ interface RegionWrapper<C: NodeWrapper>: ParentWrapper<C>, SizeManaged {
   fun setMinSize(minWidth: Double, minHeight: Double) = node.setMinSize(minWidth, minHeight)
 
 
-  val borderProperty: ObjectProperty<Border> get() = node.borderProperty()
+  val borderProperty: Var<Border?>
   var border: Border?
 	get() = node.border
-	set(value) = borderProperty.set(value)
+	set(value) = borderProperty.v(value)
 
-  fun yellow() = borderProperty.set(FXBorder.dashed(Color.YELLOW))
-  fun blue() = borderProperty.set(FXBorder.dashed(Color.BLUE))
-  fun purple() = borderProperty.set(FXBorder.dashed(Color.PURPLE))
-  fun green() = borderProperty.set(FXBorder.dashed(Color.GREEN))
-  fun red() = borderProperty.set(FXBorder.dashed(Color.RED))
-  fun orange() = borderProperty.set(FXBorder.dashed(Color.ORANGE))
-  fun white() = borderProperty.set(FXBorder.dashed(Color.WHITE))
+  fun yellow() = borderProperty.v(FXBorder.dashed(Color.YELLOW))
+  fun blue() = borderProperty.v(FXBorder.dashed(Color.BLUE))
+  fun purple() = borderProperty.v(FXBorder.dashed(Color.PURPLE))
+  fun green() = borderProperty.v(FXBorder.dashed(Color.GREEN))
+  fun red() = borderProperty.v(FXBorder.dashed(Color.RED))
+  fun orange() = borderProperty.v(FXBorder.dashed(Color.ORANGE))
+  fun white() = borderProperty.v(FXBorder.dashed(Color.WHITE))
 
   var padding: Insets
   val paddingProperty: Var<Insets>
@@ -231,6 +232,10 @@ open class RegionWrapperImpl<N: Region, C: NodeWrapper>(node: N): ParentWrapperI
 	)
   }
 
+  override val borderProperty by lazy {
+	node.borderProperty().toNullableProp()
+  }
+
   override val widthProperty by lazy { node.widthProperty().toNonNullableROProp().cast<Double>() }
   override val prefWidthProperty by lazy { node.prefWidthProperty().toNonNullableProp().cast<Double>() }
   override val minWidthProperty by lazy { node.minWidthProperty().toNonNullableProp().cast<Double>() }
@@ -241,7 +246,7 @@ open class RegionWrapperImpl<N: Region, C: NodeWrapper>(node: N): ParentWrapperI
   override val maxHeightProperty by lazy { node.maxHeightProperty().toNonNullableProp().cast<Double>() }
 
 
-  override val children: ImmutableObsList<C> by lazy {	/*trying to avoid initializing wrappers to quickly (and getting the wrong ones as a result)*/
+  override val children: ImmutableObsList<C> by lazy {    /*trying to avoid initializing wrappers to quickly (and getting the wrong ones as a result)*/
 	node.childrenUnmodifiable.createImmutableWrapper()
 	  .toLazyMappedList { uncheckedWrapperConverter<Node, C>().convertToB(it) }
   }

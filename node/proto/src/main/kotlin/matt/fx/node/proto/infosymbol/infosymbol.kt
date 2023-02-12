@@ -9,11 +9,13 @@ import matt.fx.control.popup.tooltip.fixed.tooltip
 import matt.fx.control.wrapper.label.LabelWrapper
 import matt.fx.graphics.font.fixed
 import matt.fx.graphics.style.DarkModeController
+import matt.fx.graphics.style.sty
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.fx.graphics.wrapper.node.parent.ParentWrapper
 import matt.fx.graphics.wrapper.node.shape.circle.circle
 import matt.fx.graphics.wrapper.pane.stack.StackPaneW
+import matt.fx.graphics.wrapper.style.FXColor
 import matt.fx.graphics.wrapper.text.text
 import matt.lang.function.DSL
 import matt.obs.bind.binding
@@ -22,13 +24,13 @@ import matt.obs.bind.binding
 abstract class HoverableSymbol(
   char: String,
   tooltipText: String,
-  baseColor: String? = null
+  baseColor: FXColor? = null
 ): StackPaneW() {
   companion object {
 	private const val SIZE = 11.0
 	val hoverColor by lazy {
 	  DarkModeController.darkModeProp.binding {
-		if (it) "yellow" else "blue"
+		if (it) FXColor.YELLOW else FXColor.BLUE
 	  }
 	}
   }
@@ -37,7 +39,11 @@ abstract class HoverableSymbol(
 	stroke = Color.GRAY
 	strokeWidth = 2.0
 	fill = Color.TRANSPARENT
-	style = baseColor?.let { "-fx-stroke: $it" } ?: ""
+
+	sty {
+	  fxStroke = baseColor
+	}
+
   }
   private val txt = text(char) {
 	font = Font.font("Georgia").fixed().copy(
@@ -45,7 +51,9 @@ abstract class HoverableSymbol(
 	  size = SIZE,
 	  weight = BOLD
 	).fx()
-	style = baseColor?.let { "-fx-fill: $it" } ?: ""
+	sty {
+	  fxFill = baseColor
+	}
   }
   private var builtTT = false
 
@@ -58,14 +66,19 @@ abstract class HoverableSymbol(
 	  }
 	  val e = if (isHovering) Color.YELLOW else null
 	  if (e != null) {
-		circ.style = "-fx-stroke: ${hoverColor.value}"
-		/*circ.stroke = e*/
-		/*txt.fill = e*/
-		txt.style = "-fx-fill: ${hoverColor.value}"
+		circ.sty {
+		  fxStroke = hoverColor.value
+		}
+		txt.sty {
+		  fxFill = hoverColor.value
+		}
 	  } else {
-		circ.style = baseColor?.let { "-fx-stroke: $it" } ?: ""
-		txt.style = baseColor?.let { "-fx-fill: $it" } ?: ""
-		/*(circ.node.strokeProperty() as StyleableObjectProperty).*/
+		circ.sty {
+		  fxStroke = baseColor
+		}
+		txt.sty {
+		  fxFill = baseColor
+		}
 	  }
 
 	}
@@ -110,4 +123,8 @@ open class InfoSymbol(info: String): HoverableSymbol(
 
 fun ET.warningSymbol(text: String, op: DSL<WarningSymbol> = {}) = WarningSymbol(text).attachTo(this, op)
 
-open class WarningSymbol(text: String): HoverableSymbol(char = "!!", tooltipText = text, baseColor = "red")
+open class WarningSymbol(text: String): HoverableSymbol(char = "!", tooltipText = text, baseColor = FXColor.DARKORANGE)
+
+fun ET.severeWarningSymbol(text: String, op: DSL<SevereWarningSymbol> = {}) = SevereWarningSymbol(text).attachTo(this, op)
+
+open class SevereWarningSymbol(text: String): HoverableSymbol(char = "!!", tooltipText = text, baseColor = FXColor.RED)

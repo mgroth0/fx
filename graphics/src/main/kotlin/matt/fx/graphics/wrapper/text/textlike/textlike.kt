@@ -4,8 +4,11 @@ import javafx.scene.paint.Color
 import javafx.scene.paint.Paint
 import javafx.scene.text.Font
 import matt.fx.graphics.font.fixed
+import matt.fx.graphics.fxthread.runLater
+import matt.fx.graphics.style.sty
 import matt.fx.graphics.wrapper.EventTargetWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
+import matt.fx.graphics.wrapper.style.FXColor
 import matt.obs.prop.Var
 
 val MONO_FONT by lazy { Font.font("monospaced") }
@@ -39,6 +42,7 @@ interface ColoredText: TextLike, NodeWrapper {
 	set(value) {
 	  textFillProperty v value
 	}
+
 
 
 }

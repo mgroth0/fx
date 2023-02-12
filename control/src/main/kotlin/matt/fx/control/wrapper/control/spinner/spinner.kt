@@ -3,6 +3,11 @@ package matt.fx.control.wrapper.control.spinner
 import javafx.scene.control.Spinner
 import javafx.scene.control.SpinnerValueFactory
 import javafx.scene.control.SpinnerValueFactory.IntegerSpinnerValueFactory
+import matt.fx.base.converter.ConverterConverter
+import matt.fx.base.wrapper.obs.collect.list.createFXWrapper
+import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
+import matt.fx.base.wrapper.obs.obsval.toNonNullableROProp
 import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.control.wrapper.control.spinner.fact.int.MyIntegerSpinnerValueFactory
 import matt.fx.control.wrapper.wrapped.wrapped
@@ -10,14 +15,10 @@ import matt.fx.graphics.fxthread.runLater
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
-import matt.fx.base.converter.ConverterConverter
-import matt.fx.base.wrapper.obs.collect.list.createFXWrapper
-import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
-import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
-import matt.fx.base.wrapper.obs.obsval.toNonNullableROProp
 import matt.lang.delegation.lazyVarDelegate
 import matt.lang.err
 import matt.lang.go
+import matt.model.flowlogic.recursionblocker.RecursionBlocker
 import matt.model.op.convert.Converter
 import matt.model.op.convert.StringConverter
 import matt.obs.bind.smartBind
@@ -218,6 +219,28 @@ class SpinnerWrapper<T: Any>(
   }
 
   var valueFactory by valueFactoryProperty
+
+
+  fun bindBidirectional(
+	prop: Var<T?>,
+	default: T,
+	acceptIf: (T?) -> Boolean,
+  ) {
+	val fact = valueFactory!!
+	val rBlocker = RecursionBlocker()
+	prop.onChangeWithWeak(fact) { deRefedFact, newNeuron ->
+	  if (acceptIf(newNeuron)) {
+		rBlocker {
+		  deRefedFact.value = newNeuron ?: default
+		}
+	  }
+	}
+	valueProperty.onChangeWithWeak(prop) { deRefedProp, newValue ->
+	  rBlocker {
+		deRefedProp.value = newValue
+	  }
+	}
+  }
 
   init {
 	val svf = valueFactory?.svf
