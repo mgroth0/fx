@@ -2,6 +2,7 @@ package matt.fx.graphics.wrapper.pane.anchor.swapper
 
 import javafx.scene.layout.AnchorPane
 import javafx.scene.layout.Region
+import matt.fx.base.time.toFXDuration
 import matt.fx.graphics.anim.animation.fade
 import matt.fx.graphics.fxthread.ts.nonBlockingFXWatcher
 import matt.fx.graphics.wrapper.ET
@@ -11,7 +12,6 @@ import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attach
 import matt.fx.graphics.wrapper.region.RegionWrapperImpl
 import matt.fx.graphics.wrapper.text.TextWrapper
-import matt.fx.base.time.toFXDuration
 import matt.obs.listen.MyListenerInter
 import matt.obs.prop.BindableProperty
 import matt.obs.prop.ObsVal
@@ -45,6 +45,17 @@ fun <P, N: NodeWrapper> ET.swapper(
   ): Swapper<P, N> {
   val swapper = Swapper<P, N>()
   swapper.setupSwapping(prop, nullMessage = nullMessage, fadeOutDur = fadeOutDur, fadeInDur = fadeInDur, op)
+  return attach(swapper)
+}
+
+fun <P, N: NodeWrapper> ET.swapperNullable(
+  prop: ObsVal<P>,
+  fadeOutDur: Duration? = null,
+  fadeInDur: Duration? = null,
+  op: (P).()->N,
+): Swapper<P, N> {
+  val swapper = Swapper<P, N>()
+  swapper.setupSwappingNullable(prop, fadeOutDur = fadeOutDur, fadeInDur = fadeInDur, op)
   return attach(swapper)
 }
 
@@ -150,6 +161,23 @@ open class Swapper<P, C: NodeWrapper>: RegionWrapperImpl<Region, C>(AnchorPane()
 	  } else {
 		setInnerNode(op(value), fadeOutDur = fadeOutDur, fadeInDur = fadeInDur)
 	  }
+	}
+	this.listener = fxWatcherProp!!.onChangeWithWeak(this) { swap, it ->
+	  swap.refresh(it)
+	}
+	refresh(fxWatcherProp!!.value)
+  }
+
+  @Synchronized
+  fun setupSwappingNullable(
+	prop: ObsVal<P>,
+	fadeOutDur: Duration? = null,
+	fadeInDur: Duration? = null,
+	op: (P).()->C,
+  ) {
+	initSetup(prop)
+	fun Swapper<P, C>.refresh(value: P) {
+	  setInnerNode(op(value), fadeOutDur = fadeOutDur, fadeInDur = fadeInDur)
 	}
 	this.listener = fxWatcherProp!!.onChangeWithWeak(this) { swap, it ->
 	  swap.refresh(it)

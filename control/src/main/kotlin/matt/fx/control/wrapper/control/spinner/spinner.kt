@@ -27,6 +27,11 @@ import matt.obs.prop.BindableProperty
 import matt.obs.prop.ObsVal
 import matt.obs.prop.Var
 
+
+
+
+
+
 /**
  * Create a spinner for an arbitrary type. This spinner requires you to configure a value factory, or it will throw an exception.
  */

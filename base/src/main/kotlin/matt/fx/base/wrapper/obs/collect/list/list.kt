@@ -139,7 +139,9 @@ interface FXOLMutableListWrapperAndBasic<E>: FXOListWrapperAndBasic<E>, MutableL
 
   val bindableListHelper by lazy { BindableListImpl(this) }
   override fun <S> bind(source: ImmutableObsList<S>, converter: (S)->E) = bindableListHelper.bind(source, converter)
-  override fun <S> bindWeakly(source: ImmutableObsList<S>, converter: (S)->E) = bindableListHelper.bindWeakly(source, converter)
+  override fun <S> bindWeakly(source: ImmutableObsList<S>, converter: (S)->E) =
+	bindableListHelper.bindWeakly(source, converter)
+
   override fun <T> bind(source: ObsVal<T>, converter: (T)->List<E>) = bindableListHelper.bind(source, converter)
   override val bindManager get() = bindableListHelper.bindManager
   override var theBind
@@ -264,6 +266,8 @@ open class MBackedFXObservableList<E>(internal open val mList: ImmutableObsList<
 
 class MutableMBackedFXObservableList<E>(override val mList: MutableObsList<E>):
 	MBackedFXObservableList<E>(mList) {
+
+  /*override fun add(element: E) = mList.add(element)*/
   override fun addAll(vararg elements: E) = mList.addAll(elements)
   override fun remove(from: Int, to: Int) = mList.subList(from, to).clear()
   override fun retainAll(vararg elements: E) = mList.retainAll(elements)
