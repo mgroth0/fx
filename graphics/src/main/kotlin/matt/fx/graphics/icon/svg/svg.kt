@@ -5,6 +5,7 @@ import com.kitfox.svg.SVGUniverse
 import com.kitfox.svg.animation.AnimationElement.AT_XML
 import matt.file.MFile
 import matt.fx.graphics.icon.ICON_WIDTH
+import matt.fx.image.toFXImage
 import matt.lang.anno.SeeURL
 import org.apache.batik.anim.dom.SVGDOMImplementation
 import org.apache.batik.transcoder.TranscoderInput
@@ -76,6 +77,17 @@ fun svgToImage2(
   width: Int = ICON_WIDTH.toInt(),
   height: Int = ICON_WIDTH.toInt()
 ) = svgToImage2(TranscoderInput(svg), width = width, height = height)
+
+fun svgToFXImage(
+  svg: InputStream,
+  width: Int = ICON_WIDTH.toInt(),
+  height: Int = ICON_WIDTH.toInt()
+) = svgToImage2(svg,width,height).toFXImage()
+fun svgToFXImage(
+  svg: MFile,
+  width: Int = ICON_WIDTH.toInt(),
+  height: Int = ICON_WIDTH.toInt()
+) = svgToImage2(svg,width,height).toFXImage()
 
 /*fixes black and white issue!? Nope!*/
 @SeeURL("https://stackoverflow.com/questions/42340833/convert-svg-image-to-png-in-java-by-servlet")

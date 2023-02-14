@@ -8,7 +8,7 @@ import matt.fx.graphics.icon.ICON_HEIGHT
 import matt.fx.graphics.icon.ICON_WIDTH
 import matt.fx.graphics.icon.Icon
 import matt.fx.graphics.icon.IconImage
-import matt.fx.graphics.icon.svg.svgToImage2
+import matt.fx.graphics.icon.svg.svgToFXImage
 import matt.fx.graphics.style.DarkModeController
 import matt.fx.graphics.wrapper.canvas.CanvasWrapper
 import matt.fx.graphics.wrapper.imageview.ImageViewWrapper
@@ -20,7 +20,6 @@ import matt.fx.graphics.wrapper.node.line.line
 import matt.fx.graphics.wrapper.pane.SimplePaneWrapper
 import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
 import matt.fx.graphics.wrapper.style.FXColor
-import matt.fx.image.toFXImage
 import matt.lang.l
 import matt.model.data.dir.Direction
 import matt.model.data.dir.Direction.BACKWARD
@@ -39,11 +38,11 @@ fun NW.svgIcon(
 ): ImageViewWrapper {
   val fullName = if (".svg" !in file) "$file.svg" else file
   return imageview(
-	svgToImage2(
+	svgToFXImage(
 	  resourceStream(fullName)!!,
 	  width = size*2,
 	  height = size*2
-	).toFXImage()
+	)
   ).apply {
 	isPreserveRatio = true
 	fitWidth = size.toDouble()

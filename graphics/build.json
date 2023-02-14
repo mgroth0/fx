@@ -60,6 +60,11 @@
 	  "type" : "Lib",
 	  "cfg" :  "implementation",
 	  "key" :  "guava"
+	},
+	{
+	  "type" : "Lib",
+	  "cfg" :  "implementation",
+	  "key" :  "imageio-bmp"
 	}
   ]
 }
