@@ -4,10 +4,9 @@ import javafx.scene.paint.Color
 import javafx.scene.paint.Paint
 import javafx.scene.text.Font
 import matt.fx.graphics.font.fixed
-import matt.fx.graphics.fxthread.runLater
-import matt.fx.graphics.style.sty
 import matt.fx.graphics.wrapper.EventTargetWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
+import matt.fx.graphics.wrapper.node.onHover
 import matt.fx.graphics.wrapper.style.FXColor
 import matt.obs.prop.Var
 
@@ -44,7 +43,17 @@ interface ColoredText: TextLike, NodeWrapper {
 	}
 
 
+}
 
+fun ColoredText.highlightOnHover() {
+  onHover {
+	val dark = matt.fx.graphics.style.DarkModeController.darkModeProp.value
+	textFill = when {
+	  it   -> if (dark) FXColor.YELLOW else FXColor.BLUE
+	  dark -> FXColor.WHITE
+	  else -> FXColor.BLACK
+	}
+  }
 }
 
 fun <T: ColoredText> T.applyConsoleStyle(size: Double? = null, color: Color? = null): T {
