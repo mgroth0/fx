@@ -121,6 +121,14 @@ open class InfoSymbol(info: String): HoverableSymbol(
   tooltipText = info
 )
 
+fun ET.tutorialSymbol(text: String, op: DSL<TutorialSymbol> = {}) = TutorialSymbol(text).attachTo(this, op)
+
+open class TutorialSymbol(info: String): HoverableSymbol(
+  char = "?",
+  tooltipText = info
+)
+
+
 fun ET.warningSymbol(text: String, op: DSL<WarningSymbol> = {}) = WarningSymbol(text).attachTo(this, op)
 
 open class WarningSymbol(text: String): HoverableSymbol(char = "!", tooltipText = text, baseColor = FXColor.DARKORANGE)
