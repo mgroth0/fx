@@ -84,9 +84,9 @@ class FirstPreloader: Preloader() {
 
 
 val ERROR_POP_UP_TEXT = """
-  This JavaFX Application encountered an error. Please contact the developer via the bug tracker for this application or email (mgroth49@gmail.com) and include the following information:
-  1. Copy and paste the text below
-  2. Provide a list of steps, to the best of your ability, that lead you to this error. This way we can reproduce the issue on our end and have an easier time getting to the bottom of it.
+This Application has encountered an error. Please click "Submit Bug Report" below to open a webpage with information automatically filled out. You may have to quickly create an account first. Once on that page, all you will have to do is scroll down and hit the "Create" button. You may also add any information you think would be useful to the issue.
+
+One extra piece of information that could be extremely helpful would be to provide a list of steps, to the best of your ability, that lead you to this error. This way we can reproduce the issue on our end and have an easier time getting to the bottom of it.
   """.trimIndent()
 
 class MinimalFXApp: Application() {
