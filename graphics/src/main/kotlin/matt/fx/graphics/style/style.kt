@@ -115,6 +115,7 @@ class StyleClassDSL(val s: Node): MyStyleDsl() {
   var fxStroke: Color? by custom({ Color.valueOf(this) }, { toAwtColor().hex() })
   var fxFill: Color? by custom({ Color.valueOf(this) }, { toAwtColor().hex() })
 
+
 }
 
 fun NodeWrapperImpl<*>.sty(op: StyleClassDSL.()->Unit) {

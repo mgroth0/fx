@@ -35,3 +35,6 @@ val String.fxWidth: Double
   get() = Text(this).layoutBounds.width
 
 fun fxColorFromHex(hex: String) = hexToAwtColor(hex).toFXColor()
+
+
+

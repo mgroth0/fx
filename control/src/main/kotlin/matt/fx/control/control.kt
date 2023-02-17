@@ -14,10 +14,15 @@ import matt.fx.control.wrapper.tab.TabPaneWrapper
 import matt.fx.graphics.wrapper.node.NW
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.impl.NodeWrapperImpl
+import matt.http.url.buildQueryURL
 import matt.lang.NEVER
+import matt.lang.opt
 import matt.log.warn.warn
 import matt.obs.prop.BindableProperty
 import matt.obs.prop.Var
+import matt.prim.str.urlEncode
+import java.awt.Desktop
+import java.net.URI
 
 
 interface Scrolls {
@@ -95,3 +100,27 @@ class TreeTableTreeView<T>(val table: Boolean): TreeTableView<T>() {
 	}
   }
 }
+
+
+/*does not belong in this file*/
+fun mail(
+  address: String,
+  subject: String? = null,
+  body: String? = null
+) {
+  val desktop = Desktop.getDesktop()
+  val message = mailtoURL(address, subject = subject, body = body)
+  val uri: URI = URI.create(message)
+  desktop.mail(uri)
+}
+
+/*does not belong in this file*/
+fun mailtoURL(
+  address: String,
+  subject: String? = null,
+  body: String? = null
+) = buildQueryURL(
+  "mailto:$address",
+  *opt(subject) { "subject" to this.urlEncode() },
+  *opt(body) { "body" to this.urlEncode() }
+)

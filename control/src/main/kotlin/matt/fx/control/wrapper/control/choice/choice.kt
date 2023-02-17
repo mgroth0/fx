@@ -5,7 +5,12 @@ import javafx.scene.control.ChoiceBox
 import javafx.scene.input.KeyCode.ENTER
 import javafx.scene.input.KeyCode.ESCAPE
 import javafx.scene.input.KeyCode.SPACE
+import javafx.scene.text.Font
 import javafx.util.StringConverter
+import matt.fx.base.wrapper.obs.collect.list.createFXWrapper
+import matt.fx.base.wrapper.obs.collect.list.mfxMutableListConverter
+import matt.fx.base.wrapper.obs.obsval.prop.NullableFXBackedBindableProp
+import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
 import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.control.wrapper.control.value.HasWritableValue
 import matt.fx.control.wrapper.selects.SelectingControl
@@ -13,10 +18,7 @@ import matt.fx.control.wrapper.selects.wrap
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
-import matt.fx.base.wrapper.obs.collect.list.createFXWrapper
-import matt.fx.base.wrapper.obs.collect.list.mfxMutableListConverter
-import matt.fx.base.wrapper.obs.obsval.prop.NullableFXBackedBindableProp
-import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
+import matt.lang.anno.SeeURL
 import matt.lang.delegation.lazyVarDelegate
 import matt.lang.go
 import matt.obs.bind.smartBind
@@ -62,6 +64,14 @@ class ChoiceBoxWrapper<T: Any>(
 ): ControlWrapperImpl<ChoiceBox<T>>(node), SelectingControl<T>, HasWritableValue<T?> {
 
   constructor(items: MutableObsList<T>): this(ChoiceBox(items.createFXWrapper()))
+
+
+  @SeeURL("https://stackoverflow.com/a/15023364/6596010")
+  @SeeURL("https://docs.oracle.com/cd/E17802_01/javafx/javafx/1.3/docs/api/javafx.scene/doc-files/cssref.html#typefont")
+  fun stupidlySetFont(font: Font) {
+	require(style.isNullOrBlank())
+	style = "-fx-font: ${font.size}px \"${font.name}\";"
+  }
 
 
   var converter: StringConverter<T?>?
