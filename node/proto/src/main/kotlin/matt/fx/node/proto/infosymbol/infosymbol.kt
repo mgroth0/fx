@@ -1,6 +1,7 @@
 package matt.fx.node.proto.infosymbol
 
 import javafx.scene.paint.Color
+import javafx.scene.paint.Paint
 import javafx.scene.text.Font
 import javafx.scene.text.FontPosture.ITALIC
 import javafx.scene.text.FontWeight.BOLD
@@ -19,12 +20,13 @@ import matt.fx.graphics.wrapper.style.FXColor
 import matt.fx.graphics.wrapper.text.text
 import matt.lang.function.DSL
 import matt.obs.bind.binding
+import matt.obs.prop.BindableProperty
 
 
 abstract class HoverableSymbol(
   char: String,
   tooltipText: String,
-  baseColor: FXColor? = null
+  baseColor: FXColor? = null,
 ): StackPaneW() {
   companion object {
 	private const val SIZE = 11.0
@@ -38,13 +40,20 @@ abstract class HoverableSymbol(
   private val circ = circle(radius = SIZE) {
 	stroke = Color.GRAY
 	strokeWidth = 2.0
-	fill = Color.TRANSPARENT
+	this.fill = fill ?: Color.TRANSPARENT
 
 	sty {
 	  fxStroke = baseColor
 	}
 
   }
+
+  var fill: Paint?
+	get() = circ.fill
+	set(value) {
+	  circ.fill = value
+	}
+
   private val txt = text(char) {
 	font = Font.font("Georgia").fixed().copy(
 	  posture = ITALIC,
@@ -57,7 +66,17 @@ abstract class HoverableSymbol(
   }
   private var builtTT = false
 
+  var char
+	get() = txt.text
+	set(value) {
+	  txt.text = value
+	}
+
   init {
+	@Suppress("LeakingThis")
+	exactHeight = SIZE*2
+	@Suppress("LeakingThis")
+	exactWidth = SIZE * 2
 	hoverProperty.onChange { isHovering ->
 
 	  if (!builtTT) {
@@ -93,7 +112,6 @@ abstract class HoverableSymbol(
 	buildTooltipGraphic(tooltipText)
   }
 
-  /*text("\uD83D\uDEC8")*/
   private val tt by lazy {
 
 	tooltip(content = content) {
@@ -102,17 +120,25 @@ abstract class HoverableSymbol(
 	  showDuration = FXDuration.INDEFINITE
 	  hideDelay = FXDuration.ZERO
 	}
-	/*val textProperty by lazy { tooltipLabel.textProperty }
-  val tooltipFontProperty by lazy { tooltipLabel.fontProperty }
-  val wrapTextProp by lazy { tooltipLabel.wrapTextProperty }*/
 
   }
 }
 
-/*fun ET.infoSymbol(text: ObsS, op: DSL<InfoSymbol> = {}) = InfoSymbol(text.value).attachTo(this) {
-  textProperty.bind(text)
-  op()
-}*/
+
+fun ET.plusMinusSymbol(b: BindableProperty<Boolean>, op: DSL<PlusMinusSymbol> = {}) = PlusMinusSymbol(b).attachTo(this, op)
+
+open class PlusMinusSymbol(b: BindableProperty<Boolean>): HoverableSymbol(
+  char = if (b.value) "-" else "+",
+  tooltipText = ""
+) {
+  init {
+	@Suppress("LeakingThis")
+	setOnMouseClicked {
+	  b.value = !b.value
+	  char = if (b.value) "-" else "+"
+	}
+  }
+}
 
 fun ET.infoSymbol(text: String, op: DSL<InfoSymbol> = {}) = InfoSymbol(text).attachTo(this, op)
 

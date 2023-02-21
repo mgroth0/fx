@@ -156,12 +156,12 @@ interface RegionWrapper<C: NodeWrapper>: ParentWrapper<C>, SizeManaged {
   val exactHeightProperty: VarProp<Double>
 
 
-  var exactWidth: Number
+   var exactWidth: Number
 	set(value) {
 	  exactWidthProperty.bind(BindableProperty(value.toDouble()))
 	}
 	get() = NEVER
-  var exactHeight: Number
+   var exactHeight: Number
 	set(value) {
 	  exactHeightProperty.bind(BindableProperty(value.toDouble()))
 	}
