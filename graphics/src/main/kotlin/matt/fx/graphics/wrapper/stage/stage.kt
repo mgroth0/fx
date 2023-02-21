@@ -5,14 +5,14 @@ import javafx.stage.Modality
 import javafx.stage.Stage
 import javafx.stage.StageStyle
 import javafx.stage.Window
+import matt.fx.base.wrapper.obs.obsval.prop.NullableFXBackedBindableProp
+import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
+import matt.fx.base.wrapper.obs.obsval.toNonNullableROProp
 import matt.fx.graphics.service.wrapped
 import matt.fx.graphics.wrapper.inter.titled.Titled
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.scene.SceneWrapper
 import matt.fx.graphics.wrapper.window.WindowWrapper
-import matt.fx.base.wrapper.obs.obsval.prop.NullableFXBackedBindableProp
-import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
-import matt.fx.base.wrapper.obs.obsval.toNonNullableROProp
 import matt.lang.delegation.lazyDelegate
 import matt.log.warn.warn
 
@@ -30,6 +30,7 @@ open class StageWrapper(node: Stage = Stage()): WindowWrapper<Stage>(node), Titl
   fun initOwner(owner: Window?) = node.initOwner(owner)
   fun initOwner(owner: WindowWrapper<*>?) = node.initOwner(owner?.node)
   fun initModality(m: Modality) = node.initModality(m)
+  fun initStyle(style: StageStyle) = node.initStyle(style)
 
   val iconifiedProperty by lazy { node.iconifiedProperty().toNonNullableROProp() }
   val isIconified by lazyDelegate { iconifiedProperty }

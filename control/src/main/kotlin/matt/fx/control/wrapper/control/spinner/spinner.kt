@@ -195,9 +195,10 @@ class SpinnerWrapper<T: Any>(
 
   fun autoCommitOnType() {
 	textProperty.onChangeWithWeak(this) { spinner, _ ->
-	  val oldSelection = spinner.node.editor.selection
+	  @Suppress("UNUSED_VARIABLE") val oldSelection = spinner.node.editor.selection
 	  runLater {
 		spinner.node.commitValue()
+		spinner.node.editor.selectRange(oldSelection.start + 1, oldSelection.end + 1)
 		runLater {
 		  spinner.node.editor.selectRange(oldSelection.start + 1, oldSelection.end + 1)
 		}

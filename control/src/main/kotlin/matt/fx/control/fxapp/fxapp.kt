@@ -84,10 +84,8 @@ class FirstPreloader: Preloader() {
 
 
 val ERROR_POP_UP_TEXT = """
-This Application has encountered an error. Please click "Submit Bug Report" below to open a webpage with information automatically filled out. You may have to quickly create an account first. Once on that page, all you will have to do is scroll down and hit the "Create" button. You may also add any information you think would be useful to the issue.
-
-One extra piece of information that could be extremely helpful would be to provide a list of steps, to the best of your ability, that lead you to this error. This way we can reproduce the issue on our end and have an easier time getting to the bottom of it.
-  """.trimIndent()
+  The application has encountered an unexpected error. Please submit a bug report. To help further, leave a comment in the bug report listing the steps you took that caused the error.
+  """.trim()
 
 class MinimalFXApp: Application() {
 
