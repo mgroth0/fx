@@ -22,14 +22,15 @@ import matt.lang.function.DSL
 import matt.obs.bind.binding
 import matt.obs.prop.BindableProperty
 
+private const val DEFAULT_RADIUS = 11.0
 
 abstract class HoverableSymbol(
   char: String,
   tooltipText: String,
   baseColor: FXColor? = null,
+  radius: Double = DEFAULT_RADIUS
 ): StackPaneW() {
   companion object {
-	private const val SIZE = 11.0
 	val hoverColor by lazy {
 	  DarkModeController.darkModeProp.binding {
 		if (it) FXColor.YELLOW else FXColor.BLUE
@@ -37,10 +38,10 @@ abstract class HoverableSymbol(
 	}
   }
 
-  private val circ = circle(radius = SIZE) {
+  private val circ = circle(radius = radius) {
 	stroke = Color.GRAY
 	strokeWidth = 2.0
-	this.fill = fill ?: Color.TRANSPARENT
+	this.fill = /*fill ?:*/ Color.TRANSPARENT
 
 	sty {
 	  fxStroke = baseColor
@@ -57,7 +58,7 @@ abstract class HoverableSymbol(
   private val txt = text(char) {
 	font = Font.font("Georgia").fixed().copy(
 	  posture = ITALIC,
-	  size = SIZE,
+	  size = radius,
 	  weight = BOLD
 	).fx()
 	sty {
@@ -74,9 +75,9 @@ abstract class HoverableSymbol(
 
   init {
 	@Suppress("LeakingThis")
-	exactHeight = SIZE*2
+	exactHeight = radius*2
 	@Suppress("LeakingThis")
-	exactWidth = SIZE * 2
+	exactWidth = radius * 2
 	hoverProperty.onChange { isHovering ->
 
 	  if (!builtTT) {
@@ -125,11 +126,12 @@ abstract class HoverableSymbol(
 }
 
 
-fun ET.plusMinusSymbol(b: BindableProperty<Boolean>, op: DSL<PlusMinusSymbol> = {}) = PlusMinusSymbol(b).attachTo(this, op)
+fun ET.plusMinusSymbol(b: BindableProperty<Boolean>, radius: Double = DEFAULT_RADIUS, op: DSL<PlusMinusSymbol> = {}) = PlusMinusSymbol(b, radius=radius).attachTo(this, op)
 
-open class PlusMinusSymbol(b: BindableProperty<Boolean>): HoverableSymbol(
+open class PlusMinusSymbol(b: BindableProperty<Boolean>, radius: Double = DEFAULT_RADIUS): HoverableSymbol(
   char = if (b.value) "-" else "+",
-  tooltipText = ""
+  tooltipText = "",
+  radius=radius
 ) {
   init {
 	@Suppress("LeakingThis")

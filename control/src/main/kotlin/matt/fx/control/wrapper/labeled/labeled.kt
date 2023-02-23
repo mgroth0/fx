@@ -54,7 +54,7 @@ open class LabeledWrapper<N: Labeled>(node: N): ControlWrapperImpl<N>(node), Col
 
   val wrapTextProperty by lazy { node.wrapTextProperty().toNonNullableProp() }
 
-  override val textFillProperty by lazy { node.textFillProperty().toNonNullableProp() }
+  override val textFillProperty by lazy { node.textFillProperty().toNullableProp() }
   override fun addChild(child: NodeWrapper, index: Int?) {
 	require(index == null)
 	graphic = child

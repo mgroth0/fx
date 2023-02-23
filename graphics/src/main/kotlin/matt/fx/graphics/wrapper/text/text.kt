@@ -4,6 +4,7 @@ import javafx.beans.property.ObjectProperty
 import javafx.scene.text.Text
 import javafx.scene.text.TextAlignment
 import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
 import matt.fx.graphics.fxthread.runLater
 import matt.fx.graphics.fxthread.ts.nonBlockingFXWatcher
 import matt.fx.graphics.style.sty
@@ -36,7 +37,7 @@ open class TextWrapper(
 
   override val textProperty by lazy { node.textProperty().toNonNullableProp() }
   override val fontProperty by lazy { node.fontProperty().toNonNullableProp() }
-  override val textFillProperty by lazy { node.fillProperty().toNonNullableProp() }
+  override val textFillProperty by lazy { node.fillProperty().toNullableProp() }
 
   val wrappingWidthProperty get() = node.wrappingWidthProperty()
 
