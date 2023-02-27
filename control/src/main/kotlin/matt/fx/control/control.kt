@@ -14,7 +14,7 @@ import matt.fx.control.wrapper.tab.TabPaneWrapper
 import matt.fx.graphics.wrapper.node.NW
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.impl.NodeWrapperImpl
-import matt.http.url.buildQueryURL
+import matt.http.url.query.buildQueryURL
 import matt.lang.NEVER
 import matt.lang.opt
 import matt.log.warn.warn
