@@ -15,7 +15,7 @@ import kotlin.reflect.KClass
 
 
 
-class SomeTests {
+class FXControlTests {
 
   @Test @ExperimentalContracts fun testWrappers() {
 
