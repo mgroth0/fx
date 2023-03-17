@@ -66,9 +66,9 @@ object FaviconLoader {
 	iv.fitWidth = fitWidth
 	iv.image = backupImage
 	daemon {
-	  println("loading favicon for $url")
+//	  println("loading favicon for $url")
 	  val loaded = loadSynchronously(url)
-	  println("fav: $loaded")
+//	  println("fav: $loaded")
 	  if (loaded != null) {
 		runLater {
 		  iv.image = loaded
