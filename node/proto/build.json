@@ -9,11 +9,6 @@
 	{
 	  "type" : "Project",
 	  "cfg" :  "api",
-	  "path" : ":k:fx:control:chart"
-	},
-	{
-	  "type" : "Project",
-	  "cfg" :  "api",
 	  "path" : ":k:fx:control:popup"
 	}
   ]
