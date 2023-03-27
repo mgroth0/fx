@@ -16,8 +16,8 @@ import matt.fx.graphics.wrapper.node.shape.rect.rectangle
 import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
 import matt.fx.graphics.wrapper.text.TextWrapper
 import matt.fx.graphics.wrapper.text.text
-import matt.fx.node.proto.annochart.annopane.legend.MyLegend
-import matt.fx.node.proto.annochart.annopane.legend.MyLegend.LegendItem
+import matt.fx.node.chart.annochart.annopane.legend.MyLegend
+import matt.fx.node.chart.annochart.annopane.legend.MyLegend.LegendItem
 import matt.lang.setall.setAll
 import matt.model.data.mathable.MathAndComparable
 import matt.obs.col.olist.MutableObsList
