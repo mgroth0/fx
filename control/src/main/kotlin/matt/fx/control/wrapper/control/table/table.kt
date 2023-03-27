@@ -16,7 +16,6 @@ import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
 import javafx.scene.input.MouseEvent
 import javafx.util.Callback
-import matt.async.thread.daemon
 import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.control.wrapper.control.table.cols.ColumnsDSL
 import matt.fx.control.wrapper.control.table.cols.ColumnsDSLImpl
@@ -46,6 +45,7 @@ import matt.obs.col.olist.toMutableObsList
 import matt.obs.prop.ObsVal
 import matt.obs.prop.VarProp
 import matt.time.dur.sleep
+import kotlin.concurrent.thread
 import kotlin.time.Duration.Companion.milliseconds
 
 fun <T: Any> ET.tableview(items: ImmutableObsList<T>? = null, op: TableViewWrapper<T>.()->Unit = {}) =
@@ -118,7 +118,7 @@ open class TableViewWrapper<E: Any>(
   ) {
 	scrollTo(i) /*scrollTo is not working well... hope this helps*/
 	if (recursionLevel > 0) {
-	  daemon {
+	  thread(isDaemon=true) {
 		sleep(sleepTime)
 		runLater {
 		  scrollToWithWeirdDirtyFix(i, recursionLevel = recursionLevel - 1, sleepTime = sleepTime, callback = callback)
