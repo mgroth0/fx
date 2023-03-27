@@ -24,6 +24,11 @@
     {
       "type": "Project",
       "cfg": "api",
+      "path": ":k:time"
+    },
+    {
+      "type": "Project",
+      "cfg": "api",
       "path": ":k:fx:base"
     },
     {
