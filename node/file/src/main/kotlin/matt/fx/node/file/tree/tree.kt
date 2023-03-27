@@ -26,7 +26,6 @@ import matt.fx.control.wrapper.wrapped.wrapped
 import matt.fx.fxauto.actionitem
 import matt.fx.fxauto.fxActions
 import matt.fx.graphics.icon.view
-import matt.fx.graphics.refresh.refreshWhileInSceneEvery
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.setOnDoubleClick
 import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
@@ -41,6 +40,7 @@ import matt.gui.interact.WinGeom
 import matt.gui.interact.openInNewWindow
 import matt.gui.menu.context.mcontextmenu
 import matt.gui.mstage.WMode.CLOSE
+import matt.gui.refresh.refreshWhileInSceneEvery
 import matt.lang.NEVER
 import matt.lang.inList
 import matt.log.taball
