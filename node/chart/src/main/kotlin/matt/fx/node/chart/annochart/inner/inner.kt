@@ -1,4 +1,4 @@
-package matt.fx.node.proto.annochart.inner
+package matt.fx.node.chart.annochart.inner
 
 import matt.fx.control.chart.axis.value.number.NumberAxisWrapper
 import matt.fx.graphics.fxthread.ensureInFXThreadInPlace

@@ -1,4 +1,4 @@
-package matt.fx.node.proto.annochart.annopane.legend
+package matt.fx.node.chart.annochart.annopane.legend
 
 import javafx.geometry.Insets
 import javafx.scene.layout.Border

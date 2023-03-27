@@ -1,4 +1,4 @@
-package matt.fx.node.proto.hist
+package matt.fx.node.chart.hist
 
 import javafx.scene.layout.Priority.ALWAYS
 import javafx.scene.layout.Region

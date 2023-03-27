@@ -1,0 +1,10 @@
+{
+  "type": "matt.mstruct.bj.BasicJvmOnlyMod",
+  "dependencies": [
+    {
+      "type": "Project",
+      "cfg": "api",
+      "path": ":k:fx:control:chart"
+    }
+  ]
+}

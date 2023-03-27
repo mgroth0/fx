@@ -1,4 +1,4 @@
-package matt.fx.node.proto.annochart.annopane
+package matt.fx.node.chart.annochart.annopane
 
 import javafx.geometry.Bounds
 import javafx.scene.layout.Pane
