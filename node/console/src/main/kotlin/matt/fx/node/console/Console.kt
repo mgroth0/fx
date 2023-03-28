@@ -11,6 +11,7 @@ import matt.async.safe.SemaphoreString
 import matt.async.safe.sync
 import matt.async.schedule.every
 import matt.async.thread.daemon
+import matt.auto.ascript.AppleScriptString
 import matt.auto.macapp.SublimeText
 import matt.file.MFile
 import matt.file.commons.DATA_FOLDER
@@ -40,12 +41,9 @@ import matt.stream.piping.redirectErr
 import matt.stream.piping.redirectOut
 import matt.time.dur.ms
 import matt.time.dur.sec
-import java.io.BufferedReader
-import java.io.BufferedWriter
-import java.io.IOException
-import java.io.PipedInputStream
-import java.io.PipedOutputStream
-import java.io.PrintWriter
+import java.io.*
+
+val YesIUse = AppleScriptString::class
 
 fun ParentWrapper<NodeWrapper>.processConsole(
   process: Process? = null,
