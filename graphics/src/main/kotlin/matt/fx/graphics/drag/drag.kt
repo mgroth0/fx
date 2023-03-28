@@ -23,133 +23,182 @@ import matt.lang.inList
 import matt.obs.prop.ObsVal
 
 enum class BetterTransferMode(@PublishedApi internal vararg val modes: TransferMode) {
-  MOVE(TransferMode.MOVE),
-  COPY(TransferMode.COPY),
-  LINK(TransferMode.LINK),
-  COPY_OR_MOVE(*TransferMode.COPY_OR_MOVE),
-  COPY_OR_LINK(TransferMode.COPY, TransferMode.LINK),
-  MOVE_OR_LINK(TransferMode.MOVE, TransferMode.LINK),
-  ANY(*TransferMode.ANY)
+    MOVE(TransferMode.MOVE),
+    COPY(TransferMode.COPY),
+    LINK(TransferMode.LINK),
+    COPY_OR_MOVE(*TransferMode.COPY_OR_MOVE),
+    COPY_OR_LINK(
+        TransferMode.COPY,
+        TransferMode.LINK
+    ),
+    MOVE_OR_LINK(
+        TransferMode.MOVE,
+        TransferMode.LINK
+    ),
+    ANY(*TransferMode.ANY)
 }
 
 fun NodeWrapper.dragsFile(
-  file: ObsVal<MFile>, mode: BetterTransferMode
+    file: ObsVal<MFile>,
+    mode: BetterTransferMode
 ) = drags(
-  type = DragType.SYSTEM_SINGLE_FILE,
-  predicate = { true },
-  mode = mode,
-  getData = { file.value },
+    type = DragType.SYSTEM_SINGLE_FILE,
+    predicate = { true },
+    mode = mode,
+    getData = { file.value },
 )
 
 fun NodeWrapper.dragsFile(
-  file: MFile, mode: BetterTransferMode
+    file: MFile,
+    mode: BetterTransferMode
 ) = drags(
-  type = DragType.SYSTEM_SINGLE_FILE,
-  predicate = { true },
-  mode = mode,
-  data = file,
+    type = DragType.SYSTEM_SINGLE_FILE,
+    predicate = { true },
+    mode = mode,
+    data = file,
 )
 
 fun NodeWrapper.dragsSnapshot(
-  fill: Color = Color.BLACK
-) = drags(type = DragType.SYSTEM_SINGLE_FILE, predicate = { true }, mode = COPY, getData = {
-  val params = SnapshotParameters()
-  params.fill = fill
-  val snapshot = snapshot(params, null)
-  val imgFile = snapshot.save(TEMP_DIR["drag_image.png"])
-  imgFile
-}, getDragView = { null })
+    fill: Color = Color.BLACK
+) = drags(
+    type = DragType.SYSTEM_SINGLE_FILE,
+    predicate = { true },
+    mode = COPY,
+    getData = {
+        val params = SnapshotParameters()
+        params.fill = fill
+        val snapshot = snapshot(
+            params,
+            null
+        )
+        val imgFile = snapshot.save(TEMP_DIR["drag_image.png"])
+        imgFile
+    },
+    getDragView = { null })
 
 
-inline fun <reified T: Any> NodeWrapper.drags(
-  type: DragType<T> = DragType.generic(),
-  crossinline predicate: Produce<Boolean> = { true },
-  mode: BetterTransferMode,
-  data: T,
-  noinline getDragView: Produce<Image?> = defaultDragViewGet()
+inline fun <reified T : Any> NodeWrapper.drags(
+    type: DragType<T> = DragType.generic(),
+    crossinline predicate: Produce<Boolean> = { true },
+    mode: BetterTransferMode,
+    data: T,
+    noinline getDragView: Produce<Image?> = defaultDragViewGet()
 ) = this@drags.drags(
-  type = type, predicate = predicate, mode = mode, getData = { data }, getDragView = getDragView
+    type = type,
+    predicate = predicate,
+    mode = mode,
+    getData = { data },
+    getDragView = getDragView
 )
 
 private val defaultSnapshotParams = SnapshotParameters().apply {
-  fill = Color.TRANSPARENT
+    fill = Color.TRANSPARENT
 }
 
-fun NW.defaultSnapshot() = snapshot(defaultSnapshotParams, null)
+fun NW.defaultSnapshot() = snapshot(
+    defaultSnapshotParams,
+    null
+)
 
-@PublishedApi internal fun NodeWrapper.defaultDragViewGet(): Produce<Image?> = {
-  defaultSnapshot()
+@PublishedApi
+internal fun NodeWrapper.defaultDragViewGet(): Produce<Image?> = {
+    defaultSnapshot()
 }
 
-inline fun <reified T: Any> NodeWrapper.drags(
-  type: DragType<T> = DragType.generic(),
-  crossinline predicate: Produce<Boolean> = { true },
-  mode: BetterTransferMode,
-  crossinline getData: Produce<T>,
-  noinline getDragView: Produce<Image?> = defaultDragViewGet()
+inline fun <reified T : Any> NodeWrapper.drags(
+    type: DragType<T> = DragType.generic(),
+    crossinline predicate: Produce<Boolean> = { true },
+    mode: BetterTransferMode,
+    crossinline getData: Produce<T>,
+    noinline getDragView: Produce<Image?> = defaultDragViewGet()
 ) {
-  setOnDragDetected {
-	if (predicate()) {
+    setOnDragDetected {
+        if (predicate()) {
 
-	  val db = startDragAndDrop(*mode.modes)
+            val db = startDragAndDrop(*mode.modes)
 
-	  getDragView.invoke()?.go {
-		db.dragView = it
-	  }
+            getDragView.invoke()?.go {
+                db.dragView = it
+            }
 
-	  type.setData(db, getData())
-	  it.consume()
-	}
-  }
-  setOnDragDone {
-	it.consume()
-  }
+            type.setData(
+                db,
+                getData()
+            )
+            it.consume()
+        }
+    }
+    setOnDragDone {
+        it.consume()
+    }
 }
 
-inline fun <reified T: Any> NodeWrapper.acceptDrops(
-  type: DragType<T> = DragType.generic(),
-  crossinline predicate: (Dragboard)->Boolean,
-  mode: BetterTransferMode,
-  crossinline onEnter: Op = {},
-  crossinline onDrop: On<T>,
-  crossinline finalize: Op = {}
+inline fun <reified T : Any> NodeWrapper.acceptDrops(
+    type: DragType<T> = DragType.generic(),
+    crossinline predicate: (Dragboard) -> Boolean,
+    mode: BetterTransferMode,
+    crossinline onEnter: Op = {},
+    crossinline onDrop: On<T>,
+    crossinline finalize: Op = {}
 ) {
-  setOnDragEntered {
-	if (predicate(it.dragboard)) {
-	  it.acceptTransferModes(*mode.modes)
-	  if (it.isAccepted) {
-		onEnter()
-		it.consume()
-	  }
-	}
-  }/*setOnDragOver {*//*if (it.isAccepted) it.consume()*//*it.acceptTransferModes(*mode.modes)*//*}*/
-  setOnDragDropped {
-	onDrop(type.getData(it.dragboard))
-	it.isDropCompleted = true
-	finalize()
-	it.consume()
-  }
-  setOnDragExited {
-	finalize()
-  }
+
+    setOnDragEntered {
+        if (predicate(it.dragboard)) {
+            it.acceptTransferModes(*mode.modes)
+            if (it.isAccepted) {
+                onEnter()
+                it.consume()
+            }
+        }
+    }
+
+    /*NEED THIS OR ACCEPT DOES NOT WORK*/
+    setOnDragOver {
+        if (predicate(it.dragboard)) {
+            it.acceptTransferModes(*mode.modes)
+        }
+    }
+
+    setOnDragDropped {
+        onDrop(type.getData(it.dragboard))
+        it.isDropCompleted = true
+        finalize()
+        it.consume()
+    }
+    setOnDragExited {
+//        println("drag exited ${this}: accepting object = ${it.acceptingObject}, isAccepted = ${it.isAccepted}, gSource = ${it.gestureSource}, gTarget = ${it.gestureTarget}, isDropCompleted=${it.isDropCompleted},pickResult= ${it.pickResult}")
+
+        finalize()
+    }
 }
 
-@PublishedApi internal val GENERIC_DATA_FORMAT = DataFormat("matt.generic-data-format")
+@PublishedApi
+internal val GENERIC_DATA_FORMAT = DataFormat("matt.generic-data-format")
 
-data class DragType<T: Any>(
-  val predicate: (Dragboard)->Boolean, val getData: (Dragboard)->T, val setData: (Dragboard, T)->Unit
+data class DragType<T : Any>(
+    val predicate: (Dragboard) -> Boolean,
+    val getData: (Dragboard) -> T,
+    val setData: (Dragboard, T) -> Unit
 ) {
-  companion object {
-	val SYSTEM_SINGLE_FILE =
-	  DragType(predicate = { it.hasFiles() && it.files.size == 1 }, getData = { it.files.first().toMFile() },
-		setData = { db, f -> db.putFiles(f.inList().toMutableList()) })
-	val SYSTEM_IMAGE = DragType(predicate = { it.hasImage() }, getData = { it.image!! },
-	  setData = { db, im -> db.put(DataFormat.IMAGE, im) })
+    companion object {
 
-	inline fun <reified TT: Any> generic() = DragType(predicate = { it.getContent(GENERIC_DATA_FORMAT) is TT },
-	  getData = { it.getContent(GENERIC_DATA_FORMAT) as TT },
-	  setData = { db, t -> db.setContent(mutableMapOf<DataFormat, Any>(GENERIC_DATA_FORMAT to t)) })
-  }
+        val SYSTEM_SINGLE_FILE =
+            DragType(predicate = { it.hasFiles() && it.files.size == 1 },
+                     getData = { it.files.first().toMFile() },
+                     setData = { db, f -> db.putFiles(f.inList().toMutableList()) })
+        val SYSTEM_IMAGE = DragType(predicate = { it.hasImage() },
+                                    getData = { it.image!! },
+                                    setData = { db, im ->
+                                        db.put(
+                                            DataFormat.IMAGE,
+                                            im
+                                        )
+                                    })
+
+        inline fun <reified TT : Any> generic() = DragType(predicate = { it.getContent(GENERIC_DATA_FORMAT) is TT },
+                                                           getData = { it.getContent(GENERIC_DATA_FORMAT) as TT },
+                                                           setData = { db, t -> db.setContent(mutableMapOf<DataFormat, Any>(GENERIC_DATA_FORMAT to t)) })
+    }
 }
 
 

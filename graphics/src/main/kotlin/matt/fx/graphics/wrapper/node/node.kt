@@ -18,15 +18,7 @@ import javafx.scene.SnapshotParameters
 import javafx.scene.effect.BlendMode
 import javafx.scene.effect.Effect
 import javafx.scene.image.WritableImage
-import javafx.scene.input.ContextMenuEvent
-import javafx.scene.input.DragEvent
-import javafx.scene.input.Dragboard
-import javafx.scene.input.KeyEvent
-import javafx.scene.input.MouseButton
-import javafx.scene.input.MouseEvent
-import javafx.scene.input.ScrollEvent
-import javafx.scene.input.TransferMode
-import javafx.scene.input.ZoomEvent
+import javafx.scene.input.*
 import javafx.scene.layout.AnchorPane
 import javafx.scene.layout.HBox
 import javafx.scene.layout.Priority
@@ -45,11 +37,7 @@ import matt.fx.graphics.wrapper.style.StyleableWrapper
 import matt.lang.NOT_IMPLEMENTED
 import matt.obs.bindings.bool.ObsB
 import matt.obs.bindings.bool.not
-import matt.obs.prop.BindableProperty
-import matt.obs.prop.MObservableValNewAndOld
-import matt.obs.prop.ObsVal
-import matt.obs.prop.ValProp
-import matt.obs.prop.Var
+import matt.obs.prop.*
 import kotlin.contracts.InvocationKind.EXACTLY_ONCE
 import kotlin.contracts.contract
 
@@ -215,12 +203,12 @@ interface NodeWrapper: EventTargetWrapper, StyleableWrapper {
   fun lookupAll(selector: String): MutableSet<Node> = node.lookupAll(selector)
 
   var cursor: Cursor?
-	get() = node.cursor
+	get() = cursorProperty.value
 	set(value) {
-	  node.cursor = value
+		cursorProperty v value
 	}
 
-  fun cursorProperty(): ObjectProperty<Cursor> = node.cursorProperty()
+  val cursorProperty: Var<Cursor?>
 
 
   var clip: Node?
