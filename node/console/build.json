@@ -1,15 +1,20 @@
 {
-  "type" :         "matt.mstruct.bj.BasicJvmOnlyMod",
-  "dependencies" : [
-	{
-	  "type" : "Project",
-	  "cfg" :  "implementation",
-	  "path" : ":k:gui"
-	},
-	{
-	  "type" : "Project",
-	  "cfg" :  "implementation",
-	  "path" : ":k:auto"
-	}
+  "type": "matt.mstruct.bj.BasicJvmOnlyMod",
+  "dependencies": [
+    {
+      "type": "Project",
+      "cfg": "implementation",
+      "path": ":k:gui"
+    },
+    {
+      "type": "Project",
+      "cfg": "implementation",
+      "path": ":k:auto"
+    },
+    {
+      "type": "Project",
+      "cfg": "implementation",
+      "path": ":k:auto:ascript"
+    }
   ]
 }
