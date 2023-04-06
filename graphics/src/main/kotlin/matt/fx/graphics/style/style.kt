@@ -57,9 +57,9 @@ object DarkModeController {
 }
 
 
-val MODENA_CSS = ClassLoader.getSystemResource("modena.css").toString()
-val DARK_MODENA_CSS = ClassLoader.getSystemResource("darkModena.css").toString()
-val CUSTOM_CSS = ClassLoader.getSystemResource("custom.css").toString()
+val MODENA_CSS = ClassLoader.getSystemResource("modena/modena.css").toString()
+val DARK_MODENA_CSS = ClassLoader.getSystemResource("modena/darkModena.css").toString()
+val CUSTOM_CSS = ClassLoader.getSystemResource("modena/custom.css").toString()
 
 
 private class StyleClass {

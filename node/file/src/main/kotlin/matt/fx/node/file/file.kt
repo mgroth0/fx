@@ -17,11 +17,7 @@ import matt.async.thread.daemon
 import matt.auto.openInFinder
 import matt.css.Color.black
 import matt.css.sty
-import matt.file.Folder
-import matt.file.HTMLFile
-import matt.file.LogFile
-import matt.file.MFile
-import matt.file.SvgFile
+import matt.file.*
 import matt.fx.control.lang.actionbutton
 import matt.fx.control.wrapper.checkbox.checkbox
 import matt.fx.control.wrapper.control.button.button
@@ -218,7 +214,7 @@ private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): RegionWrap
 		  infiniteLines.onChange { daemon { refresh() } }
 
 		  var lastMod = 0L
-		  every(1.sec, timer = AccurateTimer(), zeroDelayFirst = true) {
+		  every(1.sec, timer = AccurateTimer(name="log refresher"), zeroDelayFirst = true) {
 			if (weakRef.get() == null) cancel()
 			val mod = lastModified()
 			if (mod != lastMod) {
