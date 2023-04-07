@@ -31,12 +31,12 @@ import matt.kjlib.shell.proc.forEachErrChar
 import matt.kjlib.shell.proc.forEachOutChar
 import matt.lang.err
 import matt.lang.go
+import matt.lang.seq.charSequence
 import matt.log.tab
 import matt.obs.bindings.bool.not
 import matt.obs.prop.BindableProperty
 import matt.prim.str.throttled
 import matt.stream.ReaderEndReason
-import matt.stream.forEachChar
 import matt.stream.piping.redirectErr
 import matt.stream.piping.redirectOut
 import matt.time.dur.ms
@@ -46,321 +46,321 @@ import java.io.*
 val YesIUse = AppleScriptString::class
 
 fun ParentWrapper<NodeWrapper>.processConsole(
-  process: Process? = null,
-  name: String = "new process console",
-  op: ProcessConsole.()->Unit = {}
+    process: Process? = null,
+    name: String = "new process console",
+    op: ProcessConsole.() -> Unit = {}
 ): ProcessConsole {
-  return addr(ProcessConsole(name).apply {
-	process?.let(::attachProcess)
-	op()
-  })
+    return addr(ProcessConsole(name).apply {
+        process?.let(::attachProcess)
+        op()
+    })
 }
 
 fun ParentWrapper<NodeWrapper>.interceptConsole(
-  name: String = "new intercept console", op: SystemRedirectConsole.()->Unit = {}
+    name: String = "new intercept console", op: SystemRedirectConsole.() -> Unit = {}
 ): SystemRedirectConsole {
-  return addr(SystemRedirectConsole(name).apply(op))
+    return addr(SystemRedirectConsole(name).apply(op))
 }
 
 fun ParentWrapper<NodeWrapper>.customConsole(
-  name: String = "new custom console", takesInput: Boolean = true, op: CustomConsole.()->Unit = {}
+    name: String = "new custom console", takesInput: Boolean = true, op: CustomConsole.() -> Unit = {}
 ): CustomConsole {
 
-  return addr(CustomConsole(name, takesInput).apply(op))
+    return addr(CustomConsole(name, takesInput).apply(op))
 }
 
 val CONSOLE_MEM_FOLD = DATA_FOLDER + "ConsoleMemory"
 
 sealed class Console(
-  val name: String, val takesInput: Boolean = true
-): ScrollPaneWrapper<ConsoleTextFlow>(), NodeWrapper {
+    val name: String, val takesInput: Boolean = true
+) : ScrollPaneWrapper<ConsoleTextFlow>(), NodeWrapper {
 
-  object RefreshRate {
-	const val NORMAL = 500L // ms
-	const val HASTE = 10L // ms
-	private const val HASTE_DUR = 1000L // ms
-	const val HASTE_COUNT = (HASTE_DUR/HASTE).toInt()
-  }
+    object RefreshRate {
+        const val NORMAL = 500L // ms
+        const val HASTE = 10L // ms
+        private const val HASTE_DUR = 1000L // ms
+        const val HASTE_COUNT = (HASTE_DUR / HASTE).toInt()
+    }
 
-  private val hscrollOption = BindableProperty(true)
-  private val myLogFolder = mattLogContext.logFolder + name
-  protected val logfile = myLogFolder + "$name.log"
-  protected val errFile = mFile(logfile.absolutePath + ".err")
-  protected var writer: BufferedWriter? = null
-  private val mem = ConsoleMemory(CONSOLE_MEM_FOLD + "$name.txt")
-  private val consoleTextFlow = ConsoleTextFlow(takesInput)
+    private val hscrollOption = BindableProperty(true)
+    private val myLogFolder = mattLogContext.logFolder + name
+    protected val logfile = myLogFolder + "$name.log"
+    protected val errFile = mFile(logfile.absolutePath + ".err")
+    protected var writer: BufferedWriter? = null
+    private val mem = ConsoleMemory(CONSOLE_MEM_FOLD + "$name.txt")
+    private val consoleTextFlow = ConsoleTextFlow(takesInput)
 
-  private val autoscrollProp = BindableProperty(true)
-  private val throttleProp = BindableProperty(true)
-  private val enableProp = BindableProperty(true)
-  private var autoscroll by autoscrollProp
-  private var throttle by throttleProp
+    private val autoscrollProp = BindableProperty(true)
+    private val throttleProp = BindableProperty(true)
+    private val enableProp = BindableProperty(true)
+    private var autoscroll by autoscrollProp
+    private var throttle by throttleProp
 
-  fun hasText() = consoleTextFlow.hasText()
+    fun hasText() = consoleTextFlow.hasText()
 
-  private fun sendInput() {
-	if (!takesInput) err("bad")
-	val theInput = consoleTextFlow.prepStoredInput()
+    private fun sendInput() {
+        if (!takesInput) err("bad")
+        val theInput = consoleTextFlow.prepStoredInput()
 
-	writer?.apply {
-	  try {
-		write(theInput)
-		flush()
-	  } catch (e: IOException) {
-		unshownOutput += "disconnecting writer due to IOException"
-		writer = null
-	  }
-	}
+        writer?.apply {
+            try {
+                write(theInput)
+                flush()
+            } catch (e: IOException) {
+                unshownOutput += "disconnecting writer due to IOException"
+                writer = null
+            }
+        }
 
-	consoleTextFlow.displayInputAsSentAndClearStoredInput()
-	mem.handle_sent_input(theInput)
+        consoleTextFlow.displayInputAsSentAndClearStoredInput()
+        mem.handle_sent_input(theInput)
 
-  }
+    }
 
-  protected var unshownOutput = SemaphoreString("")
-  private fun copy() {
-	consoleTextFlow.unsentInput.copyToClipboard()
-  }
-
-
-  private fun paste() {
-	val clipboard = Clipboard.getSystemClipboard()
-	val content = clipboard.string
-	content?.forEach { c ->
-	  consoleTextFlow.displayAndHoldNewUnsentInputChar(c.toString())
-	}
-  }
-
-  private fun cut() {
-	copy()
-	consoleTextFlow.clearStoredAndDisplayedInput()
-  }
+    protected var unshownOutput = SemaphoreString("")
+    private fun copy() {
+        consoleTextFlow.unsentInput.copyToClipboard()
+    }
 
 
-  private var clearLogI = 0
+    private fun paste() {
+        val clipboard = Clipboard.getSystemClipboard()
+        val content = clipboard.string
+        content?.forEach { c ->
+            consoleTextFlow.displayAndHoldNewUnsentInputChar(c.toString())
+        }
+    }
 
-  private val logWorker = QueueWorker()
-  private val refresh: ()->Unit = sync {
-	if (enableProp.value) {
-	  var newString = unshownOutput.takeAndClear()
-	  if (newString.isNotEmpty()) {
-		if (throttle && newString.length > 10_000) {
-		  newString =
-			newString.throttled() // when I accidentally printed a huge array in python console, whole app crashed
-		}
-		runLater {
-		  consoleTextFlow.displayNewText(newString)
-		  if (takesInput) consoleTextFlow.clearStoredAndDisplayedInput()
-		}
-		logWorker.schedule {
-		  if (clearLogI == 1000) {
-			logfile.clearIfTooBigThenAppendText(newString)
-			clearLogI = 0
-		  } else {
-			logfile.append(newString)
-			clearLogI += 1
-		  }
-		}
-	  }
-	}
-  }
-
-  init {
-
-	hscrollOption.onChange {
-
-	  consoleTextFlow.requestLayout() // this works!!
-	}
+    private fun cut() {
+        copy()
+        consoleTextFlow.clearStoredAndDisplayedInput()
+    }
 
 
-	vbarPolicy = ScrollBarPolicy.NEVER
-	hbarPolicy = ScrollBarPolicy.NEVER
+    private var clearLogI = 0
 
-	consoleTextFlow.padding = Insets(15.0, 30.0, 15.0, 15.0)
-	fitToWidthProperty.bind(hscrollOption.not())
+    private val logWorker = QueueWorker()
+    private val refresh: () -> Unit = sync {
+        if (enableProp.value) {
+            var newString = unshownOutput.takeAndClear()
+            if (newString.isNotEmpty()) {
+                if (throttle && newString.length > 10_000) {
+                    newString =
+                        newString.throttled() // when I accidentally printed a huge array in python console, whole app crashed
+                }
+                runLater {
+                    consoleTextFlow.displayNewText(newString)
+                    if (takesInput) consoleTextFlow.clearStoredAndDisplayedInput()
+                }
+                logWorker.schedule {
+                    if (clearLogI == 1000) {
+                        logfile.clearIfTooBigThenAppendText(newString)
+                        clearLogI = 0
+                    } else {
+                        logfile.append(newString)
+                        clearLogI += 1
+                    }
+                }
+            }
+        }
+    }
 
-	var old = consoleTextFlow.height
-	consoleTextFlow.heightProperty.onChange { newValue ->
-	  if ((newValue.toDouble() > old.toDouble()) && autoscroll) {
-		vvalue = consoleTextFlow.height
-	  }
-	  old = newValue
-	}
+    init {
+
+        hscrollOption.onChange {
+
+            consoleTextFlow.requestLayout() // this works!!
+        }
 
 
+        vbarPolicy = ScrollBarPolicy.NEVER
+        hbarPolicy = ScrollBarPolicy.NEVER
 
-	content = consoleTextFlow.apply {
-	  minWidthProperty.bind(this@Console.widthProperty)
-	  minHeightProperty.bind(this@Console.heightProperty)
-	}
-	backgroundFill = Color.BLACK
-	every(1.sec) {
-	  runLater {        //                THIS ACTUALLY WORKS!!!
-		//                 THIS SOLVES THE PROBLEM WHERE THE CONSOLE IS TOO SMALL
-		//                ITS ABSOLUTELY AN INTERNAL JFX BUG
-		autosize() // matt.log.level.getDEBUG
-	  }
-	}
+        consoleTextFlow.padding = Insets(15.0, 30.0, 15.0, 15.0)
+        fitToWidthProperty.bind(hscrollOption.not())
+
+        var old = consoleTextFlow.height
+        consoleTextFlow.heightProperty.onChange { newValue ->
+            if ((newValue.toDouble() > old.toDouble()) && autoscroll) {
+                vvalue = consoleTextFlow.height
+            }
+            old = newValue
+        }
 
 
 
-	fun hitEnter() {
-	  sendInput()
-	  var count = 0
-	  every(RefreshRate.HASTE.ms, ownTimer = true) {
-		refresh()
-		count += 1
-		if (count == RefreshRate.HASTE_COUNT) cancel()
-	  }
-	}
+        content = consoleTextFlow.apply {
+            minWidthProperty.bind(this@Console.widthProperty)
+            minHeightProperty.bind(this@Console.heightProperty)
+        }
+        backgroundFill = Color.BLACK
+        every(1.sec) {
+            runLater {        //                THIS ACTUALLY WORKS!!!
+                //                 THIS SOLVES THE PROBLEM WHERE THE CONSOLE IS TOO SMALL
+                //                ITS ABSOLUTELY AN INTERNAL JFX BUG
+                autosize() // matt.log.level.getDEBUG
+            }
+        }
 
 
 
-	if (takesInput) {        /*parent?.apply {*/
-	  addEventFilter(KeyEvent.KEY_TYPED) {
-		println("console got key typed")
-		if (!it.isMetaDown) {
-		  if (it.character == "\r") Unit /*hitEnter()*/
-		  else consoleTextFlow.displayAndHoldNewUnsentInputChar(it.character)
-		}
-		it.consume()
-	  }        /*}*/
-	}
-
-	hotkeys(filter = true) {
-	  if (takesInput) {
-		ENTER.bare op {
-		  hitEnter()
-		}
-		(BACK_SPACE + DELETE) op consoleTextFlow::deleteAnInputCharIfPossible
-		C.meta op ::copy
-		V.meta op ::paste
-		X.meta op ::cut
-	  }
-	  UP.meta { vvalue = 0.0 }
-	  UP op { mem.up()?.go { consoleTextFlow.setInputToMem(it) } }
-	  DOWN.meta { vvalue = consoleTextFlow.height }
-	  DOWN op { consoleTextFlow.setInputToMem(mem.down()) }
-	  RIGHT.meta { hvalue = consoleTextFlow.width }
-	  LEFT.meta { hvalue = 0.0 }
-	  K.meta op consoleTextFlow::clearOutputAndStoredInput
-	  (PLUS + EQUALS).meta op consoleTextFlow::tryIncreaseFontSize
-	  MINUS.meta op consoleTextFlow::tryDecreaseFontSize
-	}    /*}*/
-	mcontextmenu {
-	  checkitem("autoscroll", autoscrollProp)
-	  checkitem("throttle", throttleProp)
-	  checkitem("enabled", enableProp)
-	  actionitem("Open Log") {
-		SublimeText.open(logfile)
-		SublimeText.open(errFile)
-	  }
-	  "copy text" does {
-		consoleTextFlow.fullText().copyToClipboard()
-	  }
-	  checkitem("hscroll", hscrollOption)
-	  actionitem("matt.log.level.getDEBUG: remove last child") {
-		consoleTextFlow.children.removeAt(consoleTextFlow.children.size - 1)
-	  }
-	  actionitem("print debug info on all texts") {
-		println("consoleTextFlow children info:")
-		consoleTextFlow.children.forEach {
-		  tab(it)
-		}
-	  }
-	}
-	every(NORMAL.ms, ownTimer = true) { refresh() }
-  }
+        fun hitEnter() {
+            sendInput()
+            var count = 0
+            every(RefreshRate.HASTE.ms, ownTimer = true) {
+                refresh()
+                count += 1
+                if (count == RefreshRate.HASTE_COUNT) cancel()
+            }
+        }
 
 
-  fun reset() {
-	consoleTextFlow.clearOutputAndStoredInput()
-  }
 
-  protected fun handleEndOfStream(endReason: ReaderEndReason) {
-	when (endReason.type) {
-	  ReaderEndReason.TYPE.END_OF_STREAM -> {
-		unshownOutput += "stream ended"
-	  }
+        if (takesInput) {        /*parent?.apply {*/
+            addEventFilter(KeyEvent.KEY_TYPED) {
+                println("console got key typed")
+                if (!it.isMetaDown) {
+                    if (it.character == "\r") Unit /*hitEnter()*/
+                    else consoleTextFlow.displayAndHoldNewUnsentInputChar(it.character)
+                }
+                it.consume()
+            }        /*}*/
+        }
 
-	  ReaderEndReason.TYPE.IO_EXCEPTION  -> {
-		unshownOutput += "stream ended with IO Exception"
-		logfile.append(endReason.exception!!.toString())
-		errFile.append(endReason.exception.toString())
-	  }
-	}
-  }
+        hotkeys(filter = true) {
+            if (takesInput) {
+                ENTER.bare op {
+                    hitEnter()
+                }
+                (BACK_SPACE + DELETE) op consoleTextFlow::deleteAnInputCharIfPossible
+                C.meta op ::copy
+                V.meta op ::paste
+                X.meta op ::cut
+            }
+            UP.meta { vvalue = 0.0 }
+            UP op { mem.up()?.go { consoleTextFlow.setInputToMem(it) } }
+            DOWN.meta { vvalue = consoleTextFlow.height }
+            DOWN op { consoleTextFlow.setInputToMem(mem.down()) }
+            RIGHT.meta { hvalue = consoleTextFlow.width }
+            LEFT.meta { hvalue = 0.0 }
+            K.meta op consoleTextFlow::clearOutputAndStoredInput
+            (PLUS + EQUALS).meta op consoleTextFlow::tryIncreaseFontSize
+            MINUS.meta op consoleTextFlow::tryDecreaseFontSize
+        }    /*}*/
+        mcontextmenu {
+            checkitem("autoscroll", autoscrollProp)
+            checkitem("throttle", throttleProp)
+            checkitem("enabled", enableProp)
+            actionitem("Open Log") {
+                SublimeText.open(logfile)
+                SublimeText.open(errFile)
+            }
+            "copy text" does {
+                consoleTextFlow.fullText().copyToClipboard()
+            }
+            checkitem("hscroll", hscrollOption)
+            actionitem("matt.log.level.getDEBUG: remove last child") {
+                consoleTextFlow.children.removeAt(consoleTextFlow.children.size - 1)
+            }
+            actionitem("print debug info on all texts") {
+                println("consoleTextFlow children info:")
+                consoleTextFlow.children.forEach {
+                    tab(it)
+                }
+            }
+        }
+        every(NORMAL.ms, ownTimer = true) { refresh() }
+    }
+
+
+    fun reset() {
+        consoleTextFlow.clearOutputAndStoredInput()
+    }
+
+    protected fun handleEndOfStream(endReason: ReaderEndReason) {
+        when (endReason.type) {
+            ReaderEndReason.TYPE.END_OF_STREAM -> {
+                unshownOutput += "stream ended"
+            }
+
+            ReaderEndReason.TYPE.IO_EXCEPTION -> {
+                unshownOutput += "stream ended with IO Exception"
+                logfile.append(endReason.exception!!.toString())
+                errFile.append(endReason.exception.toString())
+            }
+        }
+    }
 }
 
-class ProcessConsole(name: String): Console(name) {
-  fun alsoTail(logFile: MFile) {
-	daemon {
-	  var got = ""
-	  while (true) {
-		if (logFile.exists()) {
-		  val r = logFile.text
-		  if (got != r) {
-			unshownOutput += r.removePrefix(got)
-			/*println(r.removePrefix(got))*/
-			got = r
-		  }
-		}
-		Thread.sleep(1000)
-	  }
-	}
-  }
+class ProcessConsole(name: String) : Console(name) {
+    fun alsoTail(logFile: MFile) {
+        daemon {
+            var got = ""
+            while (true) {
+                if (logFile.exists()) {
+                    val r = logFile.text
+                    if (got != r) {
+                        unshownOutput += r.removePrefix(got)
+                        /*println(r.removePrefix(got))*/
+                        got = r
+                    }
+                }
+                Thread.sleep(1000)
+            }
+        }
+    }
 
-  fun attachProcess(p: Process) {
-	logfile.doubleBackupWrite("")
-	errFile.doubleBackupWrite("")
-	writer = p.outputStream.bufferedWriter()
-	daemon {
-	  val endReason = p.forEachOutChar {
-		unshownOutput += it
-	  }
-	  handleEndOfStream(endReason)
-	}
-	daemon {
-	  val endReason = p.forEachErrChar {
-		unshownOutput += it
-		errFile.append(it)
-	  }
-	  handleEndOfStream(endReason)
-	}
-  }
+    fun attachProcess(p: Process) {
+        logfile.doubleBackupWrite("")
+        errFile.doubleBackupWrite("")
+        writer = p.outputStream.bufferedWriter()
+        daemon {
+            val endReason = p.forEachOutChar {
+                unshownOutput += it
+            }
+            handleEndOfStream(endReason)
+        }
+        daemon {
+            val endReason = p.forEachErrChar {
+                unshownOutput += it
+                errFile.append(it)
+            }
+            handleEndOfStream(endReason)
+        }
+    }
 }
 
-class SystemRedirectConsole(name: String): Console(name, takesInput = false) {
-  fun interceptStdOutErr() {
-	logfile.doubleBackupWrite("")
-	errFile.doubleBackupWrite("")
-	redirectOut { unshownOutput += it }
-	redirectErr {
-	  unshownOutput += it
-	  errFile.append(it)
-	}
-  }
+class SystemRedirectConsole(name: String) : Console(name, takesInput = false) {
+    fun interceptStdOutErr() {
+        logfile.doubleBackupWrite("")
+        errFile.doubleBackupWrite("")
+        redirectOut { unshownOutput += it }
+        redirectErr {
+            unshownOutput += it
+            errFile.append(it)
+        }
+    }
 }
 
-class CustomConsole(name: String, takesInput: Boolean): Console(name, takesInput) {
-  fun custom(): Pair<PrintWriter, BufferedReader?> {
-	val userInput = if (takesInput) {
-	  val inpUser = PipedInputStream()
-	  val outUser = PipedOutputStream(inpUser)
-	  writer = outUser.bufferedWriter()
-	  inpUser.bufferedReader()
-	} else null
+class CustomConsole(name: String, takesInput: Boolean) : Console(name, takesInput) {
+    fun custom(): Pair<PrintWriter, BufferedReader?> {
+        val userInput = if (takesInput) {
+            val inpUser = PipedInputStream()
+            val outUser = PipedOutputStream(inpUser)
+            writer = outUser.bufferedWriter()
+            inpUser.bufferedReader()
+        } else null
 
-	val inpConsole = PipedInputStream()
-	val outConsole = PipedOutputStream(inpConsole)
-	daemon {
-	  inpConsole.bufferedReader().forEachChar {
-		unshownOutput += it
-	  }
-	}
-	val pw = PrintWriter(outConsole, true)
-	return pw to userInput
-  }
+        val inpConsole = PipedInputStream()
+        val outConsole = PipedOutputStream(inpConsole)
+        daemon {
+            inpConsole.bufferedReader().charSequence().forEach {
+                unshownOutput += it.toString()
+            }
+        }
+        val pw = PrintWriter(outConsole, true)
+        return pw to userInput
+    }
 }
 
 
