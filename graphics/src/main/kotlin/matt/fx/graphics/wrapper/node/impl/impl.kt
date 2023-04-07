@@ -18,6 +18,7 @@ import matt.lang.delegation.lazyDelegate
 import matt.model.flowlogic.recursionblocker.RecursionBlocker
 import matt.obs.bind.binding
 import matt.obs.prop.BindableProperty
+import matt.obs.prop.ObsVal
 
 //private operator fun <T, V> ReadOnlyProperty<T, V>.getValue(t: T, property: KProperty<*>): V {
 //	return error("abc")
@@ -68,6 +69,9 @@ abstract class NodeWrapperImpl<out N : Node>(
 
     final override val layoutBoundsProperty by lazy { node.layoutBoundsProperty().toNonNullableROProp() }
     final override val hoverProperty by lazy { node.hoverProperty().toNonNullableROProp() }
+    final override val styleProperty by lazy {
+        node.styleProperty().toNonNullableROProp()
+    }
     final override val effectProperty by lazy { node.effectProperty().toNullableProp() }
     final override val disabledProperty by lazy { node.disabledProperty().toNonNullableROProp() }
     final override val disableProperty by lazy { node.disableProperty().toNonNullableProp() }
