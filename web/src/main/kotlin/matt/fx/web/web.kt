@@ -279,7 +279,6 @@ fun RegionWrapper<*>.specialTransferingToWindowAndBack(par: PaneWrapper<*>) {
 }
 
 
-@ExperimentalContracts
 open class WebViewPane private constructor(file: MFile? = null, html: String? = null): VBoxWrapperImpl<NodeWrapper>() {
 
   constructor(file: MFile): this(file = file, html = null)
@@ -314,7 +313,6 @@ open class WebViewPane private constructor(file: MFile? = null, html: String? = 
 
 
 @Suppress("unused")
-@ExperimentalContracts
 fun WebViewWrapper.specialTransferingToWindowAndBack(par: PaneWrapperImpl<*, *>) {
 
   val wv = this
