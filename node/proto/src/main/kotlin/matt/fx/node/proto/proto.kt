@@ -25,7 +25,7 @@ import matt.model.data.dir.Direction
 import matt.model.data.dir.Direction.BACKWARD
 import matt.model.data.dir.Direction.FORWARD
 import matt.model.flowlogic.recursionblocker.RecursionBlocker
-import matt.mstruct.rstruct.resourceStream
+import matt.rstruct.resourceStream
 import matt.obs.bind.binding
 import matt.obs.math.double.op.times
 import matt.obs.prop.ObsVal
