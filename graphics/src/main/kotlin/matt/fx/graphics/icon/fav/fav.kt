@@ -88,31 +88,31 @@ object FaviconLoader {
 
     private fun loadFavicon(location: String): Image? {
         val faviconUrl = location.toURL().getHostName() + "favicon.ico"
-        val stream = try {
-            ImageIO.createImageInputStream(URI(faviconUrl).toURL().openStream())
+        val ims = try {
+            val stream = ImageIO.createImageInputStream(URI(faviconUrl).toURL().openStream())
+            val readerIterator = ImageIO.getImageReaders(stream)
+            if (!readerIterator.hasNext()) {
+                println("READER ITERATOR HAS NO NEXT")
+                return null
+            }
+            readerIterator.next().run {
+                input = stream
+                val images = mutableListOf<Image>()
+                for (i in 0..<getNumImages(true)) {
+                    val image = this.read(
+                        i,
+                        null
+                    ).toFXImage()
+                    images += image
+                }
+                images
+            }
         } catch (e: FileNotFoundException) {
             ThrowReport(e).print()
             return null
         } catch (e: IOException) {
             ThrowReport(e).print()
             return null
-        }
-        val readerIterator = ImageIO.getImageReaders(stream)
-        if (!readerIterator.hasNext()) {
-            println("READER ITERATOR HAS NO NEXT")
-            return null
-        }
-        val ims = readerIterator.next().run {
-            input = stream
-            val images = mutableListOf<Image>()
-            for (i in 0..<getNumImages(true)) {
-                val image = this.read(
-                    i,
-                    null
-                ).toFXImage()
-                images += image
-            }
-            images
         }
         val im = ims.maxBy { it.height }
         return try {
