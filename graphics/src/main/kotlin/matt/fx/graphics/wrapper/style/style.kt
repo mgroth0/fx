@@ -1,6 +1,5 @@
 package matt.fx.graphics.wrapper.style
 
-import javafx.collections.ObservableList
 import javafx.css.CssMetaData
 import javafx.css.PseudoClass
 import javafx.css.Styleable

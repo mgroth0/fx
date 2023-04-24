@@ -2,7 +2,6 @@ package matt.fx.node.procpane
 
 
 import javafx.application.Platform.runLater
-import javafx.beans.property.SimpleObjectProperty
 import javafx.scene.layout.Priority.ALWAYS
 import matt.async.thread.daemon
 import matt.auto.process.destroyNiceThenForceThenWait

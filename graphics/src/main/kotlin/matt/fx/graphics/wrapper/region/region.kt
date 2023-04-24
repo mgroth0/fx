@@ -1,6 +1,5 @@
 package matt.fx.graphics.wrapper.region
 
-import javafx.beans.property.ObjectProperty
 import javafx.collections.ObservableList
 import javafx.geometry.Insets
 import javafx.scene.Node

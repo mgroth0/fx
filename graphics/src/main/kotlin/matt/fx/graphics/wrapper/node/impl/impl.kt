@@ -18,7 +18,6 @@ import matt.lang.delegation.lazyDelegate
 import matt.model.flowlogic.recursionblocker.RecursionBlocker
 import matt.obs.bind.binding
 import matt.obs.prop.BindableProperty
-import matt.obs.prop.ObsVal
 
 //private operator fun <T, V> ReadOnlyProperty<T, V>.getValue(t: T, property: KProperty<*>): V {
 //	return error("abc")

@@ -3,15 +3,11 @@ package matt.fx.graphics.service
 import javafx.event.EventTarget
 import javafx.scene.Node
 import javafx.scene.Parent
-import matt.fx.graphics.fxthread.runLaterReturn
 import matt.fx.graphics.wrapper.EventTargetWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
-import matt.fx.graphics.wrapper.text.text
-import matt.lang.NEVER
 import matt.model.op.convert.Converter
 import matt.service.MattService
 import matt.service.ServiceHub
-import matt.service.action.ActionAbilitiesService
 
 interface WrapperService: MattService {
   fun <E: EventTarget> wrapped(e: E): EventTargetWrapper

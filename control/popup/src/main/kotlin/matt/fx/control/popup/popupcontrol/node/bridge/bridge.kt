@@ -11,7 +11,6 @@ import javafx.scene.Node
 import javafx.scene.Parent
 import javafx.scene.control.Skin
 import javafx.scene.layout.Pane
-import matt.fx.control.popup.popupcontrol.node.bridge.MyCSSBridgeHelper.Companion
 import matt.fx.control.popup.popupcontrol.node.MyPopupControl
 
 open class MyPopUpCSSBridge(open val popupControl: MyPopupControl): Pane() {

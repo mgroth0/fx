@@ -14,7 +14,6 @@ import matt.fx.graphics.wrapper.node.attachTo
 import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapper
 import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
 import matt.fx.base.wrapper.obs.collect.list.createMutableWrapper
-import matt.log.warn.warn
 import matt.obs.col.olist.sync.toSyncedList
 
 

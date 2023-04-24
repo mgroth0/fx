@@ -10,7 +10,6 @@ import javafx.scene.control.MenuItem
 import javafx.scene.control.SeparatorMenuItem
 import javafx.scene.control.ToggleGroup
 import javafx.scene.input.KeyCombination
-import javafx.scene.input.MouseEvent
 import matt.fx.control.wrapper.menu.item.MenuItemWrapper
 import matt.fx.control.wrapper.menu.item.SimpleMenuItem
 import matt.fx.control.wrapper.menu.radioitem.ValuedRadioMenuItem
