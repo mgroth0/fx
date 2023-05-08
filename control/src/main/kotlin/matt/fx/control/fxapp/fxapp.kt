@@ -230,7 +230,8 @@ class MinimalFXApp : Application() {
     override fun start(primaryStage: Stage?) {
 
         /*GOAL: TO PREVENT THE BIG NullPointerException BUG THAT I JUST EMAILED THE OPENJFX LISTSERV ABOUT*/
-        com.sun.glass.ui.Application.GetApplication().eventHandler = DefaultGlassAppEventHandler(com.sun.glass.ui.Application.GetApplication().eventHandler)
+        com.sun.glass.ui.Application.GetApplication().eventHandler =
+            DefaultGlassAppEventHandler(com.sun.glass.ui.Application.GetApplication().eventHandler)
 
         fxStopwatch?.toc("starting main app")
 
