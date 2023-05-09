@@ -12,24 +12,24 @@ import matt.obs.prop.BindableProperty
 
 fun ET.markdownViewer(op: DSL<MarkDownViewer> = {}) = MarkDownViewer().attachTo(this, op)
 
-class MarkDownViewer(): VBoxW() {
-  private val wv = webview {
-	vgrow = ALWAYS
-	engine.loadContent(
-	  """
+class MarkDownViewer : VBoxW() {
+    private val wv = webview {
+        vgrow = ALWAYS
+        engine.loadContent(
+            """
 		<body style="background: black">
 		</body>
 	  """.trimIndent()
-	)
-  }
-  val markdown = BindableProperty("").apply {
+        )
+    }
+    val markdown = BindableProperty("").apply {
 
-	onChange {
-	  @SeeURL("https://stackoverflow.com/questions/37770620/how-to-include-markdown-md-files-inside-html-files")
-	  @SeeURL("https://zerodevx.github.io/zero-md/basic-usage/")
-	  /*<body style="background-color: black;">*/
-	  wv.engine.loadContent(
-		"""
+        onChange {
+            @SeeURL("https://stackoverflow.com/questions/37770620/how-to-include-markdown-md-files-inside-html-files")
+            @SeeURL("https://zerodevx.github.io/zero-md/basic-usage/")
+            /*<body style="background-color: black;">*/
+            wv.engine.loadContent(
+                """
 		  
 		   <body style="background: black">
 		  
@@ -57,7 +57,7 @@ class MarkDownViewer(): VBoxW() {
 			</body>
 			
 		  """.trimIndent()
-	  )
-	}
-  }
+            )
+        }
+    }
 }
