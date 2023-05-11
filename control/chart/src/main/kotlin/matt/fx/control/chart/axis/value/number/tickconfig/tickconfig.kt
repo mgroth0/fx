@@ -11,9 +11,6 @@ import matt.fx.control.chart.xy.XYChartWrapper
 import matt.lang.function.Convert
 import matt.math.jmath.decimalOrScientificNotation
 import matt.model.data.byte.ByteSize
-import matt.model.data.byte.gigabytes
-import matt.model.data.byte.kilobytes
-import matt.model.data.byte.megabytes
 import matt.model.data.mathable.DoubleWrapper
 import matt.model.data.mathable.IntWrapper
 import matt.model.data.mathable.MathAndComparable

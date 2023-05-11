@@ -11,7 +11,7 @@ import matt.fx.control.chart.axis.value.number.tickconfig.DefaultTickConfigurer
 import matt.fx.control.chart.axis.value.number.tickconfig.DurationWrapperTickConfigurer
 import matt.fx.control.chart.axis.value.number.tickconfig.TickConfigurer
 import matt.fx.control.chart.axis.value.number.tickconfig.UnitLessTickConfigurer
-import matt.model.data.byte.ByteSizeDoubleConverter
+import matt.model.data.byte.BinaryByteSizeDoubleConverter
 import matt.model.data.index.IndexWrapperConverter
 import matt.model.data.index.IndexWrapperIntConverter
 import matt.model.data.mathable.DoubleWrapper
@@ -25,7 +25,7 @@ fun voltageAxis() = numAxis(DefaultTickConfigurer(MicroVoltConverter))
 fun frequencyAxis() = numAxis(DefaultTickConfigurer(HzConverter))
 fun unitlessAxis() = numAxis(UnitLessTickConfigurer)
 fun indexAxis() = NumberAxisWrapper(IndexWrapperConverter, DefaultIntTickConfigurer(IndexWrapperIntConverter))
-fun byteAxis() = NumberAxisWrapper(ByteSizeDoubleConverter, ByteSizeTickConfigurer)
+fun byteAxis() = NumberAxisWrapper(BinaryByteSizeDoubleConverter, ByteSizeTickConfigurer)
 fun percentAxis() = numAxis(DefaultTickConfigurer(PercentDoubleConverter))
 
 fun <T: DoubleWrapper<T>> numAxis(tickConfigurer: DefaultTickConfigurer<T>) =
