@@ -27,8 +27,8 @@ import matt.fx.node.console.Console.RefreshRate.NORMAL
 import matt.fx.node.console.mem.ConsoleMemory
 import matt.fx.node.console.text.ConsoleTextFlow
 import matt.gui.menu.context.mcontextmenu
-import matt.kjlib.shell.proc.forEachErrChar
-import matt.kjlib.shell.proc.forEachOutChar
+import matt.shell.proc.forEachErrChar
+import matt.shell.proc.forEachOutChar
 import matt.lang.err
 import matt.lang.go
 import matt.lang.seq.charSequence
