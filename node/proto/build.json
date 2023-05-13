@@ -1,15 +1,15 @@
 {
-  "type" :         "BasicJvmOnlyMod",
-  "dependencies" : [
-	{
-	  "type" : "Project",
-	  "cfg" :  "api",
-	  "path" : ":k:gui"
-	},
-	{
-	  "type" : "Project",
-	  "cfg" :  "api",
-	  "path" : ":k:fx:control:popup"
-	}
+  "type": "BasicJvmOnlyMod",
+  "dependencies": [
+    {
+      "type": "Project",
+      "cfg": "api",
+      "path": ":k:gui"
+    },
+    {
+      "type": "Project",
+      "cfg": "api",
+      "path": ":k:fx:control:popup"
+    }
   ]
 }
