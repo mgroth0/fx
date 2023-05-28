@@ -27,8 +27,6 @@ import matt.fx.node.console.Console.RefreshRate.NORMAL
 import matt.fx.node.console.mem.ConsoleMemory
 import matt.fx.node.console.text.ConsoleTextFlow
 import matt.gui.menu.context.mcontextmenu
-import matt.shell.proc.forEachErrChar
-import matt.shell.proc.forEachOutChar
 import matt.lang.err
 import matt.lang.go
 import matt.lang.seq.charSequence
@@ -36,12 +34,19 @@ import matt.log.tab
 import matt.obs.bindings.bool.not
 import matt.obs.prop.BindableProperty
 import matt.prim.str.throttled
+import matt.shell.proc.forEachErrChar
+import matt.shell.proc.forEachOutChar
 import matt.stream.ReaderEndReason
 import matt.stream.piping.redirectErr
 import matt.stream.piping.redirectOut
 import matt.time.dur.ms
 import matt.time.dur.sec
-import java.io.*
+import java.io.BufferedReader
+import java.io.BufferedWriter
+import java.io.IOException
+import java.io.PipedInputStream
+import java.io.PipedOutputStream
+import java.io.PrintWriter
 
 val YesIUse = AppleScriptString::class
 
@@ -74,6 +79,10 @@ val CONSOLE_MEM_FOLD = DATA_FOLDER + "ConsoleMemory"
 sealed class Console(
     val name: String, val takesInput: Boolean = true
 ) : ScrollPaneWrapper<ConsoleTextFlow>(), NodeWrapper {
+
+    companion object {
+        private const val THROTTLE_THRESHOLD = 100_000
+    }
 
     object RefreshRate {
         const val NORMAL = 500L // ms
@@ -144,7 +153,8 @@ sealed class Console(
         if (enableProp.value) {
             var newString = unshownOutput.takeAndClear()
             if (newString.isNotEmpty()) {
-                if (throttle && newString.length > 10_000) {
+
+                if (throttle && newString.length > THROTTLE_THRESHOLD) {
                     newString =
                         newString.throttled() // when I accidentally printed a huge array in python console, whole app crashed
                 }
@@ -181,7 +191,7 @@ sealed class Console(
 
         var old = consoleTextFlow.height
         consoleTextFlow.heightProperty.onChange { newValue ->
-            if ((newValue.toDouble() > old.toDouble()) && autoscroll) {
+            if ((newValue > old) && autoscroll) {
                 vvalue = consoleTextFlow.height
             }
             old = newValue
