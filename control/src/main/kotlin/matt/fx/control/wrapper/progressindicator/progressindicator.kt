@@ -3,7 +3,7 @@ package matt.fx.control.wrapper.progressindicator
 import javafx.geometry.Pos.CENTER_LEFT
 import javafx.scene.control.ProgressIndicator
 import javafx.scene.text.TextAlignment
-import matt.async.schedule.every
+import matt.async.thread.schedule.every
 import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.graphics.font.fixed

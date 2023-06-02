@@ -11,9 +11,9 @@ import kotlinx.html.body
 import kotlinx.html.html
 import kotlinx.html.img
 import kotlinx.html.stream.createHTML
-import matt.async.schedule.AccurateTimer
-import matt.async.schedule.every
+import matt.async.thread.schedule.every
 import matt.async.thread.daemon
+import matt.async.thread.schedule.AccurateTimer
 import matt.auto.openInFinder
 import matt.css.Color.black
 import matt.css.sty

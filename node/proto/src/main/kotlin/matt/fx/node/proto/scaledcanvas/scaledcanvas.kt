@@ -4,7 +4,7 @@ package matt.fx.node.proto.scaledcanvas
 
 import javafx.scene.layout.Pane
 import javafx.scene.paint.Color
-import matt.async.schedule.SchedulingDaemon
+import matt.async.thread.schedule.SchedulingDaemon
 import matt.fx.control.wrapper.progressindicator.PerformantProgressIndicator
 import matt.fx.graphics.fxthread.runLater
 import matt.fx.graphics.style.intColorToFXColor

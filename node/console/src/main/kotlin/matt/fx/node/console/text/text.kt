@@ -3,7 +3,9 @@ package matt.fx.node.console.text
 import javafx.animation.Timeline
 import javafx.scene.paint.Color
 import javafx.scene.text.Text
-import matt.async.schedule.AccurateTimer
+import matt.async.thread.schedule.AccurateTimer
+import matt.fx.base.mtofx.createWritableFXPropWrapper
+import matt.fx.base.time.toFXDuration
 import matt.fx.graphics.anim.animation.keyframe
 import matt.fx.graphics.anim.animation.timeline
 import matt.fx.graphics.font.fixed
@@ -12,8 +14,6 @@ import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.text.TextWrapper
 import matt.fx.graphics.wrapper.text.textlike.applyConsoleStyle
 import matt.fx.graphics.wrapper.textflow.TextFlowWrapper
-import matt.fx.base.mtofx.createWritableFXPropWrapper
-import matt.fx.base.time.toFXDuration
 import matt.lang.ifTrueOrNull
 import matt.obs.bind.deepBinding
 import matt.obs.prop.VarProp

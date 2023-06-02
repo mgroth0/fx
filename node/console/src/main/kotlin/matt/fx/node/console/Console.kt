@@ -6,11 +6,11 @@ import javafx.scene.control.ScrollPane.ScrollBarPolicy
 import javafx.scene.input.Clipboard
 import javafx.scene.input.KeyEvent
 import javafx.scene.paint.Color
-import matt.async.queue.QueueWorker
 import matt.async.safe.SemaphoreString
 import matt.async.safe.sync
-import matt.async.schedule.every
+import matt.async.thread.schedule.every
 import matt.async.thread.daemon
+import matt.async.thread.queue.QueueWorker
 import matt.auto.ascript.AppleScriptString
 import matt.auto.macapp.SublimeText
 import matt.file.MFile
