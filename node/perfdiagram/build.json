@@ -4,7 +4,7 @@
 	{
 	  "type" : "Project",
 	  "cfg" :  "api",
-	  "path" : ":k:html"
+	  "path" : ":k:html:fig"
 	},
 	{
 	  "type" : "Project",

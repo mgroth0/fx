@@ -15,7 +15,7 @@ import matt.async.thread.schedule.every
 import matt.async.thread.daemon
 import matt.async.thread.schedule.AccurateTimer
 import matt.auto.openInFinder
-import matt.css.Color.black
+import matt.css.props.Color.black
 import matt.css.sty
 import matt.file.*
 import matt.fx.control.lang.actionbutton
