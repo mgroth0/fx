@@ -10,12 +10,14 @@ import matt.lang.url.getHostName
 import matt.lang.url.toURL
 import matt.log.warn.warn
 import matt.model.code.errreport.ThrowReport
+import java.awt.image.BufferedImage
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.io.UnsupportedEncodingException
 import java.net.URI
 import java.net.URL
 import java.util.*
+import java.util.concurrent.atomic.AtomicInteger
 import javax.imageio.ImageIO
 import kotlin.concurrent.thread
 
@@ -48,10 +50,12 @@ object FaviconLoader {
 
 
     @Synchronized
-    fun loadSynchronously(url: URL): Image? {
+    fun loadSynchronously(url: URL): BufferedImage? {
         return FAVICON_CACHE[url]
     }
 
+
+    private val nextThreadID = AtomicInteger()
 
     fun loadAsynchronously(
         url: URL,
@@ -64,13 +68,14 @@ object FaviconLoader {
         iv.fitHeight = fitHeight
         iv.fitWidth = fitWidth
         iv.image = backupImage
-        thread(isDaemon = true) {
+        thread(isDaemon = true, name = "Fav Loader ${nextThreadID.getAndIncrement()}") {
 //	  println("loading favicon for $url")
             val loaded = loadSynchronously(url)
 //	  println("fav: $loaded")
             if (loaded != null) {
                 runLater {
-                    iv.image = loaded
+                    /*trying to put FX image inside the FX thread to see if that helps*/
+                    iv.image = loaded.toFXImage()
                 }
             }
         }
@@ -78,15 +83,15 @@ object FaviconLoader {
     }
 
 
-    private val FAVICON_CACHE: DefaultStoringMap<URL, Image?> by lazy {
-        WeakHashMap<URL, Image?>().withStoringDefault {
+    private val FAVICON_CACHE: DefaultStoringMap<URL, BufferedImage?> by lazy {
+        WeakHashMap<URL, BufferedImage?>().withStoringDefault {
             if (it == null) null
             else loadFavicon(it.toString())
         }
     }
 
 
-    private fun loadFavicon(location: String): Image? {
+    private fun loadFavicon(location: String): BufferedImage? {
         val faviconUrl = location.toURL().getHostName() + "favicon.ico"
         val ims = try {
             val stream = ImageIO.createImageInputStream(URI(faviconUrl).toURL().openStream())
@@ -97,12 +102,12 @@ object FaviconLoader {
             }
             readerIterator.next().run {
                 input = stream
-                val images = mutableListOf<Image>()
+                val images = mutableListOf<BufferedImage>()
                 for (i in 0..<getNumImages(true)) {
                     val image = this.read(
                         i,
                         null
-                    ).toFXImage()
+                    )
                     images += image
                 }
                 images
@@ -114,6 +119,7 @@ object FaviconLoader {
             ThrowReport(e).print()
             return null
         }
+        /*must to toFXImage in a safe place. I think that when the thread gets an exception in the middle of to a BufferedIm to FXIm conversion, it might cause JavaFX to crash ... or maybe not but this is still safer and more performant in general*/
         val im = ims.maxBy { it.height }
         return try {
             im

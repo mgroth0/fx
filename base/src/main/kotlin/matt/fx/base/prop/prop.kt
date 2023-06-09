@@ -5,19 +5,27 @@ import javafx.beans.binding.Bindings
 import javafx.beans.binding.BooleanExpression
 import javafx.beans.binding.ObjectBinding
 import javafx.beans.binding.StringBinding
-import javafx.beans.property.*
+import javafx.beans.property.ObjectProperty
+import javafx.beans.property.Property
+import javafx.beans.property.ReadOnlyObjectProperty
+import javafx.beans.property.ReadOnlyObjectWrapper
+import javafx.beans.property.SimpleBooleanProperty
+import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.property.adapter.JavaBeanObjectPropertyBuilder
 import javafx.beans.value.ObservableValue
 import matt.fx.base.prop.SingleAssignThreadSafetyMode.SYNCHRONIZED
 import matt.lang.disabledButDefinitelyStillInByteCodeCode
-import matt.obs.bind.binding
-import matt.obs.col.olist.ImmutableObsList
 import matt.obs.col.olist.MutableObsList
 import matt.prim.str.decap
 import matt.reflect.YesIUseReflect
 import java.lang.reflect.Field
 import kotlin.properties.ReadWriteProperty
-import kotlin.reflect.*
+import kotlin.reflect.KClass
+import kotlin.reflect.KFunction
+import kotlin.reflect.KFunction2
+import kotlin.reflect.KMutableProperty1
+import kotlin.reflect.KProperty
+import kotlin.reflect.KProperty1
 import kotlin.reflect.jvm.javaMethod
 
 fun <T> property(value: T? = null): FXPropertyDelegate<T> = FXPropertyDelegate(SimpleObjectProperty<T>(value))
@@ -223,11 +231,3 @@ fun <T, R> ObservableValue<T>.objectBindingN(vararg dependencies: Observable, op
     Bindings.createObjectBinding({ op(value) }, this, *dependencies)
 
 
-val <E> ImmutableObsList<E>.sizeProperty get() = binding { size }
-
-val <E> ImmutableObsList<E>.isEmptyProperty get() = binding { isEmpty() }
-val <E> ImmutableObsList<E>.isNotEmptyProperty get() = binding { isNotEmpty() }
-
-
-/*-1 if list is empty*/
-val <E> ImmutableObsList<E>.lastIndexProperty get() = sizeProperty.binding { it - 1 }
