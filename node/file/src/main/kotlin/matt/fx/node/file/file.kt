@@ -11,13 +11,17 @@ import kotlinx.html.body
 import kotlinx.html.html
 import kotlinx.html.img
 import kotlinx.html.stream.createHTML
-import matt.async.thread.schedule.every
 import matt.async.thread.daemon
 import matt.async.thread.schedule.AccurateTimer
+import matt.async.thread.schedule.every
 import matt.auto.openInFinder
 import matt.css.props.Color.black
 import matt.css.sty
-import matt.file.*
+import matt.file.Folder
+import matt.file.HTMLFile
+import matt.file.LogFile
+import matt.file.MFile
+import matt.file.SvgFile
 import matt.fx.control.lang.actionbutton
 import matt.fx.control.wrapper.checkbox.checkbox
 import matt.fx.control.wrapper.control.button.button
@@ -75,6 +79,8 @@ fun ObsVal<MFile>.draggableIcon() = ObsStringIcon(
 ).apply {
   dragsFile(this@draggableIcon, mode = BetterTransferMode.COPY)
 }
+
+
 
 
 fun MFile.createNode(renderHTMLAndSVG: Boolean = false): RegionWrapper<NodeWrapper> {
