@@ -110,7 +110,7 @@ fun mail(
 ) {
     val desktop = Desktop.getDesktop()
     val message = mailtoURL(address, subject = subject, body = body)
-    val uri: URI = URI.create(message)
+    val uri: URI = URI.create(message.cpath)
     desktop.mail(uri)
 }
 
