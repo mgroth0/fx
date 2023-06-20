@@ -186,7 +186,9 @@ class FXBackedMutableObservableListBase<E>(obs: ObservableList<E>) :
                             RemoveAtIndices(
                                 obs,
                                 it.removed.zip(it.from..<it.from + it.removed.size)
-                                    .map { IndexedValue(it.second, it.first) })
+                                    .map { IndexedValue(it.second, it.first) },
+                                quickIsRange = true
+                            ),
                         )
                     )
                 }
