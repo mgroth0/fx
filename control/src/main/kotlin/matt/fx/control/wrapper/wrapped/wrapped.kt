@@ -236,18 +236,23 @@ import matt.fx.graphics.wrapper.transform.TransformWrapper
 import matt.fx.graphics.wrapper.transform.TranslateWrapper
 import matt.fx.graphics.wrapper.window.WindowWrapper
 import matt.lang.NEVER
+import matt.lang.require.requireNull
 import kotlin.reflect.KClass
 
 
-object WrapperServiceImpl: WrapperService {
-  override fun <E: EventTarget> wrapped(e: E): EventTargetWrapper {
-	return e.wrapped()
-  }
+object WrapperServiceImpl : WrapperService {
+    override fun <E : EventTarget> wrapped(e: E): EventTargetWrapper {
+        return e.wrapped()
+    }
 }
 
-inline fun <reified W: EventTargetWrapper> EventTarget.findWrapper(): W? {
-  val w = SingularEventTargetWrapper[this]
-  return w as? W ?: run { require(w == null); w }
+inline fun <reified W : EventTargetWrapper> EventTarget.findWrapper(): W? {
+    val w = SingularEventTargetWrapper[this]
+    return w as? W ?: run {
+//        require(w == null)
+        requireNull(w)
+        w
+    }
 }
 
 val EventTarget.wrapper get() = findWrapper<EventTargetWrapper>() as EventTargetWrapperImpl<*>
@@ -259,8 +264,8 @@ fun Stage.wrapped(): StageWrapper = findWrapper() ?: StageWrapper(this@wrapped)
 fun Tab.wrapped(): TabWrapper<NodeWrapper> = findWrapper() ?: TabWrapper(this@wrapped)
 
 
-fun <T: IndexedCell<*>> VirtualFlow<T>.wrapped(): VirtualFlowWrapper<T> =
-  findWrapper() ?: VirtualFlowWrapper(this@wrapped)
+fun <T : IndexedCell<*>> VirtualFlow<T>.wrapped(): VirtualFlowWrapper<T> =
+    findWrapper() ?: VirtualFlowWrapper(this@wrapped)
 
 fun Pane.wrapped(): PaneWrapperImpl<Pane, *> = findWrapper() ?: PaneWrapperImpl<_, NodeWrapper>(this@wrapped)
 fun StackPane.wrapped(): StackPaneWrapper<*> = findWrapper() ?: StackPaneWrapper<NodeWrapper>(this@wrapped)
@@ -280,19 +285,20 @@ fun TilePane.wrapped(): TilePaneWrapper<*> = findWrapper() ?: TilePaneWrapper<No
 fun ToggleButton.wrapped(): ToggleButtonWrapper = findWrapper() ?: ToggleButtonWrapper(this@wrapped)
 fun RadioButton.wrapped(): RadioButtonWrapper = findWrapper() ?: RadioButtonWrapper(this@wrapped)
 
-fun <E: Any> TableView<E>.wrapped(): TableViewWrapper<E> = findWrapper() ?: TableViewWrapper(this@wrapped)
-fun <E: Any> TreeTableView<E>.wrapped(): TreeTableViewWrapper<E> = findWrapper() ?: TreeTableViewWrapper(this@wrapped)
-fun <E: Any> TreeView<E>.wrapped(): TreeViewWrapper<E> = findWrapper() ?: TreeViewWrapper(this@wrapped)
-fun <E: Any> ListView<E>.wrapped(): ListViewWrapper<E> = findWrapper() ?: ListViewWrapper(this@wrapped)
+fun <E : Any> TableView<E>.wrapped(): TableViewWrapper<E> = findWrapper() ?: TableViewWrapper(this@wrapped)
+fun <E : Any> TreeTableView<E>.wrapped(): TreeTableViewWrapper<E> = findWrapper() ?: TreeTableViewWrapper(this@wrapped)
+fun <E : Any> TreeView<E>.wrapped(): TreeViewWrapper<E> = findWrapper() ?: TreeViewWrapper(this@wrapped)
+fun <E : Any> ListView<E>.wrapped(): ListViewWrapper<E> = findWrapper() ?: ListViewWrapper(this@wrapped)
 
 
-fun <E: Any, P> TreeTableColumn<E, P>.wrapped(): TreeTableColumnWrapper<E, P> =
-  findWrapper() ?: TreeTableColumnWrapper(this@wrapped)
+fun <E : Any, P> TreeTableColumn<E, P>.wrapped(): TreeTableColumnWrapper<E, P> =
+    findWrapper() ?: TreeTableColumnWrapper(this@wrapped)
 
-@Suppress("UNCHECKED_CAST") fun <E, P> TableColumn<E, P>.wrapped(): TableColumnWrapper<E & Any, P> =
-  findWrapper() ?: TableColumnWrapper(
-	this@wrapped as TableColumn<E & Any, P>
-  )
+@Suppress("UNCHECKED_CAST")
+fun <E, P> TableColumn<E, P>.wrapped(): TableColumnWrapper<E & Any, P> =
+    findWrapper() ?: TableColumnWrapper(
+        this@wrapped as TableColumn<E & Any, P>
+    )
 
 fun Rectangle.wrapped(): RectangleWrapper = findWrapper() ?: RectangleWrapper(this@wrapped)
 fun Circle.wrapped(): CircleWrapper = findWrapper() ?: CircleWrapper(this@wrapped)
@@ -305,8 +311,8 @@ fun Text.wrapped(): TextWrapper = findWrapper() ?: TextWrapper(this@wrapped)
 fun Label.wrapped(): LabelWrapper = findWrapper() ?: LabelWrapper(this@wrapped)
 
 fun TextArea.wrapped(): TextAreaWrapper = findWrapper() ?: TextAreaWrapper(this@wrapped)
-fun <T: Any> Spinner<T>.wrapped(): SpinnerWrapper<T> = findWrapper() ?: SpinnerWrapper(this@wrapped)
-fun <T: Any> ChoiceBox<T>.wrapped(): ChoiceBoxWrapper<T> = findWrapper() ?: ChoiceBoxWrapper(this@wrapped)
+fun <T : Any> Spinner<T>.wrapped(): SpinnerWrapper<T> = findWrapper() ?: SpinnerWrapper(this@wrapped)
+fun <T : Any> ChoiceBox<T>.wrapped(): ChoiceBoxWrapper<T> = findWrapper() ?: ChoiceBoxWrapper(this@wrapped)
 fun FakeFocusTextField.wrapped(): FakeFocusTextFieldWrapper = findWrapper() ?: FakeFocusTextFieldWrapper(this@wrapped)
 fun TextField.wrapped(): TextFieldWrapper = findWrapper() ?: TextFieldWrapper(this@wrapped)
 fun ScrollPane.wrapped(): ScrollPaneWrapper<NodeWrapper> = findWrapper() ?: ScrollPaneWrapper(this@wrapped)
@@ -351,29 +357,29 @@ fun ToolBar.wrapped(): ToolBarWrapper = findWrapper() ?: ToolBarWrapper(this@wra
 //fun TableRow<T>.wrapped()
 
 fun Labeled.wrapped(): LabeledWrapper<*> = findWrapper() ?: when (this) {
-  is Label           -> wrapped()
-  is TitledPane      -> wrapped()
-  is TreeTableRow<*> -> wrapped()
-  is TableRow<*>     -> wrapped()
-  is IndexedCell<*>  -> wrapped()
-  is Cell<*>         -> wrapped()
-  is ButtonBase      -> wrapped()
-  else               -> cannotFindWrapper()
+    is Label           -> wrapped()
+    is TitledPane      -> wrapped()
+    is TreeTableRow<*> -> wrapped()
+    is TableRow<*>     -> wrapped()
+    is IndexedCell<*>  -> wrapped()
+    is Cell<*>         -> wrapped()
+    is ButtonBase      -> wrapped()
+    else               -> cannotFindWrapper()
 }
 
 fun ButtonBase.wrapped(): ButtonBaseWrapper<*> = findWrapper() ?: when (this) {
-  is MenuButton   -> wrapped()
-  is Hyperlink    -> wrapped()
-  is RadioButton  -> wrapped()
-  is ToggleButton -> wrapped()
-  is Button       -> wrapped()
-  else            -> cannotFindWrapper()
+    is MenuButton   -> wrapped()
+    is Hyperlink    -> wrapped()
+    is RadioButton  -> wrapped()
+    is ToggleButton -> wrapped()
+    is Button       -> wrapped()
+    else            -> cannotFindWrapper()
 }
 
 
 fun MenuButton.wrapped(): MenuButtonWrapper = findWrapper() ?: when (this) {
-  is SplitMenuButton -> wrapped()
-  else               -> findWrapper() ?: MenuButtonWrapper(this@wrapped)
+    is SplitMenuButton -> wrapped()
+    else               -> findWrapper() ?: MenuButtonWrapper(this@wrapped)
 }
 
 
@@ -398,115 +404,130 @@ fun FXVK.wrapped(): FXVKWrapper = findWrapper() ?: FXVKWrapper(this@wrapped)
 fun Separator.wrapped(): SeparatorWrapper = findWrapper() ?: SeparatorWrapper(this@wrapped)
 
 fun Control.wrapped(): ControlWrapper = findWrapper() ?: when (this) {
-  is ProgressBar        -> wrapped()
-  is WebColorField      -> wrapped()
-  is CheckBox           -> wrapped()
-  is ComboBox<*>        -> wrapped()
-  is ProgressIndicator  -> wrapped()
-  is Pagination         -> wrapped()
-  is TreeTableView<*>   -> wrapped()
-  is ListView<*>        -> wrapped()
-  is TreeView<*>        -> wrapped()
-  is TableView<*>       -> wrapped()
-  is ChoiceBox<*>       -> wrapped()
-  is ScrollBar          -> wrapped()
-  is Accordion          -> wrapped()
-  is ColorPicker        -> wrapped()
-  is DatePicker         -> wrapped()
-  is SplitPane          -> wrapped()
-  is ButtonBar          -> wrapped()
-  is Slider             -> wrapped()
-  is Labeled            -> wrapped()
-  is TabPane            -> wrapped()
-  is TextArea           -> wrapped()
-  is FakeFocusTextField -> wrapped()
-  is DoubleField        -> wrapped()
-  is IntegerField       -> wrapped()
-  is TextField          -> wrapped()
-  is MenuBar            -> wrapped()
-  is FXVK               -> wrapped()
-  is ToolBar            -> wrapped()
-  is Spinner<*>         -> wrapped()
-  is ScrollPane         -> wrapped()
-  is Separator          -> wrapped()
-  else                  -> when {
-	this::class.simpleName == "ScrollBarWidget" -> {
-	  val theControl: Control = this
-	  object: ControlWrapperImpl<Control>(theControl) {
-		override fun addChild(child: NodeWrapper, index: Int?) = NEVER
-	  }
-	}
+    is ProgressBar        -> wrapped()
+    is WebColorField      -> wrapped()
+    is CheckBox           -> wrapped()
+    is ComboBox<*>        -> wrapped()
+    is ProgressIndicator  -> wrapped()
+    is Pagination         -> wrapped()
+    is TreeTableView<*>   -> wrapped()
+    is ListView<*>        -> wrapped()
+    is TreeView<*>        -> wrapped()
+    is TableView<*>       -> wrapped()
+    is ChoiceBox<*>       -> wrapped()
+    is ScrollBar          -> wrapped()
+    is Accordion          -> wrapped()
+    is ColorPicker        -> wrapped()
+    is DatePicker         -> wrapped()
+    is SplitPane          -> wrapped()
+    is ButtonBar          -> wrapped()
+    is Slider             -> wrapped()
+    is Labeled            -> wrapped()
+    is TabPane            -> wrapped()
+    is TextArea           -> wrapped()
+    is FakeFocusTextField -> wrapped()
+    is DoubleField        -> wrapped()
+    is IntegerField       -> wrapped()
+    is TextField          -> wrapped()
+    is MenuBar            -> wrapped()
+    is FXVK               -> wrapped()
+    is ToolBar            -> wrapped()
+    is Spinner<*>         -> wrapped()
+    is ScrollPane         -> wrapped()
+    is Separator          -> wrapped()
+    else                  -> when {
+        this::class.simpleName == "ScrollBarWidget" -> {
+            val theControl: Control = this
+            object : ControlWrapperImpl<Control>(theControl) {
+                override fun addChild(
+                    child: NodeWrapper,
+                    index: Int?
+                ) = NEVER
+            }
+        }
 
-	else                                        -> cannotFindWrapper()
-  }
+        else                                        -> cannotFindWrapper()
+    }
 }
 
 
 fun Region.wrapped(): RegionWrapper<*> = findWrapper() ?: when (this) {
-  is GridPane          -> wrapped()
-  is FlowPane          -> wrapped()
-  is VBox              -> wrapped()
-  is HBox              -> wrapped()
-  /*is PieChartForWrapper            -> wrapped()*/
-  is AnchorPane        -> wrapped()
-  is StackPane         -> wrapped()
-  /*is CategoryAxisForCatAxisWrapper -> wrapped()*/
-  is TilePane          -> wrapped()
-  is Pane              -> wrapped()
-  is TableColumnHeader -> wrapped()
-  is Control           -> wrapped()
-  is VirtualFlow<*>    -> wrapped()
-  /*is AxisForPackagePrivateProps<*> -> wrapped()*/
-  else                 -> when (this::class.qualifiedName) {
-	CLIPPED_CONTAINER_QNAME                                              -> ClippedContainerWrapper(this@wrapped)
-	"org.fxmisc.richtext.ParagraphBox"                                   -> ParagraphBoxWrapper(this@wrapped)
-	"org.fxmisc.flowless.Navigator"                                      -> NavigatorWrapper(this@wrapped)
-	"org.fxmisc.flowless.VirtualFlow"                                    -> FlowLessVirtualFlowWrapper(this@wrapped)
-	"eu.hansolo.fx.charts.CoxcombChart"                                  -> CoxCombWrapper(this@wrapped)
-	"eu.hansolo.fx.charts.matt.fx.control.wrapper.wrapped.SunburstChart" -> SunburstChart(this@wrapped)
-	else                                                                 -> findWrapper()
-																			?: RegionWrapperImpl<Region, NodeWrapper>(
-																			  this
-																			)
-  }
+    is GridPane          -> wrapped()
+    is FlowPane          -> wrapped()
+    is VBox              -> wrapped()
+    is HBox              -> wrapped()
+    /*is PieChartForWrapper            -> wrapped()*/
+    is AnchorPane        -> wrapped()
+    is StackPane         -> wrapped()
+    /*is CategoryAxisForCatAxisWrapper -> wrapped()*/
+    is TilePane          -> wrapped()
+    is Pane              -> wrapped()
+    is TableColumnHeader -> wrapped()
+    is Control           -> wrapped()
+    is VirtualFlow<*>    -> wrapped()
+    /*is AxisForPackagePrivateProps<*> -> wrapped()*/
+    else                 -> when (this::class.qualifiedName) {
+        CLIPPED_CONTAINER_QNAME                                              -> ClippedContainerWrapper(this@wrapped)
+        "org.fxmisc.richtext.ParagraphBox"                                   -> ParagraphBoxWrapper(this@wrapped)
+        "org.fxmisc.flowless.Navigator"                                      -> NavigatorWrapper(this@wrapped)
+        "org.fxmisc.flowless.VirtualFlow"                                    -> FlowLessVirtualFlowWrapper(this@wrapped)
+        "eu.hansolo.fx.charts.CoxcombChart"                                  -> CoxCombWrapper(this@wrapped)
+        "eu.hansolo.fx.charts.matt.fx.control.wrapper.wrapped.SunburstChart" -> SunburstChart(this@wrapped)
+        else                                                                 -> findWrapper()
+            ?: RegionWrapperImpl<Region, NodeWrapper>(
+                this
+            )
+    }
 }
 
 /*hansolo*/
-class SunburstChart(sunburst: Region): RegionWrapperImpl<Region, NodeWrapper>(sunburst) {
-  override fun addChild(child: NodeWrapper, index: Int?) {
-	TODO("Not yet implemented")
-  }
+class SunburstChart(sunburst: Region) : RegionWrapperImpl<Region, NodeWrapper>(sunburst) {
+    override fun addChild(
+        child: NodeWrapper,
+        index: Int?
+    ) {
+        TODO("Not yet implemented")
+    }
 
 }
 
 /*hansolo*/
-class CoxCombWrapper(coxcomb: Region): RegionWrapperImpl<Region, NodeWrapper>(coxcomb) {
-  override fun addChild(child: NodeWrapper, index: Int?) {
-	TODO("Not yet implemented")
-  }
+class CoxCombWrapper(coxcomb: Region) : RegionWrapperImpl<Region, NodeWrapper>(coxcomb) {
+    override fun addChild(
+        child: NodeWrapper,
+        index: Int?
+    ) {
+        TODO("Not yet implemented")
+    }
 
 }
 
 /*RichTextFX*/
-class ParagraphBoxWrapper(paragraphBox: Region): RegionWrapperImpl<Region, NodeWrapper>(paragraphBox) {
-  override fun addChild(child: NodeWrapper, index: Int?) {
-	TODO("Not yet implemented")
-  }
+class ParagraphBoxWrapper(paragraphBox: Region) : RegionWrapperImpl<Region, NodeWrapper>(paragraphBox) {
+    override fun addChild(
+        child: NodeWrapper,
+        index: Int?
+    ) {
+        TODO("Not yet implemented")
+    }
 
 }
 
 /*FlowLess*/
-class NavigatorWrapper(navigator: Region): RegionWrapperImpl<Region, NodeWrapper>(navigator) {
-  override fun addChild(child: NodeWrapper, index: Int?) {
-	TODO("Not yet implemented")
-  }
+class NavigatorWrapper(navigator: Region) : RegionWrapperImpl<Region, NodeWrapper>(navigator) {
+    override fun addChild(
+        child: NodeWrapper,
+        index: Int?
+    ) {
+        TODO("Not yet implemented")
+    }
 }
 
 
 fun Parent.wrapped(): ParentWrapper<*> = findWrapper() ?: when (this) {
-  is Region -> wrapped()
-  is Group  -> wrapped()
-  else      -> cannotFindWrapper()
+    is Region -> wrapped()
+    is Group  -> wrapped()
+    else      -> cannotFindWrapper()
 }
 
 
@@ -516,11 +537,11 @@ fun Cylinder.wrapped(): CylinderWrapper = findWrapper() ?: CylinderWrapper(this@
 fun MeshView.wrapped(): MeshViewWrapper = findWrapper() ?: MeshViewWrapper(this@wrapped)
 
 fun Shape3D.wrapped(): NodeWrapper = findWrapper() ?: when (this) {
-  is Sphere   -> wrapped()
-  is Box      -> wrapped()
-  is Cylinder -> wrapped()
-  is MeshView -> wrapped()
-  else        -> cannotFindWrapper()
+    is Sphere   -> wrapped()
+    is Box      -> wrapped()
+    is Cylinder -> wrapped()
+    is MeshView -> wrapped()
+    else        -> cannotFindWrapper()
 }
 
 fun ImageView.wrapped(): ImageViewWrapper = findWrapper() ?: ImageViewWrapper(this@wrapped)
@@ -533,20 +554,20 @@ fun SVGPath.wrapped(): SVGPathWrapper = findWrapper() ?: SVGPathWrapper(this@wra
 fun Shape.wrapped(): ShapeWrapper<*> = findWrapper() ?: when (this) {
 
 
-  is Polyline   -> wrapped()
-  is Line       -> wrapped()
-  is QuadCurve  -> wrapped()
+    is Polyline   -> wrapped()
+    is Line       -> wrapped()
+    is QuadCurve  -> wrapped()
 
-  is SVGPath    -> wrapped()
-  is Rectangle  -> wrapped()
-  is CubicCurve -> wrapped()
-  is Circle     -> wrapped()
-  is Arc        -> wrapped()
-  is Ellipse    -> wrapped()
-  is Path       -> wrapped()
-  is Text       -> wrapped()
-  is Polygon    -> wrapped()
-  else          -> cannotFindWrapper()
+    is SVGPath    -> wrapped()
+    is Rectangle  -> wrapped()
+    is CubicCurve -> wrapped()
+    is Circle     -> wrapped()
+    is Arc        -> wrapped()
+    is Ellipse    -> wrapped()
+    is Path       -> wrapped()
+    is Text       -> wrapped()
+    is Polygon    -> wrapped()
+    else          -> cannotFindWrapper()
 }
 
 
@@ -562,32 +583,32 @@ fun Canvas.wrapped(): CanvasWrapper = findWrapper() ?: CanvasWrapper(this@wrappe
 
 
 fun Node.wrapped(): NodeWrapper = findWrapper() ?: when (this) {
-  is AmbientLight      -> wrapped()
-  is SpotLight         -> wrapped()
-  is Parent            -> wrapped()
+    is AmbientLight      -> wrapped()
+    is SpotLight         -> wrapped()
+    is Parent            -> wrapped()
 
-  is SubScene          -> wrapped()
-  is Shape3D           -> wrapped()
-  is Shape             -> wrapped()
-  is PointLight        -> wrapped()
-  is PerspectiveCamera -> wrapped()
-  is ParallelCamera    -> wrapped()
+    is SubScene          -> wrapped()
+    is Shape3D           -> wrapped()
+    is Shape             -> wrapped()
+    is PointLight        -> wrapped()
+    is PerspectiveCamera -> wrapped()
+    is ParallelCamera    -> wrapped()
 
-  is Canvas            -> wrapped()
-  is ImageView         -> wrapped()
-  is DirectionalLight  -> wrapped()
-  else                 -> unknownWrapper() /*for SwingNode*/
+    is Canvas            -> wrapped()
+    is ImageView         -> wrapped()
+    is DirectionalLight  -> wrapped()
+    else                 -> unknownWrapper() /*for SwingNode*/
 }
 
 
 fun Window.wrapped(): WindowWrapper<*> = findWrapper() ?: when (this) {
-  is Stage       -> wrapped()
+    is Stage       -> wrapped()
 
-  is ContextMenu -> wrapped()
-  /*is Tooltip      -> wrapped()
-  is PopupControl -> wrapped()
-  is Popup        -> wrapped()*/
-  else           -> findWrapper() ?: WindowWrapper(this)
+    is ContextMenu -> wrapped()
+    /*is Tooltip      -> wrapped()
+    is PopupControl -> wrapped()
+    is Popup        -> wrapped()*/
+    else           -> findWrapper() ?: WindowWrapper(this)
 }
 
 
@@ -603,22 +624,22 @@ fun Affine.wrapped(): AffineWrapper = findWrapper() ?: AffineWrapper(this@wrappe
 fun Scale.wrapped(): ScaleWrapper = findWrapper() ?: ScaleWrapper(this@wrapped)
 
 fun Transform.wrapped(): TransformWrapper<*> = findWrapper() ?: when (this) {
-  is Rotate    -> wrapped()
-  is Translate -> wrapped()
-  is Shear     -> wrapped()
-  is Affine    -> wrapped()
-  is Scale     -> wrapped()
-  else         -> when (this::class.qualifiedName) {
-	ImmutableTransformWrapper.JFX_QNAME -> ImmutableTransformWrapper(this)
-	else                                -> cannotFindWrapper()
-  }
+    is Rotate    -> wrapped()
+    is Translate -> wrapped()
+    is Shear     -> wrapped()
+    is Affine    -> wrapped()
+    is Scale     -> wrapped()
+    else         -> when (this::class.qualifiedName) {
+        ImmutableTransformWrapper.JFX_QNAME -> ImmutableTransformWrapper(this)
+        else                                -> cannotFindWrapper()
+    }
 }
 
 fun CheckBoxTreeItem<*>.wrapped(): CheckBoxTreeItemWrapper<*> = findWrapper() ?: CheckBoxTreeItemWrapper(this@wrapped)
 
 fun TreeItem<*>.wrapped(): TreeItemWrapper<*> = findWrapper() ?: when (this) {
-  is CheckBoxTreeItem<*> -> wrapped()
-  else                   -> findWrapper() ?: TreeItemWrapper(this)
+    is CheckBoxTreeItem<*> -> wrapped()
+    else                   -> findWrapper() ?: TreeItemWrapper(this)
 }
 
 
@@ -630,33 +651,33 @@ fun CustomMenuItem.wrapped(): CustomMenuItemWrapper = findWrapper() ?: CustomMen
 fun Menu.wrapped(): MenuWrapper = findWrapper() ?: MenuWrapper(this@wrapped)
 
 fun MenuItem.wrapped(): MenuItemWrapper<out MenuItem> = findWrapper() ?: when (this) {
-  is CheckMenuItem     -> wrapped()
-  is RadioMenuItem     -> wrapped()
-  is SeparatorMenuItem -> wrapped()
-  is CustomMenuItem    -> wrapped()
-  is Menu              -> wrapped()
-  else                 -> findWrapper() ?: MenuItemWrapper(this@wrapped)
+    is CheckMenuItem     -> wrapped()
+    is RadioMenuItem     -> wrapped()
+    is SeparatorMenuItem -> wrapped()
+    is CustomMenuItem    -> wrapped()
+    is Menu              -> wrapped()
+    else                 -> findWrapper() ?: MenuItemWrapper(this@wrapped)
 }
 
 
 fun TableColumnBase<*, *>.wrapped(): TableColumnBaseWrapper<*, *, *> = findWrapper() ?: when (this) {
-  is TreeTableColumn<*, *> -> wrapped()
-  is TableColumn<*, *>     -> wrapped()
-  else                     -> cannotFindWrapper()
+    is TreeTableColumn<*, *> -> wrapped()
+    is TableColumn<*, *>     -> wrapped()
+    else                     -> cannotFindWrapper()
 }
 
 /*there is no guarantee that a wrapper which is specific to this node will be appropriately generated, since those wrappers might exist in outside modules*/
 fun EventTarget.wrapped(): EventTargetWrapper = findWrapper() ?: when (this) {
-  is Node                  -> wrapped()
-  is Scene                 -> wrapped()
-  is Window                -> wrapped()
-  /*is Dialog                -> wrapped()*/
-  is Tab                   -> wrapped()
-  is MenuItem              -> wrapped()
-  is TreeItem<*>           -> wrapped()
-  is TableColumnBase<*, *> -> wrapped()
-  is Transform             -> wrapped()
-  else                     -> unknownWrapper() /*For Dialog*/
+    is Node                  -> wrapped()
+    is Scene                 -> wrapped()
+    is Window                -> wrapped()
+    /*is Dialog                -> wrapped()*/
+    is Tab                   -> wrapped()
+    is MenuItem              -> wrapped()
+    is TreeItem<*>           -> wrapped()
+    is TableColumnBase<*, *> -> wrapped()
+    is Transform             -> wrapped()
+    else                     -> unknownWrapper() /*For Dialog*/
 }
 
 /*
@@ -666,27 +687,33 @@ todo: The bottom line is that currently, JavaFX Node classes may not ship with m
 Still need CannotFindWrapperException for specific `wrapped` functions to maintain their type checking, like Labelled.wrapped().
 
 * */
-class UnknownEventTargetWrapper(et: EventTarget): SingularEventTargetWrapper<EventTarget>(et) {
-  override val properties: ObservableMap<Any, Any?> get() = TODO("Not yet implemented")
+class UnknownEventTargetWrapper(et: EventTarget) : SingularEventTargetWrapper<EventTarget>(et) {
+    override val properties: ObservableMap<Any, Any?> get() = TODO("Not yet implemented")
 
-  override fun addChild(child: NodeWrapper, index: Int?) {
-	TODO("Not yet implemented")
-  }
+    override fun addChild(
+        child: NodeWrapper,
+        index: Int?
+    ) {
+        TODO("Not yet implemented")
+    }
 
-  override fun removeFromParent() {
-	TODO("Not yet implemented")
-  }
+    override fun removeFromParent() {
+        TODO("Not yet implemented")
+    }
 
-  override fun isInsideRow(): Boolean {
-	TODO("Not yet implemented")
-  }
+    override fun isInsideRow(): Boolean {
+        TODO("Not yet implemented")
+    }
 }
 
 /*At least I can be slightly specific*/
-class UnknownNodeWrapper(node: Node): NodeWrapperImpl<Node>(node) {
-  override fun addChild(child: NodeWrapper, index: Int?) {
-	TODO("Not yet implemented")
-  }
+class UnknownNodeWrapper(node: Node) : NodeWrapperImpl<Node>(node) {
+    override fun addChild(
+        child: NodeWrapper,
+        index: Int?
+    ) {
+        TODO("Not yet implemented")
+    }
 
 }
 
@@ -695,8 +722,8 @@ fun EventTarget.unknownWrapper() = UnknownEventTargetWrapper(this)
 
 fun EventTarget.cannotFindWrapper(): Nothing = throw (CannotFindWrapperException(this::class))
 
-class CannotFindWrapperException(val cls: KClass<out EventTarget>): Exception(
-  "what is the wrapper for ${cls.qualifiedName}?"
+class CannotFindWrapperException(val cls: KClass<out EventTarget>) : Exception(
+    "what is the wrapper for ${cls.qualifiedName}?"
 )
 
 /*?: run {

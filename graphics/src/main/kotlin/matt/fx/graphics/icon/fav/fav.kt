@@ -69,9 +69,7 @@ object FaviconLoader {
         iv.fitWidth = fitWidth
         iv.image = backupImage
         thread(isDaemon = true, name = "Fav Loader ${nextThreadID.getAndIncrement()}") {
-//	  println("loading favicon for $url")
             val loaded = loadSynchronously(url)
-//	  println("fav: $loaded")
             if (loaded != null) {
                 runLater {
                     /*trying to put FX image inside the FX thread to see if that helps*/

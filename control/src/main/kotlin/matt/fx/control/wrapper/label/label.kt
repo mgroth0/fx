@@ -8,6 +8,7 @@ import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NW
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
+import matt.lang.require.requireNull
 import matt.model.op.convert.StringConverter
 import matt.obs.bind.binding
 import matt.obs.prop.ObsVal
@@ -64,7 +65,7 @@ open class LabelWrapper(
     }
 
     override fun addChild(child: NodeWrapper, index: Int?) {
-        require(index == null)
+        requireNull(index)
         graphic = child
     }
 

@@ -96,11 +96,11 @@ open class NonNullFXBackedBindableProp<T: Any>(private val o: Property<T>): NonN
 	}
 
   private fun watchForNulls(p: ObservableValue<T>) {
-	require(p.value != null) {
+	requireNotNull(p.value) {
 	  "null leaked into non-null ${p::class.simpleName}"
 	}
 	p.addListener { _, _, newValue ->
-	  require(newValue != null) {
+		requireNotNull(newValue) {
 		"null leaked into non-null ${p::class.simpleName}"
 	  }
 	}

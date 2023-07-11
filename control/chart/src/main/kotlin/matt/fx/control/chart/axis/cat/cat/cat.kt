@@ -27,6 +27,7 @@ import matt.fx.control.chart.axis.cat.cat.CategoryAxisForCatAxisWrapper.Styleabl
 import matt.fx.control.chart.axis.value.axis.AxisForPackagePrivateProps
 import matt.fx.control.chart.axis.value.axis.CategoryRangeProps
 import matt.fx.control.chart.axis.value.axis.RangeProps
+import matt.lang.require.requireNull
 import java.util.Collections
 
 /**
@@ -159,7 +160,7 @@ class CategoryAxisForCatAxisWrapper: AxisForPackagePrivateProps<String> {
 	object: ObjectPropertyBase<ObservableList<String>>() {
 	  var old: ObservableList<String>? = null
 	  override fun invalidated() {
-		require(duplicate == null) { "Duplicate category added; " + duplicate + " already present" }
+		requireNull(duplicate) { "Duplicate category added; " + duplicate + " already present" }
 		val newItems = get()
 		if (old !== newItems) {
 		  // Add and remove listeners

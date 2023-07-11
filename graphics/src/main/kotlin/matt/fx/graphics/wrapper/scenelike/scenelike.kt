@@ -9,35 +9,39 @@ import matt.fx.graphics.wrapper.EventTargetWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.parent.ParentWrapper
 import matt.fx.graphics.wrapper.sizeman.Sized
+import matt.lang.require.requireNull
 
-interface SceneLikeWrapper<N: EventTarget, R: ParentWrapper<*>>:
-  EventTargetWrapper,
-  Sized {
-  override val node: N
-  val rootProperty: ObjectProperty<Parent>
-
-
-  var root: R
-	@Suppress("UNCHECKED_CAST")
-	get() = rootProperty.get().wrapped() as R
-	set(value) {
-	  rootProperty.set(value.node)
-	}
+interface SceneLikeWrapper<N : EventTarget, R : ParentWrapper<*>> :
+    EventTargetWrapper,
+    Sized {
+    override val node: N
+    val rootProperty: ObjectProperty<Parent>
 
 
-  val fillProperty: ObjectProperty<Paint>
+    var root: R
+        @Suppress("UNCHECKED_CAST")
+        get() = rootProperty.get().wrapped() as R
+        set(value) {
+            rootProperty.set(value.node)
+        }
 
-  var fill: Paint
-	get() = fillProperty.get()
-	set(value) {
-	  fillProperty.set(value)
-	}
 
-  override fun addChild(child: NodeWrapper, index: Int?) {
-	require(index == null)
-	/*matt was here*/
-	rootProperty.set((child as ParentWrapper<*>).node)
-  }
+    val fillProperty: ObjectProperty<Paint>
+
+    var fill: Paint
+        get() = fillProperty.get()
+        set(value) {
+            fillProperty.set(value)
+        }
+
+    override fun addChild(
+        child: NodeWrapper,
+        index: Int?
+    ) {
+        requireNull(index)
+        /*matt was here*/
+        rootProperty.set((child as ParentWrapper<*>).node)
+    }
 
 
 }

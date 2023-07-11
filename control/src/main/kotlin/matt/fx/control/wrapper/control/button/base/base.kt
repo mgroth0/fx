@@ -8,46 +8,50 @@ import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.http.url.MURL
 import matt.fx.base.wrapper.obs.obsval.toNonNullableROProp
 import matt.lang.NOT_IMPLEMENTED
+import matt.lang.require.requireNull
 import java.awt.Desktop
 import java.net.URI
 import java.net.URL
 
-open class ButtonBaseWrapper<N: ButtonBase>(node: N): LabeledWrapper<N>(node) {
+open class ButtonBaseWrapper<N : ButtonBase>(node: N) : LabeledWrapper<N>(node) {
 
-  val armedProp by lazy {
-	node.armedProperty().toNonNullableROProp()
-  }
+    val armedProp by lazy {
+        node.armedProperty().toNonNullableROProp()
+    }
 
-  fun fire() = node.fire()
-  fun setOnAction(op: (ActionEvent)->Unit) {
-	node.setOnAction(op)
-  }
-  //  fun setOnAction(op: () -> Unit) {
-  //	node.setOnAction { op() }
-  //  }
+    fun fire() = node.fire()
+    fun setOnAction(op: (ActionEvent) -> Unit) {
+        node.setOnAction(op)
+    }
+    //  fun setOnAction(op: () -> Unit) {
+    //	node.setOnAction { op() }
+    //  }
 
-  var onAction: ()->Unit
-	get() = NOT_IMPLEMENTED
-	set(value) {
-	  setOnAction {
-		value()
-	  }
-	}
+    var onAction: () -> Unit
+        get() = NOT_IMPLEMENTED
+        set(value) {
+            setOnAction {
+                value()
+            }
+        }
 
-  override fun addChild(child: NodeWrapper, index: Int?) {
-	require(index == null)
-	graphic = child
-  }
+    override fun addChild(
+        child: NodeWrapper,
+        index: Int?
+    ) {
+        requireNull(index)
+        graphic = child
+    }
 
-  fun opens(uri: URI) {
-	setOnAction {
-	  Desktop.getDesktop().browse(uri)
-	}
-  }
+    fun opens(uri: URI) {
+        setOnAction {
+            Desktop.getDesktop().browse(uri)
+        }
+    }
 
-  fun opens(url: URL) = opens(url.toURI())
-  fun opens(url: MURL) = opens(url.jURL.toURI())
+    fun opens(url: URL) = opens(url.toURI())
+    fun opens(url: MURL) = opens(url.jURL.toURI())
 
 }
 
-fun ButtonBaseWrapper<*>.action(op: ()->Unit) = setOnAction { op() }
+fun ButtonBaseWrapper<*>.action(op: () -> Unit) = setOnAction { op() }

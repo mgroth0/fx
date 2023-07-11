@@ -35,6 +35,7 @@ import matt.fx.graphics.wrapper.scene.SceneWrapper
 import matt.fx.graphics.wrapper.stage.StageWrapper
 import matt.fx.graphics.wrapper.style.StyleableWrapper
 import matt.lang.NOT_IMPLEMENTED
+import matt.lang.require.requireNotEqual
 import matt.obs.bindings.bool.ObsB
 import matt.obs.bindings.bool.not
 import matt.obs.prop.*
@@ -199,7 +200,10 @@ interface NodeWrapper : EventTargetWrapper, StyleableWrapper {
     fun cacheHintProperty(): ObjectProperty<CacheHint> = node.cacheHintProperty()
 
 
-    fun snapshot(params: SnapshotParameters?, image: WritableImage?): WritableImage = node.snapshot(params, image)
+    fun snapshot(
+        params: SnapshotParameters?,
+        image: WritableImage?
+    ): WritableImage = node.snapshot(params, image)
 
     fun startDragAndDrop(vararg transferModes: TransferMode): Dragboard = node.startDragAndDrop(*transferModes)
     fun startFullDrag() = node.startFullDrag()
@@ -240,17 +244,29 @@ interface NodeWrapper : EventTargetWrapper, StyleableWrapper {
 
     fun autosize() = node.autosize()
 
-    fun <T : Event> addEventFilter(eventType: EventType<T>, handler: EventHandler<T>) =
+    fun <T : Event> addEventFilter(
+        eventType: EventType<T>,
+        handler: EventHandler<T>
+    ) =
         node.addEventFilter(eventType, handler)
 
-    fun <T : Event> addEventHandler(eventType: EventType<T>, handler: EventHandler<T>) =
+    fun <T : Event> addEventHandler(
+        eventType: EventType<T>,
+        handler: EventHandler<T>
+    ) =
         node.addEventHandler(eventType, handler)
 
 
-    fun <T : Event> removeEventFilter(eventType: EventType<T>, handler: EventHandler<T>) =
+    fun <T : Event> removeEventFilter(
+        eventType: EventType<T>,
+        handler: EventHandler<T>
+    ) =
         node.removeEventFilter(eventType, handler)
 
-    fun <T : Event> removeEventHandler(eventType: EventType<T>, handler: EventHandler<T>) =
+    fun <T : Event> removeEventHandler(
+        eventType: EventType<T>,
+        handler: EventHandler<T>
+    ) =
         node.removeEventHandler(eventType, handler)
 
     fun localToScene(bounds: Bounds): Bounds? = node.localToScene(bounds)
@@ -366,10 +382,11 @@ interface NodeWrapper : EventTargetWrapper, StyleableWrapper {
     fun requestFocus() = node.requestFocus()
 
     fun setAsLayoutProxyForAndProxiedFrom(
-        other: NodeWrapper, removeAllOtherProxiesOnBoth: Boolean = true /*critical to avoid memory leaks*/
+        other: NodeWrapper,
+        removeAllOtherProxiesOnBoth: Boolean = true /*critical to avoid memory leaks*/
     ) {
 
-        require(this.node != other.node)
+        requireNotEqual(this.node, other.node)
 
         require(hgrow == other.hgrow || (hgrow == null || other.hgrow == null))
         if (hgrow != null) other.hgrow = hgrow
@@ -491,7 +508,10 @@ interface NodeWrapper : EventTargetWrapper, StyleableWrapper {
 }
 
 
-inline fun <T : NodeWrapper> EventTargetWrapper.attach(child: T, op: T.() -> Unit = {}): T {
+inline fun <T : NodeWrapper> EventTargetWrapper.attach(
+    child: T,
+    op: T.() -> Unit = {}
+): T {
     contract {
         callsInPlace(op, EXACTLY_ONCE)
     }
@@ -500,7 +520,10 @@ inline fun <T : NodeWrapper> EventTargetWrapper.attach(child: T, op: T.() -> Uni
     return child
 }
 
-inline fun <T : NodeWrapper> T.attachTo(parent: EventTargetWrapper, op: T.() -> Unit = {}): T {
+inline fun <T : NodeWrapper> T.attachTo(
+    parent: EventTargetWrapper,
+    op: T.() -> Unit = {}
+): T {
     contract {
         callsInPlace(op, EXACTLY_ONCE)
     }
@@ -515,7 +538,9 @@ inline fun <T : NodeWrapper> T.attachTo(parent: EventTargetWrapper, op: T.() -> 
  * Because the framework sometimes needs to setup the node, another lambda can be provided
  */
 inline fun <T : NodeWrapper> T.attachTo(
-    parent: EventTargetWrapper, after: T.() -> Unit, before: (T) -> Unit
+    parent: EventTargetWrapper,
+    after: T.() -> Unit,
+    before: (T) -> Unit
 ): T {
     contract {
         callsInPlace(before, EXACTLY_ONCE)
@@ -525,7 +550,10 @@ inline fun <T : NodeWrapper> T.attachTo(
 }
 
 
-fun NodeWrapper.setOnDoubleClick(filter: Boolean = false, action: (MouseEvent) -> Unit) {
+fun NodeWrapper.setOnDoubleClick(
+    filter: Boolean = false,
+    action: (MouseEvent) -> Unit
+) {
     if (filter) {
         addEventFilter(MouseEvent.MOUSE_CLICKED) {
             if (it.clickCount == 2) action(it)
@@ -539,7 +567,11 @@ fun NodeWrapper.setOnDoubleClick(filter: Boolean = false, action: (MouseEvent) -
 }
 
 
-fun NodeWrapper.onLeftClick(clickCount: Int = 1, filter: Boolean = false, action: (MouseEvent) -> Unit) {
+fun NodeWrapper.onLeftClick(
+    clickCount: Int = 1,
+    filter: Boolean = false,
+    action: (MouseEvent) -> Unit
+) {
     if (filter) {
         addEventFilter(MouseEvent.MOUSE_CLICKED) {
             if (it.clickCount == clickCount && it.button === MouseButton.PRIMARY) action(it)
@@ -551,7 +583,11 @@ fun NodeWrapper.onLeftClick(clickCount: Int = 1, filter: Boolean = false, action
     }
 }
 
-fun NodeWrapper.onRightClick(clickCount: Int = 1, filter: Boolean = false, action: (MouseEvent) -> Unit) {
+fun NodeWrapper.onRightClick(
+    clickCount: Int = 1,
+    filter: Boolean = false,
+    action: (MouseEvent) -> Unit
+) {
     if (filter) {
         addEventFilter(MouseEvent.MOUSE_CLICKED) {
             if (it.clickCount == clickCount && it.button === MouseButton.SECONDARY) action(it)
@@ -590,7 +626,10 @@ fun NodeWrapper.show() {
     isManaged = true
 }
 
-fun NodeWrapper.whenVisible(runLater: Boolean = true, op: () -> Unit) {
+fun NodeWrapper.whenVisible(
+    runLater: Boolean = true,
+    op: () -> Unit
+) {
     visibleProperty.onChange {
         if (it) {
             if (runLater) Platform.runLater(op) else op()
@@ -656,7 +695,7 @@ fun NW.minYRelativeTo(ancestor: NodeWrapper): Double? {
     var y = boundsInParent.minY
     while (true) {
         when (p) {
-            null     -> {
+            null -> {
                 return null
             }
 
@@ -664,7 +703,7 @@ fun NW.minYRelativeTo(ancestor: NodeWrapper): Double? {
                 return y
             }
 
-            else     -> {
+            else -> {
                 y += p.boundsInParent.minY
                 p = p.parent
             }

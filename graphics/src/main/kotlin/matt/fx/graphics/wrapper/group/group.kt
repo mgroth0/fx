@@ -7,6 +7,7 @@ import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attach
 import matt.fx.graphics.wrapper.node.parent.ParentWrapperImpl
 import matt.fx.base.wrapper.obs.collect.list.createMutableWrapper
+import matt.lang.require.requireNull
 import matt.log.warn.warn
 import matt.obs.col.olist.sync.toSyncedList
 
@@ -16,7 +17,7 @@ fun <C: NodeWrapper> ET.group(initialChildren: Iterable<C>? = null, op: GroupWra
 class GroupWrapper<C: NodeWrapper>(node: Group = Group()): ParentWrapperImpl<Group, C>(node) {
   val children by lazy { node.children.createMutableWrapper().toSyncedList(uncheckedWrapperConverter()) }
   override fun addChild(child: NodeWrapper, index: Int?) {
-	require(index == null)
+	requireNull(index)
 	warn("unchecked add C")
 	@Suppress("UNCHECKED_CAST")
 	children.add(child as C)

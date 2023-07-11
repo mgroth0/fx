@@ -11,6 +11,7 @@ import matt.fx.graphics.wrapper.node.NW
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attach
 import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
+import matt.lang.require.requireNull
 
 fun <C: NodeWrapper> ET.borderpane(op: BorderPaneWrapper<C>.()->Unit = {}) = attach(BorderPaneWrapper(), op)
 open class BorderPaneWrapper<C: NodeWrapper>(node: BorderPane = BorderPane()): PaneWrapperImpl<BorderPane, C>(node) {
@@ -59,7 +60,7 @@ open class BorderPaneWrapper<C: NodeWrapper>(node: BorderPane = BorderPane()): P
 
 
   override fun addChild(child: NodeWrapper, index: Int?) {
-	require(index == null)
+	requireNull(index)
 	/*center = child*/
 	/*this needs to do nothing, or else behavior is undefined.*/
 	/*children of border pane should always be set like:

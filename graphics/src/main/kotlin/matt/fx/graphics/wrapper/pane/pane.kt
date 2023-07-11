@@ -14,6 +14,7 @@ import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
 import matt.fx.graphics.wrapper.region.RegionWrapper
 import matt.fx.graphics.wrapper.region.RegionWrapperImpl
 import matt.fx.base.wrapper.obs.collect.list.createMutableWrapper
+import matt.lang.require.requireNull
 import matt.model.data.corner.Corner
 import matt.model.data.corner.Corner.NE
 import matt.model.data.corner.Corner.NW
@@ -31,7 +32,7 @@ interface PaneWrapper<C: NodeWrapper>: RegionWrapper<C> {
 
   override fun addChild(child: NodeWrapper, index: Int?) {
 	/*TODO: not type checking C*/
-	require(index == null)
+	requireNull(index)
 	@Suppress("UNCHECKED_CAST")
 	children.add(child as C)
   }

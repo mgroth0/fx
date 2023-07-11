@@ -17,6 +17,7 @@ import matt.hotkey.HotkeyDSL
 import matt.lang.NEVER
 import matt.lang.err
 import matt.lang.go
+import matt.lang.require.requireNull
 import matt.log.NOPLogger
 import matt.log.SystemOutLogger
 import matt.log.logger.Logger
@@ -69,7 +70,7 @@ data class HotKey(
         get() = apply { isIgnoreFix = true }
 
     fun wrapOp(wrapper: (() -> Unit) -> Unit) {
-        require(theOp != null)
+        requireNotNull(theOp)
         val oldOp = theOp
         theOp = {
             wrapper(oldOp!!)
@@ -77,7 +78,7 @@ data class HotKey(
     }
 
     fun wraphandler(wrapper: ((KeyEvent) -> Unit) -> Unit) {
-        require(theHandler != null)
+        requireNotNull(theHandler)
         val oldHandle = theHandler
         theHandler = {
             wrapper(oldHandle!!)
@@ -152,7 +153,10 @@ var lastHotKey: Pair<HotKey, Long>? = null
 
 
 fun KeyEvent.runAgainst(
-    hotkeys: Iterable<HotKeyContainer>, last: KeyEvent? = null, fixer: HotKeyEventHandler, log: Logger
+    hotkeys: Iterable<HotKeyContainer>,
+    last: KeyEvent? = null,
+    fixer: HotKeyEventHandler,
+    log: Logger
 ) {
 
     log += "got hotkey: ${this}"
@@ -411,7 +415,7 @@ class FXHotkeyDSL : HotkeyDSL<HotKeyContainer>() {
 
 
     infix fun HotKey.op(setOp: () -> Unit) = apply {
-        require(theHandler == null)
+        requireNull(theHandler)
         theOp = setOp
         hotkeys.add(this)
     }
@@ -420,14 +424,14 @@ class FXHotkeyDSL : HotkeyDSL<HotKeyContainer>() {
     infix fun HotKey.toggles(b: BindableProperty<Boolean>) = op { b.toggle() }
 
     infix fun HotKey.handle(setHandler: (KeyEvent) -> Unit) = apply {
-        require(theOp == null)
+        requireNull(theOp)
         theHandler = setHandler
         hotkeys.add(this)
     }
 
     infix fun HotKeySet.op(setOp: () -> Unit) = apply {
         keys.applyEach {
-            require(theHandler == null)
+            requireNull(theHandler)
             theOp = setOp
         }
         hotkeys.add(this)
@@ -437,7 +441,7 @@ class FXHotkeyDSL : HotkeyDSL<HotKeyContainer>() {
 
     infix fun HotKeySet.handle(setHandler: (KeyEvent) -> Unit) = apply {
         keys.applyEach {
-            require(theOp == null)
+            requireNull(theOp)
             theHandler = setHandler
         }
         hotkeys.add(this)

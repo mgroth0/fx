@@ -18,6 +18,7 @@ import matt.fx.graphics.wrapper.node.NW
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.lang.delegation.lazyVarDelegate
 import matt.lang.go
+import matt.lang.require.requireNull
 import matt.lang.sync
 import matt.obs.prop.VarProp
 
@@ -66,7 +67,7 @@ open class FixedTooltipWrapper(node: MyFixedTooltip = MyFixedTooltip()): PopupWi
   }
 
   override fun addChild(child: NodeWrapper, index: Int?) {
-	require(index == null)
+	  requireNull(index)
 	contentProperty v child
   }
 
