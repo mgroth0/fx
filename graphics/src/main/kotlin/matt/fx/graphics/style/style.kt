@@ -5,13 +5,17 @@ import javafx.application.Platform.runLater
 import javafx.geometry.Insets
 import javafx.scene.Node
 import javafx.scene.paint.Color
-import matt.color.hex
+import matt.color.IntColor
 import matt.css.MyStyleDsl
+import matt.css.props.ColorLikeCssConverter
 import matt.fx.graphics.wrapper.node.impl.NodeWrapperImpl
-import matt.fx.graphics.wrapper.style.toAwtColor
+import matt.fx.graphics.wrapper.style.FXColor
+import matt.fx.graphics.wrapper.style.toFXColor
+import matt.fx.graphics.wrapper.style.toMColor
 import matt.lang.require.requireEquals
 import matt.log.warn.dumpStack
 import matt.log.warn.warn
+import matt.model.op.convert.StringConverter
 import matt.obs.prop.BindableProperty
 import java.util.logging.Level
 import kotlin.reflect.KProperty
@@ -118,12 +122,24 @@ class StyleClassDSL(val s: Node) : MyStyleDsl() {
         s.style = ""
     }
 
-    var fxTextFill: Color? by custom({ Color.valueOf(this) }, { toAwtColor().hex() })
-    var fxStroke: Color? by custom({ Color.valueOf(this) }, { toAwtColor().hex() })
-    var fxFill: Color? by custom({ Color.valueOf(this) }, { toAwtColor().hex() })
+    var fxTextFill: Color? by custom(FXColorStringConverter)
+    var fxStroke: Color? by custom(FXColorStringConverter)
+    var fxFill: Color? by custom(FXColorStringConverter)
+}
 
+object FXColorStringConverter: StringConverter<FXColor> {
+    override fun toString(t: FXColor): String {
+        return ColorLikeCssConverter.toString(
+            t.toMColor()
+        )
+    }
+
+    override fun fromString(s: String): FXColor {
+        return ((ColorLikeCssConverter.fromString(s) as IntColor).toFXColor())
+    }
 
 }
+
 
 fun NodeWrapperImpl<*>.sty(op: StyleClassDSL.() -> Unit) {
     StyleClassDSL(this.node).apply(op)

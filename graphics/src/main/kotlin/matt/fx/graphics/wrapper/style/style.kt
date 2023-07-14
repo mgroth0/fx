@@ -4,10 +4,12 @@ import javafx.css.CssMetaData
 import javafx.css.PseudoClass
 import javafx.css.Styleable
 import javafx.scene.paint.Color
-import matt.color.AColor
-import matt.color.findName
-import matt.color.hex
+import matt.color.AwtColor
+import matt.color.IntColor
+import matt.color.name.findName
 import matt.color.mostContrastingForMe
+import matt.color.toAwtColor
+import matt.color.toMColor
 import matt.fx.base.wrapper.obs.collect.list.createMutableWrapper
 import matt.fx.graphics.wrapper.style.FXStyle.fill
 import matt.fx.graphics.wrapper.style.FXStyle.`text-fill`
@@ -20,11 +22,13 @@ import matt.prim.str.LineAppender
 
 typealias FXColor = Color
 
-fun FXColor.toAwtColor() = AColor(red.toFloat(), green.toFloat(), blue.toFloat(), opacity.toFloat())
-fun FXColor.findName() = toAwtColor().findName()
-fun FXColor.hex() = toAwtColor().hex()
-fun AColor.toFXColor() = FXColor(red / 255.0, green / 255.0, blue / 255.0, alpha / 255.0)
-fun FXColor.mostContrastingForMe() = toAwtColor().mostContrastingForMe().toFXColor()
+fun IntColor.toFXColor() = toAwtColor().toFXColor()
+fun FXColor.toMColor() = toAwtColor().toMColor()
+fun FXColor.toAwtColor() = AwtColor(red.toFloat(), green.toFloat(), blue.toFloat(), opacity.toFloat())
+fun FXColor.findName() = toMColor().findName()
+fun FXColor.hex() = toMColor().hex()
+fun AwtColor.toFXColor() = FXColor(red / 255.0, green / 255.0, blue / 255.0, alpha / 255.0)
+fun FXColor.mostContrastingForMe() = toMColor().mostContrastingForMe().toFXColor()
 
 abstract class StyleableWrapperImpl(private val node: Styleable) : StyleableWrapper {
     override val typeSelector: String get() = node.typeSelector
@@ -62,12 +66,12 @@ interface StyleableWrapper {
     var fillStyle: Color
         get() = NOT_IMPLEMENTED
         set(value) {
-            style += "${fill.key}: ${value.toAwtColor().hex()};"
+            style += "${fill.key}: ${value.toMColor().hex()};"
         }
     var textFillStyle: Color
         get() = NOT_IMPLEMENTED
         set(value) {
-            style += "${`text-fill`.key}: ${value.toAwtColor().hex()};"
+            style += "${`text-fill`.key}: ${value.toMColor().hex()};"
         }
 
 
