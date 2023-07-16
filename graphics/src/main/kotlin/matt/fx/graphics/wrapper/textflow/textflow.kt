@@ -8,10 +8,9 @@ import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
 import matt.fx.graphics.wrapper.text.TextWrapper
-import matt.log.todo.todo
+import matt.log.warn.warn
 import kotlin.reflect.full.declaredMembers
 import kotlin.reflect.jvm.isAccessible
-
 
 
 fun <C: NodeWrapper> ET.textflow(op: TextFlowWrapper<C>.()->Unit = {}) = TextFlowWrapper<C>().attachTo(this, op)
@@ -34,7 +33,7 @@ open class TextFlowWrapper<C: NodeWrapper>(
   }
 
   fun fullText(): String {
-	todo("could include any node that has text...")
+	  warn("could include any node that has text...")
 	return children.filterIsInstance<TextWrapper>().joinToString("") { it.text }
   }
 }

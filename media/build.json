@@ -10,11 +10,6 @@
 	  "type" : "Project",
 	  "cfg" :  "api",
 	  "path" : ":k:fx:graphics"
-	},
-	{
-	  "type" : "Lib",
-	  "cfg" :  "api",
-	  "key" :  "kt-stdlib"
 	}
   ]
 }

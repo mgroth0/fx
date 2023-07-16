@@ -2,11 +2,7 @@
   "type" :         "BasicJvmOnlyMod",
   "jvmExec" :      {"type":"Typical"},
   "dependencies" : [
-	{
-	  "type" : "Lib",
-	  "cfg" :  "api",
-	  "key" :  "kt-stdlib"
-	},
+
 	{
 	  "type" : "Project",
 	  "cfg" :  "implementation",

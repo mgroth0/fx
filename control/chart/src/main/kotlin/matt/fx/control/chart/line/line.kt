@@ -1,5 +1,6 @@
 package matt.fx.control.chart.line
 
+import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.control.chart.axis.MAxis
 import matt.fx.control.chart.axis.value.number.NumberAxisWrapper
 import matt.fx.control.chart.line.highperf.relinechart.MorePerfOptionsLineChart
@@ -7,8 +8,7 @@ import matt.fx.control.chart.line.highperf.relinechart.xy.XYChartForPackagePriva
 import matt.fx.control.chart.xy.XYChartWrapper
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.attachTo
-import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
-import matt.log.warn.warnOnce
+import matt.log.warn.warn
 import matt.math.point.BasicPoint
 import matt.model.data.mathable.MathAndComparable
 
@@ -58,7 +58,7 @@ class NumericChartLocater<X: MathAndComparable<X>, Y: MathAndComparable<Y>>(
 	xAxis.displayPixelOf(x) + lineChart.plotArea.boundsInParent.minX + lineChart.chartContent.boundsInParent.minX
 
   override fun layoutYOf(y: Y): Double {
-	warnOnce("layoutYOf probably needs work since layoutXOf was so complicated")
+      warn("layoutYOf probably needs work since layoutXOf was so complicated")
 	return yAxis.displayPixelOf(y) + (yAxis.boundsInScene.minY - lineChart.boundsInScene.minY)
   }
 }

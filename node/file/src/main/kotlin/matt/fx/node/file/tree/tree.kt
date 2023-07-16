@@ -45,6 +45,7 @@ import matt.lang.NEVER
 import matt.lang.inList
 import matt.log.taball
 import matt.log.todo.todo
+import matt.log.warn.warn
 import matt.obs.col.olist.BasicObservableListImpl
 import matt.obs.col.olist.toBasicObservableList
 import matt.obs.listen.OldAndNewListenerImpl
@@ -110,7 +111,7 @@ fun TreeLikeWrapper<*, MFile>.nav(f: MFile) {
 	  nextSubRoot.refreshChilds()
 	  nextSubRoot.children.forEach {
 		(it as FileTreeItem).refreshChilds()
-		todo("so I can see if they can expand... need a better way")
+		  warn("so I can see if they can expand... need a better way")
 	  }
 	  nextSubRoot.children.firstOrNull {
 		it.value in fam

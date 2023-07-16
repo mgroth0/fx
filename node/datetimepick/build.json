@@ -5,11 +5,7 @@
             "type": "Lib",
             "cfg": "implementation",
             "key": "fx-controls"
-        },
-        {
-            "type": "Lib",
-            "cfg": "api",
-            "key": "kt-stdlib"
         }
+
     ]
 }

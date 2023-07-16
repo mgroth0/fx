@@ -1,11 +1,7 @@
 {
   "type" :         "BasicJvmOnlyMod",
   "dependencies" : [
-	{
-	  "type" : "Lib",
-	  "cfg" :  "api",
-	  "key" :  "kt-stdlib"
-	},
+
 	{
 	  "type" : "Lib",
 	  "cfg" :  "api",
