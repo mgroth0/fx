@@ -44,7 +44,6 @@ import matt.gui.refresh.refreshWhileInSceneEvery
 import matt.lang.NEVER
 import matt.lang.inList
 import matt.log.taball
-import matt.log.todo.todo
 import matt.log.warn.warn
 import matt.obs.col.olist.BasicObservableListImpl
 import matt.obs.col.olist.toBasicObservableList

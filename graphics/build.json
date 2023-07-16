@@ -42,11 +42,6 @@
       "path": ":k:fx:image"
     },
     {
-      "type": "Project",
-      "cfg": "api",
-      "path": ":k:color"
-    },
-    {
       "type": "Lib",
       "cfg": "implementation",
       "key": "svgsalamander"

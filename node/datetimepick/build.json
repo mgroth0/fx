@@ -1,11 +1,15 @@
 {
-    "type": "BasicJvmOnlyMod",
-    "dependencies": [
-        {
-            "type": "Lib",
-            "cfg": "implementation",
-            "key": "fx-controls"
-        }
-
-    ]
+  "type": "BasicJvmOnlyMod",
+  "dependencies": [
+    {
+      "type": "Lib",
+      "cfg": "implementation",
+      "key": "fx-controls"
+    },
+    {
+      "type": "Lib",
+      "cfg": "api",
+      "key": "kt-stdlib"
+    }
+  ]
 }
