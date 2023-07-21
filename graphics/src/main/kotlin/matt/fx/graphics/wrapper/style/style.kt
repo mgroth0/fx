@@ -115,7 +115,7 @@ enum class FXStyle {
 
 fun String.parseFXStyle() = split(";").map { it.substringBefore(":") to it.substringAfter(":") }
     .associate { (key, value) ->
-        (FXStyle.values().firstOrNull { it.key == key.trim() } ?: err(
+        (FXStyle.entries.firstOrNull { it.key == key.trim() } ?: err(
             """
 	unknown fx style key: $key in "${this@parseFXStyle}"
   """.trimIndent()

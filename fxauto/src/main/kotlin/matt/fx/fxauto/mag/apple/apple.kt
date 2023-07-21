@@ -17,8 +17,10 @@ import matt.fx.graphics.mag.left
 import matt.fx.graphics.wrapper.stage.StageWrapper
 import matt.lang.err
 import matt.log.profile.stopwatch.tic
+import matt.shell.context.ShellExecutionContext
 import kotlin.concurrent.thread
 
+context (ShellExecutionContext)
 fun moveFrontmostWindowByApplescript(x: Number, y: Number, width: Number, height: Number) {
   println(
 	"MOVE:" + compileAndOrRunApplescript(
@@ -28,6 +30,7 @@ fun moveFrontmostWindowByApplescript(x: Number, y: Number, width: Number, height
   )
 }
 
+context (ShellExecutionContext)
 fun moveAppWindowByApplescript(app: String, x: Number, y: Number, width: Number, height: Number) {
 
   runAppleScript {
@@ -45,6 +48,7 @@ fun moveAppWindowByApplescript(app: String, x: Number, y: Number, width: Number,
 
 }
 
+context (ShellExecutionContext)
 fun getFrontmostWindowPositionAndSizeByApplescript(): Rectangle2D {
   var s = compileAndOrRunApplescript("getFrontmostWindowPositionAndSize")
   val x = s.substringBefore(",").trim().toInt()
@@ -57,6 +61,7 @@ fun getFrontmostWindowPositionAndSizeByApplescript(): Rectangle2D {
   return Rectangle2D(x.toDouble(), y.toDouble(), width.toDouble(), height.toDouble())
 }
 
+context (ShellExecutionContext)
 fun getAppWindowPositionAndSizeByApplescript(app: String): Rectangle2D {
   var s = runAppleScript {
 	tell(SystemEvents) {
@@ -108,6 +113,7 @@ fun sdtInTest() {
   println("CODE=${p.waitFor()}")
 }
 
+context (ShellExecutionContext)
 /*https://stackoverflow.com/questions/70647124/how-to-reduce-overhead-and-run-applescripts-faster*/
 @Suppress("UNREACHABLE_CODE") fun appleLeft() {
   err(
