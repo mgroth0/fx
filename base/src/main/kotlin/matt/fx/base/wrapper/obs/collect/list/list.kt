@@ -140,11 +140,22 @@ class FXBackedMutableObservableListBase<E>(obs: ObservableList<E>) :
 
 
     val bindableListHelper by lazy { BindableListImpl(this) }
-    override fun <S> bind(source: ImmutableObsList<S>, converter: (S) -> E) = bindableListHelper.bind(source, converter)
-    override fun <S> bindWeakly(source: ImmutableObsList<S>, converter: (S) -> E) =
+    override fun <S> bind(
+        source: ImmutableObsList<S>,
+        converter: (S) -> E
+    ) = bindableListHelper.bind(source, converter)
+
+    override fun <S> bindWeakly(
+        source: ImmutableObsList<S>,
+        converter: (S) -> E
+    ) =
         bindableListHelper.bindWeakly(source, converter)
 
-    override fun <T> bind(source: ObsVal<T>, converter: (T) -> List<E>) = bindableListHelper.bind(source, converter)
+    override fun <T> bind(
+        source: ObsVal<T>,
+        converter: (T) -> List<E>
+    ) = bindableListHelper.bind(source, converter)
+
     override val bindManager get() = bindableListHelper.bindManager
     override var theBind
         get() = bindManager.theBind
@@ -160,7 +171,10 @@ class FXBackedMutableObservableListBase<E>(obs: ObservableList<E>) :
     override var debugger: Prints? = null
 
     @Synchronized
-    override fun onChange(listenerName: String?, op: (ListChange<E>) -> Unit): ListListener<E> {
+    override fun onChange(
+        listenerName: String?,
+        op: (ListChange<E>) -> Unit
+    ): ListListener<E> {
         val listener = ListListener {
             op(it)
         }
@@ -243,7 +257,11 @@ open class MBackedFXObservableList<E>(internal open val mList: ImmutableObsList<
         mList
     ) {
     override fun addAll(vararg elements: E): Boolean = ILLEGAL
-    override fun remove(from: Int, to: Int): Unit = ILLEGAL
+    override fun remove(
+        from: Int,
+        to: Int
+    ): Unit = ILLEGAL
+
     override fun retainAll(vararg elements: E): Boolean = ILLEGAL
     override fun removeAll(vararg elements: E): Boolean = ILLEGAL
     override fun setAll(col: MutableCollection<out E>): Boolean = ILLEGAL
@@ -275,9 +293,18 @@ open class MBackedFXObservableList<E>(internal open val mList: ImmutableObsList<
 class MutableMBackedFXObservableList<E>(override val mList: MutableObsList<E>) :
     MBackedFXObservableList<E>(mList) {
 
-    /*override fun add(element: E) = mList.add(element)*/
+    override fun add(element: E) = mList.add(element)
+    override fun set(
+        index: Int,
+        element: E
+    ) = mList.set(index, element)
+
     override fun addAll(vararg elements: E) = mList.addAll(elements)
-    override fun remove(from: Int, to: Int) = mList.subList(from, to).clear()
+    override fun remove(
+        from: Int,
+        to: Int
+    ) = mList.subList(from, to).clear()
+
     override fun retainAll(vararg elements: E) = mList.retainAll(elements)
     override fun removeAll(vararg elements: E) = mList.removeAll(elements)
     override fun setAll(col: MutableCollection<out E>): Boolean {

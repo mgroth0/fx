@@ -45,12 +45,12 @@ interface ProcessNode : ConsoleNode {
 class ProcessConsolePane(
     private val executionContext: ShellExecutionContext,
     override val name: String,
-    private val processBuilder: ProcessBuilder,
+    val processBuilder: ProcessBuilder,
     val statusFolder: MFile? = null,
 ) : VBoxWrapperImpl<NodeWrapper>(), ProcessNode {
 
     fun clone() = ProcessConsolePane(
-        executionContext=executionContext,
+        executionContext = executionContext,
         name = name,
         processBuilder = processBuilder,
         statusFolder = statusFolder
@@ -100,7 +100,7 @@ class ProcessConsolePane(
             }
         }
         onChange {
-            if (!it && autoRestart) with(executionContext) { rund()}
+            if (!it && autoRestart) with(executionContext) { rund() }
         }
     }
 
