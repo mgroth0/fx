@@ -1,21 +1,25 @@
 {
-  "type": "BasicJvmOnlyMod",
-  "dependencies" : [
-	{
-	  "type" : "Lib",
-	  "cfg" :  "api",
-	  "key" :  "fx-web"
-	},
-	{
-	  "type" : "Project",
-	  "cfg" :  "api",
-	  "path" : ":k:gui"
-	},
-	{
-	  "type" : "Lib",
-	  "cfg" :  "implementation",
-	  "key" :  "jsoup"
-	}
-  ],
-  "note" :         null
+    "type": "BasicJvmOnlyMod",
+    "dependencies": [
+        {
+            "type": "Lib",
+            "cfg": "api",
+            "key": "fx-web"
+        },
+        {
+            "type": "Project",
+            "cfg": "api",
+            "path": ":k:gui"
+        },
+        {
+            "type": "Lib",
+            "cfg": "implementation",
+            "key": "jsoup"
+        },
+        {
+            "type": "Project",
+            "cfg": "testImplementation",
+            "path": ":k:mbuild:mtest:fx"
+        }
+    ]
 }

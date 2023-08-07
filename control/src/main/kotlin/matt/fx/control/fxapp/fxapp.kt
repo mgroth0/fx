@@ -20,30 +20,44 @@ import javafx.stage.Window
 import javafx.stage.WindowEvent
 import matt.collect.itr.recurse.chain
 import matt.fx.control.wrapper.wrapped.WrapperServiceImpl
+import matt.fx.graphics.fxthread.FXAppStateWatcher
 import matt.fx.graphics.service.WrapperServiceHub
 import matt.fx.graphics.style.insets
 import matt.lang.anno.Fixes
 import matt.lang.function.Op
 import matt.lang.go
+import matt.lang.require.requireNot
 import matt.log.logger.Logger
 import matt.log.report.BugReport
 import matt.log.reporter.TracksTime
 import matt.model.code.report.Reporter
 import kotlin.concurrent.thread
 
+private val monitor = {}
+private var didRunFXApp = false
+
+const val DEFAULT_THROW_ON_APP_THREAD_THROWABLE = false
 
 fun runFXAppBlocking(
     args: Array<String>,
     usePreloaderApp: Boolean = false,
     reporter: Reporter? = null,
+    throwOnApplicationThreadThrowable: Boolean = DEFAULT_THROW_ON_APP_THREAD_THROWABLE,
     fxOp: (List<String>) -> Unit,
 ) {
+    synchronized(monitor) {
+        requireNot(didRunFXApp) {
+            "If I want to run multiple FX Apps in one JVM Runtime, I need to look at everything here and make sure it will be compatible with that. Though, not sure if JavaFX itself will even support that."
+        }
+        didRunFXApp = true
+    }
+    exitAndReThrowOnAppThrowable = throwOnApplicationThreadThrowable
     WrapperServiceHub.install(WrapperServiceImpl)
     (reporter as? TracksTime)?.toc("running FX App")
     fxBlock = fxOp
     thread(isDaemon = true) {
-
-        Logging.getJavaFXLogger().disableLogging() /* dodge "Unsupported JavaFX configuration..." part 1 */
+        Logging.getJavaFXLogger().disableLogging()
+        /* dodge "Unsupported JavaFX configuration..." part 1 */
     }
     (reporter as? TracksTime)?.toc("started disabling FX logging")
     fxStopwatch = (reporter as? TracksTime)
@@ -54,11 +68,16 @@ fun runFXAppBlocking(
         (reporter as? TracksTime)?.toc("launching app")
         Application.launch(MinimalFXApp::class.java, *args)
     }
+    applicationThreadIssue?.go {
+        throw Exception("${it::class.qualifiedName} was thrown from the FX Application Thread", it)
+    }
     (reporter as? Logger)?.info("main thread has exited from Application.launch")
 }
 
 private var fxStopwatch: TracksTime? = null
 private lateinit var fxBlock: (List<String>) -> Unit
+private var applicationThreadIssue: Throwable? = null
+private var exitAndReThrowOnAppThrowable: Boolean? = null
 
 
 class FirstPreloader : Preloader() {
@@ -73,6 +92,15 @@ class FirstPreloader : Preloader() {
 
     override fun start(stage: Stage) {
 
+        if (exitAndReThrowOnAppThrowable!!) {
+            Thread.currentThread().setUncaughtExceptionHandler { _, e ->
+                applicationThreadIssue = e
+                Platform.exit()
+                Platform.runLater {
+                    Platform.exit()
+                }
+            }
+        }
 
         fxStopwatch?.toc("starting preloader app")
         this.stage = stage
@@ -103,7 +131,10 @@ val ERROR_POP_UP_TEXT = """
 private class DefaultGlassAppEventHandler(
     private val buildInHandler: com.sun.glass.ui.Application.EventHandler
 ) : com.sun.glass.ui.Application.EventHandler() {
-    override fun handleQuitAction(app: com.sun.glass.ui.Application?, time: Long) {
+    override fun handleQuitAction(
+        app: com.sun.glass.ui.Application?,
+        time: Long
+    ) {
 
         /*Emulate:
 
@@ -139,7 +170,10 @@ private class DefaultGlassAppEventHandler(
 
     /*After thinking a lot about this, I think the only sane solution is to first ensure tht all currently running events are completed if in a nestedLoop. This seems like the only way to gracefully exit without a NullPointerException.*/
     @Fixes("Big NullPointerException Bug")
-    private fun tryToEscapeNestedEventLoopsAndThenFinally(depth: Int = 0, op: Op) {
+    private fun tryToEscapeNestedEventLoopsAndThenFinally(
+        depth: Int = 0,
+        op: Op
+    ) {
         if (depth < 10 && Platform.isNestedLoopRunning()) {
             tryToCloseDeepestDialog()
             Platform.runLater {
@@ -221,6 +255,13 @@ private fun quitJavaFX() {
     }
 }*/
 
+
+//val TEMP_DEBUG_LOG_FILE = TEMP_DIR["deephys"]["temp_debug.log"].apply {
+//    mkparents()
+//    text = ""
+//}
+
+
 class MinimalFXApp : Application() {
 
 
@@ -228,6 +269,30 @@ class MinimalFXApp : Application() {
     //	var fxStop: (() -> Unit)? = null
     //  }
     override fun start(primaryStage: Stage?) {
+        FXAppStateWatcher.markAsStarted()
+//        Thread.setDefaultUncaughtExceptionHandler { t, e ->
+//            TEMP_DEBUG_LOG_FILE.appendln("UNCAUGHT EXCEPTION: ${e}, $t, ${e.stackTraceToString()}")
+//        }
+//        TEMP_DEBUG_LOG_FILE.appendln("here1")
+        if (exitAndReThrowOnAppThrowable!!) {
+//            TEMP_DEBUG_LOG_FILE.appendln("here2: ${Thread.currentThread().name},${Thread.currentThread().id}")
+            Thread.currentThread().setUncaughtExceptionHandler { _, e ->
+//                TEMP_DEBUG_LOG_FILE.appendln("here3")
+                println("setting applicationThreadIssue to $e")
+                applicationThreadIssue = e
+                Platform.exit()
+//                TEMP_DEBUG_LOG_FILE.appendln("here4")
+                Platform.runLater {
+//                    TEMP_DEBUG_LOG_FILE.appendln("here5")
+                    Platform.exit()
+//                    TEMP_DEBUG_LOG_FILE.appendln("here6")
+                }
+//                TEMP_DEBUG_LOG_FILE.appendln("here7")
+            }
+//            TEMP_DEBUG_LOG_FILE.appendln("here8")
+        }
+//        TEMP_DEBUG_LOG_FILE.appendln("here9")
+
 
         /*GOAL: TO PREVENT THE BIG NullPointerException BUG THAT I JUST EMAILED THE OPENJFX LISTSERV ABOUT*/
         com.sun.glass.ui.Application.GetApplication().eventHandler =
@@ -235,40 +300,46 @@ class MinimalFXApp : Application() {
 
         fxStopwatch?.toc("starting main app")
 
+
         /* dodge "Unsupported JavaFX configuration..." part 2 */
         Logging.getJavaFXLogger().enableLogging()
-        try {
+        if (exitAndReThrowOnAppThrowable!!) {
             fxBlock(parameters.raw)
-        } catch (e: Exception) {
-            val bugText = BugReport(t = Thread.currentThread(), e = e).text
-            println("\n\n$bugText\n\n")
-            val debugScene = Scene(
-                VBox(
-                    Label(ERROR_POP_UP_TEXT).apply {
-                        isWrapText = true
-                        font = Font.font(18.0)
-                        insets(25.0)
-                    },
-                    VBox().apply {
-                        minHeight = 50.0
-                    },
-                    TextArea(bugText).apply {
-                        insets(25.0)
+        } else {
+            try {
+                fxBlock(parameters.raw)
+            } catch (e: Exception) {
+                val bugText = BugReport(t = Thread.currentThread(), e = e).text
+                println("\n\n$bugText\n\n")
+                val debugScene = Scene(
+                    VBox(
+                        Label(ERROR_POP_UP_TEXT).apply {
+                            isWrapText = true
+                            font = Font.font(18.0)
+                            insets(25.0)
+                        },
+                        VBox().apply {
+                            minHeight = 50.0
+                        },
+                        TextArea(bugText).apply {
+                            insets(25.0)
+                        }
+                    ).apply {
+                        alignment = CENTER
                     }
-                ).apply {
-                    alignment = CENTER
+                )
+                primaryStage!!.apply {
+                    title = "JavaFX Application Failed To Start"
+                    scene = debugScene
+                    width = 800.0
+                    height = 500.0
+                    centerOnScreen()
                 }
-            )
-            primaryStage!!.apply {
-                title = "JavaFX Application Failed To Start"
-                scene = debugScene
-                width = 800.0
-                height = 500.0
-                centerOnScreen()
-            }
-            primaryStage.show()
+                primaryStage.show()
 
+            }
         }
+
 
         fxStopwatch?.toc("finished starting main app")
     }
@@ -276,8 +347,11 @@ class MinimalFXApp : Application() {
     /*DO_NOT_SHUTDOWN_WITH_FX_THREAD*//*DO_NOT_SHUTDOWN_WITH_FX_THREAD*//*DO_NOT_SHUTDOWN_WITH_FX_THREAD*//*DO_NOT_SHUTDOWN_WITH_FX_THREAD*//*DO_NOT_SHUTDOWN_WITH_FX_THREAD*//*DO_NOT_SHUTDOWN_WITH_FX_THREAD*/
     override fun stop() {
 
-        println("DEBUG: STOP FX APP")
+
+        FXAppStateWatcher.markAsStopped(cause = applicationThreadIssue)
+        println("DEBUG: STOPPED FX APP with cause=$applicationThreadIssue")
         /*DO_NOT_SHUTDOWN_WITH_FX_THREAD*/    /*DO_NOT_SHUTDOWN_WITH_FX_THREAD*/    /*DO_NOT_SHUTDOWN_WITH_FX_THREAD*/    /*DO_NOT_SHUTDOWN_WITH_FX_THREAD*/    /*DO_NOT_SHUTDOWN_WITH_FX_THREAD*/    /*DO_NOT_SHUTDOWN_WITH_FX_THREAD*/
     }/*DO_NOT_SHUTDOWN_WITH_FX_THREAD*//*DO_NOT_SHUTDOWN_WITH_FX_THREAD*//*DO_NOT_SHUTDOWN_WITH_FX_THREAD*//*DO_NOT_SHUTDOWN_WITH_FX_THREAD*//*DO_NOT_SHUTDOWN_WITH_FX_THREAD*//*DO_NOT_SHUTDOWN_WITH_FX_THREAD*/
 }
+
 

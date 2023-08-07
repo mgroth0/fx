@@ -7,6 +7,8 @@ import matt.async.thread.schedule.every
 import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.graphics.font.fixed
+import matt.fx.graphics.fxthread.FXAppState.STOPPED
+import matt.fx.graphics.fxthread.FXAppStateWatcher
 import matt.fx.graphics.fxthread.runLaterReturn
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
@@ -80,6 +82,10 @@ class PerformantProgressIndicator : VBoxW() {
                 val toChange = synchronized(PerformantProgressIndicator) {
                     instances.toSet()
                 }
+                if (FXAppStateWatcher.getState() == STOPPED) {
+                    cancel()
+                    return@every
+                }
                 runLaterReturn {
                     val toRemove = mutableSetOf<WeakReference<TextWrapper>>()
                     toChange.forEach {
@@ -98,10 +104,10 @@ class PerformantProgressIndicator : VBoxW() {
                     }
                 }
                 next = when (next) {
-                    "." -> ".."
-                    ".." -> "..."
+                    "."   -> ".."
+                    ".."  -> "..."
                     "..." -> "."
-                    else -> NEVER
+                    else  -> NEVER
                 }
             }
         }

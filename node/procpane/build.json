@@ -1,21 +1,25 @@
 {
-  "type" :         "BasicJvmOnlyMod",
-  "dependencies" : [
-
-	{
-	  "type" : "Project",
-	  "cfg" :  "api",
-	  "path" : ":k:fx:node:console"
-	},
-	{
-	  "type" : "Project",
-	  "cfg" :  "api",
-	  "path" : ":k:auto"
-	},
-	{
-	  "type" : "Project",
-	  "cfg" :  "api",
-	  "path" : ":k:fx:node:tileabletabpane"
-	}
-  ]
+    "type": "BasicJvmOnlyMod",
+    "dependencies": [
+        {
+            "type": "Project",
+            "cfg": "api",
+            "path": ":k:fx:node:console"
+        },
+        {
+            "type": "Project",
+            "cfg": "api",
+            "path": ":k:auto"
+        },
+        {
+            "type": "Project",
+            "cfg": "api",
+            "path": ":k:fx:node:tileabletabpane"
+        },
+        {
+            "type": "Project",
+            "cfg": "testImplementation",
+            "path": ":k:mbuild:mtest:fx"
+        }
+    ]
 }

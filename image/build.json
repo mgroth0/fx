@@ -1,16 +1,20 @@
 {
-  "type": "BasicJvmOnlyMod",
-  "dependencies" : [
-	{
-	  "type" : "Project",
-	  "cfg" :  "api",
-	  "path" : ":k:file"
-	},
-	{
-	  "type" : "Lib",
-	  "cfg" :  "implementation",
-	  "key" :  "fx-swing"
-	}
-  ],
-  "note" :         null
+    "type": "BasicJvmOnlyMod",
+    "dependencies": [
+        {
+            "type": "Project",
+            "cfg": "api",
+            "path": ":k:file"
+        },
+        {
+            "type": "Lib",
+            "cfg": "implementation",
+            "key": "fx-swing"
+        },
+        {
+            "type": "Project",
+            "cfg": "testImplementation",
+            "path": ":k:mbuild:mtest:fx"
+        }
+    ]
 }

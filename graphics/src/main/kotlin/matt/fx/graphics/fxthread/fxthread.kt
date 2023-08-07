@@ -3,81 +3,114 @@ package matt.fx.graphics.fxthread
 import com.sun.javafx.application.PlatformImpl
 import javafx.application.Platform
 import javafx.application.Platform.runLater
+import matt.fx.graphics.fxthread.FXAppState.DID_NOT_START_YET
+import matt.fx.graphics.fxthread.FXAppState.STARTED
+import matt.fx.graphics.fxthread.FXAppState.STOPPED
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.lang.function.MetaFunction
 import matt.lang.function.Produce
-import matt.model.flowlogic.latch.SimpleLatch
+import matt.lang.require.requireEquals
 import matt.model.flowlogic.runner.Run
 import matt.model.flowlogic.runner.Runner
 import matt.model.flowlogic.runner.ThreadRunner
+import matt.obs.subscribe.LatchManager
 import matt.service.scheduler.Scheduler
 import kotlin.concurrent.thread
 import kotlin.time.Duration
 
-fun <T> runLaterReturn(op: ()->T): T {/*matt.log.todo.todo: can check if this is application thread and if so just run op in place*/
-  var r: Any? = object {}
-  val latch = SimpleLatch()
-  try {
-	runLater {
-	  r = op()
-	  latch.open()
-	}
-  } catch (e: Exception) {
-	latch.open()
-	e.printStackTrace()
-  }
-  latch.await()
-  @Suppress("UNCHECKED_CAST") return (r as T)
+enum class FXAppState {
+    DID_NOT_START_YET,
+    STARTED,
+    STOPPED
 }
 
-inline fun <T> ensureInFXThreadInPlace(crossinline op: ()->T): T {
-  return if (Platform.isFxApplicationThread()) op()
-  else runLaterReturn { op() }
-}
+object FXAppStateWatcher {
+    private var state = DID_NOT_START_YET
+    fun getState() = state
 
-inline fun ensureInFXThreadOrRunLater(crossinline op: ()->Unit) {
-  return if (Platform.isFxApplicationThread()) op()
-  else runLater { op() }
+    @Synchronized
+    fun markAsStarted() {
+        requireEquals(state, DID_NOT_START_YET)
+        state = STARTED
+    }
+    @Synchronized
+    fun markAsStopped(cause: Throwable?) {
+        requireEquals(state, STARTED)
+        RunLaterReturnLatchManager.cancel(cause)
+        state = STOPPED
+    }
 }
 
 
-fun runMuchLater(d: Duration, op: ()->Unit) {
-  thread {
-	Thread.sleep(d.inWholeMilliseconds)
-	runLater {
-	  op()
-	}
-  }
+val RunLaterReturnLatchManager = LatchManager()
+
+fun <T> runLaterReturn(op: () -> T): T {
+    var r: Any? = object {}
+    val latch = RunLaterReturnLatchManager.getLatch()
+    try {
+        runLater {
+            r = op()
+            latch.open()
+        }
+    } catch (e: Exception) {
+        latch.open()
+        e.printStackTrace()
+    }
+    latch.await()
+    @Suppress("UNCHECKED_CAST") return (r as T)
+}
+
+inline fun <T> ensureInFXThreadInPlace(crossinline op: () -> T): T {
+    return if (Platform.isFxApplicationThread()) op()
+    else runLaterReturn { op() }
+}
+
+inline fun ensureInFXThreadOrRunLater(crossinline op: () -> Unit) {
+    return if (Platform.isFxApplicationThread()) op()
+    else runLater { op() }
 }
 
 
-inline fun <T: Any, V> inRunLater(crossinline op: T.(V)->Unit): T.(V)->Unit {
-  return {
-	runLater {
-	  op(it)
-	}
-  }
+fun runMuchLater(
+    d: Duration,
+    op: () -> Unit
+) {
+    thread {
+        Thread.sleep(d.inWholeMilliseconds)
+        runLater {
+            op()
+        }
+    }
 }
 
 
-fun <N: NodeWrapper> N.runLater(op: N.()->Unit) = PlatformImpl.runLater { op() }
+inline fun <T : Any, V> inRunLater(crossinline op: T.(V) -> Unit): T.(V) -> Unit {
+    return {
+        runLater {
+            op(it)
+        }
+    }
+}
+
+
+fun <N : NodeWrapper> N.runLater(op: N.() -> Unit) = PlatformImpl.runLater { op() }
 
 
 val runLaterOp: MetaFunction = {
-  PlatformImpl.runLater(it)
+    PlatformImpl.runLater(it)
 }
 
-object FXScheduler: Scheduler {
-  override fun schedule(op: ()->Unit) {
-	PlatformImpl.runLater(op)
-  }
+object FXScheduler : Scheduler {
+    override fun schedule(op: () -> Unit) {
+        PlatformImpl.runLater(op)
+    }
 }
 
-object FXRunner: Runner {
-  override fun <R> run(op: Produce<R>): Run<R> {
-	val run = ThreadRunner.run {
-	  runLaterReturn(op)
-	}
-	return run
-  }
+object FXRunner : Runner {
+    override fun <R> run(op: Produce<R>): Run<R> {
+        val run = ThreadRunner.run {
+            runLaterReturn(op)
+        }
+        return run
+    }
 }

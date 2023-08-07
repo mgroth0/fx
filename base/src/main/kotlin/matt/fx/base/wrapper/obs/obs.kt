@@ -6,10 +6,10 @@ import matt.obs.oobj.ObservableObject
 
 fun Observable.toMObservable(): MObservableObject<out Any> = FXObservableBackMObservable(this)
 
-open class FXObservableBackMObservable(o: Observable): ObservableObject<FXObservableBackMObservable>() {
-  init {
-	o.addListener {
-	  markInvalid()
-	}
-  }
+open class FXObservableBackMObservable(o: Observable) : ObservableObject<FXObservableBackMObservable>() {
+    init {
+        o.addListener {
+            markInvalid()
+        }
+    }
 }

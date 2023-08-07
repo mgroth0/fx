@@ -1,20 +1,25 @@
 {
-  "type": "BasicJvmOnlyMod",
-  "dependencies": [
-    {
-      "type": "Project",
-      "cfg": "implementation",
-      "path": ":k:gui"
-    },
-    {
-      "type": "Project",
-      "cfg": "implementation",
-      "path": ":k:auto"
-    },
-    {
-      "type": "Project",
-      "cfg": "implementation",
-      "path": ":k:auto:ascript"
-    }
-  ]
+    "type": "BasicJvmOnlyMod",
+    "dependencies": [
+        {
+            "type": "Project",
+            "cfg": "implementation",
+            "path": ":k:gui"
+        },
+        {
+            "type": "Project",
+            "cfg": "implementation",
+            "path": ":k:auto"
+        },
+        {
+            "type": "Project",
+            "cfg": "implementation",
+            "path": ":k:auto:ascript"
+        },
+        {
+            "type": "Project",
+            "cfg": "testImplementation",
+            "path": ":k:mbuild:mtest:fx"
+        }
+    ]
 }

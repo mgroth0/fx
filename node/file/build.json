@@ -1,21 +1,25 @@
 {
-  "type": "BasicJvmOnlyMod",
-  "dependencies" : [
-	{
-	  "type" : "Project",
-	  "cfg" :  "implementation",
-	  "path" : ":k:fx:web"
-	},
-	{
-	  "type" : "Lib",
-	  "cfg" :  "implementation",
-	  "key" :  "kotlinx-html-jvm"
-	},
-	{
-	  "type" : "Project",
-	  "cfg" :  "implementation",
-	  "path" : ":k:fx:fxauto"
-	}
-  ],
-  "note" :         null
+    "type": "BasicJvmOnlyMod",
+    "dependencies": [
+        {
+            "type": "Project",
+            "cfg": "implementation",
+            "path": ":k:fx:web"
+        },
+        {
+            "type": "Lib",
+            "cfg": "implementation",
+            "key": "kotlinx-html-jvm"
+        },
+        {
+            "type": "Project",
+            "cfg": "implementation",
+            "path": ":k:fx:fxauto"
+        },
+        {
+            "type": "Project",
+            "cfg": "testImplementation",
+            "path": ":k:mbuild:mtest:fx"
+        }
+    ]
 }

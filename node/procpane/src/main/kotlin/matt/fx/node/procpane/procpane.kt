@@ -18,6 +18,7 @@ import matt.fx.node.console.ProcessConsole
 import matt.fx.node.procpane.inspect.ProcessInspectPane
 import matt.fx.node.procpane.status.StatusFolderWatchPane
 import matt.gui.menu.context.mcontextmenu
+import matt.lang.shutdown.preaper.ProcessReaper
 import matt.log.logInvocation
 import matt.obs.bindings.bool.not
 import matt.obs.math.double.op.times
@@ -144,6 +145,7 @@ class ProcessConsolePane(
                 }
                 statusFolderWatchPane?.start()
                 val p = processBuilder.start()
+                ProcessReaper.ensureProcessEndsWithThisJvm(p)
                 console.attachProcess(p)
                 runLater {
                     println("WEIRD BUG HERE 1")
