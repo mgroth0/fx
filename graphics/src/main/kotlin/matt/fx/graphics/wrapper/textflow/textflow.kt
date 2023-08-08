@@ -36,5 +36,7 @@ open class TextFlowWrapper<C: NodeWrapper>(
 	  warn("could include any node that has text...")
 	return children.filterIsInstance<TextWrapper>().joinToString("") { it.text }
   }
+
+
 }
 

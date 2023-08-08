@@ -4,6 +4,7 @@ import javafx.scene.paint.Color
 import javafx.scene.paint.Paint
 import javafx.scene.text.Font
 import matt.fx.graphics.font.fixed
+import matt.fx.graphics.style.DarkModeController
 import matt.fx.graphics.style.sty
 import matt.fx.graphics.wrapper.EventTargetWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
@@ -12,71 +13,87 @@ import matt.fx.graphics.wrapper.node.onHover
 import matt.fx.graphics.wrapper.style.FXColor
 import matt.obs.prop.Var
 
-val MONO_FONT by lazy { Font.font("monospaced") }
+val MONO_FONT: Font by lazy { Font.font("monospaced") }
+val CONSOLAS_FONT: Font by lazy { Font.font("Consolas") }
 
-interface TextLike: EventTargetWrapper {
-  val textProperty: Var<String?>
-  var text: String
-	get() = textProperty.value ?: ""
-	set(value) {
-	  textProperty.value = value
-	}
+interface TextLike : EventTargetWrapper {
+    val textProperty: Var<String?>
+    var text: String
+        get() = textProperty.value ?: ""
+        set(value) {
+            textProperty.value = value
+        }
 
-  val fontProperty: Var<Font>
-  var font: Font
-	get() = fontProperty.value
-	set(value) {
-	  fontProperty v value
-	}
+    val fontProperty: Var<Font>
+    var font: Font
+        get() = fontProperty.value
+        set(value) {
+            fontProperty v value
+        }
 
-  fun monospace() {
-	font = MONO_FONT
-  }
-
-}
-
-interface ColoredText: TextLike, NodeWrapper {
-
-  val textFillProperty: Var<Paint?>
-  var textFill: Paint?
-	get() = textFillProperty.value
-	set(value) {
-	  textFillProperty v value
-	}
-
+    fun monospace() {
+        font = MONO_FONT
+    }
 
 }
 
-fun ColoredText.highlightOnHover() {
+interface ColoredText : TextLike, NodeWrapper {
 
-  onHover {
-	val dark = matt.fx.graphics.style.DarkModeController.darkModeProp.value
+    val textFillProperty: Var<Paint?>
+    var textFill: Paint?
+        get() = textFillProperty.value
+        set(value) {
+            textFillProperty v value
+        }
 
-	(this as NodeWrapperImpl<*>).sty{
-	  if (it) {
-		fxFill = if (dark) FXColor.YELLOW else FXColor.BLUE
-		fxTextFill = if (dark) FXColor.YELLOW else FXColor.BLUE
-	  } else {
-		fxFill = null
-		fxTextFill = null
-	  }
-	}
 
-/*	textFill = when {
-	  it   -> if (dark) FXColor.YELLOW else FXColor.BLUE
-	  dark -> FXColor.WHITE
-	  else -> FXColor.BLACK
-	}*/
-  }
 }
 
-fun <T: ColoredText> T.applyConsoleStyle(size: Double? = null, color: Color? = null): T {
-  font = font.fixed().copy(family = "Consolas").fx()
-  if (size != null) {
-	font = font.fixed().copy(size = size).fx()
-  }
-  if (color != null) {
-	textFill = color
-  }
-  return this
+class DarkLightFXColor(
+    val darkColor: FXColor,
+    val lightColor: FXColor
+)
+
+private val DEFAULT_DARK_LIGHT_HIGHLIGHT_COLOR by lazy {
+    DarkLightFXColor(
+        darkColor = FXColor.YELLOW,
+        lightColor = FXColor.BLUE
+    )
+}
+
+fun ColoredText.highlightOnHover(
+    hoverColor: DarkLightFXColor = DEFAULT_DARK_LIGHT_HIGHLIGHT_COLOR,
+    nonHoverColor: Color? = null
+) {
+
+    onHover {
+        val dark = DarkModeController.darkModeProp.value
+
+        (this as NodeWrapperImpl<*>).sty {
+            if (it) {
+                val color = if (dark) hoverColor.darkColor else hoverColor.lightColor
+                fxFill = color
+                fxTextFill = color
+            } else {
+                fxFill = nonHoverColor
+                fxTextFill = nonHoverColor
+            }
+        }
+
+
+    }
+}
+
+fun <T : ColoredText> T.applyConsoleStyle(
+    size: Double? = null,
+    color: Color? = null
+): T {
+    font = CONSOLAS_FONT
+    if (size != null) {
+        font = font.fixed().copy(size = size).fx()
+    }
+    if (color != null) {
+        textFill = color
+    }
+    return this
 }

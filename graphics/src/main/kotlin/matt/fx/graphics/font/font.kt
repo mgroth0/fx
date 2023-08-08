@@ -24,27 +24,29 @@ val fontFamilies: List<String> by lazy { Font.getFamilies() }
 //}
 
 fun Font.fixed(): FixedFont {
-  var weight: FontWeight? = null
-  var posture: FontPosture? = null
-  if (style != "Regular") {
-	val fields = style.trim().substringAfter("Font[").dropLast(1).split(",")
-	  .associate { it.substringBefore("=").trim() to it.substringAfter("=").trim() }
-	val weightAndPostureStyle = fields["style"]
-	if (weightAndPostureStyle == "Bold Italic") {
-	  weight = BOLD
-	  posture = ITALIC
-	} else err("don't know how to process font style \"${weightAndPostureStyle}\"")
-  }
-  return FixedFont(family = family, size = size, weight = weight, posture = posture)
+    var weight: FontWeight? = null
+    var posture: FontPosture? = null
+    if (style != "Regular") {
+        val fields = style.trim().substringAfter("Font[").dropLast(1).split(",")
+            .associate { it.substringBefore("=").trim() to it.substringAfter("=").trim() }
+        val weightAndPostureStyle = fields["style"]
+        if (weightAndPostureStyle == "Bold Italic") {
+            weight = BOLD
+            posture = ITALIC
+        } else err("don't know how to process font style \"${weightAndPostureStyle}\"")
+    }
+    return FixedFont(family = family, size = size, weight = weight, posture = posture)
 }
 
 data class FixedFont internal constructor(
-  val family: String,
-  val size: Double,
-  val weight: FontWeight? = null,
-  val posture: FontPosture? = null
+    val family: String,
+    val size: Double,
+    val weight: FontWeight? = null,
+    val posture: FontPosture? = null
 ) {
-  fun fx(): Font = Font.font(family, weight, posture, size)
+    fun fx(): Font = Font.font(family, weight, posture, size)
+    fun withFontSizeAdjustedBy(change: Double) = copy(size = size + change)
+    fun withFontSizeAdjustedBy(change: Int) = copy(size = size + change)
 }
 
 

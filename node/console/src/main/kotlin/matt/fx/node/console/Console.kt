@@ -8,9 +8,9 @@ import javafx.scene.input.KeyEvent
 import javafx.scene.paint.Color
 import matt.async.safe.SemaphoreString
 import matt.async.safe.sync
-import matt.async.thread.schedule.every
 import matt.async.thread.daemon
 import matt.async.thread.queue.QueueWorker
+import matt.async.thread.schedule.every
 import matt.auto.ascript.AppleScriptString
 import matt.auto.macapp.SublimeText
 import matt.file.MFile
@@ -30,7 +30,6 @@ import matt.gui.menu.context.mcontextmenu
 import matt.lang.err
 import matt.lang.go
 import matt.lang.seq.charSequence
-import matt.log.tab
 import matt.obs.bindings.bool.not
 import matt.obs.prop.BindableProperty
 import matt.prim.str.throttled
@@ -228,7 +227,7 @@ sealed class Console(
 
         if (takesInput) {        /*parent?.apply {*/
             addEventFilter(KeyEvent.KEY_TYPED) {
-                println("console got key typed")
+//                println("console got key typed")
                 if (!it.isMetaDown) {
                     if (it.character == "\r") Unit /*hitEnter()*/
                     else consoleTextFlow.displayAndHoldNewUnsentInputChar(it.character)
@@ -258,6 +257,18 @@ sealed class Console(
             MINUS.meta op consoleTextFlow::tryDecreaseFontSize
         }    /*}*/
         mcontextmenu {
+            item("increase font size") {
+                enableWhen { this@Console.consoleTextFlow.canIncreaseFontSize }
+                setOnAction {
+                    this@Console.consoleTextFlow.tryIncreaseFontSize()
+                }
+            }
+            item("decrease font size") {
+                enableWhen { this@Console.consoleTextFlow.canDecreaseFontSize }
+                setOnAction {
+                    this@Console.consoleTextFlow.tryDecreaseFontSize()
+                }
+            }
             checkitem("autoscroll", autoscrollProp)
             checkitem("throttle", throttleProp)
             checkitem("enabled", enableProp)
@@ -269,15 +280,6 @@ sealed class Console(
                 consoleTextFlow.fullText().copyToClipboard()
             }
             checkitem("hscroll", hscrollOption)
-            actionitem("matt.log.level.getDEBUG: remove last child") {
-                consoleTextFlow.children.removeAt(consoleTextFlow.children.size - 1)
-            }
-            actionitem("print debug info on all texts") {
-                println("consoleTextFlow children info:")
-                consoleTextFlow.children.forEach {
-                    tab(it)
-                }
-            }
         }
         every(NORMAL.ms, ownTimer = true) { refresh() }
     }

@@ -41,9 +41,9 @@ open class TextWrapper(
         return "[${super.toString()} length=${t.length},text=${t.truncateWithElipses(100)}]"
     }
 
-    override val textProperty by lazy { node.textProperty().toNonNullableProp() }
-    override val fontProperty by lazy { node.fontProperty().toNonNullableProp() }
-    override val textFillProperty by lazy { node.fillProperty().toNullableProp() }
+    final override val textProperty by lazy { node.textProperty().toNonNullableProp() }
+    final override val fontProperty by lazy { node.fontProperty().toNonNullableProp() }
+    final override val textFillProperty by lazy { node.fillProperty().toNullableProp() }
 
     val wrappingWidthProperty get() = node.wrappingWidthProperty()
 
