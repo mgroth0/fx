@@ -10,8 +10,6 @@ import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
 import matt.fx.graphics.style.sty
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.impl.NodeWrapperImpl
-import matt.fx.graphics.wrapper.style.toAwtColor
-import matt.fx.graphics.wrapper.style.toMColor
 import matt.lang.delegation.lazyVarDelegate
 
 abstract class ShapeWrapper<N : Shape>(node: N) : NodeWrapperImpl<N>(node) {
