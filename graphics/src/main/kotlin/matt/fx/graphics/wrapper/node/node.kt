@@ -34,6 +34,7 @@ import matt.fx.graphics.wrapper.region.RegionWrapper
 import matt.fx.graphics.wrapper.scene.SceneWrapper
 import matt.fx.graphics.wrapper.stage.StageWrapper
 import matt.fx.graphics.wrapper.style.StyleableWrapper
+import matt.fx.graphics.wrapper.window.HasScene
 import matt.lang.NOT_IMPLEMENTED
 import matt.lang.require.requireNotEqual
 import matt.obs.bindings.bool.ObsB
@@ -64,7 +65,7 @@ inline fun <reified T : NodeWrapper> NW.recurseSelfAndChildNodes(
 
 typealias NW = NodeWrapper
 
-interface NodeWrapper : EventTargetWrapper, StyleableWrapper {
+interface NodeWrapper : EventTargetWrapper, StyleableWrapper, HasScene {
 
     override fun isInsideRow(): Boolean = parent?.isInsideRow() ?: false
 
@@ -273,7 +274,7 @@ interface NodeWrapper : EventTargetWrapper, StyleableWrapper {
     fun localToScreen(bounds: Bounds): Bounds? = node.localToScreen(bounds)
 
 
-    val scene: SceneWrapper<*>?
+    override val scene: SceneWrapper<*>?
     val sceneProperty: ObsVal<SceneWrapper<*>?>
 
 

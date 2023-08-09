@@ -60,314 +60,312 @@ import java.lang.Thread.sleep
 import java.lang.ref.WeakReference
 
 fun MFile.draggableIcon() =
-  (when {
-	(isDirectory)         -> Icon("folder")
-	(extension.isBlank()) -> Icon("file/bin")
-	else                  -> Icon("file/${extension}"/*, invert = extension in listOf("md", "txt")*/)
-  }).apply {
-	dragsFile(this@draggableIcon, mode = BetterTransferMode.COPY)
-  }
+    (when {
+        (isDirectory)         -> Icon("white/folder")
+        (extension.isBlank()) -> Icon("file/bin")
+        else                  -> Icon("file/${extension}"/*, invert = extension in listOf("md", "txt")*/)
+    }).apply {
+        dragsFile(this@draggableIcon, mode = BetterTransferMode.COPY)
+    }
 
 fun ObsVal<MFile>.draggableIcon() = ObsStringIcon(
-  binding {
-	when {
-	  (it.isDirectory)         -> "folder"
-	  (it.extension.isBlank()) -> "file/bin"
-	  else                     -> "file/${it.extension}"/*, invert = extension in listOf("md", "txt")*/
-	}
-  }
+    binding {
+        when {
+            (it.isDirectory)         -> "white/folder"
+            (it.extension.isBlank()) -> "file/bin"
+            else                     -> "file/${it.extension}"/*, invert = extension in listOf("md", "txt")*/
+        }
+    }
 ).apply {
-  dragsFile(this@draggableIcon, mode = BetterTransferMode.COPY)
+    dragsFile(this@draggableIcon, mode = BetterTransferMode.COPY)
 }
-
-
 
 
 fun MFile.createNode(renderHTMLAndSVG: Boolean = false): RegionWrapper<NodeWrapper> {
-  val node = createNodeInner(renderHTMLAndSVG = renderHTMLAndSVG)
-  node.mcontextmenu {
-	item(s = "", g = draggableIcon())
-	actionitem("show in finder") {
-	  openInFinder()
-	}
-  }
-  return node
+    val node = createNodeInner(renderHTMLAndSVG = renderHTMLAndSVG)
+    node.mcontextmenu {
+        item(s = "", g = draggableIcon())
+        actionitem("show in finder") {
+            openInFinder()
+        }
+    }
+    return node
 }
 
 private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): RegionWrapper<NodeWrapper> {
-  if (exists()) {
-	println("opening file")
-	if (isImage()) {
-	  return SimplePaneWrapper<NodeWrapper>().apply {
-		imageview {
-		  image = Image(toURI().toString())
-		  isPreserveRatio = true
-		  bindFitTo(this@apply)
-		  isSmooth = true
-		  mcontextmenu {
-			item("os open") {
-			  setOnAction {
-				java.awt.Desktop.getDesktop().open(this@createNodeInner)
-			  }
-			}
-			item("test open in new window") { onAction = EventHandler { openImageInWindow() } }
-		  }
-		  doubleClickToOpenInWindow()
-		}
-	  }
-	}
+    if (exists()) {
+        println("opening file")
+        if (isImage()) {
+            return SimplePaneWrapper<NodeWrapper>().apply {
+                imageview {
+                    image = Image(toURI().toString())
+                    isPreserveRatio = true
+                    bindFitTo(this@apply)
+                    isSmooth = true
+                    mcontextmenu {
+                        item("os open") {
+                            setOnAction {
+                                java.awt.Desktop.getDesktop().open(this@createNodeInner)
+                            }
+                        }
+                        item("test open in new window") { onAction = EventHandler { openImageInWindow() } }
+                    }
+                    doubleClickToOpenInWindow()
+                }
+            }
+        }
 
 
 
 
-	if (extension in listOf(
-		"txt",
-		"yml",
-		"json",
-		"sh",
-		"kt",
-		"java",
-		"py",
-		"kts",
-		"gradle",
-		"css",
-		"less",
-		"js",
-		"tags",
-		"coffeescript"
-	  ) || (!renderHTMLAndSVG && extension in (listOf("html", "svg")))
-	) {
-	  val viewbox = SimplePaneWrapper<NodeWrapper>()
-	  var fsText = readText()
-	  val ta = viewbox.textarea {
-		text = fsText
-		prefHeightProperty.bind(viewbox.prefHeightProperty)
-		prefWidthProperty.bind(viewbox.prefWidthProperty)
-	  }
-	  viewbox.button("matt.gui.ser.save changes") {
-		isDisable = true
-		setOnAction {
-		  writeText(ta.text)
-		}
-		ta.textProperty.onChange {
-		  val fsTextCurrent = readText()
-		  if (fsTextCurrent != fsText) {
-			safe("file content on system changed. Reload?") {
-			  text = fsTextCurrent
-			  fsText = fsTextCurrent
-			}
-		  } else {
-			isDisable = fsTextCurrent == text
-		  }
-		}
-	  }
-	  if (extension in (listOf("html", "svg")) && !renderHTMLAndSVG) {
-		viewbox.button("render") {
-		  setOnAction {
-			WebViewPane(this@createNodeInner).openInNewWindow(wMode = CLOSE)
-		  }
-		}
-	  }
-	  return viewbox
-	}
+        if (extension in listOf(
+                "txt",
+                "yml",
+                "json",
+                "sh",
+                "kt",
+                "java",
+                "py",
+                "kts",
+                "gradle",
+                "css",
+                "less",
+                "js",
+                "tags",
+                "coffeescript"
+            ) || (!renderHTMLAndSVG && extension in (listOf("html", "svg")))
+        ) {
+            val viewbox = SimplePaneWrapper<NodeWrapper>()
+            var fsText = readText()
+            val ta = viewbox.textarea {
+                text = fsText
+                prefHeightProperty.bind(viewbox.prefHeightProperty)
+                prefWidthProperty.bind(viewbox.prefWidthProperty)
+            }
+            viewbox.button("matt.gui.ser.save changes") {
+                isDisable = true
+                setOnAction {
+                    writeText(ta.text)
+                }
+                ta.textProperty.onChange {
+                    val fsTextCurrent = readText()
+                    if (fsTextCurrent != fsText) {
+                        safe("file content on system changed. Reload?") {
+                            text = fsTextCurrent
+                            fsText = fsTextCurrent
+                        }
+                    } else {
+                        isDisable = fsTextCurrent == text
+                    }
+                }
+            }
+            if (extension in (listOf("html", "svg")) && !renderHTMLAndSVG) {
+                viewbox.button("render") {
+                    setOnAction {
+                        WebViewPane(this@createNodeInner).openInNewWindow(wMode = CLOSE)
+                    }
+                }
+            }
+            return viewbox
+        }
 
 
 
 
 
 
-	return when (this) {
-	  is LogFile  -> VBoxWrapperImpl<NodeWrapper>().apply {
-		val lineLimit = BindableProperty(1000)
-		val infiniteLines = BindableProperty(false)
-		hbox<NodeWrapper> {
-		  checkbox("infinite", property = infiniteLines)
-		  spinner(property = lineLimit, amountToStepBy = 1000) {
-			disableWhen { infiniteLines }
-		  }
-		  actionbutton("perma-clear") {
-			this@createNodeInner.write("")
-		  }
-		}
+        return when (this) {
+            is LogFile  -> VBoxWrapperImpl<NodeWrapper>().apply {
+                val lineLimit = BindableProperty(1000)
+                val infiniteLines = BindableProperty(false)
+                hbox<NodeWrapper> {
+                    checkbox("infinite", property = infiniteLines)
+                    spinner(property = lineLimit, amountToStepBy = 1000) {
+                        disableWhen { infiniteLines }
+                    }
+                    actionbutton("perma-clear") {
+                        this@createNodeInner.write("")
+                    }
+                }
 
-		textarea {
-		  vgrow = ALWAYS
-		  addEventFilter(KeyEvent.KEY_TYPED) { it.consume() }
-		  addEventFilter(KeyEvent.KEY_PRESSED) {
-			if (it.code in listOf(
-				KeyCode.DELETE, KeyCode.BACK_SPACE
-			  )
-			) it.consume()
-		  }
-		  val weakRef = WeakReference(this)
+                textarea {
+                    vgrow = ALWAYS
+                    addEventFilter(KeyEvent.KEY_TYPED) { it.consume() }
+                    addEventFilter(KeyEvent.KEY_PRESSED) {
+                        if (it.code in listOf(
+                                KeyCode.DELETE, KeyCode.BACK_SPACE
+                            )
+                        ) it.consume()
+                    }
+                    val weakRef = WeakReference(this)
 
-		  @Synchronized
-		  fun refresh() {
-			val ta = weakRef.get() ?: return
-			val linLim = if (infiniteLines.value) Integer.MAX_VALUE else lineLimit.value
-			var lines = readText().lines()
-			if (lines.size > linLim) {
-			  lines = lines.subList(lines.size - linLim, lines.size)
-			}
-			val newText = lines.joinToString("\n")
-			runLaterReturn {
-			  ta.text = newText
-			  runLater { ta.end() }
-			}
-		  }
+                    @Synchronized
+                    fun refresh() {
+                        val ta = weakRef.get() ?: return
+                        val linLim = if (infiniteLines.value) Integer.MAX_VALUE else lineLimit.value
+                        var lines = readText().lines()
+                        if (lines.size > linLim) {
+                            lines = lines.subList(lines.size - linLim, lines.size)
+                        }
+                        val newText = lines.joinToString("\n")
+                        runLaterReturn {
+                            ta.text = newText
+                            runLater { ta.end() }
+                        }
+                    }
 
-		  lineLimit.onChange { daemon { refresh() } }
-		  infiniteLines.onChange { daemon { refresh() } }
+                    lineLimit.onChange { daemon { refresh() } }
+                    infiniteLines.onChange { daemon { refresh() } }
 
-		  var lastMod = 0L
-		  every(1.sec, timer = AccurateTimer(name="log refresher"), zeroDelayFirst = true) {
-			if (weakRef.get() == null) cancel()
-			val mod = lastModified()
-			if (mod != lastMod) {
-			  refresh()
-			  lastMod = mod
-			}
-		  }
-		}
-	  }
+                    var lastMod = 0L
+                    every(1.sec, timer = AccurateTimer(name = "log refresher"), zeroDelayFirst = true) {
+                        if (weakRef.get() == null) cancel()
+                        val mod = lastModified()
+                        if (mod != lastMod) {
+                            refresh()
+                            lastMod = mod
+                        }
+                    }
+                }
+            }
 
-	  is HTMLFile -> WebViewPane(this@createNodeInner).apply {
-		specialZooming()
-	  }
+            is HTMLFile -> WebViewPane(this@createNodeInner).apply {
+                specialZooming()
+            }
 
-	  is SvgFile  -> WebViewWrapper().apply {
-		runLater {
-		  vgrow = ALWAYS
-		  hgrow = ALWAYS
+            is SvgFile  -> WebViewWrapper().apply {
+                runLater {
+                    vgrow = ALWAYS
+                    hgrow = ALWAYS
 
-		  //		  this.scroll
+                    //		  this.scroll
 
-		  specialZooming()
+                    specialZooming()
 
-		  blendMode
-
-
-		  /*  engine.loadWorker.stateProperty().addListener { _, _, newValue ->
-			  if (newValue == State.RUNNING || newValue == State.SUCCEEDED) {
-				engine.executeScript("document.body.style.overflow = 'hidden';")
-			  }
-			}*/
-
-		  // hide webview scrollbars whenever they appear.
-		  // hide webview scrollbars whenever they appear.
-		  childrenUnmodifiable.observe {
-			val deadSeaScrolls: Set<Node> = lookupAll(".scroll-bar")
-			for (scroll in deadSeaScrolls) {
-			  scroll.isVisible = false
-			}
-		  }
-		  //		  childrenUnmodifiable.addListener(ListChangeListener<Any?> {
-		  //
-		  //		  })
+                    blendMode
 
 
-		  val cacheBreaker = "?${System.currentTimeMillis()}" /*omfg it works...*/
+                    /*  engine.loadWorker.stateProperty().addListener { _, _, newValue ->
+                        if (newValue == State.RUNNING || newValue == State.SUCCEEDED) {
+                          engine.executeScript("document.body.style.overflow = 'hidden';")
+                        }
+                      }*/
+
+                    // hide webview scrollbars whenever they appear.
+                    // hide webview scrollbars whenever they appear.
+                    childrenUnmodifiable.observe {
+                        val deadSeaScrolls: Set<Node> = lookupAll(".scroll-bar")
+                        for (scroll in deadSeaScrolls) {
+                            scroll.isVisible = false
+                        }
+                    }
+                    //		  childrenUnmodifiable.addListener(ListChangeListener<Any?> {
+                    //
+                    //		  })
 
 
-		  /*because i need that black background, and this is the only way i think*/
-		  val svgHTML = createHTML().apply {
-			html {
-			  body {
-				sty.background = black
-				img {
-				  src = "${toURI().toURL()}$cacheBreaker"
-				  alt = "bad svg"
-				}
-			  }
-			}
-		  }.finalize()
-
-		  engine.loadContent(svgHTML)
-
-		  //		  thread {
-		  //			while (true) {
-		  //			  matt.time.dur.sleep(1000)
-		  //			  runLater { engine.reload() }
-		  //			}
-		  //		  }
-
-		  println("opening window")
-		}
-
-	  }.let { wv ->
-
-		val weakRef = WeakReference(wv)
-
-		/*areas around for right clicking!*/
-		val root = VBoxWrapperImpl<NodeWrapper>().apply {
-		  mcontextmenu {
-			"refresh" does {
+                    val cacheBreaker = "?${System.currentTimeMillis()}" /*omfg it works...*/
 
 
-			  /*wv.engine.document.normalizeDocument()*/ /*shot in the dark, but not supported yet*/
+                    /*because i need that black background, and this is the only way i think*/
+                    val svgHTML = createHTML().apply {
+                        html {
+                            body {
+                                sty.background = black
+                                img {
+                                    src = "${toURI().toURL()}$cacheBreaker"
+                                    alt = "bad svg"
+                                }
+                            }
+                        }
+                    }.finalize()
 
-			  //			  wv.engine.
+                    engine.loadContent(svgHTML)
+
+                    //		  thread {
+                    //			while (true) {
+                    //			  matt.time.dur.sleep(1000)
+                    //			  runLater { engine.reload() }
+                    //			}
+                    //		  }
+
+                    println("opening window")
+                }
+
+            }.let { wv ->
+
+                val weakRef = WeakReference(wv)
+
+                /*areas around for right clicking!*/
+                val root = VBoxWrapperImpl<NodeWrapper>().apply {
+                    mcontextmenu {
+                        "refresh" does {
 
 
-			  wv.engine.reload()
-			}
-		  }
-		  //		  yellow()
-		  //		  vgrow = ALWAYS
-		  //		  hgrow = ALWAYS
-		  hbox<NodeWrapper> { exactHeight = 10.0 }
-		  hbox<NodeWrapper> {
-			vgrow = ALWAYS
-			hgrow = ALWAYS
-			vbox<NodeWrapper> { exactWidth = 10.0 }
-			add(wv)
-			vbox<NodeWrapper> { exactWidth = 10.0 }
-		  }
-		  hbox<NodeWrapper> { exactHeight = 10.0 }
-		}
+                            /*wv.engine.document.normalizeDocument()*/ /*shot in the dark, but not supported yet*/
 
-		val svgText = this@createNodeInner.readText()
-		val svgWidthPx = svgText.substringAfter("width=\"").substringBefore("px").toInt()
-		val svgHeightPx = svgText.substringAfter("height=\"").substringBefore("px").toInt()
-
-		runLater {
-		  val widthRatio = wv.width/svgWidthPx
-		  val heightRatio = wv.height/svgHeightPx
-		  wv.zoom *= minOf(widthRatio, heightRatio)
-		  wv.zoom *= 2 /*idk*/
-		}
+                            //			  wv.engine.
 
 
-		runLater {
-		  daemon {
-			var mtime = lastModified()
-			while (true) {
-			  sleep(1000)
-			  val wvv = weakRef.get() ?: break
-			  val newmtime = lastModified()
-			  if (newmtime != mtime) {
-				mtime = newmtime
-				runLater {
-				  wvv.engine.reload()
-				}
-			  }
-			}
-		  }
-		}
-		root
-	  }
+                            wv.engine.reload()
+                        }
+                    }
+                    //		  yellow()
+                    //		  vgrow = ALWAYS
+                    //		  hgrow = ALWAYS
+                    hbox<NodeWrapper> { exactHeight = 10.0 }
+                    hbox<NodeWrapper> {
+                        vgrow = ALWAYS
+                        hgrow = ALWAYS
+                        vbox<NodeWrapper> { exactWidth = 10.0 }
+                        add(wv)
+                        vbox<NodeWrapper> { exactWidth = 10.0 }
+                    }
+                    hbox<NodeWrapper> { exactHeight = 10.0 }
+                }
 
-	  is Folder   -> when {
-		extension != "app" -> fileTreeAndViewerPane(this).apply {
-		  prefWidth = 600.0
-		}
+                val svgText = this@createNodeInner.readText()
+                val svgWidthPx = svgText.substringAfter("width=\"").substringBefore("px").toInt()
+                val svgHeightPx = svgText.substringAfter("height=\"").substringBefore("px").toInt()
 
-		else               -> err("how to make node for files with extension:${extension}")
-	  }
+                runLater {
+                    val widthRatio = wv.width / svgWidthPx
+                    val heightRatio = wv.height / svgHeightPx
+                    wv.zoom *= minOf(widthRatio, heightRatio)
+                    wv.zoom *= 2 /*idk*/
+                }
 
-	  else        -> err("how to make node for files with extension:${extension}")
-	}
-  } else return VBoxWrapperImpl(TextWrapper("file $this does not exist"))
+
+                runLater {
+                    daemon {
+                        var mtime = lastModified()
+                        while (true) {
+                            sleep(1000)
+                            val wvv = weakRef.get() ?: break
+                            val newmtime = lastModified()
+                            if (newmtime != mtime) {
+                                mtime = newmtime
+                                runLater {
+                                    wvv.engine.reload()
+                                }
+                            }
+                        }
+                    }
+                }
+                root
+            }
+
+            is Folder   -> when {
+                extension != "app" -> fileTreeAndViewerPane(this).apply {
+                    prefWidth = 600.0
+                }
+
+                else               -> err("how to make node for files with extension:${extension}")
+            }
+
+            else        -> err("how to make node for files with extension:${extension}")
+        }
+    } else return VBoxWrapperImpl(TextWrapper("file $this does not exist"))
 }
 
 

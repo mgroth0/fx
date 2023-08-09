@@ -8,19 +8,23 @@ import javafx.scene.Scene
 import javafx.stage.Screen
 import javafx.stage.Window
 import javafx.stage.WindowEvent
+import matt.fx.base.wrapper.obs.obsval.NonNullFXBackedReadOnlyBindableProp
+import matt.fx.base.wrapper.obs.obsval.toNonNullableROProp
 import matt.fx.graphics.service.wrapped
 import matt.fx.graphics.wrapper.SingularEventTargetWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.scene.SceneWrapper
 import matt.fx.graphics.wrapper.sizeman.SizeControlled
 import matt.fx.graphics.wrapper.stage.StageWrapper
-import matt.fx.base.wrapper.obs.obsval.NonNullFXBackedReadOnlyBindableProp
-import matt.fx.base.wrapper.obs.obsval.toNonNullableROProp
 import matt.lang.NOT_IMPLEMENTED
 import matt.lang.delegation.lazyDelegate
 import matt.lang.require.requireNotEqual
 
-open class WindowWrapper<W : Window>(override val node: W) : SingularEventTargetWrapper<W>(node), SizeControlled {
+interface HasScene {
+    val scene: SceneWrapper<*>?
+}
+
+open class WindowWrapper<W : Window>(override val node: W) : SingularEventTargetWrapper<W>(node), SizeControlled, HasScene {
 
     companion object {
         fun windows() = Window.getWindows().map { it.wrapped() as WindowWrapper<*> }
@@ -112,7 +116,7 @@ open class WindowWrapper<W : Window>(override val node: W) : SingularEventTarget
     fun hide() = node.hide()
 
 
-    open val scene: SceneWrapper<*>? get() = node.scene?.wrapped() as SceneWrapper<*>?
+    override val scene: SceneWrapper<*>? get() = node.scene?.wrapped() as SceneWrapper<*>?
 
     fun sceneProperty(): ReadOnlyObjectProperty<Scene> = node.sceneProperty()
 
