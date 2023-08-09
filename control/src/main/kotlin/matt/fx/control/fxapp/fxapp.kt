@@ -278,7 +278,6 @@ class MinimalFXApp : Application() {
 //            TEMP_DEBUG_LOG_FILE.appendln("here2: ${Thread.currentThread().name},${Thread.currentThread().id}")
             Thread.currentThread().setUncaughtExceptionHandler { _, e ->
 //                TEMP_DEBUG_LOG_FILE.appendln("here3")
-                println("setting applicationThreadIssue to $e")
                 applicationThreadIssue = e
                 Platform.exit()
 //                TEMP_DEBUG_LOG_FILE.appendln("here4")
@@ -349,7 +348,6 @@ class MinimalFXApp : Application() {
 
 
         FXAppStateWatcher.markAsStopped(cause = applicationThreadIssue)
-        println("DEBUG: STOPPED FX APP with cause=$applicationThreadIssue")
         /*DO_NOT_SHUTDOWN_WITH_FX_THREAD*/    /*DO_NOT_SHUTDOWN_WITH_FX_THREAD*/    /*DO_NOT_SHUTDOWN_WITH_FX_THREAD*/    /*DO_NOT_SHUTDOWN_WITH_FX_THREAD*/    /*DO_NOT_SHUTDOWN_WITH_FX_THREAD*/    /*DO_NOT_SHUTDOWN_WITH_FX_THREAD*/
     }/*DO_NOT_SHUTDOWN_WITH_FX_THREAD*//*DO_NOT_SHUTDOWN_WITH_FX_THREAD*//*DO_NOT_SHUTDOWN_WITH_FX_THREAD*//*DO_NOT_SHUTDOWN_WITH_FX_THREAD*//*DO_NOT_SHUTDOWN_WITH_FX_THREAD*//*DO_NOT_SHUTDOWN_WITH_FX_THREAD*/
 }
