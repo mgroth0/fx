@@ -4,7 +4,6 @@ import javafx.application.Application
 import javafx.event.Event
 import javafx.event.EventHandler
 import javafx.event.EventType
-import javafx.scene.Node
 import javafx.scene.text.Text
 import javafx.stage.Stage
 import matt.color.hexToColor

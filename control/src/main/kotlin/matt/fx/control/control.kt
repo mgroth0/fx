@@ -1,6 +1,5 @@
 package matt.fx.control
 
-import javafx.scene.Node
 import javafx.scene.control.TreeTableView
 import javafx.scene.input.ContextMenuEvent
 import javafx.scene.layout.ColumnConstraints
