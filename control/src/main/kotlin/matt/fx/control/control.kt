@@ -72,7 +72,7 @@ fun TabPaneWrapper<TabWrapper<*>>.lazyTab(name: String, nodeOp: () -> NodeWrappe
 }
 
 
-fun Node.disableContextMenu() {
+fun NodeWrapper.disableContextMenu() {
     addEventFilter(ContextMenuEvent.ANY) {
         it.consume()
     }

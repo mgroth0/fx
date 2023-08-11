@@ -11,35 +11,57 @@ import matt.obs.bind.smartBind
 import matt.obs.prop.Var
 
 fun ET.checkbox(
-  text: String = "",
-  property: Var<Boolean>? = null,
-  weakBothWays: Boolean? = null,
-  op: CheckBoxWrapper.()->Unit = {}
+    text: String = "",
+    property: Var<Boolean>? = null,
+    weakBothWays: Boolean? = null,
+    op: CheckBoxWrapper.() -> Unit = {}
 ) = CheckBoxWrapper().apply { this.text = text }.attachTo(this, op) {
-  if (property != null) it.bind(property, weakBothWays = weakBothWays ?: false)
-  else {
-	requireNull(weakBothWays) {
-	  "setting weakBothWays does not make sense if property is not set"
-	}
-  }
+    if (property != null) it.bind(property, weakBothWays = weakBothWays ?: false)
+    else {
+        requireNull(weakBothWays) {
+            "setting weakBothWays does not make sense if property is not set"
+        }
+    }
 }
 
 
 class CheckBoxWrapper(
-  node: CheckBox = CheckBox(),
-): ButtonBaseWrapper<CheckBox>(node) {
+    node: CheckBox = CheckBox(),
+) : ButtonBaseWrapper<CheckBox>(node) {
 
-  constructor(text: String?): this(CheckBox(text))
+    constructor(text: String?) : this(CheckBox(text))
 
 
-  var isSelected
-	get() = node.isSelected
-	set(value) {
-	  node.isSelected = value
-	}
+    var isSelected
+        get() = node.isSelected
+        set(value) {
+            node.isSelected = value
+        }
 
-  val selectedProperty: NonNullFXBackedBindableProp<Boolean> get() = node.selectedProperty().toNonNullableProp()
+    val selectedProperty: NonNullFXBackedBindableProp<Boolean> get() = node.selectedProperty().toNonNullableProp()
+
+
+    var isAllowIndeterminate
+        get() = node.isAllowIndeterminate
+        set(value) {
+            node.isAllowIndeterminate = value
+        }
+
+    val allowIndeterminateProperty: NonNullFXBackedBindableProp<Boolean> get() = node.allowIndeterminateProperty().toNonNullableProp()
+
+    var isIndeterminate
+        get() = node.isIndeterminate
+        set(value) {
+            node.isIndeterminate = value
+        }
+
+    val indeterminateProperty: NonNullFXBackedBindableProp<Boolean> get() = node.indeterminateProperty().toNonNullableProp()
+
 }
 
-fun CheckBoxWrapper.bind(property: Var<Boolean>, readonly: Boolean = false, weakBothWays: Boolean = false) =
-  selectedProperty.smartBind(property, readonly, weak = weakBothWays)
+fun CheckBoxWrapper.bind(
+    property: Var<Boolean>,
+    readonly: Boolean = false,
+    weakBothWays: Boolean = false
+) =
+    selectedProperty.smartBind(property, readonly, weak = weakBothWays)

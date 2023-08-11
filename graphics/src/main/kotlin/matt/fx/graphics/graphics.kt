@@ -8,16 +8,17 @@ import javafx.scene.Node
 import javafx.scene.text.Text
 import javafx.stage.Stage
 import matt.color.hexToColor
+import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.style.toFXColor
 
-fun <T: Event> Node.filterAndConsume(eventType: EventType<T>, handler: EventHandler<T>) {
+fun <T: Event> NodeWrapper.filterAndConsume(eventType: EventType<T>, handler: EventHandler<T>) {
   addEventFilter(eventType) {
 	handler.handle(it)
 	it.consume()
   }
 }
 
-fun <T: Event> Node.handleAndConsume(eventType: EventType<T>, handler: EventHandler<T>) {
+fun <T: Event> NodeWrapper.handleAndConsume(eventType: EventType<T>, handler: EventHandler<T>) {
   addEventHandler(eventType) {
 	handler.handle(it)
 	it.consume()

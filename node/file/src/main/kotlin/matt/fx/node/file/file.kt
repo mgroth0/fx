@@ -60,21 +60,21 @@ import java.lang.Thread.sleep
 import java.lang.ref.WeakReference
 
 fun MFile.draggableIcon() =
-    (when {
-        (isDirectory)         -> Icon("white/folder")
-        (extension.isBlank()) -> Icon("file/bin")
-        else                  -> Icon("file/${extension}"/*, invert = extension in listOf("md", "txt")*/)
-    }).apply {
+    staticIcon().apply {
         dragsFile(this@draggableIcon, mode = BetterTransferMode.COPY)
     }
 
+fun MFile.staticIcon() = Icon(iconString())
+
+private fun MFile.iconString() = when {
+    (isDirectory)         -> "white/folder"
+    (extension.isBlank()) -> "file/bin"
+    else                  -> "file/${extension}"/*, invert = extension in listOf("md", "txt")*/
+}
+
 fun ObsVal<MFile>.draggableIcon() = ObsStringIcon(
     binding {
-        when {
-            (it.isDirectory)         -> "white/folder"
-            (it.extension.isBlank()) -> "file/bin"
-            else                     -> "file/${it.extension}"/*, invert = extension in listOf("md", "txt")*/
-        }
+        it.iconString()
     }
 ).apply {
     dragsFile(this@draggableIcon, mode = BetterTransferMode.COPY)
