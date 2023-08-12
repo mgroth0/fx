@@ -10,12 +10,12 @@ import matt.fx.control.wrapper.checkbox.CheckBoxWrapper
 import matt.fx.control.wrapper.control.tab.TabWrapper
 import matt.fx.control.wrapper.scroll.ScrollPaneWrapper
 import matt.fx.control.wrapper.tab.TabPaneWrapper
-import matt.fx.graphics.wrapper.node.NW
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.impl.NodeWrapperImpl
 import matt.http.url.query.buildQueryURL
 import matt.lang.NEVER
 import matt.lang.opt
+import matt.lang.require.requireNot
 import matt.log.warn.warn
 import matt.obs.prop.BindableProperty
 import matt.obs.prop.Var
@@ -56,18 +56,32 @@ var RowConstraints.exactHeight: Number
     get() = NEVER
 
 
-fun TabPaneWrapper<TabWrapper<*>>.lazyTab(name: String, nodeOp: () -> NodeWrapper) = TabWrapper<NW>(name).apply {
+fun <N : NodeWrapper> TabPaneWrapper<in TabWrapper<N>>.lazyTab(
+    name: String,
+    closable: Boolean = true,
+    nodeOp: () -> N
+) = object : LazyTab<N>(name, closable = closable) {
+    override fun nodeOp() = nodeOp()
+}.apply {
+    this@lazyTab.tabs += this
+}
 
-    if (isSelected) {
-        content = nodeOp()
-    } else {
+
+abstract class LazyTab<N : NodeWrapper?>(
+    name: String,
+    closable: Boolean = true,
+) : TabWrapper<N>(name) {
+    abstract fun nodeOp(): N
+
+    init {
+        isClosable = closable
+        requireNot(isSelected)
         selectedProperty.onChangeUntilInclusive({ true }) {
             if (it == true) {
                 content = nodeOp()
             }
         }
     }
-    this@lazyTab.tabs += this
 }
 
 
@@ -88,7 +102,10 @@ fun Var<Boolean>.checkbox(name: String? = null) = CheckBoxWrapper(name).also {
 
 
 class TreeTableTreeView<T>(val table: Boolean) : TreeTableView<T>() {
-    override fun resize(width: Double, height: Double) {
+    override fun resize(
+        width: Double,
+        height: Double
+    ) {
         super.resize(width, height)
         if (!table) {
             val header = lookup("TableHeaderRow") as Pane

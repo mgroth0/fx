@@ -12,7 +12,7 @@ import matt.lang.require.requireNull
 import matt.obs.bindings.bool.ObsB
 import matt.obs.bindings.bool.not
 
-open class TabWrapper<C : NodeWrapper>(
+open class TabWrapper<C : NodeWrapper?>(
     node: Tab = Tab()
 ) : SingularEventTargetWrapper<Tab>(node) {
 
@@ -36,8 +36,8 @@ open class TabWrapper<C : NodeWrapper>(
 
     open var content: C
         @Suppress("UNCHECKED_CAST")
-        get() = node.content.wrapped() as C
-        set(value) = contentProperty v (value.node)
+        get() = node.content?.wrapped() as C
+        set(value) = contentProperty v (value?.node)
 
     val graphicProperty by lazy { node.graphicProperty().toNullableProp() }
     var graphic by graphicProperty

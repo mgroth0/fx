@@ -7,6 +7,7 @@ import javafx.scene.control.SelectionMode
 import javafx.scene.control.TreeItem
 import javafx.scene.control.TreeView
 import matt.collect.itr.recurse.recurse
+import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
 import matt.fx.control.wrapper.cellfact.TreeCellFactory
 import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.control.wrapper.control.tree.like.TreeLikeWrapper
@@ -17,8 +18,6 @@ import matt.fx.graphics.service.uncheckedNullableWrapperConverter
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
-import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
-import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
 
 fun <T: Any> TreeViewWrapper<T>.items(): Sequence<TreeItemWrapper<T>> = root!!.recurse { it.children }
 
@@ -54,7 +53,7 @@ class TreeViewWrapper<T: Any>(node: TreeView<T> = TreeView(), op: TreeViewWrappe
   fun editableProperty(): BooleanProperty = node.editableProperty()
 
 
-  override val cellFactoryProperty by lazy { node.cellFactoryProperty().toNonNullableProp() }
+  override val cellFactoryProperty by lazy { node.cellFactoryProperty().toNullableProp() }
 
 
   override val rootProperty by lazy {node.rootProperty().toNullableProp().proxy(uncheckedNullableWrapperConverter<TreeItem<T>,TreeItemWrapper<T>>())}

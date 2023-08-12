@@ -10,7 +10,7 @@ class ConsoleTests : Tests() {
     @Test
     fun instantiateClasses() {
         FXTester.runFXHeadlessApp {
-            ConsoleTextFlow()
+            ConsoleTextFlow(maxLines = 1)
         }
     }
 }

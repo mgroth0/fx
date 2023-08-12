@@ -29,6 +29,7 @@ import matt.fx.node.console.text.ConsoleTextFlow
 import matt.gui.menu.context.mcontextmenu
 import matt.lang.err
 import matt.lang.go
+import matt.lang.require.requireNot
 import matt.lang.seq.charSequence
 import matt.obs.bindings.bool.not
 import matt.obs.prop.BindableProperty
@@ -40,12 +41,18 @@ import matt.stream.piping.redirectErr
 import matt.stream.piping.redirectOut
 import matt.time.dur.ms
 import matt.time.dur.sec
+import matt.time.dur.sleep
 import java.io.BufferedReader
 import java.io.BufferedWriter
 import java.io.IOException
 import java.io.PipedInputStream
 import java.io.PipedOutputStream
 import java.io.PrintWriter
+import java.nio.ByteBuffer
+import java.nio.CharBuffer
+import java.nio.channels.FileChannel
+import java.nio.file.NoSuchFileException
+import kotlin.time.Duration.Companion.seconds
 
 val YesIUse = AppleScriptString::class
 
@@ -61,13 +68,16 @@ fun ParentWrapper<NodeWrapper>.processConsole(
 }
 
 fun ParentWrapper<NodeWrapper>.interceptConsole(
-    name: String = "new intercept console", op: SystemRedirectConsole.() -> Unit = {}
+    name: String = "new intercept console",
+    op: SystemRedirectConsole.() -> Unit = {}
 ): SystemRedirectConsole {
     return addr(SystemRedirectConsole(name).apply(op))
 }
 
 fun ParentWrapper<NodeWrapper>.customConsole(
-    name: String = "new custom console", takesInput: Boolean = true, op: CustomConsole.() -> Unit = {}
+    name: String = "new custom console",
+    takesInput: Boolean = true,
+    op: CustomConsole.() -> Unit = {}
 ): CustomConsole {
 
     return addr(CustomConsole(name, takesInput).apply(op))
@@ -75,8 +85,13 @@ fun ParentWrapper<NodeWrapper>.customConsole(
 
 val CONSOLE_MEM_FOLD = DATA_FOLDER + "ConsoleMemory"
 
+private val DEFAULT_MAX_LINES: Int = 1000
+
 sealed class Console(
-    val name: String, val takesInput: Boolean = true
+    val name: String,
+    val takesInput: Boolean = true,
+    throttle: Boolean = true,
+    maxLines: Int? = DEFAULT_MAX_LINES
 ) : ScrollPaneWrapper<ConsoleTextFlow>(), NodeWrapper {
 
     companion object {
@@ -90,16 +105,16 @@ sealed class Console(
         const val HASTE_COUNT = (HASTE_DUR / HASTE).toInt()
     }
 
-    private val hscrollOption = BindableProperty(true)
+    private val hScrollOption = BindableProperty(true)
     private val myLogFolder = mattLogContext.logFolder + name
     protected val logfile = myLogFolder + "$name.log"
     protected val errFile = mFile(logfile.absolutePath + ".err")
     protected var writer: BufferedWriter? = null
     private val mem = ConsoleMemory(CONSOLE_MEM_FOLD + "$name.txt")
-    private val consoleTextFlow = ConsoleTextFlow(takesInput)
+    private val consoleTextFlow = ConsoleTextFlow(takesInput, maxLines = maxLines)
 
     private val autoscrollProp = BindableProperty(true)
-    private val throttleProp = BindableProperty(true)
+    private val throttleProp = BindableProperty(throttle)
     private val enableProp = BindableProperty(true)
     private var autoscroll by autoscrollProp
     private var throttle by throttleProp
@@ -176,7 +191,7 @@ sealed class Console(
 
     init {
 
-        hscrollOption.onChange {
+        hScrollOption.onChange {
 
             consoleTextFlow.requestLayout() // this works!!
         }
@@ -186,7 +201,7 @@ sealed class Console(
         hbarPolicy = ScrollBarPolicy.NEVER
 
         consoleTextFlow.padding = Insets(15.0, 30.0, 15.0, 15.0)
-        fitToWidthProperty.bind(hscrollOption.not())
+        fitToWidthProperty.bind(hScrollOption.not())
 
         var old = consoleTextFlow.height
         consoleTextFlow.heightProperty.onChange { newValue ->
@@ -279,7 +294,7 @@ sealed class Console(
             "copy text" does {
                 consoleTextFlow.fullText().copyToClipboard()
             }
-            checkitem("hscroll", hscrollOption)
+            checkitem("hscroll", hScrollOption)
         }
         every(NORMAL.ms, ownTimer = true) { refresh() }
     }
@@ -289,13 +304,14 @@ sealed class Console(
         consoleTextFlow.clearOutputAndStoredInput()
     }
 
+
     protected fun handleEndOfStream(endReason: ReaderEndReason) {
         when (endReason.type) {
             ReaderEndReason.TYPE.END_OF_STREAM -> {
                 unshownOutput += "stream ended"
             }
 
-            ReaderEndReason.TYPE.IO_EXCEPTION -> {
+            ReaderEndReason.TYPE.IO_EXCEPTION  -> {
                 unshownOutput += "stream ended with IO Exception"
                 logfile.append(endReason.exception!!.toString())
                 errFile.append(endReason.exception.toString())
@@ -304,23 +320,86 @@ sealed class Console(
     }
 }
 
-class ProcessConsole(name: String) : Console(name) {
-    fun alsoTail(logFile: MFile) {
-        daemon {
-            var got = ""
-            while (true) {
-                if (logFile.exists()) {
-                    val r = logFile.text
-                    if (got != r) {
-                        unshownOutput += r.removePrefix(got)
-                        /*println(r.removePrefix(got))*/
-                        got = r
-                    }
-                }
-                Thread.sleep(1000)
-            }
-        }
+
+sealed class TailCapableConsole(
+    name: String,
+    takesInput: Boolean,
+    throttle: Boolean,
+    maxLines: Int? = DEFAULT_MAX_LINES
+) : Console(name, takesInput = takesInput, throttle = throttle, maxLines = maxLines) {
+    companion object {
+        val BUFF_SIZE = 1000
     }
+
+    private val interval = 1.seconds
+    protected var shouldContinue = true
+    protected fun tail(logFile: MFile) = daemon {
+        val decoder = Charsets.UTF_8.newDecoder()
+        var reader: FileChannel? = null
+        try {
+            var pos = 0
+            val charBuffer = CharBuffer.allocate(BUFF_SIZE)
+            val byteBuffer = ByteBuffer.allocate(BUFF_SIZE)
+            val charArray = CharArray(BUFF_SIZE)
+            var lastSize = logFile.size()
+
+            fun localReset() {
+                reader?.close()
+                reader = null
+                pos = 0
+                charBuffer.clear()
+                byteBuffer.clear()
+                reset()
+            }
+
+
+            while (shouldContinue) {
+
+                val newSize = try {
+                    logFile.size()
+                } catch (e: NoSuchFileException) {
+                    localReset()
+                    sleep(interval)
+                    continue
+                }
+
+
+                val theReader = reader ?: logFile.readChannel().also {
+                    reader = it
+                }
+
+                /*LOOPHOLE: The file contents may have changed before `position`, without the file size shrinking, and in that case I would not catch it*/
+                if (newSize < lastSize) {
+                    theReader.position(0)
+                }
+                lastSize = newSize
+
+
+                val numBytesRead = theReader.read(byteBuffer)
+                pos += numBytesRead
+                byteBuffer.flip()
+                decoder.decode(byteBuffer, charBuffer, false)
+                byteBuffer.clear()
+                @Suppress("UNUSED_VARIABLE") val endOfStream = numBytesRead == -1
+                if (numBytesRead > 0) {
+                    charBuffer.flip()
+                    val numChars = charBuffer.remaining()
+                    charBuffer.get(charArray, 0, numChars)
+                    charBuffer.clear()
+                    unshownOutput += charArray.concatToString(0, numChars)
+                } else {
+                    sleep(interval)
+                }
+            }
+        } finally {
+            reader?.close()
+        }
+
+    }
+}
+
+class ProcessConsole(name: String) : TailCapableConsole(name, takesInput = true, throttle = true) {
+    fun alsoTail(logFile: MFile) = tail(logFile)
 
     fun attachProcess(p: Process) {
         logfile.doubleBackupWrite("")
@@ -342,6 +421,30 @@ class ProcessConsole(name: String) : Console(name) {
     }
 }
 
+class TailConsole(
+    name: String,
+    val file: MFile
+) : TailCapableConsole(name, takesInput = false, throttle = false, maxLines = null) {
+
+    private var started = false
+    private var stopped = false
+
+    @Synchronized
+    fun start() {
+        requireNot(started)
+        requireNot(stopped)
+        started = true
+        tail(file)
+    }
+
+    @Synchronized
+    fun stop() {
+        shouldContinue = false
+        stopped = true
+    }
+
+}
+
 class SystemRedirectConsole(name: String) : Console(name, takesInput = false) {
     fun interceptStdOutErr() {
         logfile.doubleBackupWrite("")
@@ -354,7 +457,10 @@ class SystemRedirectConsole(name: String) : Console(name, takesInput = false) {
     }
 }
 
-class CustomConsole(name: String, takesInput: Boolean) : Console(name, takesInput) {
+class CustomConsole(
+    name: String,
+    takesInput: Boolean
+) : Console(name, takesInput) {
     fun custom(): Pair<PrintWriter, BufferedReader?> {
         val userInput = if (takesInput) {
             val inpUser = PipedInputStream()

@@ -38,7 +38,6 @@ import matt.obs.listen.whenEqualsOnce
 import matt.obs.prop.BindableProperty
 import matt.obs.prop.ObsVal
 import matt.obs.prop.VarProp
-import matt.shell.context.DefaultMacExecutionContext
 import matt.time.dur.ms
 
 private const val PROMPT = "> "
@@ -46,22 +45,23 @@ private val PROMPT_COLOR: Color = Color.GREEN
 private val INPUT_COLOR = rgb(100, 100, 255).toFXColor()
 private val CLICKABLE_COLOR: Color = Color.BLUE
 private val HOVER_COLOR = DarkLightFXColor(
-    darkColor = Color.LIGHTBLUE,
-    lightColor = Color.DARKBLUE
+    darkColor = Color.LIGHTBLUE, lightColor = Color.DARKBLUE
 )
 
+private val NEWLINES = listOf('\n', '\r')
 
-class ConsoleTextFlow(private val takesInput: Boolean = true) : TextFlowWrapper<ConsoleBlock>() {
+class ConsoleTextFlow(
+    private val takesInput: Boolean = true,
+    private val maxLines: Int?
+) : TextFlowWrapper<ConsoleBlock>() {
 
     companion object {
         private const val MAX_FONT_SIZE = 50.0
         private const val MIN_FONT_SIZE = 5.0
         private val DEFAULT_FONT = MONO_FONT.fixed().copy(size = 12.0).fx()
-        private val NEWLINES = listOf('\n', '\r')
-
-        /*CURRENTLY IS NOT A LINE BUFFER BUT RATHER IS A BLOCK BUFFER, THIS IS FINE FOR NOW BUT NOT IDEAL*/
-        private const val BUFFER_NUM_LINES = 1000
     }
+
+    private var currentLineCount = 0
 
     private val font = BindableProperty(DEFAULT_FONT)
     private val fontSize = font.binding { it.size }
@@ -102,6 +102,7 @@ class ConsoleTextFlow(private val takesInput: Boolean = true) : TextFlowWrapper<
 
     init {
         add(currentLine)
+        currentLineCount++
         if (takesInput) {
             add(separatorText!!)
             add(unsentInputText!!)
@@ -112,6 +113,7 @@ class ConsoleTextFlow(private val takesInput: Boolean = true) : TextFlowWrapper<
         get() = unsentInputText!!.text
 
     fun displayInputAsSentAndClearStoredInput() {
+
         blinkRemote!!.stop()
         currentLine = OutputText().also {
             it.text = "\n"
@@ -126,6 +128,7 @@ class ConsoleTextFlow(private val takesInput: Boolean = true) : TextFlowWrapper<
                 add(it)
             }
         }
+        currentLineCount++
     }
 
     fun displayAndHoldNewUnsentInputChar(c: String) {
@@ -143,7 +146,6 @@ class ConsoleTextFlow(private val takesInput: Boolean = true) : TextFlowWrapper<
     }
 
 
-    private var reachedBufferNumLines = false
     fun displayNewText(newText: String) {
         newText.forEach { c ->
             currentLine.text += c
@@ -177,14 +179,13 @@ class ConsoleTextFlow(private val takesInput: Boolean = true) : TextFlowWrapper<
                         lastPart = nextPart
                     }
                     maybeAddBasicText(finishedLineText.substring(lastPart.indices.last + 1))
-
-
                 }
                 currentLine = OutputText().also {
                     children.add(
                         if (takesInput) children.size - 2 else children.size, it
                     )
                 }
+                currentLineCount++
                 checkLineBuffer()
             }
         }
@@ -192,24 +193,23 @@ class ConsoleTextFlow(private val takesInput: Boolean = true) : TextFlowWrapper<
 
     private fun TransformableOutput.toNode() = when (this) {
         is StackTraceLine -> ClickableText(text) {
-            with(DefaultMacExecutionContext) {
-
-                Idea.open(
-                    OpenSpecific(
-                        qualifiedName = qualifiedName,
-                        fileName = fileName,
-                        lineNumber = lineNumber
-                    )
+            Idea.open(
+                OpenSpecific(
+                    qualifiedName = qualifiedName, fileName = fileName, lineNumber = lineNumber
                 )
-
-            }
+            )
         }
     }
 
-    /*CURRENTLY IS NOT A LINE BUFFER BUT RATHER IS A BLOCK BUFFER, THIS IS FINE FOR NOW BUT NOT IDEAL*/
     private fun checkLineBuffer() {
-        if (reachedBufferNumLines) children.removeAt(0)
-        else reachedBufferNumLines = children.size >= BUFFER_NUM_LINES
+        if (maxLines != null) {
+            if (currentLineCount > maxLines) {
+                do {
+                    val removed = children.removeAt(0)
+                } while (!removed.isEndOfLine)
+                currentLineCount--
+            }
+        }
     }
 
     fun clearStoredAndDisplayedInput() {
@@ -225,7 +225,7 @@ class ConsoleTextFlow(private val takesInput: Boolean = true) : TextFlowWrapper<
             children.clear()
             currentLine = OutputText().also { children.add(it) }
         }
-        reachedBufferNumLines = false
+        currentLineCount = 1
     }
 
     private fun SepText(newline: Boolean = true) = SepBlock(this@ConsoleTextFlow.font, newline = newline)
@@ -257,12 +257,10 @@ private class ClickableOutputText(
     font: ObsVal<Font>,
     action: Op
 ) : OutputText(font, CLICKABLE_COLOR), ConsoleBlock {
-    companion object {}
 
     init {
         highlightOnHover(
-            hoverColor = HOVER_COLOR,
-            nonHoverColor = CLICKABLE_COLOR
+            hoverColor = HOVER_COLOR, nonHoverColor = CLICKABLE_COLOR
         )
         cursor = HAND
         onLeftClick {
@@ -286,13 +284,17 @@ private class SepBlock(
 private class InputBlock(font: ObsVal<Font>) : BaseText(font, INPUT_COLOR), ConsoleBlock
 
 
-sealed interface ConsoleBlock : NodeWrapper
+sealed interface ConsoleBlock : NodeWrapper {
+    val isEndOfLine: Boolean
+}
 
 
 private abstract class BaseText(
     font: ObsVal<Font>,
     color: FXColor
-) : TextWrapper() {
+) : TextWrapper(), ConsoleBlock {
+    override val isEndOfLine get() = text.last() in NEWLINES
+
     init {
         fontProperty.bindWeakly(font)
         fillViaStyleSinceThereIsSomeBug = color
@@ -331,13 +333,11 @@ private fun TextWrapper.blink(): BlinkRemote {
             }
         }
     }
-    return BlinkRemote(
-        stop = {
-            remoteEnabled.value = false
-            listener.removeListener()
-            shouldBlink.removeAllDependencies()
-            preShouldBlink.removeAllDependencies()
-        }
-    )
+    return BlinkRemote(stop = {
+        remoteEnabled.value = false
+        listener.removeListener()
+        shouldBlink.removeAllDependencies()
+        preShouldBlink.removeAllDependencies()
+    })
 }
 
