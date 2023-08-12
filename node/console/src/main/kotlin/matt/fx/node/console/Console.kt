@@ -19,6 +19,7 @@ import matt.file.commons.mattLogContext
 import matt.file.construct.mFile
 import matt.fx.control.wrapper.scroll.ScrollPaneWrapper
 import matt.fx.graphics.clip.copyToClipboard
+import matt.fx.graphics.fxthread.ensureInFXThreadInPlace
 import matt.fx.graphics.hotkey.hotkeys
 import matt.fx.graphics.hotkey.plus
 import matt.fx.graphics.wrapper.node.NodeWrapper
@@ -301,7 +302,9 @@ sealed class Console(
 
 
     fun reset() {
-        consoleTextFlow.clearOutputAndStoredInput()
+        ensureInFXThreadInPlace {
+            consoleTextFlow.clearOutputAndStoredInput()
+        }
     }
 
 
