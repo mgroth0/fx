@@ -23,13 +23,9 @@ import matt.lang.sync
 import matt.obs.prop.VarProp
 
 fun NW.install(newToolTip: FixedTooltipWrapper) {
-  /*if (this is ControlWrapperImpl<*>) {
-	tooltip = newToolTip
-  } else {*/
   MyFixedTooltip.install(
 	this.node, newToolTip.node
   )
-  /*}*/
 }
 
 fun NW.tooltip(text: String = "", graphic: NW? = null, op: FixedTooltipWrapper.()->Unit = {}): FixedTooltipWrapper {

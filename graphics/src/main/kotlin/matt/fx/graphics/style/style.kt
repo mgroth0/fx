@@ -8,7 +8,8 @@ import javafx.scene.paint.Color
 import matt.color.IntColor
 import matt.css.MyStyleDsl
 import matt.css.props.ColorLikeCssConverter
-import matt.fx.graphics.wrapper.node.impl.NodeWrapperImpl
+import matt.fx.graphics.wrapper.FXNodeWrapperDSL
+import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.style.FXColor
 import matt.fx.graphics.wrapper.style.toFXColor
 import matt.fx.graphics.wrapper.style.toMColor
@@ -77,7 +78,7 @@ private class StyleClass {
     }
 }
 
-
+@FXNodeWrapperDSL
 class StyleClassDSL(val s: Node) : MyStyleDsl() {
     val yellowText by StyleClass()
     val blueText by StyleClass()
@@ -125,9 +126,10 @@ class StyleClassDSL(val s: Node) : MyStyleDsl() {
     var fxTextFill: Color? by custom(FXColorStringConverter)
     var fxStroke: Color? by custom(FXColorStringConverter)
     var fxFill: Color? by custom(FXColorStringConverter)
+    var fxBackgroundColor: Color? by custom(FXColorStringConverter)
 }
 
-object FXColorStringConverter: StringConverter<FXColor> {
+object FXColorStringConverter : StringConverter<FXColor> {
     override fun toString(t: FXColor): String {
         return ColorLikeCssConverter.toString(
             t.toMColor()
@@ -141,7 +143,7 @@ object FXColorStringConverter: StringConverter<FXColor> {
 }
 
 
-fun NodeWrapperImpl<*>.sty(op: StyleClassDSL.() -> Unit) {
+fun NodeWrapper.sty(op: StyleClassDSL.() -> Unit) {
     StyleClassDSL(this.node).apply(op)
 }
 

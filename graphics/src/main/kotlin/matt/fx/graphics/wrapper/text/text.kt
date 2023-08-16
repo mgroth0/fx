@@ -5,13 +5,10 @@ import javafx.scene.text.Text
 import javafx.scene.text.TextAlignment
 import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
-import matt.fx.graphics.fxthread.runLater
 import matt.fx.graphics.fxthread.ts.nonBlockingFXWatcher
-import matt.fx.graphics.style.sty
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.fx.graphics.wrapper.node.shape.ShapeWrapper
-import matt.fx.graphics.wrapper.style.FXColor
 import matt.fx.graphics.wrapper.text.textlike.ColoredText
 import matt.lang.delegation.lazyVarDelegate
 import matt.obs.bindings.str.ObsS
@@ -60,27 +57,5 @@ open class TextWrapper(
     val yProperty by lazy { node.yProperty().toNonNullableProp().cast<Double>() }
     var y by lazyVarDelegate { yProperty }
 
-
-    fun pointlesslyTryToSetTextFillWithoutAFlicker(color: FXColor) {
-        /*require(Platform.isFxApplicationThread())*/
-        sty {
-            fill = color
-        }
-        textFill = color
-        runLater {
-            textFill = color
-            sty {
-                fill = color
-            }
-            runLater {
-                /*YES I have found that sometimes (probably mostly in heavy parts of the app) this needs to be run a THIRD time*/
-                textFill = color
-                sty {
-                    fill = color
-                }
-                /*YES it didn't work with two, and proved to work with 3 (Category View titles). So stupid.*/
-            }
-        }
-    }
 
 }

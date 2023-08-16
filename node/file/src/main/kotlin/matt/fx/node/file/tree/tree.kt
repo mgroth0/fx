@@ -265,12 +265,12 @@ private fun TreeLikeWrapper<*, MFile>.setupGUI() {
         }
 
         onRequest {
-            val selects = selectionModel.selectedItems
+            val selects = this@setupGUI.selectionModel.selectedItems
             when (selects.size) {
                 0    -> Unit
                 1    -> {
                     "open in new window" does {
-                        selectedValue?.let {
+                        this@setupGUI.selectedValue?.let {
                             VBoxWrapperImpl<NodeWrapper>().apply {
                                 val container = this
                                 add(it.createNode(renderHTMLAndSVG = true).apply {
@@ -287,7 +287,7 @@ private fun TreeLikeWrapper<*, MFile>.setupGUI() {
                             )
                         }
                     }
-                    selectedValue?.let { it.actions() + it.fxActions() }?.forEach { action ->
+                    this@setupGUI.selectedValue?.let { it.actions() + it.fxActions() }?.forEach { action ->
                         actionitem(action) {
                             graphic = action.icon?.view()?.node
                         }

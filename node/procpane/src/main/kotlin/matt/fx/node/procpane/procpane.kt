@@ -301,8 +301,8 @@ class ProcessConsolePane(
                 vgrow = ALWAYS
             })
             mcontextmenu {
-                checkitem("Show process inspect pane", showProcessInspectPaneOption)
-                checkitem("Auto-Restart", autoRestartProp)
+                checkitem("Show process inspect pane", this@ProcessConsolePane.showProcessInspectPaneOption)
+                checkitem("Auto-Restart", this@ProcessConsolePane.autoRestartProp)
             }
         }
     }

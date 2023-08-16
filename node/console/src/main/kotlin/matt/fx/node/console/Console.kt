@@ -285,17 +285,17 @@ sealed class Console(
                     this@Console.consoleTextFlow.tryDecreaseFontSize()
                 }
             }
-            checkitem("autoscroll", autoscrollProp)
-            checkitem("throttle", throttleProp)
-            checkitem("enabled", enableProp)
+            checkitem("autoscroll", this@Console.autoscrollProp)
+            checkitem("throttle", this@Console.throttleProp)
+            checkitem("enabled", this@Console.enableProp)
             actionitem("Open Log") {
-                SublimeText.open(logfile)
-                SublimeText.open(errFile)
+                SublimeText.open(this@Console.logfile)
+                SublimeText.open(this@Console.errFile)
             }
             "copy text" does {
-                consoleTextFlow.fullText().copyToClipboard()
+                this@Console.consoleTextFlow.fullText().copyToClipboard()
             }
-            checkitem("hscroll", hScrollOption)
+            checkitem("hscroll", this@Console.hScrollOption)
         }
         every(NORMAL.ms, ownTimer = true) { refresh() }
     }
