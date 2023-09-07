@@ -3,23 +3,17 @@ package matt.fx.image
 import javafx.application.Platform
 import javafx.embed.swing.SwingFXUtils
 import javafx.scene.image.Image
+import javafx.scene.image.ImageView
 import matt.file.MFile
-
+import matt.image.save
 import java.awt.image.BufferedImage
-import javax.imageio.ImageIO
 
 
-fun jswingIconToImage(jswingIcon: javax.swing.Icon): Image? {
-    require(Platform.isFxApplicationThread()) {
-        "Let's try to be extra safe and only do this one on the FX Application thread too"
-    }
-    val bufferedImage = BufferedImage(
-        jswingIcon.iconWidth, jswingIcon.iconHeight,
-        BufferedImage.TYPE_INT_ARGB
-    )
-    jswingIcon.paintIcon(null, bufferedImage.graphics, 0, 0)
-    return SwingFXUtils.toFXImage(bufferedImage, null)
-}
+@JvmInline
+value class FxImage(val image: Image) : matt.image.Image
+
+@JvmInline
+value class FxImageView(val imageView: ImageView) : matt.image.Image
 
 fun Image.toBufferedImage(): BufferedImage {
     require(Platform.isFxApplicationThread()) {
@@ -35,7 +29,5 @@ fun BufferedImage.toFXImage(): Image {
     return SwingFXUtils.toFXImage(this, null)
 }
 
-fun Image.save(file: MFile): MFile {
-    ImageIO.write(toBufferedImage(), file.extension, file)
-    return file
-}
+
+fun Image.save(file: MFile) = toBufferedImage().save(file)

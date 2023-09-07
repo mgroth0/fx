@@ -281,6 +281,7 @@ open class MBackedFXObservableList<E>(internal open val mList: ImmutableObsList<
 
     override fun addListener(listener: ListChangeListener<in E>) {
         changeListenerMap[listener] = mList.onChange {
+//            println("BUGGY CHANGE: ${it}")
             listener.onChanged(it.toFXChange(this))
         }
     }

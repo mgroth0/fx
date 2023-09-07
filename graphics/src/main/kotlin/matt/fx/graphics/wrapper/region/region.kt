@@ -13,7 +13,13 @@ import javafx.scene.paint.Color
 import javafx.scene.paint.Paint
 import matt.file.MFile
 import matt.file.construct.toMFile
+import matt.fx.base.wrapper.obs.collect.list.createImmutableWrapper
+import matt.fx.base.wrapper.obs.collect.list.createMutableWrapper
+import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
+import matt.fx.base.wrapper.obs.obsval.toNonNullableROProp
 import matt.fx.graphics.service.uncheckedWrapperConverter
+import matt.fx.graphics.studio.DefaultStudio
 import matt.fx.graphics.style.background.backgroundFromColor
 import matt.fx.graphics.style.border.FXBorder
 import matt.fx.graphics.style.copy
@@ -25,14 +31,14 @@ import matt.fx.graphics.wrapper.node.parent.ParentWrapperImpl
 import matt.fx.graphics.wrapper.node.parent.parent
 import matt.fx.graphics.wrapper.region.RegionWrapper.Companion.computePrefWidthFun
 import matt.fx.graphics.wrapper.sizeman.SizeManaged
-import matt.fx.base.wrapper.obs.collect.list.createImmutableWrapper
-import matt.fx.base.wrapper.obs.collect.list.createMutableWrapper
-import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
-import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
-import matt.fx.base.wrapper.obs.obsval.toNonNullableROProp
+import matt.fx.image.toBufferedImage
+import matt.image.Png
+import matt.image.convert.toPng
 import matt.lang.NEVER
 import matt.lang.delegation.lazyVarDelegate
 import matt.lang.err
+import matt.model.data.rect.IntRectSize
+import matt.model.obj.raster.PngRasterizable
 import matt.model.op.convert.Converter
 import matt.obs.bindhelp.bindMultipleTargetsTogether
 import matt.obs.col.olist.ImmutableObsList
@@ -47,249 +53,264 @@ import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.jvm.isAccessible
 
 
-interface RegionWrapper<C: NodeWrapper>: ParentWrapper<C>, SizeManaged {
+interface RegionWrapper<C : NodeWrapper> : ParentWrapper<C>, SizeManaged, PngRasterizable {
 
-  companion object {
-	internal val computePrefWidthFun = Region::class.java.getDeclaredMethod("computePrefWidth", Double::class.java)
-	  .apply {
-		isAccessible = true
-	  }
-  }
-
-
-  override val node: Region
+    companion object {
+        internal val computePrefWidthFun =
+            Region::class.java.getDeclaredMethod("computePrefWidth", Double::class.java).apply {
+                isAccessible = true
+            }
+    }
 
 
-  fun setMinSize(minWidth: Double, minHeight: Double) = node.setMinSize(minWidth, minHeight)
+    override val node: Region
 
 
-  val borderProperty: Var<Border?>
-  var border: Border?
-	get() = node.border
-	set(value) = borderProperty.v(value)
+    fun setMinSize(
+        minWidth: Double,
+        minHeight: Double
+    ) = node.setMinSize(minWidth, minHeight)
 
-  fun yellow() = borderProperty.v(FXBorder.dashed(Color.YELLOW))
-  fun blue() = borderProperty.v(FXBorder.dashed(Color.BLUE))
-  fun purple() = borderProperty.v(FXBorder.dashed(Color.PURPLE))
-  fun green() = borderProperty.v(FXBorder.dashed(Color.GREEN))
-  fun red() = borderProperty.v(FXBorder.dashed(Color.RED))
-  fun orange() = borderProperty.v(FXBorder.dashed(Color.ORANGE))
-  fun white() = borderProperty.v(FXBorder.dashed(Color.WHITE))
+    override fun rasterize(size: IntRectSize): Png
 
-  var padding: Insets
-  val paddingProperty: Var<Insets>
+    val borderProperty: Var<Border?>
+    var border: Border?
+        get() = node.border
+        set(value) = borderProperty.v(value)
 
+    fun yellow() = borderProperty.v(FXBorder.dashed(Color.YELLOW))
+    fun blue() = borderProperty.v(FXBorder.dashed(Color.BLUE))
+    fun purple() = borderProperty.v(FXBorder.dashed(Color.PURPLE))
+    fun green() = borderProperty.v(FXBorder.dashed(Color.GREEN))
+    fun red() = borderProperty.v(FXBorder.dashed(Color.RED))
+    fun orange() = borderProperty.v(FXBorder.dashed(Color.ORANGE))
+    fun white() = borderProperty.v(FXBorder.dashed(Color.WHITE))
 
-  val backgroundProperty: Var<Background?>
-  var background: Background?
-
-  override val widthProperty: ObsVal<Double>
-  override val prefWidthProperty: Var<Double>
-  override val minWidthProperty: Var<Double>
-  override val maxWidthProperty: Var<Double>
-  override val heightProperty: ObsVal<Double>
-  override val prefHeightProperty: Var<Double>
-  override val minHeightProperty: Var<Double>
-  override val maxHeightProperty: Var<Double>
-
-  fun setOnFilesDropped(op: (List<MFile>)->Unit) {
-	node.setOnDragEntered {
-	  it.acceptTransferModes(*TransferMode.ANY)
-	}
-	node.setOnDragOver {
-	  it.acceptTransferModes(*TransferMode.ANY)
-	}
-	node.setOnDragDropped {
-	  if (DataFormat.FILES in it.dragboard.contentTypes) {
-		op(it.dragboard.files.map { it.toMFile() })
-	  }
-	  it.consume()
-	}
-  }
-
-  var backgroundFill: Paint?
-	set(value) {
-	  if (value == null) {
-		this.background = null
-	  } else {
-		background = backgroundFromColor(value)
-	  }
-
-	}
-	get() {
-	  err("no getter yet")
-	}
+    var padding: Insets
+    val paddingProperty: Var<Insets>
 
 
-  fun fitToParentHeight() {
-	fitToHeight((parent as RegionWrapper))
-  }
+    val backgroundProperty: Var<Background?>
+    var background: Background?
 
-  fun fitToParentWidth() {
-	fitToWidth((parent as RegionWrapper))
-  }
+    override val widthProperty: ObsVal<Double>
+    override val prefWidthProperty: Var<Double>
+    override val minWidthProperty: Var<Double>
+    override val maxWidthProperty: Var<Double>
+    override val heightProperty: ObsVal<Double>
+    override val prefHeightProperty: Var<Double>
+    override val minHeightProperty: Var<Double>
+    override val maxHeightProperty: Var<Double>
 
-  fun fitToParentSize() {
-	fitToParentHeight()
-	fitToParentWidth()
-  }
+    fun setOnFilesDropped(op: (List<MFile>) -> Unit) {
+        node.setOnDragEntered {
+            it.acceptTransferModes(*TransferMode.ANY)
+        }
+        node.setOnDragOver {
+            it.acceptTransferModes(*TransferMode.ANY)
+        }
+        node.setOnDragDropped {
+            if (DataFormat.FILES in it.dragboard.contentTypes) {
+                op(it.dragboard.files.map { it.toMFile() })
+            }
+            it.consume()
+        }
+    }
 
-  fun fitToHeight(region: RegionWrapper<*>) {
-	prefHeightProperty.bind(region.heightProperty)
-  }
+    var backgroundFill: Paint?
+        set(value) {
+            if (value == null) {
+                this.background = null
+            } else {
+                background = backgroundFromColor(value)
+            }
 
-  fun fitToWidth(region: RegionWrapper<*>) {
-	prefWidthProperty.bind(region.widthProperty)
-  }
-
-  fun fitToSize(region: RegionWrapper<*>) {
-	fitToHeight(region)
-	fitToWidth(region)
-  }
-
-
-  val paddingVerticalProperty: Var<Double>
-  var paddingVertical: Double
-
-  val exactWidthProperty: VarProp<Double>
-  val exactHeightProperty: VarProp<Double>
-
-
-   var exactWidth: Number
-	set(value) {
-	  exactWidthProperty.bind(BindableProperty(value.toDouble()))
-	}
-	get() = NEVER
-   var exactHeight: Number
-	set(value) {
-	  exactHeightProperty.bind(BindableProperty(value.toDouble()))
-	}
-	get() = NEVER
+        }
+        get() {
+            err("no getter yet")
+        }
 
 
-  var useMaxWidth: Boolean
-	get() = maxWidth == Double.MAX_VALUE
-	set(value) = if (value) maxWidth = Double.MAX_VALUE else Unit
+    fun fitToParentHeight() {
+        fitToHeight((parent as RegionWrapper))
+    }
 
-  var useMaxHeight: Boolean
-	get() = maxHeight == Double.MAX_VALUE
-	set(value) = if (value) maxHeight = Double.MAX_VALUE else Unit
+    fun fitToParentWidth() {
+        fitToWidth((parent as RegionWrapper))
+    }
 
-  var useMaxSize: Boolean
-	get() = maxWidth == Double.MAX_VALUE && maxHeight == Double.MAX_VALUE
-	set(value) = if (value) {
-	  useMaxWidth = true; useMaxHeight = true
-	} else Unit
+    fun fitToParentSize() {
+        fitToParentHeight()
+        fitToParentWidth()
+    }
 
-  var usePrefWidth: Boolean
-	get() = width == prefWidth
-	set(value) = if (value) run {
-	  minWidth = (Region.USE_PREF_SIZE)
-	} else Unit
+    fun fitToHeight(region: RegionWrapper<*>) {
+        prefHeightProperty.bind(region.heightProperty)
+    }
 
-  var usePrefHeight: Boolean
-	get() = height == prefHeight
-	set(value) = if (value) run { minHeight = (Region.USE_PREF_SIZE) } else Unit
+    fun fitToWidth(region: RegionWrapper<*>) {
+        prefWidthProperty.bind(region.widthProperty)
+    }
 
-  var usePrefSize: Boolean
-	get() = maxWidth == Double.MAX_VALUE && maxHeight == Double.MAX_VALUE
-	set(value) = if (value) setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE) else Unit
+    fun fitToSize(region: RegionWrapper<*>) {
+        fitToHeight(region)
+        fitToWidth(region)
+    }
 
 
-  override fun addChild(child: NodeWrapper, index: Int?) {
-	TODO("Not yet implemented")
-  }
+    val paddingVerticalProperty: Var<Double>
+    var paddingVertical: Double
+
+    val exactWidthProperty: VarProp<Double>
+    val exactHeightProperty: VarProp<Double>
 
 
-  val children: ImmutableObsList<C>
+    var exactWidth: Number
+        set(value) {
+            exactWidthProperty.bind(BindableProperty(value.toDouble()))
+        }
+        get() = NEVER
+    var exactHeight: Number
+        set(value) {
+            exactHeightProperty.bind(BindableProperty(value.toDouble()))
+        }
+        get() = NEVER
+
+
+    var useMaxWidth: Boolean
+        get() = maxWidth == Double.MAX_VALUE
+        set(value) = if (value) maxWidth = Double.MAX_VALUE else Unit
+
+    var useMaxHeight: Boolean
+        get() = maxHeight == Double.MAX_VALUE
+        set(value) = if (value) maxHeight = Double.MAX_VALUE else Unit
+
+    var useMaxSize: Boolean
+        get() = maxWidth == Double.MAX_VALUE && maxHeight == Double.MAX_VALUE
+        set(value) = if (value) {
+            useMaxWidth = true; useMaxHeight = true
+        } else Unit
+
+    var usePrefWidth: Boolean
+        get() = width == prefWidth
+        set(value) = if (value) run {
+            minWidth = (Region.USE_PREF_SIZE)
+        } else Unit
+
+    var usePrefHeight: Boolean
+        get() = height == prefHeight
+        set(value) = if (value) run { minHeight = (Region.USE_PREF_SIZE) } else Unit
+
+    var usePrefSize: Boolean
+        get() = maxWidth == Double.MAX_VALUE && maxHeight == Double.MAX_VALUE
+        set(value) = if (value) setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE) else Unit
+
+
+    override fun addChild(
+        child: NodeWrapper,
+        index: Int?
+    ) {
+        TODO("Not yet implemented")
+    }
+
+
+    val children: ImmutableObsList<C>
 
 
 }
 
 fun RegionWrapper<*>.computePrefWidth(height: Double) = (computePrefWidthFun.invoke(node, height) as Double).also {
-  println("computed pref width of $node with height $height is $it")
+    println("computed pref width of $node with height $height is $it")
 }
 
 
-open class RegionWrapperImpl<N: Region, C: NodeWrapper>(node: N): ParentWrapperImpl<N, C>(node), RegionWrapper<C> {
-  /*any temporary border changes might want to come back to this after*//*used to be an ugly lazy map that lead to errors. manual is better for this.*/
-  var defaultBorder: Border = Border.EMPTY
+open class RegionWrapperImpl<N : Region, C : NodeWrapper>(node: N) : ParentWrapperImpl<N, C>(node), RegionWrapper<C> {
+    /*any temporary border changes might want to come back to this after*//*used to be an ugly lazy map that lead to errors. manual is better for this.*/
+    var defaultBorder: Border = Border.EMPTY
 
-  companion object {
-	private val regionChildrenProp by lazy {
-	  Parent::class.declaredMemberProperties.first {
-		it.name == "children"
-	  }.apply {
-		isAccessible = true
-	  }
-	}
-  }
+    companion object {
+        private val regionChildrenProp by lazy {
+            Parent::class.declaredMemberProperties.first {
+                it.name == "children"
+            }.apply {
+                isAccessible = true
+            }
+        }
+    }
 
-  @Suppress("UNCHECKED_CAST") protected val regionChildren by lazy {
-	(regionChildrenProp.call(this@RegionWrapperImpl.node) as ObservableList<Node>).createMutableWrapper().toSyncedList(
-	  uncheckedWrapperConverter()
-	)
-  }
+    @Suppress("UNCHECKED_CAST")
+    protected val regionChildren by lazy {
+        (regionChildrenProp.call(this@RegionWrapperImpl.node) as ObservableList<Node>).createMutableWrapper()
+            .toSyncedList(
+                uncheckedWrapperConverter()
+            )
+    }
 
-  override val borderProperty by lazy {
-	node.borderProperty().toNullableProp()
-  }
+    override val borderProperty by lazy {
+        node.borderProperty().toNullableProp()
+    }
 
-  override val widthProperty by lazy { node.widthProperty().toNonNullableROProp().cast<Double>() }
-  override val prefWidthProperty by lazy { node.prefWidthProperty().toNonNullableProp().cast<Double>() }
-  override val minWidthProperty by lazy { node.minWidthProperty().toNonNullableProp().cast<Double>() }
-  override val maxWidthProperty by lazy { node.maxWidthProperty().toNonNullableProp().cast<Double>() }
-  override val heightProperty by lazy { node.heightProperty().toNonNullableROProp().cast<Double>() }
-  override val prefHeightProperty by lazy { node.prefHeightProperty().toNonNullableProp().cast<Double>() }
-  override val minHeightProperty by lazy { node.minHeightProperty().toNonNullableProp().cast<Double>() }
-  override val maxHeightProperty by lazy { node.maxHeightProperty().toNonNullableProp().cast<Double>() }
-
-
-  override val children: ImmutableObsList<C> by lazy {    /*trying to avoid initializing wrappers to quickly (and getting the wrong ones as a result)*/
-	node.childrenUnmodifiable.createImmutableWrapper()
-	  .toLazyMappedList { uncheckedWrapperConverter<Node, C>().convertToB(it) }
-  }
-
-  override val paddingProperty by lazy { node.paddingProperty().toNonNullableProp() }
-
-  override var padding by lazyVarDelegate {
-	paddingProperty
-  }
+    override val widthProperty by lazy { node.widthProperty().toNonNullableROProp().cast<Double>() }
+    override val prefWidthProperty by lazy { node.prefWidthProperty().toNonNullableProp().cast<Double>() }
+    override val minWidthProperty by lazy { node.minWidthProperty().toNonNullableProp().cast<Double>() }
+    override val maxWidthProperty by lazy { node.maxWidthProperty().toNonNullableProp().cast<Double>() }
+    override val heightProperty by lazy { node.heightProperty().toNonNullableROProp().cast<Double>() }
+    override val prefHeightProperty by lazy { node.prefHeightProperty().toNonNullableProp().cast<Double>() }
+    override val minHeightProperty by lazy { node.minHeightProperty().toNonNullableProp().cast<Double>() }
+    override val maxHeightProperty by lazy { node.maxHeightProperty().toNonNullableProp().cast<Double>() }
 
 
-  final override val paddingVerticalProperty: ProxyProp<Insets, Double> by lazy {
-	paddingProperty.proxy(object: Converter<Insets, Double> {
-	  override fun convertToB(a: Insets): Double {
-		return a.vertical
-	  }
+    override val children: ImmutableObsList<C> by lazy {    /*trying to avoid initializing wrappers to quickly (and getting the wrong ones as a result)*/
+        node.childrenUnmodifiable.createImmutableWrapper()
+            .toLazyMappedList { uncheckedWrapperConverter<Node, C>().convertToB(it) }
+    }
+
+    final override fun rasterize(size: IntRectSize): Png {
+        return DefaultStudio(
+            size
+        ).shoot(this).toBufferedImage().toPng()
+    }
+
+    override val paddingProperty by lazy { node.paddingProperty().toNonNullableProp() }
+
+    override var padding by lazyVarDelegate {
+        paddingProperty
+    }
 
 
-	  override fun convertToA(b: Double): Insets {
-		return padding.copy(vertical = b)
-	  }
+    final override val paddingVerticalProperty: ProxyProp<Insets, Double> by lazy {
+        paddingProperty.proxy(object : Converter<Insets, Double> {
+            override fun convertToB(a: Insets): Double {
+                return a.vertical
+            }
 
-	})
-  }
-  final override var paddingVertical by lazyVarDelegate { paddingVerticalProperty }
 
-  final override val backgroundProperty by lazy { node.backgroundProperty().toNullableStyleProp() }
-  final override var background by lazyVarDelegate { backgroundProperty }
+            override fun convertToA(b: Double): Insets {
+                return padding.copy(vertical = b)
+            }
 
-  final override val exactWidthProperty by lazy {
-	BindableProperty(0.0).also {
-	  bindMultipleTargetsTogether(
-		setOf(minWidthProperty, maxWidthProperty), it
-	  )
-	}
-  }
+        })
+    }
+    final override var paddingVertical by lazyVarDelegate { paddingVerticalProperty }
 
-  final override val exactHeightProperty by lazy {
-	BindableProperty(0.0).also {
-	  bindMultipleTargetsTogether(
-		setOf(minHeightProperty, maxHeightProperty), it
-	  )
-	}
-  }
+    final override val backgroundProperty by lazy { node.backgroundProperty().toNullableStyleProp() }
+    final override var background by lazyVarDelegate { backgroundProperty }
+
+    final override val exactWidthProperty by lazy {
+        BindableProperty(0.0).also {
+            bindMultipleTargetsTogether(
+                setOf(minWidthProperty, maxWidthProperty), it
+            )
+        }
+    }
+
+    final override val exactHeightProperty by lazy {
+        BindableProperty(0.0).also {
+            bindMultipleTargetsTogether(
+                setOf(minHeightProperty, maxHeightProperty), it
+            )
+        }
+    }
 
 }
 

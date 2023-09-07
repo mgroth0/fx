@@ -47,7 +47,6 @@ private val CLICKABLE_COLOR: Color = Color.BLUE
 private val HOVER_COLOR = DarkLightFXColor(
     darkColor = Color.LIGHTBLUE, lightColor = Color.DARKBLUE
 )
-
 private val NEWLINES = listOf('\n', '\r')
 
 class ConsoleTextFlow(

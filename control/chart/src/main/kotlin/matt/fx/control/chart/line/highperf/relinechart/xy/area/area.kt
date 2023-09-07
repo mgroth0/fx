@@ -1,27 +1,16 @@
 package matt.fx.control.chart.line.highperf.relinechart.xy.area
 
-import com.sun.javafx.charts.Legend.LegendItem
 import javafx.animation.FadeTransition
 import javafx.animation.KeyFrame
 import javafx.animation.KeyValue
 import javafx.animation.Timeline
-import javafx.application.Platform
 import javafx.beans.NamedArg
-import javafx.beans.property.BooleanProperty
 import javafx.beans.property.DoubleProperty
 import javafx.beans.property.SimpleDoubleProperty
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
-import javafx.css.CssMetaData
-import javafx.css.Styleable
-import javafx.css.StyleableBooleanProperty
-import javafx.css.StyleableProperty
-import javafx.css.converter.BooleanConverter
 import javafx.event.EventHandler
-import javafx.scene.AccessibleRole.TEXT
 import javafx.scene.Group
-import javafx.scene.Node
-import javafx.scene.layout.StackPane
 import javafx.scene.shape.ClosePath
 import javafx.scene.shape.LineTo
 import javafx.scene.shape.MoveTo
@@ -31,83 +20,23 @@ import javafx.util.Duration
 import matt.fx.control.chart.axis.value.axis.AxisForPackagePrivateProps
 import matt.fx.control.chart.line.highperf.relinechart.MorePerfOptionsLineChart
 import matt.fx.control.chart.line.highperf.relinechart.xy.XYChartForPackagePrivateProps
-import matt.fx.control.chart.line.highperf.relinechart.xy.area.AreaChartForPrivateProps.StyleableProperties.classCssMetaData
+import matt.fx.control.chart.linelike.LineLikeChartNodeWithOptionalSymbols
 import matt.fx.graphics.anim.interp.MyInterpolator
 import java.util.*
 
-/**
- * AreaChart - Plots the area between the line that connects the data points and
- * the 0 line on the Y axis.
- * @since JavaFX 2.0
- */
 class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
     @NamedArg("xAxis") xAxis: AxisForPackagePrivateProps<X>,
     @NamedArg("yAxis") yAxis: AxisForPackagePrivateProps<Y>,
     @NamedArg("data")
     data: ObservableList<Series<X, Y>> = FXCollections.observableArrayList()
-) :
-    XYChartForPackagePrivateProps<X, Y>(xAxis, yAxis) {
+) : LineLikeChartNodeWithOptionalSymbols<X, Y>(xAxis, yAxis) {
     // -------------- PRIVATE FIELDS ------------------------------------------
     /** A multiplier for the Y values that we store for each series, it is used to animate in a new series  */
     private val seriesYMultiplierMap: MutableMap<Series<X, Y>, DoubleProperty> = HashMap()
     private var timeline: Timeline? = null
     // -------------- PUBLIC PROPERTIES ----------------------------------------
-    /**
-     * When true, CSS styleable symbols are created for any data items that don't have a symbol node specified.
-     * @since JavaFX 8.0
-     */
-    private val createSymbols: BooleanProperty = object : StyleableBooleanProperty(true) {
-        override fun invalidated() {
-            for (seriesIndex in getData().indices) {
-                val series = getData()[seriesIndex]
-                for (itemIndex in series.data.value.indices) {
-                    val item = series.data.value[itemIndex]
-                    var symbol = item.nodeProp.value
-                    if (get() && symbol == null) { // create any symbols
-                        symbol = createSymbol(series, getData().indexOf(series), item, itemIndex)
-                        if (null != symbol) {
-                            plotChildren.add(symbol)
-                        }
-                    } else if (!get() && symbol != null) { // remove symbols
-                        plotChildren.remove(symbol)
-                        item.nodeProp.value = null
-                    }
-                }
-            }
-            requestChartLayout()
-        }
 
-        override fun getBean(): Any {
-            return this
-        }
 
-        override fun getName(): String {
-            return "createSymbols"
-        }
-
-        override fun getCssMetaData(): CssMetaData<AreaChartForPrivateProps<*, *>, Boolean> {
-            return StyleableProperties.CREATE_SYMBOLS
-        }
-    }
-
-    /**
-     * Indicates whether symbols for data points will be created or not.
-     *
-     * @return true if symbols for data points will be created and false otherwise.
-     * @since JavaFX 8.0
-     */
-    fun getCreateSymbols(): Boolean {
-        return createSymbols.value
-    }
-
-    @Suppress("unused")
-    fun setCreateSymbols(value: Boolean) {
-        createSymbols.value = value
-    }
-
-    fun createSymbolsProperty(): BooleanProperty {
-        return createSymbols
-    }
     /**
      * Construct a new Area Chart with the given axis and data
      *
@@ -331,10 +260,6 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
         //Note: better animation here, point should move from old position to new position at center point between prev and next symbols
     }
 
-    /** {@inheritDoc}  */
-    override fun dataItemChanged(item: Data<X, Y>) {}
-
-
     override fun updateStyleClassOf(
         s: Series<X, Y>,
         i: Int
@@ -426,8 +351,8 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
         seriesYMultiplierMap.remove(series)
         // remove all symbol nodes
         if (shouldAnimate()) {
-			timeline = Timeline(*createSeriesRemoveTimeLine(series, 400))
-			timeline!!.play()
+            timeline = Timeline(*createSeriesRemoveTimeLine(series, 400))
+            timeline!!.play()
         } else {
             plotChildren.remove(series.node.value)
             for (d in series.data.value) plotChildren.remove(d.nodeProp.value)
@@ -453,86 +378,19 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
         }
     }
 
-    private fun createSymbol(
-        series: Series<X, Y>,
-        seriesIndex: Int,
-        item: Data<X, Y>,
-        itemIndex: Int
-    ): Node? {
-        var symbol = item.nodeProp.value
-        // check if symbol has already been created
-        if (symbol == null && getCreateSymbols()) {
-            symbol = StackPane()
-            symbol.setAccessibleRole(TEXT)
-            symbol.setAccessibleRoleDescription("Point")
-            symbol.focusTraversableProperty().bind(Platform.accessibilityActiveProperty())
-            item.nodeProp.value = symbol
-        }
-        // set symbol styles
-        // Note: not sure if we want to add or check, ie be more careful and efficient here
-        symbol?.styleClass?.setAll(
-            "chart-area-symbol", "series$seriesIndex", "data$itemIndex",
-            series.defaultColorStyleClass
-        )
-        return symbol
-    }
 
-    override fun createLegendItemForSeries(
-        series: Series<X, Y>,
-        seriesIndex: Int
-    ): LegendItem {
-        val legendItem = LegendItem(series.name.value)
-        legendItem.symbol.styleClass.addAll(
-            "chart-area-symbol", "series$seriesIndex",
-            "area-legend-symbol", series.defaultColorStyleClass
-        )
-        return legendItem
+    override val seriesRemovalAnimation by ::timeline
+    override fun nullifySeriesRemovalAnimation() {
+        timeline = null
     }
 
 
-	/** {@inheritDoc}  */
-	override fun seriesBeingRemovedIsAdded(series: Series<X, Y>) {
-		if (timeline != null) {
-			timeline!!.onFinished = null
-			timeline!!.stop()
-			timeline = null
-			plotChildren.remove(series.getNode())
-			for (d in series.getData()) plotChildren.remove(d.node)
-			removeSeriesFromDisplay(series)
-		}
-	}
+    override val lineOrArea = LineOrArea.area
 
-    // -------------- STYLESHEET HANDLING --------------------------------------
-    private object StyleableProperties {
-        val CREATE_SYMBOLS: CssMetaData<AreaChartForPrivateProps<*, *>, Boolean> =
-            object : CssMetaData<AreaChartForPrivateProps<*, *>, Boolean>(
-                "-fx-create-symbols",
-                BooleanConverter.getInstance(), java.lang.Boolean.TRUE
-            ) {
-                override fun isSettable(node: AreaChartForPrivateProps<*, *>): Boolean {
-                    return node.createSymbols.value == null || !node.createSymbols.isBound
-                }
+    protected object StyleableProperties : StyleableProps<AreaChartForPrivateProps<*, *>>()
 
-                override fun getStyleableProperty(node: AreaChartForPrivateProps<*, *>): StyleableProperty<Boolean> {
-                    @Suppress("UNCHECKED_CAST")
-                    return node.createSymbolsProperty() as StyleableProperty<Boolean>
-                }
-            }
-        val classCssMetaData: List<CssMetaData<out Styleable?, *>> by lazy {
-            val styleables: MutableList<CssMetaData<out Styleable?, *>> = ArrayList(getClassCssMetaData())
-            styleables.add(CREATE_SYMBOLS)
-            Collections.unmodifiableList(styleables)
-        }
-
-    }
-
-    /**
-     * {@inheritDoc}
-     * @since JavaFX 8.0
-     */
-    override fun getCssMetaData(): List<CssMetaData<out Styleable?, *>> {
-        return classCssMetaData
-    }
+    override val styleableProps get() = StyleableProperties
+    override fun getCssMetaData() = StyleableProperties.classCssMetaData
 
     companion object {
         // -------------- METHODS ------------------------------------------------------------------------------------------

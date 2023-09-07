@@ -1,7 +1,7 @@
 package matt.fx.control.chart.test
 
 
-import matt.fx.control.chart.axis.value.moregenval.DoubleAxisConverter
+import matt.fig.model.plot.convert.DoubleAxisConverter
 import matt.fx.control.chart.axis.value.number.moregennum.MoreGenericNumberAxis
 import matt.mbuild.mtest.fx.FXTester
 import matt.mbuild.mtest.fx.FxTests

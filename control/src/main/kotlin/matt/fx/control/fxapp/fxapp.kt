@@ -18,6 +18,7 @@ import javafx.scene.text.Font
 import javafx.stage.Stage
 import javafx.stage.Window
 import javafx.stage.WindowEvent
+import matt.async.thread.namedThread
 import matt.collect.itr.recurse.chain
 import matt.fx.control.wrapper.wrapped.WrapperServiceImpl
 import matt.fx.graphics.fxthread.FXAppStateWatcher
@@ -31,7 +32,6 @@ import matt.log.logger.Logger
 import matt.log.report.BugReport
 import matt.log.reporter.TracksTime
 import matt.model.code.report.Reporter
-import kotlin.concurrent.thread
 
 private val monitor = {}
 private var didRunFXApp = false
@@ -39,11 +39,10 @@ private var didRunFXApp = false
 const val DEFAULT_THROW_ON_APP_THREAD_THROWABLE = false
 
 fun runFXAppBlocking(
-    args: Array<String>,
     usePreloaderApp: Boolean = false,
     reporter: Reporter? = null,
     throwOnApplicationThreadThrowable: Boolean = DEFAULT_THROW_ON_APP_THREAD_THROWABLE,
-    fxOp: (List<String>) -> Unit,
+    fxOp: () -> Unit,
 ) {
     synchronized(monitor) {
         requireNot(didRunFXApp) {
@@ -55,7 +54,7 @@ fun runFXAppBlocking(
     WrapperServiceHub.install(WrapperServiceImpl)
     (reporter as? TracksTime)?.toc("running FX App")
     fxBlock = fxOp
-    thread(isDaemon = true) {
+    namedThread(isDaemon = true,name="disable FX Logger Thread") {
         Logging.getJavaFXLogger().disableLogging()
         /* dodge "Unsupported JavaFX configuration..." part 1 */
     }
@@ -63,10 +62,10 @@ fun runFXAppBlocking(
     fxStopwatch = (reporter as? TracksTime)
     if (usePreloaderApp) {
         (reporter as? TracksTime)?.toc("launching preloader")
-        LauncherImpl.launchApplication(MinimalFXApp::class.java, FirstPreloader::class.java, args)
+        LauncherImpl.launchApplication(MinimalFXApp::class.java, FirstPreloader::class.java, arrayOf())
     } else {
         (reporter as? TracksTime)?.toc("launching app")
-        Application.launch(MinimalFXApp::class.java, *args)
+        Application.launch(MinimalFXApp::class.java)
     }
     applicationThreadIssue?.go {
         throw Exception("${it::class.qualifiedName} was thrown from the FX Application Thread", it)
@@ -75,7 +74,7 @@ fun runFXAppBlocking(
 }
 
 private var fxStopwatch: TracksTime? = null
-private lateinit var fxBlock: (List<String>) -> Unit
+private lateinit var fxBlock: () -> Unit
 private var applicationThreadIssue: Throwable? = null
 private var exitAndReThrowOnAppThrowable: Boolean? = null
 
@@ -303,10 +302,10 @@ class MinimalFXApp : Application() {
         /* dodge "Unsupported JavaFX configuration..." part 2 */
         Logging.getJavaFXLogger().enableLogging()
         if (exitAndReThrowOnAppThrowable!!) {
-            fxBlock(parameters.raw)
+            fxBlock()
         } else {
             try {
-                fxBlock(parameters.raw)
+                fxBlock()
             } catch (e: Exception) {
                 val bugText = BugReport(t = Thread.currentThread(), e = e).text
                 println("\n\n$bugText\n\n")

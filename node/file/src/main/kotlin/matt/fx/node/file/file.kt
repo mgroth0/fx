@@ -214,8 +214,8 @@ private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): RegionWrap
                         }
                     }
 
-                    lineLimit.onChange { daemon { refresh() } }
-                    infiniteLines.onChange { daemon { refresh() } }
+                    lineLimit.onChange { daemon("lineLimit Thread") { refresh() } }
+                    infiniteLines.onChange { daemon("infiniteLines Thread") { refresh() } }
 
                     var lastMod = 0L
                     every(1.sec, timer = AccurateTimer(name = "log refresher"), zeroDelayFirst = true) {
@@ -337,7 +337,7 @@ private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): RegionWrap
 
 
                 runLater {
-                    daemon {
+                    daemon("createNode Inner Thread") {
                         var mtime = lastModified()
                         while (true) {
                             sleep(1000)

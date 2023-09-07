@@ -10,6 +10,7 @@ import matt.css.MyStyleDsl
 import matt.css.props.ColorLikeCssConverter
 import matt.fx.graphics.wrapper.FXNodeWrapperDSL
 import matt.fx.graphics.wrapper.node.NodeWrapper
+import matt.fx.graphics.wrapper.scene.SceneWrapper
 import matt.fx.graphics.wrapper.style.FXColor
 import matt.fx.graphics.wrapper.style.toFXColor
 import matt.fx.graphics.wrapper.style.toMColor
@@ -66,6 +67,20 @@ object DarkModeController {
 val MODENA_CSS = ClassLoader.getSystemResource("modena/modena.css").toString()
 val DARK_MODENA_CSS = ClassLoader.getSystemResource("modena/darkModena.css").toString()
 val CUSTOM_CSS = ClassLoader.getSystemResource("modena/custom.css").toString()
+
+
+fun SceneWrapper<*>.reloadStyle(darkMode: Boolean) {
+    stylesheets.clear()
+    fill = Color.WHITE /*FX DEFAULT*/
+    if (darkMode) {
+        stylesheets.add(DARK_MODENA_CSS)
+        stylesheets.add(CUSTOM_CSS)
+
+        //     ensure that even while the screen is loading it is black. So not white flashes or flickering while refreshing
+        fill =
+            Color.BLACK    //        maybe also possible by styleing .root in css, but if I remember correctly that also affects other nodes
+    }
+}
 
 
 private class StyleClass {

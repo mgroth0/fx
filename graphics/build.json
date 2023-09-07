@@ -1,70 +1,75 @@
 {
-    "type": "BasicJvmOnlyMod",
-    "dependencies": [
-        {
-            "type": "Project",
-            "cfg": "api",
-            "path": ":k:css"
-        },
-        {
-            "type": "Project",
-            "cfg": "api",
-            "path": ":k:obs:math"
-        },
-        {
-            "type": "Lib",
-            "cfg": "api",
-            "key": "fx-graphics"
-        },
-        {
-            "type": "Lib",
-            "cfg": "api",
-            "key": "jSystemThemeDetector"
-        },
-        {
-            "type": "Project",
-            "cfg": "api",
-            "path": ":k:time"
-        },
-        {
-            "type": "Project",
-            "cfg": "api",
-            "path": ":k:fx:base"
-        },
-        {
-            "type": "Project",
-            "cfg": "api",
-            "path": ":k:hotkey"
-        },
-        {
-            "type": "Project",
-            "cfg": "api",
-            "path": ":k:fx:image"
-        },
-        {
-            "type": "Lib",
-            "cfg": "implementation",
-            "key": "svgsalamander"
-        },
-        {
-            "type": "Lib",
-            "cfg": "implementation",
-            "key": "batik"
-        },
-        {
-            "type": "Lib",
-            "cfg": "implementation",
-            "key": "guava"
-        },
-        {
-            "type": "Lib",
-            "cfg": "implementation",
-            "key": "imageio-bmp"
-        },
-        {
-            "type": "Project",
-            "cfg": "testImplementation",
-            "path": ":k:mbuild:mtest:fx"
-        }
-    ]
+  "type": "BasicJvmOnlyMod",
+  "dependencies": [
+    {
+      "type": "Project",
+      "cfg": "api",
+      "path": ":k:css"
+    },
+    {
+      "type": "Project",
+      "cfg": "api",
+      "path": ":k:obs:math"
+    },
+    {
+      "type": "Project",
+      "cfg": "api",
+      "path": ":k:async:thread"
+    },
+    {
+      "type": "Lib",
+      "cfg": "api",
+      "key": "fx-graphics"
+    },
+    {
+      "type": "Lib",
+      "cfg": "api",
+      "key": "jSystemThemeDetector"
+    },
+    {
+      "type": "Project",
+      "cfg": "api",
+      "path": ":k:time"
+    },
+    {
+      "type": "Project",
+      "cfg": "api",
+      "path": ":k:fx:base"
+    },
+    {
+      "type": "Project",
+      "cfg": "api",
+      "path": ":k:hotkey"
+    },
+    {
+      "type": "Project",
+      "cfg": "api",
+      "path": ":k:fx:image"
+    },
+    {
+      "type": "Lib",
+      "cfg": "implementation",
+      "key": "svgsalamander"
+    },
+    {
+      "type": "Lib",
+      "cfg": "implementation",
+      "key": "batik"
+    },
+    {
+      "type": "Lib",
+      "cfg": "implementation",
+      "key": "guava"
+    },
+    {
+      "type": "Lib",
+      "cfg": "implementation",
+      "key": "imageio-bmp"
+    },
+    {
+      "type": "Project",
+      "cfg": "testImplementation",
+      "path": ":k:mbuild:mtest:fx"
+    }
+  ]
 }

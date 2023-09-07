@@ -1,37 +1,27 @@
 package matt.fx.control.chart.line.highperf.relinechart
 
-import com.sun.javafx.charts.Legend.LegendItem
 import javafx.animation.Animation.Status.RUNNING
 import javafx.animation.FadeTransition
 import javafx.animation.KeyFrame
 import javafx.animation.KeyValue
 import javafx.animation.Timeline
-import javafx.application.Platform
-import javafx.beans.property.BooleanProperty
 import javafx.beans.property.DoubleProperty
 import javafx.beans.property.ObjectProperty
 import javafx.beans.property.ObjectPropertyBase
 import javafx.beans.property.SimpleDoubleProperty
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
-import javafx.css.CssMetaData
-import javafx.css.Styleable
-import javafx.css.StyleableBooleanProperty
-import javafx.css.StyleableProperty
-import javafx.css.converter.BooleanConverter
 import javafx.event.EventHandler
-import javafx.scene.AccessibleRole.TEXT
 import javafx.scene.Node
-import javafx.scene.layout.StackPane
 import javafx.scene.shape.LineTo
 import javafx.scene.shape.Path
 import javafx.scene.shape.StrokeLineJoin.BEVEL
 import javafx.util.Duration
 import matt.fx.control.chart.axis.value.axis.AxisForPackagePrivateProps
 import matt.fx.control.chart.line.highperf.relinechart.MorePerfOptionsLineChart.SortingPolicy.X_AXIS
-import matt.fx.control.chart.line.highperf.relinechart.MorePerfOptionsLineChart.StyleableProperties.classCssMetaData
-import matt.fx.control.chart.line.highperf.relinechart.xy.XYChartForPackagePrivateProps
 import matt.fx.control.chart.line.highperf.relinechart.xy.area.AreaChartForPrivateProps
+import matt.fx.control.chart.linelike.LineLikeChartNodeWithOptionalSymbols
+import matt.fx.control.chart.linelike.LineLikeChartNodeWithOptionalSymbols.LineOrArea.line
 import matt.fx.graphics.anim.interp.MyInterpolator
 import java.util.*
 
@@ -39,7 +29,7 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
     xAxis: AxisForPackagePrivateProps<X>,
     yAxis: AxisForPackagePrivateProps<Y>,
     data: ObservableList<Series<X, Y>> = FXCollections.observableArrayList()
-) : XYChartForPackagePrivateProps<X, Y>(xAxis, yAxis) {
+) : LineLikeChartNodeWithOptionalSymbols<X, Y>(xAxis, yAxis) {
     // -------------- PRIVATE FIELDS ------------------------------------------
     /** A multiplier for the Y values that we store for each series, it is used to animate in a new series  */
     private val seriesYMultiplierMap: MutableMap<Series<X, Y>, DoubleProperty> = HashMap()
@@ -51,55 +41,9 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
     private var seriesRemoveTimeline: Timeline? = null
     // -------------- PUBLIC PROPERTIES ----------------------------------------
     /** When true, CSS styleable symbols are created for any data items that don't have a symbol node specified.  */
-    private val createSymbols: BooleanProperty = object : StyleableBooleanProperty(true) {
-        override fun invalidated() {
-            for (seriesIndex in getData().indices) {
-                val series = getData()[seriesIndex]
-                for (itemIndex in series.data.value.indices) {
-                    val item = series.data.value[itemIndex]
-                    var symbol = item.nodeProp.value
-                    if (get() && symbol == null) { // create any symbols
-                        symbol = createSymbol(series, getData().indexOf(series), item, itemIndex)
-                        plotChildren.add(symbol)
-                    } else if (!get() && symbol != null) { // remove symbols
-                        plotChildren.remove(symbol)
-                        item.nodeProp.value = null
-                    }
-                }
-            }
-            requestChartLayout()
-        }
 
-        override fun getBean(): Any {
-            return this@MorePerfOptionsLineChart
-        }
 
-        override fun getName(): String {
-            return "createSymbols"
-        }
 
-        override fun getCssMetaData(): CssMetaData<MorePerfOptionsLineChart<*, *>, Boolean> {
-            return StyleableProperties.CREATE_SYMBOLS
-        }
-    }
-
-    /**
-     * Indicates whether symbols for data points will be created or not.
-     *
-     * @return true if symbols for data points will be created and false otherwise.
-     */
-    fun getCreateSymbols(): Boolean {
-        return createSymbols.value
-    }
-
-    @Suppress("unused")
-    fun setCreateSymbols(value: Boolean) {
-        createSymbols.value = value
-    }
-
-    fun createSymbolsProperty(): BooleanProperty {
-        return createSymbols
-    }
 
     /**
      * Indicates whether the data passed to LineChart should be sorted by natural order of one of the axes.
@@ -242,33 +186,21 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
             if (animate) {
                 animate(
                     KeyFrame(
-                        Duration.ZERO,
-                        {
-                            @Suppress("SENSELESS_COMPARISON")
-                            if (symbol != null && !plotChildren.contains(
+                        Duration.ZERO, {
+                            @Suppress("SENSELESS_COMPARISON") if (symbol != null && !plotChildren.contains(
                                     symbol
                                 )
                             ) plotChildren.add(symbol)
-                        },
-                        KeyValue(
-                            item.currentYProperty(),
-                            item.currentY.value,
-                            MyInterpolator.MY_DEFAULT_INTERPOLATOR
-                        ),
-                        KeyValue(
-                            item.currentXProperty(),
-                            item.currentX.value,
-                            MyInterpolator.MY_DEFAULT_INTERPOLATOR
+                        }, KeyValue(
+                            item.currentYProperty(), item.currentY.value, MyInterpolator.MY_DEFAULT_INTERPOLATOR
+                        ), KeyValue(
+                            item.currentXProperty(), item.currentX.value, MyInterpolator.MY_DEFAULT_INTERPOLATOR
                         )
-                    ),
-                    KeyFrame(
+                    ), KeyFrame(
                         Duration.millis(700.0), KeyValue(
-                            item.currentYProperty(),
-                            item.yValueProp.value, MyInterpolator.EASE_BOTH
-                        ),
-                        KeyValue(
-                            item.currentXProperty(),
-                            item.xValueProp.value, MyInterpolator.EASE_BOTH
+                            item.currentYProperty(), item.yValueProp.value, MyInterpolator.EASE_BOTH
+                        ), KeyValue(
+                            item.currentXProperty(), item.xValueProp.value, MyInterpolator.EASE_BOTH
                         )
                     )
                 )
@@ -357,10 +289,6 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
         //Note: better animation here, point should move from old position to new position at center point between prev and next symbols
     }
 
-    /** {@inheritDoc}  */
-    override fun dataItemChanged(item: Data<X, Y>) {}
-
-
     override fun updateStyleClassOf(
         s: Series<X, Y>,
         i: Int
@@ -372,6 +300,8 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
             symbol?.styleClass?.setAll("`chart-line-symbol`", "series$i", "data$j", s.defaultColorStyleClass)
         }
     }
+
+    override val lineOrArea = line
 
 //  private fun updateStyleClassOf(s: Series<X, Y>, i: Int) {
 //	val seriesNode = s.node.value
@@ -441,24 +371,21 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
             )
             keyFrames.add(
                 KeyFrame(
-                    Duration.millis(500.0),
-                    KeyValue(seriesYAnimMultiplier, 1, MyInterpolator.MY_DEFAULT_INTERPOLATOR)
+                    Duration.millis(500.0), KeyValue(seriesYAnimMultiplier, 1, MyInterpolator.MY_DEFAULT_INTERPOLATOR)
                 )
             )
         }
         for (j in series.data.value.indices) {
             val item = series.data.value[j]
             val symbol = createSymbol(series, seriesIndex, item, j)
-            @Suppress("SENSELESS_COMPARISON")
-            if (symbol != null) {
+            @Suppress("SENSELESS_COMPARISON") if (symbol != null) {
                 if (shouldAnimate()) symbol.opacity = 0.0
                 plotChildren.add(symbol)
                 if (shouldAnimate()) {
                     // fade in new symbol
                     keyFrames.add(
                         KeyFrame(
-                            Duration.ZERO,
-                            KeyValue(symbol.opacityProperty(), 0, MyInterpolator.MY_DEFAULT_INTERPOLATOR)
+                            Duration.ZERO, KeyValue(symbol.opacityProperty(), 0, MyInterpolator.MY_DEFAULT_INTERPOLATOR)
                         )
                     )
                     keyFrames.add(
@@ -539,17 +466,12 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
         XYValueMap.clear()
     }
 
-    /** {@inheritDoc}  */
-    override fun seriesBeingRemovedIsAdded(series: Series<X, Y>) {
-        if (seriesRemoveTimeline != null) {
-            seriesRemoveTimeline!!.onFinished = null
-            seriesRemoveTimeline!!.stop()
-            seriesRemoveTimeline = null
-            plotChildren.remove(series.node.value)
-            for (d in series.data.value) plotChildren.remove(d.nodeProp.value)
-            removeSeriesFromDisplay(series)
-        }
+
+    override val seriesRemovalAnimation by ::seriesRemoveTimeline
+    override fun nullifySeriesRemovalAnimation() {
+        seriesRemoveTimeline = null
     }
+
 
     private fun createDataRemoveTimeline(
         item: Data<X, Y>,
@@ -562,101 +484,32 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
         t.keyFrames.addAll(
             KeyFrame(
                 Duration.ZERO, KeyValue(
-                    item.currentYProperty(),
-                    item.currentY.value, MyInterpolator.MY_DEFAULT_INTERPOLATOR
+                    item.currentYProperty(), item.currentY.value, MyInterpolator.MY_DEFAULT_INTERPOLATOR
                 ), KeyValue(
-                    item.currentXProperty(),
-                    item.currentX.value, MyInterpolator.MY_DEFAULT_INTERPOLATOR
+                    item.currentXProperty(), item.currentX.value, MyInterpolator.MY_DEFAULT_INTERPOLATOR
                 )
-            ),
-            KeyFrame(
+            ), KeyFrame(
                 Duration.millis(500.0), {
                     if (symbol != null) plotChildren.remove(symbol)
                     removeDataItemFromDisplay(series, item)
                     XYValueMap.clear()
-                },
-                KeyValue(
-                    item.currentYProperty(),
-                    item.yValueProp.value, MyInterpolator.EASE_BOTH
-                ),
-                KeyValue(
-                    item.currentXProperty(),
-                    item.xValueProp.value, MyInterpolator.EASE_BOTH
+                }, KeyValue(
+                    item.currentYProperty(), item.yValueProp.value, MyInterpolator.EASE_BOTH
+                ), KeyValue(
+                    item.currentXProperty(), item.xValueProp.value, MyInterpolator.EASE_BOTH
                 )
             )
         )
         return t
     }
 
-    private fun createSymbol(
-        series: Series<X, Y>,
-        seriesIndex: Int,
-        item: Data<X, Y>,
-        itemIndex: Int
-    ): Node? {
-        var symbol = item.node
-        // check if symbol has already been created
-        if (symbol == null && getCreateSymbols()) {
-            symbol = StackPane()
-            symbol.setAccessibleRole(TEXT)
-            symbol.setAccessibleRoleDescription("Point")
-            symbol.focusTraversableProperty().bind(Platform.accessibilityActiveProperty())
-            item.nodeProp.value = symbol
-        }
-        // set symbol styles
-        symbol?.styleClass?.addAll(
-            "chart-line-symbol", "series$seriesIndex",
-            "data$itemIndex", series.defaultColorStyleClass
-        )
-        return symbol
-    }
 
-    override fun createLegendItemForSeries(
-        series: Series<X, Y>,
-        seriesIndex: Int
-    ): LegendItem {
-        val legendItem = LegendItem(series.name.value)
-        legendItem.symbol.styleClass.addAll(
-            "chart-line-symbol", "series$seriesIndex",
-            series.defaultColorStyleClass
-        )
-        return legendItem
-    }
-
-    // -------------- STYLESHEET HANDLING --------------------------------------
-    private object StyleableProperties {
-        val CREATE_SYMBOLS: CssMetaData<MorePerfOptionsLineChart<*, *>, Boolean> =
-            object : CssMetaData<MorePerfOptionsLineChart<*, *>, Boolean>(
-                "-fx-create-symbols",
-                BooleanConverter.getInstance(), true
-            ) {
-                override fun isSettable(node: MorePerfOptionsLineChart<*, *>): Boolean {
-                    return node.createSymbols.value == null || !node.createSymbols.isBound
-                }
-
-                override fun getStyleableProperty(node: MorePerfOptionsLineChart<*, *>): StyleableProperty<Boolean?> {
-                    @Suppress("UNCHECKED_CAST")
-                    return node.createSymbolsProperty() as StyleableProperty<Boolean?>
-                }
-            }
-
-        val classCssMetaData: List<CssMetaData<out Styleable?, *>> by lazy {
-            Collections.unmodifiableList(ArrayList(getClassCssMetaData()).apply {
-                add(CREATE_SYMBOLS)
-            })
-        }
-
-    }
-
-    override fun getCssMetaData(): List<CssMetaData<out Styleable?, *>>? {
-        return classCssMetaData
-    }
+    protected object StyleableProperties : StyleableProps<MorePerfOptionsLineChart<*, *>>()
+    override val styleableProps get() = StyleableProperties
+    override fun getCssMetaData() = styleableProps.classCssMetaData
 
     enum class SortingPolicy {
-        NONE,
-        X_AXIS,
-        Y_AXIS
+        NONE, X_AXIS, Y_AXIS
     }
 
-    companion object
 }

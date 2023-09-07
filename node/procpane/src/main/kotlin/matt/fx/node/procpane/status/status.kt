@@ -40,7 +40,7 @@ class StatusFolderWatchPane(val folder: MFile): TileableTabPane(
 	if (!running) {
 	  // start here
 	  running = true
-	  daemon {
+	  daemon("StatusFolderWatchPane start Thread") {
 		while (!stopped) {
 		  Thread.sleep(100)
 		}

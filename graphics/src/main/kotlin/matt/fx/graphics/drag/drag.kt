@@ -72,7 +72,7 @@ fun NodeWrapper.dragsSnapshot(
             null
         )
         val imgFile = snapshot.save(TEMP_DIR["drag_image.png"])
-        imgFile
+        imgFile.toMFile()
     },
     getDragView = { null })
 

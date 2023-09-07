@@ -19,21 +19,15 @@ import matt.fx.control.chart.axis.cat.cat.CategoryAxisForCatAxisWrapper
 import matt.fx.control.chart.axis.value.axis.AxisForPackagePrivateProps
 import matt.fx.control.chart.axis.value.moregenval.MoreGenericValueAxis
 import matt.fx.control.chart.axis.value.number.moregennum.MoreGenericNumberAxis
-import matt.fx.control.chart.line.highperf.relinechart.xy.XYChartForPackagePrivateProps
+import matt.fx.control.chart.linelike.LineLikeChartNode
 import kotlin.math.abs
 
-/**
- * Chart type that plots bubbles for the data points in a series. The extra value property of Data is used to represent
- * the radius of the bubble it should be a java.lang.Number.
- * @since JavaFX 2.0
- */
 class BubbleChartForWrapper<X, Y> @JvmOverloads constructor(
     @NamedArg("xAxis") xAxis: AxisForPackagePrivateProps<X>,
     @NamedArg("yAxis") yAxis: AxisForPackagePrivateProps<Y>,
     @NamedArg("data")
     data: ObservableList<Series<X, Y>> = FXCollections.observableArrayList()
-) :
-    XYChartForPackagePrivateProps<X, Y>(xAxis, yAxis) {
+) : LineLikeChartNode<X, Y>(xAxis, yAxis) {
 
 
     private var parallelTransition: ParallelTransition? = null
@@ -155,8 +149,6 @@ class BubbleChartForWrapper<X, Y> @JvmOverloads constructor(
         }
     }
 
-    /** {@inheritDoc}  */
-    override fun dataItemChanged(item: Data<X, Y>) {}
     override fun seriesAdded(
         series: Series<X, Y>,
         seriesIndex: Int
@@ -209,17 +201,10 @@ class BubbleChartForWrapper<X, Y> @JvmOverloads constructor(
     }
 
 
-	/** {@inheritDoc}  */
-	override fun seriesBeingRemovedIsAdded(series: Series<X, Y>) {
-		if (parallelTransition != null) {
-			parallelTransition!!.onFinished = null
-			parallelTransition!!.stop()
-			parallelTransition = null
-			plotChildren.remove(series.getNode())
-			for (d in series.getData()) plotChildren.remove(d.node)
-			removeSeriesFromDisplay(series)
-		}
-	}
+    override val seriesRemovalAnimation by ::parallelTransition
+    override fun nullifySeriesRemovalAnimation() {
+        parallelTransition = null
+    }
 
     /**
      * Create a Bubble for a given data item if it doesn't already have a node

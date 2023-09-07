@@ -1,9 +1,10 @@
 package matt.fx.control.chart.axis
 
+import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
 import matt.fx.control.chart.axis.value.axis.AxisForPackagePrivateProps
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.region.RegionWrapperImpl
-import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 
 typealias MAxis<T> = AxisWrapper<T, out AxisForPackagePrivateProps<T>>
 
@@ -20,4 +21,6 @@ abstract class AxisWrapper<T, N: AxisForPackagePrivateProps<T>>(node: N): Region
   override fun addChild(child: NodeWrapper, index: Int?) {
 	TODO("Not yet implemented")
   }
+  val axisLabelProp = node.labelProperty().toNullableProp()
+  var axisLabel by axisLabelProp
 }

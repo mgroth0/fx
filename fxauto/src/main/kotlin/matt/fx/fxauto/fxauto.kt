@@ -1,5 +1,6 @@
 package matt.fx.fxauto
 
+import matt.async.thread.namedThread
 import matt.auto.AutoAction
 import matt.auto.jumpToSource
 import matt.file.MFile
@@ -10,7 +11,6 @@ import matt.fx.graphics.wrapper.node.NW
 import matt.gui.menu.context.MContextMenuBuilder
 import matt.gui.menu.context.mcontextmenu
 import matt.shell.context.ShellExecutionContext
-import kotlin.concurrent.thread
 
 fun MFile.fxActions() = listOf(AutoAction("copy full path") {
     absolutePath.copyToClipboard()
@@ -30,7 +30,7 @@ context(ShellExecutionContext)
 fun NW.jumpFromContextMenu() {
     mcontextmenu {
         actionitem("jump to source code of ${this@jumpFromContextMenu::class.simpleName!!}") {
-            thread {
+            namedThread("jumpFromContextMenu Thread") {
                 with(IdeProject.all) {
                     this@jumpFromContextMenu::class.jumpToSource()
                 }

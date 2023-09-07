@@ -336,7 +336,7 @@ sealed class TailCapableConsole(
 
     private val interval = 1.seconds
     protected var shouldContinue = true
-    protected fun tail(logFile: MFile) = daemon {
+    protected fun tail(logFile: MFile) = daemon(name = "TailCapableConsole.tail Thread") {
         val decoder = Charsets.UTF_8.newDecoder()
         var reader: FileChannel? = null
         try {
@@ -408,13 +408,13 @@ class ProcessConsole(name: String) : TailCapableConsole(name, takesInput = true,
         logfile.doubleBackupWrite("")
         errFile.doubleBackupWrite("")
         writer = p.outputStream.bufferedWriter()
-        daemon {
+        daemon(name = "attachProcess Thread 1") {
             val endReason = p.forEachOutChar {
                 unshownOutput += it
             }
             handleEndOfStream(endReason)
         }
-        daemon {
+        daemon(name = "attachProcess Thread 2") {
             val endReason = p.forEachErrChar {
                 unshownOutput += it
                 errFile.append(it)
@@ -474,7 +474,7 @@ class CustomConsole(
 
         val inpConsole = PipedInputStream()
         val outConsole = PipedOutputStream(inpConsole)
-        daemon {
+        daemon(name="CustomConsole.custom Thread") {
             inpConsole.bufferedReader().charSequence().forEach {
                 unshownOutput += it.toString()
             }

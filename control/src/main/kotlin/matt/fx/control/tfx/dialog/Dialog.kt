@@ -13,9 +13,9 @@ import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
 import javafx.stage.Modality
 import javafx.stage.Stage
+import matt.async.thread.runner.ResultRun
 import matt.fx.graphics.wrapper.window.WindowWrapper
 import matt.model.flowlogic.latch.asyncloaded.LoadedValueSlot
-import matt.model.flowlogic.runner.ResultRun
 import matt.model.flowlogic.runner.Run
 
 
@@ -98,7 +98,7 @@ inline fun warning(
 ) =
   alert(WARNING, header, content, *buttons, owner = owner, title = title, actionFn = actionFn)
 
-inline fun error(
+inline fun errorAlert(
   header: String,
   content: String? = null,
   vararg buttons: ButtonType,

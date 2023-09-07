@@ -16,78 +16,82 @@ import matt.fx.graphics.wrapper.window.WindowWrapper
 import matt.lang.delegation.lazyDelegate
 import matt.log.warn.warn
 
-open class StageWrapper(node: Stage = Stage()): WindowWrapper<Stage>(node), Titled {
+open class StageWrapper(node: Stage = Stage()) : WindowWrapper<Stage>(node), Titled {
 
-  constructor(stageStyle: StageStyle): this(Stage(stageStyle))
+    constructor(stageStyle: StageStyle) : this(Stage(stageStyle))
 
-  override val titleProperty: NullableFXBackedBindableProp<String> by lazy { node.titleProperty().toNullableProp() }
+    override val titleProperty: NullableFXBackedBindableProp<String> by lazy { node.titleProperty().toNullableProp() }
 
-  val icons get() = node.icons
+    val icons get() = node.icons
 
-  fun showAndWait() = node.showAndWait()
+    fun showAndWait() = node.showAndWait()
 
-  val owner: WindowWrapper<*>? get() = node.owner?.wrapped() as? WindowWrapper<*>
-  fun initOwner(owner: Window?) = node.initOwner(owner)
-  fun initOwner(owner: WindowWrapper<*>?) = node.initOwner(owner?.node)
-  fun initModality(m: Modality) = node.initModality(m)
-  fun initStyle(style: StageStyle) = node.initStyle(style)
+    val owner: WindowWrapper<*>? get() = node.owner?.wrapped() as? WindowWrapper<*>
+    fun initOwner(owner: Window) = node.initOwner(owner)
+    fun initOwner(owner: WindowWrapper<*>) = node.initOwner(owner.node)
+    fun initNoOwner() = node.initOwner(null)
+    fun initModality(m: Modality) = node.initModality(m)
+    fun initStyle(style: StageStyle) = node.initStyle(style)
 
-  val iconifiedProperty by lazy { node.iconifiedProperty().toNonNullableROProp() }
-  val isIconified by lazyDelegate { iconifiedProperty }
+    val iconifiedProperty by lazy { node.iconifiedProperty().toNonNullableROProp() }
+    val isIconified by lazyDelegate { iconifiedProperty }
 
-  fun makeIconinfied() {
-	node.isIconified = true
-  }
-
-
-  fun show() = node.show()
-  fun close() = node.close()
-  fun toFront() = node.toFront()
-  fun centerOnScreen() = node.centerOnScreen()
+    fun makeIconinfied() {
+        node.isIconified = true
+    }
 
 
-  var isFullScreen
-	get() = node.isFullScreen
-	set(value) {
-	  node.isFullScreen = value
-	}
-
-  fun fullScreenProperty(): ReadOnlyBooleanProperty = node.fullScreenProperty()
+    fun show() = node.show()
+    fun close() = node.close()
+    fun toFront() = node.toFront()
+    fun centerOnScreen() = node.centerOnScreen()
 
 
-  var isMaximized
-	get() = node.isMaximized
-	set(value) {
-	  node.isMaximized = value
-	}
+    var isFullScreen
+        get() = node.isFullScreen
+        set(value) {
+            node.isFullScreen = value
+        }
 
-  fun maximizedProperty(): ReadOnlyBooleanProperty = node.maximizedProperty()
-
-  override var scene: SceneWrapper<*>?
-	get() = super.scene
-	set(value) {
-	  node.scene = value?.node
-	}
-
-  override fun addChild(child: NodeWrapper, index: Int?) {
-	TODO("Not yet implemented")
-  }
-
-  override fun removeFromParent() {
-	warn("removeFromParent used on a stage... closing stage")
-	close()
-  }
-
-  override fun isInsideRow() = false
+    fun fullScreenProperty(): ReadOnlyBooleanProperty = node.fullScreenProperty()
 
 
-  var isAlwaysOnTop
-	get() = node.isAlwaysOnTop
-	set(value) {
-	  node.isAlwaysOnTop = value
-	}
+    var isMaximized
+        get() = node.isMaximized
+        set(value) {
+            node.isMaximized = value
+        }
 
-  fun alwaysOnTopProperty(): ReadOnlyBooleanProperty = node.alwaysOnTopProperty()
+    fun maximizedProperty(): ReadOnlyBooleanProperty = node.maximizedProperty()
+
+    override var scene: SceneWrapper<*>?
+        get() = super.scene
+        set(value) {
+            node.scene = value?.node
+        }
+
+    override fun addChild(
+        child: NodeWrapper,
+        index: Int?
+    ) {
+        TODO("Not yet implemented")
+    }
+
+    override fun removeFromParent() {
+        warn("removeFromParent used on a stage... closing stage")
+        close()
+    }
+
+    override fun isInsideRow() = false
+
+
+    var isAlwaysOnTop
+        get() = node.isAlwaysOnTop
+        set(value) {
+            node.isAlwaysOnTop = value
+        }
+
+    fun alwaysOnTopProperty(): ReadOnlyBooleanProperty = node.alwaysOnTopProperty()
 
 
 }

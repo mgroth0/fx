@@ -43,6 +43,7 @@ import javafx.scene.shape.Path
 import javafx.scene.shape.Rectangle
 import javafx.util.Duration
 import matt.collect.weak.WeakMap
+import matt.fig.model.series.SeriesIdea
 import matt.fx.control.chart.axis.value.axis.AxisForPackagePrivateProps
 import matt.fx.control.chart.line.highperf.relinechart.xy.XYChartForPackagePrivateProps.StyleableProperties.classCssMetaData
 import matt.fx.control.chart.line.highperf.relinechart.xy.chart.ChartForPrivateProps
@@ -496,7 +497,7 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
     }
 
     // -------------- PROTECTED PROPERTIES -----------------------------------------------------------------------------
-    protected val plotChildren: ObservableList<Node?>
+    protected val plotChildren: ObservableList<Node>
         /**
          * Modifiable and observable list of all content in the plot. This is where implementations of XYChart should add
          * any nodes they use to draw their plot.
@@ -750,7 +751,7 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
 
 
     private val lastSeriesIndices = WeakMap<Series<*, *>, Int>()
-    protected fun seriesChanged(c: Change<out Series<*, *>>) {
+    protected open fun seriesChanged(c: Change<out Series<*, *>>) {
         // Update style classes for all series lines and symbols
         // Note: is there a more efficient way of doing this?
         /*Matt: Yes, there is.*/
@@ -1717,7 +1718,8 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
      * A named series of data items
      * @since JavaFX 2.0
      */
-    class Series<X, Y> @JvmOverloads constructor(data: ObservableList<Data<X, Y>> = FXCollections.observableArrayList()) {
+    class Series<X, Y> @JvmOverloads constructor(data: ObservableList<Data<X, Y>> = FXCollections.observableArrayList()) :
+        SeriesIdea {
         // -------------- PRIVATE PROPERTIES ----------------------------------------
         /** the style class for default color for this series  */
         var defaultColorStyleClass: String? = null
@@ -1775,6 +1777,8 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
                         for (d in data2) {
                             require(dupCheck.add(d)) { "Duplicate data added" }
                         }
+//                        val debugCL = classLoaderOf(c)
+//                        println("debugCL1=${debugCL}")
                         for (d in c.addedSubList) {
                             d!!.setSeries(this@Series)
                         }

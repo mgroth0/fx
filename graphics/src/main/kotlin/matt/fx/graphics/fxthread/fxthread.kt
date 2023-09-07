@@ -3,19 +3,19 @@ package matt.fx.graphics.fxthread
 import com.sun.javafx.application.PlatformImpl
 import javafx.application.Platform
 import javafx.application.Platform.runLater
+import matt.async.thread.namedThread
+import matt.async.thread.runner.ThreadRunner
 import matt.fx.graphics.fxthread.FXAppState.DID_NOT_START_YET
 import matt.fx.graphics.fxthread.FXAppState.STARTED
 import matt.fx.graphics.fxthread.FXAppState.STOPPED
 import matt.fx.graphics.wrapper.node.NodeWrapper
-import matt.lang.function.MetaFunction
+import matt.lang.exec.Exec
 import matt.lang.function.Produce
 import matt.lang.require.requireEquals
 import matt.model.flowlogic.runner.Run
 import matt.model.flowlogic.runner.Runner
-import matt.model.flowlogic.runner.ThreadRunner
 import matt.obs.subscribe.LatchManager
 import matt.service.scheduler.Scheduler
-import kotlin.concurrent.thread
 import kotlin.time.Duration
 
 enum class FXAppState {
@@ -33,6 +33,7 @@ object FXAppStateWatcher {
         requireEquals(state, DID_NOT_START_YET)
         state = STARTED
     }
+
     @Synchronized
     fun markAsStopped(cause: Throwable?) {
         requireEquals(state, STARTED)
@@ -42,7 +43,7 @@ object FXAppStateWatcher {
 }
 
 
-val RunLaterReturnLatchManager = LatchManager()
+val RunLaterReturnLatchManager by lazy { LatchManager() }
 
 fun <T> runLaterReturn(op: () -> T): T {
     var r: Any? = object {}
@@ -75,7 +76,7 @@ fun runMuchLater(
     d: Duration,
     op: () -> Unit
 ) {
-    thread {
+    namedThread(name = "runMuchLater Thread") {
         Thread.sleep(d.inWholeMilliseconds)
         runLater {
             op()
@@ -96,7 +97,7 @@ inline fun <T : Any, V> inRunLater(crossinline op: T.(V) -> Unit): T.(V) -> Unit
 fun <N : NodeWrapper> N.runLater(op: N.() -> Unit) = PlatformImpl.runLater { op() }
 
 
-val runLaterOp: MetaFunction = {
+val runLaterOp: Exec = {
     PlatformImpl.runLater(it)
 }
 

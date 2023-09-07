@@ -6,6 +6,7 @@ import javafx.application.Platform.runLater
 import javafx.beans.property.StringProperty
 import javafx.geometry.Pos
 import javafx.scene.layout.Priority.ALWAYS
+import matt.async.thread.TheProcessReaper
 import matt.async.thread.daemon
 import matt.auto.process.destroyNiceThenForceThenWait
 import matt.file.MFile
@@ -18,6 +19,7 @@ import matt.fx.graphics.anim.animation.keyframe
 import matt.fx.graphics.anim.animation.timeline
 import matt.fx.graphics.fxthread.runLaterReturn
 import matt.fx.graphics.wrapper.node.NodeWrapper
+import matt.fx.graphics.wrapper.node.visibleWhen
 import matt.fx.graphics.wrapper.pane.hbox.hbox
 import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
 import matt.fx.graphics.wrapper.text.TextWrapper
@@ -27,13 +29,13 @@ import matt.fx.node.console.ProcessConsole
 import matt.fx.node.procpane.inspect.ProcessInspectPane
 import matt.fx.node.procpane.status.StatusFolderWatchPane
 import matt.gui.menu.context.mcontextmenu
-import matt.lang.shutdown.preaper.ProcessReaper
 import matt.lang.trip
 import matt.log.logInvocation
 import matt.obs.bindings.bool.not
 import matt.obs.math.double.op.times
 import matt.obs.prop.BindableProperty
 import matt.obs.prop.VarProp
+import matt.obs.prop.toggle
 import matt.shell.context.ShellExecutionContext
 import matt.time.ONE_MINUTE
 import java.lang.Thread.sleep
@@ -116,14 +118,14 @@ class ProcessConsolePane(
     /*MESSY, LIKELY THERE ARE RACE CONDITIONS*/
     private fun startProcessWatchThreads(p: Process) {
         var stopTime: Long? = null
-        daemon {
+        daemon("startProcessWatchThreads Thread 1") {
             p.waitFor()
             stopTime = System.currentTimeMillis()
             runLater {
                 runningProp v false
             }
         }
-        daemon {
+        daemon("startProcessWatchThreads Thread 2") {
             synchronized(timerMonitor) {
                 val timerOps = listOf(
                     msTimerTimeline!! to 1.milliseconds trip 1000,
@@ -189,14 +191,14 @@ class ProcessConsolePane(
     @Suppress("MemberVisibilityCanBePrivate")
     override fun rund() = with(executionContext) {
         logInvocation {
-            daemon {
+            daemon("rund Thread") {
                 if (running) {
                     stop()
                 }
                 statusFolderWatchPane?.start()
                 val p = processBuilder.start()
                 startTime = System.currentTimeMillis()
-                ProcessReaper.ensureProcessEndsWithThisJvm(p)
+                TheProcessReaper.ensureProcessEndsWithThisJvm(p)
                 console.attachProcess(p)
                 runLater {
                     process = p
@@ -214,7 +216,7 @@ class ProcessConsolePane(
         }
     }
 
-    override fun stopd() = with(executionContext) { daemon { stop() } }
+    override fun stopd() = with(executionContext) { daemon("stopd Thread") { stop() } }
 
     private var msTimerTimeline: Timeline? = null
     private var secTimerTimeline: Timeline? = null
@@ -267,12 +269,19 @@ class ProcessConsolePane(
                 button("Stop") {
                     disableProperty.bind(this@ProcessConsolePane.runningProp.not())
                     setOnAction {
-                        daemon {
+                        daemon("Stop procpane Thread") {
                             this@ProcessConsolePane.stop()
                         }
                     }
                 }
+                val showTimer = BindableProperty(true)
+                button("Toggle Timer") {
+                    setOnAction {
+                        showTimer.toggle()
+                    }
+                }
                 this@ProcessConsolePane.theTimerText = text {
+                    visibleWhen(showTimer)
                     val textProp = node.textProperty()
                     this@ProcessConsolePane.msTimerTimeline =
                         this@ProcessConsolePane.timerTimeline(textProp, 1.milliseconds)

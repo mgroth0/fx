@@ -15,52 +15,52 @@ import org.jsoup.Jsoup
 
 fun ImageRefreshingWebView(file: MFile) = WebViewWrapper().apply {
 
-  engine.onError = EventHandler { event -> System.err.println(event) }
+    engine.onError = EventHandler { event -> System.err.println(event) }
 
 
-  var refreshThisCycle = false
+    var refreshThisCycle = false
 
-  interceptConsole()
+    interceptConsole()
 
-  engine.loadWorker.stateProperty().addListener { _, _, new ->
-	println("${file.name}:loadstate:${new}")
-	refreshThisCycle = true
-  }
+    engine.loadWorker.stateProperty().addListener { _, _, new ->
+        println("${file.name}:loadstate:${new}")
+        refreshThisCycle = true
+    }
 
 
-  engine.load(file.toURI().toString())
-  daemon {
-	val imgFiles = mutableMapOf<MFile, Long>()
-	Jsoup.parse(file.readText()).allElements.forEach {
-	  if (it.tag().name == "img") {
-		val src = it.attributes()["src"]
-		val imgFile = file.parentFile!!.toPath().resolve(src).normalize().toFile().toMFile()
-		imgFiles[imgFile] = imgFile.lastModified()
-	  }
-	}
-	println("watching mtimes of:")
-	for (entry in imgFiles) {
-	  println("\t" + entry.key.toString())
-	}
+    engine.load(file.toURI().toString())
+    daemon(name = "ImageRefreshingWebView thread") {
+        val imgFiles = mutableMapOf<MFile, Long>()
+        Jsoup.parse(file.readText()).allElements.forEach {
+            if (it.tag().name == "img") {
+                val src = it.attributes()["src"]
+                val imgFile = file.parentFile!!.toPath().resolve(src).normalize().toFile().toMFile()
+                imgFiles[imgFile] = imgFile.lastModified()
+            }
+        }
+        println("watching mtimes of:")
+        for (entry in imgFiles) {
+            println("\t" + entry.key.toString())
+        }
 
-	refreshWhileInSceneEvery(2.sec) {
-	  @Suppress("DEPRECATION")
-	  if (!file.exists()) NonCancellable.cancel() // NOSONAR
+        refreshWhileInSceneEvery(2.sec) {
+            @Suppress("DEPRECATION")
+            if (!file.exists()) NonCancellable.cancel() // NOSONAR
 
-	  for (entry in imgFiles) {
-		if (entry.key.lastModified() != entry.value) {
-		  imgFiles[entry.key] = entry.key.lastModified()
-		  refreshThisCycle = true
-		}
-	  }
-	  if (refreshThisCycle) {
-		refreshThisCycle = false
-		//                println("refresh2(${file.absolutePath})")
-		runLaterReturn {
-		  println("executing js refresh!")
-		  engine.executeScript(refreshImages)
-		}
-	  }
-	}
-  }
+            for (entry in imgFiles) {
+                if (entry.key.lastModified() != entry.value) {
+                    imgFiles[entry.key] = entry.key.lastModified()
+                    refreshThisCycle = true
+                }
+            }
+            if (refreshThisCycle) {
+                refreshThisCycle = false
+                //                println("refresh2(${file.absolutePath})")
+                runLaterReturn {
+                    println("executing js refresh!")
+                    engine.executeScript(refreshImages)
+                }
+            }
+        }
+    }
 }

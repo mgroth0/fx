@@ -1,13 +1,11 @@
 package matt.fx.node.perfdiagram
 
-import matt.fx.web.WebViewPane
-import matt.html.fig.sankey.sankeyHTML
+import matt.fig.model.sankey.SankeyConnection
+import matt.fig.model.sankey.SankeyIr
 import matt.log.profile.stopwatch.Stopwatch
-import matt.model.code.idea.FigIdea
 
-fun Stopwatch.analysisNode() = StopWatchAnalysisNode(this)
-
-class StopWatchAnalysisNode(val sw: Stopwatch) : WebViewPane(sankeyHTML(sw.increments().joinToString("\n") {
-    it.first
-    "[ '${sw.prefix}', '${it.second}', ${it.first.inWholeMilliseconds} ],"
-})), FigIdea
+fun Stopwatch.analysisNodeIr() = SankeyIr(
+    increments().map {
+        SankeyConnection(from = prefix ?: "null", to = it.second, weight = it.first.inWholeMilliseconds)
+    }
+)

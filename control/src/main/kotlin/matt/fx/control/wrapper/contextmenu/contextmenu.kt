@@ -11,6 +11,8 @@ import javafx.scene.control.MenuItem
 import javafx.scene.control.SeparatorMenuItem
 import javafx.scene.control.ToggleGroup
 import javafx.scene.input.KeyCombination
+import matt.async.thread.namedThread
+import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.control.wrapper.menu.item.MenuItemWrapper
 import matt.fx.control.wrapper.menu.item.SimpleMenuItem
 import matt.fx.control.wrapper.menu.item.action
@@ -18,9 +20,7 @@ import matt.fx.control.wrapper.menu.radioitem.ValuedRadioMenuItem
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.window.WindowWrapper
-import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.obs.bindings.str.ObsS
-import kotlin.concurrent.thread
 
 
 fun ET.contextmenu(op: ContextMenu.()->Unit = {}): ContextMenu {
@@ -166,7 +166,7 @@ class ContextMenuWrapper(node: ContextMenu = ContextMenu()): WindowWrapper<Conte
   fun actionitem(s: String, threaded: Boolean = false, op: ()->Unit) {
 	item(s) {
 	  setOnAction {
-		if (threaded) thread { op() }
+		if (threaded) namedThread("actionitem Thread") { op() }
 		else op()
 	  }
 	}

@@ -6,9 +6,7 @@ import javafx.event.EventHandler
 import javafx.event.EventType
 import javafx.scene.text.Text
 import javafx.stage.Stage
-import matt.color.hexToColor
 import matt.fx.graphics.wrapper.node.NodeWrapper
-import matt.fx.graphics.wrapper.style.toFXColor
 
 fun <T: Event> NodeWrapper.filterAndConsume(eventType: EventType<T>, handler: EventHandler<T>) {
   addEventFilter(eventType) {
@@ -34,7 +32,6 @@ class DummyAppForFxThreadForScreen: Application() {
 val String.fxWidth: Double
   get() = Text(this).layoutBounds.width
 
-fun fxColorFromHex(hex: String) = hexToColor(hex).toFXColor()
 
 
 

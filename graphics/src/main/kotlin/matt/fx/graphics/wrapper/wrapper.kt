@@ -65,6 +65,10 @@ interface EventTargetWrapper {
 
 }
 
+
+
+
+
 sealed class EventTargetWrapperImpl<out N : EventTarget> : EventTargetWrapper {
     abstract override val node: N
 

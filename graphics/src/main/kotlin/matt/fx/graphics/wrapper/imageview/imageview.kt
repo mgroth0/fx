@@ -40,7 +40,7 @@ fun ET.imageview(image: Image, op: ImageViewWrapper.()->Unit = {}) =
 
 class ImageViewWrapper(
   node: ImageView = ImageView(),
-): NodeWrapperImpl<ImageView>(node) {
+): NodeWrapperImpl<ImageView>(node), matt.image.Image {
 
   constructor(image: Image): this(ImageView(image))
   constructor(imageURL: String): this(ImageView(imageURL))
