@@ -2,7 +2,7 @@ package matt.fx.control.wrapper.scroll
 
 import javafx.geometry.Bounds
 import javafx.scene.control.ScrollPane
-import matt.collect.itr.recurse.chain
+import matt.collect.itr.recurse.chain.chain
 import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.control.wrapper.wrapped.wrapped
 import matt.fx.graphics.wrapper.ET

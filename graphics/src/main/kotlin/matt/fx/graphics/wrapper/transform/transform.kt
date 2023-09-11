@@ -9,6 +9,8 @@ import javafx.scene.transform.Transform
 import javafx.scene.transform.Translate
 import matt.fx.graphics.wrapper.SingularEventTargetWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
+import matt.lang.classname.JvmQualifiedClassName
+import matt.lang.classname.jvmQualifiedClassName
 import matt.lang.require.requireEquals
 
 abstract class TransformWrapper<E : Transform>(node: E) : SingularEventTargetWrapper<E>(node) {
@@ -39,10 +41,10 @@ class ScaleWrapper(node: Scale = Scale()) : TransformWrapper<Scale>(node)
 
 class ImmutableTransformWrapper(node: Transform) : TransformWrapper<Transform>(node) {
     companion object {
-        const val JFX_QNAME = "javafx.scene.transform.Transform.ImmutableTransform"
+        val JFX_QNAME = JvmQualifiedClassName("javafx.scene.transform.Transform.ImmutableTransform")
     }
 
     init {
-        requireEquals(node::class.qualifiedName, JFX_QNAME)
+        requireEquals(node::class.jvmQualifiedClassName, JFX_QNAME)
     }
 }

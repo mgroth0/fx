@@ -8,6 +8,11 @@
     },
     {
       "type": "Project",
+      "cfg": "implementation",
+      "path": ":k:rstruct"
+    },
+    {
+      "type": "Project",
       "cfg": "api",
       "path": ":k:obs:math"
     },

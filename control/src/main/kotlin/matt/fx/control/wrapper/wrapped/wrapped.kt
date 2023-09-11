@@ -236,6 +236,8 @@ import matt.fx.graphics.wrapper.transform.TransformWrapper
 import matt.fx.graphics.wrapper.transform.TranslateWrapper
 import matt.fx.graphics.wrapper.window.WindowWrapper
 import matt.lang.NEVER
+import matt.lang.classname.JvmQualifiedClassName
+import matt.lang.classname.jvmQualifiedClassName
 import matt.lang.require.requireNull
 import kotlin.reflect.KClass
 
@@ -466,14 +468,32 @@ fun Region.wrapped(): RegionWrapper<*> = findWrapper() ?: when (this) {
     is Control           -> wrapped()
     is VirtualFlow<*>    -> wrapped()
     /*is AxisForPackagePrivateProps<*> -> wrapped()*/
-    else                 -> when (this::class.qualifiedName) {
-        CLIPPED_CONTAINER_QNAME                                              -> ClippedContainerWrapper(this@wrapped)
-        "org.fxmisc.richtext.ParagraphBox"                                   -> ParagraphBoxWrapper(this@wrapped)
-        "org.fxmisc.flowless.Navigator"                                      -> NavigatorWrapper(this@wrapped)
-        "org.fxmisc.flowless.VirtualFlow"                                    -> FlowLessVirtualFlowWrapper(this@wrapped)
-        "eu.hansolo.fx.charts.CoxcombChart"                                  -> CoxCombWrapper(this@wrapped)
-        "eu.hansolo.fx.charts.matt.fx.control.wrapper.wrapped.SunburstChart" -> SunburstChart(this@wrapped)
-        else                                                                 -> findWrapper()
+    else                 -> when (this::class.jvmQualifiedClassName) {
+        CLIPPED_CONTAINER_QNAME                                                                     -> ClippedContainerWrapper(
+            this@wrapped
+        )
+
+        JvmQualifiedClassName("org.fxmisc.richtext.ParagraphBox")                                   -> ParagraphBoxWrapper(
+            this@wrapped
+        )
+
+        JvmQualifiedClassName("org.fxmisc.flowless.Navigator")                                      -> NavigatorWrapper(
+            this@wrapped
+        )
+
+        JvmQualifiedClassName("org.fxmisc.flowless.VirtualFlow")                                    -> FlowLessVirtualFlowWrapper(
+            this@wrapped
+        )
+
+        JvmQualifiedClassName("eu.hansolo.fx.charts.CoxcombChart")                                  -> CoxCombWrapper(
+            this@wrapped
+        )
+
+        JvmQualifiedClassName("eu.hansolo.fx.charts.matt.fx.control.wrapper.wrapped.SunburstChart") -> SunburstChart(
+            this@wrapped
+        )
+
+        else                                                                                        -> findWrapper()
             ?: RegionWrapperImpl<Region, NodeWrapper>(
                 this
             )
@@ -629,7 +649,7 @@ fun Transform.wrapped(): TransformWrapper<*> = findWrapper() ?: when (this) {
     is Shear     -> wrapped()
     is Affine    -> wrapped()
     is Scale     -> wrapped()
-    else         -> when (this::class.qualifiedName) {
+    else         -> when (this::class.jvmQualifiedClassName) {
         ImmutableTransformWrapper.JFX_QNAME -> ImmutableTransformWrapper(this)
         else                                -> cannotFindWrapper()
     }

@@ -19,6 +19,7 @@ import matt.log.warn.dumpStack
 import matt.log.warn.warn
 import matt.model.op.convert.StringConverter
 import matt.obs.prop.BindableProperty
+import matt.rstruct.loader.systemResourceLoader
 import java.util.logging.Level
 import kotlin.reflect.KProperty
 
@@ -63,18 +64,23 @@ object DarkModeController {
     }
 }
 
-
-val MODENA_CSS = ClassLoader.getSystemResource("modena/modena.css").toString()
-val DARK_MODENA_CSS = ClassLoader.getSystemResource("modena/darkModena.css").toString()
-val CUSTOM_CSS = ClassLoader.getSystemResource("modena/custom.css").toString()
+val MODENA_CSS by lazy {
+    systemResourceLoader().resourceURL("modena/modena.css")
+}
+val DARK_MODENA_CSS by lazy {
+    systemResourceLoader().resourceURL("modena/darkModena.css")
+}
+val CUSTOM_CSS by lazy {
+    systemResourceLoader().resourceURL("modena/custom.css")
+}
 
 
 fun SceneWrapper<*>.reloadStyle(darkMode: Boolean) {
     stylesheets.clear()
     fill = Color.WHITE /*FX DEFAULT*/
     if (darkMode) {
-        stylesheets.add(DARK_MODENA_CSS)
-        stylesheets.add(CUSTOM_CSS)
+        stylesheets.add(DARK_MODENA_CSS.toString())
+        stylesheets.add(CUSTOM_CSS.toString())
 
         //     ensure that even while the screen is loading it is black. So not white flashes or flickering while refreshing
         fill =

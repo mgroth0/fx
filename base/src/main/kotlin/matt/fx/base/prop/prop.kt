@@ -33,9 +33,16 @@ fun <T> property(block: () -> Property<T>) = FXPropertyDelegate(block())
 
 class FXPropertyDelegate<T>(val fxProperty: Property<T>) : ReadWriteProperty<Any, T?> {
 
-    override fun getValue(thisRef: Any, property: KProperty<*>): T? = fxProperty.value
+    override fun getValue(
+        thisRef: Any,
+        property: KProperty<*>
+    ): T? = fxProperty.value
 
-    override fun setValue(thisRef: Any, property: KProperty<*>, value: T?) {
+    override fun setValue(
+        thisRef: Any,
+        property: KProperty<*>,
+        value: T?
+    ) {
         fxProperty.value = value
     }
 
@@ -49,15 +56,14 @@ fun <T> Any.getProperty(prop: KMutableProperty1<*, T>): ObjectProperty<T> {
         ) { "No delegate field with name '${prop.name}' found" }
 
     field.isAccessible = true
+    val delegate = field.get(this) as FXPropertyDelegate<in Nothing>
     @Suppress("UNCHECKED_CAST")
-    val delegate = field.get(this) as FXPropertyDelegate<T>
     return delegate.fxProperty as ObjectProperty<T>
 }
 
 fun Class<*>.findFieldByName(name: String): Field? {
     val field = (declaredFields + fields).find { it.name == name }
     if (field != null) return field
-    @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
     if (superclass == java.lang.Object::class.java) return null
     return superclass.findFieldByName(name)
 }
@@ -82,7 +88,10 @@ fun <S, T> S.observable(prop: KMutableProperty1<S, T>) = observable(this, prop)
 /**
  * Convert an owner instance and a corresponding property reference into a readonly observable
  */
-fun <S, T> observable(owner: S, prop: KProperty1<S, T>): ReadOnlyObjectProperty<T> {
+fun <S, T> observable(
+    owner: S,
+    prop: KProperty1<S, T>
+): ReadOnlyObjectProperty<T> {
     return object : ReadOnlyObjectWrapper<T>(owner, prop.name) {
         override fun get() = prop.get(owner)
     }
@@ -93,7 +102,11 @@ fun <S, T> observable(owner: S, prop: KProperty1<S, T>): ReadOnlyObjectProperty<
  *
  * Example: val observableName = observable(myPojo, MyPojo::getName, MyPojo::setName)
  */
-fun <S : Any, T> observable(bean: S, getter: KFunction<T>, setter: KFunction2<S, T, Unit>): PojoProperty<T> {
+fun <S : Any, T> observable(
+    bean: S,
+    getter: KFunction<T>,
+    setter: KFunction2<S, T, Unit>
+): PojoProperty<T> {
     val propName = getter.name.substring(3).decap()
 
     return object : PojoProperty<T>(bean, propName) {
@@ -104,7 +117,10 @@ fun <S : Any, T> observable(bean: S, getter: KFunction<T>, setter: KFunction2<S,
     }
 }
 
-open class PojoProperty<T>(bean: Any, propName: String) : SimpleObjectProperty<T>(bean, propName) {
+open class PojoProperty<T>(
+    bean: Any,
+    propName: String
+) : SimpleObjectProperty<T>(bean, propName) {
     fun refresh() {
         fireValueChangedEvent()
     }
@@ -124,7 +140,6 @@ inline fun <reified T : Any> Any.observable(propName: String) =
  *            or
  *          val observableName = myPojo.observable("name")
  */
-@Suppress("UNCHECKED_CAST")
 fun <S : Any, T : Any> S.observable(
     getter: KFunction<T>? = null,
     setter: KFunction2<S, T, Unit>? = null,
@@ -139,12 +154,16 @@ fun <S : Any, T : Any> S.observable(
         YesIUseReflect
     }
 
-    return JavaBeanObjectPropertyBuilder.create().apply {
+    val r = JavaBeanObjectPropertyBuilder.create().apply {
         bean(this@observable)
         this.name(propName)
         if (getter != null) this.getter(getter.javaMethod)
         if (setter != null) this.setter(setter.javaMethod)
-    }.build() as ObjectProperty<T>
+    }.build()
+
+
+    @Suppress("UNCHECKED_CAST")
+    return r as ObjectProperty<T>
 }
 
 enum class SingleAssignThreadSafetyMode {
@@ -157,8 +176,16 @@ fun <T> singleAssign(threadSafetyMode: SingleAssignThreadSafetyMode = SYNCHRONIZ
 
 interface SingleAssign<T> {
     fun isInitialized(): Boolean
-    operator fun getValue(thisRef: Any?, property: KProperty<*>): T
-    operator fun setValue(thisRef: Any?, property: KProperty<*>, value: T)
+    operator fun getValue(
+        thisRef: Any?,
+        property: KProperty<*>
+    ): T
+
+    operator fun setValue(
+        thisRef: Any?,
+        property: KProperty<*>,
+        value: T
+    )
 }
 
 private class SynchronizedSingleAssign<T> : UnsynchronizedSingleAssign<T>() {
@@ -166,7 +193,11 @@ private class SynchronizedSingleAssign<T> : UnsynchronizedSingleAssign<T>() {
     @Volatile
     override var _value: Any? = UNINITIALIZED_VALUE
 
-    override operator fun setValue(thisRef: Any?, property: KProperty<*>, value: T) = synchronized(this) {
+    override operator fun setValue(
+        thisRef: Any?,
+        property: KProperty<*>,
+        value: T
+    ) = synchronized(this) {
         super.setValue(thisRef, property, value)
     }
 }
@@ -177,14 +208,21 @@ private open class UnsynchronizedSingleAssign<T> : SingleAssign<T> {
 
     protected open var _value: Any? = UNINITIALIZED_VALUE
 
-    override operator fun getValue(thisRef: Any?, property: KProperty<*>): T {
-        if (!isInitialized()) throw UninitializedPropertyAccessException("matt.lang.model.value.Value has not been assigned yet!")
+    override operator fun getValue(
+        thisRef: Any?,
+        property: KProperty<*>
+    ): T {
+        if (!isInitialized()) throw UninitializedPropertyAccessException("Value has not been assigned yet!")
         @Suppress("UNCHECKED_CAST")
         return _value as T
     }
 
-    override operator fun setValue(thisRef: Any?, property: KProperty<*>, value: T) {
-        if (isInitialized()) throw Exception("matt.lang.model.value.Value has already been assigned!")
+    override operator fun setValue(
+        thisRef: Any?,
+        property: KProperty<*>,
+        value: T
+    ) {
+        if (isInitialized()) throw Exception("Value has already been assigned!")
         _value = value
     }
 
@@ -224,10 +262,16 @@ fun <T : Any> booleanListBinding(
 }
 
 
-fun <T> ObservableValue<T>.stringBinding(vararg dependencies: Observable, op: (T?) -> String): StringBinding =
+fun <T> ObservableValue<T>.stringBinding(
+    vararg dependencies: Observable,
+    op: (T?) -> String
+): StringBinding =
     Bindings.createStringBinding({ op(value) }, this, *dependencies)
 
-fun <T, R> ObservableValue<T>.objectBindingN(vararg dependencies: Observable, op: (T?) -> R?): ObjectBinding<R?> =
+fun <T, R> ObservableValue<T>.objectBindingN(
+    vararg dependencies: Observable,
+    op: (T?) -> R?
+): ObjectBinding<R?> =
     Bindings.createObjectBinding({ op(value) }, this, *dependencies)
 
 

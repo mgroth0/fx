@@ -18,9 +18,10 @@ import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
 import javafx.scene.input.MouseEvent
 import javafx.util.Callback
+import matt.collect.itr.recurse.depth.recursionDepth
 import matt.collect.itr.recurse.recurse
 import matt.collect.itr.recurse.recurseToFlat
-import matt.collect.itr.recurse.recursionDepth
+import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
 import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.control.wrapper.control.tablelike.TableLikeWrapper
 import matt.fx.control.wrapper.control.tree.like.TreeLikeWrapper
@@ -34,7 +35,6 @@ import matt.fx.graphics.service.uncheckedNullableWrapperConverter
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
-import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
 import matt.lang.go
 import matt.obs.prop.ObsVal
 import matt.obs.prop.VarProp

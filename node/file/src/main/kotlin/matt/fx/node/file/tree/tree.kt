@@ -6,7 +6,7 @@ import javafx.scene.layout.Priority.ALWAYS
 import matt.auto.actions
 import matt.auto.moveToTrash
 import matt.auto.open
-import matt.collect.itr.recurse.chain
+import matt.collect.itr.recurse.chain.chain
 import matt.collect.itr.recurse.recurse
 import matt.collect.itr.sameContentsAnyOrder
 import matt.collect.map.lazyMap

@@ -19,7 +19,7 @@ import javafx.stage.Stage
 import javafx.stage.Window
 import javafx.stage.WindowEvent
 import matt.async.thread.namedThread
-import matt.collect.itr.recurse.chain
+import matt.collect.itr.recurse.chain.chain
 import matt.fx.control.wrapper.wrapped.WrapperServiceImpl
 import matt.fx.graphics.fxthread.FXAppStateWatcher
 import matt.fx.graphics.service.WrapperServiceHub

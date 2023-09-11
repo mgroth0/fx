@@ -29,7 +29,7 @@ import matt.obs.bind.binding
 import matt.obs.math.double.op.times
 import matt.obs.prop.ObsVal
 import matt.obs.prop.VarProp
-import matt.rstruct.resourceStream
+import matt.rstruct.loader.systemResourceLoader
 import kotlin.reflect.KClass
 
 fun NW.svgIcon(
@@ -39,7 +39,7 @@ fun NW.svgIcon(
     val fullName = if (".svg" !in file) "$file.svg" else file
     return imageview(
         svgToFXImage(
-            resourceStream(fullName)!!,
+            systemResourceLoader().resourceStream(fullName)!!,
             width = size * 2,
             height = size * 2
         )
