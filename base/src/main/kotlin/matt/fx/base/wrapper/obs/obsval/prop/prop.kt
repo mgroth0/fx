@@ -5,7 +5,7 @@ import javafx.beans.value.ObservableValue
 import matt.fx.base.wrapper.obs.obsval.FXBackedProp
 import matt.fx.base.wrapper.obs.obsval.NonNullFXBackedReadOnlyBindableProp
 import matt.fx.base.wrapper.obs.obsval.NullableFXBackedReadOnlyBindableProp
-import matt.model.op.convert.Converter
+import matt.lang.convert.BiConverter
 import matt.obs.bindhelp.BindableValue
 import matt.obs.bindhelp.BindableValueHelper
 import matt.obs.listen.OldAndNewListener
@@ -36,7 +36,7 @@ interface WritableFXBackedProp<FX_T>: FXBackedProp<FX_T>,
   override fun bindBidirectional(source: Var<FX_T>, checkEquality: Boolean, clean: Boolean , debug: Boolean, weak: Boolean) =
 	bindManager.bindBidirectional(source, checkEquality = checkEquality, clean=clean,debug = debug, weak = weak)
 
-  override fun <S> bindBidirectional(source: Var<S>, converter: Converter<FX_T, S>) =
+  override fun <S> bindBidirectional(source: Var<S>, converter: BiConverter<FX_T, S>) =
 	bindManager.bindBidirectional(source, converter)
 
   override fun bind(source: MObservableVal<out FX_T, *, *>) = bindManager.bind(source)

@@ -18,7 +18,7 @@ import matt.fx.graphics.wrapper.node.shape.circle.circle
 import matt.fx.graphics.wrapper.pane.stack.StackPaneW
 import matt.fx.graphics.wrapper.style.FXColor
 import matt.fx.graphics.wrapper.text.text
-import matt.lang.function.DSL
+import matt.lang.function.Dsl
 import matt.obs.bind.binding
 import matt.obs.prop.BindableProperty
 
@@ -126,7 +126,7 @@ abstract class HoverableSymbol(
 }
 
 
-fun ET.plusMinusSymbol(b: BindableProperty<Boolean>, radius: Double = DEFAULT_RADIUS, op: DSL<PlusMinusSymbol> = {}) = PlusMinusSymbol(b, radius=radius).attachTo(this, op)
+fun ET.plusMinusSymbol(b: BindableProperty<Boolean>, radius: Double = DEFAULT_RADIUS, op: Dsl<PlusMinusSymbol> = {}) = PlusMinusSymbol(b, radius=radius).attachTo(this, op)
 
 open class PlusMinusSymbol(b: BindableProperty<Boolean>, radius: Double = DEFAULT_RADIUS): HoverableSymbol(
   char = if (b.value) "-" else "+",
@@ -142,14 +142,14 @@ open class PlusMinusSymbol(b: BindableProperty<Boolean>, radius: Double = DEFAUL
   }
 }
 
-fun ET.infoSymbol(text: String, op: DSL<InfoSymbol> = {}) = InfoSymbol(text).attachTo(this, op)
+fun ET.infoSymbol(text: String, op: Dsl<InfoSymbol> = {}) = InfoSymbol(text).attachTo(this, op)
 
 open class InfoSymbol(info: String): HoverableSymbol(
   char = "i",
   tooltipText = info
 )
 
-fun ET.tutorialSymbol(text: String, op: DSL<TutorialSymbol> = {}) = TutorialSymbol(text).attachTo(this, op)
+fun ET.tutorialSymbol(text: String, op: Dsl<TutorialSymbol> = {}) = TutorialSymbol(text).attachTo(this, op)
 
 open class TutorialSymbol(info: String): HoverableSymbol(
   char = "?",
@@ -157,10 +157,10 @@ open class TutorialSymbol(info: String): HoverableSymbol(
 )
 
 
-fun ET.warningSymbol(text: String, op: DSL<WarningSymbol> = {}) = WarningSymbol(text).attachTo(this, op)
+fun ET.warningSymbol(text: String, op: Dsl<WarningSymbol> = {}) = WarningSymbol(text).attachTo(this, op)
 
 open class WarningSymbol(text: String): HoverableSymbol(char = "!", tooltipText = text, baseColor = FXColor.DARKORANGE)
 
-fun ET.severeWarningSymbol(text: String, op: DSL<SevereWarningSymbol> = {}) = SevereWarningSymbol(text).attachTo(this, op)
+fun ET.severeWarningSymbol(text: String, op: Dsl<SevereWarningSymbol> = {}) = SevereWarningSymbol(text).attachTo(this, op)
 
 open class SevereWarningSymbol(text: String): HoverableSymbol(char = "!!", tooltipText = text, baseColor = FXColor.RED)

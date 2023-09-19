@@ -9,7 +9,7 @@ import matt.mbuild.mtest.fx.FxTests
 import matt.reflect.access
 import matt.reflect.noArgConstructor
 import matt.reflect.pack.Pack
-import matt.reflect.scan.systemScanner
+import matt.reflect.scan.systemScope
 import org.junit.jupiter.api.Test
 import kotlin.contracts.ExperimentalContracts
 import kotlin.reflect.KClass
@@ -23,7 +23,7 @@ class FXControlTests : FxTests() {
 
         FXTester.runFXHeadlessApp {
             //	  @Suppress("UNUSED_VARIABLE")
-            val failedToWrap = with(systemScanner().usingClassGraph()) {
+            val failedToWrap = with(systemScope().usingClassGraph()) {
                 (EventTarget::class as KClass<out EventTarget>).subClasses(Pack("javafx"))
             }.filter {
                 /*must test for anonymous first because trying to see if anonymous is abstract leads to error*/

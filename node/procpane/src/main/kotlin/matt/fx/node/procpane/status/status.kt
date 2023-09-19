@@ -8,7 +8,10 @@ import javafx.scene.text.Text
 import javafx.scene.text.TextFlow
 import matt.async.safe.with
 import matt.async.thread.daemon
-import matt.file.MFile
+import matt.lang.model.file.FsFile
+import matt.file.ext.FileExtension.Companion.STATUS
+import matt.file.ext.hasExtension
+import matt.file.toJioFile
 import matt.fx.control.wrapper.scroll.ScrollPaneWrapper
 import matt.fx.control.wrapper.wrapped.wrapped
 import matt.fx.graphics.fxthread.runLaterReturn
@@ -19,10 +22,11 @@ import matt.fx.graphics.wrapper.text.text
 import matt.fx.graphics.wrapper.text.textlike.applyConsoleStyle
 import matt.fx.graphics.wrapper.textflow.TextFlowWrapper
 import matt.fx.node.tileabletabpane.TileableTabPane
+import matt.lang.file.toJFile
 import matt.log.printlnWithTime
 import java.util.concurrent.Semaphore
 
-class StatusFolderWatchPane(val folder: MFile): TileableTabPane(
+class StatusFolderWatchPane(val folder: FsFile): TileableTabPane(
   orientation = HORIZONTAL
 ) {
   init {
@@ -59,7 +63,7 @@ class StatusFolderWatchPane(val folder: MFile): TileableTabPane(
   }
 
   private val filenodes = mutableMapOf<String, ScrollPaneWrapper<*>>()
-  private fun filenode(file: MFile): ScrollPaneWrapper<*> {
+  private fun filenode(file: FsFile): ScrollPaneWrapper<*> {
 
 	return (if (filenodes.containsKey(file.name)) {
 	  filenodes[file.name]!!
@@ -84,7 +88,7 @@ class StatusFolderWatchPane(val folder: MFile): TileableTabPane(
 	  //	  }
 	}).apply {
 	  (content as TextFlow).children.setAll(TextWrapper().applyConsoleStyle(size = 8.0).apply {
-		text = System.currentTimeMillis().toString() + " | " + file.readText()
+		text = System.currentTimeMillis().toString() + " | " + file.toJFile().readText()
 		fill = Color.LIGHTSALMON
 	  }.node)
 	  (content as TextFlow).wrapped().text("") /*matt.log.level.getDEBUG FORCE UPDATE*/
@@ -92,14 +96,14 @@ class StatusFolderWatchPane(val folder: MFile): TileableTabPane(
   }
 
   private fun refresh() {
-	if (!folder.exists()) {
+	if (!folder.toJioFile().exists()) {
 	  return
 	}
 	runLaterReturn {
-	  panes = folder.listFiles()!!.filter { it.extension == "status" }.map {
+	  panes = folder.toJioFile().listFiles()!!.filter { it.hasExtension(STATUS) }.map {
 		it.nameWithoutExtension to filenode(it).apply {
 		  if (false) {
-			printlnWithTime("matt.log.level.getDEBUG:${(this.content as TextFlow).children.joinToString { t -> (t as Text).text }}")
+			printlnWithTime("DEBUG:${(this.content as TextFlow).children.joinToString { t -> (t as Text).text }}")
 		  }
 		}
 

@@ -9,10 +9,10 @@ import matt.fx.graphics.wrapper.node.NW
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.lang.require.requireNull
-import matt.model.op.convert.StringConverter
 import matt.obs.bind.binding
 import matt.obs.prop.ObsVal
 import matt.obs.prop.ValProp
+import matt.prim.converters.StringConverter
 
 
 inline fun <reified T> ET.label(

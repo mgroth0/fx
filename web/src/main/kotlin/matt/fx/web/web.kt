@@ -8,7 +8,7 @@ import javafx.scene.input.KeyCode
 import javafx.scene.layout.Priority
 import javafx.scene.web.WebEngine
 import javafx.scene.web.WebView
-import matt.file.MFile
+import matt.lang.model.file.FsFile
 import matt.fx.control.lang.actionbutton
 import matt.fx.graphics.clip.copyToClipboard
 import matt.fx.graphics.fxthread.runLater
@@ -291,11 +291,11 @@ fun RegionWrapper<*>.specialTransferingToWindowAndBack(par: PaneWrapper<*>) {
 
 
 open class WebViewPane private constructor(
-    file: MFile? = null,
+    file: FsFile? = null,
     html: String? = null
 ) : VBoxWrapperImpl<NodeWrapper>() {
 
-    constructor(file: MFile) : this(file = file, html = null)
+    constructor(file: FsFile) : this(file = file, html = null)
 
     constructor(html: String) : this(html = html, file = null)
 

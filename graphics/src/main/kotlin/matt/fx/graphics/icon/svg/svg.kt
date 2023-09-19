@@ -3,7 +3,8 @@ package matt.fx.graphics.icon.svg
 import com.kitfox.svg.SVGRoot
 import com.kitfox.svg.SVGUniverse
 import com.kitfox.svg.animation.AnimationElement.AT_XML
-import matt.file.MFile
+import matt.file.toJioFile
+import matt.lang.model.file.FsFile
 import matt.fx.graphics.icon.ICON_WIDTH
 import matt.fx.image.toFXImage
 import matt.lang.anno.SeeURL
@@ -20,10 +21,10 @@ import java.net.URI
 
 
 fun svgToImage(
-  svg: MFile,
+  svg: FsFile,
   width: Int = ICON_WIDTH.toInt(),
   height: Int = ICON_WIDTH.toInt()
-) = SVGUniverse().let { svgToImage(it, it.loadSVG(svg.toURI().toURL()), width = width, height = height) }
+) = SVGUniverse().let { svgToImage(it, it.loadSVG(svg.toJioFile().toURI().toURL()), width = width, height = height) }
 
 fun svgToImage(
   svg: InputStream,
@@ -66,10 +67,10 @@ fun SVGRoot.setOrAddAttribute(name: String, value: String) {
 
 /*fixes black and white issue!?*/
 fun svgToImage2(
-  svg: MFile,
+  svg: FsFile,
   width: Int = ICON_WIDTH.toInt(),
   height: Int = ICON_WIDTH.toInt()
-) = svgToImage2(svg.inputStream(), width = width, height = height)
+) = svgToImage2(svg.toJioFile().inputStream(), width = width, height = height)
 
 /*fixes black and white issue!?*/
 fun svgToImage2(
@@ -84,7 +85,7 @@ fun svgToFXImage(
   height: Int = ICON_WIDTH.toInt()
 ) = svgToImage2(svg,width,height).toFXImage()
 fun svgToFXImage(
-  svg: MFile,
+  svg: FsFile,
   width: Int = ICON_WIDTH.toInt(),
   height: Int = ICON_WIDTH.toInt()
 ) = svgToImage2(svg,width,height).toFXImage()

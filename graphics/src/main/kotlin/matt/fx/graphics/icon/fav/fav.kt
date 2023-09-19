@@ -8,6 +8,7 @@ import matt.collect.map.dmap.withStoringDefault
 import matt.fx.graphics.wrapper.imageview.ImageViewWrapper
 import matt.fx.image.toFXImage
 import matt.image.fav.tryToLoadImageStreamAndTakeLargestImage
+import matt.lang.model.value.Value
 import matt.lang.url.getHostName
 import matt.log.warn.warn
 import matt.model.code.errreport.ThrowReport
@@ -22,7 +23,7 @@ object FaviconLoader {
 
     @Synchronized
     fun loadSynchronously(url: URL): BufferedImage? {
-        return FAVICON_CACHE[url]
+        return FAVICON_CACHE[url].value
     }
 
 
@@ -53,16 +54,18 @@ object FaviconLoader {
     }
 
 
-    private val FAVICON_CACHE: DefaultStoringMap<URL, BufferedImage?> by lazy {
-        WeakHashMap<URL, BufferedImage?>().withStoringDefault {
-            if (it == null) null
-            else {
-                val faviconUrl = URI(it.getHostName() + "favicon.ico").toURL()
-                tryToLoadImageStreamAndTakeLargestImage(faviconUrl, onMinorException = {
-                    warn("$it for $faviconUrl")
-                    ThrowReport(it).print()
-                })
-            }
+    private val FAVICON_CACHE: DefaultStoringMap<URL, Value<BufferedImage?>> by lazy {
+        WeakHashMap<URL, Value<BufferedImage?>>().withStoringDefault {
+            Value(
+                if (it == null) null
+                else {
+                    val faviconUrl = URI(it.getHostName() + "favicon.ico").toURL()
+                    tryToLoadImageStreamAndTakeLargestImage(faviconUrl, onMinorException = {
+                        warn("$it for $faviconUrl")
+                        ThrowReport(it).print()
+                    })
+                }
+            )
         }
     }
 

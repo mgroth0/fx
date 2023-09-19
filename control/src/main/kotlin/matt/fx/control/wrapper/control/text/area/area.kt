@@ -8,9 +8,9 @@ import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
-import matt.model.op.convert.StringConverter
 import matt.obs.bindings.str.ObsS
 import matt.obs.prop.VarProp
+import matt.prim.converters.StringConverter
 
 fun ET.textarea(value: String? = null, op: TextAreaWrapper.()->Unit = {}) = TextAreaWrapper().attachTo(this, op) {
   if (value != null) it.text = value
@@ -24,7 +24,7 @@ fun ET.textarea(property: VarProp<String>, op: TextAreaWrapper.()->Unit = {}) = 
 
 
 fun <T> ET.textarea(
-  property: VarProp<T>, converter: StringConverter<T>, op: TextAreaWrapper.()->Unit = {}
+    property: VarProp<T>, converter: StringConverter<T>, op: TextAreaWrapper.()->Unit = {}
 ) = textarea().apply {
   textProperty.bindBidirectional(property, converter)
   op(this)

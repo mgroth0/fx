@@ -9,10 +9,10 @@ import javafx.collections.transformation.SortedList
 import matt.collect.fake.FakeMutableList
 import matt.fx.base.wrapper.obs.collect.list.change.toFXChange
 import matt.lang.ILLEGAL
+import matt.lang.convert.BiConverter
 import matt.lang.function.Consume
 import matt.lang.function.Op
 import matt.lang.setall.setAll
-import matt.model.op.convert.Converter
 import matt.model.op.prints.Prints
 import matt.obs.bindhelp.BindableList
 import matt.obs.bindhelp.BindableListImpl
@@ -77,7 +77,7 @@ fun <E> MyObservableListWrapper<E>.onChange(op: (ListChangeListener.Change<out E
 interface MyObservableListWrapperPlusList<E> : MyObservableListWrapper<E>, List<E>
 //interface MyObservableListWrapperPlusMutableList<E>: matt.hurricanefx.eye.wrapper.obs.collect.list.MyObservableListWrapperPlusList<E>, MutableList<E>
 
-fun <E> mfxListConverter() = object : Converter<ObservableList<E>, MutableObsList<E>> {
+fun <E> mfxListConverter() = object : BiConverter<ObservableList<E>, MutableObsList<E>> {
     override fun convertToB(a: ObservableList<E>): MutableObsList<E> {
         @Suppress("UNCHECKED_CAST")
         return when (a) {
@@ -95,7 +95,7 @@ fun <E> mfxListConverter() = object : Converter<ObservableList<E>, MutableObsLis
     }
 }
 
-fun <E> mfxMutableListConverter() = object : Converter<ObservableList<E>, MutableObsList<E>> {
+fun <E> mfxMutableListConverter() = object : BiConverter<ObservableList<E>, MutableObsList<E>> {
     override fun convertToB(a: ObservableList<E>): MutableObsList<E> {
         @Suppress("UNCHECKED_CAST")
         return when (a) {

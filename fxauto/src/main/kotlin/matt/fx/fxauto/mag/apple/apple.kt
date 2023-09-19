@@ -18,9 +18,9 @@ import matt.fx.graphics.mag.left
 import matt.fx.graphics.wrapper.stage.StageWrapper
 import matt.lang.err
 import matt.log.profile.stopwatch.tic
-import matt.shell.context.ShellExecutionContext
+import matt.shell.context.ReapingShellExecutionContext
 
-context (ShellExecutionContext)
+context(ReapingShellExecutionContext)
 fun moveFrontmostWindowByApplescript(
     x: Number,
     y: Number,
@@ -35,7 +35,7 @@ fun moveFrontmostWindowByApplescript(
     )
 }
 
-context (ShellExecutionContext)
+context(ReapingShellExecutionContext)
 fun moveAppWindowByApplescript(
     app: String,
     x: Number,
@@ -59,7 +59,7 @@ fun moveAppWindowByApplescript(
 
 }
 
-context (ShellExecutionContext)
+context(ReapingShellExecutionContext)
 fun getFrontmostWindowPositionAndSizeByApplescript(): Rectangle2D {
     var s = compileAndOrRunApplescript("getFrontmostWindowPositionAndSize")
     val x = s.substringBefore(",").trim().toInt()
@@ -72,7 +72,7 @@ fun getFrontmostWindowPositionAndSizeByApplescript(): Rectangle2D {
     return Rectangle2D(x.toDouble(), y.toDouble(), width.toDouble(), height.toDouble())
 }
 
-context (ShellExecutionContext)
+context(ReapingShellExecutionContext)
 fun getAppWindowPositionAndSizeByApplescript(app: String): Rectangle2D {
     var s = runAppleScript {
         tell(SystemEvents) {
@@ -95,6 +95,7 @@ fun getAppWindowPositionAndSizeByApplescript(app: String): Rectangle2D {
 }
 
 
+context(ReapingShellExecutionContext)
 fun sdtInTest() {
 
 
@@ -124,7 +125,7 @@ fun sdtInTest() {
     println("CODE=${p.waitFor()}")
 }
 
-context (ShellExecutionContext)
+context(ReapingShellExecutionContext)
         /*https://stackoverflow.com/questions/70647124/how-to-reduce-overhead-and-run-applescripts-faster*/
 @Suppress("UNREACHABLE_CODE")
 fun appleLeft() {

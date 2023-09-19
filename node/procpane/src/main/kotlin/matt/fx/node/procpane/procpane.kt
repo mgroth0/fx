@@ -6,10 +6,9 @@ import javafx.application.Platform.runLater
 import javafx.beans.property.StringProperty
 import javafx.geometry.Pos
 import javafx.scene.layout.Priority.ALWAYS
-import matt.async.thread.TheProcessReaper
 import matt.async.thread.daemon
 import matt.auto.process.destroyNiceThenForceThenWait
-import matt.file.MFile
+import matt.lang.model.file.FsFile
 import matt.file.commons.REGISTERED_FOLDER
 import matt.fx.base.time.toFXDuration
 import matt.fx.control.lang.actionbutton
@@ -29,6 +28,7 @@ import matt.fx.node.console.ProcessConsole
 import matt.fx.node.procpane.inspect.ProcessInspectPane
 import matt.fx.node.procpane.status.StatusFolderWatchPane
 import matt.gui.menu.context.mcontextmenu
+import matt.lang.file.toJFile
 import matt.lang.trip
 import matt.log.logInvocation
 import matt.obs.bindings.bool.not
@@ -36,7 +36,6 @@ import matt.obs.math.double.op.times
 import matt.obs.prop.BindableProperty
 import matt.obs.prop.VarProp
 import matt.obs.prop.toggle
-import matt.shell.context.ShellExecutionContext
 import matt.time.ONE_MINUTE
 import java.lang.Thread.sleep
 import kotlin.time.Duration
@@ -59,31 +58,31 @@ interface ProcessNode : ConsoleNode {
 }
 
 
+context(matt.shell.context.ReapingShellExecutionContext)
 @Suppress("unused")
 class ProcessConsolePane(
-    private val executionContext: ShellExecutionContext,
     override val name: String,
     val processBuilder: ProcessBuilder,
-    val statusFolder: MFile? = null,
+    val statusFolder: FsFile? = null,
 ) : VBoxWrapperImpl<NodeWrapper>(), ProcessNode {
 
     fun clone() = ProcessConsolePane(
-        executionContext = executionContext, name = name, processBuilder = processBuilder, statusFolder = statusFolder
+        name = name,
+        processBuilder = processBuilder,
+        statusFolder = statusFolder
     )
 
     constructor(
-        executionContext: ShellExecutionContext,
         name: String,
         vararg command: String,
-        workingDir: MFile? = null,
-        statusFolder: MFile? = null,
+        workingDir: FsFile? = null,
+        statusFolder: FsFile? = null,
         environmentalVars: Map<String, String> = mapOf()
-    ) : this(
-        executionContext, name, ProcessBuilder(
+    ) : this(name, ProcessBuilder(
             command.toList()
         ).apply {
             environment() += environmentalVars
-            directory(workingDir)
+            directory(workingDir?.toJFile())
         }, statusFolder
     )
 
@@ -109,7 +108,7 @@ class ProcessConsolePane(
             }
         }
         onChange {
-            if (!it && autoRestart) with(executionContext) { rund() }
+            if (!it && autoRestart) rund()
         }
     }
 
@@ -164,9 +163,7 @@ class ProcessConsolePane(
     private val autoRestartProp = BindableProperty(false).apply {
         onChange {
             if (it && !running) {
-                with(executionContext) {
-                    rund()
-                }
+                rund()
             }
         }
     }
@@ -189,34 +186,30 @@ class ProcessConsolePane(
     private var startTime: Long? = null
 
     @Suppress("MemberVisibilityCanBePrivate")
-    override fun rund() = with(executionContext) {
-        logInvocation {
-            daemon("rund Thread") {
-                if (running) {
-                    stop()
-                }
-                statusFolderWatchPane?.start()
-                val p = processBuilder.start()
-                startTime = System.currentTimeMillis()
-                TheProcessReaper.ensureProcessEndsWithThisJvm(p)
-                console.attachProcess(p)
-                runLater {
-                    process = p
-                }
+    override fun rund() = logInvocation {
+        daemon("rund Thread") {
+            if (running) {
+                stop()
+            }
+            statusFolderWatchPane?.start()
+            val p = processBuilder.start()
+            startTime = System.currentTimeMillis()
+            ensureProcessEndsAtShutdown(p)
+            console.attachProcess(p)
+            runLater {
+                process = p
             }
         }
     }
 
     @Suppress("MemberVisibilityCanBePrivate")
-    fun stop() = with(executionContext) {
-        logInvocation {
-            statusFolderWatchPane?.stop()
-            val p = process
-            p?.destroyNiceThenForceThenWait()
-        }
+    fun stop() = logInvocation {
+        statusFolderWatchPane?.stop()
+        val p = process
+        p?.destroyNiceThenForceThenWait()
     }
 
-    override fun stopd() = with(executionContext) { daemon("stopd Thread") { stop() } }
+    override fun stopd() = daemon("stopd Thread") { stop() }
 
     private var msTimerTimeline: Timeline? = null
     private var secTimerTimeline: Timeline? = null
@@ -253,66 +246,64 @@ class ProcessConsolePane(
 
     init {
         val vbox = this
-        with(executionContext) {
-            processProp.onChange {
-                println("processProp:${it}")
-                if (it != null) {
-                    console.reset()
+        processProp.onChange {
+            println("processProp:${it}")
+            if (it != null) {
+                console.reset()
+            }
+        }
+        hbox<ButtonWrapper> {
+            alignment = Pos.CENTER_LEFT
+            spacing = 5.0
+            actionbutton("Run") {
+                this@ProcessConsolePane.rund()
+            }
+            button("Stop") {
+                disableProperty.bind(this@ProcessConsolePane.runningProp.not())
+                setOnAction {
+                    daemon("Stop procpane Thread") {
+                        this@ProcessConsolePane.stop()
+                    }
                 }
             }
-            hbox<ButtonWrapper> {
-                alignment = Pos.CENTER_LEFT
-                spacing = 5.0
-                actionbutton("Run") {
-                    this@ProcessConsolePane.rund()
+            val showTimer = BindableProperty(true)
+            button("Toggle Timer") {
+                setOnAction {
+                    showTimer.toggle()
                 }
-                button("Stop") {
-                    disableProperty.bind(this@ProcessConsolePane.runningProp.not())
-                    setOnAction {
-                        daemon("Stop procpane Thread") {
-                            this@ProcessConsolePane.stop()
-                        }
-                    }
-                }
-                val showTimer = BindableProperty(true)
-                button("Toggle Timer") {
-                    setOnAction {
-                        showTimer.toggle()
-                    }
-                }
-                this@ProcessConsolePane.theTimerText = text {
-                    visibleWhen(showTimer)
-                    val textProp = node.textProperty()
-                    this@ProcessConsolePane.msTimerTimeline =
-                        this@ProcessConsolePane.timerTimeline(textProp, 1.milliseconds)
-                    this@ProcessConsolePane.secTimerTimeline =
-                        this@ProcessConsolePane.timerTimeline(textProp, 10.milliseconds)
-                    this@ProcessConsolePane.minTimerTimeline =
-                        this@ProcessConsolePane.timerTimeline(textProp, 100.milliseconds)
-                }
+            }
+            this@ProcessConsolePane.theTimerText = text {
+                visibleWhen(showTimer)
+                val textProp = node.textProperty()
+                this@ProcessConsolePane.msTimerTimeline =
+                    this@ProcessConsolePane.timerTimeline(textProp, 1.milliseconds)
+                this@ProcessConsolePane.secTimerTimeline =
+                    this@ProcessConsolePane.timerTimeline(textProp, 10.milliseconds)
+                this@ProcessConsolePane.minTimerTimeline =
+                    this@ProcessConsolePane.timerTimeline(textProp, 100.milliseconds)
+            }
 
-            }
-            add(console.apply {
-                prefHeightProperty.bind(vbox.heightProperty)
-                vgrow = ALWAYS
-            })
-            val fracOfHeight = vbox.heightProperty * 0.2
-            statusFolder?.let {
-                statusFolderWatchPane = StatusFolderWatchPane(it).apply {
-                    minHeightProperty.bind(fracOfHeight)
-                    maxHeightProperty.bind(fracOfHeight)
-                }
-                add(statusFolderWatchPane!!)
-            }
-            add(inspectBox.apply {
+        }
+        add(console.apply {
+            prefHeightProperty.bind(vbox.heightProperty)
+            vgrow = ALWAYS
+        })
+        val fracOfHeight = vbox.heightProperty * 0.2
+        statusFolder?.let {
+            statusFolderWatchPane = StatusFolderWatchPane(it).apply {
                 minHeightProperty.bind(fracOfHeight)
                 maxHeightProperty.bind(fracOfHeight)
-                vgrow = ALWAYS
-            })
-            mcontextmenu {
-                checkitem("Show process inspect pane", this@ProcessConsolePane.showProcessInspectPaneOption)
-                checkitem("Auto-Restart", this@ProcessConsolePane.autoRestartProp)
             }
+            add(statusFolderWatchPane!!)
+        }
+        add(inspectBox.apply {
+            minHeightProperty.bind(fracOfHeight)
+            maxHeightProperty.bind(fracOfHeight)
+            vgrow = ALWAYS
+        })
+        mcontextmenu {
+            checkitem("Show process inspect pane", this@ProcessConsolePane.showProcessInspectPaneOption)
+            checkitem("Auto-Restart", this@ProcessConsolePane.autoRestartProp)
         }
     }
 }

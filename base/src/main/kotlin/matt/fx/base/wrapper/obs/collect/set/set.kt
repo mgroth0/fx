@@ -5,9 +5,9 @@ import javafx.beans.Observable
 import javafx.collections.ObservableSet
 import javafx.collections.SetChangeListener
 import matt.collect.map.FakeMutableSet
+import matt.lang.convert.BiConverter
 import matt.lang.function.Consume
 import matt.lang.function.Op
-import matt.model.op.convert.Converter
 import matt.model.op.prints.Prints
 import matt.obs.bindhelp.BindableSet
 import matt.obs.bindhelp.BindableSetImpl
@@ -67,7 +67,7 @@ fun <E> MyObservableSetWrapper<E>.onChange(op: (SetChangeListener.Change<out E>)
 interface MyObservableSetWrapperPlusSet<E> : MyObservableSetWrapper<E>, Set<E>
 //interface MyObservableSetWrapperPlusMutableSet<E>: MyObservableSetWrapperPlusSet<E>, MutableSet<E>
 
-fun <E> mfxSetConverter() = object : Converter<ObservableSet<E>, ObsSet<E>> {
+fun <E> mfxSetConverter() = object : BiConverter<ObservableSet<E>, ObsSet<E>> {
     override fun convertToB(a: ObservableSet<E>): ObsSet<E> {
         @Suppress("UNCHECKED_CAST")
         return when (a) {
@@ -85,7 +85,7 @@ fun <E> mfxSetConverter() = object : Converter<ObservableSet<E>, ObsSet<E>> {
     }
 }
 
-fun <E> mfxMutableSetConverter() = object : Converter<ObservableSet<E>, MutableObsSet<E>> {
+fun <E> mfxMutableSetConverter() = object : BiConverter<ObservableSet<E>, MutableObsSet<E>> {
     override fun convertToB(a: ObservableSet<E>): MutableObsSet<E> {
         @Suppress("UNCHECKED_CAST")
         return when (a) {

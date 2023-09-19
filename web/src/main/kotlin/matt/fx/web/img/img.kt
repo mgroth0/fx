@@ -3,18 +3,22 @@ package matt.fx.web.img
 import javafx.event.EventHandler
 import kotlinx.coroutines.NonCancellable
 import matt.async.thread.daemon
-import matt.file.MFile
+import matt.file.JioFile
+import matt.lang.model.file.FsFile
 import matt.file.construct.toMFile
+import matt.file.toJioFile
 import matt.fx.graphics.fxthread.runLaterReturn
 import matt.fx.web.WebViewWrapper
 import matt.fx.web.interceptConsole
 import matt.fx.web.refreshImages
 import matt.gui.refresh.refreshWhileInSceneEvery
+import matt.lang.file.toJFile
+import matt.lang.model.file.MacFileSystem
 import matt.time.dur.sec
 import org.jsoup.Jsoup
 
-fun ImageRefreshingWebView(file: MFile) = WebViewWrapper().apply {
-
+fun ImageRefreshingWebView(fil: FsFile) = WebViewWrapper().apply {
+    val file = fil.toJioFile()
     engine.onError = EventHandler { event -> System.err.println(event) }
 
 
@@ -30,12 +34,13 @@ fun ImageRefreshingWebView(file: MFile) = WebViewWrapper().apply {
 
     engine.load(file.toURI().toString())
     daemon(name = "ImageRefreshingWebView thread") {
-        val imgFiles = mutableMapOf<MFile, Long>()
+        val imgFiles = mutableMapOf<JioFile, Long>()
         Jsoup.parse(file.readText()).allElements.forEach {
             if (it.tag().name == "img") {
                 val src = it.attributes()["src"]
-                val imgFile = file.parentFile!!.toPath().resolve(src).normalize().toFile().toMFile()
-                imgFiles[imgFile] = imgFile.lastModified()
+                val imgFile =
+                    file.parentFile!!.toJFile().toPath().resolve(src).normalize().toFile().toMFile(MacFileSystem)
+                imgFiles[imgFile] = imgFile.toJioFile().lastModified()
             }
         }
         println("watching mtimes of:")
@@ -45,7 +50,7 @@ fun ImageRefreshingWebView(file: MFile) = WebViewWrapper().apply {
 
         refreshWhileInSceneEvery(2.sec) {
             @Suppress("DEPRECATION")
-            if (!file.exists()) NonCancellable.cancel() // NOSONAR
+            if (!file.toJioFile().exists()) NonCancellable.cancel() // NOSONAR
 
             for (entry in imgFiles) {
                 if (entry.key.lastModified() != entry.value) {

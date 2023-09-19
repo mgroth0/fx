@@ -1,5 +1,6 @@
 package matt.fx.control.wrapper.control.spinner
 
+import javafx.beans.binding.Bindings.bindBidirectional
 import javafx.scene.control.Spinner
 import javafx.scene.control.SpinnerValueFactory
 import javafx.scene.control.SpinnerValueFactory.IntegerSpinnerValueFactory
@@ -15,32 +16,28 @@ import matt.fx.graphics.fxthread.runLater
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
+import matt.lang.convert.BiConverter
 import matt.lang.delegation.lazyVarDelegate
 import matt.lang.err
 import matt.lang.go
 import matt.model.flowlogic.recursionblocker.RecursionBlocker
-import matt.model.op.convert.Converter
-import matt.model.op.convert.StringConverter
 import matt.obs.bind.smartBind
 import matt.obs.col.olist.MutableObsList
 import matt.obs.prop.BindableProperty
 import matt.obs.prop.ObsVal
 import matt.obs.prop.Var
-
-
-
-
+import matt.prim.converters.StringConverter
 
 
 /**
  * Create a spinner for an arbitrary type. This spinner requires you to configure a value factory, or it will throw an exception.
  */
 fun <T: Any> ET.spinner(
-  editable: Boolean = false,
-  property: Var<T>? = null,
-  enableScroll: Boolean = false,
-  converter: StringConverter<T>? = null,
-  op: SpinnerWrapper<T>.()->Unit = {}
+	editable: Boolean = false,
+	property: Var<T>? = null,
+	enableScroll: Boolean = false,
+	converter: StringConverter<T>? = null,
+	op: SpinnerWrapper<T>.()->Unit = {}
 ) = SpinnerWrapper<T>().also {
   it.attachTo(this, op)
 
@@ -211,7 +208,7 @@ class SpinnerWrapper<T: Any>(
 
   val valueFactoryProperty by lazy {
 	node.valueFactoryProperty().toNullableProp().proxy(
-	  object: Converter<SpinnerValueFactory<T>?, SpinnerValueFactoryWrapper<T>?> {
+	  object: BiConverter<SpinnerValueFactory<T>?, SpinnerValueFactoryWrapper<T>?> {
 		override fun convertToB(a: SpinnerValueFactory<T>?): SpinnerValueFactoryWrapper<T>? {
 		  return a?.wrap()
 		}

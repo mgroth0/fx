@@ -11,6 +11,7 @@ import matt.fx.control.wrapper.treeitem.TreeItemWrapper
 import matt.fx.graphics.fxthread.ts.nonBlockingFXWatcher
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.pane.hbox.HBoxWrapperImpl
+import matt.lang.model.file.MacFileSystem
 import matt.obs.bind.binding
 import matt.obs.bindings.str.ObsS
 import matt.obs.bindings.str.plus
@@ -76,7 +77,7 @@ class ProcessInspectPane(initialValue: Process?) : HBoxWrapperImpl<NodeWrapper>(
                 sortOrder.setAll(col.node) // not working for matt.fx.control.layout.children?
                 (column("main program") { cdf: TreeTableColumn.CellDataFeatures<ProcessOrHandleWrapper, String> ->
                     cdf.value?.value?.command()?.let { com ->
-                        BindableProperty(mFile(com).name)
+                        BindableProperty(mFile(com,MacFileSystem).name)
                     } ?: BindableProperty("null")
                 }).apply {
                     prefWidth = 100.0

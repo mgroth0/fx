@@ -2,13 +2,20 @@ package matt.fx.graphics.icon
 
 import javafx.scene.image.Image
 import matt.collect.map.lazyMap
-import matt.file.MFile
+import matt.file.JioFile
+import matt.lang.model.file.FsFile
 import matt.file.commons.ICON_FOLDER
+import matt.file.ext.FileExtension.Companion.IMAGE_EXTENSIONS
+import matt.file.ext.FileExtension.Companion.SVG
+import matt.file.ext.hasExtension
+import matt.file.ext.withExtension
+import matt.file.toJioFile
 import matt.fx.graphics.effect.INVERSION_EFFECT
 import matt.fx.graphics.icon.svg.svgToImage
 import matt.fx.graphics.wrapper.imageview.ImageViewWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.image.toFXImage
+import matt.lang.file.toJFile
 import matt.obs.bind.binding
 import matt.obs.bindings.str.ObsS
 import matt.obs.prop.FakeObsVal
@@ -18,12 +25,12 @@ const val ICON_WIDTH = 20.0
 const val ICON_HEIGHT = 20.0
 
 fun NodeWrapper.icon(
-    file: MFile,
+    file: FsFile,
     invert: Boolean = false
 ) = add(Icon(file, invert = invert))
 
 fun NodeWrapper.obsFileIcon(
-    file: ObsVal<MFile>,
+    file: ObsVal<FsFile>,
     invert: Boolean = false
 ) = add(ObsFileIcon(file, invert = invert))
 
@@ -67,12 +74,12 @@ fun ObsIconImage(file: ObsS) = IconImage(file.binding { ICON_FOLDER[it] })
 
 
 fun Icon(
-    file: MFile,
+    file: FsFile,
     invert: Boolean = false
 ): ImageViewWrapper = Icon(IconImage(file), invert = invert)
 
 fun ObsFileIcon(
-    file: ObsVal<MFile>,
+    file: ObsVal<FsFile>,
     invert: Boolean = false
 ): ImageViewWrapper =
     ObsIcon(IconImage(file), invert = invert)
@@ -94,20 +101,19 @@ fun ObsIcon(
     if (invert) effect = INVERSION_EFFECT
 }
 
-private val IMAGE_EXTENSIONS = listOf("svg", "png", "jpg", "jpeg")
 
-private val images = lazyMap<MFile, Image> { file ->
-    (file.takeIf { it.exists() } ?: if (file.extension.isBlank()) IMAGE_EXTENSIONS.map { file.withExtension(it) }
+private val images = lazyMap<JioFile, Image> { file ->
+    (file.takeIf { it.exists() } ?: if (file.toJFile().extension.isNotBlank()) IMAGE_EXTENSIONS.map { file.withExtension(it) }
         .firstOrNull {
             it.exists()
         } ?: FALLBACK_FILE else FALLBACK_FILE).let { f ->
-        if (f.extension == "svg") svgToImage(f).toFXImage()
-        else Image(f.toPath().toUri().toURL().toString())
+        if (f.hasExtension(SVG)) svgToImage(f).toFXImage()
+        else Image(f.toJFile().toPath().toUri().toURL().toString())
     }
 }
 
-fun IconImage(file: MFile): Image = IconImage(FakeObsVal(file)).value
-fun IconImage(file: ObsVal<MFile>): ObsVal<Image> = file.binding { images[it] }
+fun IconImage(file: FsFile): Image = IconImage(FakeObsVal(file)).value
+fun IconImage(file: ObsVal<FsFile>): ObsVal<Image> = file.binding { images[it.toJioFile()] }
 
 
 

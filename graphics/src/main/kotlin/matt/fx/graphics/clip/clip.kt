@@ -5,8 +5,11 @@ package matt.fx.graphics.clip
 import javafx.scene.input.Clipboard
 import javafx.scene.input.ClipboardContent
 import javafx.scene.input.DataFormat
+import matt.file.JioFile
+import matt.file.toJioFile
 /*import matt.auto.clip.AwtClipLink*/
-import matt.file.MFile
+import matt.lang.model.file.FsFile
+import matt.lang.file.toJFile
 import java.awt.Toolkit
 import java.awt.datatransfer.StringSelection
 
@@ -24,10 +27,10 @@ fun String.copyToClipboard() {
     clipboard.setContent(content)
 }
 
-fun MFile.copyToClipboard() {
+fun JioFile.copyToClipboard() {
     val clipboard = Clipboard.getSystemClipboard()
     val content = ClipboardContent()
-    content.putFiles(listOf(this))
+    content.putFiles(listOf(this.toJFile()))
     clipboard.setContent(content)
 }
 
@@ -45,7 +48,7 @@ fun Clipboard.setContent(op: ClipboardContent.() -> Unit) {
 }
 
 fun Clipboard.putString(value: String) = setContent { putString(value) }
-fun Clipboard.putFiles(files: MutableList<MFile>) = setContent { putFiles(files.map { it.userFile }) }
+fun Clipboard.putFiles(files: MutableList<FsFile>) = setContent { putFiles(files.map { it.toJioFile().userFile }) }
 fun Clipboard.put(
     dataFormat: DataFormat,
     value: Any

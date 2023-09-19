@@ -14,7 +14,7 @@ import matt.fx.base.wrapper.obs.collect.list.createImmutableWrapper
 import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.base.wrapper.obs.obsval.toNonNullableROProp
 import matt.fx.base.wrapper.obs.obsval.toNullableROProp
-import matt.model.op.convert.Converter
+import matt.lang.convert.BiConverter
 import matt.obs.bind.binding
 import matt.obs.col.olist.ImmutableObsList
 import matt.obs.col.olist.MutableObsList
@@ -111,9 +111,9 @@ open class SelectionModelWrapperImpl<T: Any>(sm: SelectionModel<T>): SelectionMo
   }
 }
 
-fun <T: Any, W: Any> SelectionModel<T>.wrap(converter: Converter<T, W>) = SelectionModelProxy(this, converter)
+fun <T: Any, W: Any> SelectionModel<T>.wrap(converter: BiConverter<T, W>) = SelectionModelProxy(this, converter)
 class SelectionModelProxy<T: Any, W: Any>(
-  sm: SelectionModel<T>, private val converter: Converter<T, W>
+  sm: SelectionModel<T>, private val converter: BiConverter<T, W>
 ): SelectionModelWrapperBase<T, W>(sm) {
   override fun select(obj: W?) = sm.select(obj?.let(converter::convertToA))
   override val selectedItemProperty by lazy {
@@ -157,11 +157,11 @@ open class MultipleSelectionModelWrapperImpl<T: Any>(
   override val selectedItems by lazy { sm.selectedItems.createImmutableWrapper() }
 }
 
-fun <T: Any, W: Any> MultipleSelectionModel<T>.wrap(converter: Converter<T, W>) =
+fun <T: Any, W: Any> MultipleSelectionModel<T>.wrap(converter: BiConverter<T, W>) =
   MultipleSelectionModelWrapperProxy(this, converter)
 
 class MultipleSelectionModelWrapperProxy<T: Any, W: Any>(
-  sm: MultipleSelectionModel<T>, private val converter: Converter<T, W>
+  sm: MultipleSelectionModel<T>, private val converter: BiConverter<T, W>
 ): MultipleSelectionModelWrapperBase<T, W>(sm), SelectionControls<W> by SelectionModelProxy<T, W>(sm, converter) {
   override val selectedItems by lazy {
 	sm.selectedItems.createImmutableWrapper().toMappedList {

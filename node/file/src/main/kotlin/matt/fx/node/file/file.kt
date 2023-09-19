@@ -17,11 +17,29 @@ import matt.async.thread.schedule.every
 import matt.auto.openInFinder
 import matt.css.props.Color.black
 import matt.css.sty
-import matt.file.Folder
-import matt.file.HTMLFile
-import matt.file.LogFile
-import matt.file.MFile
-import matt.file.SvgFile
+import matt.file.ext.FileExtension.Companion.APP
+import matt.file.ext.FileExtension.Companion.COFFEESCRIPT
+import matt.file.ext.FileExtension.Companion.CSS
+import matt.file.ext.FileExtension.Companion.GRADLE
+import matt.file.ext.FileExtension.Companion.HTML
+import matt.file.ext.FileExtension.Companion.JAVA
+import matt.file.ext.FileExtension.Companion.JS
+import matt.file.ext.FileExtension.Companion.JSON
+import matt.file.ext.FileExtension.Companion.KT
+import matt.file.ext.FileExtension.Companion.KTS
+import matt.file.ext.FileExtension.Companion.LESS
+import matt.file.ext.FileExtension.Companion.PY
+import matt.file.ext.FileExtension.Companion.SH
+import matt.file.ext.FileExtension.Companion.SVG
+import matt.file.ext.FileExtension.Companion.TAGS
+import matt.file.ext.FileExtension.Companion.TXT
+import matt.file.ext.FileExtension.Companion.YML
+import matt.file.ext.hasAnyExtension
+import matt.file.ext.hasExtension
+import matt.file.ext.isImage
+import matt.file.ext.mExtension
+import matt.file.toJioFile
+import matt.file.types.typed
 import matt.fx.control.lang.actionbutton
 import matt.fx.control.wrapper.checkbox.checkbox
 import matt.fx.control.wrapper.control.button.button
@@ -52,36 +70,41 @@ import matt.gui.interact.safe
 import matt.gui.menu.context.mcontextmenu
 import matt.gui.mstage.WMode.CLOSE
 import matt.lang.err
+import matt.lang.file.toJFile
+import matt.lang.model.file.FsFile
+import matt.lang.model.file.types.FolderType
+import matt.lang.model.file.types.Html
+import matt.lang.model.file.types.Log
+import matt.lang.model.file.types.Svg
 import matt.obs.bind.binding
 import matt.obs.prop.BindableProperty
 import matt.obs.prop.ObsVal
+import matt.shell.context.ReapingShellExecutionContext
 import matt.time.dur.sec
 import java.lang.Thread.sleep
 import java.lang.ref.WeakReference
 
-fun MFile.draggableIcon() =
-    staticIcon().apply {
-        dragsFile(this@draggableIcon, mode = BetterTransferMode.COPY)
-    }
-
-fun MFile.staticIcon() = Icon(iconString())
-
-private fun MFile.iconString() = when {
-    (isDirectory)         -> "white/folder"
-    (extension.isBlank()) -> "file/bin"
-    else                  -> "file/${extension}"/*, invert = extension in listOf("md", "txt")*/
+fun matt.file.JioFile.draggableIcon() = staticIcon().apply {
+    dragsFile(this@draggableIcon, mode = BetterTransferMode.COPY)
 }
 
-fun ObsVal<MFile>.draggableIcon() = ObsStringIcon(
-    binding {
-        it.iconString()
-    }
-).apply {
+fun matt.file.JioFile.staticIcon() = Icon(iconString())
+
+private fun matt.file.JioFile.iconString() = when {
+    (isDirectory)        -> "white/folder"
+    (mExtension == null) -> "file/bin"
+    else                 -> "file/${mExtension!!.afterDot}"/*, invert = extension in listOf("md", "txt")*/
+}
+
+fun ObsVal<out FsFile>.draggableIcon() = ObsStringIcon(binding {
+    it.toJioFile().iconString()
+}).apply {
     dragsFile(this@draggableIcon, mode = BetterTransferMode.COPY)
 }
 
 
-fun MFile.createNode(renderHTMLAndSVG: Boolean = false): RegionWrapper<NodeWrapper> {
+context(ReapingShellExecutionContext)
+fun matt.file.JioFile.createNode(renderHTMLAndSVG: Boolean = false): RegionWrapper<NodeWrapper> {
     val node = createNodeInner(renderHTMLAndSVG = renderHTMLAndSVG)
     node.mcontextmenu {
         item(s = "", g = draggableIcon())
@@ -92,7 +115,8 @@ fun MFile.createNode(renderHTMLAndSVG: Boolean = false): RegionWrapper<NodeWrapp
     return node
 }
 
-private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): RegionWrapper<NodeWrapper> {
+context(ReapingShellExecutionContext)
+private fun matt.file.JioFile.createNodeInner(renderHTMLAndSVG: Boolean = false): RegionWrapper<NodeWrapper> {
     if (exists()) {
         println("opening file")
         if (isImage()) {
@@ -105,7 +129,7 @@ private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): RegionWrap
                     mcontextmenu {
                         item("os open") {
                             setOnAction {
-                                java.awt.Desktop.getDesktop().open(this@createNodeInner)
+                                java.awt.Desktop.getDesktop().open(this@createNodeInner.toJFile())
                             }
                         }
                         item("test open in new window") { onAction = EventHandler { openImageInWindow() } }
@@ -118,22 +142,9 @@ private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): RegionWrap
 
 
 
-        if (extension in listOf(
-                "txt",
-                "yml",
-                "json",
-                "sh",
-                "kt",
-                "java",
-                "py",
-                "kts",
-                "gradle",
-                "css",
-                "less",
-                "js",
-                "tags",
-                "coffeescript"
-            ) || (!renderHTMLAndSVG && extension in (listOf("html", "svg")))
+        if (hasAnyExtension(
+                TXT, YML, JSON, SH, KT, JAVA, PY, KTS, GRADLE, CSS, LESS, JS, TAGS, COFFEESCRIPT
+            ) || (!renderHTMLAndSVG && hasAnyExtension(HTML, SVG))
         ) {
             val viewbox = SimplePaneWrapper<NodeWrapper>()
             var fsText = readText()
@@ -159,7 +170,7 @@ private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): RegionWrap
                     }
                 }
             }
-            if (extension in (listOf("html", "svg")) && !renderHTMLAndSVG) {
+            if (hasAnyExtension(HTML, SVG) && !renderHTMLAndSVG) {
                 viewbox.button("render") {
                     setOnAction {
                         WebViewPane(this@createNodeInner).openInNewWindow(wMode = CLOSE)
@@ -174,8 +185,8 @@ private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): RegionWrap
 
 
 
-        return when (this) {
-            is LogFile  -> VBoxWrapperImpl<NodeWrapper>().apply {
+        return when (this.typed().fileType) {
+            Log -> VBoxWrapperImpl<NodeWrapper>().apply {
                 val lineLimit = BindableProperty(1000)
                 val infiniteLines = BindableProperty(false)
                 hbox<NodeWrapper> {
@@ -229,11 +240,11 @@ private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): RegionWrap
                 }
             }
 
-            is HTMLFile -> WebViewPane(this@createNodeInner).apply {
+            Html -> WebViewPane(this@createNodeInner).apply {
                 specialZooming()
             }
 
-            is SvgFile  -> WebViewWrapper().apply {
+            Svg  -> WebViewWrapper().apply {
                 runLater {
                     vgrow = ALWAYS
                     hgrow = ALWAYS
@@ -355,15 +366,15 @@ private fun MFile.createNodeInner(renderHTMLAndSVG: Boolean = false): RegionWrap
                 root
             }
 
-            is Folder   -> when {
-                extension != "app" -> fileTreeAndViewerPane(this).apply {
+            FolderType   -> when {
+                !hasExtension(APP) -> fileTreeAndViewerPane(this).apply {
                     prefWidth = 600.0
                 }
 
-                else               -> err("how to make node for files with extension:${extension}")
+                else               -> err("how to make node for files with extension:${mExtension}")
             }
 
-            else        -> err("how to make node for files with extension:${extension}")
+            else        -> err("how to make node for files with extension:${mExtension}")
         }
     } else return VBoxWrapperImpl(TextWrapper("file $this does not exist"))
 }

@@ -2,6 +2,7 @@ package matt.fx.node.file.tree
 
 import javafx.geometry.Pos.CENTER_LEFT
 import javafx.scene.control.SelectionMode.MULTIPLE
+import javafx.scene.control.TreeItem
 import javafx.scene.layout.Priority.ALWAYS
 import matt.auto.actions
 import matt.auto.moveToTrash
@@ -10,10 +11,10 @@ import matt.collect.itr.recurse.chain.chain
 import matt.collect.itr.recurse.recurse
 import matt.collect.itr.sameContentsAnyOrder
 import matt.collect.map.lazyMap
-import matt.file.MFile
 import matt.file.construct.mFile
+import matt.file.ext.mExtension
+import matt.file.toJioFile
 import matt.fx.control.inter.graphic
-import matt.fx.control.wrapper.cellfact.SimpleFactory
 import matt.fx.control.wrapper.control.row.TreeCellWrapper
 import matt.fx.control.wrapper.control.row.TreeTableRowWrapper
 import matt.fx.control.wrapper.control.tree.TreeViewWrapper
@@ -21,6 +22,7 @@ import matt.fx.control.wrapper.control.tree.like.TreeLikeWrapper
 import matt.fx.control.wrapper.control.tree.like.populateTree
 import matt.fx.control.wrapper.control.treetable.TreeTableViewWrapper
 import matt.fx.control.wrapper.control.treetable.autoResizeColumns
+import matt.fx.control.wrapper.selects.MultiSelectWrap
 import matt.fx.control.wrapper.treeitem.TreeItemWrapper
 import matt.fx.control.wrapper.wrapped.wrapped
 import matt.fx.fxauto.actionitem
@@ -43,6 +45,8 @@ import matt.gui.mstage.WMode.CLOSE
 import matt.gui.refresh.refreshWhileInSceneEvery
 import matt.lang.NEVER
 import matt.lang.inList
+import matt.lang.model.file.FsFile
+import matt.lang.model.file.MacFileSystem
 import matt.lang.scope
 import matt.log.taball
 import matt.log.warn.warn
@@ -51,14 +55,15 @@ import matt.obs.col.olist.toBasicObservableList
 import matt.obs.listen.OldAndNewListenerImpl
 import matt.obs.math.double.op.div
 import matt.obs.prop.BindableProperty
-import matt.shell.context.ShellExecutionContext
+import matt.shell.context.ReapingShellExecutionContext
 import matt.shell.context.UnknownShellExecutionContext
 import matt.time.dur.sec
 
 private const val HEIGHT = 300.0
 
+context(ReapingShellExecutionContext)
 fun fileTreeAndViewerPane(
-    rootFile: MFile,
+    rootFile: FsFile,
     doubleClickInsteadOfSelect: Boolean = false
 ) = HBoxWrapperImpl<NodeWrapper>().apply {
     val hBox = this
@@ -78,7 +83,7 @@ fun fileTreeAndViewerPane(
         treeTableView.setOnDoubleClick {
             treeTableView.selectedItem?.let {
                 viewBox.clear()
-                viewBox.add(it.value.createNode(renderHTMLAndSVG = true).apply {
+                viewBox.add(it.value.toJioFile().createNode(renderHTMLAndSVG = true).apply {
                     perfectBind(viewBox)
                     specialTransferingToWindowAndBack(viewBox)
                 })
@@ -88,7 +93,7 @@ fun fileTreeAndViewerPane(
         treeTableView.onSelect { file ->
             viewBox.clear()
             if (file != null) {
-                viewBox.add(file.value.createNode(renderHTMLAndSVG = true).apply {
+                viewBox.add(file.value.toJioFile().createNode(renderHTMLAndSVG = true).apply {
                     perfectBind(viewBox)
                     specialTransferingToWindowAndBack(viewBox)
                 })
@@ -97,13 +102,13 @@ fun fileTreeAndViewerPane(
     }
 }
 
-fun TreeLikeWrapper<*, MFile>.nav(f: MFile) {
+fun TreeLikeWrapper<*, out FsFile>.nav(f: FsFile) {
 
     val roo = root ?: return
 
     val fam = f.chain { it.parentFile }.toList()
 
-    if (f.doesNotExist) return
+    if (f.toJioFile().doesNotExist) return
 
     roo.children.firstOrNull { it.value in fam }?.let { subRoot ->
         println("good to nav")
@@ -123,8 +128,11 @@ fun TreeLikeWrapper<*, MFile>.nav(f: MFile) {
                 if (it.value == f) {
                     println("found treeitem: $it")
                     it.parent?.chain { it.parent }?.forEach { it.isExpanded = true }
-                    selectionModel.select(it.node)
-                    scrollTo(getRow(it.node))
+                    @Suppress("UNCHECKED_CAST")
+
+                    (selectionModel as MultiSelectWrap<TreeItem<FsFile>>).select(it.node)
+                    @Suppress("UNCHECKED_CAST")
+                    scrollTo((this as TreeLikeWrapper<*, FsFile>).getRow(it.node))
                     keepGoing = false
                 } else nextSubRoot = it as FileTreeItem
             } ?: run {
@@ -136,25 +144,28 @@ fun TreeLikeWrapper<*, MFile>.nav(f: MFile) {
 
 }
 
+context(ReapingShellExecutionContext)
 fun PaneWrapperImpl<*, *>.fileTree(
-    rootFile: MFile,
+    rootFile: FsFile,
     strategy: FileTreePopulationStrategy = AUTOMATIC,
-    op: (TreeViewWrapper<MFile>.() -> Unit)? = null,
-): TreeViewWrapper<MFile> = fileTree(rootFile.inList().toBasicObservableList(), strategy, op)
+    op: (TreeViewWrapper<FsFile>.() -> Unit)? = null,
+): TreeViewWrapper<out FsFile> = fileTree(rootFile.inList().toBasicObservableList(), strategy, op)
 
+context(ReapingShellExecutionContext)
 fun PaneWrapperImpl<*, *>.fileTableTree(
-    rootFile: MFile,
+    rootFile: FsFile,
     strategy: FileTreePopulationStrategy = AUTOMATIC,
-    op: (TreeTableViewWrapper<MFile>.() -> Unit)? = null,
-): TreeTableViewWrapper<MFile> = fileTableTree(rootFile.inList().toBasicObservableList(), strategy, op)
+    op: (TreeTableViewWrapper<FsFile>.() -> Unit)? = null,
+): TreeTableViewWrapper<FsFile> = fileTableTree(rootFile.inList().toBasicObservableList(), strategy, op)
 
 
+context(ReapingShellExecutionContext)
 fun PaneWrapperImpl<*, *>.fileTree(
-    rootFiles: BasicObservableListImpl<MFile>,
+    rootFiles: BasicObservableListImpl<out FsFile>,
     strategy: FileTreePopulationStrategy = AUTOMATIC,
-    op: (TreeViewWrapper<MFile>.() -> Unit)? = null,
-): TreeViewWrapper<MFile> {
-    return TreeViewWrapper<MFile>().apply {
+    op: (TreeViewWrapper<FsFile>.() -> Unit)? = null,
+): TreeViewWrapper<out FsFile> {
+    return TreeViewWrapper<FsFile>().apply {
         this@fileTree.add(this)
 
         UnknownShellExecutionContext.scope {
@@ -169,12 +180,13 @@ fun PaneWrapperImpl<*, *>.fileTree(
     }
 }
 
+context(ReapingShellExecutionContext)
 fun PaneWrapperImpl<*, *>.fileTableTree(
-    rootFiles: BasicObservableListImpl<MFile>,
+    rootFiles: BasicObservableListImpl<FsFile>,
     strategy: FileTreePopulationStrategy = AUTOMATIC,
-    op: (TreeTableViewWrapper<MFile>.() -> Unit)? = null,
-): TreeTableViewWrapper<MFile> {
-    return TreeTableViewWrapper<MFile>().apply {
+    op: (TreeTableViewWrapper<FsFile>.() -> Unit)? = null,
+): TreeTableViewWrapper<FsFile> {
+    return TreeTableViewWrapper<FsFile>().apply {
         this@fileTableTree.add(this)
 
         UnknownShellExecutionContext.scope {
@@ -190,8 +202,8 @@ fun PaneWrapperImpl<*, *>.fileTableTree(
 }
 
 
-context(ShellExecutionContext)
-private fun TreeLikeWrapper<*, MFile>.setupGUI() {
+context(ReapingShellExecutionContext)
+private fun TreeLikeWrapper<*, FsFile>.setupGUI() {
 
     selectionModel.selectionMode = MULTIPLE
 
@@ -199,19 +211,19 @@ private fun TreeLikeWrapper<*, MFile>.setupGUI() {
     var showSizesProp: BindableProperty<Boolean>? = null
 
     when (this) {
-        is TreeViewWrapper<MFile>      -> {
+        is TreeViewWrapper<FsFile>      -> {
 
             node.setCellFactory {
-                TreeCellWrapper<MFile>().apply {
+                TreeCellWrapper<FsFile>().apply {
                     setOnDoubleClick {
-                        this.treeItem?.value?.open()
+                        this.treeItem?.value?.toJioFile()?.open()
                     }
 
-                    val dragIconCache = lazyMap<MFile, NodeWrapper> {
+                    val dragIconCache = lazyMap<FsFile, NodeWrapper> {
                         /*without this cache, performance suffers because i think new drag icons are being created constantly?*/
-                        it.draggableIcon()
+                        it.toJioFile().draggableIcon()
                     }
-                    updateItemOv = { item: MFile?, empty: Boolean ->
+                    updateItemOv = { item: FsFile?, empty: Boolean ->
                         if (empty || item == null) {
                             if (text.isNotBlank()) text = ""
                             if (graphic != null) graphic = null
@@ -224,24 +236,29 @@ private fun TreeLikeWrapper<*, MFile>.setupGUI() {
             }
         }
 
-        is TreeTableViewWrapper<MFile> -> {
+        is TreeTableViewWrapper<FsFile> -> {
             node.setRowFactory {
-                TreeTableRowWrapper<MFile>().apply {
+                TreeTableRowWrapper<FsFile>().apply {
                     setOnDoubleClick {
-                        this.treeItem?.value?.open()
+                        this.treeItem?.value?.toJioFile()?.open()
                     }
                 }.node
             }
-            val nameCol = column("name", MFile::abspath) {
-                simpleCellFactory(SimpleFactory { value -> mFile(value).let { it.name to it.draggableIcon() } })
+            val nameCol = column("name", FsFile::abspath) {
+                simpleCellFactory { value ->
+                    mFile(
+                        value,
+                        MacFileSystem
+                    ).let { it.name to it.toJioFile().draggableIcon() }
+                }
             }
-            column("ext", MFile::extension)
+            column("ext", FsFile::mExtension)
 
             showSizesProp = BindableProperty(false)
             showSizesProp.onChange { b ->
                 if (b) {
-                    column<String>("size") {
-                        BindableProperty(it.value.value.size().formattedBinary.toString())
+                    column("size") {
+                        BindableProperty(it.value.value.toJioFile().size().formattedBinary.toString())
                     }
                     autoResizeColumns()
                 } else {
@@ -253,7 +270,7 @@ private fun TreeLikeWrapper<*, MFile>.setupGUI() {
             node.sortOrder.setAll(nameCol.node) /*not working, but can click columns*/
         }
 
-        else                           -> NEVER
+        else                            -> NEVER
     }
 
 
@@ -273,7 +290,7 @@ private fun TreeLikeWrapper<*, MFile>.setupGUI() {
                         this@setupGUI.selectedValue?.let {
                             VBoxWrapperImpl<NodeWrapper>().apply {
                                 val container = this
-                                add(it.createNode(renderHTMLAndSVG = true).apply {
+                                add(it.toJioFile().createNode(renderHTMLAndSVG = true).apply {
                                     perfectBind(container)
                                     specialTransferingToWindowAndBack(container)
                                 })
@@ -287,18 +304,19 @@ private fun TreeLikeWrapper<*, MFile>.setupGUI() {
                             )
                         }
                     }
-                    this@setupGUI.selectedValue?.let { it.actions() + it.fxActions() }?.forEach { action ->
-                        actionitem(action) {
-                            graphic = action.icon?.view()?.node
+                    this@setupGUI.selectedValue?.let { it.toJioFile().actions() + it.toJioFile().fxActions() }
+                        ?.forEach { action ->
+                            actionitem(action) {
+                                graphic = action.icon?.view()?.node
+                            }
                         }
-                    }
                 }
 
                 else -> {
                     "move all to trash" does {
                         //		  confirm("delete all?") {
                         selects.forEach {
-                            it.value.moveToTrash()
+                            it.value.toJioFile().moveToTrash()
                         }
                         //		  }
                     }
@@ -310,11 +328,11 @@ private fun TreeLikeWrapper<*, MFile>.setupGUI() {
 
 }
 
-private fun TreeLikeWrapper<*, MFile>.setupContent(
-    rootFiles: BasicObservableListImpl<MFile>,
+private fun TreeLikeWrapper<*, FsFile>.setupContent(
+    rootFiles: BasicObservableListImpl<out FsFile>,
     strategy: FileTreePopulationStrategy,
 ) {
-    root = TreeItemWrapper<MFile>()
+    root = TreeItemWrapper<FsFile>()
     root!!.children.bind(rootFiles) {
         (FileTreeItem(it))
     }
@@ -322,12 +340,12 @@ private fun TreeLikeWrapper<*, MFile>.setupContent(
     setupPopulating(strategy)
 }
 
-private fun TreeLikeWrapper<*, MFile>.rePop() {
+private fun TreeLikeWrapper<*, FsFile>.rePop() {
     root!!.children.forEach { child ->
         populateTree(child, {
             FileTreeItem(it)
         }) { item ->
-            val cs = item.value.childs()
+            val cs = item.value.toJioFile().childs()
             taball("cs of ${item.value}", cs)
             cs
         }
@@ -335,12 +353,13 @@ private fun TreeLikeWrapper<*, MFile>.rePop() {
     (this as? TreeTableViewWrapper<*>)?.autoResizeColumns()
 }
 
-private fun TreeLikeWrapper<*, MFile>.setupPopulating(strategy: FileTreePopulationStrategy) {
+private fun TreeLikeWrapper<*, FsFile>.setupPopulating(strategy: FileTreePopulationStrategy) {
     if (strategy == AUTOMATIC) {
         rePop()
         refreshWhileInSceneEvery(5.sec) {
             if (root!!.children.flatMap { it.recurse { it.children } }.any {
-                    !it.children.map { it.value }.sameContentsAnyOrder(it.value.listFiles()?.toList() ?: listOf())
+                    !it.children.map { it.value }
+                        .sameContentsAnyOrder(it.value.toJioFile().listFiles()?.toList() ?: listOf())
                 }) {
                 rePop()
             }
@@ -357,31 +376,31 @@ private fun TreeLikeWrapper<*, MFile>.setupPopulating(strategy: FileTreePopulati
 }
 
 
-private fun MFile.childs() = listFilesAsList()
+private fun matt.file.JioFile.childs() = listFilesAsList()
     ?.sortedWith(FILE_SORT_RULE)
 
 
-private val FILE_SORT_RULE = compareBy<MFile> { !it.isDirectory }.then(compareBy { it.name })
+private val FILE_SORT_RULE = compareBy<FsFile> { !it.toJioFile().isDirectory }.then(compareBy { it.name })
 private val FILE_SORT_RULE_ITEMS =
-    compareBy<TreeItemWrapper<MFile>> { !it.value.isDirectory }.then(compareBy { it.value.name })
+    compareBy<TreeItemWrapper<FsFile>> { !it.value.toJioFile().isDirectory }.then(compareBy { it.value.name })
 
 enum class FileTreePopulationStrategy {
     AUTOMATIC, EFFICIENT
 }
 
-private class FileTreeItem(file: MFile) : TreeItemWrapper<MFile>(file) {
+private class FileTreeItem(file: FsFile) : TreeItemWrapper<FsFile>(file) {
 
     init {
         expandedProperty.addListener(OldAndNewListenerImpl { o, n ->
             if (o != n && !n) {
-                (this@FileTreeItem as TreeItemWrapper<MFile>).recurse { it.children }.forEach { it.isExpanded = false }
+                (this@FileTreeItem as TreeItemWrapper<FsFile>).recurse { it.children }.forEach { it.isExpanded = false }
             }
         })
     }
 
     fun refreshChilds() {
         //	println("refreshing childs of ${value}")
-        val childs = value.childs() ?: listOf()
+        val childs = value.toJioFile().childs() ?: listOf()
         //	taball("childs", childs)
         children.removeAll { it.value !in childs }
         childs.filter { it !in children.map { it.value } }.forEach {

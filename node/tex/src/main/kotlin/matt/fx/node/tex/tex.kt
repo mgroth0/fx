@@ -13,13 +13,13 @@ import matt.fx.node.proto.scaledcanvas.toCanvas
 import matt.fx.node.tex.internal.TexToPixelRenderer
 import matt.fx.node.tex.internal.isValidTeX
 import matt.lang.go
+import matt.lang.model.value.Value
 import matt.model.code.tex.TexCode
 import matt.obs.math.double.op.times
 import matt.obs.prop.BindableProperty
 
 @Serializable
 class EquationNotReallyIrTex(val code: TexCode) : EquationIr
-
 
 
 object TexEquationRenderer : EquationRenderer<TexCode> {
@@ -40,18 +40,20 @@ class TexNodeFactory(val scale: Double) {
     fun isValidTex(code: TexCode) = code.isValidTeX()
 
 
-    fun toCanvas(code: TexCode) = texPixels[code to DarkModeController.darkModeProp.value]?.toCanvas()?.let {
+    fun toCanvas(code: TexCode) = texPixels[code to DarkModeController.darkModeProp.value].value?.toCanvas()?.let {
         TexCanvas(it, scaleCoef, this, code)
     }
 
 
     internal val texPixels by lazy {
-        LRUCache<Pair<TexCode, Boolean>, Array<Array<Color?>>?>(100)
+        LRUCache<Pair<TexCode, Boolean>, Value<Array<Array<Color?>>?>>(100)
             .withStoringDefault {
-                TexToPixelRenderer(
-                    texFontSize = TEX_FONT_SIZE,
-                    darkMode = it.second
-                ).render(EquationNotReallyIrTex(it.first))
+                Value(
+                    TexToPixelRenderer(
+                        texFontSize = TEX_FONT_SIZE,
+                        darkMode = it.second
+                    ).render(EquationNotReallyIrTex(it.first))
+                )
             }
     }
 }
@@ -67,7 +69,7 @@ class TexCanvas(
     init {
         DarkModeController.darkModeProp.onChangeWithWeak(this) { texCanvas, dark ->
             texCanvas.children.clear()
-            val newCanv = texCanvas.fact.texPixels[code to dark]?.toCanvas()
+            val newCanv = texCanvas.fact.texPixels[code to dark].value?.toCanvas()
             newCanv?.scale?.bind(
                 texCanvas.fontSizeSortOf * someScaleThing
             )

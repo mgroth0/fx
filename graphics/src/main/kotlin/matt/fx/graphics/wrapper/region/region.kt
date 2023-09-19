@@ -11,7 +11,7 @@ import javafx.scene.layout.Border
 import javafx.scene.layout.Region
 import javafx.scene.paint.Color
 import javafx.scene.paint.Paint
-import matt.file.MFile
+import matt.lang.model.file.FsFile
 import matt.file.construct.toMFile
 import matt.fx.base.wrapper.obs.collect.list.createImmutableWrapper
 import matt.fx.base.wrapper.obs.collect.list.createMutableWrapper
@@ -35,11 +35,12 @@ import matt.fx.image.toBufferedImage
 import matt.image.Png
 import matt.image.convert.toPng
 import matt.lang.NEVER
+import matt.lang.convert.BiConverter
 import matt.lang.delegation.lazyVarDelegate
 import matt.lang.err
+import matt.lang.model.file.MacFileSystem
 import matt.model.data.rect.IntRectSize
 import matt.model.obj.raster.PngRasterizable
-import matt.model.op.convert.Converter
 import matt.obs.bindhelp.bindMultipleTargetsTogether
 import matt.obs.col.olist.ImmutableObsList
 import matt.obs.col.olist.mappedlist.toLazyMappedList
@@ -102,7 +103,7 @@ interface RegionWrapper<C : NodeWrapper> : ParentWrapper<C>, SizeManaged, PngRas
     override val minHeightProperty: Var<Double>
     override val maxHeightProperty: Var<Double>
 
-    fun setOnFilesDropped(op: (List<MFile>) -> Unit) {
+    fun setOnFilesDropped(op: (List<FsFile>) -> Unit) {
         node.setOnDragEntered {
             it.acceptTransferModes(*TransferMode.ANY)
         }
@@ -111,7 +112,7 @@ interface RegionWrapper<C : NodeWrapper> : ParentWrapper<C>, SizeManaged, PngRas
         }
         node.setOnDragDropped {
             if (DataFormat.FILES in it.dragboard.contentTypes) {
-                op(it.dragboard.files.map { it.toMFile() })
+                op(it.dragboard.files.map { it.toMFile(MacFileSystem) })
             }
             it.consume()
         }
@@ -279,7 +280,7 @@ open class RegionWrapperImpl<N : Region, C : NodeWrapper>(node: N) : ParentWrapp
 
 
     final override val paddingVerticalProperty: ProxyProp<Insets, Double> by lazy {
-        paddingProperty.proxy(object : Converter<Insets, Double> {
+        paddingProperty.proxy(object : BiConverter<Insets, Double> {
             override fun convertToB(a: Insets): Double {
                 return a.vertical
             }

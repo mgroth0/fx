@@ -7,10 +7,10 @@ import matt.fx.graphics.wrapper.pane.vbox.VBoxW
 import matt.fx.web.md.ghdark.GH_MD_DARK_CSS
 import matt.fx.web.webview
 import matt.lang.anno.SeeURL
-import matt.lang.function.DSL
+import matt.lang.function.Dsl
 import matt.obs.prop.BindableProperty
 
-fun ET.markdownViewer(op: DSL<MarkDownViewer> = {}) = MarkDownViewer().attachTo(this, op)
+fun ET.markdownViewer(op: Dsl<MarkDownViewer> = {}) = MarkDownViewer().attachTo(this, op)
 
 class MarkDownViewer : VBoxW() {
     private val wv = webview {

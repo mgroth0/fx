@@ -6,9 +6,10 @@ import javafx.scene.input.DataFormat
 import javafx.scene.input.Dragboard
 import javafx.scene.input.TransferMode
 import javafx.scene.paint.Color
-import matt.file.MFile
+import matt.lang.model.file.FsFile
 import matt.file.commons.TEMP_DIR
 import matt.file.construct.toMFile
+import matt.file.toJioFile
 import matt.fx.graphics.clip.put
 import matt.fx.graphics.clip.putFiles
 import matt.fx.graphics.drag.BetterTransferMode.COPY
@@ -20,6 +21,7 @@ import matt.lang.function.Op
 import matt.lang.function.Produce
 import matt.lang.go
 import matt.lang.inList
+import matt.lang.model.file.MacFileSystem
 import matt.obs.prop.ObsVal
 
 enum class BetterTransferMode(@PublishedApi internal vararg val modes: TransferMode) {
@@ -39,23 +41,23 @@ enum class BetterTransferMode(@PublishedApi internal vararg val modes: TransferM
 }
 
 fun NodeWrapper.dragsFile(
-    file: ObsVal<MFile>,
+    file: ObsVal<out FsFile>,
     mode: BetterTransferMode
 ) = drags(
     type = DragType.SYSTEM_SINGLE_FILE,
     predicate = { true },
     mode = mode,
-    getData = { file.value },
+    getData = { file.value.toJioFile() },
 )
 
 fun NodeWrapper.dragsFile(
-    file: MFile,
+    file: FsFile,
     mode: BetterTransferMode
 ) = drags(
     type = DragType.SYSTEM_SINGLE_FILE,
     predicate = { true },
     mode = mode,
-    data = file,
+    data = file.toJioFile(),
 )
 
 fun NodeWrapper.dragsSnapshot(
@@ -72,7 +74,7 @@ fun NodeWrapper.dragsSnapshot(
             null
         )
         val imgFile = snapshot.save(TEMP_DIR["drag_image.png"])
-        imgFile.toMFile()
+        imgFile.toMFile(MacFileSystem)
     },
     getDragView = { null })
 
@@ -184,20 +186,20 @@ data class DragType<T : Any>(
 
         val SYSTEM_SINGLE_FILE =
             DragType(predicate = { it.hasFiles() && it.files.size == 1 },
-                     getData = { it.files.first().toMFile() },
-                     setData = { db, f -> db.putFiles(f.inList().toMutableList()) })
+                getData = { it.files.first().toMFile(MacFileSystem) },
+                setData = { db, f -> db.putFiles(f.inList().toMutableList()) })
         val SYSTEM_IMAGE = DragType(predicate = { it.hasImage() },
-                                    getData = { it.image!! },
-                                    setData = { db, im ->
-                                        db.put(
-                                            DataFormat.IMAGE,
-                                            im
-                                        )
-                                    })
+            getData = { it.image!! },
+            setData = { db, im ->
+                db.put(
+                    DataFormat.IMAGE,
+                    im
+                )
+            })
 
         inline fun <reified TT : Any> generic() = DragType(predicate = { it.getContent(GENERIC_DATA_FORMAT) is TT },
-                                                           getData = { it.getContent(GENERIC_DATA_FORMAT) as TT },
-                                                           setData = { db, t -> db.setContent(mutableMapOf<DataFormat, Any>(GENERIC_DATA_FORMAT to t)) })
+            getData = { it.getContent(GENERIC_DATA_FORMAT) as TT },
+            setData = { db, t -> db.setContent(mutableMapOf<DataFormat, Any>(GENERIC_DATA_FORMAT to t)) })
     }
 }
 

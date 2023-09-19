@@ -4,11 +4,11 @@ import javafx.scene.paint.Color
 import javafx.scene.paint.CycleMethod
 import javafx.scene.paint.LinearGradient
 import javafx.scene.paint.Stop
-import matt.lang.function.DSL
+import matt.lang.function.Dsl
 import matt.model.code.idea.LinearGradientIdea
 
 
-fun linearGradient(op: DSL<LinearGradientDSL>): LinearGradient {
+fun linearGradient(op: Dsl<LinearGradientDSL>): LinearGradient {
   return LinearGradientDSL().apply(op).getGradient()
 }
 

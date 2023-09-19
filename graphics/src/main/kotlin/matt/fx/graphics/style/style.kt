@@ -17,8 +17,8 @@ import matt.fx.graphics.wrapper.style.toMColor
 import matt.lang.require.requireEquals
 import matt.log.warn.dumpStack
 import matt.log.warn.warn
-import matt.model.op.convert.StringConverter
 import matt.obs.prop.BindableProperty
+import matt.prim.converters.StringConverter
 import matt.rstruct.loader.systemResourceLoader
 import java.util.logging.Level
 import kotlin.reflect.KProperty

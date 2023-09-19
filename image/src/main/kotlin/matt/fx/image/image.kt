@@ -4,8 +4,9 @@ import javafx.application.Platform
 import javafx.embed.swing.SwingFXUtils
 import javafx.scene.image.Image
 import javafx.scene.image.ImageView
-import matt.file.MFile
+import matt.lang.model.file.FsFile
 import matt.image.save
+import matt.lang.file.toJFile
 import java.awt.image.BufferedImage
 
 
@@ -30,4 +31,4 @@ fun BufferedImage.toFXImage(): Image {
 }
 
 
-fun Image.save(file: MFile) = toBufferedImage().save(file)
+fun Image.save(file: FsFile) = toBufferedImage().save(file.toJFile())
