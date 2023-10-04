@@ -2,23 +2,15 @@
 
 package matt.fx.graphics.clip
 
+/*import matt.auto.clip.AwtClipLink*/
 import javafx.scene.input.Clipboard
 import javafx.scene.input.ClipboardContent
 import javafx.scene.input.DataFormat
 import matt.file.JioFile
 import matt.file.toJioFile
-/*import matt.auto.clip.AwtClipLink*/
-import matt.lang.model.file.FsFile
 import matt.lang.file.toJFile
-import java.awt.Toolkit
-import java.awt.datatransfer.StringSelection
+import matt.lang.model.file.FsFile
 
-
-fun String.copyToClipboardNonFx() {
-    val clipboard = Toolkit.getDefaultToolkit().systemClipboard
-    val content = StringSelection(this)
-    clipboard.setContents(content, content)
-}
 
 fun String.copyToClipboard() {
     val clipboard = Clipboard.getSystemClipboard()

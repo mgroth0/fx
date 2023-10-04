@@ -5,7 +5,7 @@ import javafx.scene.image.WritableImage
 import matt.file.commons.TEMP_DIR
 import matt.fx.image.save
 import matt.mbuild.mtest.fx.FXTester.runFXHeadlessApp
-import matt.test.JupiterTestAssertions.assertRunsInOneMinute
+import matt.test.assertions.JupiterTestAssertions.assertRunsInOneMinute
 import kotlin.test.Test
 
 class ImageTests {

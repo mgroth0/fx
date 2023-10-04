@@ -28,7 +28,7 @@ import matt.fx.node.console.text.parseterm.TransformableOutput
 import matt.fx.node.console.text.parseterm.parseTerminalOutput
 import matt.lang.function.Op
 import matt.lang.ifTrueOrNull
-import matt.model.data.message.OpenSpecific
+import matt.model.data.message.OpenVerySpecific
 import matt.obs.bind.binding
 import matt.obs.bind.deepBinding
 import matt.obs.bindings.bool.and
@@ -193,8 +193,9 @@ class ConsoleTextFlow(
     private fun TransformableOutput.toNode() = when (this) {
         is StackTraceLine -> ClickableText(text) {
             Idea.open(
-                OpenSpecific(
-                    qualifiedName = qualifiedName, fileName = fileName, lineNumber = lineNumber
+                OpenVerySpecific(
+                    /*line index or number? Something is wrong somewhere*/
+                    qualifiedName = qualifiedName, fileName = fileName, lineIndex = lineNumber
                 )
             )
         }

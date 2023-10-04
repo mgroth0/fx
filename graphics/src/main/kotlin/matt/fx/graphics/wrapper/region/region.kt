@@ -11,7 +11,6 @@ import javafx.scene.layout.Border
 import javafx.scene.layout.Region
 import javafx.scene.paint.Color
 import javafx.scene.paint.Paint
-import matt.lang.model.file.FsFile
 import matt.file.construct.toMFile
 import matt.fx.base.wrapper.obs.collect.list.createImmutableWrapper
 import matt.fx.base.wrapper.obs.collect.list.createMutableWrapper
@@ -38,6 +37,7 @@ import matt.lang.NEVER
 import matt.lang.convert.BiConverter
 import matt.lang.delegation.lazyVarDelegate
 import matt.lang.err
+import matt.lang.model.file.FsFile
 import matt.lang.model.file.MacFileSystem
 import matt.model.data.rect.IntRectSize
 import matt.model.obj.raster.PngRasterizable
@@ -262,8 +262,10 @@ open class RegionWrapperImpl<N : Region, C : NodeWrapper>(node: N) : ParentWrapp
 
 
     override val children: ImmutableObsList<C> by lazy {    /*trying to avoid initializing wrappers to quickly (and getting the wrong ones as a result)*/
-        node.childrenUnmodifiable.createImmutableWrapper()
-            .toLazyMappedList { uncheckedWrapperConverter<Node, C>().convertToB(it) }
+        node.childrenUnmodifiable
+            .createImmutableWrapper().toLazyMappedList {
+                uncheckedWrapperConverter<Node, C>().convertToB(it)
+            }
     }
 
     final override fun rasterize(size: IntRectSize): Png {

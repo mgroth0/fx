@@ -17,11 +17,6 @@
       "path": ":k:obs:math"
     },
     {
-      "type": "Project",
-      "cfg": "api",
-      "path": ":k:async:thread"
-    },
-    {
       "type": "Lib",
       "cfg": "api",
       "key": "fx-graphics"
@@ -30,11 +25,6 @@
       "type": "Lib",
       "cfg": "api",
       "key": "jSystemThemeDetector"
-    },
-    {
-      "type": "Project",
-      "cfg": "api",
-      "path": ":k:time"
     },
     {
       "type": "Project",

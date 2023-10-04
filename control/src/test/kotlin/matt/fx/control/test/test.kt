@@ -23,7 +23,7 @@ class FXControlTests : FxTests() {
 
         FXTester.runFXHeadlessApp {
             //	  @Suppress("UNUSED_VARIABLE")
-            val failedToWrap = with(systemScope().usingClassGraph()) {
+            val failedToWrap = with(systemScope(includePlatformClassloader=false).usingClassGraph()) {
                 (EventTarget::class as KClass<out EventTarget>).subClasses(Pack("javafx"))
             }.filter {
                 /*must test for anonymous first because trying to see if anonymous is abstract leads to error*/

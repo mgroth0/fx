@@ -4,12 +4,12 @@
     {
       "type": "Project",
       "cfg": "api",
-      "path": ":k:file"
+      "path": ":k:image"
     },
     {
       "type": "Project",
-      "cfg": "api",
-      "path": ":k:image"
+      "cfg": "testImplementation",
+      "path": ":k:file"
     },
     {
       "type": "Lib",

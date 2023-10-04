@@ -4,12 +4,12 @@
         {
             "type": "Project",
             "cfg": "api",
-            "path": ":k:html:fig"
+            "path": ":k:log:profile"
         },
         {
             "type": "Project",
             "cfg": "api",
-            "path": ":k:fx:web"
+            "path": ":k:fig:model"
         },
         {
             "type": "Project",

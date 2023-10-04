@@ -468,35 +468,45 @@ fun Region.wrapped(): RegionWrapper<*> = findWrapper() ?: when (this) {
     is Control           -> wrapped()
     is VirtualFlow<*>    -> wrapped()
     /*is AxisForPackagePrivateProps<*> -> wrapped()*/
-    else                 -> when (this::class.jvmQualifiedClassName) {
-        CLIPPED_CONTAINER_QNAME                                                                     -> ClippedContainerWrapper(
-            this@wrapped
-        )
+    else                 -> when {
 
-        JvmQualifiedClassName("org.fxmisc.richtext.ParagraphBox")                                   -> ParagraphBoxWrapper(
-            this@wrapped
-        )
-
-        JvmQualifiedClassName("org.fxmisc.flowless.Navigator")                                      -> NavigatorWrapper(
-            this@wrapped
-        )
-
-        JvmQualifiedClassName("org.fxmisc.flowless.VirtualFlow")                                    -> FlowLessVirtualFlowWrapper(
-            this@wrapped
-        )
-
-        JvmQualifiedClassName("eu.hansolo.fx.charts.CoxcombChart")                                  -> CoxCombWrapper(
-            this@wrapped
-        )
-
-        JvmQualifiedClassName("eu.hansolo.fx.charts.matt.fx.control.wrapper.wrapped.SunburstChart") -> SunburstChart(
-            this@wrapped
-        )
-
-        else                                                                                        -> findWrapper()
-            ?: RegionWrapperImpl<Region, NodeWrapper>(
+        this::class.java.let { it.isAnonymousClass && it.superclass.simpleName == "EndButton" } -> {
+            /*this is a private class in ScrollBarSkin and when we get here we usually have an anonymous subclass of it. Without this clause we actually get an error because kotlin can't even find the qualified class name of it.*/
+            RegionWrapperImpl<Region, NodeWrapper>(
                 this
             )
+        }
+
+        else                                                                                    -> when (this::class.jvmQualifiedClassName) {
+            CLIPPED_CONTAINER_QNAME                                                                     -> ClippedContainerWrapper(
+                this@wrapped
+            )
+
+            JvmQualifiedClassName("org.fxmisc.richtext.ParagraphBox")                                   -> ParagraphBoxWrapper(
+                this@wrapped
+            )
+
+            JvmQualifiedClassName("org.fxmisc.flowless.Navigator")                                      -> NavigatorWrapper(
+                this@wrapped
+            )
+
+            JvmQualifiedClassName("org.fxmisc.flowless.VirtualFlow")                                    -> FlowLessVirtualFlowWrapper(
+                this@wrapped
+            )
+
+            JvmQualifiedClassName("eu.hansolo.fx.charts.CoxcombChart")                                  -> CoxCombWrapper(
+                this@wrapped
+            )
+
+            JvmQualifiedClassName("eu.hansolo.fx.charts.matt.fx.control.wrapper.wrapped.SunburstChart") -> SunburstChart(
+                this@wrapped
+            )
+
+            else                                                                                        -> findWrapper()
+                ?: RegionWrapperImpl<Region, NodeWrapper>(
+                    this
+                )
+        }
     }
 }
 

@@ -18,7 +18,7 @@ import matt.file.commons.DATA_FOLDER
 import matt.file.commons.mattLogContext
 import matt.file.construct.mFile
 import matt.file.ext.clearIfTooBigThenAppendText
-import matt.file.ext.doubleBackupWrite
+import matt.file.ext.backup.doubleBackupWrite
 import matt.file.toJioFile
 import matt.fx.control.wrapper.scroll.ScrollPaneWrapper
 import matt.fx.graphics.clip.copyToClipboard
