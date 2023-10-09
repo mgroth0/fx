@@ -58,7 +58,7 @@ class MBackedFXListChange<E>(
             is ReplaceAt             -> lowestChangedIndex
             is RemoveAtIndices       -> lowestChangedIndex
             is RemoveElements        -> TODO("${this::class.simpleName}")
-            is RetainAllList         -> TODO("${this::class.simpleName}")
+            is RetainAllList         -> lowestChangedIndex
             is AtomicListChange      -> TODO("${this::class.simpleName}")
         }
     }
@@ -79,7 +79,11 @@ class MBackedFXListChange<E>(
             }
 
             is RemoveElements        -> TODO("${this::class.simpleName}")
-            is RetainAllList         -> TODO("${this::class.simpleName}")
+            is RetainAllList         -> {
+                if (removedSize > 1) TODO()
+                lowestChangedIndex
+            }
+
             is AtomicListChange      -> TODO("${this::class.simpleName}")
         }
     }

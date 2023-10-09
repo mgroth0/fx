@@ -10,7 +10,7 @@ import matt.obs.col.olist.BasicObservableListImpl
 import matt.obs.col.olist.MutableObsList
 import matt.obs.prop.BindableProperty
 import matt.obs.prop.ObsVal
-import matt.obs.watch.PropertyWatcher
+import matt.obs.watch.otherwatch.PropertyWatcher
 
 private class BlockingFXWatcher<T>(source: ObsVal<T>): MyBinding<T>(calcArg = {
   source.value
