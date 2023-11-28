@@ -12,7 +12,7 @@ import matt.collect.itr.recurse.recurse
 import matt.collect.itr.sameContentsAnyOrder
 import matt.collect.map.lazyMap
 import matt.file.construct.mFile
-import matt.file.ext.mExtension
+import matt.file.ext.singleExtension
 import matt.file.toJioFile
 import matt.fx.control.inter.graphic
 import matt.fx.control.wrapper.control.row.TreeCellWrapper
@@ -57,6 +57,7 @@ import matt.obs.math.double.op.div
 import matt.obs.prop.BindableProperty
 import matt.shell.context.ReapingShellExecutionContext
 import matt.shell.context.UnknownShellExecutionContext
+import matt.shell.context.shell.UnixDirectCommandsOnly
 import matt.time.dur.sec
 
 private const val HEIGHT = 300.0
@@ -168,7 +169,7 @@ fun PaneWrapperImpl<*, *>.fileTree(
     return TreeViewWrapper<FsFile>().apply {
         this@fileTree.add(this)
 
-        UnknownShellExecutionContext.scope {
+        UnknownShellExecutionContext(UnixDirectCommandsOnly).scope {
             setupGUI()
         }
 
@@ -189,7 +190,7 @@ fun PaneWrapperImpl<*, *>.fileTableTree(
     return TreeTableViewWrapper<FsFile>().apply {
         this@fileTableTree.add(this)
 
-        UnknownShellExecutionContext.scope {
+        UnknownShellExecutionContext(UnixDirectCommandsOnly).scope {
             setupGUI()
         }
         setupContent(rootFiles, strategy)
@@ -252,7 +253,7 @@ private fun TreeLikeWrapper<*, FsFile>.setupGUI() {
                     ).let { it.name to it.toJioFile().draggableIcon() }
                 }
             }
-            column("ext", FsFile::mExtension)
+            column("ext", FsFile::singleExtension)
 
             showSizesProp = BindableProperty(false)
             showSizesProp.onChange { b ->

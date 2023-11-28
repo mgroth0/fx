@@ -12,13 +12,13 @@ import matt.async.thread.daemon
 import matt.async.thread.queue.QueueWorker
 import matt.async.thread.schedule.every
 import matt.auto.ascript.AppleScriptString
-import matt.auto.macapp.SublimeText
-import matt.lang.model.file.FsFile
+import matt.auto.macapp.sublime.SublimeText
 import matt.file.commons.DATA_FOLDER
 import matt.file.commons.mattLogContext
 import matt.file.construct.mFile
-import matt.file.ext.clearIfTooBigThenAppendText
 import matt.file.ext.backup.doubleBackupWrite
+import matt.file.ext.clearIfTooBigThenAppendText
+import matt.file.ext.mkparents
 import matt.file.toJioFile
 import matt.fx.control.wrapper.scroll.ScrollPaneWrapper
 import matt.fx.graphics.clip.copyToClipboard
@@ -33,18 +33,21 @@ import matt.fx.node.console.text.ConsoleTextFlow
 import matt.gui.menu.context.mcontextmenu
 import matt.lang.err
 import matt.lang.go
+import matt.lang.model.file.FsFile
 import matt.lang.model.file.MacFileSystem
-import matt.lang.require.requireNot
+import matt.lang.assertions.require.requireNot
 import matt.lang.seq.charSequence
+import matt.log.warn.warn
 import matt.obs.bindings.bool.not
 import matt.obs.prop.BindableProperty
+import matt.prim.charset.newDefaultCharsetDecoder
 import matt.prim.str.throttled
 import matt.shell.context.ReapingShellExecutionContext
 import matt.shell.proc.forEachErrChar
 import matt.shell.proc.forEachOutChar
 import matt.stream.ReaderEndReason
-import matt.stream.piping.redirectErr
-import matt.stream.piping.redirectOut
+import matt.stream.redirect.redirectErr
+import matt.stream.redirect.redirectOut
 import matt.time.dur.ms
 import matt.time.dur.sec
 import matt.time.dur.sleep
@@ -117,8 +120,8 @@ sealed class Console(
 
     private val hScrollOption = BindableProperty(true)
     private val myLogFolder = mattLogContext.logFolder + name
-    protected val logfile = myLogFolder + "$name.log"
-    protected val errFile = mFile(logfile.absolutePath + ".err",MacFileSystem)
+    protected val logfile by lazy { (myLogFolder + "$name.log").also { it.mkparents() } }
+    protected val errFile by lazy { mFile(logfile.absolutePath + ".err", MacFileSystem).also { it.toJioFile().mkparents() } }
     protected var writer: BufferedWriter? = null
     private val mem = ConsoleMemory(CONSOLE_MEM_FOLD + "$name.txt")
     private val consoleTextFlow = ConsoleTextFlow(takesInput, maxLines = maxLines)
@@ -332,7 +335,7 @@ sealed class Console(
     }
 }
 
-context(matt.shell.context.ReapingShellExecutionContext)
+context(ReapingShellExecutionContext)
 sealed class TailCapableConsole(
     name: String,
     takesInput: Boolean,
@@ -340,13 +343,13 @@ sealed class TailCapableConsole(
     maxLines: Int? = DEFAULT_MAX_LINES
 ) : Console(name, takesInput = takesInput, throttle = throttle, maxLines = maxLines) {
     companion object {
-        val BUFF_SIZE = 1000
+        const val BUFF_SIZE = 1000
     }
 
     private val interval = 1.seconds
     protected var shouldContinue = true
     protected fun tail(logFile: FsFile) = daemon(name = "TailCapableConsole.tail Thread") {
-        val decoder = Charsets.UTF_8.newDecoder()
+        val decoder = newDefaultCharsetDecoder()
         var reader: FileChannel? = null
         try {
             var pos = 0
@@ -390,9 +393,11 @@ sealed class TailCapableConsole(
                 val numBytesRead = theReader.read(byteBuffer)
                 pos += numBytesRead
                 byteBuffer.flip()
-                decoder.decode(byteBuffer, charBuffer, false)
+                val decodeResult = decoder.decode(byteBuffer, charBuffer, !shouldContinue)
+                check(!decodeResult.isError)
                 byteBuffer.clear()
-                @Suppress("UNUSED_VARIABLE") val endOfStream = numBytesRead == -1
+                @Suppress("UNUSED_VARIABLE")
+                val endOfStream = numBytesRead == -1
                 if (numBytesRead > 0) {
                     charBuffer.flip()
                     val numChars = charBuffer.remaining()
@@ -410,11 +415,11 @@ sealed class TailCapableConsole(
     }
 }
 
-context(matt.shell.context.ReapingShellExecutionContext)
+context(ReapingShellExecutionContext)
 class ProcessConsole(
     name: String,
 ) :
-    TailCapableConsole(name,takesInput = true, throttle = true) {
+    TailCapableConsole(name, takesInput = true, throttle = true) {
     fun alsoTail(logFile: FsFile) = tail(logFile)
 
     fun attachProcess(p: Process) {
@@ -437,7 +442,7 @@ class ProcessConsole(
     }
 }
 
-context(matt.shell.context.ReapingShellExecutionContext)
+context(ReapingShellExecutionContext)
 class TailConsole(
     name: String,
     val file: FsFile,
@@ -468,15 +473,19 @@ class SystemRedirectConsole(name: String) :
     fun interceptStdOutErr() {
         logfile.toJioFile().doubleBackupWrite("")
         errFile.toJioFile().doubleBackupWrite("")
+
+        warn("must be called at the VERY beginning. FAIL!")
         redirectOut { unshownOutput += it }
         redirectErr {
             unshownOutput += it
             errFile.toJioFile().append(it)
         }
+        warn("must be called at the VERY beginning. FAIL!")
     }
 
 
 }
+
 context(ReapingShellExecutionContext)
 class CustomConsole(
     name: String,

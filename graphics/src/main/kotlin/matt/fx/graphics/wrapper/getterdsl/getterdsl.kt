@@ -5,7 +5,7 @@ import javafx.event.EventTarget
 import matt.fx.graphics.hotkey.HotKeyEventHandler
 import matt.fx.graphics.wrapper.EventTargetWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
-import matt.lang.require.requireNull
+import matt.lang.assertions.require.requireNull
 
 fun buildNodes(op: EventTargetWrapper.() -> Unit): List<NodeWrapper> {
     val built = NodeBuilder().apply(op).nodesThatHaveBeenBuilt()

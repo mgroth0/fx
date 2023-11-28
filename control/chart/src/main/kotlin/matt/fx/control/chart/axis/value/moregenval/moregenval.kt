@@ -14,7 +14,6 @@ import javafx.css.StyleableBooleanProperty
 import javafx.css.StyleableDoubleProperty
 import javafx.css.StyleableIntegerProperty
 import javafx.css.StyleableProperty
-import javafx.css.converter.BooleanConverter
 import javafx.css.converter.SizeConverter
 import javafx.geometry.Side
 import javafx.geometry.Side.LEFT
@@ -25,11 +24,12 @@ import javafx.scene.shape.LineTo
 import javafx.scene.shape.MoveTo
 import javafx.scene.shape.Path
 import javafx.util.StringConverter
-import matt.fig.model.plot.convert.InternalData
-import matt.fig.model.plot.convert.ValueAxisConverter
+import matt.fig.modell.plot.convert.InternalData
+import matt.fig.modell.plot.convert.ValueAxisConverter
 import matt.fx.control.chart.axis.value.axis.AxisForPackagePrivateProps
 import matt.fx.control.chart.axis.value.axis.NullRangeProp
 import matt.fx.control.chart.axis.value.axis.RangeProps
+import matt.fx.control.css.BooleanCssMetaData
 import matt.lang.anno.See
 import matt.obs.prop.BindableProperty
 import java.util.*
@@ -563,10 +563,9 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
 
         val MINOR_TICK_VISIBLE: CssMetaData<MoreGenericValueAxis<out UpperBound>, Boolean> =
 
-            object : CssMetaData<MoreGenericValueAxis<out UpperBound>, Boolean>(
+            object : BooleanCssMetaData<MoreGenericValueAxis<out UpperBound>>(
                 "-fx-minor-tick-visible",
-                BooleanConverter.getInstance(),
-                java.lang.Boolean.TRUE
+                true
             ) {
                 override fun isSettable(n: MoreGenericValueAxis<out UpperBound>): Boolean {
                     return n.minorTickVisible.value == null || !n.minorTickVisible.isBound

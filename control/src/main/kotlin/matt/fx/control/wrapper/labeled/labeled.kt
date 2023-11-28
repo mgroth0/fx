@@ -14,7 +14,7 @@ import matt.fx.graphics.wrapper.text.textlike.ColoredText
 import matt.fx.base.wrapper.obs.obsval.prop.NullableFXBackedBindableProp
 import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
-import matt.lang.require.requireNull
+import matt.lang.assertions.require.requireNull
 
 open class LabeledWrapper<N : Labeled>(node: N) : ControlWrapperImpl<N>(node), ColoredText, TextAndGraphic {
 

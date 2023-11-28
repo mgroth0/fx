@@ -5,7 +5,7 @@ import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.region.RegionWrapperImpl
 import matt.lang.classname.JvmQualifiedClassName
 import matt.lang.classname.jvmQualifiedClassName
-import matt.lang.require.requireEquals
+import matt.lang.assertions.require.requireEquals
 
 val CLIPPED_CONTAINER_QNAME = JvmQualifiedClassName("javafx.scene.control.skin.VirtualFlow.ClippedContainer")
 

@@ -1,7 +1,7 @@
 package matt.fx.control.chart.axis.value.number.tickconfig
 
 import javafx.util.StringConverter
-import matt.fig.model.plot.axis.tick.TickConfigurer
+import matt.fig.modell.plot.axis.tick.TickConfigurer
 import matt.fx.control.chart.axis.value.number.NumberAxisWrapper
 import matt.fx.control.chart.line.LineChartWrapper
 import matt.fx.control.chart.xy.XYChartWrapper

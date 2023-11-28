@@ -3,7 +3,6 @@ package matt.fx.graphics.icon
 import javafx.scene.image.Image
 import matt.collect.map.lazyMap
 import matt.file.JioFile
-import matt.lang.model.file.FsFile
 import matt.file.commons.ICON_FOLDER
 import matt.file.ext.FileExtension.Companion.IMAGE_EXTENSIONS
 import matt.file.ext.FileExtension.Companion.SVG
@@ -11,18 +10,22 @@ import matt.file.ext.hasExtension
 import matt.file.ext.withExtension
 import matt.file.toJioFile
 import matt.fx.graphics.effect.INVERSION_EFFECT
-import matt.fx.graphics.icon.svg.svgToImage
 import matt.fx.graphics.wrapper.imageview.ImageViewWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.image.toFXImage
 import matt.lang.file.toJFile
+import matt.lang.model.file.FsFile
+import matt.model.data.rect.DoubleRectSize
 import matt.obs.bind.binding
 import matt.obs.bindings.str.ObsS
 import matt.obs.prop.FakeObsVal
 import matt.obs.prop.ObsVal
+import matt.svg.render.svgToImage
 
-const val ICON_WIDTH = 20.0
-const val ICON_HEIGHT = 20.0
+val ICON_SIZE = DoubleRectSize(
+    width = 20.0,
+    height = 20.0
+)
 
 fun NodeWrapper.icon(
     file: FsFile,
@@ -96,18 +99,19 @@ fun ObsIcon(
 ): ImageViewWrapper = ImageViewWrapper().apply {
     imageProperty.bind(image)
     isPreserveRatio = false
-    fitWidth = ICON_WIDTH
-    fitHeight = ICON_HEIGHT
+    fitWidth = ICON_SIZE.width
+    fitHeight = ICON_SIZE.height
     if (invert) effect = INVERSION_EFFECT
 }
 
 
 private val images = lazyMap<JioFile, Image> { file ->
-    (file.takeIf { it.exists() } ?: if (file.toJFile().extension.isNotBlank()) IMAGE_EXTENSIONS.map { file.withExtension(it) }
-        .firstOrNull {
-            it.exists()
-        } ?: FALLBACK_FILE else FALLBACK_FILE).let { f ->
-        if (f.hasExtension(SVG)) svgToImage(f).toFXImage()
+    (file.takeIf { it.exists() }
+        ?: if (file.toJFile().extension.isNotBlank()) IMAGE_EXTENSIONS.map { file.withExtension(it) }
+            .firstOrNull {
+                it.exists()
+            } ?: FALLBACK_FILE else FALLBACK_FILE).let { f ->
+        if (f.hasExtension(SVG)) svgToImage(f, size = ICON_SIZE.toIntSize()).toFXImage()
         else Image(f.toJFile().toPath().toUri().toURL().toString())
     }
 }

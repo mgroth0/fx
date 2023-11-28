@@ -20,7 +20,7 @@ import matt.fx.graphics.service.nullableNodeConverter
 import matt.fx.graphics.stylelock.toNonNullableStyleProp
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.lang.go
-import matt.lang.require.requireNull
+import matt.lang.assertions.require.requireNull
 import matt.lang.sync
 import matt.obs.prop.Var
 import matt.obs.prop.VarProp

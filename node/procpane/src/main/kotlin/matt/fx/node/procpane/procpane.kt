@@ -8,8 +8,6 @@ import javafx.geometry.Pos
 import javafx.scene.layout.Priority.ALWAYS
 import matt.async.thread.daemon
 import matt.auto.process.destroyNiceThenForceThenWait
-import matt.lang.model.file.FsFile
-import matt.file.commons.REGISTERED_FOLDER
 import matt.fx.base.time.toFXDuration
 import matt.fx.control.lang.actionbutton
 import matt.fx.control.wrapper.control.button.ButtonWrapper
@@ -29,6 +27,7 @@ import matt.fx.node.procpane.inspect.ProcessInspectPane
 import matt.fx.node.procpane.status.StatusFolderWatchPane
 import matt.gui.menu.context.mcontextmenu
 import matt.lang.file.toJFile
+import matt.lang.model.file.FsFile
 import matt.lang.trip
 import matt.log.logInvocation
 import matt.obs.bindings.bool.not
@@ -42,7 +41,6 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.DurationUnit
 
-val STATUS_FOLDER = REGISTERED_FOLDER + "status"
 
 interface ConsoleNode {
     val console: Console
@@ -78,7 +76,8 @@ class ProcessConsolePane(
         workingDir: FsFile? = null,
         statusFolder: FsFile? = null,
         environmentalVars: Map<String, String> = mapOf()
-    ) : this(name, ProcessBuilder(
+    ) : this(
+        name, ProcessBuilder(
             command.toList()
         ).apply {
             environment() += environmentalVars

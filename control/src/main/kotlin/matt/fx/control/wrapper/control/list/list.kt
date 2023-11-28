@@ -47,7 +47,7 @@ open class ListViewWrapper<E : Any>(
 
     constructor(items: ObservableList<E>) : this(ListView(items))
 //    constructor(items: MutableObsList<E>) : this(items.createMutableFXWrapper())
-    constructor(items: ImmutableObsList<E>) : this((items as? MutableObsList)?.createMutableFXWrapper()  ?: items.createFXWrapper())
+    constructor(items: ImmutableObsList<E>) : this((items as? MutableObsList<E>)?.createMutableFXWrapper()  ?: items.createFXWrapper())
 
     fun scrollTo(i: Int) = node.scrollTo(i)
     fun scrollTo(e: E) = node.scrollTo(e)

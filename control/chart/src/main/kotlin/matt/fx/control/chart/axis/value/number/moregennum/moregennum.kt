@@ -10,7 +10,7 @@ import javafx.css.Styleable
 import javafx.geometry.Dimension2D
 import javafx.util.Duration
 import javafx.util.StringConverter
-import matt.fig.model.plot.convert.ValueAxisConverter
+import matt.fig.modell.plot.convert.ValueAxisConverter
 import matt.fx.control.chart.axis.value.axis.NumberRangeProps
 import matt.fx.control.chart.axis.value.axis.RangeProps
 import matt.fx.control.chart.axis.value.moregenval.MoreGenericValueAxis

@@ -5,7 +5,7 @@ import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.fx.graphics.wrapper.node.shape.ShapeWrapper
 import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
-import matt.lang.require.requireEquals
+import matt.lang.assertions.require.requireEquals
 
 fun ET.line(
     startX: Number = 0.0,

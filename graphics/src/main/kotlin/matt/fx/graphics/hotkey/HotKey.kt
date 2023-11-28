@@ -4,7 +4,7 @@ import javafx.application.Platform.runLater
 import javafx.event.EventHandler
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
-import matt.collect.itr.allUnique
+import matt.collect.itr.areAllUnique
 import matt.collect.itr.applyEach
 import matt.collect.itr.duplicates
 import matt.file.thismachine.thisMachine
@@ -15,9 +15,10 @@ import matt.fx.graphics.wrapper.stage.StageWrapper
 import matt.hotkey.Hotkey
 import matt.hotkey.HotkeyDSL
 import matt.lang.NEVER
+import matt.lang.anno.SeeURL
 import matt.lang.err
 import matt.lang.go
-import matt.lang.require.requireNull
+import matt.lang.assertions.require.requireNull
 import matt.log.NOPLogger
 import matt.log.SystemOutLogger
 import matt.log.logger.Logger
@@ -283,7 +284,7 @@ class HotKeyEventHandler(
 }
 
 fun <K, V> Map<K, V>.invert(): Map<V, K> {
-    require(values.allUnique())
+    require(values.areAllUnique())
     return this.map { it.value to it.key }.associate { it.first to it.second }
 }
 
@@ -448,6 +449,8 @@ class FXHotkeyDSL : HotkeyDSL<HotKeyContainer>() {
     }
 }
 
+@SeeURL("https://youtrack.jetbrains.com/issue/KT-63414/K2-Contracts-false-positive-Result-has-wrong-invocation-kind-when-invoking-a-function-returning-a-value-with-contract")
+@Suppress("WRONG_INVOCATION_KIND")
 inline fun EventTargetWrapper.hotkeys(
     filter: Boolean = false,
     quickPassForNormalTyping: Boolean = false,

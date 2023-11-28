@@ -2,7 +2,7 @@ package matt.fx.base.wrapper.obs.collect.list.change
 
 import javafx.collections.ListChangeListener.Change
 import javafx.collections.ObservableList
-import matt.lang.require.requireEquals
+import matt.lang.assertions.require.requireEquals
 import matt.obs.col.change.AddAt
 import matt.obs.col.change.AddAtEnd
 import matt.obs.col.change.AtomicListChange

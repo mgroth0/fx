@@ -27,7 +27,7 @@ import matt.gui.interact.openInNewWindow
 import matt.gui.menu.context.mcontextmenu
 import matt.fx.base.mtofx.createROFXPropWrapper
 import matt.lang.NEVER
-import matt.lang.require.requireNotEqual
+import matt.lang.assertions.require.requireNotEqual
 import netscape.javascript.JSObject
 import org.intellij.lang.annotations.Language
 

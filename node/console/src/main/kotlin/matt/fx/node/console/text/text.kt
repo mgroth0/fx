@@ -6,7 +6,7 @@ import javafx.scene.Cursor.HAND
 import javafx.scene.paint.Color
 import javafx.scene.paint.Color.YELLOW
 import javafx.scene.text.Font
-import matt.auto.macapp.Idea
+import matt.auto.macapp.intellij.Idea
 import matt.color.rgb
 import matt.fx.base.time.toFXDuration
 import matt.fx.base.wrapper.obs.obsval.toNonNullableROProp

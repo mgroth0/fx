@@ -27,7 +27,7 @@ import matt.fx.graphics.style.insets
 import matt.lang.anno.Fixes
 import matt.lang.function.Op
 import matt.lang.go
-import matt.lang.require.requireNot
+import matt.lang.assertions.require.requireNot
 import matt.log.logger.Logger
 import matt.log.report.BugReport
 import matt.log.reporter.TracksTime

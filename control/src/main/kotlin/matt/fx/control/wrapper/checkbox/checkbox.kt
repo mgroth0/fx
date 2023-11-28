@@ -6,7 +6,7 @@ import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.control.wrapper.control.button.base.ButtonBaseWrapper
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.attachTo
-import matt.lang.require.requireNull
+import matt.lang.assertions.require.requireNull
 import matt.obs.bind.smartBind
 import matt.obs.prop.Var
 

@@ -34,10 +34,11 @@ import matt.file.ext.FileExtension.Companion.SVG
 import matt.file.ext.FileExtension.Companion.TAGS
 import matt.file.ext.FileExtension.Companion.TXT
 import matt.file.ext.FileExtension.Companion.YML
+import matt.file.ext.finalExtensionOrNull
 import matt.file.ext.hasAnyExtension
 import matt.file.ext.hasExtension
 import matt.file.ext.isImage
-import matt.file.ext.mExtension
+import matt.file.ext.singleExtension
 import matt.file.toJioFile
 import matt.file.types.typed
 import matt.fx.control.lang.actionbutton
@@ -91,9 +92,9 @@ fun matt.file.JioFile.draggableIcon() = staticIcon().apply {
 fun matt.file.JioFile.staticIcon() = Icon(iconString())
 
 private fun matt.file.JioFile.iconString() = when {
-    (isDirectory)        -> "white/folder"
-    (mExtension == null) -> "file/bin"
-    else                 -> "file/${mExtension!!.afterDot}"/*, invert = extension in listOf("md", "txt")*/
+    (isDirectory)                    -> "white/folder"
+    (finalExtensionOrNull() == null) -> "file/bin"
+    else                             -> "file/${singleExtension.afterDot}"/*, invert = extension in listOf("md", "txt")*/
 }
 
 fun ObsVal<out FsFile>.draggableIcon() = ObsStringIcon(binding {
@@ -186,7 +187,7 @@ private fun matt.file.JioFile.createNodeInner(renderHTMLAndSVG: Boolean = false)
 
 
         return when (this.typed().fileType) {
-            Log -> VBoxWrapperImpl<NodeWrapper>().apply {
+            Log        -> VBoxWrapperImpl<NodeWrapper>().apply {
                 val lineLimit = BindableProperty(1000)
                 val infiniteLines = BindableProperty(false)
                 hbox<NodeWrapper> {
@@ -240,11 +241,11 @@ private fun matt.file.JioFile.createNodeInner(renderHTMLAndSVG: Boolean = false)
                 }
             }
 
-            Html -> WebViewPane(this@createNodeInner).apply {
+            Html       -> WebViewPane(this@createNodeInner).apply {
                 specialZooming()
             }
 
-            Svg  -> WebViewWrapper().apply {
+            Svg        -> WebViewWrapper().apply {
                 runLater {
                     vgrow = ALWAYS
                     hgrow = ALWAYS
@@ -366,15 +367,15 @@ private fun matt.file.JioFile.createNodeInner(renderHTMLAndSVG: Boolean = false)
                 root
             }
 
-            FolderType   -> when {
+            FolderType -> when {
                 !hasExtension(APP) -> fileTreeAndViewerPane(this).apply {
                     prefWidth = 600.0
                 }
 
-                else               -> err("how to make node for files with extension:${mExtension}")
+                else               -> err("how to make node for files with extension:${singleExtension}")
             }
 
-            else        -> err("how to make node for files with extension:${mExtension}")
+            else       -> err("how to make node for files with extension:${singleExtension}")
         }
     } else return VBoxWrapperImpl(TextWrapper("file $this does not exist"))
 }

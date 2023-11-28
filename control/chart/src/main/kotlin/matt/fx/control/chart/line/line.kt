@@ -9,8 +9,8 @@ import matt.fx.control.chart.xy.XYChartWrapper
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.log.warn.warn
-import matt.math.point.BasicPoint
 import matt.model.data.mathable.MathAndComparable
+import matt.model.data.point.BasicPoint
 
 
 /**

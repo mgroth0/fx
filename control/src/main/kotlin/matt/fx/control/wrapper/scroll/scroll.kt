@@ -15,9 +15,9 @@ import matt.fx.graphics.wrapper.node.minYRelativeTo
 import matt.fx.graphics.wrapper.node.parent.parent
 import matt.fx.graphics.wrapper.region.RegionWrapper
 import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
-import matt.lang.require.requireNull
-import matt.lang.require.requireOne
-import matt.lang.require.requireZero
+import matt.lang.assertions.require.requireNull
+import matt.lang.assertions.require.requireOne
+import matt.lang.assertions.require.requireZero
 
 
 fun NW.isFullyVisibleIn(sp: ScrollPaneWrapper<*>): Boolean {

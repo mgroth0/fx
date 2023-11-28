@@ -1,8 +1,12 @@
 package matt.fx.graphics.wrapper.node.impl
 
+import javafx.css.CssMetaData
+import javafx.css.PseudoClass
+import javafx.css.Styleable
 import javafx.scene.Cursor
 import javafx.scene.Node
 import javafx.scene.Scene
+import javafx.scene.paint.Color
 import matt.fx.base.wrapper.obs.obsval.prop.NullableFXBackedBindableProp
 import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
@@ -12,24 +16,74 @@ import matt.fx.graphics.service.uncheckedNullableWrapperConverter
 import matt.fx.graphics.wrapper.SingularEventTargetWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.scene.SceneWrapper
+import matt.fx.graphics.wrapper.style.FXStyle.fill
+import matt.fx.graphics.wrapper.style.FXStyle.`text-fill`
 import matt.fx.graphics.wrapper.style.StyleableWrapper
 import matt.fx.graphics.wrapper.style.StyleableWrapperImpl
+import matt.fx.graphics.wrapper.style.toMColor
+import matt.lang.NOT_IMPLEMENTED
 import matt.lang.delegation.lazyDelegate
 import matt.model.flowlogic.recursionblocker.RecursionBlocker
 import matt.obs.bind.binding
+import matt.obs.col.olist.MutableObsList
+import matt.obs.col.oset.ObsSet
 import matt.obs.prop.BindableProperty
+import matt.prim.str.LineAppender
 
 //private operator fun <T, V> ReadOnlyProperty<T, V>.getValue(t: T, property: KProperty<*>): V {
 //	return error("abc")
 //}
 abstract class NodeWrapperImpl<out N : Node>(
     node: N
-) : SingularEventTargetWrapper<N>(node), StyleableWrapper by object : StyleableWrapperImpl(node) {
-    override fun setTheStyle(value: String) {
-        node.style = value
-        node.style
+) : SingularEventTargetWrapper<N>(node), StyleableWrapper, NodeWrapper {
+
+
+    private val styleableWrapperThatWorkedAsDelegateBeforeK2 = object : StyleableWrapperImpl(node) {
+        override fun setTheStyle(value: String) {
+            node.style = value
+            node.style
+        }
     }
-}, NodeWrapper {
+
+
+
+    override val typeSelector get() = styleableWrapperThatWorkedAsDelegateBeforeK2.typeSelector
+    override val id get() = styleableWrapperThatWorkedAsDelegateBeforeK2.id
+
+    override val cssMetaData get() = styleableWrapperThatWorkedAsDelegateBeforeK2.cssMetaData
+    override val styleableParent get() = styleableWrapperThatWorkedAsDelegateBeforeK2.styleableParent
+    override val pseudoClassStates get() = styleableWrapperThatWorkedAsDelegateBeforeK2.pseudoClassStates
+
+    override val styleClass get() = styleableWrapperThatWorkedAsDelegateBeforeK2.styleClass
+
+
+    override var style by styleableWrapperThatWorkedAsDelegateBeforeK2::style
+
+//    override fun setTheStyle(value: String) = styleableWrapperThatWorkedAsDelegateBeforeK2.setTheStyle(value)
+    override fun getTheStyle(): String? = styleableWrapperThatWorkedAsDelegateBeforeK2.getTheStyle()
+
+
+    override var fillStyle by styleableWrapperThatWorkedAsDelegateBeforeK2::fillStyle
+    override var textFillStyle by styleableWrapperThatWorkedAsDelegateBeforeK2::textFillStyle
+
+
+    override fun styleInfo() = styleableWrapperThatWorkedAsDelegateBeforeK2.styleInfo()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     final override val cursorProperty: NullableFXBackedBindableProp<Cursor> by lazy {

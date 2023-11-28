@@ -28,30 +28,36 @@ import matt.model.data.mathable.MathAndComparable
 /*fun PieChart.wrapped(): PieChartWrapper = findWrapper() ?: PieChartWrapper(this@wrapped)*/
 
 
-fun <X: MathAndComparable<X>, Y: MathAndComparable<Y>> MorePerfOptionsLineChart<X, Y>.wrapped(): LineChartWrapper<X, Y> =
-  findWrapper() ?: LineChartWrapper(this@wrapped)
+fun <X : MathAndComparable<X>, Y : MathAndComparable<Y>> MorePerfOptionsLineChart<X, Y>.wrapped(): LineChartWrapper<X, Y> =
+    findWrapper() ?: LineChartWrapper(this@wrapped)
 
 
+@Suppress("UNCHECKED_CAST") fun AreaChartForPrivateProps<*, *>.wrapped(): AreaChartWrapper<*, *> =
+    findWrapper() ?: AreaChartWrapper(
+        this@wrapped as AreaChartForPrivateProps<Any, Any>
+    )
 
+@Suppress("UNCHECKED_CAST") fun BarChartForWrapper<*, *>.wrapped(): BarChartWrapper<*, *> =
+    findWrapper() ?: BarChartWrapper(this@wrapped as BarChartForWrapper<Any, Any>)
 
-fun AreaChartForPrivateProps<*, *>.wrapped(): AreaChartWrapper<*, *> = findWrapper() ?: AreaChartWrapper(this@wrapped)
-fun BarChartForWrapper<*, *>.wrapped(): BarChartWrapper<*, *> = findWrapper() ?: BarChartWrapper(this@wrapped)
-fun BubbleChartForWrapper<*, *>.wrapped(): BubbleChartWrapper<*, *> = findWrapper() ?: BubbleChartWrapper(this@wrapped)
-fun ScatterChartForWrapper<*, *>.wrapped(): ScatterChartWrapper<*, *> = findWrapper() ?: ScatterChartWrapper(this@wrapped)
-fun StackedBarChartForWrapper<*, *>.wrapped(): StackedBarChartWrapper<*, *> =
-  findWrapper() ?: StackedBarChartWrapper(this@wrapped)
+@Suppress("UNCHECKED_CAST") fun BubbleChartForWrapper<*, *>.wrapped(): BubbleChartWrapper<*, *> =
+    findWrapper() ?: BubbleChartWrapper(this@wrapped as BubbleChartForWrapper<Any, Any>)
 
+@Suppress("UNCHECKED_CAST") fun ScatterChartForWrapper<*, *>.wrapped(): ScatterChartWrapper<*, *> =
+    findWrapper() ?: ScatterChartWrapper(this@wrapped as ScatterChartForWrapper<Any, Any>)
+
+@Suppress("UNCHECKED_CAST") fun StackedBarChartForWrapper<*, *>.wrapped(): StackedBarChartWrapper<*, *> =
+    findWrapper() ?: StackedBarChartWrapper(this@wrapped as StackedBarChartForWrapper<Any, Any>)
 
 
 fun PieChartForWrapper.wrapped(): PieChartWrapper = findWrapper() ?: PieChartWrapper(this@wrapped)
 
 
-fun <T: MathAndComparable<T>> MoreGenericNumberAxis<T>.wrapped(): NumberAxisWrapper<*> =
-  findWrapper() ?: error("not implemented: NumberAxisWrapper(this@wrapped)")
+fun <T : MathAndComparable<T>> MoreGenericNumberAxis<T>.wrapped(): NumberAxisWrapper<*> =
+    findWrapper() ?: error("not implemented: NumberAxisWrapper(this@wrapped)")
 
 /*fun NumberAxis.wrapped(): OldNumberAxisWrapper = findWrapper() ?: OldNumberAxisWrapper(this@wrapped)*/
 fun CategoryAxisForCatAxisWrapper.wrapped(): CategoryAxisWrapper = findWrapper() ?: CategoryAxisWrapper(this@wrapped)
-
 
 
 /*@Suppress("UNCHECKED_CAST") fun <T: Number> MoreGenericValueAxis<T>.wrapped(): OldValueAxisWrapper<T> =
@@ -63,9 +69,9 @@ fun CategoryAxisForCatAxisWrapper.wrapped(): CategoryAxisWrapper = findWrapper()
 
 @Suppress("UNCHECKED_CAST")
 fun <T> AxisForPackagePrivateProps<T>.wrapped(): AxisWrapper<T, AxisForPackagePrivateProps<T>> =
-  findWrapper() ?: when (this) {
-	is MoreGenericNumberAxis         -> wrapped()
-	is MoreGenericValueAxis          -> (this as MoreGenericValueAxis<out Number>).wrapped() as AxisWrapper<T, AxisForPackagePrivateProps<T>>
-	is CategoryAxisForCatAxisWrapper -> wrapped() as AxisWrapper<T, AxisForPackagePrivateProps<T>>
-	else                             -> cannotFindWrapper()
-  }
+    findWrapper() ?: when (this) {
+        is MoreGenericNumberAxis         -> wrapped()
+        is MoreGenericValueAxis          -> (this as MoreGenericValueAxis<out Number>).wrapped() as AxisWrapper<T, AxisForPackagePrivateProps<T>>
+        is CategoryAxisForCatAxisWrapper -> wrapped() as AxisWrapper<T, AxisForPackagePrivateProps<T>>
+        else                             -> cannotFindWrapper()
+    }

@@ -36,7 +36,7 @@ import matt.fx.graphics.wrapper.stage.StageWrapper
 import matt.fx.graphics.wrapper.style.StyleableWrapper
 import matt.fx.graphics.wrapper.window.HasScene
 import matt.lang.NOT_IMPLEMENTED
-import matt.lang.require.requireNotEqual
+import matt.lang.assertions.require.requireNotEqual
 import matt.obs.bindings.bool.ObsB
 import matt.obs.bindings.bool.not
 import matt.obs.prop.*
@@ -70,6 +70,7 @@ interface NodeWrapper : EventTargetWrapper, StyleableWrapper, HasScene {
     override fun isInsideRow(): Boolean = parent?.isInsideRow() ?: false
 
     override val node: Node
+
     val visibleAndManagedProp: BindableProperty<Boolean>
 
     val styleProperty: ObsVal<String>

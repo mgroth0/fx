@@ -31,7 +31,6 @@ import javafx.css.Styleable
 import javafx.css.StyleableBooleanProperty
 import javafx.css.StyleableDoubleProperty
 import javafx.css.StyleableProperty
-import javafx.css.converter.BooleanConverter
 import javafx.css.converter.SizeConverter
 import javafx.event.ActionEvent
 import javafx.event.EventHandler
@@ -53,6 +52,7 @@ import javafx.scene.transform.Scale
 import javafx.util.Duration
 import matt.fx.control.chart.line.highperf.relinechart.xy.chart.ChartForPrivateProps
 import matt.fx.control.chart.pie.pie.PieChartForWrapper.StyleableProperties.classCssMetaData
+import matt.fx.control.css.BooleanCssMetaData
 import matt.lang.anno.SeeURL
 import java.text.MessageFormat
 import java.util.*
@@ -1067,13 +1067,13 @@ class PieChartForWrapper @JvmOverloads constructor(data: ObservableList<Data> = 
                     bind(nameProperty(), currentPieValueProperty())
                 }
 
-				@SeeURL("https://github.com/openjdk/jfx/commit/33f1f629c5df9f8e03e81e360730536cde0a8f53")
+                @SeeURL("https://github.com/openjdk/jfx/commit/33f1f629c5df9f8e03e81e360730536cde0a8f53")
                 override fun computeValue(): String {
 
-					val format = ControlResources.getString("PieChart.data.accessibleText") /*requires FX 21+5*/
-					val mf = MessageFormat(format)
-					val args = arrayOf<Any>(getName(), getCurrentPieValue())
-					return mf.format(args)
+                    val format = ControlResources.getString("PieChart.data.accessibleText") /*requires FX 21+5*/
+                    val mf = MessageFormat(format)
+                    val args = arrayOf<Any>(getName(), getCurrentPieValue())
+                    return mf.format(args)
                     /*return getName() + " represents " + getCurrentPieValue() + " percent"*/ /*from before FX 21+5*/
                 }
             })
@@ -1094,9 +1094,9 @@ class PieChartForWrapper @JvmOverloads constructor(data: ObservableList<Data> = 
        * Super-lazy instantiation pattern from Bill Pugh.
        */
     private object StyleableProperties {
-        val CLOCKWISE: CssMetaData<PieChartForWrapper, Boolean> = object : CssMetaData<PieChartForWrapper, Boolean>(
+        val CLOCKWISE: CssMetaData<PieChartForWrapper, Boolean> = object : BooleanCssMetaData<PieChartForWrapper>(
             "-fx-clockwise",
-            BooleanConverter.getInstance(), java.lang.Boolean.TRUE
+            true
         ) {
             override fun isSettable(node: PieChartForWrapper): Boolean {
                 return node.clockwise.value == null || !node.clockwise.isBound
@@ -1107,10 +1107,10 @@ class PieChartForWrapper @JvmOverloads constructor(data: ObservableList<Data> = 
                 return node.clockwiseProperty() as StyleableProperty<Boolean?>
             }
         }
-        val LABELS_VISIBLE: CssMetaData<PieChartForWrapper, Boolean> =
-            object : CssMetaData<PieChartForWrapper, Boolean>(
+        val LABELS_VISIBLE: BooleanCssMetaData<PieChartForWrapper> =
+            object : BooleanCssMetaData<PieChartForWrapper>(
                 "-fx-pie-label-visible",
-                BooleanConverter.getInstance(), java.lang.Boolean.TRUE
+                true
             ) {
                 override fun isSettable(node: PieChartForWrapper): Boolean {
                     return node.labelsVisible.value == null || !node.labelsVisible.isBound

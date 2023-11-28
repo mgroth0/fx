@@ -7,7 +7,7 @@ import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attach
 import matt.fx.graphics.wrapper.node.parent.ParentWrapperImpl
 import matt.fx.base.wrapper.obs.collect.list.createMutableWrapper
-import matt.lang.require.requireNull
+import matt.lang.assertions.require.requireNull
 import matt.log.warn.warn
 import matt.obs.col.olist.sync.toSyncedList
 

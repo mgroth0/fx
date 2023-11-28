@@ -21,7 +21,7 @@ import matt.fx.graphics.wrapper.node.attachTo
 import matt.lang.anno.SeeURL
 import matt.lang.delegation.lazyVarDelegate
 import matt.lang.go
-import matt.lang.require.requireNull
+import matt.lang.assertions.require.requireNull
 import matt.obs.bind.smartBind
 import matt.obs.col.olist.MutableObsList
 import matt.obs.col.olist.toBasicObservableList

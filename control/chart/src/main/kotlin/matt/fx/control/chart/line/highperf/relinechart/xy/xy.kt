@@ -25,7 +25,6 @@ import javafx.css.CssMetaData
 import javafx.css.Styleable
 import javafx.css.StyleableBooleanProperty
 import javafx.css.StyleableProperty
-import javafx.css.converter.BooleanConverter
 import javafx.geometry.Orientation.HORIZONTAL
 import javafx.geometry.Orientation.VERTICAL
 import javafx.geometry.Side.BOTTOM
@@ -43,10 +42,11 @@ import javafx.scene.shape.Path
 import javafx.scene.shape.Rectangle
 import javafx.util.Duration
 import matt.collect.weak.WeakMap
-import matt.fig.model.series.SeriesIdea
+import matt.fig.modell.series.SeriesIdea
 import matt.fx.control.chart.axis.value.axis.AxisForPackagePrivateProps
 import matt.fx.control.chart.line.highperf.relinechart.xy.XYChartForPackagePrivateProps.StyleableProperties.classCssMetaData
 import matt.fx.control.chart.line.highperf.relinechart.xy.chart.ChartForPrivateProps
+import matt.fx.control.css.BooleanCssMetaData
 import matt.fx.graphics.anim.interp.MyInterpolator
 import matt.model.data.xyz.Dim2D
 import matt.obs.prop.BindableProperty
@@ -70,7 +70,9 @@ import java.util.*
  *
  * @since JavaFX 2.0
  */
-abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PROPERTIES --------------------------------------------------------------------------------
+abstract class XYChartForPackagePrivateProps<X, Y>(
+
+    // -------------- PUBLIC PROPERTIES --------------------------------------------------------------------------------
 
 
     internal val xAxis: AxisForPackagePrivateProps<X>,
@@ -118,6 +120,7 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
     val plotContent = Group()
     private val plotAreaClip = Rectangle()
     private val displayedSeries: MutableList<Series<X, Y>> = ArrayList()
+
     private val legend = Legend()
 
     /** This is called when a series is added or removed from the chart  */
@@ -1313,9 +1316,9 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
     // -------------- STYLESHEET HANDLING ------------------------------------------------------------------------------
     private object StyleableProperties {
         val HORIZONTAL_GRID_LINE_VISIBLE: CssMetaData<XYChartForPackagePrivateProps<*, *>, Boolean> =
-            object : CssMetaData<XYChartForPackagePrivateProps<*, *>, Boolean>(
+            object : BooleanCssMetaData<XYChartForPackagePrivateProps<*, *>>(
                 "-fx-horizontal-grid-lines-visible",
-                BooleanConverter.getInstance(), true
+                true
             ) {
                 override fun isSettable(node: XYChartForPackagePrivateProps<*, *>): Boolean {
                     return node.horizontalGridLinesVisible.value == null ||
@@ -1327,10 +1330,10 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
                     return node.horizontalGridLinesVisibleProperty() as StyleableProperty<Boolean?>
                 }
             }
-        val HORIZONTAL_ZERO_LINE_VISIBLE: CssMetaData<XYChartForPackagePrivateProps<*, *>, Boolean> =
-            object : CssMetaData<XYChartForPackagePrivateProps<*, *>, Boolean>(
+        val HORIZONTAL_ZERO_LINE_VISIBLE: BooleanCssMetaData<XYChartForPackagePrivateProps<*, *>> =
+            object : BooleanCssMetaData<XYChartForPackagePrivateProps<*, *>>(
                 "-fx-horizontal-zero-line-visible",
-                BooleanConverter.getInstance(), java.lang.Boolean.TRUE
+                true
             ) {
                 override fun isSettable(node: XYChartForPackagePrivateProps<*, *>): Boolean {
                     return node.horizontalZeroLineVisible.value == null ||
@@ -1342,10 +1345,10 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
                     return node.horizontalZeroLineVisibleProperty() as StyleableProperty<Boolean?>
                 }
             }
-        val ALTERNATIVE_ROW_FILL_VISIBLE: CssMetaData<XYChartForPackagePrivateProps<*, *>, Boolean> =
-            object : CssMetaData<XYChartForPackagePrivateProps<*, *>, Boolean>(
+        val ALTERNATIVE_ROW_FILL_VISIBLE: BooleanCssMetaData<XYChartForPackagePrivateProps<*, *>> =
+            object : BooleanCssMetaData<XYChartForPackagePrivateProps<*, *>>(
                 "-fx-alternative-row-fill-visible",
-                BooleanConverter.getInstance(), java.lang.Boolean.TRUE
+                true
             ) {
                 override fun isSettable(node: XYChartForPackagePrivateProps<*, *>): Boolean {
                     return node.alternativeRowFillVisible.value == null ||
@@ -1357,10 +1360,10 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
                     return node.alternativeRowFillVisibleProperty() as StyleableProperty<Boolean?>
                 }
             }
-        val VERTICAL_GRID_LINE_VISIBLE: CssMetaData<XYChartForPackagePrivateProps<*, *>, Boolean> =
-            object : CssMetaData<XYChartForPackagePrivateProps<*, *>, Boolean>(
+        val VERTICAL_GRID_LINE_VISIBLE: BooleanCssMetaData<XYChartForPackagePrivateProps<*, *>> =
+            object : BooleanCssMetaData<XYChartForPackagePrivateProps<*, *>>(
                 "-fx-vertical-grid-lines-visible",
-                BooleanConverter.getInstance(), true
+                true
             ) {
                 override fun isSettable(node: XYChartForPackagePrivateProps<*, *>): Boolean {
                     return node.verticalGridLinesVisible.value == null ||
@@ -1372,10 +1375,10 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
                     return node.verticalGridLinesVisibleProperty() as StyleableProperty<Boolean?>
                 }
             }
-        val VERTICAL_ZERO_LINE_VISIBLE: CssMetaData<XYChartForPackagePrivateProps<*, *>, Boolean> =
-            object : CssMetaData<XYChartForPackagePrivateProps<*, *>, Boolean>(
+        val VERTICAL_ZERO_LINE_VISIBLE: BooleanCssMetaData<XYChartForPackagePrivateProps<*, *>> =
+            object : BooleanCssMetaData<XYChartForPackagePrivateProps<*, *>>(
                 "-fx-vertical-zero-line-visible",
-                BooleanConverter.getInstance(), true
+                true
             ) {
                 override fun isSettable(node: XYChartForPackagePrivateProps<*, *>): Boolean {
                     return node.verticalZeroLineVisible.value == null ||
@@ -1387,10 +1390,10 @@ abstract class XYChartForPackagePrivateProps<X, Y>( // -------------- PUBLIC PRO
                     return node.verticalZeroLineVisibleProperty() as StyleableProperty<Boolean?>
                 }
             }
-        val ALTERNATIVE_COLUMN_FILL_VISIBLE: CssMetaData<XYChartForPackagePrivateProps<*, *>, Boolean> =
-            object : CssMetaData<XYChartForPackagePrivateProps<*, *>, Boolean>(
+        val ALTERNATIVE_COLUMN_FILL_VISIBLE: BooleanCssMetaData<XYChartForPackagePrivateProps<*, *>> =
+            object : BooleanCssMetaData<XYChartForPackagePrivateProps<*, *>>(
                 "-fx-alternative-column-fill-visible",
-                BooleanConverter.getInstance(), true
+                true
             ) {
                 override fun isSettable(node: XYChartForPackagePrivateProps<*, *>): Boolean {
                     return node.alternativeColumnFillVisible.value == null ||

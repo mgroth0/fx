@@ -1,6 +1,8 @@
 package matt.fx.control.chart.xy
 
 import matt.collect.itr.applyEach
+import matt.fx.base.wrapper.obs.obsval.prop.NonNullFXBackedBindableProp
+import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.control.chart.ChartWrapper
 import matt.fx.control.chart.axis.MAxis
 import matt.fx.control.chart.axis.value.ValueAxisWrapper
@@ -9,78 +11,107 @@ import matt.fx.control.chart.line.LineChartWrapper
 import matt.fx.control.chart.line.highperf.relinechart.xy.XYChartForPackagePrivateProps
 import matt.fx.control.chart.line.highperf.relinechart.xy.XYChartForPackagePrivateProps.Data
 import matt.fx.control.chart.wrap.wrapped
-import matt.fx.control.chart.xy.series.SeriesConverter
 import matt.fx.control.chart.xy.series.SeriesWrapper
-import matt.fx.base.wrapper.obs.collect.list.createMutableWrapper
-import matt.fx.base.wrapper.obs.obsval.prop.NonNullFXBackedBindableProp
-import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.obs.col.olist.MutableObsList
-import matt.obs.col.olist.sync.toSyncedList
 
-fun <X, Y> MutableList<Data<X, Y>>.add(x: X, y: Y) = add(Data(x, y))
+fun <X, Y> MutableList<Data<X, Y>>.add(
+    x: X,
+    y: Y
+) = add(Data(x, y))
 
-open class XYChartWrapper<X, Y, N: XYChartForPackagePrivateProps<X, Y>>(node: N): ChartWrapper<N>(node) {
-
-
-  val data: MutableObsList<SeriesWrapper<X, Y>> by lazy {
-	node.data.value.createMutableWrapper().toSyncedList(SeriesConverter())
-  }
+open class XYChartWrapper<X : Any, Y : Any, N : XYChartForPackagePrivateProps<X, Y>>(nodeDifferentNameForK2: N) :
+    ChartWrapper<N>(nodeDifferentNameForK2) {
 
 
-  open val yAxis: MAxis<Y> by lazy { node.yAxis.wrapped() }
-  open val xAxis: MAxis<X> by lazy { node.xAxis.wrapped() }
+    val data: MutableObsList<SeriesWrapper<X, Y>> by lazy {
+        error(
+            """
+                Super weird K2 error:  https://youtrack.jetbrains.com/issue/KT-63569/Kotlin-2.0.0-Beta-1-IllegalStateException-id1
+                
+                private val nodeDataForK2: ObjectProperty<ObservableList<Series<X, Y>>> = nodeDifferentNameForK2.data
 
-  //  /*https://stackoverflow.com/questions/52179664/how-to-change-the-axis-color-of-javafx-chart*/
-  //  var axesColor: Color
-  //	get() = NOT_IMPLEMENTED
-  //	set(value) {
-  //	  val h = value.hex()
-  //	  val sty = """
-  //	d
-  //		""".trimIndent()
-  //	  style += sty
-  //	  xAxis.style += sty
-  //	  yAxis.style += sty
-  //	}
+    private fun nodeDataValueMutableWrapperForK2() = nodeDataForK2.value.createMutableWrapper()
+                
+                nodeDataValueMutableWrapperForK2().toSyncedList(SeriesConverter())
+                
+            """.trimIndent()
+        )
 
+    }
 
-  val horizontalZeroLineVisibleProperty: NonNullFXBackedBindableProp<Boolean> by lazy { node.horizontalZeroLineVisibleProperty().toNonNullableProp() }
-  val verticalZeroLineVisibleProperty: NonNullFXBackedBindableProp<Boolean> by lazy { node.verticalZeroLineVisibleProperty().toNonNullableProp() }
+    fun temporaryK2Replacement(): XYChartForPackagePrivateProps<X, Y> {
+        error(
+            """
+                Super weird K2 error:  https://youtrack.jetbrains.com/issue/KT-63569/Kotlin-2.0.0-Beta-1-IllegalStateException-id1
+                
+                
+            """.trimIndent()
+        )
 
-  fun configureForHighPerformance() {
-	animated = false
-	(this as? LineChartWrapper)?.createSymbols = false
-	isLegendVisible = false
-	(listOf(yAxis) + xAxis).applyEach {
-	  animated = false
-	  isAutoRanging = false
-	  isTickMarkVisible = false
-	  isTickLabelsVisible = false
-	  (this as? ValueAxisWrapper)?.apply {
-		isMinorTickVisible = false
-		minorTickCount = 0
-		(this as? NumberAxisWrapper)?.apply {
-		  maximizeTickUnit()
-		}
-	  }
-	}
-  }
+    }
 
+    open val yAxis: MAxis<Y> by lazy {
 
-  internal val chartContent by lazy {
-	node.chartContent
-  }
+        temporaryK2Replacement().yAxis.wrapped()
 
-  private val plotContent by lazy {
-	node.plotContent
-  }
-  internal val plotArea by lazy {
-	node.plotArea
-  }
+    }
+    open val xAxis: MAxis<X> by lazy { temporaryK2Replacement().xAxis.wrapped() }
+
+    //  /*https://stackoverflow.com/questions/52179664/how-to-change-the-axis-color-of-javafx-chart*/
+    //  var axesColor: Color
+    //	get() = NOT_IMPLEMENTED
+    //	set(value) {
+    //	  val h = value.hex()
+    //	  val sty = """
+    //	d
+    //		""".trimIndent()
+    //	  style += sty
+    //	  xAxis.style += sty
+    //	  yAxis.style += sty
+    //	}
 
 
-  val dataItemChangedAnimDur = node.dataItemChangedAnimDur
-  val dataItemChangedAnimInterp = node.dataItemChangedAnimInterp
+    val horizontalZeroLineVisibleProperty: NonNullFXBackedBindableProp<Boolean> by lazy {
+        temporaryK2Replacement().horizontalZeroLineVisibleProperty().toNonNullableProp()
+    }
+    val verticalZeroLineVisibleProperty: NonNullFXBackedBindableProp<Boolean> by lazy {
+        temporaryK2Replacement().verticalZeroLineVisibleProperty().toNonNullableProp()
+    }
+
+    fun configureForHighPerformance() {
+        animated = false
+        (this as? LineChartWrapper)?.createSymbols = false
+        isLegendVisible = false
+        (listOf(yAxis) + xAxis).applyEach {
+            animated = false
+            isAutoRanging = false
+            isTickMarkVisible = false
+            isTickLabelsVisible = false
+            (this as? ValueAxisWrapper)?.apply {
+                isMinorTickVisible = false
+                minorTickCount = 0
+                (this as? NumberAxisWrapper)?.apply {
+                    maximizeTickUnit()
+                }
+            }
+        }
+    }
+
+
+    internal val chartContent by lazy {
+        temporaryK2Replacement().chartContent
+    }
+
+    private val plotContent by lazy {
+        temporaryK2Replacement().plotContent
+    }
+    internal val plotArea by lazy {
+        temporaryK2Replacement().plotArea
+    }
+
+
+    val dataItemChangedAnimDur = temporaryK2Replacement().dataItemChangedAnimDur
+    val dataItemChangedAnimInterp = temporaryK2Replacement().dataItemChangedAnimInterp
 
 
 }
@@ -90,15 +121,15 @@ open class XYChartWrapper<X, Y, N: XYChartForPackagePrivateProps<X, Y>>(node: N)
  * Add a new XYChart.Series with the given name to the given Chart. Optionally specify a list data for the new series or
  * add data with the optional op that will be performed on the created series object.
  */
-fun <X, Y, ChartType: XYChartWrapper<X, Y, *>> ChartType.series(
-  name: String,
-  elements: MutableObsList<Data<X, Y>>? = null,
-  op: (SeriesWrapper<X, Y>).()->Unit = {}
+fun <X, Y, ChartType : XYChartWrapper<X, Y, *>> ChartType.series(
+    name: String,
+    elements: MutableObsList<Data<X, Y>>? = null,
+    op: (SeriesWrapper<X, Y>).() -> Unit = {}
 ) = SeriesWrapper<X, Y>().also {
-  it.name = name
-  elements?.let(it::setTheData)
-  op(it)
-  data.add(it)
+    it.name = name
+    elements?.let(it::setTheData)
+    op(it)
+    data.add(it)
 }
 
 /**
@@ -107,19 +138,30 @@ fun <X, Y, ChartType: XYChartWrapper<X, Y, *>> ChartType.series(
  *
  * @return The new Data entry
  */
-fun <X, Y> SeriesWrapper<X, Y>.data(x: X, y: Y, extra: Any? = null, op: (Data<X, Y>).()->Unit = {}) =
-  Data(x, y).apply {
-	if (extra != null) setExtraValue(extra)
-	data.add(this)
-	op(this)
-  }
+fun <X, Y> SeriesWrapper<X, Y>.data(
+    x: X,
+    y: Y,
+    extra: Any? = null,
+    op: (Data<X, Y>).() -> Unit = {}
+) =
+    Data(x, y).apply {
+        if (extra != null) setExtraValue(extra)
+        data.add(this)
+        op(this)
+    }
 
 
 /**
  * Helper class for the multiseries support
  */
-class MultiSeries<X, Y>(val series: List<SeriesWrapper<X, Y>>, val chart: XYChartWrapper<X, Y, *>) {
-  fun data(x: X, vararg y: Y) = y.forEachIndexed { index, value -> series[index].data(x, value) }
+class MultiSeries<X: Any, Y: Any>(
+    val series: List<SeriesWrapper<X, Y>>,
+    val chart: XYChartWrapper<X, Y, *>
+) {
+    fun data(
+        x: X,
+        vararg y: Y
+    ) = y.forEachIndexed { index, value -> series[index].data(x, value) }
 }
 
 /**
@@ -134,14 +176,14 @@ class MultiSeries<X, Y>(val series: List<SeriesWrapper<X, Y>>, val chart: XYChar
  *     }
  *
  */
-fun <X, Y, ChartType: XYChartWrapper<X, Y, *>> ChartType.multiseries(
-  vararg names: String,
-  op: (MultiSeries<X, Y>).()->Unit = {}
+fun <X: Any, Y: Any, ChartType : XYChartWrapper<X, Y, *>> ChartType.multiseries(
+    vararg names: String,
+    op: (MultiSeries<X, Y>).() -> Unit = {}
 ): MultiSeries<X, Y> {
-  val series = names.map { SeriesWrapper<X, Y>().apply { name = it } }
-  val multiSeries = MultiSeries(series, this).also(op)
-  data.addAll(series)
-  return multiSeries
+    val series = names.map { SeriesWrapper<X, Y>().apply { name = it } }
+    val multiSeries = MultiSeries(series, this).also(op)
+    data.addAll(series)
+    return multiSeries
 }
 
 operator fun <X, Y> Data<X, Y>.component1(): X = xValueProp.value

@@ -7,14 +7,15 @@ import javafx.scene.control.TableSelectionModel
 import javafx.scene.control.TableView.TableViewSelectionModel
 import javafx.scene.control.TreeItem
 import javafx.scene.control.TreeTableView.TreeTableViewSelectionModel
-import matt.fx.control.wrapper.control.ControlWrapper
-import matt.fx.control.wrapper.control.colbase.TableColumnBaseWrapper
-import matt.fx.control.wrapper.control.column.TableColumnWrapper
 import matt.fx.base.wrapper.obs.collect.list.createImmutableWrapper
 import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.base.wrapper.obs.obsval.toNonNullableROProp
 import matt.fx.base.wrapper.obs.obsval.toNullableROProp
+import matt.fx.control.wrapper.control.ControlWrapper
+import matt.fx.control.wrapper.control.colbase.TableColumnBaseWrapper
+import matt.fx.control.wrapper.control.column.TableColumnWrapper
 import matt.lang.convert.BiConverter
+import matt.log.warn.warn
 import matt.obs.bind.binding
 import matt.obs.col.olist.ImmutableObsList
 import matt.obs.col.olist.MutableObsList
@@ -90,7 +91,7 @@ abstract class SelectionModelWrapperBase<T: Any, W: Any>(
   override fun selectLast() = sm.selectLast()
   override fun selectionIsEmpty() = sm.isEmpty
   override fun selectPrevious() = sm.selectPrevious()
-  override fun clearAndSelect(index: Int) = sm.clearAndSelect(index)
+  override fun clearAndSelect(index: Int): Unit { sm.clearAndSelect(index)}
   override fun selectIndex(index: Int) = sm.select(index)
   override fun clearSelection(index: Int) = sm.clearSelection(index)
   override fun clearSelection() = sm.clearSelection()
@@ -153,8 +154,32 @@ abstract class MultipleSelectionModelWrapperBase<T: Any, W: Any>(
 fun <T: Any> MultipleSelectionModel<T>.wrap() = MultipleSelectionModelWrapperImpl(this)
 open class MultipleSelectionModelWrapperImpl<T: Any>(
   sm: MultipleSelectionModel<T>
-): MultipleSelectionModelWrapperBase<T, T>(sm), SelectionControls<T> by SelectionModelWrapperImpl(sm) {
+): MultipleSelectionModelWrapperBase<T, T>(sm), SelectionControls<T> {
   override val selectedItems by lazy { sm.selectedItems.createImmutableWrapper() }
+
+    private val usedToDelegate =  SelectionModelWrapperImpl(sm)
+
+    init {
+        warn("used to delegate SelectionControls<T> by SelectionModelWrapperImpl(sm)")
+    }
+
+    override fun selectNext() = usedToDelegate.selectNext()
+    override fun selectFirst() = usedToDelegate.selectFirst()
+    override fun selectLast() = usedToDelegate.selectLast()
+    override fun selectionIsEmpty() = usedToDelegate.selectionIsEmpty()
+    override fun selectPrevious() = usedToDelegate.selectPrevious()
+    override fun clearAndSelect(index: Int): Unit { usedToDelegate.clearAndSelect(index)}
+    override fun selectIndex(index: Int) = usedToDelegate.selectIndex(index)
+    override fun clearSelection(index: Int) = usedToDelegate.clearSelection(index)
+    override fun clearSelection() = usedToDelegate.clearSelection()
+    override fun isSelected(index: Int) = usedToDelegate.isSelected(index)
+    override val selectedIndex: Int? get() = usedToDelegate.selectedIndex
+    override val selectedIndexProperty get() = usedToDelegate.selectedIndexProperty
+    override fun select(obj: T?) = usedToDelegate.select(obj)
+    override val selectedItemProperty: ObsVal<out T?>
+        get() = usedToDelegate.selectedItemProperty
+
+
 }
 
 fun <T: Any, W: Any> MultipleSelectionModel<T>.wrap(converter: BiConverter<T, W>) =

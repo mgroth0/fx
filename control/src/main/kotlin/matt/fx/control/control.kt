@@ -15,7 +15,7 @@ import matt.fx.graphics.wrapper.node.impl.NodeWrapperImpl
 import matt.http.url.query.buildQueryURL
 import matt.lang.NEVER
 import matt.lang.opt
-import matt.lang.require.requireNot
+import matt.lang.assertions.require.requireNot
 import matt.log.warn.warn
 import matt.obs.prop.BindableProperty
 import matt.obs.prop.Var

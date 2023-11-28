@@ -5,9 +5,9 @@ import matt.fx.graphics.wrapper.node.line.LineWrapper
 import matt.fx.graphics.wrapper.node.line.line
 import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
 import matt.fx.graphics.wrapper.style.FXColor
-import matt.math.neg.unaryMinus
-import matt.math.point.BasicPoint
-import matt.math.point.Point
+import matt.math.langg.arithmetic.neg.unaryMinus
+import matt.model.data.point.BasicPoint
+import matt.model.data.point.Point
 
 
 @Suppress("unused") class LineDrawDSL(private val parent: PaneWrapperImpl<*, *>, start: Point) {

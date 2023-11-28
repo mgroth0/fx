@@ -5,7 +5,7 @@ import javafx.scene.paint.Color
 import javafx.scene.shape.Path
 import matt.collect.list.downSampled
 import matt.collect.weak.WeakMap
-import matt.fig.model.series.SeriesIdea
+import matt.fig.modell.series.SeriesIdea
 import matt.fx.base.wrapper.obs.collect.list.mfxMutableListConverter
 import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp

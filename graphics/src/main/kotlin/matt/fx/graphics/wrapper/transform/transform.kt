@@ -11,7 +11,7 @@ import matt.fx.graphics.wrapper.SingularEventTargetWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.lang.classname.JvmQualifiedClassName
 import matt.lang.classname.jvmQualifiedClassName
-import matt.lang.require.requireEquals
+import matt.lang.assertions.require.requireEquals
 
 abstract class TransformWrapper<E : Transform>(node: E) : SingularEventTargetWrapper<E>(node) {
     override val properties: ObservableMap<Any, Any?>

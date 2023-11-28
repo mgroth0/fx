@@ -18,7 +18,7 @@ import matt.fx.graphics.wrapper.node.NW
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.lang.delegation.lazyVarDelegate
 import matt.lang.go
-import matt.lang.require.requireNull
+import matt.lang.assertions.require.requireNull
 import matt.lang.sync
 import matt.obs.prop.VarProp
 

@@ -4,7 +4,7 @@ import javafx.beans.InvalidationListener
 import javafx.beans.Observable
 import javafx.collections.ObservableSet
 import javafx.collections.SetChangeListener
-import matt.collect.map.FakeMutableSet
+import javafx.util.Subscription
 import matt.lang.convert.BiConverter
 import matt.lang.function.Consume
 import matt.lang.function.Op
@@ -108,10 +108,20 @@ abstract class FXBackedObsSet<E>(internal val obs: ObservableSet<E>)
 
 abstract class ObservableSetWrapperImpl<E>(obs: ObservableSet<E>) : FXBackedObsSet<E>(obs),
     MyObservableSetWrapperPlusSet<E>,
-    Observable by obs {
+    Observable {
     override fun addListener(listener: SetChangeListener<E>) = obs.addListener(listener)
     override fun removeListener(listener: SetChangeListener<E>) = obs.removeListener(listener)
+    override fun addListener(listener: InvalidationListener?) {
+        TODO("delegated Observable by obs until kotlin 2.0.0Beta1 <:[")
+    }
 
+    override fun removeListener(listener: InvalidationListener?) {
+        TODO("delegated Observable by obs until kotlin 2.0.0Beta1 <:[")
+    }
+
+    override fun subscribe(invalidationSubscriber: Runnable?): Subscription {
+        TODO("delegated Observable by obs until kotlin 2.0.0Beta1 <:[")
+    }
 }
 
 interface FXOSetWrapperAndBasic<E> : MyObservableSetWrapper<E>, ObsSet<E>, BindableSet<E>
@@ -119,14 +129,22 @@ interface FXOLMutableSetWrapperAndBasic<E> : FXOSetWrapperAndBasic<E>, MutableSe
 
 class FXBackedMutableObservableSetBase<E>(obs: ObservableSet<E>) : ObservableSetWrapperImpl<E>(obs),
     MutableObsSet<E>,
-    MutableSet<E> by obs,
+    MutableSet<E>,
     FXOLMutableSetWrapperAndBasic<E>,
     BindableSet<E> {
 
 
     val bindableSetHelper by lazy { BindableSetImpl(this) }
-    override fun <S> bind(source: ObsSet<S>, converter: (S) -> E) = bindableSetHelper.bind(source, converter)
-    override fun <T> bind(source: ObsVal<T>, converter: (T) -> Set<E>) = bindableSetHelper.bind(source, converter)
+    override fun <S> bind(
+        source: ObsSet<S>,
+        converter: (S) -> E
+    ) = bindableSetHelper.bind(source, converter)
+
+    override fun <T> bind(
+        source: ObsVal<T>,
+        converter: (T) -> Set<E>
+    ) = bindableSetHelper.bind(source, converter)
+
     override val bindManager get() = bindableSetHelper.bindManager
     override var theBind
         get() = bindManager.theBind
@@ -135,6 +153,29 @@ class FXBackedMutableObservableSetBase<E>(obs: ObservableSet<E>) : ObservableSet
         }
 
     override fun unbind() = bindableSetHelper.unbind()
+    override fun clear() {
+        TODO("Not yet implemented")
+    }
+
+    override fun retainAll(elements: Collection<E>): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun removeAll(elements: Collection<E>): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun remove(element: E): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun addAll(elements: Collection<E>): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun add(element: E): Boolean {
+        TODO("Not yet implemented")
+    }
 
 
     override var nam: String? = null
@@ -142,7 +183,10 @@ class FXBackedMutableObservableSetBase<E>(obs: ObservableSet<E>) : ObservableSet
     override var debugger: Prints? = null
 
     @Synchronized
-    override fun onChange(listenerName: String?, op: (SetChange<E>) -> Unit): SetListener<E> {
+    override fun onChange(
+        listenerName: String?,
+        op: (SetChange<E>) -> Unit
+    ): SetListener<E> {
         val listener = SetListener {
             op(it)
         }
@@ -181,9 +225,28 @@ class FXBackedMutableObservableSetBase<E>(obs: ObservableSet<E>) : ObservableSet
         listenersMap.remove(listener)
     }
 
-	override fun releaseUpdatesAfter(op: Op) {
-		TODO("Not yet implemented")
-	}
+    override val size: Int
+        get() = TODO("delegated MutableSet<E> by obs until kotlin 2.0.0Beta1 <:[")
+
+    override fun isEmpty(): Boolean {
+        TODO("delegated MutableSet<E> by obs until kotlin 2.0.0Beta1 <:[")
+    }
+
+    override fun iterator(): MutableIterator<E> {
+        TODO("delegated MutableSet<E> by obs until kotlin 2.0.0Beta1 <:[")
+    }
+
+    override fun containsAll(elements: Collection<E>): Boolean {
+        TODO("delegated MutableSet<E> by obs until kotlin 2.0.0Beta1 <:[")
+    }
+
+    override fun contains(element: E): Boolean {
+        TODO("delegated MutableSet<E> by obs until kotlin 2.0.0Beta1 <:[")
+    }
+
+    override fun releaseUpdatesAfter(op: Op) {
+        TODO("delegated MutableSet<E> by obs until kotlin 2.0.0Beta1 <:[")
+    }
 
 }
 
@@ -203,7 +266,7 @@ class FXBackedMutableObservableSet<E>(obs: ObservableSet<E>) : FXBackedObsSet<E>
 fun <E> MutableObsSet<E>.createMutableFXWrapper() = MutableMBackedFXObservableSet(this)
 fun <E> ObsSet<E>.createFXWrapper() = MBackedFXObservableSet(this)
 open class MBackedFXObservableSet<E>(internal open val mSet: ObsSet<E>) : ObservableSet<E>,
-    MutableSet<E> by FakeMutableSet(mSet) {
+    MutableSet<E>  {
     //  override fun addAll(vararg elements: E): Boolean = ILLEGAL
     //  override fun retainAll(vararg elements: E): Boolean = ILLEGAL
     //  override fun removeAll(vararg elements: E): Boolean = ILLEGAL
@@ -269,6 +332,49 @@ open class MBackedFXObservableSet<E>(internal open val mSet: ObsSet<E>) : Observ
 
     override fun removeListener(listener: SetChangeListener<in E>) {
         changeListenerMap[listener]?.tryRemovingListener()
+    }
+
+    override fun add(element: E): Boolean {
+        TODO("delegated MutableSet<E> by FakeMutableSet(mSet) until kotlin 2.0.0Beta1 <:[")
+    }
+
+    override fun addAll(elements: Collection<E>): Boolean {
+        TODO("delegated MutableSet<E> by FakeMutableSet(mSet) until kotlin 2.0.0Beta1 <:[")
+    }
+
+    override val size: Int
+        get() =    TODO("delegated MutableSet<E> by FakeMutableSet(mSet) until kotlin 2.0.0Beta1 <:[")
+
+    override fun clear() {
+        TODO("delegated MutableSet<E> by FakeMutableSet(mSet) until kotlin 2.0.0Beta1 <:[")
+    }
+
+    override fun isEmpty(): Boolean {
+        TODO("delegated MutableSet<E> by FakeMutableSet(mSet) until kotlin 2.0.0Beta1 <:[")
+    }
+
+    override fun containsAll(elements: Collection<E>): Boolean {
+        TODO("delegated MutableSet<E> by FakeMutableSet(mSet) until kotlin 2.0.0Beta1 <:[")
+    }
+
+    override fun contains(element: E): Boolean {
+        TODO("delegated MutableSet<E> by FakeMutableSet(mSet) until kotlin 2.0.0Beta1 <:[")
+    }
+
+    override fun iterator(): MutableIterator<E> {
+        TODO("delegated MutableSet<E> by FakeMutableSet(mSet) until kotlin 2.0.0Beta1 <:[")
+    }
+
+    override fun retainAll(elements: Collection<E>): Boolean {
+        TODO("delegated MutableSet<E> by FakeMutableSet(mSet) until kotlin 2.0.0Beta1 <:[")
+    }
+
+    override fun removeAll(elements: Collection<E>): Boolean {
+        TODO("delegated MutableSet<E> by FakeMutableSet(mSet) until kotlin 2.0.0Beta1 <:[")
+    }
+
+    override fun remove(element: E): Boolean {
+        TODO("delegated MutableSet<E> by FakeMutableSet(mSet) until kotlin 2.0.0Beta1 <:[")
     }
 }
 

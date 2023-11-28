@@ -8,7 +8,7 @@ import matt.fx.base.wrapper.obs.obsval.toNonNullableROProp
 import matt.fx.control.wrapper.wrapped.wrapped
 import matt.fx.graphics.wrapper.SingularEventTargetWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
-import matt.lang.require.requireNull
+import matt.lang.assertions.require.requireNull
 import matt.obs.bindings.bool.ObsB
 import matt.obs.bindings.bool.not
 

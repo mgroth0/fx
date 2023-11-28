@@ -1,9 +1,9 @@
 package matt.fx.control.chart.axis.value.number
 
-import matt.fig.model.plot.axis.NumericalAxis
-import matt.fig.model.plot.axis.tick.DefaultTickConfigurer
-import matt.fig.model.plot.axis.tick.TickConfigurer
-import matt.fig.model.plot.convert.ValueAxisConverter
+import matt.fig.modell.plot.axis.NumericalAxis
+import matt.fig.modell.plot.axis.tick.DefaultTickConfigurer
+import matt.fig.modell.plot.axis.tick.TickConfigurer
+import matt.fig.modell.plot.convert.ValueAxisConverter
 import matt.fx.control.chart.axis.value.ValueAxisWrapper
 import matt.fx.control.chart.axis.value.number.moregennum.MoreGenericNumberAxis
 import matt.model.data.mathable.DoubleWrapper
@@ -19,7 +19,7 @@ fun <T : MathAndComparable<T>> numAxis(
 ) = NumberAxisWrapper(converter, tickConfigurer)
 
 
-fun <T : MathAndComparable<T>> NumericalAxis<T>.numAxis() = NumberAxisWrapper(converter, tickConfigurer)
+fun <T : MathAndComparable<T>> NumericalAxis<T>.numAxis() = NumberAxisWrapper(valueCodec.converter, tickConfigurer)
 
 class NumberAxisWrapper<T : MathAndComparable<T>>(
     override val node: MoreGenericNumberAxis<T>,

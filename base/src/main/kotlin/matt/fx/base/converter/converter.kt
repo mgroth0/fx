@@ -42,11 +42,14 @@ class ConverterConverter<T>() : BiConverter<StringConverter<T>, matt.prim.conver
 
 }
 
-fun <I, O> callbackConverter() = object :
-    BiConverter<Callback<I, ObservableValue<O>>, Callback<I, ObsVal<O>>> {
+fun <I, O> callbackConverter() = object : BiConverter<Callback<I, ObservableValue<O>>, Callback<I, ObsVal<O>>> {
+
+
     override fun convertToB(a: Callback<I, ObservableValue<O>>): Callback<I, ObsVal<O>> {
         return Callback<I, ObsVal<O>> { param ->
             val o = a.call(param)!!
+
+
             val m = o.toNullableROProp().cast<O>()
             m
         }

@@ -4,7 +4,7 @@ import javafx.scene.Node
 import javafx.scene.control.CustomMenuItem
 import matt.fx.control.wrapper.menu.item.MenuItemWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
-import matt.lang.require.requireNull
+import matt.lang.assertions.require.requireNull
 
 open class CustomMenuItemWrapper(
     node: CustomMenuItem = CustomMenuItem(),

@@ -238,7 +238,7 @@ import matt.fx.graphics.wrapper.window.WindowWrapper
 import matt.lang.NEVER
 import matt.lang.classname.JvmQualifiedClassName
 import matt.lang.classname.jvmQualifiedClassName
-import matt.lang.require.requireNull
+import matt.lang.assertions.require.requireNull
 import kotlin.reflect.KClass
 
 

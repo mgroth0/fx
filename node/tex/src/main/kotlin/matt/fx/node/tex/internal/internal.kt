@@ -3,7 +3,7 @@ package matt.fx.node.tex.internal
 import javafx.scene.paint.Color
 import matt.caching.cache.LRUCache
 import matt.collect.map.dmap.withStoringDefault
-import matt.fig.model.EquationIr
+import matt.fig.modell.EquationIr
 import matt.fig.render.EquationRenderer
 import matt.fx.graphics.style.intColorToFXColor
 import matt.fx.graphics.wrapper.style.toFXColor

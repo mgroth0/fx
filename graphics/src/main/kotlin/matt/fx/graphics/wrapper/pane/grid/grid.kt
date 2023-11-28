@@ -18,7 +18,7 @@ import matt.fx.graphics.wrapper.pane.grid.GridPaneWrapper.GridDSLType.COL
 import matt.fx.graphics.wrapper.pane.grid.GridPaneWrapper.GridDSLType.ROW
 import matt.fx.base.wrapper.obs.collect.list.createMutableWrapper
 import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
-import matt.lang.require.requireNotEqual
+import matt.lang.assertions.require.requireNotEqual
 
 
 fun <T : NodeWrapper> T.gridpaneConstraints(op: (GridPaneConstraint.() -> Unit)): T {

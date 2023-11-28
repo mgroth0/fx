@@ -38,18 +38,13 @@
     },
     {
       "type": "Project",
+      "cfg": "implementation",
+      "path": ":k:svg"
+    },
+    {
+      "type": "Project",
       "cfg": "api",
       "path": ":k:fx:image"
-    },
-    {
-      "type": "Lib",
-      "cfg": "implementation",
-      "key": "svgsalamander"
-    },
-    {
-      "type": "Lib",
-      "cfg": "implementation",
-      "key": "batik"
     },
     {
       "type": "Lib",

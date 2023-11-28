@@ -9,7 +9,7 @@ import matt.fx.graphics.wrapper.EventTargetWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.parent.ParentWrapper
 import matt.fx.graphics.wrapper.sizeman.Sized
-import matt.lang.require.requireNull
+import matt.lang.assertions.require.requireNull
 
 interface SceneLikeWrapper<N : EventTarget, R : ParentWrapper<*>> :
     EventTargetWrapper,

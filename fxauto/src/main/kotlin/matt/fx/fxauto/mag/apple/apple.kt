@@ -11,9 +11,9 @@ import matt.auto.ascript.DoShellScript
 import matt.auto.ascript.interactiveOsascript
 import matt.auto.ascript.runAppleScript
 import matt.auto.compileAndOrRunApplescript
-import matt.auto.macapp.JavaMacApp
+import matt.auto.macapp.java.JavaMacApp
 import matt.auto.macapp.MacApp.Companion.getFrontmostProcessFromKotlinNative
-import matt.auto.macapp.SystemEvents
+import matt.auto.macapp.sysevents.SystemEvents
 import matt.fx.graphics.mag.left
 import matt.fx.graphics.wrapper.stage.StageWrapper
 import matt.lang.err

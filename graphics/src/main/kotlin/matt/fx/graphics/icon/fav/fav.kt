@@ -12,6 +12,7 @@ import matt.lang.model.value.Value
 import matt.lang.url.getHostName
 import matt.log.warn.warn
 import matt.model.code.errreport.ThrowReport
+import matt.model.data.rect.DoubleRectSize
 import java.awt.image.BufferedImage
 import java.net.URI
 import java.net.URL
@@ -32,13 +33,12 @@ object FaviconLoader {
     fun loadAsynchronously(
         url: URL,
         backupImage: Image,
-        fitWidth: Double,
-        fitHeight: Double
+        fitSize: DoubleRectSize
     ): ImageViewWrapper {
         val iv = ImageViewWrapper()
         iv.isPreserveRatio = true
-        iv.fitHeight = fitHeight
-        iv.fitWidth = fitWidth
+        iv.fitHeight = fitSize.height
+        iv.fitWidth = fitSize.width
         iv.image = backupImage
         namedThread(isDaemon = true, name = "Fav Loader ${nextThreadID.getAndIncrement()}") {
             val loaded = loadSynchronously(url)

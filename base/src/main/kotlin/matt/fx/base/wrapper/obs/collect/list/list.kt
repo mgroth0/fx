@@ -6,6 +6,7 @@ import javafx.collections.ListChangeListener
 import javafx.collections.ObservableList
 import javafx.collections.transformation.FilteredList
 import javafx.collections.transformation.SortedList
+import javafx.util.Subscription
 import matt.collect.fake.FakeMutableList
 import matt.fx.base.wrapper.obs.collect.list.change.toFXChange
 import matt.lang.ILLEGAL
@@ -13,6 +14,7 @@ import matt.lang.convert.BiConverter
 import matt.lang.function.Consume
 import matt.lang.function.Op
 import matt.lang.setall.setAll
+import matt.log.warn.warn
 import matt.model.op.prints.Prints
 import matt.obs.bindhelp.BindableList
 import matt.obs.bindhelp.BindableListImpl
@@ -118,7 +120,24 @@ abstract class FXBackedObsList<E>(internal val obs: ObservableList<E>)
 
 abstract class ObservableListWrapperImpl<E>(obs: ObservableList<E>) : FXBackedObsList<E>(obs),
     MyObservableListWrapperPlusList<E>,
-    Observable by obs {
+    Observable {
+
+    init {
+        warn("You know the deal. Kotlin 2.0.0-Beta1")
+    }
+
+    override fun addListener(listener: InvalidationListener?) {
+        obs.addListener(listener)
+    }
+
+    override fun removeListener(listener: InvalidationListener?) {
+        obs.removeListener(listener)
+    }
+
+    override fun subscribe(invalidationSubscriber: Runnable?): Subscription {
+        return obs.subscribe(invalidationSubscriber)
+    }
+
     override fun addListener(listener: ListChangeListener<E>) = obs.addListener(listener)
     override fun removeListener(listener: ListChangeListener<E>) = obs.removeListener(listener)
     override fun filtered(predicate: Predicate<E>) = obs.filtered(predicate)
@@ -130,7 +149,6 @@ abstract class ObservableListWrapperImpl<E>(obs: ObservableList<E>) : FXBackedOb
 interface FXOListWrapperAndBasic<E> : MyObservableListWrapper<E>, MutableObsList<E>, BindableList<E>
 interface FXOLMutableListWrapperAndBasic<E> : FXOListWrapperAndBasic<E>, MutableList<E>
 
-@OptIn(ExperimentalStdlibApi::class)
 class FXBackedMutableObservableListBase<E>(obs: ObservableList<E>) :
     ObservableListWrapperImpl<E>(obs),
     MutableObsList<E>,
@@ -253,9 +271,111 @@ class FXBackedMutableObservableList<E>(obs: ObservableList<E>) : FXBackedObsList
 fun <E> MutableObsList<E>.createMutableFXWrapper() = MutableMBackedFXObservableList(this)
 fun <E> ImmutableObsList<E>.createFXWrapper() = MBackedFXObservableList(this)
 open class MBackedFXObservableList<E>(internal open val mList: ImmutableObsList<E>) : ObservableList<E>,
-    MutableList<E> by FakeMutableList(
-        mList
+    MutableList<E> {
+
+
+
+    init {
+        warn("kotlin 2.0.0-Beta1 >:[")
+    }
+
+
+
+    private val fakeMutableList by lazy { FakeMutableList(mList) }
+
+    override fun iterator(): MutableIterator<E> {
+        return fakeMutableList.iterator()
+    }
+    override fun isEmpty(): Boolean {
+        return fakeMutableList.isEmpty()
+    }
+
+    override fun retainAll(elements: Collection<E>): Boolean {
+        fakeMutableList.retainAll(elements)
+    }
+
+    override fun removeAll(elements: Collection<E>): Boolean {
+        fakeMutableList.removeAll(elements)
+    }
+
+    override fun clear() {
+        fakeMutableList.clear()
+    }
+
+    override fun listIterator(): MutableListIterator<E> {
+        return fakeMutableList.listIterator()
+    }
+
+    override fun listIterator(index: Int): MutableListIterator<E> {
+        return fakeMutableList.listIterator(index)
+    }
+
+    override fun contains(element: E): Boolean {
+        return fakeMutableList.contains(element)
+    }
+
+    override fun containsAll(elements: Collection<E>): Boolean {
+       return  fakeMutableList.containsAll(elements)
+    }
+    override fun set(
+        index: Int,
+        element: E
+    ): E {
+        fakeMutableList.set(index,element)
+    }
+    override fun removeAt(index: Int): E {
+        fakeMutableList.removeAt(index)
+    }
+
+    override fun get(index: Int): E {
+        return fakeMutableList.get(index)
+    }
+
+    override val size: Int
+        get() = fakeMutableList.size
+
+    override fun lastIndexOf(element: E): Int {
+        return fakeMutableList.lastIndexOf(element)
+    }
+
+    override fun indexOf(element: E): Int {
+        return fakeMutableList.indexOf(element)
+    }
+
+    override fun add(element: E): Boolean {
+        fakeMutableList.add(element)
+    }
+
+    override fun addAll(elements: Collection<E>): Boolean {
+        fakeMutableList.addAll(elements)
+    }
+
+    override fun add(
+        index: Int,
+        element: E
     ) {
+        fakeMutableList.add(index, element)
+    }
+
+    override fun addAll(
+        index: Int,
+        elements: Collection<E>
+    ): Boolean {
+        fakeMutableList.addAll(index, elements)
+    }
+
+    override fun subList(
+        fromIndex: Int,
+        toIndex: Int
+    ): MutableList<E> {
+        return fakeMutableList.subList(fromIndex, toIndex)
+    }
+
+    override fun remove(element: E): Boolean {
+        fakeMutableList.remove(element)
+    }
+
+
     override fun addAll(vararg elements: E): Boolean = ILLEGAL
     override fun remove(
         from: Int,
@@ -295,6 +415,7 @@ class MutableMBackedFXObservableList<E>(override val mList: MutableObsList<E>) :
     MBackedFXObservableList<E>(mList) {
 
     override fun add(element: E) = mList.add(element)
+
     override fun set(
         index: Int,
         element: E

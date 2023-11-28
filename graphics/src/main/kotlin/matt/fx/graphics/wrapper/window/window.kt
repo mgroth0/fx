@@ -18,7 +18,7 @@ import matt.fx.graphics.wrapper.sizeman.SizeControlled
 import matt.fx.graphics.wrapper.stage.StageWrapper
 import matt.lang.NOT_IMPLEMENTED
 import matt.lang.delegation.lazyDelegate
-import matt.lang.require.requireNotEqual
+import matt.lang.assertions.require.requireNotEqual
 
 interface HasScene {
     val scene: SceneWrapper<*>?

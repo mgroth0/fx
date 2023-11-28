@@ -8,7 +8,7 @@ import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.http.url.MURL
 import matt.fx.base.wrapper.obs.obsval.toNonNullableROProp
 import matt.lang.NOT_IMPLEMENTED
-import matt.lang.require.requireNull
+import matt.lang.assertions.require.requireNull
 import java.awt.Desktop
 import java.net.URI
 import java.net.URL

@@ -14,7 +14,7 @@ import matt.fx.graphics.wrapper.scene.SceneWrapper
 import matt.fx.graphics.wrapper.style.FXColor
 import matt.fx.graphics.wrapper.style.toFXColor
 import matt.fx.graphics.wrapper.style.toMColor
-import matt.lang.require.requireEquals
+import matt.lang.assertions.require.requireEquals
 import matt.log.warn.dumpStack
 import matt.log.warn.warn
 import matt.obs.prop.BindableProperty

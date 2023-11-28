@@ -7,8 +7,8 @@ import javafx.scene.Node
 import matt.fx.graphics.hotkey.HotKeyEventHandler
 import matt.fx.graphics.wrapper.node.NW
 import matt.fx.graphics.wrapper.node.NodeWrapper
-import matt.lang.require.requireDoesNotContain
-import matt.lang.require.requireNull
+import matt.lang.assertions.require.requireDoesNotContain
+import matt.lang.assertions.require.requireNull
 import matt.lang.toStringBasic
 
 @DslMarker

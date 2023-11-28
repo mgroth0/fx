@@ -11,7 +11,7 @@ import matt.fx.graphics.fxthread.FXAppState.STOPPED
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.lang.exec.Exec
 import matt.lang.function.Produce
-import matt.lang.require.requireEquals
+import matt.lang.assertions.require.requireEquals
 import matt.model.flowlogic.runner.Run
 import matt.model.flowlogic.runner.Runner
 import matt.obs.subscribe.LatchManager

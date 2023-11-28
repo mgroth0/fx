@@ -1,7 +1,7 @@
 package matt.fx.node.perfdiagram
 
-import matt.fig.model.sankey.SankeyConnection
-import matt.fig.model.sankey.SankeyIr
+import matt.fig.modell.sankey.SankeyConnection
+import matt.fig.modell.sankey.SankeyIr
 import matt.log.profile.stopwatch.Stopwatch
 
 fun Stopwatch.analysisNodeIr() = SankeyIr(

@@ -4,8 +4,7 @@ import javafx.scene.canvas.GraphicsContext
 import matt.fx.control.wrapper.control.tab.TabWrapper
 import matt.fx.control.wrapper.control.text.area.TextAreaWrapper
 import matt.fx.control.wrapper.tab.TabPaneWrapper
-import matt.fx.graphics.icon.ICON_HEIGHT
-import matt.fx.graphics.icon.ICON_WIDTH
+import matt.fx.graphics.icon.ICON_SIZE
 import matt.fx.graphics.icon.Icon
 import matt.fx.graphics.icon.IconImage
 import matt.fx.graphics.icon.svg.svgToFXImage
@@ -24,6 +23,8 @@ import matt.lang.l
 import matt.model.data.dir.Direction
 import matt.model.data.dir.Direction.BACKWARD
 import matt.model.data.dir.Direction.FORWARD
+import matt.model.data.rect.DoubleRectSize
+import matt.model.data.rect.IntSquareSize
 import matt.model.flowlogic.recursionblocker.RecursionBlocker
 import matt.obs.bind.binding
 import matt.obs.math.double.op.times
@@ -40,8 +41,7 @@ fun NW.svgIcon(
     return imageview(
         svgToFXImage(
             systemResourceLoader().resourceStream(fullName)!!,
-            width = size * 2,
-            height = size * 2
+            size = IntSquareSize(size * 2)
         )
     ).apply {
         isPreserveRatio = true
@@ -80,7 +80,7 @@ fun Direction.graphic(): NodeWrapperImpl<*>? {
         Icon("white/forward")
     } else if (this == BACKWARD) {
 
-        val canvas = CanvasWrapper(ICON_WIDTH, ICON_HEIGHT)
+        val canvas = CanvasWrapper(ICON_SIZE)
         val image = IconImage("white/forward")
         val xoff = 0.0 /*15.0*/
         val gc: GraphicsContext = canvas.graphicsContext

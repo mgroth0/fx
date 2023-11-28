@@ -9,10 +9,10 @@ import matt.fx.graphics.wrapper.node.attachTo
 /**
  * Create a BubbleChart with optional title, axis and add to the parent pane. The optional op will be performed on the new instance.
  */
-fun <X, Y> ET.bubblechart(title: String? = null, x: MAxis<X>, y: MAxis<Y>, op: BubbleChartWrapper<X, Y>.()->Unit = {}) =
-  BubbleChartWrapper<X, Y>(x, y).attachTo(this, op) { it.title = title }
+fun <X: Any, Y: Any> ET.bubblechart(title: String? = null, x: MAxis<X>, y: MAxis<Y>, op: BubbleChartWrapper<X, Y>.()->Unit = {}) =
+  BubbleChartWrapper(x, y).attachTo(this, op) { it.title = title }
 
-open class BubbleChartWrapper<X, Y>(
+open class BubbleChartWrapper<X: Any, Y: Any>(
   node: BubbleChartForWrapper<X, Y>,
 ): XYChartWrapper<X, Y, BubbleChartForWrapper<X, Y>>(node) {
 
