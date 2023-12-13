@@ -169,7 +169,9 @@ open class NullableFXBackedReadOnlyBindableProp<T>(private val o: ObservableValu
 
 
     init {
-        warn("used to delegate ReadableFXBackedPropBinder<T> by ReadingBinder(o) before bug in kotlin 2.0.0-Beta1")
+        if (KotlinVersion.CURRENT > KotlinVersion(2, 0, 0)) {
+            warn("used to delegate ReadableFXBackedPropBinder<T> by ReadingBinder(o) before bug in kotlin 2.0.0-Beta1")
+        }
     }
 
     override val isFXBound get() = (o as? Property<*>)?.isBound ?: false

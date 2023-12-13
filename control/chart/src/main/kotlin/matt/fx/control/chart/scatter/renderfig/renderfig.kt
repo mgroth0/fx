@@ -28,6 +28,7 @@ import matt.fx.graphics.wrapper.getterdsl.buildNode
 import matt.fx.graphics.wrapper.style.FXColor
 import matt.fx.graphics.wrapper.style.hex
 import matt.fx.graphics.wrapper.style.toFXColor
+import matt.lang.atomic.AtomicBool
 import matt.lang.file.toJFile
 import matt.lang.go
 import matt.lang.model.file.betterURLIGuess
@@ -36,7 +37,6 @@ import matt.model.data.dir.VerticalOrHorizontal.Horizontal
 import matt.model.data.dir.VerticalOrHorizontal.Vertical
 import matt.model.data.mathable.MathAndComparable
 import matt.model.flowlogic.latch.SimpleThreadLatch
-import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.random.Random
 import kotlin.reflect.full.functions
 import kotlin.reflect.full.valueParameters
@@ -44,7 +44,7 @@ import kotlin.reflect.full.valueParameters
 
 class FxPlotRendererForNonFxApp<X, Y> : GenericPlotRenderer<X, Y, ChartWrapper<*>> {
     companion object {
-        private var startedFx = AtomicBoolean(false)
+        private var startedFx = AtomicBool(false)
     }
 
     override fun render(figData: GenericPlotData<X, Y>): ChartWrapper<*> {

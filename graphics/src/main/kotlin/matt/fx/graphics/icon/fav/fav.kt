@@ -8,6 +8,7 @@ import matt.collect.map.dmap.withStoringDefault
 import matt.fx.graphics.wrapper.imageview.ImageViewWrapper
 import matt.fx.image.toFXImage
 import matt.image.fav.tryToLoadImageStreamAndTakeLargestImage
+import matt.lang.atomic.AtomicInt
 import matt.lang.model.value.Value
 import matt.lang.url.getHostName
 import matt.log.warn.warn
@@ -17,7 +18,6 @@ import java.awt.image.BufferedImage
 import java.net.URI
 import java.net.URL
 import java.util.*
-import java.util.concurrent.atomic.AtomicInteger
 
 object FaviconLoader {
 
@@ -28,7 +28,7 @@ object FaviconLoader {
     }
 
 
-    private val nextThreadID = AtomicInteger()
+    private val nextThreadID = AtomicInt()
 
     fun loadAsynchronously(
         url: URL,

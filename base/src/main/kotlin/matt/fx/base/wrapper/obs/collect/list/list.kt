@@ -123,7 +123,9 @@ abstract class ObservableListWrapperImpl<E>(obs: ObservableList<E>) : FXBackedOb
     Observable {
 
     init {
-        warn("You know the deal. Kotlin 2.0.0-Beta1")
+        if (KotlinVersion.CURRENT > KotlinVersion(2, 0, 0)) {
+            warn("You know the deal. Kotlin 2.0.0-Beta1")
+        }
     }
 
     override fun addListener(listener: InvalidationListener?) {
@@ -276,9 +278,10 @@ open class MBackedFXObservableList<E>(internal open val mList: ImmutableObsList<
 
 
     init {
-        warn("kotlin 2.0.0-Beta1 >:[")
+        if (KotlinVersion.CURRENT > KotlinVersion(2, 0, 0)) {
+            warn("kotlin 2.0.0-Beta1 >:[")
+        }
     }
-
 
 
     private val fakeMutableList by lazy { FakeMutableList(mList) }
@@ -286,6 +289,7 @@ open class MBackedFXObservableList<E>(internal open val mList: ImmutableObsList<
     override fun iterator(): MutableIterator<E> {
         return fakeMutableList.iterator()
     }
+
     override fun isEmpty(): Boolean {
         return fakeMutableList.isEmpty()
     }
@@ -315,14 +319,16 @@ open class MBackedFXObservableList<E>(internal open val mList: ImmutableObsList<
     }
 
     override fun containsAll(elements: Collection<E>): Boolean {
-       return  fakeMutableList.containsAll(elements)
+        return fakeMutableList.containsAll(elements)
     }
+
     override fun set(
         index: Int,
         element: E
     ): E {
-        fakeMutableList.set(index,element)
+        fakeMutableList.set(index, element)
     }
+
     override fun removeAt(index: Int): E {
         fakeMutableList.removeAt(index)
     }
