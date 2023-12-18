@@ -12,8 +12,9 @@ import matt.async.thread.daemon
 import matt.async.thread.queue.QueueWorker
 import matt.async.thread.schedule.every
 import matt.auto.ascript.AppleScriptString
+import matt.auto.console.mem.CONSOLE_MEM_FOLD
+import matt.auto.console.mem.ConsoleMemory
 import matt.auto.macapp.sublime.SublimeText
-import matt.file.commons.DATA_FOLDER
 import matt.file.commons.mattLogContext
 import matt.file.construct.mFile
 import matt.file.ext.backup.doubleBackupWrite
@@ -24,18 +25,16 @@ import matt.fx.control.wrapper.scroll.ScrollPaneWrapper
 import matt.fx.graphics.clip.copyToClipboard
 import matt.fx.graphics.fxthread.ensureInFXThreadInPlace
 import matt.fx.graphics.hotkey.hotkeys
-import matt.fx.graphics.hotkey.plus
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.parent.ParentWrapper
 import matt.fx.node.console.Console.RefreshRate.NORMAL
-import matt.fx.node.console.mem.ConsoleMemory
 import matt.fx.node.console.text.ConsoleTextFlow
 import matt.gui.menu.context.mcontextmenu
+import matt.lang.assertions.require.requireNot
 import matt.lang.err
 import matt.lang.go
 import matt.lang.model.file.FsFile
 import matt.lang.model.file.MacFileSystem
-import matt.lang.assertions.require.requireNot
 import matt.lang.seq.charSequence
 import matt.log.warn.warn
 import matt.obs.bindings.bool.not
@@ -95,9 +94,8 @@ fun ParentWrapper<NodeWrapper>.customConsole(
     return addr(CustomConsole(name, takesInput).apply(op))
 }
 
-val CONSOLE_MEM_FOLD = DATA_FOLDER + "ConsoleMemory"
 
-private val DEFAULT_MAX_LINES: Int = 1000
+private const val DEFAULT_MAX_LINES: Int = 1000
 
 context(ReapingShellExecutionContext)
 sealed class Console(
@@ -121,7 +119,11 @@ sealed class Console(
     private val hScrollOption = BindableProperty(true)
     private val myLogFolder = mattLogContext.logFolder + name
     protected val logfile by lazy { (myLogFolder + "$name.log").also { it.mkparents() } }
-    protected val errFile by lazy { mFile(logfile.absolutePath + ".err", MacFileSystem).also { it.toJioFile().mkparents() } }
+    protected val errFile by lazy {
+        mFile(logfile.absolutePath + ".err", MacFileSystem).also {
+            it.toJioFile().mkparents()
+        }
+    }
     protected var writer: BufferedWriter? = null
     private val mem = ConsoleMemory(CONSOLE_MEM_FOLD + "$name.txt")
     private val consoleTextFlow = ConsoleTextFlow(takesInput, maxLines = maxLines)
@@ -143,7 +145,7 @@ sealed class Console(
                 write(theInput)
                 flush()
             } catch (e: IOException) {
-                unshownOutput += "disconnecting writer due to IOException"
+                unShownOutput += "disconnecting writer due to IOException"
                 writer = null
             }
         }
@@ -153,7 +155,7 @@ sealed class Console(
 
     }
 
-    protected var unshownOutput = SemaphoreString("")
+    protected var unShownOutput = SemaphoreString("")
     private fun copy() {
         consoleTextFlow.unsentInput.copyToClipboard()
     }
@@ -178,7 +180,7 @@ sealed class Console(
     private val logWorker = QueueWorker()
     private val refresh: () -> Unit = sync {
         if (enableProp.value) {
-            var newString = unshownOutput.takeAndClear()
+            var newString = unShownOutput.takeAndClear()
             if (newString.isNotEmpty()) {
 
                 if (throttle && newString.length > THROTTLE_THRESHOLD) {
@@ -266,10 +268,13 @@ sealed class Console(
 
         hotkeys(filter = true) {
             if (takesInput) {
-                ENTER.bare op {
+                RETURN.bare op {
                     hitEnter()
                 }
-                (BACK_SPACE + DELETE) op consoleTextFlow::deleteAnInputCharIfPossible
+                println("I kinda miss: listOf(BACK_SPACE + DELETE) op consoleTextFlow::deleteAnInputCharIfPossible")
+                listOf(BACK_SPACE, DELETE).forEach {
+                    it op consoleTextFlow::deleteAnInputCharIfPossible
+                }
                 C.meta op ::copy
                 V.meta op ::paste
                 X.meta op ::cut
@@ -281,7 +286,7 @@ sealed class Console(
             RIGHT.meta { hvalue = consoleTextFlow.width }
             LEFT.meta { hvalue = 0.0 }
             K.meta op consoleTextFlow::clearOutputAndStoredInput
-            (PLUS + EQUALS).meta op consoleTextFlow::tryIncreaseFontSize
+            EQUALS.meta op consoleTextFlow::tryIncreaseFontSize
             MINUS.meta op consoleTextFlow::tryDecreaseFontSize
         }    /*}*/
         mcontextmenu {
@@ -323,11 +328,11 @@ sealed class Console(
     protected fun handleEndOfStream(endReason: ReaderEndReason) {
         when (endReason.type) {
             ReaderEndReason.TYPE.END_OF_STREAM -> {
-                unshownOutput += "stream ended"
+                unShownOutput += "stream ended"
             }
 
             ReaderEndReason.TYPE.IO_EXCEPTION  -> {
-                unshownOutput += "stream ended with IO Exception"
+                unShownOutput += "stream ended with IO Exception"
                 logfile.append(endReason.exception!!.toString())
                 errFile.toJioFile().append(endReason.exception.toString())
             }
@@ -403,7 +408,7 @@ sealed class TailCapableConsole(
                     val numChars = charBuffer.remaining()
                     charBuffer.get(charArray, 0, numChars)
                     charBuffer.clear()
-                    unshownOutput += charArray.concatToString(0, numChars)
+                    unShownOutput += charArray.concatToString(0, numChars)
                 } else {
                     sleep(interval)
                 }
@@ -428,13 +433,13 @@ class ProcessConsole(
         writer = p.outputStream.bufferedWriter()
         daemon(name = "attachProcess Thread 1") {
             val endReason = p.forEachOutChar {
-                unshownOutput += it
+                unShownOutput += it
             }
             handleEndOfStream(endReason)
         }
         daemon(name = "attachProcess Thread 2") {
             val endReason = p.forEachErrChar {
-                unshownOutput += it
+                unShownOutput += it
                 errFile.toJioFile().append(it)
             }
             handleEndOfStream(endReason)
@@ -475,9 +480,9 @@ class SystemRedirectConsole(name: String) :
         errFile.toJioFile().doubleBackupWrite("")
 
         warn("must be called at the VERY beginning. FAIL!")
-        redirectOut { unshownOutput += it }
+        redirectOut { unShownOutput += it }
         redirectErr {
-            unshownOutput += it
+            unShownOutput += it
             errFile.toJioFile().append(it)
         }
         warn("must be called at the VERY beginning. FAIL!")
@@ -503,7 +508,7 @@ class CustomConsole(
         val outConsole = PipedOutputStream(inpConsole)
         daemon(name = "CustomConsole.custom Thread") {
             inpConsole.bufferedReader().charSequence().forEach {
-                unshownOutput += it.toString()
+                unShownOutput += it.toString()
             }
         }
         val pw = PrintWriter(outConsole, true)

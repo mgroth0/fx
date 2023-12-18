@@ -24,7 +24,6 @@ import matt.fx.graphics.wrapper.text.text
 import matt.fx.node.console.Console
 import matt.fx.node.console.ProcessConsole
 import matt.fx.node.procpane.inspect.ProcessInspectPane
-import matt.fx.node.procpane.status.StatusFolderWatchPane
 import matt.gui.menu.context.mcontextmenu
 import matt.lang.file.toJFile
 import matt.lang.model.file.FsFile
@@ -61,13 +60,11 @@ context(matt.shell.context.ReapingShellExecutionContext)
 class ProcessConsolePane(
     override val name: String,
     val processBuilder: ProcessBuilder,
-    val statusFolder: FsFile? = null,
 ) : VBoxWrapperImpl<NodeWrapper>(), ProcessNode {
 
     fun clone() = ProcessConsolePane(
         name = name,
         processBuilder = processBuilder,
-        statusFolder = statusFolder
     )
 
     constructor(
@@ -82,12 +79,11 @@ class ProcessConsolePane(
         ).apply {
             environment() += environmentalVars
             directory(workingDir?.toJFile())
-        }, statusFolder
+        }
     )
 
     @Suppress("MemberVisibilityCanBePrivate")
     override val console = ProcessConsole(name)
-    private var statusFolderWatchPane: StatusFolderWatchPane? = null
 
 
     private val processProp: VarProp<Process?> = VarProp(null)
@@ -190,7 +186,6 @@ class ProcessConsolePane(
             if (running) {
                 stop()
             }
-            statusFolderWatchPane?.start()
             val p = processBuilder.start()
             startTime = System.currentTimeMillis()
             ensureProcessEndsAtShutdown(p)
@@ -203,7 +198,6 @@ class ProcessConsolePane(
 
     @Suppress("MemberVisibilityCanBePrivate")
     fun stop() = logInvocation {
-        statusFolderWatchPane?.stop()
         val p = process
         p?.destroyNiceThenForceThenWait()
     }
@@ -215,9 +209,9 @@ class ProcessConsolePane(
     private var minTimerTimeline: Timeline? = null
     private fun formatMillis(ms: Long): String {
         return when {
-            ms == 0L   -> ""
+            ms == 0L -> ""
             ms < 1000L -> "$ms ms"
-            else       -> {
+            else -> {
                 val d = ms.milliseconds
                 when {
                     d < ONE_MINUTE -> d.toString(DurationUnit.SECONDS, decimals = 2)
@@ -288,13 +282,6 @@ class ProcessConsolePane(
             vgrow = ALWAYS
         })
         val fracOfHeight = vbox.heightProperty * 0.2
-        statusFolder?.let {
-            statusFolderWatchPane = StatusFolderWatchPane(it).apply {
-                minHeightProperty.bind(fracOfHeight)
-                maxHeightProperty.bind(fracOfHeight)
-            }
-            add(statusFolderWatchPane!!)
-        }
         add(inspectBox.apply {
             minHeightProperty.bind(fracOfHeight)
             maxHeightProperty.bind(fracOfHeight)

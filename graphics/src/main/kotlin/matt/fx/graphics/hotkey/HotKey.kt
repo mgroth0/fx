@@ -5,156 +5,56 @@ import javafx.event.EventHandler
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
 import matt.collect.itr.areAllUnique
-import matt.collect.itr.applyEach
 import matt.collect.itr.duplicates
+import matt.collect.mapToSet
 import matt.file.thismachine.thisMachine
+import matt.fx.graphics.hotkey.fxkeymap.fxKeyCode
+import matt.fx.graphics.hotkey.model.FxHotKey
+import matt.fx.graphics.hotkey.model.FxHotKeyLike
+import matt.fx.graphics.hotkey.model.FxPrevHotKey
 import matt.fx.graphics.wrapper.EventTargetWrapper
 import matt.fx.graphics.wrapper.node.impl.NodeWrapperImpl
 import matt.fx.graphics.wrapper.scene.SceneWrapper
 import matt.fx.graphics.wrapper.stage.StageWrapper
+import matt.hotkey.ConsumeInstruction
+import matt.hotkey.ConsumeInstruction.Consume
+import matt.hotkey.ConsumeInstruction.DoNotConsume
 import matt.hotkey.Hotkey
-import matt.hotkey.HotkeyDSL
+import matt.hotkey.HotkeyDsl
+import matt.hotkey.KeyStroke
+import matt.hotkey.KeyStrokeProps
 import matt.lang.NEVER
 import matt.lang.anno.SeeURL
 import matt.lang.err
 import matt.lang.go
-import matt.lang.assertions.require.requireNull
 import matt.log.NOPLogger
 import matt.log.SystemOutLogger
 import matt.log.logger.Logger
+import matt.log.warn.warn
 import matt.model.code.sys.Mac
 import matt.obs.prop.BindableProperty
-import matt.obs.prop.VarProp
 import matt.obs.prop.toggle
 import matt.prim.str.joinWithNewLinesAndTabs
 import java.lang.System.currentTimeMillis
 import kotlin.contracts.InvocationKind.EXACTLY_ONCE
 import kotlin.contracts.contract
 
-sealed class HotKeyContainer : Hotkey {
-    abstract fun getHotkeys(): List<HotKey>
 
-}
+infix fun FxHotKeyLike.matches(h: FxHotKeyLike) = this.keyStroke == h.keyStroke
 
-data class HotKey(
-    val code: KeyCode,
-    var isMeta: Boolean = false,
-    var isOpt: Boolean = false,
-    var isCtrl: Boolean = false,
-    var isShift: Boolean = false,
-
-    var previous: HotKey? = null
-
-) : HotKeyContainer() {
-
-    override fun getHotkeys() = listOf(this)
-
-
-    var theOp: (() -> Unit)? = null
-    var theHandler: ((KeyEvent) -> Unit)? = null
-    var blocksFXorOSdefault = false
-
-    val meta
-        get() = apply { isMeta = true }
-    val opt
-        get() = apply { isOpt = true }
-    val ctrl
-        get() = apply { isCtrl = true }
-    val shift
-        get() = apply { isShift = true }
-    val bare get() = this
-    infix fun then(h: HotKey) = h.also { it.previous = this }
-
-    var isIgnoreFix = false
-
-    val ignoreFix
-        get() = apply { isIgnoreFix = true }
-
-    fun wrapOp(wrapper: (() -> Unit) -> Unit) {
-        requireNotNull(theOp)
-        val oldOp = theOp
-        theOp = {
-            wrapper(oldOp!!)
-        }
-    }
-
-    fun wraphandler(wrapper: ((KeyEvent) -> Unit) -> Unit) {
-        requireNotNull(theHandler)
-        val oldHandle = theHandler
-        theHandler = {
-            wrapper(oldHandle!!)
-        }
-    }
-
-
-    fun blockFXorOSdefault() = apply {
-        blocksFXorOSdefault = true
-    }
-
-}
-
-
-operator fun KeyCode.plus(other: KeyCode) = HotKeySet(HotKey(this), HotKey(other))
-operator fun HotKey.plus(other: HotKey) = HotKeySet(this, other)
-operator fun HotKey.plus(other: KeyCode) = HotKeySet(this, HotKey(other))
-operator fun KeyCode.plus(other: HotKey) = HotKeySet(HotKey(this), other)
-
-
-private val KeyCode.meta
-    get() = HotKey(this, isMeta = true)
-private val KeyCode.opt
-    get() = HotKey(this, isOpt = true)
-private val KeyCode.ctrl
-    get() = HotKey(this, isCtrl = true)
-private val KeyCode.shift
-    get() = HotKey(this, isShift = true)
-private val KeyCode.bare
-    get() = HotKey(this)
-
-
-class HotKeySet(vararg keys: HotKey) : HotKeyContainer() {
-    val keys = keys.toList()
-    override fun getHotkeys() = keys
-    val meta
-        get() = apply {
-            keys.applyEach { isMeta = true }
-        }
-    val opt
-        get() = apply { keys.applyEach { isOpt = true } }
-    val ctrl
-        get() = apply { keys.applyEach { isCtrl = true } }
-    val shift
-        get() = apply { keys.applyEach { isShift = true } }
-
-    val ignoreFix
-        get() = apply { keys.applyEach { isIgnoreFix = true } }
-
-
-    fun blockFXorOSdefault() = apply {
-        keys.applyEach {
-            blocksFXorOSdefault = true
-        }
-    }
-
-}
-
-
-infix fun KeyEvent.matches(h: HotKey) =
-    code == h.code && isMetaDown == h.isMeta && isAltDown == h.isOpt && isControlDown == h.isCtrl && isShiftDown == h.isShift
-
-infix fun HotKey.matches(h: HotKey) =
-    code == h.code && isMeta == h.isMeta && isOpt == h.isOpt && isCtrl == h.isCtrl && isShift == h.isShift
+infix fun KeyEvent.matches(h: KeyStrokeProps) =
+    code == h.fxKeyCode && isMetaDown == h.isMeta && isAltDown == h.isOpt && isControlDown == h.isCtrl && isShiftDown == h.isShift
 
 infix fun KeyEvent.matches(h: KeyEvent) =
     code == h.code && isMetaDown == h.isMetaDown && isAltDown == h.isAltDown && isControlDown == h.isControlDown && isShiftDown == h.isShiftDown
 
 
 const val DOUBLE_HOTKEY_WINDOW_MS = 500L
-var lastHotKey: Pair<HotKey, Long>? = null
+var lastHotKey: Pair<FxHotKeyLike, Long>? = null
 
 
 fun KeyEvent.runAgainst(
-    hotkeys: Iterable<HotKeyContainer>,
+    hotkeys: Iterable<FxHotKeyLike>,
     last: KeyEvent? = null,
     fixer: HotKeyEventHandler,
     log: Logger
@@ -215,36 +115,44 @@ fun KeyEvent.runAgainst(
     * */
 
 
-    var ensureConsume = false
-    hotkeys.asSequence().flatMap { it.getHotkeys() }.flatMap {
+    hotkeys.asSequence().flatMap {
         sequence {
             yield(it)
             it.previous?.go { yield(it) }
         }
     }.filter { h ->
+
+
         log += "h(${this matches h}): $h"
+
+
         this matches h && (h.previous == null || (lastHotKey?.let {
             h.previous!!.matches(it.first) && (pressTime - it.second) <= DOUBLE_HOTKEY_WINDOW_MS
         } ?: false))
-    }.onEach {
-        ensureConsume = ensureConsume || it.blocksFXorOSdefault
+
+
     }.forEach { h ->
         lastHotKey = h to currentTimeMillis()
         if (!h.isIgnoreFix) {
+            warn("And yet I still set fixer.last = null below? confused.")
             fixer.last = this
         }
         if (isConsumed) return
-        h.theOp?.go {
-            it()
-            runLater {
-                fixer.last = null
-            } /*... finally got it. not to early not too late. wow.*/        //                println("consume 3")
-            return consume()
+        when (h) {
+            is FxHotKey     -> {
+                val consumeInstruction = h.theOp()
+                runLater {
+                    fixer.last = null
+                } /*... finally got it. not to early not too late. wow.*/
+
+                when (consumeInstruction) {
+                    Consume      -> return consume()
+                    DoNotConsume -> Unit
+                }
+            }
+
+            is FxPrevHotKey -> Unit
         }
-        h.theHandler?.invoke(this)
-    }
-    if (ensureConsume && !isConsumed) {    //        println("consume 4")
-        consume()
     }
 }
 
@@ -254,17 +162,17 @@ class HotKeyEventHandler(
 
     var debug: Boolean = false
 
-    val hotkeys = mutableListOf<HotKeyContainer>()
+    val hotkeys = mutableListOf<FxHotKeyLike>()
 
     init {    //        println("making handler ${this.hashCode()} with")
         //        hotkeys.forEach {
         //            matt.prim.str.build.tab(it)
         //        }
-        hotkeys.flatMap { it.getHotkeys() }.forEach {
-            if (it.code == KeyCode.H && it.isMeta && !it.isCtrl && !it.isOpt && !it.isShift) {
+        hotkeys.forEach {
+            if (it.fxKeyCode == KeyCode.H && it.isMeta && !it.isCtrl && !it.isOpt && !it.isShift) {
                 err("meta H is blocked by KM to prevent OS window hiding")
             }
-            if (it.isOpt && !it.code.isArrowKey && !it.isMeta && !it.isCtrl && !it.isShift && (thisMachine is Mac)
+            if (it.isOpt && !it.fxKeyCode.isArrowKey && !it.isMeta && !it.isCtrl && !it.isShift && (thisMachine is Mac)
             ) {
                 err(
                     "I think MacOS has problems with opt where it sends an extra key typed event. stupid. also seen in intellij"
@@ -292,7 +200,7 @@ fun <K, V> Map<K, V>.invert(): Map<V, K> {
 @Synchronized
 fun EventTargetWrapper.register(
     inFilter: Boolean,
-    hotkeys: Iterable<HotKeyContainer>,
+    hotkeys: Iterable<FxHotKeyLike>,
     quickPassForNormalTyping: Boolean = false,
     debug: Boolean = false,
 ) {
@@ -332,121 +240,47 @@ fun EventTargetWrapper.register(
     }
 }
 
+
+context(HotkeyDsl)
+infix fun KeyStroke.toggles(b: BindableProperty<Boolean>) = op { b.toggle() }
+
 @Suppress("PropertyName")
-class FXHotkeyDSL : HotkeyDSL<HotKeyContainer>() {
-
-    /*fun keyCode(name: String) = KeyCode.getKeyCode(name).bare*/
-    fun keyCode(name: String) = KeyCode.valueOf(name).bare
-
-    val hotkeys = mutableSetOf<HotKeyContainer>()
+class FXHotkeyDSL : HotkeyDsl() {
 
 
-    override val A get() = KeyCode.A.bare
-    override val B get() = KeyCode.B.bare
-    override val C get() = KeyCode.C.bare
-    override val D get() = KeyCode.D.bare
-    override val E get() = KeyCode.E.bare
-    override val F get() = KeyCode.F.bare
-    override val G get() = KeyCode.G.bare
-    override val H get() = KeyCode.H.bare
-    override val I get() = KeyCode.I.bare
-    override val J get() = KeyCode.J.bare
-    override val K get() = KeyCode.K.bare
-    override val L get() = KeyCode.L.bare
-    override val M get() = KeyCode.M.bare
-    override val N get() = KeyCode.N.bare
-    override val O get() = KeyCode.O.bare
-    override val P get() = KeyCode.P.bare
-    override val Q get() = KeyCode.Q.bare
-    override val R get() = KeyCode.R.bare
-    override val S get() = KeyCode.S.bare
-    override val T get() = KeyCode.T.bare
-    override val U get() = KeyCode.U.bare
-    override val V get() = KeyCode.V.bare
-    override val W get() = KeyCode.W.bare
-    override val X get() = KeyCode.X.bare
-    override val Y get() = KeyCode.Y.bare
-    override val Z get() = KeyCode.Z.bare
-    override val SPACE get() = KeyCode.SPACE.bare
-    val ENTER get() = KeyCode.ENTER.bare
-    val DELETE get() = KeyCode.DELETE.bare
-    val BACK_SPACE get() = KeyCode.BACK_SPACE.bare
-    val CLOSE_BRACKET get() = KeyCode.CLOSE_BRACKET.bare
-    val RIGHT_BRACKET get() = CLOSE_BRACKET
-    val OPEN_BRACKET get() = KeyCode.OPEN_BRACKET.bare
-    val LEFT_BRACKET get() = OPEN_BRACKET
-    val ESCAPE get() = KeyCode.ESCAPE.bare
-    val TAB get() = KeyCode.TAB.bare
-    val COMMA get() = KeyCode.COMMA.bare
+    private val fxSpecialHotKeys = mutableSetOf<FxHotKeyLike>()
 
-    override val LEFT get() = KeyCode.LEFT.bare
-    override val RIGHT get() = KeyCode.RIGHT.bare
-    override val UP get() = KeyCode.UP.bare
-    override val DOWN get() = KeyCode.DOWN.bare
+    fun buildFxHotkeys() = setOf(
+        *fxSpecialHotKeys.toTypedArray(),
+        *buildHotkeys().mapToSet { FxHotKey(it) }.toTypedArray()
+    )
 
-    val DIGIT1 get() = KeyCode.DIGIT1.bare
-    val DIGIT2 get() = KeyCode.DIGIT2.bare
-    val DIGIT3 get() = KeyCode.DIGIT3.bare
-    val DIGIT4 get() = KeyCode.DIGIT4.bare
-    val DIGIT5 get() = KeyCode.DIGIT5.bare
-    val DIGIT6 get() = KeyCode.DIGIT6.bare
-    val DIGIT7 get() = KeyCode.DIGIT7.bare
-    val DIGIT8 get() = KeyCode.DIGIT8.bare
-    val DIGIT9 get() = KeyCode.DIGIT9.bare
-    val DIGIT0 get() = KeyCode.DIGIT0.bare
+    fun KeyStroke.op(
+        ignoreFix: Boolean,
+        setOp: () -> Unit
+    ) = apply {
+        fxSpecialHotKeys.add(FxHotKey(Hotkey(this) {
+            setOp()
+            ConsumeInstruction.Consume
+        }, isIgnoreFix = ignoreFix))
+    }
 
-    val BRACELEFT get() = KeyCode.BRACELEFT.bare
-    val BRACERIGHT get() = KeyCode.BRACERIGHT.bare
+    fun KeyStroke.conditionalOp(
+        ignoreFix: Boolean,
+        setOp: () -> ConsumeInstruction
+    ) = apply {
+        fxSpecialHotKeys.add(FxHotKey(Hotkey(this) {
+            setOp()
+        }, isIgnoreFix = ignoreFix))
+    }
 
-    val PLUS get() = KeyCode.PLUS.bare
-    val EQUALS get() = KeyCode.EQUALS.bare
-    val MINUS get() = KeyCode.MINUS.bare
-
-    fun HotKey.meta(h: () -> Unit) = apply { hotkeys.add(this.meta op { h() }) }
-    fun HotKey.opt(h: () -> Unit) = apply { hotkeys.add(this.opt op { h() }) }
-    fun HotKey.ctrl(h: () -> Unit) = apply { hotkeys.add(this.ctrl op { h() }) }
-    fun HotKey.shift(h: () -> Unit) = apply { hotkeys.add(this.shift op { h() }) }
-    fun HotKey.bare(h: () -> Unit) = apply { hotkeys.add(this op { h() }) }
-
-    fun HotKeySet.meta(h: () -> Unit) = hotkeys.add(this.meta op { h() })
-    fun HotKeySet.opt(h: () -> Unit) = hotkeys.add(this.opt op { h() })
-    fun HotKeySet.ctrl(h: () -> Unit) = hotkeys.add(this.ctrl op { h() })
-    fun HotKeySet.shift(h: () -> Unit) = hotkeys.add(this.shift op { h() })
-    fun HotKeySet.bare(h: () -> Unit) = hotkeys.add(this op { h() })
-
-
-    infix fun HotKey.op(setOp: () -> Unit) = apply {
-        requireNull(theHandler)
-        theOp = setOp
-        hotkeys.add(this)
+    infix fun KeyStroke.then(
+        other: Hotkey
+    ) = apply {
+        fxSpecialHotKeys.add(FxHotKey(other, previous = FxPrevHotKey(keyStroke = this)))
     }
 
 
-    infix fun HotKey.toggles(b: BindableProperty<Boolean>) = op { b.toggle() }
-
-    infix fun HotKey.handle(setHandler: (KeyEvent) -> Unit) = apply {
-        requireNull(theOp)
-        theHandler = setHandler
-        hotkeys.add(this)
-    }
-
-    infix fun HotKeySet.op(setOp: () -> Unit) = apply {
-        keys.applyEach {
-            requireNull(theHandler)
-            theOp = setOp
-        }
-        hotkeys.add(this)
-    }
-
-    infix fun HotKeySet.toggles(b: VarProp<Boolean>) = op { b.toggle() }
-
-    infix fun HotKeySet.handle(setHandler: (KeyEvent) -> Unit) = apply {
-        keys.applyEach {
-            requireNull(theOp)
-            theHandler = setHandler
-        }
-        hotkeys.add(this)
-    }
 }
 
 @SeeURL("https://youtrack.jetbrains.com/issue/KT-63414/K2-Contracts-false-positive-Result-has-wrong-invocation-kind-when-invoking-a-function-returning-a-value-with-contract")
@@ -460,7 +294,7 @@ inline fun EventTargetWrapper.hotkeys(
     contract {
         callsInPlace(op, EXACTLY_ONCE)
     }
-    FXHotkeyDSL().apply(op).hotkeys.go {
+    FXHotkeyDSL().apply(op).buildFxHotkeys().go {
         if (filter) this.register(inFilter = true, it, quickPassForNormalTyping, debug)
         else this.register(inFilter = false, it, quickPassForNormalTyping, debug)
     }

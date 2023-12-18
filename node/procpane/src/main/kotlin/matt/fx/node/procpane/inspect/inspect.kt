@@ -28,7 +28,7 @@ import kotlin.reflect.KProperty
 
 @ExperimentalContracts
 class ProcessInspectPane(initialValue: Process?) : HBoxWrapperImpl<NodeWrapper>() {
-    val procProp = VarProp<Process?>(initialValue).apply {
+    val procProp = VarProp(initialValue).apply {
         addListener(OldAndNewListenerImpl { oldValue, newValue ->
             if (newValue != oldValue) {
                 update(newValue)
@@ -39,15 +39,14 @@ class ProcessInspectPane(initialValue: Process?) : HBoxWrapperImpl<NodeWrapper>(
     private val propLabel: PropListLabel<ProcessOrHandleWrapper> by lazy {
 
 
-
         PropListLabel(
             if (initialValue != null) ProcessOrHandleWrapper(p = initialValue) else null,
             "pid" to ProcessOrHandleWrapper::pid,
             "isAlive" to ProcessOrHandleWrapper::aliveProp,
             "start time" to ProcessOrHandleWrapper::startInstant,
             "command" to ProcessOrHandleWrapper::command,
-            "matt.kjlib.shell.top.arguments" to ProcessOrHandleWrapper::arguments,
-            "matt.kjlib.shell.top.commandLine" to ProcessOrHandleWrapper::commandLine
+            "arguments" to ProcessOrHandleWrapper::arguments,
+            "commandLine" to ProcessOrHandleWrapper::commandLine
         )
     }
 
@@ -77,7 +76,7 @@ class ProcessInspectPane(initialValue: Process?) : HBoxWrapperImpl<NodeWrapper>(
                 sortOrder.setAll(col.node) // not working for matt.fx.control.layout.children?
                 (column("main program") { cdf: TreeTableColumn.CellDataFeatures<ProcessOrHandleWrapper, String> ->
                     cdf.value?.value?.command()?.let { com ->
-                        BindableProperty(mFile(com,MacFileSystem).name)
+                        BindableProperty(mFile(com, MacFileSystem).name)
                     } ?: BindableProperty("null")
                 }).apply {
                     prefWidth = 100.0
