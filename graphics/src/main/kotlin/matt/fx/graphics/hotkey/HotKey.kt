@@ -30,7 +30,6 @@ import matt.lang.go
 import matt.log.NOPLogger
 import matt.log.SystemOutLogger
 import matt.log.logger.Logger
-import matt.log.warn.warn
 import matt.model.code.sys.Mac
 import matt.obs.prop.BindableProperty
 import matt.obs.prop.toggle
@@ -94,11 +93,9 @@ fun KeyEvent.runAgainst(
                 */
                 fixer.last = null
 
-                //                println("consuming2 ${this}")
                 return consume()
 
             }
-        } else {
         }
     } //  runLater { fixer.last = null }
     /*only possible race condition now is with:
@@ -134,7 +131,7 @@ fun KeyEvent.runAgainst(
     }.forEach { h ->
         lastHotKey = h to currentTimeMillis()
         if (!h.isIgnoreFix) {
-            warn("And yet I still set fixer.last = null below? confused.")
+            /*And yet I still set fixer.last = null below? confused.*/
             fixer.last = this
         }
         if (isConsumed) return
@@ -164,17 +161,14 @@ class HotKeyEventHandler(
 
     val hotkeys = mutableListOf<FxHotKeyLike>()
 
-    init {    //        println("making handler ${this.hashCode()} with")
-        //        hotkeys.forEach {
-        //            matt.prim.str.build.tab(it)
-        //        }
+    init {
         hotkeys.forEach {
             if (it.fxKeyCode == KeyCode.H && it.isMeta && !it.isCtrl && !it.isOpt && !it.isShift) {
-                err("meta H is blocked by KM to prevent OS window hiding")
+                error("meta H is blocked by KM to prevent OS window hiding")
             }
             if (it.isOpt && !it.fxKeyCode.isArrowKey && !it.isMeta && !it.isCtrl && !it.isShift && (thisMachine is Mac)
             ) {
-                err(
+                error(
                     "I think MacOS has problems with opt where it sends an extra key typed event. stupid. also seen in intellij"
                 )
             }
@@ -182,11 +176,10 @@ class HotKeyEventHandler(
     }
 
     var last: KeyEvent? = null
-    override fun handle(event: KeyEvent) {    //        println("handling with ${this.hashCode()}")
+    override fun handle(event: KeyEvent) {
         if (quickPassForNormalTyping && (event.code.isDigitKey || event.code.isLetterKey) && !event.isMetaDown && !event.isControlDown && !event.isAltDown) {
             return
-        }    //    println("event.code: ${event.code}")
-        //    println("hotkeys length: ${hotkeys.size}")
+        }
         event.runAgainst(hotkeys, last = last, fixer = this, log = if (debug) SystemOutLogger else NOPLogger)
     }
 }

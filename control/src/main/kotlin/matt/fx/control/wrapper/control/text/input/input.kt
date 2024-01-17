@@ -23,7 +23,7 @@ import matt.obs.prop.mutateOnChange
 open class TextInputControlWrapper<N: TextInputControl>(node: N): ControlWrapperImpl<N>(node), ColoredText {
 
   override fun addChild(child: NodeWrapper, index: Int?) {
-	TODO("Not yet implemented")
+	TODO()
   }
 
 

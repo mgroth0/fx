@@ -22,10 +22,12 @@ import javafx.css.StyleableStringProperty
 import javafx.css.converter.StringConverter
 import javafx.scene.Node
 import javafx.scene.control.Control
+import javafx.scene.control.PopupControl
 import javafx.scene.control.Skin
 import javafx.scene.control.Skinnable
 import javafx.stage.PopupWindow
 import javafx.stage.PopupWindow.AnchorLocation.CONTENT_TOP_LEFT
+import matt.fx.base.rewrite.ReWrittenFxClass
 import matt.fx.control.popup.popupcontrol.node.bridge.MyPopUpCSSBridge
 import matt.lang.go
 import java.util.Collections
@@ -45,6 +47,7 @@ this is the original reason, but not the only
 
 * */
 
+@ReWrittenFxClass(PopupControl::class)
 open class MyPopupControl: PopupWindow(), Skinnable, Styleable {
 
   /**

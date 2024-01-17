@@ -1,6 +1,8 @@
 package matt.fx.graphics.wrapper.node.parent
 
 import javafx.scene.Parent
+import matt.fx.base.wrapper.obs.collect.list.createImmutableWrapper
+import matt.fx.base.wrapper.obs.obsval.toNullableROProp
 import matt.fx.graphics.service.wrapped
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
@@ -8,8 +10,6 @@ import matt.fx.graphics.wrapper.node.impl.NodeWrapperImpl
 import matt.fx.graphics.wrapper.node.line.poly.PolylineWrapper
 import matt.fx.graphics.wrapper.node.line.quad.QuadCurveWrapper
 import matt.fx.graphics.wrapper.node.shape.poly.PolygonWrapper
-import matt.fx.base.wrapper.obs.collect.list.createImmutableWrapper
-import matt.fx.base.wrapper.obs.obsval.toNullableROProp
 import matt.fx.graphics.wrapper.node.tri.Triangle
 import matt.obs.bind.binding
 import matt.obs.col.olist.mappedlist.toMappedList
@@ -55,6 +55,9 @@ interface ParentWrapper<C : NodeWrapper> : NodeWrapper {
 
 abstract class ParentWrapperImpl<out N : Parent, C : NodeWrapper>(node: N) : NodeWrapperImpl<N>(node),
     ParentWrapper<C> {
+
+
+
 
 
     val childrenUnmodifiable by lazy {

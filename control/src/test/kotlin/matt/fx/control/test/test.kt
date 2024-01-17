@@ -2,7 +2,7 @@ package matt.fx.control.test
 /*TEST FILE PATHS MUST BE DISTINGUISHABLE FROM MAIN FILE PATHS OR INTELLIJ WONT NAV TO THEM*/
 import javafx.application.Platform
 import javafx.event.EventTarget
-import matt.fx.control.wrapper.wrapped.CannotFindWrapperException
+import matt.fx.control.wrapper.wrapped.util.CannotFindWrapperException
 import matt.fx.control.wrapper.wrapped.wrapped
 import matt.mbuild.mtest.fx.FXTester
 import matt.mbuild.mtest.fx.FxTests
@@ -20,6 +20,8 @@ class FXControlTests : FxTests() {
     @Test
     @ExperimentalContracts
     fun testWrappers() {
+
+
 
         FXTester.runFXHeadlessApp {
             //	  @Suppress("UNUSED_VARIABLE")

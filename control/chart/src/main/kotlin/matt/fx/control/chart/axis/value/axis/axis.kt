@@ -64,6 +64,8 @@ import javafx.geometry.Side.BOTTOM
 import javafx.geometry.Side.LEFT
 import javafx.geometry.Side.RIGHT
 import javafx.geometry.Side.TOP
+import javafx.scene.chart.Axis
+import javafx.scene.chart.CategoryAxis
 import javafx.scene.control.Label
 import javafx.scene.layout.Region
 import javafx.scene.paint.Color
@@ -76,6 +78,7 @@ import javafx.scene.text.Text
 import javafx.scene.transform.Rotate
 import javafx.scene.transform.Translate
 import javafx.util.Duration
+import matt.fx.base.rewrite.ReWrittenFxClass
 import matt.fx.control.chart.axis.value.axis.AxisForPackagePrivateProps.StyleableProperties.classCssMetaData
 import matt.fx.control.css.BooleanCssMetaData
 import java.util.*
@@ -90,6 +93,7 @@ import java.util.*
  * categories along its axis.
  * @since JavaFX 2.0
  */
+@ReWrittenFxClass(Axis::class)
 abstract class AxisForPackagePrivateProps<T> : Region() {
     // -------------- PRIVATE FIELDS -----------------------------------------------------------------------------------
     var measure = Text()

@@ -5,6 +5,4 @@ import matt.fx.control.wrapper.menu.item.custom.CustomMenuItemWrapper
 
 class SeparatorMenuItemWrapper(
   node: SeparatorMenuItem = SeparatorMenuItem(),
-): CustomMenuItemWrapper(node) {
-
-}
+): CustomMenuItemWrapper(node)

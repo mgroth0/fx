@@ -39,6 +39,7 @@ import javafx.geometry.Side.LEFT
 import javafx.geometry.Side.RIGHT
 import javafx.scene.AccessibleRole.TEXT
 import javafx.scene.Node
+import javafx.scene.chart.PieChart
 import javafx.scene.layout.Region
 import javafx.scene.shape.Arc
 import javafx.scene.shape.ArcTo
@@ -50,6 +51,7 @@ import javafx.scene.shape.Path
 import javafx.scene.text.Text
 import javafx.scene.transform.Scale
 import javafx.util.Duration
+import matt.fx.base.rewrite.ReWrittenFxClass
 import matt.fx.control.chart.line.highperf.relinechart.xy.chart.ChartForPrivateProps
 import matt.fx.control.chart.pie.pie.PieChartForWrapper.StyleableProperties.classCssMetaData
 import matt.fx.control.css.BooleanCssMetaData
@@ -68,6 +70,7 @@ import java.util.*
  *
  * @since JavaFX 2.0
  */
+@ReWrittenFxClass(PieChart::class)
 class PieChartForWrapper @JvmOverloads constructor(data: ObservableList<Data> = FXCollections.observableArrayList()) :
     ChartForPrivateProps() {
     private val colorBits = BitSet(8)
@@ -132,7 +135,8 @@ class PieChartForWrapper @JvmOverloads constructor(data: ObservableList<Data> = 
             for (i in c.getFrom() until c.getTo()) {
                 val item: Data = getData()!!.get(i)
                 // assign default color to the added slice
-                // TODO: check nearby colors
+
+                // TO DO (this TODO was from JavaFx, not from Matt): check nearby colors
                 item.defaultColorIndex = colorBits.nextClearBit(0)
                 colorBits.set(item.defaultColorIndex)
                 dataItemAdded(item, i)

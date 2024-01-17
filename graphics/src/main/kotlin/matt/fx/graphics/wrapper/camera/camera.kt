@@ -8,7 +8,7 @@ import matt.fx.graphics.wrapper.node.impl.NodeWrapperImpl
 
 abstract class CameraWrapper(node: Camera): NodeWrapperImpl<Camera>(node) {
   override fun addChild(child: NodeWrapper, index: Int?) {
-	TODO("Not yet implemented")
+	TODO()
   }
 }
 

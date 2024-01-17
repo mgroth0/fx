@@ -7,6 +7,11 @@
       "path": ":k:fx:node:proto"
     },
     {
+      "type": "Project",
+      "cfg": "api",
+      "path": ":k:caching"
+    },
+    {
       "type": "Lib",
       "cfg": "implementation",
       "key": "jLatexMath"

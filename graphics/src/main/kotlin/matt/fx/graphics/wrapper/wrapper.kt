@@ -10,6 +10,7 @@ import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.lang.assertions.require.requireDoesNotContain
 import matt.lang.assertions.require.requireNull
 import matt.lang.toStringBasic
+import java.util.concurrent.ConcurrentMap
 
 @DslMarker
 annotation class FXNodeWrapperDSL
@@ -66,9 +67,6 @@ interface EventTargetWrapper {
 }
 
 
-
-
-
 sealed class EventTargetWrapperImpl<out N : EventTarget> : EventTargetWrapper {
     abstract override val node: N
 
@@ -80,14 +78,14 @@ sealed class EventTargetWrapperImpl<out N : EventTarget> : EventTargetWrapper {
 
 }
 
-abstract class SingularEventTargetWrapper<out N : EventTarget>(/*TODO: node must be made internal...? then protected...*/
-                                                               node: N
+abstract class SingularEventTargetWrapper<out N : EventTarget>(
+    node: N
 ) : EventTargetWrapperImpl<N>() {
 
     override val node = node
 
     companion object {
-        private val wrappers = MapMaker()
+        private val wrappers: ConcurrentMap<EventTarget, EventTargetWrapper> = MapMaker()
             .weakKeys()
             .weakValues()
             .makeMap<EventTarget, EventTargetWrapper>()
@@ -97,6 +95,8 @@ abstract class SingularEventTargetWrapper<out N : EventTarget>(/*TODO: node must
     }
 
     init {
+
+//        sun.security.util.MemoryCache(true,1)
 
         /*println("checking for ${this.toStringBasic()} with ${superNode.toStringBasic()}")*/
         /*if ("Scene@" in superNode.toStringBasic()) {
@@ -125,15 +125,15 @@ abstract class SingularEventTargetWrapper<out N : EventTarget>(/*TODO: node must
 @Suppress("UNUSED_PARAMETER")
 class ProxyEventTargetWrapper(private val addOp: (NW) -> Unit) : EventTargetWrapper {
     override var hotKeyHandler: HotKeyEventHandler?
-        get() = TODO("Not yet implemented")
+        get() = TODO()
         set(value) {}
     override var hotKeyFilter: HotKeyEventHandler?
-        get() = TODO("Not yet implemented")
+        get() = TODO()
         set(value) {}
     override val node: EventTarget
-        get() = TODO("Not yet implemented")
+        get() = TODO()
     override val properties: ObservableMap<Any, Any?>
-        get() = TODO("Not yet implemented")
+        get() = TODO()
 
     override fun addChild(
         child: NodeWrapper,
@@ -144,11 +144,11 @@ class ProxyEventTargetWrapper(private val addOp: (NW) -> Unit) : EventTargetWrap
     }
 
     override fun removeFromParent() {
-        TODO("Not yet implemented")
+        TODO()
     }
 
     override fun isInsideRow(): Boolean {
-        TODO("Not yet implemented")
+        TODO()
     }
 
 }

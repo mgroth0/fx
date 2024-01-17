@@ -6,7 +6,7 @@ import matt.fx.graphics.wrapper.node.NodeWrapper
 
 class DoubleFieldWrapper(node: DoubleField): ControlWrapperImpl<DoubleField>(node) {
   override fun addChild(child: NodeWrapper, index: Int?) {
-	TODO("Not yet implemented")
+	TODO()
   }
 
 }

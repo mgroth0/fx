@@ -8,13 +8,13 @@ import matt.fx.graphics.wrapper.region.RegionWrapperImpl
 
 class VirtualFlowWrapper<T: IndexedCell<*>>(node: VirtualFlow<T>): RegionWrapperImpl<VirtualFlow<T>, NodeWrapper>(node) {
   override fun addChild(child: NodeWrapper, index: Int?) {
-	TODO("Not yet implemented")
+	TODO()
   }
 }
 
 /*FlowLess*/
 class FlowLessVirtualFlowWrapper(val vflow: Region): RegionWrapperImpl<Region, NodeWrapper>(vflow) {
   override fun addChild(child: NodeWrapper, index: Int?) {
-	TODO("Not yet implemented")
+	TODO()
   }
 }

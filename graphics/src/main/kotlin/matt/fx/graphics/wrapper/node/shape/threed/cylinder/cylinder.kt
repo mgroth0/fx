@@ -8,7 +8,7 @@ class CylinderWrapper(
   node: Cylinder = Cylinder(),
 ): NodeWrapperImpl<Cylinder>(node) {
   override fun addChild(child: NodeWrapper, index: Int?) {
-	TODO("Not yet implemented")
+	TODO()
   }
 
 

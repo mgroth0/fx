@@ -31,7 +31,7 @@ open class MenuBarWrapper(
 	}
 
   override fun addChild(child: NodeWrapper, index: Int?) {
-	TODO("Not yet implemented")
+	TODO()
   }
 
 

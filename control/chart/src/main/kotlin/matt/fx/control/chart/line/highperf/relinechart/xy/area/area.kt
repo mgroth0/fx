@@ -11,12 +11,14 @@ import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import javafx.event.EventHandler
 import javafx.scene.Group
+import javafx.scene.chart.AreaChart
 import javafx.scene.shape.ClosePath
 import javafx.scene.shape.LineTo
 import javafx.scene.shape.MoveTo
 import javafx.scene.shape.Path
 import javafx.scene.shape.StrokeLineJoin.BEVEL
 import javafx.util.Duration
+import matt.fx.base.rewrite.ReWrittenFxClass
 import matt.fx.control.chart.axis.value.axis.AxisForPackagePrivateProps
 import matt.fx.control.chart.line.highperf.relinechart.MorePerfOptionsLineChart
 import matt.fx.control.chart.line.highperf.relinechart.xy.XYChartForPackagePrivateProps
@@ -24,6 +26,7 @@ import matt.fx.control.chart.linelike.LineLikeChartNodeWithOptionalSymbols
 import matt.fx.graphics.anim.interp.MyInterpolator
 import java.util.*
 
+@ReWrittenFxClass(AreaChart::class)
 class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
     @NamedArg("xAxis") xAxis: AxisForPackagePrivateProps<X>,
     @NamedArg("yAxis") yAxis: AxisForPackagePrivateProps<Y>,

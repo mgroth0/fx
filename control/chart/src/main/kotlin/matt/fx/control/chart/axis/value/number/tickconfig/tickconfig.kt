@@ -55,7 +55,7 @@ fun <T : MathAndComparable<T>> TickConfigurer<T>.showBestTicksNoLayout(axis: Num
         }
 
         override fun fromString(string: String): T {
-            TODO("Not yet implemented")
+            TODO()
         }
 
 

@@ -12,9 +12,11 @@ import javafx.scene.AccessibleAttribute
 import javafx.scene.AccessibleAttribute.TEXT
 import javafx.scene.AccessibleRole
 import javafx.scene.Node
+import javafx.scene.chart.BubbleChart
 import javafx.scene.layout.StackPane
 import javafx.scene.shape.Ellipse
 import javafx.util.Duration
+import matt.fx.base.rewrite.ReWrittenFxClass
 import matt.fx.control.chart.axis.cat.cat.CategoryAxisForCatAxisWrapper
 import matt.fx.control.chart.axis.value.axis.AxisForPackagePrivateProps
 import matt.fx.control.chart.axis.value.moregenval.MoreGenericValueAxis
@@ -22,6 +24,7 @@ import matt.fx.control.chart.axis.value.number.moregennum.MoreGenericNumberAxis
 import matt.fx.control.chart.linelike.LineLikeChartNode
 import kotlin.math.abs
 
+@ReWrittenFxClass(BubbleChart::class)
 class BubbleChartForWrapper<X, Y> @JvmOverloads constructor(
     @NamedArg("xAxis") xAxis: AxisForPackagePrivateProps<X>,
     @NamedArg("yAxis") yAxis: AxisForPackagePrivateProps<Y>,

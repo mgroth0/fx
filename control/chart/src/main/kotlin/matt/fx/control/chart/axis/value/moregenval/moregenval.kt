@@ -26,11 +26,11 @@ import javafx.scene.shape.Path
 import javafx.util.StringConverter
 import matt.fig.modell.plot.convert.InternalData
 import matt.fig.modell.plot.convert.ValueAxisConverter
+import matt.fx.base.rewrite.ReWrittenFxClass
 import matt.fx.control.chart.axis.value.axis.AxisForPackagePrivateProps
 import matt.fx.control.chart.axis.value.axis.NullRangeProp
 import matt.fx.control.chart.axis.value.axis.RangeProps
 import matt.fx.control.css.BooleanCssMetaData
-import matt.lang.anno.See
 import matt.obs.prop.BindableProperty
 import java.util.*
 
@@ -42,7 +42,7 @@ private typealias UpperBound = Any
  * tick-marks between the major ones.
  * @since JavaFX 2.0
  */
-@See(ValueAxis::class)
+@ReWrittenFxClass(ValueAxis::class)
 abstract class MoreGenericValueAxis<T : UpperBound>(
     lowerBound: T? = null,
     upperBound: T? = null,

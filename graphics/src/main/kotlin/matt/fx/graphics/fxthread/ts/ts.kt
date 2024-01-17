@@ -1,6 +1,7 @@
 package matt.fx.graphics.fxthread.ts
 
 import javafx.application.Platform.runLater
+import matt.async.thread.TheThreadProvider
 import matt.fx.graphics.fxthread.ensureInFXThreadInPlace
 import matt.fx.graphics.fxthread.ensureInFXThreadOrRunLater
 import matt.lang.function.Op
@@ -95,7 +96,7 @@ class FXThreadSafeProp<T>(value: T): BindableProperty<T>(value) {
 
 fun <T: Any> ObsVal<T>.periodicFXUpdates() = GlobalFXWatcher.watch(this)
 
-object GlobalFXWatcher: PropertyWatcher() {
+object GlobalFXWatcher: PropertyWatcher(TheThreadProvider) {
   override fun runOps(ops: List<Op>) {
 	runLater {
 	  ops.forEach { it() }

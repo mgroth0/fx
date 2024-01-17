@@ -12,24 +12,24 @@ abstract class LightBaseWrapper(node: LightBase): NodeWrapperImpl<LightBase>(nod
 
 class AmbientLightWrapper(node: AmbientLight): LightBaseWrapper(node) {
   override fun addChild(child: NodeWrapper, index: Int?) {
-	TODO("Not yet implemented")
+	TODO()
   }
 }
 
 class PointLightWrapper(node: PointLight): LightBaseWrapper(node) {
   override fun addChild(child: NodeWrapper, index: Int?) {
-	TODO("Not yet implemented")
+	TODO()
   }
 }
 
 class SpotLightWrapper(node: SpotLight): LightBaseWrapper(node) {
   override fun addChild(child: NodeWrapper, index: Int?) {
-	TODO("Not yet implemented")
+	TODO()
   }
 }
 
 class DirectionalLightWrapper(node: DirectionalLight): LightBaseWrapper(node) {
   override fun addChild(child: NodeWrapper, index: Int?) {
-	TODO("Not yet implemented")
+	TODO()
   }
 }

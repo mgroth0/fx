@@ -4,6 +4,8 @@ import javafx.scene.Node
 import javafx.scene.control.Label
 import javafx.scene.control.Skin
 import javafx.scene.control.Tooltip
+import javafx.scene.control.skin.TooltipSkin
+import matt.fx.base.rewrite.ReWrittenFxClass
 import matt.fx.control.popup.tooltip.node.MyTooltip
 
 /**
@@ -13,6 +15,7 @@ import matt.fx.control.popup.tooltip.node.MyTooltip
  *
  * TooltipContent class is the actual skin implementation of the tooltip
  */
+@ReWrittenFxClass(TooltipSkin::class)
 class MyTooltipSkin(t: MyTooltip): Skin<MyTooltip?> {
   /* *************************************************************************
      *                                                                         *

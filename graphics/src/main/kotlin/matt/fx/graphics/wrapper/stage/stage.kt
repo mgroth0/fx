@@ -74,7 +74,7 @@ open class StageWrapper(node: Stage = Stage()) : WindowWrapper<Stage>(node), Tit
         child: NodeWrapper,
         index: Int?
     ) {
-        TODO("Not yet implemented")
+        TODO()
     }
 
     override fun removeFromParent() {

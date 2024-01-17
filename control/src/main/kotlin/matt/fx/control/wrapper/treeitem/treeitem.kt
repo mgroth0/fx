@@ -18,21 +18,21 @@ open class TreeItemWrapper<T : Any>(node: TreeItem<T> = TreeItem()) : SingularEv
     val value by node::value
 
     override val properties: ObservableMap<Any, Any?>
-        get() = TODO("Not yet implemented")
+        get() = TODO()
 
     override fun addChild(
         child: NodeWrapper,
         index: Int?
     ) {
-        TODO("Not yet implemented")
+        TODO()
     }
 
     override fun removeFromParent() {
-        TODO("Not yet implemented")
+        TODO()
     }
 
     override fun isInsideRow(): Boolean {
-        TODO("Not yet implemented")
+        TODO()
     }
 
     val expandedProperty by lazy { node.expandedProperty().toNonNullableProp() }

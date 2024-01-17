@@ -11,8 +11,10 @@ import javafx.scene.Node
 import javafx.scene.Parent
 import javafx.scene.control.Skin
 import javafx.scene.layout.Pane
+import matt.fx.base.rewrite.ReWrittenFxClass
 import matt.fx.control.popup.popupcontrol.node.MyPopupControl
 
+@ReWrittenFxClass(originalName = "PopUpCSSBridge")
 open class MyPopUpCSSBridge(open val popupControl: MyPopupControl): Pane() {
 
 

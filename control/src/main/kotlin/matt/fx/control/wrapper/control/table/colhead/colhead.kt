@@ -9,7 +9,7 @@ class TableColumnHeaderWrapper(node: TableColumnHeader): RegionWrapperImpl<Table
   override fun isInsideRow() = false
 
   override fun addChild(child: NodeWrapper, index: Int?) {
-	TODO("Not yet implemented")
+	TODO()
   }
 
 }

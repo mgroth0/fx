@@ -8,7 +8,7 @@ class SphereWrapper(
   node: Sphere = Sphere(),
 ): NodeWrapperImpl<Sphere>(node) {
   override fun addChild(child: NodeWrapper, index: Int?) {
-    TODO("Not yet implemented")
+    TODO()
   }
 
 

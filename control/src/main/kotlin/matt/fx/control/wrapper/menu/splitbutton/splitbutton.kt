@@ -17,6 +17,4 @@ fun ET.splitmenubutton(
 
 class SplitMenuButtonWrapper(
   node: SplitMenuButton = SplitMenuButton(),
-): MenuButtonWrapper(node) {
-
-}
+): MenuButtonWrapper(node)

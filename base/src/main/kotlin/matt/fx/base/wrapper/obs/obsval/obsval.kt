@@ -11,6 +11,7 @@ import javafx.beans.binding.ObjectBinding
 import javafx.beans.binding.StringBinding
 import javafx.beans.property.Property
 import javafx.beans.value.ObservableValue
+import matt.lang.ktversion.ifPastInitialK2
 import matt.log.warn.warn
 import matt.obs.listen.OldAndNewListener
 import matt.obs.listen.update.ValueChange
@@ -169,7 +170,7 @@ open class NullableFXBackedReadOnlyBindableProp<T>(private val o: ObservableValu
 
 
     init {
-        if (KotlinVersion.CURRENT > KotlinVersion(2, 0, 0)) {
+        ifPastInitialK2 {
             warn("used to delegate ReadableFXBackedPropBinder<T> by ReadingBinder(o) before bug in kotlin 2.0.0-Beta1")
         }
     }

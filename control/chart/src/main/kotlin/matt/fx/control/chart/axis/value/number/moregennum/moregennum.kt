@@ -8,9 +8,11 @@ import javafx.beans.property.BooleanPropertyBase
 import javafx.css.CssMetaData
 import javafx.css.Styleable
 import javafx.geometry.Dimension2D
+import javafx.scene.chart.NumberAxis
 import javafx.util.Duration
 import javafx.util.StringConverter
 import matt.fig.modell.plot.convert.ValueAxisConverter
+import matt.fx.base.rewrite.ReWrittenFxClass
 import matt.fx.control.chart.axis.value.axis.NumberRangeProps
 import matt.fx.control.chart.axis.value.axis.RangeProps
 import matt.fx.control.chart.axis.value.moregenval.MoreGenericValueAxis
@@ -26,6 +28,7 @@ import kotlin.math.round
  * You can use any Number type with this axis.
  * @since JavaFX 2.0
  */
+@ReWrittenFxClass(NumberAxis::class)
 class MoreGenericNumberAxis<T : Any>(
     converter: ValueAxisConverter<T>,
     lowerBound: T? = null,
@@ -211,7 +214,7 @@ class MoreGenericNumberAxis<T : Any>(
                             "Lower Bound=" + range.lowerBound + ", Upper Bound=" + range.upperBound + ", Tick Unit=" + range.tickUnit
                 )
             } else {
-		  		println("range.tickUnit=${range.tickUnit}")
+                println("range.tickUnit=${range.tickUnit}")
                 if (range.lowerBound + range.tickUnit < range.upperBound) {
                     // If tickUnit is integer, start with the nearest integer
                     var major = if (round(range.tickUnit) == range.tickUnit) ceil(

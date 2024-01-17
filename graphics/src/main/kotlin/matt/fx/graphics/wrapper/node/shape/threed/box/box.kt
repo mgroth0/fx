@@ -8,7 +8,7 @@ class BoxWrapper3D(
   node: Box = Box(),
 ): NodeWrapperImpl<Box>(node) {
   override fun addChild(child: NodeWrapper, index: Int?) {
-	TODO("Not yet implemented")
+	TODO()
   }
 
 

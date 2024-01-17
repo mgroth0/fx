@@ -2,7 +2,21 @@ package matt.fx.graphics.anim.animation
 
 /*slightly modified code I stole from tornadofx*/
 
-import javafx.animation.*
+import javafx.animation.Animation
+import javafx.animation.FadeTransition
+import javafx.animation.FillTransition
+import javafx.animation.KeyFrame
+import javafx.animation.KeyValue
+import javafx.animation.ParallelTransition
+import javafx.animation.PathTransition
+import javafx.animation.PauseTransition
+import javafx.animation.RotateTransition
+import javafx.animation.ScaleTransition
+import javafx.animation.SequentialTransition
+import javafx.animation.StrokeTransition
+import javafx.animation.Timeline
+import javafx.animation.Transition
+import javafx.animation.TranslateTransition
 import javafx.beans.value.WritableValue
 import javafx.event.ActionEvent
 import javafx.event.EventHandler

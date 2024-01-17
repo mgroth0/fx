@@ -9,11 +9,14 @@ import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import javafx.event.EventHandler
 import javafx.scene.AccessibleRole.TEXT
+import javafx.scene.chart.ScatterChart
 import javafx.scene.layout.StackPane
 import javafx.util.Duration
+import matt.fx.base.rewrite.ReWrittenFxClass
 import matt.fx.control.chart.axis.value.axis.AxisForPackagePrivateProps
 import matt.fx.control.chart.linelike.LineLikeChartNode
 
+@ReWrittenFxClass(ScatterChart::class)
 class ScatterChartForWrapper<X, Y> @JvmOverloads constructor(
     @NamedArg("xAxis") xAxis: AxisForPackagePrivateProps<X>,
     @NamedArg("yAxis") yAxis: AxisForPackagePrivateProps<Y>,

@@ -33,6 +33,7 @@ import javafx.geometry.Side.RIGHT
 import javafx.geometry.Side.TOP
 import javafx.scene.Group
 import javafx.scene.Node
+import javafx.scene.chart.XYChart
 import javafx.scene.layout.Region
 import javafx.scene.shape.ClosePath
 import javafx.scene.shape.Line
@@ -43,6 +44,7 @@ import javafx.scene.shape.Rectangle
 import javafx.util.Duration
 import matt.collect.weak.WeakMap
 import matt.fig.modell.series.SeriesIdea
+import matt.fx.base.rewrite.ReWrittenFxClass
 import matt.fx.control.chart.axis.value.axis.AxisForPackagePrivateProps
 import matt.fx.control.chart.line.highperf.relinechart.xy.XYChartForPackagePrivateProps.StyleableProperties.classCssMetaData
 import matt.fx.control.chart.line.highperf.relinechart.xy.chart.ChartForPrivateProps
@@ -70,6 +72,7 @@ import java.util.*
  *
  * @since JavaFX 2.0
  */
+@ReWrittenFxClass(XYChart::class)
 abstract class XYChartForPackagePrivateProps<X, Y>(
 
     // -------------- PUBLIC PROPERTIES --------------------------------------------------------------------------------

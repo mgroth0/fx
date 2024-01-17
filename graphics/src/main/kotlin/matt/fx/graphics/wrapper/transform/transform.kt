@@ -15,21 +15,21 @@ import matt.lang.assertions.require.requireEquals
 
 abstract class TransformWrapper<E : Transform>(node: E) : SingularEventTargetWrapper<E>(node) {
     override val properties: ObservableMap<Any, Any?>
-        get() = TODO("Not yet implemented")
+        get() = TODO()
 
     override fun addChild(
         child: NodeWrapper,
         index: Int?
     ) {
-        TODO("Not yet implemented")
+        TODO()
     }
 
     override fun removeFromParent() {
-        TODO("Not yet implemented")
+        TODO()
     }
 
     override fun isInsideRow(): Boolean {
-        TODO("Not yet implemented")
+        TODO()
     }
 }
 

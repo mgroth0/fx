@@ -92,7 +92,7 @@ class ChoiceBoxWrapper<T : Any>(
             }
 
             override fun fromString(string: String?): T? {
-                TODO("Not yet implemented")
+                TODO()
             }
 
         }
@@ -146,7 +146,7 @@ class ChoiceBoxWrapper<T : Any>(
         child: NodeWrapper,
         index: Int?
     ) {
-        TODO("Not yet implemented")
+        TODO()
     }
 
     fun action(op: () -> Unit) = setOnAction { op() }

@@ -22,7 +22,7 @@ open class SeparatorWrapper(
   ): this(Separator(o))
 
   override fun addChild(child: NodeWrapper, index: Int?) {
-	TODO("Not yet implemented")
+	TODO()
   }
 
 

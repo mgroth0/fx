@@ -9,7 +9,7 @@ class SwingNodeWrapper(node: SwingNode = SwingNode()) : NodeWrapperImpl<SwingNod
         child: NodeWrapper,
         index: Int?
     ) {
-        TODO("Not yet implemented")
+        TODO()
     }
 
     var content by node::content

@@ -6,6 +6,6 @@ import matt.fx.graphics.wrapper.node.NodeWrapper
 
 open class PopupControlWrapper<W: MyPopupControl>(node: W): PopupWindowWrapper<W>(node) {
   override fun addChild(child: NodeWrapper, index: Int?) {
-	TODO("Not yet implemented")
+	TODO()
   }
 }

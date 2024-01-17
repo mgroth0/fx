@@ -3,17 +3,19 @@ package matt.fx.graphics.wrapper.style
 import javafx.css.CssMetaData
 import javafx.css.PseudoClass
 import javafx.css.Styleable
+import javafx.scene.Node
 import javafx.scene.paint.Color
 import matt.color.AwtColor
+import matt.color.ContrastAlgorithm
 import matt.color.IntColor
+import matt.color.calculateContrastingColor
 import matt.color.name.findName
-import matt.color.mostContrastingForMe
 import matt.color.toAwtColor
 import matt.color.toMColor
 import matt.fx.base.wrapper.obs.collect.list.createMutableWrapper
+import matt.fx.base.wrapper.obs.collect.set.createImmutableWrapper
 import matt.fx.graphics.wrapper.style.FXStyle.fill
 import matt.fx.graphics.wrapper.style.FXStyle.`text-fill`
-import matt.fx.base.wrapper.obs.collect.set.createImmutableWrapper
 import matt.lang.NOT_IMPLEMENTED
 import matt.lang.err
 import matt.obs.col.olist.MutableObsList
@@ -28,7 +30,7 @@ fun FXColor.toAwtColor() = AwtColor(red.toFloat(), green.toFloat(), blue.toFloat
 fun FXColor.findName() = toMColor().findName()
 fun FXColor.hex() = toMColor().hex()
 fun AwtColor.toFXColor() = FXColor(red / 255.0, green / 255.0, blue / 255.0, alpha / 255.0)
-fun FXColor.mostContrastingForMe() = toMColor().mostContrastingForMe().toFXColor()
+fun FXColor.mostContrasting(alg: ContrastAlgorithm) = toMColor().calculateContrastingColor(alg).toFXColor()
 
 abstract class StyleableWrapperImpl(private val node: Styleable) : StyleableWrapper {
     override val typeSelector: String get() = node.typeSelector
@@ -41,6 +43,13 @@ abstract class StyleableWrapperImpl(private val node: Styleable) : StyleableWrap
     override val styleClass: MutableObsList<String> by lazy { node.styleClass.createMutableWrapper() }
     override fun getTheStyle(): String? = node.style
 }
+
+class StyleableWrapperImpl2(private val node: Node) : StyleableWrapperImpl(node) {
+    override fun setTheStyle(value: String) {
+        node.style = value
+    }
+}
+
 
 interface StyleableWrapper {
     val typeSelector: String

@@ -5,6 +5,7 @@ import javafx.geometry.Pos
 import javafx.scene.Node
 import javafx.scene.layout.Priority
 import javafx.scene.layout.VBox
+import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.graphics.style.inset.MarginableConstraints
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NW
@@ -15,7 +16,6 @@ import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
 import matt.fx.graphics.wrapper.pane.SimplePaneWrapper
 import matt.fx.graphics.wrapper.pane.box.BoxWrapper
 import matt.fx.graphics.wrapper.pane.box.BoxWrapperImpl
-import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.lang.B
 import matt.lang.delegation.lazyVarDelegate
 import matt.obs.prop.Var
@@ -46,6 +46,7 @@ interface VBoxWrapper<C: NodeWrapper>: BoxWrapper<C> {
 
 open class VBoxWrapperImpl<C: NodeWrapper>(node: VBox = VBox()): BoxWrapperImpl<VBox, C>(node), VBoxWrapper<C> {
   constructor(vararg nodes: C): this(VBox(*nodes.map { it.node }.toTypedArray()))
+
 
   final override val fillWidthProperty by lazy {
 	node.fillWidthProperty().toNonNullableProp()

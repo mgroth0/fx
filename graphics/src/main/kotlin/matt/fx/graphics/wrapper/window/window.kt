@@ -45,7 +45,7 @@ open class WindowWrapper<W : Window>(override val node: W) : SingularEventTarget
         child: NodeWrapper,
         index: Int?
     ) {
-        TODO("Not yet implemented")
+        TODO()
     }
 
     override var height

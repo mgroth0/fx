@@ -21,7 +21,9 @@ import javafx.css.StyleableDoubleProperty
 import javafx.css.StyleableProperty
 import javafx.css.converter.SizeConverter
 import javafx.geometry.Dimension2D
+import javafx.scene.chart.CategoryAxis
 import javafx.util.Duration
+import matt.fx.base.rewrite.ReWrittenFxClass
 import matt.fx.control.chart.axis.cat.cat.CategoryAxisForCatAxisWrapper.StyleableProperties.classCssMetaData
 import matt.fx.control.chart.axis.value.axis.AxisForPackagePrivateProps
 import matt.fx.control.chart.axis.value.axis.CategoryRangeProps
@@ -35,6 +37,7 @@ import java.util.*
  * value as a unique category(tick mark) along the axis.
  * @since JavaFX 2.0
  */
+@ReWrittenFxClass(CategoryAxis::class)
 class CategoryAxisForCatAxisWrapper : AxisForPackagePrivateProps<String> {
     // -------------- PRIVATE FIELDS -------------------------------------------
     internal val allDataCategories: MutableList<String> = ArrayList()

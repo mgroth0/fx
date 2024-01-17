@@ -17,11 +17,7 @@ fun ET.datepicker(property: VarProp<LocalDate?>, op: DatePickerWrapper.()->Unit 
 
 class DatePickerWrapper(
   node: DatePicker = DatePicker(),
-): ComboBoxBaseWrapper<LocalDate, DatePicker>(node) {
-
-
-
-}
+): ComboBoxBaseWrapper<LocalDate, DatePicker>(node)
 
 fun DatePickerWrapper.bind(property: ObsVal<LocalDate?>, readonly: Boolean = false) =
   valueProperty.smartBind(property, readonly)

@@ -3,7 +3,7 @@
     "dependencies": [
         {
             "type": "Project",
-            "cfg": "implementation",
+            "cfg": "api",
             "path": ":k:gui"
         },
         {
@@ -11,11 +11,7 @@
             "cfg": "implementation",
             "path": ":k:auto"
         },
-        {
-            "type": "Project",
-            "cfg": "implementation",
-            "path": ":k:auto:ascript"
-        },
+
         {
             "type": "Project",
             "cfg": "testImplementation",

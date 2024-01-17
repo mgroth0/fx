@@ -1,3 +1,4 @@
+
 package matt.fx.control.wrapper.wrapped
 
 
@@ -6,7 +7,6 @@ import com.sun.javafx.scene.control.FakeFocusTextField
 import com.sun.javafx.scene.control.IntegerField
 import com.sun.javafx.scene.control.WebColorField
 import com.sun.javafx.scene.control.skin.FXVK
-import javafx.collections.ObservableMap
 import javafx.event.EventTarget
 import javafx.scene.AmbientLight
 import javafx.scene.DirectionalLight
@@ -179,6 +179,8 @@ import matt.fx.control.wrapper.virtualflow.FlowLessVirtualFlowWrapper
 import matt.fx.control.wrapper.virtualflow.VirtualFlowWrapper
 import matt.fx.control.wrapper.virtualflow.clip.CLIPPED_CONTAINER_QNAME
 import matt.fx.control.wrapper.virtualflow.clip.ClippedContainerWrapper
+import matt.fx.control.wrapper.wrapped.unknown.unknownWrapper
+import matt.fx.control.wrapper.wrapped.util.cannotFindWrapper
 import matt.fx.graphics.service.WrapperService
 import matt.fx.graphics.wrapper.EventTargetWrapper
 import matt.fx.graphics.wrapper.EventTargetWrapperImpl
@@ -193,7 +195,6 @@ import matt.fx.graphics.wrapper.light.DirectionalLightWrapper
 import matt.fx.graphics.wrapper.light.PointLightWrapper
 import matt.fx.graphics.wrapper.light.SpotLightWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
-import matt.fx.graphics.wrapper.node.impl.NodeWrapperImpl
 import matt.fx.graphics.wrapper.node.line.LineWrapper
 import matt.fx.graphics.wrapper.node.line.arc.ArcWrapper
 import matt.fx.graphics.wrapper.node.line.cubic.CubicCurveWrapper
@@ -236,10 +237,9 @@ import matt.fx.graphics.wrapper.transform.TransformWrapper
 import matt.fx.graphics.wrapper.transform.TranslateWrapper
 import matt.fx.graphics.wrapper.window.WindowWrapper
 import matt.lang.NEVER
+import matt.lang.assertions.require.requireNull
 import matt.lang.classname.JvmQualifiedClassName
 import matt.lang.classname.jvmQualifiedClassName
-import matt.lang.assertions.require.requireNull
-import kotlin.reflect.KClass
 
 
 object WrapperServiceImpl : WrapperService {
@@ -516,7 +516,7 @@ class SunburstChart(sunburst: Region) : RegionWrapperImpl<Region, NodeWrapper>(s
         child: NodeWrapper,
         index: Int?
     ) {
-        TODO("Not yet implemented")
+        TODO()
     }
 
 }
@@ -527,7 +527,7 @@ class CoxCombWrapper(coxcomb: Region) : RegionWrapperImpl<Region, NodeWrapper>(c
         child: NodeWrapper,
         index: Int?
     ) {
-        TODO("Not yet implemented")
+        TODO()
     }
 
 }
@@ -538,7 +538,7 @@ class ParagraphBoxWrapper(paragraphBox: Region) : RegionWrapperImpl<Region, Node
         child: NodeWrapper,
         index: Int?
     ) {
-        TODO("Not yet implemented")
+        TODO()
     }
 
 }
@@ -549,7 +549,7 @@ class NavigatorWrapper(navigator: Region) : RegionWrapperImpl<Region, NodeWrappe
         child: NodeWrapper,
         index: Int?
     ) {
-        TODO("Not yet implemented")
+        TODO()
     }
 }
 
@@ -709,58 +709,3 @@ fun EventTarget.wrapped(): EventTargetWrapper = findWrapper() ?: when (this) {
     is Transform             -> wrapped()
     else                     -> unknownWrapper() /*For Dialog*/
 }
-
-/*
-
-todo: The bottom line is that currently, JavaFX Node classes may not ship with my wrapper classes. There is simply no way I can guarantee that I get the correct wrapper without creating some sort of complex external registry. Not happening. So let's just do this, and change our understanding of how the `wrapped` function works. It does NOT currently guarantee that I will get the "correct" (most specific possible) wrapper. This is unfortunate, but the best solution currently available. Maybe with some sort of external registry or ServiceLoaders I can ensure wrapper specificity in the future, but that is not a super high priority. For now, don't make any log depend on which class is outputted from the `wrapped` function.
-
-Still need CannotFindWrapperException for specific `wrapped` functions to maintain their type checking, like Labelled.wrapped().
-
-* */
-class UnknownEventTargetWrapper(et: EventTarget) : SingularEventTargetWrapper<EventTarget>(et) {
-    override val properties: ObservableMap<Any, Any?> get() = TODO("Not yet implemented")
-
-    override fun addChild(
-        child: NodeWrapper,
-        index: Int?
-    ) {
-        TODO("Not yet implemented")
-    }
-
-    override fun removeFromParent() {
-        TODO("Not yet implemented")
-    }
-
-    override fun isInsideRow(): Boolean {
-        TODO("Not yet implemented")
-    }
-}
-
-/*At least I can be slightly specific*/
-class UnknownNodeWrapper(node: Node) : NodeWrapperImpl<Node>(node) {
-    override fun addChild(
-        child: NodeWrapper,
-        index: Int?
-    ) {
-        TODO("Not yet implemented")
-    }
-
-}
-
-fun Node.unknownWrapper() = UnknownNodeWrapper(this)
-fun EventTarget.unknownWrapper() = UnknownEventTargetWrapper(this)
-
-fun EventTarget.cannotFindWrapper(): Nothing = throw (CannotFindWrapperException(this::class))
-
-class CannotFindWrapperException(val cls: KClass<out EventTarget>) : Exception(
-    "what is the wrapper for ${cls.qualifiedName}?"
-)
-
-/*?: run {
-  val theMap = constructorMap
-//	  W::class.starProjectedType
-  val theConstructor = theMap[W::class.starProjectedType]
-  theConstructor.call(this) as W
-}*//*?: W::class.primaryConstructor!!.call(this)*/
-
-

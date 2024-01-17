@@ -14,11 +14,13 @@ import javafx.event.EventHandler
 import javafx.geometry.NodeOrientation.RIGHT_TO_LEFT
 import javafx.scene.Node
 import javafx.scene.Parent
+import javafx.scene.control.Tooltip
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.Pane
 import javafx.stage.PopupWindow
 import javafx.stage.Window
 import javafx.util.Duration
+import matt.fx.base.rewrite.ReWrittenFxClass
 
 
 /*
@@ -30,6 +32,7 @@ Also, let's make this bare-bones. It can be just a node. Don't need the text/gra
 Also removing any CSS nonsense.
 
 * */
+@ReWrittenFxClass(Tooltip::class)
 class MyFixedTooltip constructor() : PopupWindow() {
     /**
      * The delay between the mouse entering the hovered node and when the associated tooltip will be shown to the user.

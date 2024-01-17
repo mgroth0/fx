@@ -1,12 +1,8 @@
 package matt.fx.graphics.wrapper.node.impl
 
-import javafx.css.CssMetaData
-import javafx.css.PseudoClass
-import javafx.css.Styleable
 import javafx.scene.Cursor
 import javafx.scene.Node
 import javafx.scene.Scene
-import javafx.scene.paint.Color
 import matt.fx.base.wrapper.obs.obsval.prop.NullableFXBackedBindableProp
 import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
@@ -16,19 +12,12 @@ import matt.fx.graphics.service.uncheckedNullableWrapperConverter
 import matt.fx.graphics.wrapper.SingularEventTargetWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.scene.SceneWrapper
-import matt.fx.graphics.wrapper.style.FXStyle.fill
-import matt.fx.graphics.wrapper.style.FXStyle.`text-fill`
 import matt.fx.graphics.wrapper.style.StyleableWrapper
-import matt.fx.graphics.wrapper.style.StyleableWrapperImpl
-import matt.fx.graphics.wrapper.style.toMColor
-import matt.lang.NOT_IMPLEMENTED
+import matt.fx.graphics.wrapper.style.StyleableWrapperImpl2
 import matt.lang.delegation.lazyDelegate
 import matt.model.flowlogic.recursionblocker.RecursionBlocker
 import matt.obs.bind.binding
-import matt.obs.col.olist.MutableObsList
-import matt.obs.col.oset.ObsSet
 import matt.obs.prop.BindableProperty
-import matt.prim.str.LineAppender
 
 //private operator fun <T, V> ReadOnlyProperty<T, V>.getValue(t: T, property: KProperty<*>): V {
 //	return error("abc")
@@ -38,13 +27,8 @@ abstract class NodeWrapperImpl<out N : Node>(
 ) : SingularEventTargetWrapper<N>(node), StyleableWrapper, NodeWrapper {
 
 
-    private val styleableWrapperThatWorkedAsDelegateBeforeK2 = object : StyleableWrapperImpl(node) {
-        override fun setTheStyle(value: String) {
-            node.style = value
-            node.style
-        }
-    }
 
+    private val styleableWrapperThatWorkedAsDelegateBeforeK2 = StyleableWrapperImpl2(node)
 
 
     override val typeSelector get() = styleableWrapperThatWorkedAsDelegateBeforeK2.typeSelector
@@ -59,7 +43,7 @@ abstract class NodeWrapperImpl<out N : Node>(
 
     override var style by styleableWrapperThatWorkedAsDelegateBeforeK2::style
 
-//    override fun setTheStyle(value: String) = styleableWrapperThatWorkedAsDelegateBeforeK2.setTheStyle(value)
+    //    override fun setTheStyle(value: String) = styleableWrapperThatWorkedAsDelegateBeforeK2.setTheStyle(value)
     override fun getTheStyle(): String? = styleableWrapperThatWorkedAsDelegateBeforeK2.getTheStyle()
 
 
@@ -68,22 +52,6 @@ abstract class NodeWrapperImpl<out N : Node>(
 
 
     override fun styleInfo() = styleableWrapperThatWorkedAsDelegateBeforeK2.styleInfo()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     final override val cursorProperty: NullableFXBackedBindableProp<Cursor> by lazy {

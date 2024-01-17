@@ -18,5 +18,4 @@ fun ET.passwordfield(property: VarProp<String>, op: PasswordFieldWrapper.()->Uni
 
 class PasswordFieldWrapper(
   node: PasswordField = PasswordField(),
-): TextFieldWrapper(node) {
-}
+): TextFieldWrapper(node)

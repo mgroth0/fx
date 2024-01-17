@@ -11,11 +11,7 @@
             "cfg": "api",
             "path": ":k:auto"
         },
-        {
-            "type": "Project",
-            "cfg": "api",
-            "path": ":k:fx:node:tileabletabpane"
-        },
+
         {
             "type": "Project",
             "cfg": "testImplementation",

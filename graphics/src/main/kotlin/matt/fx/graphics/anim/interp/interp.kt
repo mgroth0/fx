@@ -2,6 +2,7 @@ package matt.fx.graphics.anim.interp
 
 import javafx.animation.Interpolatable
 import javafx.animation.Interpolator
+import matt.fx.base.rewrite.ReWrittenFxClass
 import matt.model.data.interp.BasicInterpolatable
 import java.lang.reflect.Method
 
@@ -23,6 +24,9 @@ class InterpolatorWrapper(private val curver: Interpolator): MyInterpolator() {
 }
 
 
+
+
+@ReWrittenFxClass(Interpolator::class)
 abstract class MyInterpolator: Interpolator() {
 
   companion object {

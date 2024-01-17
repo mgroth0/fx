@@ -19,7 +19,6 @@ import javafx.css.Styleable
 import javafx.css.StyleableBooleanProperty
 import javafx.css.StyleableObjectProperty
 import javafx.css.StyleableProperty
-import javafx.css.converter.BooleanConverter
 import javafx.css.converter.EnumConverter
 import javafx.geometry.Pos.CENTER
 import javafx.geometry.Side
@@ -28,12 +27,14 @@ import javafx.geometry.Side.LEFT
 import javafx.geometry.Side.RIGHT
 import javafx.geometry.Side.TOP
 import javafx.scene.Node
+import javafx.scene.chart.Chart
 import javafx.scene.control.Label
 import javafx.scene.layout.Pane
 import javafx.scene.layout.Region
+import matt.fx.base.rewrite.ReWrittenFxClass
 import matt.fx.control.chart.line.highperf.relinechart.xy.chart.ChartForPrivateProps.StyleableProperties.classCssMetaData
 import matt.fx.control.css.BooleanCssMetaData
-import java.util.Collections
+import java.util.*
 
 /**
  * Base class for all charts. It has 3 parts the title, legend and chartContent. The chart content is populated by the
@@ -41,6 +42,7 @@ import java.util.Collections
  *
  * @since JavaFX 2.0
  */
+@ReWrittenFxClass(Chart::class)
 abstract class ChartForPrivateProps : Region() {
     /** Title Label  */
     private val titleLabel = Label()

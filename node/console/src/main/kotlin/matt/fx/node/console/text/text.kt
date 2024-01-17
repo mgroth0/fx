@@ -6,7 +6,9 @@ import javafx.scene.Cursor.HAND
 import javafx.scene.paint.Color
 import javafx.scene.paint.Color.YELLOW
 import javafx.scene.text.Font
-import matt.auto.macapp.intellij.Idea
+import matt.auto.term.parseterm.TransformableOutput
+import matt.auto.term.parseterm.open
+import matt.auto.term.parseterm.parseTerminalOutput
 import matt.color.rgb
 import matt.fx.base.time.toFXDuration
 import matt.fx.base.wrapper.obs.obsval.toNonNullableROProp
@@ -23,12 +25,8 @@ import matt.fx.graphics.wrapper.text.textlike.DarkLightFXColor
 import matt.fx.graphics.wrapper.text.textlike.MONO_FONT
 import matt.fx.graphics.wrapper.text.textlike.highlightOnHover
 import matt.fx.graphics.wrapper.textflow.TextFlowWrapper
-import matt.fx.node.console.text.parseterm.StackTraceLine
-import matt.fx.node.console.text.parseterm.TransformableOutput
-import matt.fx.node.console.text.parseterm.parseTerminalOutput
 import matt.lang.function.Op
 import matt.lang.ifTrueOrNull
-import matt.model.data.message.OpenVerySpecific
 import matt.obs.bind.binding
 import matt.obs.bind.deepBinding
 import matt.obs.bindings.bool.and
@@ -190,16 +188,7 @@ class ConsoleTextFlow(
         }
     }
 
-    private fun TransformableOutput.toNode() = when (this) {
-        is StackTraceLine -> ClickableText(text) {
-            Idea.open(
-                OpenVerySpecific(
-                    /*line index or number? Something is wrong somewhere*/
-                    qualifiedName = qualifiedName, fileName = fileName, lineIndex = lineNumber
-                )
-            )
-        }
-    }
+    private fun TransformableOutput.toNode() = ClickableText(text) { open() }
 
     private fun checkLineBuffer() {
         if (maxLines != null) {

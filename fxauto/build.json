@@ -13,11 +13,6 @@
         },
         {
             "type": "Project",
-            "cfg": "implementation",
-            "path": ":k:auto:ascript"
-        },
-        {
-            "type": "Project",
             "cfg": "testImplementation",
             "path": ":k:mbuild:mtest:fx"
         }

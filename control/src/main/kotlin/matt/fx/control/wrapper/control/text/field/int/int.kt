@@ -5,7 +5,7 @@ import matt.fx.graphics.wrapper.node.NodeWrapper
 
 class IntegerFieldWrapper(node: IntegerField): ControlWrapperImpl<IntegerField>(node) {
   override fun addChild(child: NodeWrapper, index: Int?) {
-	TODO("Not yet implemented")
+	TODO()
   }
 
 }

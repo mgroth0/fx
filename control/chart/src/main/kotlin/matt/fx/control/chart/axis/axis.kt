@@ -19,7 +19,7 @@ abstract class AxisWrapper<T, N: AxisForPackagePrivateProps<T>>(node: N): Region
   val animatedProperty by lazy { node.animatedProperty().toNonNullableProp() }
   var animated by animatedProperty
   override fun addChild(child: NodeWrapper, index: Int?) {
-	TODO("Not yet implemented")
+	TODO()
   }
   val axisLabelProp = node.labelProperty().toNullableProp()
   var axisLabel by axisLabelProp

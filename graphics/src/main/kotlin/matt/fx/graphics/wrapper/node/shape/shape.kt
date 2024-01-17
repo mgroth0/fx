@@ -63,7 +63,7 @@ abstract class ShapeWrapper<N : Shape>(node: N) : NodeWrapperImpl<N>(node) {
         child: NodeWrapper,
         index: Int?
     ) {
-        TODO("Not yet implemented")
+        TODO()
     }
 
 }

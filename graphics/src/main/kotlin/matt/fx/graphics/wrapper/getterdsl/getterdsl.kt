@@ -23,20 +23,20 @@ fun <R : NodeWrapper> buildNode(op: EventTargetWrapper.() -> R): R {
 internal class NodeBuilder() : EventTargetWrapper {
     @Suppress("UNUSED_PARAMETER")
     override var hotKeyHandler: HotKeyEventHandler?
-        get() = TODO("Not yet implemented")
+        get() = TODO()
         set(value) {
-            TODO("Not yet implemented")
+            TODO()
         }
     @Suppress("UNUSED_PARAMETER")
     override var hotKeyFilter: HotKeyEventHandler?
-        get() = TODO("Not yet implemented")
+        get() = TODO()
         set(value) {
-            TODO("Not yet implemented")
+            TODO()
         }
     override val node: EventTarget
-        get() = TODO("Not yet implemented")
+        get() = TODO()
     override val properties: ObservableMap<Any, Any?>
-        get() = TODO("Not yet implemented")
+        get() = TODO()
 
     private val builtNodes = mutableListOf<NodeWrapper>()
 
@@ -51,11 +51,11 @@ internal class NodeBuilder() : EventTargetWrapper {
     }
 
     override fun removeFromParent() {
-        TODO("Not yet implemented")
+        TODO()
     }
 
     override fun isInsideRow(): Boolean {
-        TODO("Not yet implemented")
+        TODO()
     }
 
 }

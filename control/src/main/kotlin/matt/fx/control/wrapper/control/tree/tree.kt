@@ -67,7 +67,7 @@ class TreeViewWrapper<T: Any>(node: TreeView<T> = TreeView(), op: TreeViewWrappe
   override val selectionModel by lazy { node.selectionModel.wrap() }
   override fun scrollTo(i: Int) = node.scrollTo(i)
   override fun addChild(child: NodeWrapper, index: Int?) {
-	TODO("Not yet implemented")
+	TODO()
   }
 
   override fun getRow(ti: TreeItem<T>) = node.getRow(ti)

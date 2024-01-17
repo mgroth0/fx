@@ -24,8 +24,10 @@ import javafx.geometry.Orientation.HORIZONTAL
 import javafx.geometry.Orientation.VERTICAL
 import javafx.scene.AccessibleRole.TEXT
 import javafx.scene.Node
+import javafx.scene.chart.StackedBarChart
 import javafx.scene.layout.StackPane
 import javafx.util.Duration
+import matt.fx.base.rewrite.ReWrittenFxClass
 import matt.fx.control.chart.axis.cat.cat.CategoryAxisForCatAxisWrapper
 import matt.fx.control.chart.axis.value.axis.AxisForPackagePrivateProps
 import matt.fx.control.chart.axis.value.moregenval.MoreGenericValueAxis
@@ -41,6 +43,7 @@ import java.util.*
  * The bar for each series is stacked on top of the previous series.
  * @since JavaFX 2.1
  */
+@ReWrittenFxClass(StackedBarChart::class)
 class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
     @NamedArg("xAxis") xAxis: AxisForPackagePrivateProps<X>,
     @NamedArg("yAxis") yAxis: AxisForPackagePrivateProps<Y>,

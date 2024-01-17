@@ -13,6 +13,7 @@ import matt.lang.ILLEGAL
 import matt.lang.convert.BiConverter
 import matt.lang.function.Consume
 import matt.lang.function.Op
+import matt.lang.ktversion.ifPastInitialK2
 import matt.lang.setall.setAll
 import matt.log.warn.warn
 import matt.model.op.prints.Prints
@@ -123,7 +124,7 @@ abstract class ObservableListWrapperImpl<E>(obs: ObservableList<E>) : FXBackedOb
     Observable {
 
     init {
-        if (KotlinVersion.CURRENT > KotlinVersion(2, 0, 0)) {
+        ifPastInitialK2 {
             warn("You know the deal. Kotlin 2.0.0-Beta1")
         }
     }
@@ -247,11 +248,11 @@ class FXBackedMutableObservableListBase<E>(obs: ObservableList<E>) :
     }
 
     override fun atomicChange(op: MutableObsList<E>.() -> Unit) {
-        TODO("Not yet implemented")
+        TODO()
     }
 
     override fun releaseUpdatesAfter(op: Op) {
-        TODO("Not yet implemented")
+        TODO()
     }
 
 
@@ -278,7 +279,7 @@ open class MBackedFXObservableList<E>(internal open val mList: ImmutableObsList<
 
 
     init {
-        if (KotlinVersion.CURRENT > KotlinVersion(2, 0, 0)) {
+        ifPastInitialK2 {
             warn("kotlin 2.0.0-Beta1 >:[")
         }
     }

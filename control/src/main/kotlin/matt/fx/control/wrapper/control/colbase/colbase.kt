@@ -32,7 +32,7 @@ abstract class TableColumnBaseWrapper<E: Any, P, F: TableColumnBase<E, P>>(
   abstract val tableView: TableLikeWrapper<E>?
 
   override fun addChild(child: NodeWrapper, index: Int?) {
-	TODO("Not yet implemented")
+	TODO()
   }
 
 

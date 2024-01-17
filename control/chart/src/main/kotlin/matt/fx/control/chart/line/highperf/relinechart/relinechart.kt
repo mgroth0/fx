@@ -13,10 +13,12 @@ import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import javafx.event.EventHandler
 import javafx.scene.Node
+import javafx.scene.chart.LineChart
 import javafx.scene.shape.LineTo
 import javafx.scene.shape.Path
 import javafx.scene.shape.StrokeLineJoin.BEVEL
 import javafx.util.Duration
+import matt.fx.base.rewrite.ReWrittenFxClass
 import matt.fx.control.chart.axis.value.axis.AxisForPackagePrivateProps
 import matt.fx.control.chart.line.highperf.relinechart.MorePerfOptionsLineChart.SortingPolicy.X_AXIS
 import matt.fx.control.chart.line.highperf.relinechart.xy.area.AreaChartForPrivateProps
@@ -25,6 +27,7 @@ import matt.fx.control.chart.linelike.LineLikeChartNodeWithOptionalSymbols.LineO
 import matt.fx.graphics.anim.interp.MyInterpolator
 import java.util.*
 
+@ReWrittenFxClass(LineChart::class)
 open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
     xAxis: AxisForPackagePrivateProps<X>,
     yAxis: AxisForPackagePrivateProps<Y>,

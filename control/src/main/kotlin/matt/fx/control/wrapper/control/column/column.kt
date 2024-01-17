@@ -67,7 +67,7 @@ class TableColumnWrapper<E : Any, P>(
         child: NodeWrapper,
         index: Int?
     ) {
-        TODO("Not yet implemented")
+        TODO()
     }
 
     fun getCellObservableValue(index: Int) = node.getCellObservableValue(index).toNullableROProp()

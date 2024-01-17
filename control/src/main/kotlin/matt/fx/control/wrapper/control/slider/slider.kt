@@ -83,7 +83,7 @@ class SliderWrapper(
   val minorTickCountProperty by lazy { node.minorTickCountProperty().toNonNullableProp() }
   var minorTickCount by lazyVarDelegate { minorTickCountProperty }
   override fun addChild(child: NodeWrapper, index: Int?) {
-	TODO("Not yet implemented")
+	TODO()
   }
 }
 

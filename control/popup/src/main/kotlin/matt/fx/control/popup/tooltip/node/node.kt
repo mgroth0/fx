@@ -37,6 +37,7 @@ import javafx.scene.control.ContentDisplay
 import javafx.scene.control.OverrunStyle
 import javafx.scene.control.OverrunStyle.ELLIPSIS
 import javafx.scene.control.Skin
+import javafx.scene.control.Tooltip
 import javafx.scene.image.ImageView
 import javafx.scene.input.MouseEvent
 import javafx.scene.text.Font
@@ -44,6 +45,7 @@ import javafx.scene.text.TextAlignment
 import javafx.scene.text.TextAlignment.LEFT
 import javafx.stage.Window
 import javafx.util.Duration
+import matt.fx.base.rewrite.ReWrittenFxClass
 import matt.fx.control.css.BooleanCssMetaData
 import matt.fx.control.popup.popupcontrol.node.MyPopupControl
 import matt.fx.control.popup.popupcontrol.node.bridge.MyPopUpCSSBridge
@@ -61,6 +63,7 @@ Because styling the built in tooltip is unsupported, requires hacks, buggy, and 
 Also the design of this is to have a "text" and a "graphic". That's too specific for my needs.
 
 * */
+@ReWrittenFxClass(Tooltip::class)
 class MyTooltip @JvmOverloads constructor(text: String? = null) : MyPopupControl() {
     /**
      * The text to display in the tooltip. If the text is set to null, an empty
@@ -291,7 +294,7 @@ class MyTooltip @JvmOverloads constructor(text: String? = null) : MyPopupControl
                 //     StyleableProperty prop = metaData.getStyleableProperty(labeled);
                 //     prop.set(someUrl);
                 //
-                // TODO: Note that prop != labeled, which violates the contract between StyleableProperty and CssMetaData.
+                // TO DO (from JavaFx not from Matt): Note that prop != labeled, which violates the contract between StyleableProperty and CssMetaData.
                 var origin = USER
                 override fun applyStyle(
                     origin: StyleOrigin,

@@ -18,15 +18,15 @@ import matt.lang.NOT_IMPLEMENTED
 open class DialogWrapper<R>(dialog: Dialog<R> = Dialog()): SingularEventTargetWrapper<Dialog<R>>(dialog) {
   override val properties get() = NOT_IMPLEMENTED
   override fun addChild(child: NodeWrapper, index: Int?) {
-	TODO("Not yet implemented")
+	TODO()
   }
 
   override fun removeFromParent() {
-	TODO("Not yet implemented")
+	TODO()
   }
 
   override fun isInsideRow(): Boolean {
-	TODO("Not yet implemented")
+	TODO()
   }
 
   fun showAndWait() = node.showAndWait()

@@ -22,9 +22,7 @@ fun ET.colorpicker(
 
 class ColorPickerWrapper(
    node: ColorPicker = ColorPicker(),
-): ComboBoxBaseWrapper<Color, ColorPicker>(node) {
-
-}
+): ComboBoxBaseWrapper<Color, ColorPicker>(node)
 
 fun ColorPickerWrapper.bind(property: ObsVal<Color?>, readonly: Boolean = false) =
   valueProperty.smartBind(property, readonly)

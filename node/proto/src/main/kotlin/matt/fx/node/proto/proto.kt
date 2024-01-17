@@ -23,7 +23,6 @@ import matt.lang.l
 import matt.model.data.dir.Direction
 import matt.model.data.dir.Direction.BACKWARD
 import matt.model.data.dir.Direction.FORWARD
-import matt.model.data.rect.DoubleRectSize
 import matt.model.data.rect.IntSquareSize
 import matt.model.flowlogic.recursionblocker.RecursionBlocker
 import matt.obs.bind.binding
