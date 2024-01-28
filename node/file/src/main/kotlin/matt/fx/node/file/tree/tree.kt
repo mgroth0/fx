@@ -107,7 +107,7 @@ fun TreeLikeWrapper<*, out FsFile>.nav(f: FsFile) {
 
     val roo = root ?: return
 
-    val fam = f.chain { it.parentFile }.toList()
+    val fam = f.chain { it.parent }.toList()
 
     if (f.toJioFile().doesNotExist) return
 

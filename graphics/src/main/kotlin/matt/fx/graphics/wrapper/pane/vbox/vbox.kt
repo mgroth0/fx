@@ -51,7 +51,7 @@ open class VBoxWrapperImpl<C: NodeWrapper>(node: VBox = VBox()): BoxWrapperImpl<
   final override val fillWidthProperty by lazy {
 	node.fillWidthProperty().toNonNullableProp()
   }
-  override var isFillWidth by lazyVarDelegate { fillWidthProperty }
+  final override var isFillWidth by lazyVarDelegate { fillWidthProperty }
 }
 
 fun VBoxWrapperImpl<PaneWrapper<*>>.spacer(prio: Priority = Priority.ALWAYS, op: PaneWrapperImpl<*, *>.()->Unit = {}) =

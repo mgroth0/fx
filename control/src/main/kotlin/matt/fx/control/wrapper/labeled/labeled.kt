@@ -4,6 +4,9 @@ import javafx.beans.property.BooleanProperty
 import javafx.beans.property.ObjectProperty
 import javafx.scene.control.Labeled
 import javafx.scene.text.TextAlignment
+import matt.fx.base.wrapper.obs.obsval.prop.NullableFXBackedBindableProp
+import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
 import matt.fx.control.inter.TextAndGraphic
 import matt.fx.control.inter.graphic
 import matt.fx.control.wrapper.control.ControlWrapperImpl
@@ -11,9 +14,7 @@ import matt.fx.graphics.service.nullableNodeConverter
 import matt.fx.graphics.stylelock.toNonNullableStyleProp
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.text.textlike.ColoredText
-import matt.fx.base.wrapper.obs.obsval.prop.NullableFXBackedBindableProp
-import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
-import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
+import matt.lang.anno.Open
 import matt.lang.assertions.require.requireNull
 
 open class LabeledWrapper<N : Labeled>(node: N) : ControlWrapperImpl<N>(node), ColoredText, TextAndGraphic {
@@ -35,7 +36,7 @@ open class LabeledWrapper<N : Labeled>(node: N) : ControlWrapperImpl<N>(node), C
 
     fun mnemonicParsingProperty(): BooleanProperty = node.mnemonicParsingProperty()
 
-    override val textProperty: NullableFXBackedBindableProp<String> by lazy { node.textProperty().toNullableProp() }
+    final override val textProperty: NullableFXBackedBindableProp<String> by lazy { node.textProperty().toNullableProp() }
 
     final override val graphicProperty by lazy {
         node.graphicProperty().toNullableProp().proxy(nullableNodeConverter)
@@ -45,7 +46,7 @@ open class LabeledWrapper<N : Labeled>(node: N) : ControlWrapperImpl<N>(node), C
         node.contentDisplayProperty().toNonNullableStyleProp()
     }
 
-    override val fontProperty by lazy { node.fontProperty().toNonNullableProp() }
+    final override val fontProperty by lazy { node.fontProperty().toNonNullableProp() }
 
     var isWrapText
         get() = node.isWrapText
@@ -55,7 +56,8 @@ open class LabeledWrapper<N : Labeled>(node: N) : ControlWrapperImpl<N>(node), C
 
     val wrapTextProperty by lazy { node.wrapTextProperty().toNonNullableProp() }
 
-    override val textFillProperty by lazy { node.textFillProperty().toNullableProp() }
+    final override val textFillProperty by lazy { node.textFillProperty().toNullableProp() }
+    @Open
     override fun addChild(
         child: NodeWrapper,
         index: Int?

@@ -10,6 +10,7 @@ import matt.fx.graphics.wrapper.SingularEventTargetWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
+import matt.lang.anno.Open
 import matt.lang.assertions.require.requireNull
 import matt.model.op.convert.NullToBlankStringConverter
 import matt.obs.bindings.bool.ObsB
@@ -33,7 +34,7 @@ open class MenuItemWrapper<N : MenuItem>(
     }
 
 
-    override val properties get() = node.properties
+    final override val properties get() = node.properties
 
     val visibleProperty by lazy { node.visibleProperty().toNonNullableProp() }
     val disableProperty by lazy { node.disableProperty().toNonNullableProp() }
@@ -86,6 +87,7 @@ open class MenuItemWrapper<N : MenuItem>(
     fun enableWhen(expr: () -> ObsB) = enableWhen(expr())
     fun enableWhen(obs: ObsB) = disableProperty.bind(obs.not())
 
+    @Open
     override fun addChild(
         child: NodeWrapper,
         index: Int?
@@ -94,11 +96,11 @@ open class MenuItemWrapper<N : MenuItem>(
         graphic = child.node
     }
 
-    override fun removeFromParent() {
+    final override fun removeFromParent() {
         node.parentMenu.items.remove(node)
     }
 
-    override fun isInsideRow() = false
+    final override fun isInsideRow() = false
 
 }
 

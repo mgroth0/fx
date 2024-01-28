@@ -59,7 +59,7 @@ open class BorderPaneWrapper<C: NodeWrapper>(node: BorderPane = BorderPane()): P
 	}
 
 
-  override fun addChild(child: NodeWrapper, index: Int?) {
+  final override fun addChild(child: NodeWrapper, index: Int?) {
 	requireNull(index)
 	/*center = child*/
 	/*this needs to do nothing, or else behavior is undefined.*/

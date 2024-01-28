@@ -3,11 +3,12 @@ package matt.fx.graphics.wrapper.node.shape.rect
 import javafx.scene.Parent
 import javafx.scene.paint.Paint
 import javafx.scene.shape.Rectangle
-import matt.fx.graphics.wrapper.node.impl.NodeWrapperImpl
+import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.graphics.wrapper.node.attachTo
+import matt.fx.graphics.wrapper.node.impl.NodeWrapperImpl
 import matt.fx.graphics.wrapper.node.shape.ShapeWrapper
 import matt.fx.graphics.wrapper.sizeman.SizeControlled
-import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
+import matt.lang.anno.Open
 import matt.lang.delegation.lazyVarDelegate
 
 fun NodeWrapperImpl<Parent>.rectangle(
@@ -27,7 +28,7 @@ open class RectangleWrapper(
   constructor(width: Double, height: Double, fill: Paint): this(Rectangle(width, height, fill))
   constructor(width: Double, height: Double): this(Rectangle(width, height))
 
-  //  var width
+  final //  var width
   //	get() = node.width
   //	set(value) {
   //	  node.width = value
@@ -36,7 +37,7 @@ open class RectangleWrapper(
 	node.widthProperty().toNonNullableProp().cast<Double>()
   }
 
-  //  var height
+  final //  var height
   //	get() = node.height
   //	set(value) {
   //	  node.height = value
@@ -54,13 +55,14 @@ open class RectangleWrapper(
   var y by lazyVarDelegate { yProperty }
 
 
-  override var height
+    @Open
+    override var height
 	get() = node.height
 	set(value) {
 	  node.height = value
 	}
 
-  override var width
+  final override var width
 	get() = node.width
 	set(value) {
 	  node.width = value

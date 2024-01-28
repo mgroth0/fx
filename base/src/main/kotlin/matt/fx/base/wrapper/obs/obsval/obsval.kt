@@ -11,8 +11,7 @@ import javafx.beans.binding.ObjectBinding
 import javafx.beans.binding.StringBinding
 import javafx.beans.property.Property
 import javafx.beans.value.ObservableValue
-import matt.lang.ktversion.ifPastInitialK2
-import matt.log.warn.warn
+import matt.lang.anno.Open
 import matt.obs.listen.OldAndNewListener
 import matt.obs.listen.update.ValueChange
 import matt.obs.prop.FXBackedPropBase
@@ -114,70 +113,14 @@ open class NullableFXBackedReadOnlyBindableProp<T>(private val o: ObservableValu
     MObservableROValBase<T?, ValueChange<T?>, OldAndNewListener<T?, ValueChange<T?>, out ValueChange<T?>>>(),
     FXBackedProp<T>,
     MObservableValNewAndOld<T?>,
-    ReadableFXBackedPropBinder<T> {
+    ReadableFXBackedPropBinder<T> by ReadingBinder(o) {
 
 
-    private val readingBinder = ReadingBinder(o)
-    override fun booleanBinding(
-        vararg dependencies: Observable,
-        op: (T?) -> Boolean
-    ): BooleanBinding {
-        return readingBinder.booleanBinding(*dependencies, op = op)
-    }
 
-    override fun doubleBinding(
-        vararg dependencies: Observable,
-        op: (T?) -> Double
-    ): DoubleBinding {
-        return readingBinder.doubleBinding(*dependencies, op = op)
-    }
-
-    override fun floatBinding(
-        vararg dependencies: Observable,
-        op: (T?) -> Float
-    ): FloatBinding {
-        return readingBinder.floatBinding(*dependencies, op = op)
-    }
-
-    override fun integerBinding(
-        vararg dependencies: Observable,
-        op: (T?) -> Int
-    ): IntegerBinding {
-        return readingBinder.integerBinding(*dependencies, op = op)
-    }
-
-    override fun longBinding(
-        vararg dependencies: Observable,
-        op: (T?) -> Long
-    ): LongBinding {
-        return readingBinder.longBinding(*dependencies, op = op)
-    }
-
-
-    override fun stringBinding(
-        vararg dependencies: Observable,
-        op: (T?) -> String
-    ): StringBinding {
-        return readingBinder.stringBinding(*dependencies, op = op)
-    }
-
-    override fun <TT> objectBinding(
-        vararg dependencies: Observable,
-        op: (T?) -> TT
-    ): ObjectBinding<TT> {
-        return readingBinder.objectBinding(*dependencies, op = op)
-    }
-
-
-    init {
-        ifPastInitialK2 {
-            warn("used to delegate ReadableFXBackedPropBinder<T> by ReadingBinder(o) before bug in kotlin 2.0.0-Beta1")
-        }
-    }
-
+    @Open
     override val isFXBound get() = (o as? Property<*>)?.isBound ?: false
 
-    override val value: T?
+    @Open override val value: T?
         get() {
             return o.value
         }
@@ -195,11 +138,10 @@ open class NonNullFXBackedReadOnlyBindableProp<T : Any>(private val o: Observabl
     MObservableROValBase<T, ValueChange<T>, OldAndNewListener<T, ValueChange<T>, out ValueChange<T>>>(),
     FXBackedProp<T>,
     MObservableValNewAndOld<T>,
-    ReadableFXBackedPropBinder<T> {
+    ReadableFXBackedPropBinder<T> by ReadingBinder(o) {
 
-
-    override val isFXBound get() = (o as? Property<*>)?.isBound ?: false
-    override val value: T
+    @Open override val isFXBound get() = (o as? Property<*>)?.isBound ?: false
+    @Open override val value: T
         get() {
             return o.value!!
         }
@@ -210,52 +152,4 @@ open class NonNullFXBackedReadOnlyBindableProp<T : Any>(private val o: Observabl
         }
     }
 
-    override fun booleanBinding(
-        vararg dependencies: Observable,
-        op: (T?) -> Boolean
-    ): BooleanBinding {
-        TODO("delegated MutableSet<E> by ReadingBinder(o) until kotlin 2.0.0Beta1 <:[")
-    }
-
-    override fun integerBinding(
-        vararg dependencies: Observable,
-        op: (T?) -> Int
-    ): IntegerBinding {
-        TODO("delegated MutableSet<E> by ReadingBinder(o) until kotlin 2.0.0Beta1 <:[")
-    }
-
-    override fun longBinding(
-        vararg dependencies: Observable,
-        op: (T?) -> Long
-    ): LongBinding {
-        TODO("delegated MutableSet<E> by ReadingBinder(o) until kotlin 2.0.0Beta1 <:[")
-    }
-
-    override fun doubleBinding(
-        vararg dependencies: Observable,
-        op: (T?) -> Double
-    ): DoubleBinding {
-        TODO("delegated MutableSet<E> by ReadingBinder(o) until kotlin 2.0.0Beta1 <:[")
-    }
-
-    override fun floatBinding(
-        vararg dependencies: Observable,
-        op: (T?) -> Float
-    ): FloatBinding {
-        TODO("delegated MutableSet<E> by ReadingBinder(o) until kotlin 2.0.0Beta1 <:[")
-    }
-
-    override fun <TT> objectBinding(
-        vararg dependencies: Observable,
-        op: (T?) -> TT
-    ): ObjectBinding<TT> {
-        TODO("delegated MutableSet<E> by ReadingBinder(o) until kotlin 2.0.0Beta1 <:[")
-    }
-
-    override fun stringBinding(
-        vararg dependencies: Observable,
-        op: (T?) -> String
-    ): StringBinding {
-        TODO("delegated MutableSet<E> by ReadingBinder(o) until kotlin 2.0.0Beta1 <:[")
-    }
 }

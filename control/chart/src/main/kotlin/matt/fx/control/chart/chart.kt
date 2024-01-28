@@ -14,9 +14,9 @@ import matt.lang.NOT_IMPLEMENTED
 open class ChartWrapper<N: ChartForPrivateProps>(node: N): RegionWrapperImpl<N, NodeWrapper>(node), Titled {
 
 
-  override val titleProperty: NullableFXBackedBindableProp<String> by lazy { node.titleProperty().toNullableProp() }
+  final override val titleProperty: NullableFXBackedBindableProp<String> by lazy { node.titleProperty().toNullableProp() }
 
-  override fun addChild(child: NodeWrapper, index: Int?) = NOT_IMPLEMENTED
+  final override fun addChild(child: NodeWrapper, index: Int?) = NOT_IMPLEMENTED
 
   val animatedProperty: NonNullFXBackedBindableProp<Boolean> by lazy { node.animatedProperty().toNonNullableProp() }
   var animated: Boolean by animatedProperty

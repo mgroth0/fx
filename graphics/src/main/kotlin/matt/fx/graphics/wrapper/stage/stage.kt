@@ -20,7 +20,7 @@ open class StageWrapper(node: Stage = Stage()) : WindowWrapper<Stage>(node), Tit
 
     constructor(stageStyle: StageStyle) : this(Stage(stageStyle))
 
-    override val titleProperty: NullableFXBackedBindableProp<String> by lazy { node.titleProperty().toNullableProp() }
+    final override val titleProperty: NullableFXBackedBindableProp<String> by lazy { node.titleProperty().toNullableProp() }
 
     val icons get() = node.icons
 
@@ -64,25 +64,25 @@ open class StageWrapper(node: Stage = Stage()) : WindowWrapper<Stage>(node), Tit
 
     fun maximizedProperty(): ReadOnlyBooleanProperty = node.maximizedProperty()
 
-    override var scene: SceneWrapper<*>?
+    final override var scene: SceneWrapper<*>?
         get() = super.scene
         set(value) {
             node.scene = value?.node
         }
 
-    override fun addChild(
+    final override fun addChild(
         child: NodeWrapper,
         index: Int?
     ) {
         TODO()
     }
 
-    override fun removeFromParent() {
+    final override fun removeFromParent() {
         warn("removeFromParent used on a stage... closing stage")
         close()
     }
 
-    override fun isInsideRow() = false
+    final override fun isInsideRow() = false
 
 
     var isAlwaysOnTop

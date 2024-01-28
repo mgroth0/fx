@@ -11,7 +11,6 @@ import matt.async.safe.sync
 import matt.async.thread.daemon
 import matt.async.thread.queue.QueueWorker
 import matt.async.thread.schedule.every
-import matt.auto.ascript.AppleScriptString
 import matt.auto.console.mem.CONSOLE_MEM_FOLD
 import matt.auto.console.mem.ConsoleMemory
 import matt.auto.macapp.sublime.SublimeText
@@ -62,7 +61,6 @@ import java.nio.channels.FileChannel
 import java.nio.file.NoSuchFileException
 import kotlin.time.Duration.Companion.seconds
 
-val YesIUse = AppleScriptString::class
 
 context(ReapingShellExecutionContext)
 fun ParentWrapper<NodeWrapper>.processConsole(

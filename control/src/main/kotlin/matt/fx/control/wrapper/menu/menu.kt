@@ -13,6 +13,7 @@ import javafx.scene.input.KeyCombination
 import matt.fx.control.wrapper.menu.item.MenuItemWrapper
 import matt.fx.control.wrapper.menu.item.SimpleMenuItem
 import matt.fx.control.wrapper.menu.radioitem.ValuedRadioMenuItem
+import matt.lang.anno.Open
 import matt.obs.bindings.str.ObsS
 
 interface ContextMenuBuilder {
@@ -20,6 +21,7 @@ interface ContextMenuBuilder {
         s: String,
         op: () -> Unit
     ): MenuItemWrapper<*>
+    @Open
     infix fun String.does(op: () -> Unit) = actionitem(this, op)
 }
 

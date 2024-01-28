@@ -16,116 +16,124 @@ import matt.fx.control.wrapper.label.LabelWrapper
 import matt.fx.graphics.service.nullableParentConverter
 import matt.fx.graphics.wrapper.node.NW
 import matt.fx.graphics.wrapper.node.NodeWrapper
+import matt.lang.assertions.require.requireNull
 import matt.lang.delegation.lazyVarDelegate
 import matt.lang.go
-import matt.lang.assertions.require.requireNull
-import matt.lang.sync
 import matt.obs.prop.VarProp
 
 fun NW.install(newToolTip: FixedTooltipWrapper) {
-  MyFixedTooltip.install(
-	this.node, newToolTip.node
-  )
+    MyFixedTooltip.install(
+        this.node, newToolTip.node
+    )
 }
 
-fun NW.tooltip(text: String = "", graphic: NW? = null, op: FixedTooltipWrapper.()->Unit = {}): FixedTooltipWrapper {
-  val newToolTip = FixedTooltipWrapper().apply {
+fun NW.tooltip(
+    text: String = "",
+    graphic: NW? = null,
+    op: FixedTooltipWrapper.() -> Unit = {}
+): FixedTooltipWrapper {
+    val newToolTip = FixedTooltipWrapper().apply {
 
 
-	this.content = LabelWrapper(text, graphic?.node)
-	comfortablyShowForeverUntilEscaped()
-	op()
-  }
-  install(newToolTip)
-  return newToolTip
+        this.content = LabelWrapper(text, graphic?.node)
+        comfortablyShowForeverUntilEscaped()
+        op()
+    }
+    install(newToolTip)
+    return newToolTip
 }
 
-fun NW.tooltip(content: NW?, op: FixedTooltipWrapper.()->Unit = {}): FixedTooltipWrapper {
-  val newToolTip = FixedTooltipWrapper().apply {
-	this.content = content
-	comfortablyShowForeverUntilEscaped()
-	op()
-  }
-  install(newToolTip)
-  return newToolTip
+fun NW.tooltip(
+    content: NW?,
+    op: FixedTooltipWrapper.() -> Unit = {}
+): FixedTooltipWrapper {
+    val newToolTip = FixedTooltipWrapper().apply {
+        this.content = content
+        comfortablyShowForeverUntilEscaped()
+        op()
+    }
+    install(newToolTip)
+    return newToolTip
 }
 
 
-open class FixedTooltipWrapper(node: MyFixedTooltip = MyFixedTooltip()): PopupWindowWrapper<MyFixedTooltip>(node) {
+open class FixedTooltipWrapper(node: MyFixedTooltip = MyFixedTooltip()) : PopupWindowWrapper<MyFixedTooltip>(node) {
 
 
+    val contentProperty by lazy {
+        node.contentProperty().toNullableProp().proxy(nullableParentConverter)
+    }
+    var content by lazyVarDelegate {
+        contentProperty
+    }
 
-  val contentProperty by lazy {
-	node.contentProperty().toNullableProp().proxy(nullableParentConverter)
-  }
-  var content by lazyVarDelegate {
-	contentProperty
-  }
-
-  override fun addChild(child: NodeWrapper, index: Int?) {
-	  requireNull(index)
-	contentProperty v child
-  }
-
-
-  fun comfortablyShowForeverUntilMouseMoved() {
-	showDelay = Duration.millis(100.0)
-	showDuration = Duration.INDEFINITE
-  }
-
-  fun comfortablyShowForeverUntilEscaped() {
-	comfortablyShowForeverUntilMouseMoved()
-	hideDelay = Duration.INDEFINITE
-  }
-
-  var showDelay: Duration
-	get() = node.showDelay
-	set(value) {
-	  node.setShowDelay(value)
-	}
-  var hideDelay: Duration
-	get() = node.hideDelay
-	set(value) {
-	  node.setHideDelay(value)
-	}
-  var showDuration: Duration
-	get() = node.showDuration
-	set(value) {
-	  node.setShowDuration(value)
-	}
-  var consumeAutoHidingEvents by node::consumeAutoHidingEvents
-  var isAutoFix by node.autoFixProperty().toNonNullableProp()
-  var isAutoHide by node.autoHideProperty().toNonNullableProp()
+    final override fun addChild(
+        child: NodeWrapper,
+        index: Int?
+    ) {
+        requireNull(index)
+        contentProperty v child
+    }
 
 
-  private var transparentMouseEventHandler: EventHandler<MouseEvent>? = null
+    fun comfortablyShowForeverUntilMouseMoved() {
+        showDelay = Duration.millis(100.0)
+        showDuration = Duration.INDEFINITE
+    }
 
-  val sendMouseEventsToProp = VarProp<SendMouseEvents?>(null).apply {
-	onChange { opt ->
-	  sync {
-		if (opt == null) {
-		  transparentMouseEventHandler?.go {
-			removeEventFilter(MouseEvent.ANY, it)
-			transparentMouseEventHandler = null
-		  }
-		} else {
+    fun comfortablyShowForeverUntilEscaped() {
+        comfortablyShowForeverUntilMouseMoved()
+        hideDelay = Duration.INDEFINITE
+    }
 
-		  addEventFilter(MouseEvent.ANY, EventHandler<MouseEvent> {
-			correctTooltipNativeMouseEvent(
-			  it, target = when (opt) {
-				AutoDetectUnderlyingScene -> null
-				is Owner                  -> node.ownerWindow.scene
-				is SpecificScene          -> opt.scene
-			  }, exclude = scene!!.node
-			)
-			it.consume()
-		  }.also {
-			transparentMouseEventHandler = it
-		  })
-		}
-	  }
-	}
-  }
-  var sendMouseEventsTo by sendMouseEventsToProp
+    var showDelay: Duration
+        get() = node.showDelay
+        set(value) {
+            node.setShowDelay(value)
+        }
+    var hideDelay: Duration
+        get() = node.hideDelay
+        set(value) {
+            node.setHideDelay(value)
+        }
+    var showDuration: Duration
+        get() = node.showDuration
+        set(value) {
+            node.setShowDuration(value)
+        }
+    var consumeAutoHidingEvents by node::consumeAutoHidingEvents
+    var isAutoFix by node.autoFixProperty().toNonNullableProp()
+    var isAutoHide by node.autoHideProperty().toNonNullableProp()
+
+
+    private var transparentMouseEventHandler: EventHandler<MouseEvent>? = null
+
+    val sendMouseEventsToProp = VarProp<SendMouseEvents?>(null).apply {
+        onChange { opt ->
+            synchronized(this) {
+                if (opt == null) {
+                    transparentMouseEventHandler?.go {
+                        removeEventFilter(MouseEvent.ANY, it)
+                        transparentMouseEventHandler = null
+                    }
+                } else {
+
+                    addEventFilter(MouseEvent.ANY, EventHandler<MouseEvent> {
+                        correctTooltipNativeMouseEvent(
+                            it, target = when (opt) {
+                                AutoDetectUnderlyingScene -> null
+                                is Owner                  -> node.ownerWindow.scene
+                                is SpecificScene          -> opt.scene
+                            }, exclude = scene!!.node
+                        )
+                        it.consume()
+                    }.also {
+                        transparentMouseEventHandler = it
+                    })
+                }
+            }
+        }
+    }
+    var sendMouseEventsTo by sendMouseEventsToProp
 
 }

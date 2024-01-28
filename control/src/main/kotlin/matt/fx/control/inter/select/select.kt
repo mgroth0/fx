@@ -3,12 +3,14 @@ package matt.fx.control.inter.select
 import matt.fx.control.toggle.mech.ToggleMechanism
 import matt.fx.control.wrapper.control.value.constval.HasConstValue
 import matt.lang.B
+import matt.lang.anno.Open
 import matt.obs.prop.GoodVar
 import matt.obs.prop.Var
 
 interface Selectable {
   val selectedProperty: GoodVar<B>
-  var isSelected
+	@Open
+	var isSelected
 	get() = selectedProperty.value
 	set(value) {
 	  selectedProperty.value = value

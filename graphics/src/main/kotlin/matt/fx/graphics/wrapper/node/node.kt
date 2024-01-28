@@ -44,6 +44,7 @@ import matt.fx.graphics.wrapper.stage.StageWrapper
 import matt.fx.graphics.wrapper.style.StyleableWrapper
 import matt.fx.graphics.wrapper.window.HasScene
 import matt.lang.NOT_IMPLEMENTED
+import matt.lang.anno.Open
 import matt.lang.assertions.require.requireNotEqual
 import matt.obs.bindings.bool.ObsB
 import matt.obs.bindings.bool.not
@@ -79,6 +80,7 @@ typealias NW = NodeWrapper
 
 interface NodeWrapper : EventTargetWrapper, StyleableWrapper, HasScene {
 
+    @Open
     override fun isInsideRow(): Boolean = parent?.isInsideRow() ?: false
 
     override val node: Node
@@ -89,75 +91,94 @@ interface NodeWrapper : EventTargetWrapper, StyleableWrapper, HasScene {
 
     val hoverProperty: ObsVal<Boolean>
 
+    @Open
     val boundsInLocal: Bounds get() = node.boundsInLocal
+    @Open
     val boundsInParent: Bounds get() = node.boundsInParent
 
     val layoutBoundsProperty: ObsVal<Bounds>
 
-    fun setOnKeyPressed(listener: (KeyEvent) -> Unit) {
+    @Open fun setOnKeyPressed(listener: (KeyEvent) -> Unit) {
         node.setOnKeyPressed(listener)
     }
 
+    @Open
     fun setOnKeyTyped(listener: (KeyEvent) -> Unit) = node.setOnKeyTyped(listener)
 
+    @Open
     fun setOnMousePressed(listener: (MouseEvent) -> Unit) {
         node.setOnMousePressed(listener)
     }
 
 
+    @Open
     fun setOnMouseClicked(listener: (MouseEvent) -> Unit) {
         node.setOnMouseClicked(listener)
     }
 
 
+    @Open
     fun setOnMouseDragged(listener: (MouseEvent) -> Unit) {
         node.setOnMouseDragged(listener)
     }
 
+    @Open
     fun setOnMouseReleased(listener: (MouseEvent) -> Unit) {
         node.setOnMouseReleased(listener)
     }
 
+    @Open
     fun setOnMouseMoved(listener: (MouseEvent) -> Unit) {
         node.setOnMouseMoved(listener)
     }
 
+    @Open
     fun setOnMouseEntered(listener: (MouseEvent) -> Unit) {
         node.setOnMouseEntered(listener)
     }
 
+    @Open
     fun setOnMouseExited(listener: (MouseEvent) -> Unit) {
         node.setOnMouseExited(listener)
     }
 
+    @Open
     fun setOnDragEntered(listener: (DragEvent) -> Unit) {
         node.setOnDragEntered(listener)
     }
 
+    @Open
     fun setOnDragOver(listener: (DragEvent) -> Unit) {
         node.setOnDragOver(listener)
     }
 
+    @Open
     fun setOnDragDetected(listener: (MouseEvent) -> Unit) {
         node.setOnDragDetected(listener)
     }
 
+    @Open
     fun setOnDragDone(listener: (DragEvent) -> Unit) {
         node.setOnDragDone(listener)
     }
 
+    @Open
     fun setOnDragExited(listener: (DragEvent) -> Unit) {
         node.setOnDragExited(listener)
     }
 
+    @Open
     fun setOnDragDropped(listener: (DragEvent) -> Unit) {
         node.setOnDragDropped(listener)
     }
 
 
+    @Open
     fun toFront() = node.toFront()
+    @Open
     fun toBack() = node.toBack()
 
+    @Open
     fun setOnScroll(listener: (ScrollEvent) -> Unit) {
         node.setOnScroll(listener)
     }
@@ -166,64 +187,80 @@ interface NodeWrapper : EventTargetWrapper, StyleableWrapper, HasScene {
     val visibleProperty: Var<Boolean>
 
 
-    fun fireEvent(e: Event) = node.fireEvent(e)
+    @Open fun fireEvent(e: Event) = node.fireEvent(e)
 
     //  val styleClass get() = node.styleClass
 
 
-    fun setOnContextMenuRequested(value: EventHandler<ContextMenuEvent>) = node.setOnContextMenuRequested(value)
+    @Open fun setOnContextMenuRequested(value: EventHandler<ContextMenuEvent>) = node.setOnContextMenuRequested(value)
 
+    @Open
     var opacity
         get() = node.opacity
         set(value) {
             node.opacity = value
         }
 
+    @Open
     fun opacityProperty(): DoubleProperty = node.opacityProperty()
+    @Open
     var rotate
         get() = node.rotate
         set(value) {
             node.rotate = value
         }
+    @Open
     val rotateProperty: DoubleProperty get() = node.rotateProperty()
 
+    @Open
     var rotationAxis: Point3D
         get() = node.rotationAxis
         set(value) {
             node.rotationAxis = value
         }
+    @Open
     val rotationAxisProperty: ObjectProperty<Point3D> get() = node.rotationAxisProperty()
 
 
+    @Open
     override val properties: ObservableMap<Any, Any?> get() = node.properties
 
+    @Open
     var isCache
         get() = node.isCache
         set(value) {
             node.isCache = value
         }
 
+    @Open
     fun cacheProperty(): BooleanProperty = node.cacheProperty()
 
+    @Open
     var cacheHint: CacheHint
         get() = node.cacheHint
         set(value) {
             node.cacheHint = value
         }
 
+    @Open
     fun cacheHintProperty(): ObjectProperty<CacheHint> = node.cacheHintProperty()
 
 
+    @Open
     fun snapshot(
         params: SnapshotParameters?,
         image: WritableImage?
     ): WritableImage = node.snapshot(params, image)
 
+    @Open
     fun startDragAndDrop(vararg transferModes: TransferMode): Dragboard = node.startDragAndDrop(*transferModes)
+    @Open
     fun startFullDrag() = node.startFullDrag()
 
+    @Open
     fun lookupAll(selector: String): MutableSet<Node> = node.lookupAll(selector)
 
+    @Open
     var cursor: Cursor?
         get() = cursorProperty.value
         set(value) {
@@ -233,37 +270,45 @@ interface NodeWrapper : EventTargetWrapper, StyleableWrapper, HasScene {
     val cursorProperty: Var<Cursor?>
 
 
+    @Open
     var clip: Node?
         get() = node.clip
         set(value) {
             node.clip = value
         }
 
+    @Open
     fun clipProperty(): ObjectProperty<Node> = node.clipProperty()
 
     val effectProperty: Var<Effect?>
+    @Open
     var effect: Effect?
         get() = effectProperty.value
         set(value) {
             effectProperty.value = value
         }
 
+    @Open
     var blendMode: BlendMode?
         get() = node.blendMode
         set(value) {
             node.blendMode = value
         }
 
+    @Open
     fun blendModeProperty(): ObjectProperty<BlendMode> = node.blendModeProperty()
 
+    @Open
     fun autosize() = node.autosize()
 
+    @Open
     fun <T : Event> addEventFilter(
         eventType: EventType<T>,
         handler: EventHandler<T>
     ) =
         node.addEventFilter(eventType, handler)
 
+    @Open
     fun <T : Event> addEventHandler(
         eventType: EventType<T>,
         handler: EventHandler<T>
@@ -271,19 +316,23 @@ interface NodeWrapper : EventTargetWrapper, StyleableWrapper, HasScene {
         node.addEventHandler(eventType, handler)
 
 
+    @Open
     fun <T : Event> removeEventFilter(
         eventType: EventType<T>,
         handler: EventHandler<T>
     ) =
         node.removeEventFilter(eventType, handler)
 
+    @Open
     fun <T : Event> removeEventHandler(
         eventType: EventType<T>,
         handler: EventHandler<T>
     ) =
         node.removeEventHandler(eventType, handler)
 
+    @Open
     fun localToScene(bounds: Bounds): Bounds? = node.localToScene(bounds)
+    @Open
     fun localToScreen(bounds: Bounds): Bounds? = node.localToScreen(bounds)
 
 
@@ -291,16 +340,19 @@ interface NodeWrapper : EventTargetWrapper, StyleableWrapper, HasScene {
     val sceneProperty: ObsVal<SceneWrapper<*>?>
 
 
+    @Open
     var isEnabled
         get() = !isDisable
         set(value) {
             isDisable = !value
         }
+    @Open
     var isEnable
         get() = !isDisable
         set(value) {
             isDisable = !value
         }
+    @Open
     var isDisable
         get() = node.isDisable
         set(value) {
@@ -316,50 +368,58 @@ interface NodeWrapper : EventTargetWrapper, StyleableWrapper, HasScene {
     val focusedProperty: ObsVal<Boolean>
 
 
+    @Open
     var hGrow: Priority
         get() = HBox.getHgrow(node)
         set(value) {
             HBox.setHgrow(node, value)
         }
+    @Open
     var vGrow: Priority
         get() = VBox.getVgrow(node)
         set(value) {
             VBox.setVgrow(node, value)
         }
 
-    fun setOnZoom(op: (ZoomEvent) -> Unit) = node.setOnZoom(op)
+    @Open fun setOnZoom(op: (ZoomEvent) -> Unit) = node.setOnZoom(op)
 
 
+    @Open
     var isVisible
         get() = node.isVisible
         set(value) {
             node.isVisible = value
         }
 
+    @Open
     var isManaged
         get() = node.isManaged
         set(value) {
             node.isManaged = value
         }
 
+    @Open
     var translateX
         get() = node.translateX
         set(value) {
             node.translateX = value
         }
 
+    @Open
     val translateXProperty: DoubleProperty get() = node.translateXProperty()
 
+    @Open
     var translateY
         get() = node.translateY
         set(value) {
             node.translateY = value
         }
 
+    @Open
     val translateYProperty: DoubleProperty get() = node.translateYProperty()
 
 
-    var layoutX
+    @Open var layoutX
         get() = node.layoutX
         set(value) {
             node.layoutX = value
@@ -369,7 +429,7 @@ interface NodeWrapper : EventTargetWrapper, StyleableWrapper, HasScene {
     val layoutXProperty: BindableProperty<Double>
 
 
-    var layoutY
+    @Open var layoutY
         get() = node.layoutY
         set(value) {
             node.layoutY = value
@@ -378,23 +438,26 @@ interface NodeWrapper : EventTargetWrapper, StyleableWrapper, HasScene {
     val layoutYProperty: BindableProperty<Double>
 
 
-    var scaleX
+    @Open var scaleX
         get() = node.scaleX
         set(value) {
             node.scaleX = value
         }
 
     val scaleXProperty: BindableProperty<Double>
-    var scaleY
+    @Open var scaleY
         get() = node.scaleY
         set(value) {
             node.scaleY = value
         }
 
+    @Open
     val scaleYProperty: BindableProperty<Double>
 
+    @Open
     fun requestFocus() = node.requestFocus()
 
+    @Open
     fun setAsLayoutProxyForAndProxiedFrom(
         other: NodeWrapper,
         removeAllOtherProxiesOnBoth: Boolean = true /*critical to avoid memory leaks*/
@@ -422,6 +485,7 @@ interface NodeWrapper : EventTargetWrapper, StyleableWrapper, HasScene {
     val layoutProxies: MutableSet<NodeWrapper>
 
 
+    @Open
     var hgrow: Priority?
         get() = HBox.getHgrow(this.node)
         set(value) {
@@ -429,6 +493,7 @@ interface NodeWrapper : EventTargetWrapper, StyleableWrapper, HasScene {
                 HBox.setHgrow(it.node, value)
             }
         }
+    @Open
     var vgrow: Priority?
         get() = VBox.getVgrow(this.node)
         set(value) {
@@ -437,12 +502,14 @@ interface NodeWrapper : EventTargetWrapper, StyleableWrapper, HasScene {
             }
         }
 
+    @Open
     var hMarginAll: Double?
         get() = NOT_IMPLEMENTED
         set(value) {
             hMargin = value?.let { Insets(it) }
         }
 
+    @Open
     var hMargin: Insets?
         get() = HBox.getMargin(this.node)
         set(value) {
@@ -450,11 +517,13 @@ interface NodeWrapper : EventTargetWrapper, StyleableWrapper, HasScene {
                 HBox.setMargin(it.node, value)
             }
         }
+    @Open
     var vMarginAll: Double?
         get() = NOT_IMPLEMENTED
         set(value) {
             vMargin = value?.let { Insets(it) }
         }
+    @Open
     var vMargin: Insets?
         get() = VBox.getMargin(this.node)
         set(value) {
@@ -463,6 +532,7 @@ interface NodeWrapper : EventTargetWrapper, StyleableWrapper, HasScene {
             }
         }
 
+    @Open
     fun layoutProxyNetwork(): Set<NW> {
         val net = mutableSetOf(this)
         var toSearch = layoutProxies.toSet()
@@ -473,6 +543,7 @@ interface NodeWrapper : EventTargetWrapper, StyleableWrapper, HasScene {
         return net
     }
 
+    @Open
     fun clearLayoutProxyNetwork() {
         layoutProxyNetwork().forEach {
             it.layoutProxies.clear()
@@ -480,13 +551,16 @@ interface NodeWrapper : EventTargetWrapper, StyleableWrapper, HasScene {
     }
 
 
+    @Open
     val boundsInScene: Bounds
         get() = localToScene(boundsInLocal)!!
 
+    @Open
     val boundsInScreen: Bounds
         get() = localToScreen(boundsInLocal)!!
 
 
+    @Open
     var visibleAndManaged: Boolean
         get() = node.isVisible && node.isManaged
         set(value) {
@@ -495,8 +569,10 @@ interface NodeWrapper : EventTargetWrapper, StyleableWrapper, HasScene {
         }
 
 
+    @Open
     val stage get() = scene?.window as? StageWrapper
 
+    @Open
     fun onDoubleClickConsume(action: () -> Unit) {
         node.setOnMouseClicked {
             if (it.clickCount == 2) {
@@ -506,14 +582,20 @@ interface NodeWrapper : EventTargetWrapper, StyleableWrapper, HasScene {
         }
     }
 
+    @Open
     infix fun addTo(pane: EventTargetWrapper) = pane.addChild(this)
 
 
+    @Open
     fun setAsTopAnchor(offset: Double) = AnchorPane.setTopAnchor(node, offset)
+    @Open
     fun setAsBottomAnchor(offset: Double) = AnchorPane.setBottomAnchor(node, offset)
+    @Open
     fun setAsLeftAnchor(offset: Double) = AnchorPane.setLeftAnchor(node, offset)
+    @Open
     fun setAsRightAnchor(offset: Double) = AnchorPane.setRightAnchor(node, offset)
 
+    @Open
     override fun removeFromParent() {
         node.parent?.wrapped()?.childList?.remove(node)
     }
@@ -709,7 +791,7 @@ fun NW.minYRelativeTo(ancestor: NodeWrapper): Double? {
     var y = boundsInParent.minY
     while (true) {
         when (p) {
-            null -> {
+            null     -> {
                 return null
             }
 
@@ -717,7 +799,7 @@ fun NW.minYRelativeTo(ancestor: NodeWrapper): Double? {
                 return y
             }
 
-            else -> {
+            else     -> {
                 y += p.boundsInParent.minY
                 p = p.parent
             }

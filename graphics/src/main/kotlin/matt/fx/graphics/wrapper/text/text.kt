@@ -13,15 +13,22 @@ import matt.fx.graphics.wrapper.text.textlike.ColoredText
 import matt.lang.delegation.lazyVarDelegate
 import matt.obs.bindings.str.ObsS
 import matt.prim.str.truncateWithElipses
+import kotlin.reflect.KProperty
 
 fun ET.text(op: TextWrapper.() -> Unit = {}) = TextWrapper().attachTo(this, op)
 
-fun ET.text(initialValue: String? = null, op: TextWrapper.() -> Unit = {}) = TextWrapper().attachTo(this, op) {
+fun ET.text(
+    initialValue: String? = null,
+    op: TextWrapper.() -> Unit = {}
+) = TextWrapper().attachTo(this, op) {
     if (initialValue != null) it.text = initialValue
 }
 
 
-fun ET.text(observable: ObsS, op: TextWrapper.() -> Unit = {}) = text().apply {
+fun ET.text(
+    observable: ObsS,
+    op: TextWrapper.() -> Unit = {}
+) = text().apply {
     textProperty.bind(observable.nonBlockingFXWatcher())
     op(this)
 }
@@ -32,10 +39,11 @@ open class TextWrapper(
 
     constructor(text: String) : this(Text(text))
 
+    private val textLength get() = text.length
+    private val textTruncated get() = text.truncateWithElipses(100)
 
-    override fun toString(): String {
-        val t = text
-        return "[${super.toString()} length=${t.length},text=${t.truncateWithElipses(100)}]"
+    final override fun reflectingToStringProps(): Set<KProperty<*>> {
+        return setOf(::textLength, ::textTruncated)
     }
 
     final override val textProperty by lazy { node.textProperty().toNonNullableProp() }

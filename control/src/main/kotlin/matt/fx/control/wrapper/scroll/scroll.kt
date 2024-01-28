@@ -159,7 +159,7 @@ open class ScrollPaneWrapper<C : NodeWrapper>(node: ScrollPane = ScrollPane()) :
         get() = vvalue * ((content!!.boundsInParent.height - viewportBounds.height).takeIf { it > 0 } ?: 0.0)
 
     val vValueConvertedMax get() = vValueConverted + viewportBounds.height
-    override fun addChild(
+    final override fun addChild(
         child: NodeWrapper,
         index: Int?
     ) {

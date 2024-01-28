@@ -282,7 +282,7 @@ private abstract class BaseText(
     font: ObsVal<Font>,
     color: FXColor
 ) : TextWrapper(), ConsoleBlock {
-    override val isEndOfLine get() = text.last() in NEWLINES
+    final override val isEndOfLine get() = text.last() in NEWLINES
 
     init {
         fontProperty.bindWeakly(font)

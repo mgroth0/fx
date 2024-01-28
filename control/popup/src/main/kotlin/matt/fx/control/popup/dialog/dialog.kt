@@ -6,26 +6,26 @@ import javafx.scene.control.Dialog
 import javafx.scene.control.TextInputDialog
 import javafx.stage.Modality
 import javafx.stage.StageStyle
+import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
+import matt.fx.base.wrapper.obs.obsval.toNonNullableROProp
 import matt.fx.control.wrapper.wrapped.wrapped
 import matt.fx.graphics.service.uncheckedNullableWrapperConverter
 import matt.fx.graphics.wrapper.SingularEventTargetWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.window.WindowWrapper
-import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
-import matt.fx.base.wrapper.obs.obsval.toNonNullableROProp
 import matt.lang.NOT_IMPLEMENTED
 
 open class DialogWrapper<R>(dialog: Dialog<R> = Dialog()): SingularEventTargetWrapper<Dialog<R>>(dialog) {
-  override val properties get() = NOT_IMPLEMENTED
-  override fun addChild(child: NodeWrapper, index: Int?) {
+  final override val properties get() = NOT_IMPLEMENTED
+  final override fun addChild(child: NodeWrapper, index: Int?) {
 	TODO()
   }
 
-  override fun removeFromParent() {
+  final override fun removeFromParent() {
 	TODO()
   }
 
-  override fun isInsideRow(): Boolean {
+  final override fun isInsideRow(): Boolean {
 	TODO()
   }
 

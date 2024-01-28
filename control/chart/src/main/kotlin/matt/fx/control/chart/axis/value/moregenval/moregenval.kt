@@ -31,8 +31,9 @@ import matt.fx.control.chart.axis.value.axis.AxisForPackagePrivateProps
 import matt.fx.control.chart.axis.value.axis.NullRangeProp
 import matt.fx.control.chart.axis.value.axis.RangeProps
 import matt.fx.control.css.BooleanCssMetaData
+import matt.lang.anno.Open
 import matt.obs.prop.BindableProperty
-import java.util.*
+import java.util.Collections
 
 
 private typealias UpperBound = Any
@@ -262,7 +263,7 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
         }
     }
     // -------------- PROTECTED METHODS --------------------------------------------------------------------------------
-    /**
+    final /**
      * This calculates the upper and lower bound based on the data provided to invalidateRange() method. This must not
      * affect the state of the axis. Any results of the auto-ranging should be
      * returned in the range object. This will we passed to setRange() if it has been decided to adopt this range for
@@ -340,14 +341,14 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
      * Called during layout if the tickmarks have been updated, allowing subclasses to do anything they need to
      * in reaction.
      */
-    override fun tickMarksUpdated() {
+    final override fun tickMarksUpdated() {
         super.tickMarksUpdated()
         // recalculate minor tick marks
         minorTickMarkValues = calculateMinorTickMarks()
         minorTickMarksDirty = true
     }
 
-    /**
+    final /**
      * Invoked during the layout pass to layout this axis and all its content.
      */
     override fun layoutChildren() {
@@ -437,7 +438,7 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
         }
     }
     // -------------- METHODS ------------------------------------------------------------------------------------------
-    /**
+    final /**
      * Called when the data has changed and the range may not be valid anymore. This is only called by the chart if
      * isAutoRanging() returns true. If we are auto ranging it will cause layout to be requested and auto ranging to
      * happen on next layout pass.
@@ -461,7 +462,7 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
         super.invalidateRange(data)
     }
 
-    /**
+    final /**
      * Gets the display position along this axis for a given value.
      * If the value is not in the current range, the returned value will be an extrapolation of the display
      * position.
@@ -473,7 +474,7 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
         return offset + (converter.convertToB(value) - currentLowerBound.get()) * getScale()
     }
 
-    /**
+    final /**
      * Gets the data value for the given display position on this axis. If the axis
      * is a CategoryAxis this will be the nearest value.
      *
@@ -485,7 +486,7 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
         return toRealValue((displayPosition - offset) / getScale() + currentLowerBound.get())
     }
 
-    /**
+    final /**
      * Gets the display position of the zero line along this axis.
      *
      * @return display position or Double.NaN if zero is not in current range;
@@ -497,7 +498,7 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
             0.0.convert()
         )
 
-    /**
+    final /**
      * Checks if the given value is plottable on this axis
      *
      * @param value The value to check if its on axis
@@ -508,7 +509,7 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
         return num >= lowerBound.value.convert() && num <= upperBound.value.convert()
     }
 
-    /**
+    final /**
      * All axis values must be representable by some numeric value. This gets the numeric value for a given data value.
      *
      * @param value The data value to convert
@@ -518,7 +519,7 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
         return converter.convertToB(value)
     }
 
-    /**
+    final /**
      * All axis values must be representable by some numeric value. This gets the data value for a given numeric value.
      *
      * @param value The numeric value to convert
@@ -598,6 +599,7 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
         }
     }
 
+    @Open
     /**
      * {@inheritDoc}
      * @since JavaFX 8.0

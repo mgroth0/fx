@@ -11,22 +11,24 @@ import matt.fx.graphics.wrapper.node.line.poly.PolylineWrapper
 import matt.fx.graphics.wrapper.node.line.quad.QuadCurveWrapper
 import matt.fx.graphics.wrapper.node.shape.poly.PolygonWrapper
 import matt.fx.graphics.wrapper.node.tri.Triangle
+import matt.lang.anno.Open
 import matt.obs.bind.binding
 import matt.obs.col.olist.mappedlist.toMappedList
 
 interface ParentWrapper<C : NodeWrapper> : NodeWrapper {
     override val node: Parent
 
+    @Open
     fun polygon(vararg points: Number, op: PolygonWrapper.() -> Unit = {}) =
         PolygonWrapper(*points.map(Number::toDouble).toDoubleArray()).attachTo(this, op)
 
-    fun triangle(op: Triangle.() -> Unit = {}) =
+    @Open fun triangle(op: Triangle.() -> Unit = {}) =
         Triangle().attachTo(this, op)
 
-    fun polyline(vararg points: Number, op: PolylineWrapper.() -> Unit = {}) =
+    @Open fun polyline(vararg points: Number, op: PolylineWrapper.() -> Unit = {}) =
         PolylineWrapper(*points.map(Number::toDouble).toDoubleArray()).attachTo(this, op)
 
-    fun quadcurve(
+    @Open fun quadcurve(
         startX: Number = 0.0,
         startY: Number = 0.0,
         controlX: Number = 0.0,
@@ -45,7 +47,7 @@ interface ParentWrapper<C : NodeWrapper> : NodeWrapper {
         ).attachTo(this, op)
 
 
-    fun <CC : C> addr(child: CC, op: (CC.() -> Unit)? = null): CC {
+    @Open fun <CC : C> addr(child: CC, op: (CC.() -> Unit)? = null): CC {
         op?.invoke(child)
         add(child)
         return child

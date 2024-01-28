@@ -42,7 +42,7 @@ abstract class MyInterpolator: Interpolator() {
 	val MY_DEFAULT_INTERPOLATOR = LINEAR
   }
 
-  override fun interpolate(startValue: Any?, endValue: Any?, fraction: Double): Any {
+  final override fun interpolate(startValue: Any?, endValue: Any?, fraction: Double): Any {
 	return when {
 	  (startValue is Number && endValue is Number)                                 -> super.interpolate(
 		startValue, endValue, fraction

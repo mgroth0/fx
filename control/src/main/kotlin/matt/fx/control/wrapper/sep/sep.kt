@@ -21,7 +21,7 @@ open class SeparatorWrapper(
 	o: Orientation
   ): this(Separator(o))
 
-  override fun addChild(child: NodeWrapper, index: Int?) {
+  final override fun addChild(child: NodeWrapper, index: Int?) {
 	TODO()
   }
 

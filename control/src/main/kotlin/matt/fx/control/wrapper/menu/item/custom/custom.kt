@@ -20,7 +20,7 @@ open class CustomMenuItemWrapper(
             node.content = value
         }
 
-    override fun addChild(
+    final override fun addChild(
         child: NodeWrapper,
         index: Int?
     ) {

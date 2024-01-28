@@ -34,6 +34,7 @@ import matt.fx.image.toBufferedImage
 import matt.image.Png
 import matt.image.convert.toPng
 import matt.lang.NEVER
+import matt.lang.anno.Open
 import matt.lang.convert.BiConverter
 import matt.lang.delegation.lazyVarDelegate
 import matt.lang.err
@@ -67,6 +68,7 @@ interface RegionWrapper<C : NodeWrapper> : ParentWrapper<C>, SizeManaged, PngRas
     override val node: Region
 
 
+    @Open
     fun setMinSize(
         minWidth: Double,
         minHeight: Double
@@ -75,16 +77,23 @@ interface RegionWrapper<C : NodeWrapper> : ParentWrapper<C>, SizeManaged, PngRas
     override fun rasterize(size: IntRectSize): Png
 
     val borderProperty: Var<Border?>
+    @Open
     var border: Border?
         get() = node.border
         set(value) = borderProperty.v(value)
 
+    @Open
     fun yellow() = borderProperty.v(FXBorder.dashed(Color.YELLOW))
+    @Open
     fun blue() = borderProperty.v(FXBorder.dashed(Color.BLUE))
+    @Open
     fun purple() = borderProperty.v(FXBorder.dashed(Color.PURPLE))
-    fun green() = borderProperty.v(FXBorder.dashed(Color.GREEN))
+    @Open fun green() = borderProperty.v(FXBorder.dashed(Color.GREEN))
+    @Open
     fun red() = borderProperty.v(FXBorder.dashed(Color.RED))
+    @Open
     fun orange() = borderProperty.v(FXBorder.dashed(Color.ORANGE))
+    @Open
     fun white() = borderProperty.v(FXBorder.dashed(Color.WHITE))
 
     var padding: Insets
@@ -103,6 +112,7 @@ interface RegionWrapper<C : NodeWrapper> : ParentWrapper<C>, SizeManaged, PngRas
     override val minHeightProperty: Var<Double>
     override val maxHeightProperty: Var<Double>
 
+    @Open
     fun setOnFilesDropped(op: (List<FsFile>) -> Unit) {
         node.setOnDragEntered {
             it.acceptTransferModes(*TransferMode.ANY)
@@ -118,6 +128,7 @@ interface RegionWrapper<C : NodeWrapper> : ParentWrapper<C>, SizeManaged, PngRas
         }
     }
 
+    @Open
     var backgroundFill: Paint?
         set(value) {
             if (value == null) {
@@ -132,27 +143,33 @@ interface RegionWrapper<C : NodeWrapper> : ParentWrapper<C>, SizeManaged, PngRas
         }
 
 
+    @Open
     fun fitToParentHeight() {
         fitToHeight((parent as RegionWrapper))
     }
 
+    @Open
     fun fitToParentWidth() {
         fitToWidth((parent as RegionWrapper))
     }
 
+    @Open
     fun fitToParentSize() {
         fitToParentHeight()
         fitToParentWidth()
     }
 
+    @Open
     fun fitToHeight(region: RegionWrapper<*>) {
         prefHeightProperty.bind(region.heightProperty)
     }
 
+    @Open
     fun fitToWidth(region: RegionWrapper<*>) {
         prefWidthProperty.bind(region.widthProperty)
     }
 
+    @Open
     fun fitToSize(region: RegionWrapper<*>) {
         fitToHeight(region)
         fitToWidth(region)
@@ -166,11 +183,13 @@ interface RegionWrapper<C : NodeWrapper> : ParentWrapper<C>, SizeManaged, PngRas
     val exactHeightProperty: VarProp<Double>
 
 
+    @Open
     var exactWidth: Number
         set(value) {
             exactWidthProperty.bind(BindableProperty(value.toDouble()))
         }
         get() = NEVER
+    @Open
     var exactHeight: Number
         set(value) {
             exactHeightProperty.bind(BindableProperty(value.toDouble()))
@@ -178,36 +197,42 @@ interface RegionWrapper<C : NodeWrapper> : ParentWrapper<C>, SizeManaged, PngRas
         get() = NEVER
 
 
+    @Open
     var useMaxWidth: Boolean
         get() = maxWidth == Double.MAX_VALUE
         set(value) = if (value) maxWidth = Double.MAX_VALUE else Unit
 
+    @Open
     var useMaxHeight: Boolean
         get() = maxHeight == Double.MAX_VALUE
         set(value) = if (value) maxHeight = Double.MAX_VALUE else Unit
 
+    @Open
     var useMaxSize: Boolean
         get() = maxWidth == Double.MAX_VALUE && maxHeight == Double.MAX_VALUE
         set(value) = if (value) {
             useMaxWidth = true; useMaxHeight = true
         } else Unit
 
+    @Open
     var usePrefWidth: Boolean
         get() = width == prefWidth
         set(value) = if (value) run {
             minWidth = (Region.USE_PREF_SIZE)
         } else Unit
 
+    @Open
     var usePrefHeight: Boolean
         get() = height == prefHeight
         set(value) = if (value) run { minHeight = (Region.USE_PREF_SIZE) } else Unit
 
+    @Open
     var usePrefSize: Boolean
         get() = maxWidth == Double.MAX_VALUE && maxHeight == Double.MAX_VALUE
         set(value) = if (value) setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE) else Unit
 
 
-    override fun addChild(
+    @Open   override fun addChild(
         child: NodeWrapper,
         index: Int?
     ) {
@@ -247,25 +272,24 @@ open class RegionWrapperImpl<N : Region, C : NodeWrapper>(node: N) : ParentWrapp
             )
     }
 
-    override val borderProperty by lazy {
+    final override val borderProperty by lazy {
         node.borderProperty().toNullableProp()
     }
 
-    override val widthProperty by lazy { node.widthProperty().toNonNullableROProp().cast<Double>() }
-    override val prefWidthProperty by lazy { node.prefWidthProperty().toNonNullableProp().cast<Double>() }
-    override val minWidthProperty by lazy { node.minWidthProperty().toNonNullableProp().cast<Double>() }
-    override val maxWidthProperty by lazy { node.maxWidthProperty().toNonNullableProp().cast<Double>() }
-    override val heightProperty by lazy { node.heightProperty().toNonNullableROProp().cast<Double>() }
-    override val prefHeightProperty by lazy { node.prefHeightProperty().toNonNullableProp().cast<Double>() }
-    override val minHeightProperty by lazy { node.minHeightProperty().toNonNullableProp().cast<Double>() }
-    override val maxHeightProperty by lazy { node.maxHeightProperty().toNonNullableProp().cast<Double>() }
+    final override val widthProperty by lazy { node.widthProperty().toNonNullableROProp().cast<Double>() }
+    final override val prefWidthProperty by lazy { node.prefWidthProperty().toNonNullableProp().cast<Double>() }
+    final override val minWidthProperty by lazy { node.minWidthProperty().toNonNullableProp().cast<Double>() }
+    final override val maxWidthProperty by lazy { node.maxWidthProperty().toNonNullableProp().cast<Double>() }
+    final override val heightProperty by lazy { node.heightProperty().toNonNullableROProp().cast<Double>() }
+    final override val prefHeightProperty by lazy { node.prefHeightProperty().toNonNullableProp().cast<Double>() }
+    final override val minHeightProperty by lazy { node.minHeightProperty().toNonNullableProp().cast<Double>() }
+    final override val maxHeightProperty by lazy { node.maxHeightProperty().toNonNullableProp().cast<Double>() }
 
 
-    override val children: ImmutableObsList<C> by lazy {    /*trying to avoid initializing wrappers to quickly (and getting the wrong ones as a result)*/
-        node.childrenUnmodifiable
-            .createImmutableWrapper().toLazyMappedList {
-                uncheckedWrapperConverter<Node, C>().convertToB(it)
-            }
+    @Open override val children: ImmutableObsList<C> by lazy {    /*trying to avoid initializing wrappers to quickly (and getting the wrong ones as a result)*/
+        node.childrenUnmodifiable.createImmutableWrapper().toLazyMappedList {
+            uncheckedWrapperConverter<Node, C>().convertToB(it)
+        }
     }
 
     final override fun rasterize(size: IntRectSize): Png {
@@ -274,9 +298,9 @@ open class RegionWrapperImpl<N : Region, C : NodeWrapper>(node: N) : ParentWrapp
         ).shoot(this).toBufferedImage().toPng()
     }
 
-    override val paddingProperty by lazy { node.paddingProperty().toNonNullableProp() }
+    final override val paddingProperty by lazy { node.paddingProperty().toNonNullableProp() }
 
-    override var padding by lazyVarDelegate {
+    final override var padding by lazyVarDelegate {
         paddingProperty
     }
 

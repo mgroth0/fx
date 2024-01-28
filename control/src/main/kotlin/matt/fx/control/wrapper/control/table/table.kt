@@ -83,7 +83,7 @@ open class TableViewWrapper<E : Any>(
     fun setRowFactory(value: Callback<TableView<E>, TableRow<E>>) = node.setRowFactory(value)
 
 
-    override fun isInsideRow() = true
+    final override fun isInsideRow() = true
 
     val editableProperty by lazy { node.editableProperty().toNonNullableProp() }
 
@@ -108,9 +108,9 @@ open class TableViewWrapper<E : Any>(
     val comparatorProperty by lazy { node.comparatorProperty().toNullableROProp() }
     val comparator by comparatorProperty
 
-    override val columns: ObservableList<TableColumn<E, *>> get() = node.columns
+    final override val columns: ObservableList<TableColumn<E, *>> get() = node.columns
 
-    override val selectionModel by lazy { node.selectionModel.wrap() }
+    final override val selectionModel by lazy { node.selectionModel.wrap() }
     fun scrollTo(i: Int) = node.scrollTo(i)
     fun scrollToWithWeirdDirtyFix(
         i: Int,
@@ -160,7 +160,7 @@ open class TableViewWrapper<E : Any>(
     }
 
 
-    override fun addChild(
+    final override fun addChild(
         child: NodeWrapper,
         index: Int?
     ) {

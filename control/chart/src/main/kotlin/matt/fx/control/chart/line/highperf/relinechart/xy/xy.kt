@@ -50,6 +50,7 @@ import matt.fx.control.chart.line.highperf.relinechart.xy.XYChartForPackagePriva
 import matt.fx.control.chart.line.highperf.relinechart.xy.chart.ChartForPrivateProps
 import matt.fx.control.css.BooleanCssMetaData
 import matt.fx.graphics.anim.interp.MyInterpolator
+import matt.lang.anno.Open
 import matt.model.data.xyz.Dim2D
 import matt.obs.prop.BindableProperty
 import java.text.MessageFormat
@@ -815,7 +816,7 @@ abstract class XYChartForPackagePrivateProps<X, Y>(
      */
     protected abstract fun layoutPlotChildren()
 
-    /** {@inheritDoc}  */
+    final /** {@inheritDoc}  */
     @Suppress("NAME_SHADOWING")
     override fun layoutChartChildren(
         top: Double,
@@ -1421,6 +1422,7 @@ abstract class XYChartForPackagePrivateProps<X, Y>(
 
     }
 
+    @Open
     /**
      * {@inheritDoc}
      * @since JavaFX 8.0

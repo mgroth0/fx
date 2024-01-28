@@ -24,34 +24,8 @@ import matt.obs.prop.BindableProperty
 //}
 abstract class NodeWrapperImpl<out N : Node>(
     node: N
-) : SingularEventTargetWrapper<N>(node), StyleableWrapper, NodeWrapper {
+) : SingularEventTargetWrapper<N>(node), StyleableWrapper by StyleableWrapperImpl2(node), NodeWrapper {
 
-
-
-    private val styleableWrapperThatWorkedAsDelegateBeforeK2 = StyleableWrapperImpl2(node)
-
-
-    override val typeSelector get() = styleableWrapperThatWorkedAsDelegateBeforeK2.typeSelector
-    override val id get() = styleableWrapperThatWorkedAsDelegateBeforeK2.id
-
-    override val cssMetaData get() = styleableWrapperThatWorkedAsDelegateBeforeK2.cssMetaData
-    override val styleableParent get() = styleableWrapperThatWorkedAsDelegateBeforeK2.styleableParent
-    override val pseudoClassStates get() = styleableWrapperThatWorkedAsDelegateBeforeK2.pseudoClassStates
-
-    override val styleClass get() = styleableWrapperThatWorkedAsDelegateBeforeK2.styleClass
-
-
-    override var style by styleableWrapperThatWorkedAsDelegateBeforeK2::style
-
-    //    override fun setTheStyle(value: String) = styleableWrapperThatWorkedAsDelegateBeforeK2.setTheStyle(value)
-    override fun getTheStyle(): String? = styleableWrapperThatWorkedAsDelegateBeforeK2.getTheStyle()
-
-
-    override var fillStyle by styleableWrapperThatWorkedAsDelegateBeforeK2::fillStyle
-    override var textFillStyle by styleableWrapperThatWorkedAsDelegateBeforeK2::textFillStyle
-
-
-    override fun styleInfo() = styleableWrapperThatWorkedAsDelegateBeforeK2.styleInfo()
 
 
     final override val cursorProperty: NullableFXBackedBindableProp<Cursor> by lazy {
@@ -139,7 +113,7 @@ abstract class NodeWrapperImpl<out N : Node>(
         r
     }
 
-    override val visibleAndManagedProp by lazy {
+    final override val visibleAndManagedProp by lazy {
         _visibleAndManagedProp
     }
 

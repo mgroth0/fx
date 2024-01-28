@@ -21,7 +21,6 @@ import matt.fx.graphics.stylelock.toNonNullableStyleProp
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.lang.go
 import matt.lang.assertions.require.requireNull
-import matt.lang.sync
 import matt.obs.prop.Var
 import matt.obs.prop.VarProp
 /*
@@ -51,14 +50,14 @@ open class TooltipWrapper(node: MyTooltip = MyTooltip()): PopupControlWrapper<My
   constructor(s: String): this(MyTooltip(s))
 
 
-  override val textProperty: Var<String?> by lazy { node.textProperty().toNullableProp() }
-  override val fontProperty: Var<Font> by lazy { node.fontProperty().toNonNullableProp() }
-  override val graphicProperty by lazy { node.graphicProperty().toNullableProp().proxy(nullableNodeConverter) }
+  final override val textProperty: Var<String?> by lazy { node.textProperty().toNullableProp() }
+  final override val fontProperty: Var<Font> by lazy { node.fontProperty().toNonNullableProp() }
+  final override val graphicProperty by lazy { node.graphicProperty().toNullableProp().proxy(nullableNodeConverter) }
   final override val contentDisplayProp by lazy {
 	node.contentDisplayProperty().toNonNullableStyleProp()
   }
 
-  override fun addChild(child: NodeWrapper, index: Int?) {
+  final override fun addChild(child: NodeWrapper, index: Int?) {
 	requireNull(index)
 	graphic = child
   }
@@ -102,7 +101,7 @@ open class TooltipWrapper(node: MyTooltip = MyTooltip()): PopupControlWrapper<My
 
   val sendMouseEventsToProp = VarProp<SendMouseEvents?>(null).apply {
 	onChange { opt ->
-	  sync {
+	  synchronized(this) {
 		if (opt == null) {
 		  transparentMouseEventHandler?.go {
 			removeEventFilter(MouseEvent.ANY, it)

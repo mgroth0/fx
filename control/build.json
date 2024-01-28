@@ -19,7 +19,8 @@
     {
       "type": "Lib",
       "cfg": "api",
-      "key": "fx-controls"
+      "key": "fx-controls",
+      "checkIfUsed": false
     },
     {
       "type": "Project",

@@ -12,6 +12,7 @@ import matt.fx.graphics.wrapper.node.impl.NodeWrapperImpl
 import matt.fx.graphics.wrapper.sizeman.HasHeight
 import matt.fx.graphics.wrapper.sizeman.HasWidth
 import matt.lang.NOT_IMPLEMENTED
+import matt.lang.anno.Open
 import matt.lang.delegation.lazyVarDelegate
 import matt.model.data.rect.DoubleRectSize
 import matt.obs.math.double.ObsD
@@ -36,13 +37,14 @@ interface Canv {
 
     val graphicsContext: GraphicsContext
     val pixelWriter: PixelWriter
+    @Open
     operator fun set(
         x: Int,
         y: Int,
         c: Color
     ) = pixelWriter.setColor(x, y, c)
 
-    fun drawBorder() {
+    @Open fun drawBorder() {
         graphicsContext.apply {
             stroke = Color.YELLOW /*BLUE*/
             fill = Color.YELLOW /*BLUE*/
@@ -70,21 +72,21 @@ open class CanvasWrapper(node: Canvas = Canvas()) : NodeWrapperImpl<Canvas>(node
 
 
     final override val widthProperty = node.widthProperty().toNonNullableProp().cast<Double>()
-    override var pixelWidth by lazyVarDelegate { widthProperty }
+    final override var pixelWidth by lazyVarDelegate { widthProperty }
     final override val heightProperty = node.heightProperty().toNonNullableProp().cast<Double>()
-    override var pixelHeight by lazyVarDelegate { heightProperty }
+    final override var pixelHeight by lazyVarDelegate { heightProperty }
 
     final override val actualWidth by lazy { widthProperty * scaleXProperty }
     final override val actualHeight by lazy { heightProperty * scaleYProperty }
 
-    override val graphicsContext: GraphicsContext get() = node.graphicsContext2D
-    override fun addChild(
+    final override val graphicsContext: GraphicsContext get() = node.graphicsContext2D
+    final override fun addChild(
         child: NodeWrapper,
         index: Int?
     ) = NOT_IMPLEMENTED
 
 
-    override val pixelWriter: PixelWriter by lazy { graphicsContext.pixelWriter }
+    final override val pixelWriter: PixelWriter by lazy { graphicsContext.pixelWriter }
 
 
 }

@@ -4,7 +4,7 @@
     {
       "type": "Lib",
       "cfg": "api",
-      "key": "fx-swing"
+      "key": "fx-swing","checkIfUsed": false
     },
     {
       "type": "Project",

@@ -10,6 +10,7 @@ import javafx.util.Subscription
 import matt.collect.fake.FakeMutableList
 import matt.fx.base.wrapper.obs.collect.list.change.toFXChange
 import matt.lang.ILLEGAL
+import matt.lang.anno.Open
 import matt.lang.convert.BiConverter
 import matt.lang.function.Consume
 import matt.lang.function.Op
@@ -129,23 +130,23 @@ abstract class ObservableListWrapperImpl<E>(obs: ObservableList<E>) : FXBackedOb
         }
     }
 
-    override fun addListener(listener: InvalidationListener?) {
+    final override fun addListener(listener: InvalidationListener?) {
         obs.addListener(listener)
     }
 
-    override fun removeListener(listener: InvalidationListener?) {
+    final override fun removeListener(listener: InvalidationListener?) {
         obs.removeListener(listener)
     }
 
-    override fun subscribe(invalidationSubscriber: Runnable?): Subscription {
+    final override fun subscribe(invalidationSubscriber: Runnable?): Subscription {
         return obs.subscribe(invalidationSubscriber)
     }
 
-    override fun addListener(listener: ListChangeListener<E>) = obs.addListener(listener)
-    override fun removeListener(listener: ListChangeListener<E>) = obs.removeListener(listener)
-    override fun filtered(predicate: Predicate<E>) = obs.filtered(predicate)
-    override fun sorted(comparator: Comparator<E>) = obs.sorted(comparator)
-    override fun sorted() = obs.sorted()
+    final override fun addListener(listener: ListChangeListener<E>) = obs.addListener(listener)
+    final override fun removeListener(listener: ListChangeListener<E>) = obs.removeListener(listener)
+    final override fun filtered(predicate: Predicate<E>) = obs.filtered(predicate)
+    final override fun sorted(comparator: Comparator<E>) = obs.sorted(comparator)
+    final override fun sorted() = obs.sorted()
 
 }
 
@@ -273,147 +274,46 @@ class FXBackedMutableObservableList<E>(obs: ObservableList<E>) : FXBackedObsList
 
 fun <E> MutableObsList<E>.createMutableFXWrapper() = MutableMBackedFXObservableList(this)
 fun <E> ImmutableObsList<E>.createFXWrapper() = MBackedFXObservableList(this)
+
+
 open class MBackedFXObservableList<E>(internal open val mList: ImmutableObsList<E>) : ObservableList<E>,
-    MutableList<E> {
-
-
-
-    init {
-        ifPastInitialK2 {
-            warn("kotlin 2.0.0-Beta1 >:[")
-        }
-    }
+    MutableList<E> by FakeMutableList(mList) {
 
 
     private val fakeMutableList by lazy { FakeMutableList(mList) }
 
-    override fun iterator(): MutableIterator<E> {
-        return fakeMutableList.iterator()
-    }
-
-    override fun isEmpty(): Boolean {
-        return fakeMutableList.isEmpty()
-    }
-
-    override fun retainAll(elements: Collection<E>): Boolean {
-        fakeMutableList.retainAll(elements)
-    }
-
-    override fun removeAll(elements: Collection<E>): Boolean {
-        fakeMutableList.removeAll(elements)
-    }
-
-    override fun clear() {
-        fakeMutableList.clear()
-    }
-
-    override fun listIterator(): MutableListIterator<E> {
-        return fakeMutableList.listIterator()
-    }
-
-    override fun listIterator(index: Int): MutableListIterator<E> {
-        return fakeMutableList.listIterator(index)
-    }
-
-    override fun contains(element: E): Boolean {
-        return fakeMutableList.contains(element)
-    }
-
-    override fun containsAll(elements: Collection<E>): Boolean {
-        return fakeMutableList.containsAll(elements)
-    }
-
-    override fun set(
-        index: Int,
-        element: E
-    ): E {
-        fakeMutableList.set(index, element)
-    }
-
-    override fun removeAt(index: Int): E {
-        fakeMutableList.removeAt(index)
-    }
-
-    override fun get(index: Int): E {
-        return fakeMutableList.get(index)
-    }
-
-    override val size: Int
-        get() = fakeMutableList.size
-
-    override fun lastIndexOf(element: E): Int {
-        return fakeMutableList.lastIndexOf(element)
-    }
-
-    override fun indexOf(element: E): Int {
-        return fakeMutableList.indexOf(element)
-    }
-
-    override fun add(element: E): Boolean {
-        fakeMutableList.add(element)
-    }
-
-    override fun addAll(elements: Collection<E>): Boolean {
-        fakeMutableList.addAll(elements)
-    }
-
-    override fun add(
-        index: Int,
-        element: E
-    ) {
-        fakeMutableList.add(index, element)
-    }
-
-    override fun addAll(
-        index: Int,
-        elements: Collection<E>
-    ): Boolean {
-        fakeMutableList.addAll(index, elements)
-    }
-
-    override fun subList(
-        fromIndex: Int,
-        toIndex: Int
-    ): MutableList<E> {
-        return fakeMutableList.subList(fromIndex, toIndex)
-    }
-
-    override fun remove(element: E): Boolean {
-        fakeMutableList.remove(element)
-    }
-
-
+    @Open
     override fun addAll(vararg elements: E): Boolean = ILLEGAL
-    override fun remove(
+    @Open override fun remove(
         from: Int,
         to: Int
     ): Unit = ILLEGAL
 
-    override fun retainAll(vararg elements: E): Boolean = ILLEGAL
-    override fun removeAll(vararg elements: E): Boolean = ILLEGAL
-    override fun setAll(col: MutableCollection<out E>): Boolean = ILLEGAL
-    override fun setAll(vararg elements: E): Boolean = ILLEGAL
+    @Open override fun retainAll(vararg elements: E): Boolean = ILLEGAL
+    @Open override fun removeAll(vararg elements: E): Boolean = ILLEGAL
+    @Open override fun setAll(col: MutableCollection<out E>): Boolean = ILLEGAL
+    @Open override fun setAll(vararg elements: E): Boolean = ILLEGAL
 
     private val invalidationListenerMap = mutableMapOf<InvalidationListener, MyListenerInter<*>>()
     private val changeListenerMap = mutableMapOf<ListChangeListener<in E>, MyListenerInter<*>>()
-    override fun addListener(listener: InvalidationListener) {
+    final override fun addListener(listener: InvalidationListener) {
         invalidationListenerMap[listener] = mList.observe {
             listener.invalidated(this)
         }
     }
 
-    override fun removeListener(listener: InvalidationListener) {
+    final override fun removeListener(listener: InvalidationListener) {
         invalidationListenerMap[listener]?.tryRemovingListener()
     }
 
-    override fun addListener(listener: ListChangeListener<in E>) {
+    final override fun addListener(listener: ListChangeListener<in E>) {
         changeListenerMap[listener] = mList.onChange {
 //            println("BUGGY CHANGE: ${it}")
             listener.onChanged(it.toFXChange(this))
         }
     }
 
-    override fun removeListener(listener: ListChangeListener<in E>) {
+    final override fun removeListener(listener: ListChangeListener<in E>) {
         changeListenerMap[listener]?.tryRemovingListener()
     }
 }

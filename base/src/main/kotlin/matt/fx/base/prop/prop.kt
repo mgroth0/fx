@@ -14,10 +14,9 @@ import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.property.adapter.JavaBeanObjectPropertyBuilder
 import javafx.beans.value.ObservableValue
 import matt.fx.base.prop.SingleAssignThreadSafetyMode.SYNCHRONIZED
-import matt.lang.disabledButDefinitelyStillInByteCodeCode
+import matt.lang.anno.Open
 import matt.obs.col.olist.MutableObsList
 import matt.prim.str.decap
-import matt.reflect.YesIUseReflect
 import java.lang.reflect.Field
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KClass
@@ -48,18 +47,18 @@ class FXPropertyDelegate<T>(val fxProperty: Property<T>) : ReadWriteProperty<Any
 
 }
 
-fun <T> Any.getProperty(prop: KMutableProperty1<*, T>): ObjectProperty<T> {
-    // avoid kotlin-reflect dependency
-    val field =
-        requireNotNull(
-            javaClass.findFieldByName("${prop.name}\$delegate")
-        ) { "No delegate field with name '${prop.name}' found" }
-
-    field.isAccessible = true
-    val delegate = field.get(this) as FXPropertyDelegate<in Nothing>
-    @Suppress("UNCHECKED_CAST")
-    return delegate.fxProperty as ObjectProperty<T>
-}
+//fun <T> Any.getProperty(prop: KMutableProperty1<*, T>): ObjectProperty<T> {
+//    // avoid kotlin-reflect dependency
+//    val field =
+//        requireNotNull(
+//            javaClass.findFieldByName("${prop.name}\$delegate")
+//        ) { "No delegate field with name '${prop.name}' found" }
+//
+//    field.isAccessible = true
+//    val delegate = field.get(this) as FXPropertyDelegate<in Nothing>
+//    @Suppress("UNCHECKED_CAST")
+//    return delegate.fxProperty as ObjectProperty<T>
+//}
 
 fun Class<*>.findFieldByName(name: String): Field? {
     val field = (declaredFields + fields).find { it.name == name }
@@ -127,9 +126,9 @@ open class PojoProperty<T>(
 }
 
 
-@JvmName("pojoObservable")
-inline fun <reified T : Any> Any.observable(propName: String) =
-    this.observable(propertyName = propName, propertyType = T::class)
+//@JvmName("pojoObservable")
+//inline fun <reified T : Any> Any.observable(propName: String) =
+//    this.observable(propertyName = propName, propertyType = T::class)
 
 /**
  * Convert a pojo bean instance into a writable observable.
@@ -149,10 +148,6 @@ fun <S : Any, T : Any> S.observable(
     if (getter == null && propertyName == null) throw AssertionError("Either getter or propertyName must be provided")
     val propName = propertyName
         ?: getter?.name?.substring(3)?.decap()
-
-    disabledButDefinitelyStillInByteCodeCode {
-        YesIUseReflect
-    }
 
     val r = JavaBeanObjectPropertyBuilder.create().apply {
         bean(this@observable)
@@ -208,7 +203,7 @@ private open class UnsynchronizedSingleAssign<T> : SingleAssign<T> {
 
     protected open var _value: Any? = UNINITIALIZED_VALUE
 
-    override operator fun getValue(
+    final override operator fun getValue(
         thisRef: Any?,
         property: KProperty<*>
     ): T {
@@ -217,6 +212,7 @@ private open class UnsynchronizedSingleAssign<T> : SingleAssign<T> {
         return _value as T
     }
 
+    @Open
     override operator fun setValue(
         thisRef: Any?,
         property: KProperty<*>,
@@ -226,7 +222,7 @@ private open class UnsynchronizedSingleAssign<T> : SingleAssign<T> {
         _value = value
     }
 
-    override fun isInitialized() = _value != UNINITIALIZED_VALUE
+    final override fun isInitialized() = _value != UNINITIALIZED_VALUE
 }
 
 /**

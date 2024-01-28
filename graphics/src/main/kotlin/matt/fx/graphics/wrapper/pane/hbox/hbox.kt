@@ -49,7 +49,7 @@ open class HBoxWrapperImpl<C: NodeWrapper>(node: HBox = HBox()): BoxWrapperImpl<
   final override val fillHeightProperty by lazy {
 	node.fillHeightProperty().toNonNullableProp()
   }
-  override var isFillHeight by lazyVarDelegate { fillHeightProperty }
+  final override var isFillHeight by lazyVarDelegate { fillHeightProperty }
 
 }
 

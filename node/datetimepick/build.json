@@ -4,7 +4,7 @@
         {
             "type": "Lib",
             "cfg": "implementation",
-            "key": "fx-controls"
+            "key": "fx-controls","checkIfUsed": false
         },
         {
             "type": "Lib",

@@ -85,14 +85,14 @@ sealed interface ChoseFile {
 }
 
 sealed class ChoseFileBase<T>(
-    override var stage: StageWrapper? = null
+    final override var stage: StageWrapper? = null
 ) : ChoseFile {
-    override var initialDir: FsFile? = null
+    final override var initialDir: FsFile? = null
 
     /*doesn't support file open dialogs on all operating systems*/
     var initialSaveFileName: String? = null
 
-    override var title: String? = null
+    final override var title: String? = null
     private val filters = mutableSetOf<ExtensionFilter>()
 
     fun extensionFilter(

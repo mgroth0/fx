@@ -47,7 +47,7 @@ open class TitledPaneWrapper(
   node: TitledPane = TitledPane(),
 ): LabeledWrapper<TitledPane>(node), Titled {
 
-  override val titleProperty by lazy { textProperty }
+  final override val titleProperty by lazy { textProperty }
 
   var content: NodeWrapper?
 	get() = node.content?.wrapped()
@@ -66,7 +66,7 @@ open class TitledPaneWrapper(
 	  node.isExpanded = value
 	}
 
-  override fun addChild(child: NodeWrapper, index: Int?) {
+  final override fun addChild(child: NodeWrapper, index: Int?) {
 	when (content) {
 	  is Pane -> content!!.addChild(child, index)
 

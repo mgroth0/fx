@@ -17,6 +17,7 @@ import matt.fx.graphics.wrapper.scene.SceneWrapper
 import matt.fx.graphics.wrapper.sizeman.SizeControlled
 import matt.fx.graphics.wrapper.stage.StageWrapper
 import matt.lang.NOT_IMPLEMENTED
+import matt.lang.anno.Open
 import matt.lang.delegation.lazyDelegate
 import matt.lang.assertions.require.requireNotEqual
 
@@ -24,37 +25,38 @@ interface HasScene {
     val scene: SceneWrapper<*>?
 }
 
-open class WindowWrapper<W : Window>(override val node: W) : SingularEventTargetWrapper<W>(node), SizeControlled, HasScene {
+open class WindowWrapper<W : Window>(final override val node: W) : SingularEventTargetWrapper<W>(node), SizeControlled,
+    HasScene {
 
     companion object {
         fun windows() = Window.getWindows().map { it.wrapped() as WindowWrapper<*> }
         fun guessMainStage() = windows().filterIsInstance<StageWrapper>().firstOrNull()
     }
 
-    override fun removeFromParent(): Unit = NOT_IMPLEMENTED
+    @Open  override fun removeFromParent(): Unit = NOT_IMPLEMENTED
 
-    override fun isInsideRow() = false
+    @Open  override fun isInsideRow() = false
 
     var pullBackWhenOffScreen = true
 
     fun requestFocus() = node.requestFocus()
 
 
-    override val properties get() = node.properties
-    override fun addChild(
+    final override val properties get() = node.properties
+    @Open  override fun addChild(
         child: NodeWrapper,
         index: Int?
     ) {
         TODO()
     }
 
-    override var height
+    final override var height
         get() = node.height
         set(value) {
             node.height = value
         }
 
-    override var width
+    final override var width
         get() = node.width
         set(value) {
             node.width = value
@@ -95,7 +97,7 @@ open class WindowWrapper<W : Window>(override val node: W) : SingularEventTarget
     //	  node.height = value
     //	}
 
-    override val heightProperty by lazy { node.heightProperty().toNonNullableROProp().cast<Double>() }
+    final override val heightProperty by lazy { node.heightProperty().toNonNullableROProp().cast<Double>() }
 
 
     //  var width
@@ -104,7 +106,7 @@ open class WindowWrapper<W : Window>(override val node: W) : SingularEventTarget
     //	  node.width = value
     //	}
 
-    override val widthProperty by lazy { node.widthProperty().toNonNullableROProp().cast<Double>() }
+    final override val widthProperty by lazy { node.widthProperty().toNonNullableROProp().cast<Double>() }
 
     fun setOnShowing(value: EventHandler<WindowEvent>) = node.setOnShowing(value)
 
@@ -116,6 +118,7 @@ open class WindowWrapper<W : Window>(override val node: W) : SingularEventTarget
     fun hide() = node.hide()
 
 
+    @Open
     override val scene: SceneWrapper<*>? get() = node.scene?.wrapped() as SceneWrapper<*>?
 
     fun sceneProperty(): ReadOnlyObjectProperty<Scene> = node.sceneProperty()
@@ -127,26 +130,22 @@ open class WindowWrapper<W : Window>(override val node: W) : SingularEventTarget
     fun <T : Event> addEventFilter(
         eventType: EventType<T>,
         handler: EventHandler<T>
-    ) =
-        node.addEventFilter(eventType, handler)
+    ) = node.addEventFilter(eventType, handler)
 
     fun <T : Event> addEventHandler(
         eventType: EventType<T>,
         handler: EventHandler<T>
-    ) =
-        node.addEventHandler(eventType, handler)
+    ) = node.addEventHandler(eventType, handler)
 
     fun <T : Event> removeEventFilter(
         eventType: EventType<T>,
         handler: EventHandler<T>
-    ) =
-        node.removeEventFilter(eventType, handler)
+    ) = node.removeEventFilter(eventType, handler)
 
     fun <T : Event> removeEventHandler(
         eventType: EventType<T>,
         handler: EventHandler<T>
-    ) =
-        node.removeEventHandler(eventType, handler)
+    ) = node.removeEventHandler(eventType, handler)
 
 }
 

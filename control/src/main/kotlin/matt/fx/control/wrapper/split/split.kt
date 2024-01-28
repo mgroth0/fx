@@ -29,9 +29,9 @@ open class SplitPaneWrapper(node: SplitPane = SplitPane()) : ControlWrapperImpl<
         }
     val items: ObservableList<Node> get() = node.items
 
-    override val childList get() = items
+    final override val childList get() = items
 
-    override fun addChild(
+    final override fun addChild(
         child: NodeWrapper,
         index: Int?
     ) {

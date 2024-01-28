@@ -14,8 +14,8 @@ import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.impl.NodeWrapperImpl
 import matt.http.url.query.buildQueryURL
 import matt.lang.NEVER
-import matt.lang.opt
 import matt.lang.assertions.require.requireNot
+import matt.lang.opt
 import matt.log.warn.warn
 import matt.obs.prop.BindableProperty
 import matt.obs.prop.Var
@@ -126,7 +126,7 @@ fun mail(
 ) {
     val desktop = Desktop.getDesktop()
     val message = mailtoURL(address, subject = subject, body = body)
-    val uri: URI = URI.create(message.cpath)
+    val uri: URI = URI.create(message.path)
     desktop.mail(uri)
 }
 

@@ -59,7 +59,7 @@ abstract class ShapeWrapper<N : Shape>(node: N) : NodeWrapperImpl<N>(node) {
             }
         }
 
-    override fun addChild(
+    final override fun addChild(
         child: NodeWrapper,
         index: Int?
     ) {

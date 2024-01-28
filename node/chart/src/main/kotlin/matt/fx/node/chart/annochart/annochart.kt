@@ -74,9 +74,7 @@ open class AnnotateableChart<X : MathAndComparable<X>, Y : MathAndComparable<Y>>
     val realData = basicMutableObservableListOf<SeriesWrapper<X, Y>>()
     private val annoPane = AnnotationPane(
         NumericChartLocater(
-            lineChart = chart,
-            xAxis = xAxis,
-            yAxis = yAxis
+            lineChart = chart, xAxis = xAxis, yAxis = yAxis
         ),
         chartBoundsProp = chart.layoutBoundsProperty,
         chartHeightProp = chart.heightProperty,
@@ -87,34 +85,34 @@ open class AnnotateableChart<X : MathAndComparable<X>, Y : MathAndComparable<Y>>
         realData = realData
     )
 
-    override fun layoutXOf(x: X) = annoPane.layoutXOf(x)
-    override fun layoutYOf(y: Y) = annoPane.layoutYOf(y)
+    final override fun layoutXOf(x: X) = annoPane.layoutXOf(x)
+    final override fun layoutYOf(y: Y) = annoPane.layoutYOf(y)
 
-    override fun staticRectangle(
+    final override fun staticRectangle(
         minX: X,
         maxX: X
     ) = annoPane.staticRectangle(minX, maxX)
 
-    override fun dynamicRectangle(
+    final override fun dynamicRectangle(
         minX: X,
         maxX: X
     ) = annoPane.dynamicRectangle(minX, maxX)
 
-    override fun dynamicVerticalLine(x: X) = annoPane.dynamicVerticalLine(x)
-    override fun dynamicHorizontalLine(y: Y) = annoPane.dynamicHorizontalLine(y)
-    override fun staticText(
+    final override fun dynamicVerticalLine(x: X) = annoPane.dynamicVerticalLine(x)
+    final override fun dynamicHorizontalLine(y: Y) = annoPane.dynamicHorizontalLine(y)
+    final override fun staticText(
         minX: X,
         text: String
     ) = annoPane.staticText(minX, text)
 
-    override fun dynamicText(
+    final override fun dynamicText(
         minX: X,
         text: String
     ) = annoPane.dynamicText(minX, text)
 
-    override fun staticVerticalLine(x: X) = annoPane.staticVerticalLine(x)
-    override fun staticHorizontalLine(y: Y) = annoPane.staticHorizontalLine(y)
-    override fun addLegend() = annoPane.addLegend()
+    final override fun staticVerticalLine(x: X) = annoPane.staticVerticalLine(x)
+    final override fun staticHorizontalLine(y: Y) = annoPane.staticHorizontalLine(y)
+    final override fun addLegend() = annoPane.addLegend()
 
 
     private val downSampledRealData by lazy {
@@ -181,7 +179,7 @@ open class AnnotateableChart<X : MathAndComparable<X>, Y : MathAndComparable<Y>>
     }
 
 
-    override fun clearAnnotations() {
+    final override fun clearAnnotations() {
         annotationSeries.clear()
         annoPane.clear()
     }

@@ -35,7 +35,7 @@ open class ButtonBaseWrapper<N : ButtonBase>(node: N) : LabeledWrapper<N>(node) 
             }
         }
 
-    override fun addChild(
+    final override fun addChild(
         child: NodeWrapper,
         index: Int?
     ) {

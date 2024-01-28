@@ -85,7 +85,7 @@ open class ComboBoxBaseWrapper<T: Any, N: ComboBoxBase<T>>(node: N): ControlWrap
 	}
 
   fun promptTextProperty(): StringProperty = node.promptTextProperty()
-  override fun addChild(child: NodeWrapper, index: Int?) {
+  final override fun addChild(child: NodeWrapper, index: Int?) {
 	TODO()
   }
 

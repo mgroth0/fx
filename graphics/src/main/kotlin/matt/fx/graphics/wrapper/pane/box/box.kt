@@ -15,13 +15,13 @@ interface BoxWrapper<C: NodeWrapper>: PaneWrapper<C> {
 
 abstract class BoxWrapperImpl<N: Pane, C: NodeWrapper>(node: N): PaneWrapperImpl<N, C>(node), BoxWrapper<C> {
 
-  override var alignment: Pos
+  final override var alignment: Pos
 	get() = (node as? HBox)?.alignment ?: (node as VBox).alignment
 	set(value) {
 	  if (node is HBox) (node as HBox).alignment = value
 	  else (node as VBox).alignment = value
 	}
-  override var spacing: Double
+  final override var spacing: Double
 	get() = (node as? HBox)?.spacing ?: (node as VBox).spacing
 	set(value) {
 	  if (node is HBox) (node as HBox).spacing = value

@@ -60,7 +60,7 @@ open class MyPopUpCSSBridge(open val popupControl: MyPopupControl): Pane() {
 	}
   }
 
-  /**
+  final /**
    * Requests a layout pass to be performed before the next scene is
    * rendered. This is batched up asynchronously to happen once per
    * "pulse", or frame of animation.
@@ -81,7 +81,7 @@ open class MyPopUpCSSBridge(open val popupControl: MyPopupControl): Pane() {
 	super.requestLayout()
   }
 
-  /**
+  final /**
    * This method should be treated as final and should not be overridden by any subclasses of CSSBridge.
    * @return the styleable parent
    */
@@ -89,7 +89,7 @@ open class MyPopUpCSSBridge(open val popupControl: MyPopupControl): Pane() {
 	return popupControl.getStyleableParent()
   }
 
-  override fun getCssMetaData(): List<CssMetaData<out Styleable, *>> {
+  final override fun getCssMetaData(): List<CssMetaData<out Styleable, *>> {
 	return popupControl.getCssMetaData()
   }
 

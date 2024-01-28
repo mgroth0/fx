@@ -10,6 +10,7 @@ import matt.fx.control.wrapper.treeitem.TreeItemWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.region.RegionWrapper
 import matt.fx.graphics.wrapper.sizeman.SizeManaged
+import matt.lang.anno.Open
 import matt.lang.setall.setAll
 import matt.obs.prop.Var
 
@@ -27,14 +28,15 @@ operator fun <T> TreeItem<T>.plusAssign(treeItem: TreeItem<T>) {
 interface TreeLikeWrapper<N: Region, T: Any>: RegionWrapper<NodeWrapper>, SelectingControl<TreeItem<T>>, SizeManaged {
 
   val rootProperty: Var<TreeItemWrapper<T>?>
-  var root: TreeItemWrapper<T>?
+	@Open
+	var root: TreeItemWrapper<T>?
 	get() = rootProperty.value
 	set(value) {
 	  rootProperty.value = value
 	}
   var isShowRoot: Boolean
   override val selectionModel: MultiSelectWrap<TreeItem<T>>
-  val selectedValue: T? get() = selectedItem?.value
+	@Open val selectedValue: T? get() = selectedItem?.value
   fun scrollTo(i: Int)
   fun getRow(ti: TreeItem<T>): Int
 }

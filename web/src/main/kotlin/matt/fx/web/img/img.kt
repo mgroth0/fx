@@ -39,7 +39,7 @@ fun ImageRefreshingWebView(fil: FsFile) = WebViewWrapper().apply {
             if (it.tag().name == "img") {
                 val src = it.attributes()["src"]
                 val imgFile =
-                    file.parentFile!!.toJFile().toPath().resolve(src).normalize().toFile().toMFile(MacFileSystem)
+                    file.parent!!.toJFile().toPath().resolve(src).normalize().toFile().toMFile(MacFileSystem)
                 imgFiles[imgFile] = imgFile.toJioFile().lastModified()
             }
         }

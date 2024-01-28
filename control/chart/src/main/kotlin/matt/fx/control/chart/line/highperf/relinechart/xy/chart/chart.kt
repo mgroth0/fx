@@ -34,6 +34,7 @@ import javafx.scene.layout.Region
 import matt.fx.base.rewrite.ReWrittenFxClass
 import matt.fx.control.chart.line.highperf.relinechart.xy.chart.ChartForPrivateProps.StyleableProperties.classCssMetaData
 import matt.fx.control.css.BooleanCssMetaData
+import matt.lang.anno.Open
 import java.util.*
 
 /**
@@ -337,7 +338,7 @@ abstract class ChartForPrivateProps : Region() {
         height: Double
     )
 
-    /**
+    final /**
      * Invoked during the layout pass to layout this chart and all its content.
      */
     override fun layoutChildren() {
@@ -444,7 +445,7 @@ abstract class ChartForPrivateProps : Region() {
         chartContent.resizeRelocate(left, top, width - left - right, height - top - bottom)
     }
 
-    /**
+    final /**
      * Charts are sized outside in, user tells chart how much space it has and chart draws inside that. So minimum
      * height is a constant 150.
      */
@@ -452,7 +453,7 @@ abstract class ChartForPrivateProps : Region() {
         return 150.0
     }
 
-    /**
+    final /**
      * Charts are sized outside in, user tells chart how much space it has and chart draws inside that. So minimum
      * width is a constant 200.
      */
@@ -460,7 +461,7 @@ abstract class ChartForPrivateProps : Region() {
         return 200.0
     }
 
-    /**
+    final /**
      * Charts are sized outside in, user tells chart how much space it has and chart draws inside that. So preferred
      * width is a constant 500.
      */
@@ -468,7 +469,7 @@ abstract class ChartForPrivateProps : Region() {
         return 500.0
     }
 
-    /**
+    final /**
      * Charts are sized outside in, user tells chart how much space it has and chart draws inside that. So preferred
      * height is a constant 400.
      */
@@ -530,6 +531,7 @@ abstract class ChartForPrivateProps : Region() {
 
     }
 
+    @Open
     /**
      * {@inheritDoc}
      * @since JavaFX 8.0

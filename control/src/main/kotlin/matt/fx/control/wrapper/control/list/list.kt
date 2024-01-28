@@ -52,7 +52,7 @@ open class ListViewWrapper<E : Any>(
     fun scrollTo(i: Int) = node.scrollTo(i)
     fun scrollTo(e: E) = node.scrollTo(e)
 
-    override val cellFactoryProperty by lazy { node.cellFactoryProperty().toNullableProp() }
+    final override val cellFactoryProperty by lazy { node.cellFactoryProperty().toNullableProp() }
 
     var isEditable
         get() = node.isEditable
@@ -70,8 +70,8 @@ open class ListViewWrapper<E : Any>(
 
     fun itemsProperty(): ObjectProperty<ObservableList<E>> = node.itemsProperty()
 
-    override val selectionModel by lazy { node.selectionModel.wrap() }
-    override fun addChild(
+    final override val selectionModel by lazy { node.selectionModel.wrap() }
+    final override fun addChild(
         child: NodeWrapper,
         index: Int?
     ) {

@@ -31,6 +31,7 @@ import matt.log.NOPLogger
 import matt.log.SystemOutLogger
 import matt.log.logger.Logger
 import matt.model.code.sys.Mac
+import matt.model.op.prints.plusAssign
 import matt.obs.prop.BindableProperty
 import matt.obs.prop.toggle
 import matt.prim.str.joinWithNewLinesAndTabs
@@ -276,7 +277,7 @@ class FXHotkeyDSL : HotkeyDsl() {
 
 }
 
-@SeeURL("https://youtrack.jetbrains.com/issue/KT-63414/K2-Contracts-false-positive-Result-has-wrong-invocation-kind-when-invoking-a-function-returning-a-value-with-contract")
+@SeeURL("https://youtrack.jetbrains.com/issue/KT-65158/K2-Contracts-False-positive-WRONGINVOCATIONKIND-with-unrelated-higher-order-function-call")
 @Suppress("WRONG_INVOCATION_KIND")
 inline fun EventTargetWrapper.hotkeys(
     filter: Boolean = false,

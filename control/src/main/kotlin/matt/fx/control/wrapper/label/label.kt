@@ -64,7 +64,7 @@ open class LabelWrapper(
         if (wrap != null) isWrapText = wrap
     }
 
-    override fun addChild(child: NodeWrapper, index: Int?) {
+    final override fun addChild(child: NodeWrapper, index: Int?) {
         requireNull(index)
         graphic = child
     }

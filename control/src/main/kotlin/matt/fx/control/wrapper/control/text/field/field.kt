@@ -69,7 +69,7 @@ open class TextFieldWrapper(
 	node.setOnAction(op)
   }
 
-  override val valueProperty by lazy { textProperty }
+  final override val valueProperty by lazy { textProperty }
 
   infix fun withPrompt(s: String): TextFieldWrapper {
 	promptText = s

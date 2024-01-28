@@ -14,6 +14,7 @@ import matt.fx.graphics.wrapper.node.shape.rect.RectangleWrapper
 import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
 import matt.fx.graphics.wrapper.region.RegionWrapper
 import matt.fx.graphics.wrapper.region.RegionWrapperImpl
+import matt.lang.anno.Open
 import matt.lang.assertions.require.requireNull
 import matt.model.data.corner.Corner
 import matt.model.data.corner.Corner.NE
@@ -31,6 +32,7 @@ interface PaneWrapper<C : NodeWrapper> : RegionWrapper<C> {
 
     override val node: Pane
 
+    @Open
     override fun addChild(
         child: NodeWrapper,
         index: Int?
@@ -45,7 +47,7 @@ interface PaneWrapper<C : NodeWrapper> : RegionWrapper<C> {
         children.add(child as C)
     }
 
-    operator fun Collection<C>.unaryPlus() {
+    @Open   operator fun Collection<C>.unaryPlus() {
         addAll(this)
     }
 
@@ -53,7 +55,7 @@ interface PaneWrapper<C : NodeWrapper> : RegionWrapper<C> {
     override val children: MutableObsList<C>
 
 
-    fun resizer(corner: Corner) {
+    @Open    fun resizer(corner: Corner) {
         /*var y = 0.0
           var x = 0.0*/
         var initEventX = 0.0
@@ -137,10 +139,10 @@ interface PaneWrapper<C : NodeWrapper> : RegionWrapper<C> {
 
     }
 
-    fun addAll(vararg nodes: C) = children.addAll(nodes)
-    fun addAll(nodes: Iterable<C>) = children.addAll(nodes)
+    @Open fun addAll(vararg nodes: C) = children.addAll(nodes)
+    @Open fun addAll(nodes: Iterable<C>) = children.addAll(nodes)
 
-    fun clear() = children.clear()
+    @Open fun clear() = children.clear()
 }
 
 fun <C : NodeWrapper> PaneWrapper<C>.spacer(size: Double = 20.0) {
@@ -176,8 +178,8 @@ open class PaneWrapperImpl<N : Pane, C : NodeWrapper>(
 ) : RegionWrapperImpl<N, C>(node), PaneWrapper<C> {
 
 
-    override val childList get() = node.children
-    override val children by lazy {
+    final override val childList get() = node.children
+    final override val children by lazy {
         node.children.createMutableWrapper().toSyncedList(uncheckedWrapperConverter<Node, C>())
     }
 }

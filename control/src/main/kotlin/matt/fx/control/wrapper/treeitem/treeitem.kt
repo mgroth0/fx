@@ -17,21 +17,21 @@ open class TreeItemWrapper<T : Any>(node: TreeItem<T> = TreeItem()) : SingularEv
 
     val value by node::value
 
-    override val properties: ObservableMap<Any, Any?>
+    final override val properties: ObservableMap<Any, Any?>
         get() = TODO()
 
-    override fun addChild(
+    final override fun addChild(
         child: NodeWrapper,
         index: Int?
     ) {
         TODO()
     }
 
-    override fun removeFromParent() {
+    final override fun removeFromParent() {
         TODO()
     }
 
-    override fun isInsideRow(): Boolean {
+    final override fun isInsideRow(): Boolean {
         TODO()
     }
 

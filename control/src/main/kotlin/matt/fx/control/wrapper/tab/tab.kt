@@ -34,7 +34,7 @@ open class TabPaneWrapper<T : TabWrapper<*>>(
 
     val tabs get() = node.tabs.createMutableWrapper().toSyncedList<Tab, T>(uncheckedWrapperConverter())
 
-    override val selectionModel: SelectModWrap<T> by lazy {
+    final override val selectionModel: SelectModWrap<T> by lazy {
         println("actually selection model is a property...")
         node.selectionModel.wrap(uncheckedWrapperConverter())
     }
@@ -48,7 +48,7 @@ open class TabPaneWrapper<T : TabWrapper<*>>(
     fun remove(tab: T) = tabs.remove(tab)
     operator fun contains(tab: T) = tab in tabs
 
-    override fun addChild(
+    final override fun addChild(
         child: NodeWrapper,
         index: Int?
     ) {

@@ -46,8 +46,6 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
     /** When true, CSS styleable symbols are created for any data items that don't have a symbol node specified.  */
 
 
-
-
     /**
      * Indicates whether the data passed to LineChart should be sorted by natural order of one of the axes.
      * If this is set to [SortingPolicy.NONE], the order in [.dataProperty] will be used.
@@ -103,7 +101,7 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
     }
     // -------------- METHODS ------------------------------------------------------------------------------------------
     /** {@inheritDoc}  */
-    override fun updateAxisRange() {
+    final override fun updateAxisRange() {
         val xa = xAxis
         val ya = yAxis
         var xData: MutableList<X>? = null
@@ -127,7 +125,7 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
         }
     }
 
-    override fun dataItemAdded(
+    final override fun dataItemAdded(
         series: Series<X, Y>,
         itemIndex: Int,
         item: Data<X, Y>
@@ -213,7 +211,7 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
         }
     }
 
-    override fun dataItemRemoved(
+    final override fun dataItemRemoved(
         item: Data<X, Y>,
         series: Series<X, Y>
     ) {
@@ -292,7 +290,7 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
         //Note: better animation here, point should move from old position to new position at center point between prev and next symbols
     }
 
-    override fun updateStyleClassOf(
+    final override fun updateStyleClassOf(
         s: Series<X, Y>,
         i: Int
     ) {
@@ -304,7 +302,7 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
         }
     }
 
-    override val lineOrArea = line
+    final override val lineOrArea = line
 
 //  private fun updateStyleClassOf(s: Series<X, Y>, i: Int) {
 //	val seriesNode = s.node.value
@@ -337,7 +335,7 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
 //  }
 
 
-    override fun seriesAdded(
+    final override fun seriesAdded(
         series: Series<X, Y>,
         seriesIndex: Int
     ) {
@@ -403,7 +401,7 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
         if (shouldAnimate()) animate(*keyFrames.toTypedArray())
     }
 
-    override fun seriesRemoved(series: Series<X, Y>) {
+    final override fun seriesRemoved(series: Series<X, Y>) {
         // remove all symbol nodes
         seriesYMultiplierMap.remove(series)
         if (shouldAnimate()) {
@@ -417,6 +415,7 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
         }
     }
 
+    final
     /** {@inheritDoc}  */
     override fun layoutPlotChildren() {
         val constructedPath = ArrayList<LineTo>(
@@ -440,6 +439,7 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
         }
     }
 
+    final
     /** {@inheritDoc}  */
     override fun dataBeingRemovedIsAdded(
         item: Data<X, Y>,
@@ -470,8 +470,8 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
     }
 
 
-    override val seriesRemovalAnimation by ::seriesRemoveTimeline
-    override fun nullifySeriesRemovalAnimation() {
+    final override val seriesRemovalAnimation by ::seriesRemoveTimeline
+    final override fun nullifySeriesRemovalAnimation() {
         seriesRemoveTimeline = null
     }
 
@@ -508,8 +508,9 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
 
 
     protected object StyleableProperties : StyleableProps<MorePerfOptionsLineChart<*, *>>()
-    override val styleableProps get() = StyleableProperties
-    override fun getCssMetaData() = styleableProps.classCssMetaData
+
+    final override val styleableProps get() = StyleableProperties
+    final override fun getCssMetaData() = styleableProps.classCssMetaData
 
     enum class SortingPolicy {
         NONE, X_AXIS, Y_AXIS

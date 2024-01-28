@@ -17,6 +17,7 @@ import matt.fx.base.wrapper.obs.collect.set.createImmutableWrapper
 import matt.fx.graphics.wrapper.style.FXStyle.fill
 import matt.fx.graphics.wrapper.style.FXStyle.`text-fill`
 import matt.lang.NOT_IMPLEMENTED
+import matt.lang.anno.Open
 import matt.lang.err
 import matt.obs.col.olist.MutableObsList
 import matt.obs.col.oset.ObsSet
@@ -33,15 +34,15 @@ fun AwtColor.toFXColor() = FXColor(red / 255.0, green / 255.0, blue / 255.0, alp
 fun FXColor.mostContrasting(alg: ContrastAlgorithm) = toMColor().calculateContrastingColor(alg).toFXColor()
 
 abstract class StyleableWrapperImpl(private val node: Styleable) : StyleableWrapper {
-    override val typeSelector: String get() = node.typeSelector
-    override val id: String? get() = node.id
-    override val cssMetaData: MutableList<CssMetaData<out Styleable, *>> get() = node.cssMetaData
-    override val styleableParent: Styleable? get() = node.styleableParent
-    override val pseudoClassStates by lazy {
+    final override val typeSelector: String get() = node.typeSelector
+    final override val id: String? get() = node.id
+    final override val cssMetaData: MutableList<CssMetaData<out Styleable, *>> get() = node.cssMetaData
+    final override val styleableParent: Styleable? get() = node.styleableParent
+    final override val pseudoClassStates by lazy {
         node.pseudoClassStates.createImmutableWrapper()
     }
-    override val styleClass: MutableObsList<String> by lazy { node.styleClass.createMutableWrapper() }
-    override fun getTheStyle(): String? = node.style
+    final override val styleClass: MutableObsList<String> by lazy { node.styleClass.createMutableWrapper() }
+    final override fun getTheStyle(): String? = node.style
 }
 
 class StyleableWrapperImpl2(private val node: Node) : StyleableWrapperImpl(node) {
@@ -62,6 +63,7 @@ interface StyleableWrapper {
     val styleClass: MutableObsList<String>
 
 
+    @Open
     var style
         get() = getTheStyle()
         set(value) {
@@ -72,19 +74,19 @@ interface StyleableWrapper {
     fun getTheStyle(): String?
 
 
-    var fillStyle: Color
+    @Open    var fillStyle: Color
         get() = NOT_IMPLEMENTED
         set(value) {
             style += "${fill.key}: ${value.toMColor().hex()};"
         }
-    var textFillStyle: Color
+    @Open   var textFillStyle: Color
         get() = NOT_IMPLEMENTED
         set(value) {
             style += "${`text-fill`.key}: ${value.toMColor().hex()};"
         }
 
 
-    fun styleInfo(): String {
+    @Open    fun styleInfo(): String {
         val r = LineAppender()
         r += ("${this::class}->${typeSelector}")
 
@@ -122,8 +124,8 @@ enum class FXStyle {
     val key = "-fx-$name"
 }
 
-fun String.parseFXStyle() = split(";").map { it.substringBefore(":") to it.substringAfter(":") }
-    .associate { (key, value) ->
+fun String.parseFXStyle() =
+    split(";").map { it.substringBefore(":") to it.substringAfter(":") }.associate { (key, value) ->
         (FXStyle.entries.firstOrNull { it.key == key.trim() } ?: err(
             """
 	unknown fx style key: $key in "${this@parseFXStyle}"

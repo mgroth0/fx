@@ -15,6 +15,7 @@ import matt.fx.graphics.wrapper.style.FXStyle
 import matt.fx.graphics.wrapper.style.parseFXStyle
 import matt.fx.graphics.wrapper.style.toStyleString
 import matt.fx.graphics.wrapper.text.textlike.ColoredText
+import matt.lang.anno.Open
 import matt.lang.err
 import matt.log.warn.warn
 import matt.obs.prop.BindableProperty
@@ -22,16 +23,17 @@ import matt.obs.prop.mutateOnChange
 
 open class TextInputControlWrapper<N: TextInputControl>(node: N): ControlWrapperImpl<N>(node), ColoredText {
 
-  override fun addChild(child: NodeWrapper, index: Int?) {
+    @Open
+    override fun addChild(child: NodeWrapper, index: Int?) {
 	TODO()
   }
 
 
   fun editableProperty(): BooleanProperty = node.editableProperty()
 
-  override val textProperty by lazy { node.textProperty().toNonNullableProp() }
+  final override val textProperty by lazy { node.textProperty().toNonNullableProp() }
 
-  override val textFillProperty by lazy {
+  final override val textFillProperty by lazy {
 	BindableProperty<Paint?>(null).apply {
 	  warn("broken paint property...")
 	  onChange {
@@ -55,7 +57,7 @@ open class TextInputControlWrapper<N: TextInputControl>(node: N): ControlWrapper
   fun promptTextProperty(): StringProperty = node.promptTextProperty()
 
 
-  override val fontProperty by lazy { node.fontProperty().toNonNullableProp() }
+  final override val fontProperty by lazy { node.fontProperty().toNonNullableProp() }
 
 
   val caretPosition get() = node.caretPosition

@@ -14,7 +14,7 @@
     {
       "type": "Lib",
       "cfg": "implementation",
-      "key": "fx-swing"
+      "key": "fx-swing","checkIfUsed": false
     },
     {
       "type": "Project",

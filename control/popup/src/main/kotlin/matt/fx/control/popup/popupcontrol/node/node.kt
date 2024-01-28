@@ -29,6 +29,7 @@ import javafx.stage.PopupWindow
 import javafx.stage.PopupWindow.AnchorLocation.CONTENT_TOP_LEFT
 import matt.fx.base.rewrite.ReWrittenFxClass
 import matt.fx.control.popup.popupcontrol.node.bridge.MyPopUpCSSBridge
+import matt.lang.anno.Open
 import matt.lang.go
 import java.util.Collections
 
@@ -96,7 +97,7 @@ open class MyPopupControl: PopupWindow(), Skinnable, Styleable {
    */
   fun setId(value: String) = idProperty().set(value)
 
-  /**
+  final /**
    * The id of this `PopupControl`. This simple string identifier is useful for
    * finding a specific Node within the scene graph. While the id of a Node
    * should be unique within the scene graph, this uniqueness is not enforced.
@@ -109,7 +110,7 @@ open class MyPopupControl: PopupWindow(), Skinnable, Styleable {
    */
   override fun getId(): String? = idProperty().get()
 
-  /**
+  final /**
    * Returns the list of String identifiers that make up the styleClass
    * for this PopupControl.
    */
@@ -119,7 +120,7 @@ open class MyPopupControl: PopupWindow(), Skinnable, Styleable {
 	styleProperty().set(value)
   }
 
-  override fun getStyle(): String = styleProperty().get()
+  final override fun getStyle(): String = styleProperty().get()
 
   /**
    * A string representation of the CSS style associated with this
@@ -135,7 +136,7 @@ open class MyPopupControl: PopupWindow(), Skinnable, Styleable {
    */
   fun styleProperty(): StringProperty = bridge.styleProperty()
 
-  /**
+  final /**
    * Skin is responsible for rendering this `PopupControl`. From the
    * perspective of the `PopupControl`, the `Skin` is a black box.
    * It listens and responds to changes in state in a `PopupControl`.
@@ -150,11 +151,11 @@ open class MyPopupControl: PopupWindow(), Skinnable, Styleable {
    */
   override fun skinProperty(): ObjectProperty<Skin<*>> = skin
 
-  override fun setSkin(value: Skin<*>) {
+  final override fun setSkin(value: Skin<*>) {
 	skinProperty().value = value
   }
 
-  override fun getSkin(): Skin<*>? = skinProperty().value
+  final override fun getSkin(): Skin<*>? = skinProperty().value
 
   private val skin: ObjectProperty<Skin<*>> = object: ObjectPropertyBase<Skin<*>>() {
 	// We store a reference to the oldValue so that we can handle
@@ -942,7 +943,8 @@ open class MyPopupControl: PopupWindow(), Skinnable, Styleable {
 	PopupWindowHelper.getContent(this).add(bridge)
   }
 
-  override fun getCssMetaData(): List<CssMetaData<out Styleable, *>> = classCssMetaData
+	@Open
+	override fun getCssMetaData(): List<CssMetaData<out Styleable, *>> = classCssMetaData
 
   /**
    * Used to specify that a pseudo-class of this node has changed.
@@ -956,14 +958,14 @@ open class MyPopupControl: PopupWindow(), Skinnable, Styleable {
 	bridge.pseudoClassStateChanged(pseudoClass, active)
   }
 
-  /**
+  final /**
    * {@inheritDoc}
    * @return "PopupControl"
    * @since JavaFX 8.0
    */
   override fun getTypeSelector(): String = "PopupControl"
 
-  /**
+	@Open  /**
    * {@inheritDoc}
    *
    * A PopupControl&#39;s styles are based on the popup &quot;owner&quot; which is the
@@ -992,13 +994,13 @@ open class MyPopupControl: PopupWindow(), Skinnable, Styleable {
 	return bridge.parent
   }
 
-  /**
+  final /**
    * {@inheritDoc}
    * @since JavaFX 8.0
    */
   override fun getPseudoClassStates(): ObservableSet<PseudoClass> = FXCollections.emptyObservableSet()
 
-  override fun getStyleableNode(): Node = bridge
+  final override fun getStyleableNode(): Node = bridge
 
 
   companion object {

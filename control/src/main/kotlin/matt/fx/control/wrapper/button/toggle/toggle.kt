@@ -86,7 +86,7 @@ open class ToggleButtonWrapper(
     node: ToggleButton = ToggleButton(),
 ) : ButtonBaseWrapper<ToggleButton>(node), Selectable {
 
-    override val selectedProperty by lazy {
+    final override val selectedProperty by lazy {
         node.selectedProperty().toNonNullableProp()
     }
 

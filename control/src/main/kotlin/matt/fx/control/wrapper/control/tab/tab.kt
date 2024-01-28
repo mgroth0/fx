@@ -16,7 +16,7 @@ open class TabWrapper<C : NodeWrapper?>(
     node: Tab = Tab()
 ) : SingularEventTargetWrapper<Tab>(node) {
 
-    override fun isInsideRow() = false
+    final override fun isInsideRow() = false
 
     constructor(
         text: String?,
@@ -26,9 +26,9 @@ open class TabWrapper<C : NodeWrapper?>(
     val closableProp by lazy { node.closableProperty().toNonNullableProp() }
     var isClosable by closableProp
 
-    override val properties get() = node.properties
+    final override val properties get() = node.properties
 
-    override fun removeFromParent() {
+    final override fun removeFromParent() {
         node.tabPane?.tabs?.remove(node)
     }
 
@@ -84,7 +84,7 @@ open class TabWrapper<C : NodeWrapper?>(
 
     fun select() = apply { tabPane!!.selectionModel.select(this.node) }
 
-    override fun addChild(
+    final override fun addChild(
         child: NodeWrapper,
         index: Int?
     ) {

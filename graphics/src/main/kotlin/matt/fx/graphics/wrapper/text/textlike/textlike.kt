@@ -11,6 +11,7 @@ import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.impl.NodeWrapperImpl
 import matt.fx.graphics.wrapper.node.onHover
 import matt.fx.graphics.wrapper.style.FXColor
+import matt.lang.anno.Open
 import matt.obs.prop.Var
 
 val MONO_FONT: Font by lazy { Font.font("monospaced") }
@@ -18,6 +19,7 @@ val CONSOLAS_FONT: Font by lazy { Font.font("Consolas") }
 
 interface TextLike : EventTargetWrapper {
     val textProperty: Var<String?>
+    @Open
     var text: String
         get() = textProperty.value ?: ""
         set(value) {
@@ -25,13 +27,13 @@ interface TextLike : EventTargetWrapper {
         }
 
     val fontProperty: Var<Font>
-    var font: Font
+    @Open    var font: Font
         get() = fontProperty.value
         set(value) {
             fontProperty v value
         }
 
-    fun monospace() {
+    @Open   fun monospace() {
         font = MONO_FONT
     }
 
@@ -40,7 +42,7 @@ interface TextLike : EventTargetWrapper {
 interface ColoredText : TextLike, NodeWrapper {
 
     val textFillProperty: Var<Paint?>
-    var textFill: Paint?
+    @Open var textFill: Paint?
         get() = textFillProperty.value
         set(value) {
             textFillProperty v value
@@ -56,8 +58,7 @@ class DarkLightFXColor(
 
 private val DEFAULT_DARK_LIGHT_HIGHLIGHT_COLOR by lazy {
     DarkLightFXColor(
-        darkColor = FXColor.YELLOW,
-        lightColor = FXColor.BLUE
+        darkColor = FXColor.YELLOW, lightColor = FXColor.BLUE
     )
 }
 

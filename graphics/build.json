@@ -19,7 +19,8 @@
     {
       "type": "Lib",
       "cfg": "api",
-      "key": "fx-graphics"
+      "key": "fx-graphics",
+      "checkIfUsed": false
     },
     {
       "type": "Lib",
