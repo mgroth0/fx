@@ -19,9 +19,9 @@ import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.lang.anno.SeeURL
+import matt.lang.assertions.require.requireNull
 import matt.lang.delegation.lazyVarDelegate
 import matt.lang.go
-import matt.lang.assertions.require.requireNull
 import matt.obs.bind.smartBind
 import matt.obs.col.olist.MutableObsList
 import matt.obs.col.olist.toBasicObservableList
@@ -87,9 +87,7 @@ class ChoiceBoxWrapper<T : Any>(
 
     fun <R> convertBy(op: (T) -> R) {
         converter = object : StringConverter<T?>() {
-            override fun toString(`object`: T?): String {
-                return `object`?.let { op(it) }.toString()
-            }
+            override fun toString(`object`: T?): String = `object`?.let { op(it) }.toString()
 
             override fun fromString(string: String?): T? {
                 TODO()

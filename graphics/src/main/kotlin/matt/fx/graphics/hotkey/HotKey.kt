@@ -60,7 +60,7 @@ fun KeyEvent.runAgainst(
     log: Logger
 ) {
 
-    log += "got hotkey: ${this}"
+    log += "got hotkey: $this"
 
     val pressTime = currentTimeMillis()
 
@@ -91,7 +91,7 @@ fun KeyEvent.runAgainst(
 
 
 
-                */
+                 */
                 fixer.last = null
 
                 return consume()
@@ -100,17 +100,17 @@ fun KeyEvent.runAgainst(
         }
     } //  runLater { fixer.last = null }
     /*only possible race condition now is with:
-    * 1. javafx lag
-    * 2. same hotkey twice really fast, faster than this runLater can run
-    * 3. or not even so fast, of there's lots of lag (but who cares then there shouldnt be lots of lag)
-    * more concerned with if there's little lag but I just am trying to do lots of things fast...
-    * guess there's little I can do for now. Would need to file a bug report with a minimal working example...
-    * */
+     * 1. javafx lag
+     * 2. same hotkey twice really fast, faster than this runLater can run
+     * 3. or not even so fast, of there's lots of lag (but who cares then there shouldnt be lots of lag)
+     * more concerned with if there's little lag but I just am trying to do lots of things fast...
+     * guess there's little I can do for now. Would need to file a bug report with a minimal working example...
+     * */
 
     /*UGH! I CANNOT AVOID THIS PROBLEM!!!! I must use eventHandlers wherever this occurs. Its fine, they are the proper HANDLERS anyway (filters are FILTERS)
-    *
-    * UPDATE: EVEN HANDLERS ARENT WORKING
-    * */
+     *
+     * UPDATE: EVEN HANDLERS ARENT WORKING
+     * */
 
 
     hotkeys.asSequence().flatMap {
@@ -226,10 +226,10 @@ fun EventTargetWrapper.register(
     val dups = handler.hotkeys.duplicates()
     if (dups.isNotEmpty()) { /*doesnt check handlers and filters together, and doesn't check from multiple nodes together!*/
         err(
-            """
-	  hotkey duplicates!:
-	  ${dups.joinWithNewLinesAndTabs()}
-	""".trimIndent()
+"""
+hotkey duplicates!:
+${dups.joinWithNewLinesAndTabs()}
+""".trimIndent()
         )
     }
 }

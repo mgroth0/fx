@@ -23,9 +23,7 @@ class EquationNotReallyIrTex(val code: TexCode) : EquationIr
 
 
 object TexEquationRenderer : EquationRenderer<TexCode> {
-    override fun render(equationData: EquationIr): TexCode {
-        return (equationData as EquationNotReallyIrTex).code
-    }
+    override fun render(equationData: EquationIr): TexCode = (equationData as EquationNotReallyIrTex).code
 }
 
 private const val RESOLUTION_CONTROL = 2f

@@ -14,27 +14,27 @@ import matt.lang.anno.Open
 
 
 abstract class TableColumnBaseWrapper<E: Any, P, F: TableColumnBase<E, P>>(
-  @Open override val node: TableColumnBase<E, P>
+    @Open override val node: TableColumnBase<E, P>
 ):
-  SingularEventTargetWrapper<TableColumnBase<E, P>>(node),
-  WidthManaged {
-  fun widthProperty(): ReadOnlyDoubleProperty = node.widthProperty()
+    SingularEventTargetWrapper<TableColumnBase<E, P>>(node),
+        WidthManaged {
+    fun widthProperty(): ReadOnlyDoubleProperty = node.widthProperty()
 
-  final override fun isInsideRow() = false
+    final override fun isInsideRow() = false
 
-  final override val widthProperty get() = node.widthProperty().toNonNullableROProp().cast<Double>()
-  final override val prefWidthProperty get() = node.prefWidthProperty().toNonNullableProp().cast<Double>()
-  final override val minWidthProperty get() = node.minWidthProperty().toNonNullableProp().cast<Double>()
-  final override val maxWidthProperty get() = node.maxWidthProperty().toNonNullableProp().cast<Double>()
+    final override val widthProperty get() = node.widthProperty().toNonNullableROProp().cast<Double>()
+    final override val prefWidthProperty get() = node.prefWidthProperty().toNonNullableProp().cast<Double>()
+    final override val minWidthProperty get() = node.minWidthProperty().toNonNullableProp().cast<Double>()
+    final override val maxWidthProperty get() = node.maxWidthProperty().toNonNullableProp().cast<Double>()
 
-  final override val properties: ObservableMap<Any, Any?>
-    get() = node.properties
+    final override val properties: ObservableMap<Any, Any?>
+        get() = node.properties
 
-  abstract val tableView: TableLikeWrapper<E>?
+    abstract val tableView: TableLikeWrapper<E>?
 
-  @Open override fun addChild(child: NodeWrapper, index: Int?) {
-	TODO()
-  }
+    @Open override fun addChild(child: NodeWrapper, index: Int?) {
+        TODO()
+    }
 
 
 }
@@ -44,5 +44,5 @@ abstract class TableColumnBaseWrapper<E: Any, P, F: TableColumnBase<E, P>>(
  */
 fun <S, T> TableColumn.CellEditEvent<S, T>.cancel() {
 
-  tableView.edit(-1, tableColumn)
+    tableView.edit(-1, tableColumn)
 }

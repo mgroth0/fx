@@ -10,32 +10,32 @@ import matt.fx.graphics.wrapper.node.NodeWrapper
 
 
 fun actionbutton(text: String = "", graphic: NodeWrapper? = null, action: ButtonWrapper.(ActionEvent)->Unit) =
-  ButtonWrapper(text, graphic).apply {
-	setOnAction {
-	  action(it)
-	  it.consume()
-	}
-  }
+    ButtonWrapper(text, graphic).apply {
+        setOnAction {
+            action(it)
+            it.consume()
+        }
+    }
 
 fun EventTargetWrapper.actionbutton(
-  text: String = "",
-  graphic: NodeWrapper? = null,
-  action: ButtonWrapper.(ActionEvent)->Unit
+    text: String = "",
+    graphic: NodeWrapper? = null,
+    action: ButtonWrapper.(ActionEvent)->Unit
 ) = ButtonWrapper(text, graphic).apply {
-  setOnAction {
-	action(it)
-	it.consume()
-  }
-  this@actionbutton.addChild(this)
+    setOnAction {
+        action(it)
+        it.consume()
+    }
+    this@actionbutton.addChild(this)
 }
 
 infix fun ButtonWrapper.withAction(newOp: ()->Unit) = this.apply { op = newOp }
 
 fun EventTargetWrapper.removecontextmenu() {
-  if (this is Control) {
-	contextMenu = null
-  } else (this as? Node)?.apply {
-	setOnContextMenuRequested {
-	}
-  }
+    if (this is Control) {
+        contextMenu = null
+    } else (this as? Node)?.apply {
+        setOnContextMenuRequested {
+        }
+    }
 }

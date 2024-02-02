@@ -15,30 +15,30 @@ import matt.lang.setall.setAll
 import matt.obs.prop.Var
 
 fun <T> TreeItem<T>.treeitem(value: T? = null, op: TreeItem<T>.()->Unit = {}): TreeItem<T> {
-  val treeItem = value?.let { TreeItem<T>(it) } ?: TreeItem<T>()
-  treeItem.op()
-  this += treeItem
-  return treeItem
+    val treeItem = value?.let { TreeItem<T>(it) } ?: TreeItem<T>()
+    treeItem.op()
+    this += treeItem
+    return treeItem
 }
 
 operator fun <T> TreeItem<T>.plusAssign(treeItem: TreeItem<T>) {
-  this.children.add(treeItem)
+    this.children.add(treeItem)
 }
 
 interface TreeLikeWrapper<N: Region, T: Any>: RegionWrapper<NodeWrapper>, SelectingControl<TreeItem<T>>, SizeManaged {
 
-  val rootProperty: Var<TreeItemWrapper<T>?>
-	@Open
-	var root: TreeItemWrapper<T>?
-	get() = rootProperty.value
-	set(value) {
-	  rootProperty.value = value
-	}
-  var isShowRoot: Boolean
-  override val selectionModel: MultiSelectWrap<TreeItem<T>>
-	@Open val selectedValue: T? get() = selectedItem?.value
-  fun scrollTo(i: Int)
-  fun getRow(ti: TreeItem<T>): Int
+    val rootProperty: Var<TreeItemWrapper<T>?>
+    @Open
+    var root: TreeItemWrapper<T>?
+        get() = rootProperty.value
+        set(value) {
+            rootProperty.value = value
+        }
+    var isShowRoot: Boolean
+    override val selectionModel: MultiSelectWrap<TreeItem<T>>
+    @Open val selectedValue: T? get() = selectedItem?.value
+    fun scrollTo(i: Int)
+    fun getRow(ti: TreeItem<T>): Int
 }
 
 
@@ -52,35 +52,35 @@ interface TreeLikeWrapper<N: Region, T: Any>: RegionWrapper<NodeWrapper>, Select
  * function is called for each of the generated child items.
  */
 fun <T: Any> populateTree(
-  item: TreeItemWrapper<T>,
-  itemFactory: (T)->TreeItemWrapper<T>,
-  childFactory: (TreeItemWrapper<T>)->Iterable<T>?
+    item: TreeItemWrapper<T>,
+    itemFactory: (T)->TreeItemWrapper<T>,
+    childFactory: (TreeItemWrapper<T>)->Iterable<T>?
 ) {
-  val children = childFactory.invoke(item)
+    val children = childFactory.invoke(item)
 
-  children?.map { itemFactory(it) }?.apply {
-	item.children.setAll(this)
-	forEach { populateTree(it, itemFactory, childFactory) }
-  }
+    children?.map { itemFactory(it) }?.apply {
+        item.children.setAll(this)
+        forEach { populateTree(it, itemFactory, childFactory) }
+    }
 
-  (children as? ObservableList<T>)?.addListener(ListChangeListener { change ->
-	while (change.next()) {
-	  if (change.wasPermutated()) {
-		item.children.subList(change.from, change.to).clear()
-		val permutated = change.list.subList(change.from, change.to).map { itemFactory(it) }
-		item.children.addAll(change.from, permutated)
-		permutated.forEach { populateTree(it, itemFactory, childFactory) }
-	  } else {
-		if (change.wasRemoved()) {
-		  val removed = change.removed.flatMap { removed -> item.children.filter { it.value == removed } }
-		  item.children.removeAll(removed)
-		}
-		if (change.wasAdded()) {
-		  val added = change.addedSubList.map { itemFactory(it) }
-		  item.children.addAll(change.from, added)
-		  added.forEach { populateTree(it, itemFactory, childFactory) }
-		}
-	  }
-	}
-  })
+    (children as? ObservableList<T>)?.addListener(ListChangeListener { change ->
+        while (change.next()) {
+            if (change.wasPermutated()) {
+                item.children.subList(change.from, change.to).clear()
+                val permutated = change.list.subList(change.from, change.to).map { itemFactory(it) }
+                item.children.addAll(change.from, permutated)
+                permutated.forEach { populateTree(it, itemFactory, childFactory) }
+            } else {
+                if (change.wasRemoved()) {
+                    val removed = change.removed.flatMap { removed -> item.children.filter { it.value == removed } }
+                    item.children.removeAll(removed)
+                }
+                if (change.wasAdded()) {
+                    val added = change.addedSubList.map { itemFactory(it) }
+                    item.children.addAll(change.from, added)
+                    added.forEach { populateTree(it, itemFactory, childFactory) }
+                }
+            }
+        }
+    })
 }

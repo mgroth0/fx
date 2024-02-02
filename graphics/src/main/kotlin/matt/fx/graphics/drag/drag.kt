@@ -6,7 +6,6 @@ import javafx.scene.input.DataFormat
 import javafx.scene.input.Dragboard
 import javafx.scene.input.TransferMode
 import javafx.scene.paint.Color
-import matt.lang.model.file.FsFile
 import matt.file.commons.TEMP_DIR
 import matt.file.construct.toMFile
 import matt.file.toJioFile
@@ -21,6 +20,7 @@ import matt.lang.function.Op
 import matt.lang.function.Produce
 import matt.lang.go
 import matt.lang.inList
+import matt.lang.model.file.FsFile
 import matt.lang.model.file.MacFileSystem
 import matt.obs.prop.ObsVal
 

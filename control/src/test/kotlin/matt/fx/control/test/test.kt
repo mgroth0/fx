@@ -30,7 +30,7 @@ class FXControlTests : FxTests() {
             }.filter {
                 /*must test for anonymous first because trying to see if anonymous is abstract leads to error*/
                 !it.java.isAnonymousClass
-                        && !it.isAbstract
+                    && !it.isAbstract
                 /*	  && it.qualifiedName !in listOf(
                         "javafx.embed.swing.SwingNode", *//*not sure how this keeps getting in even though I'm not depending on fx-swing*//*
 		  )*/

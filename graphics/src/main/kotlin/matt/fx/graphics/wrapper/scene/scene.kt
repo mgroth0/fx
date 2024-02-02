@@ -8,6 +8,9 @@ import javafx.scene.Parent
 import javafx.scene.Scene
 import javafx.scene.paint.Paint
 import javafx.stage.Window
+import matt.fx.base.wrapper.obs.collect.list.createMutableWrapper
+import matt.fx.base.wrapper.obs.obsval.toNonNullableROProp
+import matt.fx.base.wrapper.obs.obsval.toNullableROProp
 import matt.fx.graphics.service.uncheckedNullableWrapperConverter
 import matt.fx.graphics.service.wrapped
 import matt.fx.graphics.wrapper.SingularEventTargetWrapper
@@ -15,9 +18,6 @@ import matt.fx.graphics.wrapper.node.parent.ParentWrapper
 import matt.fx.graphics.wrapper.scenelike.SceneLikeWrapper
 import matt.fx.graphics.wrapper.stage.StageWrapper
 import matt.fx.graphics.wrapper.window.WindowWrapper
-import matt.fx.base.wrapper.obs.collect.list.createMutableWrapper
-import matt.fx.base.wrapper.obs.obsval.toNonNullableROProp
-import matt.fx.base.wrapper.obs.obsval.toNullableROProp
 import matt.obs.bind.binding
 
 

@@ -11,13 +11,13 @@ import java.time.LocalDate
 
 fun ET.datepicker(op: DatePickerWrapper.()->Unit = {}) = DatePickerWrapper().attachTo(this, op)
 fun ET.datepicker(property: VarProp<LocalDate?>, op: DatePickerWrapper.()->Unit = {}) = datepicker().apply {
-  bind(property)
-  op(this)
+    bind(property)
+    op(this)
 }
 
 class DatePickerWrapper(
-  node: DatePicker = DatePicker(),
+    node: DatePicker = DatePicker(),
 ): ComboBoxBaseWrapper<LocalDate, DatePicker>(node)
 
 fun DatePickerWrapper.bind(property: ObsVal<LocalDate?>, readonly: Boolean = false) =
-  valueProperty.smartBind(property, readonly)
+    valueProperty.smartBind(property, readonly)

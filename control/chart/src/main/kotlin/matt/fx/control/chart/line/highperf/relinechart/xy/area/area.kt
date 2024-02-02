@@ -24,7 +24,6 @@ import matt.fx.control.chart.line.highperf.relinechart.MorePerfOptionsLineChart
 import matt.fx.control.chart.line.highperf.relinechart.xy.XYChartForPackagePrivateProps
 import matt.fx.control.chart.linelike.LineLikeChartNodeWithOptionalSymbols
 import matt.fx.graphics.anim.interp.MyInterpolator
-import java.util.*
 
 @ReWrittenFxClass(AreaChart::class)
 class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
@@ -401,9 +400,7 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
         private fun doubleValue(
             number: Number?,
             nullDefault: Double = 0.0
-        ): Double {
-            return number?.toDouble() ?: nullDefault
-        }
+        ): Double = number?.toDouble() ?: nullDefault
 
         fun <X, Y> makePaths(
             chart: XYChartForPackagePrivateProps<X, Y>,

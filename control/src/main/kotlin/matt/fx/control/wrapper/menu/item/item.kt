@@ -6,10 +6,10 @@ import javafx.event.EventHandler
 import javafx.scene.Node
 import javafx.scene.control.MenuItem
 import javafx.scene.input.KeyCombination
-import matt.fx.graphics.wrapper.SingularEventTargetWrapper
-import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
+import matt.fx.graphics.wrapper.SingularEventTargetWrapper
+import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.lang.anno.Open
 import matt.lang.assertions.require.requireNull
 import matt.model.op.convert.NullToBlankStringConverter

@@ -17,15 +17,13 @@ import matt.model.data.rect.DoubleRectSize
 import java.awt.image.BufferedImage
 import java.net.URI
 import java.net.URL
-import java.util.*
+import java.util.WeakHashMap
 
 object FaviconLoader {
 
 
     @Synchronized
-    fun loadSynchronously(url: URL): BufferedImage? {
-        return FAVICON_CACHE[url].value
-    }
+    fun loadSynchronously(url: URL): BufferedImage? = FAVICON_CACHE[url].value
 
 
     private val nextThreadID = AtomicInt()

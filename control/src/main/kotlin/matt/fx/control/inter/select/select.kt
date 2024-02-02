@@ -8,15 +8,15 @@ import matt.obs.prop.GoodVar
 import matt.obs.prop.Var
 
 interface Selectable {
-  val selectedProperty: GoodVar<B>
-	@Open
-	var isSelected
-	get() = selectedProperty.value
-	set(value) {
-	  selectedProperty.value = value
-	}
+    val selectedProperty: GoodVar<B>
+    @Open
+    var isSelected
+        get() = selectedProperty.value
+        set(value) {
+            selectedProperty.value = value
+        }
 }
 
 interface SelectableValue<V: Any>: Selectable, HasConstValue<V> {
-  val toggleMechanism: Var<ToggleMechanism<V>?>
+    val toggleMechanism: Var<ToggleMechanism<V>?>
 }

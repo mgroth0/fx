@@ -20,30 +20,30 @@ import matt.obs.prop.BindableProperty
  * radiobutton, it will be automatically selected.
  */
 fun <V: Any> ET.radiobutton(
-  text: String? = null,
-  group: ToggleMechanism<V>? = null,
-  value: V,
-  op: ValuedRadioButton<V>.()->Unit = {}
+    text: String? = null,
+    group: ToggleMechanism<V>? = null,
+    value: V,
+    op: ValuedRadioButton<V>.()->Unit = {}
 ) = ValuedRadioButton(value).attachTo(this, op) {
-  it.text = if (/*value != null && */text == null) value.toString() else text
-  if (group != null) it.toggleMechanism.value = group
+    it.text = if (/*value != null && */text == null) value.toString() else text
+    if (group != null) it.toggleMechanism.value = group
 }
 
 
 class ValuedRadioButton<V: Any>(value: V): RadioButtonWrapper(), HasWritableValue<V>, SelectableValue<V> {
-  override val valueProperty = BindableProperty(value)
-  override val toggleMechanism = BindableProperty<ToggleMechanism<V>?>(null).apply {
-	addListener(OldAndNewListenerImpl { old, new ->
-	  old?.removeToggle(this@ValuedRadioButton)
-	  new?.addToggle(this@ValuedRadioButton)
-	})
-  }
+    override val valueProperty = BindableProperty(value)
+    override val toggleMechanism = BindableProperty<ToggleMechanism<V>?>(null).apply {
+        addListener(OldAndNewListenerImpl { old, new ->
+            old?.removeToggle(this@ValuedRadioButton)
+            new?.addToggle(this@ValuedRadioButton)
+        })
+    }
 }
 
 open class RadioButtonWrapper(
-  node: RadioButton = RadioButton(),
+    node: RadioButton = RadioButton(),
 ): ToggleButtonWrapper(node) {
 
-  constructor(text: String): this(RadioButton(text))
+    constructor(text: String): this(RadioButton(text))
 
 }

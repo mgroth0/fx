@@ -5,17 +5,17 @@ import matt.fx.graphics.wrapper.text.textlike.TextLike
 import matt.obs.prop.Var
 
 interface TextAndGraphic: TextLike {
-  val graphicProperty: Var<NW?>
-  val contentDisplayProp: Var<ContentDisplay>
+    val graphicProperty: Var<NW?>
+    val contentDisplayProp: Var<ContentDisplay>
 }
 
 var TextAndGraphic.graphic: NW?
-  get() = graphicProperty.value
-  set(value) {
-	graphicProperty.value = value
-  }
+    get() = graphicProperty.value
+    set(value) {
+        graphicProperty.value = value
+    }
 var TextAndGraphic.contentDisplay: ContentDisplay
-  get() = contentDisplayProp.value
-  set(value) {
-    contentDisplayProp.value = value
-  }
+    get() = contentDisplayProp.value
+    set(value) {
+        contentDisplayProp.value = value
+    }

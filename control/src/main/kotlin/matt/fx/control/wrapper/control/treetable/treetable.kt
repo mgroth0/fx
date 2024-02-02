@@ -285,11 +285,9 @@ class TreeTableViewWrapper<E : Any>(
     inline fun <P> column(
         getter: KFunction<P>,
         op: TreeTableColumnWrapper<E, P>.() -> Unit = {}
-    ): TreeTableColumnWrapper<E, P> {
-        return column(getter.name) {
-            VarProp(getter.call(it.value.value))
-        }.apply(op)
-    }
+    ): TreeTableColumnWrapper<E, P> = column(getter.name) {
+        VarProp(getter.call(it.value.value))
+    }.apply(op)
 
 
     /**
@@ -299,11 +297,9 @@ class TreeTableViewWrapper<E : Any>(
     inline fun <P> column(
         getter: KProperty1<E, P>,
         op: TreeTableColumnWrapper<E, P>.() -> Unit = {}
-    ): TreeTableColumnWrapper<E, P> {
-        return column(getter.name) {
-            VarProp(getter.call(it.value.value))
-        }.apply(op)
-    }
+    ): TreeTableColumnWrapper<E, P> = column(getter.name) {
+        VarProp(getter.call(it.value.value))
+    }.apply(op)
 
 }
 

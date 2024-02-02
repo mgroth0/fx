@@ -15,22 +15,22 @@ import kotlin.reflect.KClass
 
 
 val converters = mapOf<KClass<*>, StringConverter<*>>(
-  Number::class to MyNumberStringConverter
+    Number::class to MyNumberStringConverter
 )
 
 
 inline fun <reified T: Any> ET.textfield(property: Var<T>, op: TextFieldWrapper.()->Unit = {}) =
-  textfield().apply {
-	if (T::class == String::class) {
-	  @Suppress("UNCHECKED_CAST")
-	  textProperty.bindBidirectional(property as Var<String>)
-	} else {
-	  @Suppress("UNCHECKED_CAST")
-	  textProperty.bindBidirectional(property, converters[T::class]!! as BiConverter<String, T>)
-	}
+    textfield().apply {
+        if (T::class == String::class) {
+            @Suppress("UNCHECKED_CAST")
+            textProperty.bindBidirectional(property as Var<String>)
+        } else {
+            @Suppress("UNCHECKED_CAST")
+            textProperty.bindBidirectional(property, converters[T::class]!! as BiConverter<String, T>)
+        }
 
-	op(this)
-  }
+        op(this)
+    }
 
 ///*@JvmName("textfieldNumber") */inline fun ET.textfield(
 //  property: Var<Number>,
@@ -49,39 +49,39 @@ inline fun <reified T: Any> ET.textfield(property: Var<T>, op: TextFieldWrapper.
 //}
 
 fun ET.textfield(value: String? = null, op: TextFieldWrapper.()->Unit = {}) = TextFieldWrapper().attachTo(this, op) {
-  if (value != null) it.text = value
+    if (value != null) it.text = value
 }
 
 fun <T> ET.textfield(
     property: Var<T>, converter: StringConverter<T>, op: TextFieldWrapper.()->Unit = {}
 ) = textfield().apply {
-  textProperty.bindBidirectional(property, converter)
-  op(this)
+    textProperty.bindBidirectional(property, converter)
+    op(this)
 }
 
 
 open class TextFieldWrapper(
-  node: TextField = TextField(),
+    node: TextField = TextField(),
 ): TextInputControlWrapper<TextField>(node), HasWritableValue<String> {
-  constructor(text: String?): this(TextField(text))
+    constructor(text: String?): this(TextField(text))
 
-  fun setOnAction(op: (ActionEvent)->Unit) {
-	node.setOnAction(op)
-  }
+    fun setOnAction(op: (ActionEvent)->Unit) {
+        node.setOnAction(op)
+    }
 
-  final override val valueProperty by lazy { textProperty }
+    final override val valueProperty by lazy { textProperty }
 
-  infix fun withPrompt(s: String): TextFieldWrapper {
-	promptText = s
-	return this
-  }
+    infix fun withPrompt(s: String): TextFieldWrapper {
+        promptText = s
+        return this
+    }
 }
 
 fun TextFieldWrapper.action(op: ()->Unit) = setOnAction { op() }
 
 
 class FakeFocusTextFieldWrapper(
-  node: FakeFocusTextField
+    node: FakeFocusTextField
 ): TextFieldWrapper(node)
 
 

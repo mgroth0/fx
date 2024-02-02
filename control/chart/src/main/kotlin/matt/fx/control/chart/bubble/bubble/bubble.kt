@@ -232,19 +232,17 @@ class BubbleChartForWrapper<X, Y> @JvmOverloads constructor(
                 override fun queryAccessibleAttribute(
                     attribute: AccessibleAttribute,
                     vararg parameters: Any
-                ): Any {
-                    return when (attribute) {
-                        TEXT -> {
-                            val accText = accessibleText
-                            if (item.extraValue.value == null) {
-                                accText
-                            } else {
-                                accText + " Bubble radius is " + item.extraValue
-                            }
+                ): Any = when (attribute) {
+                    TEXT -> {
+                        val accText = accessibleText
+                        if (item.extraValue.value == null) {
+                            accText
+                        } else {
+                            accText + " Bubble radius is " + item.extraValue
                         }
-
-                        else -> super.queryAccessibleAttribute(attribute, *parameters)
                     }
+
+                    else -> super.queryAccessibleAttribute(attribute, *parameters)
                 }
             }
             bubble.setAccessibleRole(AccessibleRole.TEXT)
@@ -354,8 +352,6 @@ class BubbleChartForWrapper<X, Y> @JvmOverloads constructor(
         private fun getDoubleValue(
             number: Any,
             nullDefault: Double
-        ): Double {
-            return if (number !is Number) nullDefault else number.toDouble()
-        }
+        ): Double = if (number !is Number) nullDefault else number.toDouble()
     }
 }

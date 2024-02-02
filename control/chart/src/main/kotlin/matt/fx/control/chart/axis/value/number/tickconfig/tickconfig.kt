@@ -50,9 +50,7 @@ fun <T : MathAndComparable<T>> TickConfigurer<T>.showBestTicksNoLayout(axis: Num
 
     val stringConverter = object : StringConverter<T>() {
 
-        override fun toString(`object`: T): String {
-            return converter.invoke(`object`)
-        }
+        override fun toString(`object`: T): String = converter.invoke(`object`)
 
         override fun fromString(string: String): T {
             TODO()

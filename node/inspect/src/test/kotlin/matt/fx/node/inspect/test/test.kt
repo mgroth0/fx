@@ -18,8 +18,6 @@ class InspectTests : FxTests() {
 }
 
 object TestInspectable : Inspectable<VBoxW> {
-    override fun inspect(): VBoxW {
-        return VBoxW()
-    }
+    override fun inspect(): VBoxW = VBoxW()
 
 }

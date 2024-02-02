@@ -16,26 +16,26 @@ import kotlin.reflect.jvm.isAccessible
 fun <C: NodeWrapper> ET.textflow(op: TextFlowWrapper<C>.()->Unit = {}) = TextFlowWrapper<C>().attachTo(this, op)
 
 open class TextFlowWrapper<C: NodeWrapper>(
-  node: TextFlow = TextFlow(),
+    node: TextFlow = TextFlow(),
 ): PaneWrapperImpl<TextFlow, C>(node) {
 
-  constructor(vararg nodes: Node?): this(TextFlow(*nodes))
-  constructor(vararg nodeWrappers: NodeWrapper?): this(*nodeWrappers.mapToArray { it?.node })
+    constructor(vararg nodes: Node?): this(TextFlow(*nodes))
+    constructor(vararg nodeWrappers: NodeWrapper?): this(*nodeWrappers.mapToArray { it?.node })
 
-  companion object {
-	val PREF_HEIGHT_UNLOCKED by lazy {
-	  TextFlow::class.declaredMembers.first {
-		it.name == "computePrefHeight"
-	  }.apply {
-		isAccessible = true
-	  }
-	}
-  }
+    companion object {
+        val PREF_HEIGHT_UNLOCKED by lazy {
+            TextFlow::class.declaredMembers.first {
+                it.name == "computePrefHeight"
+            }.apply {
+                isAccessible = true
+            }
+        }
+    }
 
-  fun fullText(): String {
-	  warn("could include any node that has text...")
-	return children.filterIsInstance<TextWrapper>().joinToString("") { it.text }
-  }
+    fun fullText(): String {
+        warn("could include any node that has text...")
+        return children.filterIsInstance<TextWrapper>().joinToString("") { it.text }
+    }
 
 
 }

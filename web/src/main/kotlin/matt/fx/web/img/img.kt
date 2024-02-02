@@ -4,7 +4,6 @@ import javafx.event.EventHandler
 import kotlinx.coroutines.NonCancellable
 import matt.async.thread.daemon
 import matt.file.JioFile
-import matt.lang.model.file.FsFile
 import matt.file.construct.toMFile
 import matt.file.toJioFile
 import matt.fx.graphics.fxthread.runLaterReturn
@@ -13,6 +12,7 @@ import matt.fx.web.interceptConsole
 import matt.fx.web.refreshImages
 import matt.gui.refresh.refreshWhileInSceneEvery
 import matt.lang.file.toJFile
+import matt.lang.model.file.FsFile
 import matt.lang.model.file.MacFileSystem
 import matt.time.dur.sec
 import org.jsoup.Jsoup
@@ -27,7 +27,7 @@ fun ImageRefreshingWebView(fil: FsFile) = WebViewWrapper().apply {
     interceptConsole()
 
     engine.loadWorker.stateProperty().addListener { _, _, new ->
-        println("${file.name}:loadstate:${new}")
+        println("${file.name}:loadstate:$new")
         refreshThisCycle = true
     }
 

@@ -149,14 +149,12 @@ open class TableViewWrapper<E : Any>(
     fun makeIndexColumn(
         name: String = "#",
         startNumber: Int = 1
-    ): TableColumn<E, Number> {
-        return TableColumn<E, Number>(name).apply {
-            isSortable = false
-            prefWidth = width
+    ): TableColumn<E, Number> = TableColumn<E, Number>(name).apply {
+        isSortable = false
+        prefWidth = width
 
-            this@TableViewWrapper.columns += this
-            setCellValueFactory { ReadOnlyObjectWrapper(items!!.indexOf(it.value) + startNumber) }
-        }
+        this@TableViewWrapper.columns += this
+        setCellValueFactory { ReadOnlyObjectWrapper(items!!.indexOf(it.value) + startNumber) }
     }
 
 

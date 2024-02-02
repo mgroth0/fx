@@ -211,7 +211,8 @@ interface RegionWrapper<C : NodeWrapper> : ParentWrapper<C>, SizeManaged, PngRas
     var useMaxSize: Boolean
         get() = maxWidth == Double.MAX_VALUE && maxHeight == Double.MAX_VALUE
         set(value) = if (value) {
-            useMaxWidth = true; useMaxHeight = true
+            useMaxWidth = true;
+            useMaxHeight = true
         } else Unit
 
     @Open
@@ -292,11 +293,9 @@ open class RegionWrapperImpl<N : Region, C : NodeWrapper>(node: N) : ParentWrapp
         }
     }
 
-    final override fun rasterize(size: IntRectSize): Png {
-        return DefaultStudio(
-            size
-        ).shoot(this).toBufferedImage().toPng()
-    }
+    final override fun rasterize(size: IntRectSize): Png = DefaultStudio(
+        size
+    ).shoot(this).toBufferedImage().toPng()
 
     final override val paddingProperty by lazy { node.paddingProperty().toNonNullableProp() }
 
@@ -307,14 +306,10 @@ open class RegionWrapperImpl<N : Region, C : NodeWrapper>(node: N) : ParentWrapp
 
     final override val paddingVerticalProperty: ProxyProp<Insets, Double> by lazy {
         paddingProperty.proxy(object : BiConverter<Insets, Double> {
-            override fun convertToB(a: Insets): Double {
-                return a.vertical
-            }
+            override fun convertToB(a: Insets): Double = a.vertical
 
 
-            override fun convertToA(b: Double): Insets {
-                return padding.copy(vertical = b)
-            }
+            override fun convertToA(b: Double): Insets = padding.copy(vertical = b)
 
         })
     }

@@ -48,11 +48,11 @@ import matt.fx.graphics.wrapper.pane.stack.StackPaneWrapper
 import kotlin.time.Duration.Companion.milliseconds
 
 operator fun Timeline.plusAssign(keyFrame: KeyFrame) {
-  keyFrames.add(keyFrame)
+    keyFrames.add(keyFrame)
 }
 
 operator fun KeyFrame.plusAssign(keyValue: KeyValue) {
-  values.add(keyValue)
+    values.add(keyValue)
 }
 
 fun SequentialTransition.timeline(op: (Timeline).()->Unit) = timeline(false, op).also { children += it }
@@ -60,18 +60,18 @@ fun SequentialTransition.timeline(op: (Timeline).()->Unit) = timeline(false, op)
 fun ParallelTransition.timeline(op: (Timeline).()->Unit) = timeline(false, op).also { children += it }
 
 fun sequentialTransition(play: Boolean = true, op: (SequentialTransition.()->Unit)) = SequentialTransition().apply {
-  op(this)
-  if (play) play()
+    op(this)
+    if (play) play()
 }
 
 fun parallelTransition(play: Boolean = true, op: (ParallelTransition.()->Unit)) = ParallelTransition().apply {
-  op(this)
-  if (play) play()
+    op(this)
+    if (play) play()
 }
 
 fun timeline(play: Boolean = true, op: (Timeline).()->Unit) = Timeline().apply {
-  op()
-  if (play) play()
+    op()
+    if (play) play()
 }
 
 
@@ -87,25 +87,25 @@ fun timeline(play: Boolean = true, op: (Timeline).()->Unit) = Timeline().apply {
  * @return A TranslateTransition on this node
  */
 fun NodeWrapper.move(
-  time: Duration, destination: Point2D,
-  easing: MyInterpolator = MyInterpolator.EASE_BOTH, reversed: Boolean = false, play: Boolean = true,
-  op: TranslateTransition.()->Unit = {}
+    time: Duration, destination: Point2D,
+    easing: MyInterpolator = MyInterpolator.EASE_BOTH, reversed: Boolean = false, play: Boolean = true,
+    op: TranslateTransition.()->Unit = {}
 ): TranslateTransition {
-  val target: Point2D
-  if (reversed) {
-	target = point(translateX, translateY)
-	translateX = destination.x
-	translateY = destination.y
-  } else {
-	target = destination
-  }
-  return TranslateTransition(time, this.node).apply {
-	interpolator = easing
-	op(this)
-	toX = target.x
-	toY = target.y
-	if (play) play()
-  }
+    val target: Point2D
+    if (reversed) {
+        target = point(translateX, translateY)
+        translateX = destination.x
+        translateY = destination.y
+    } else {
+        target = destination
+    }
+    return TranslateTransition(time, this.node).apply {
+        interpolator = easing
+        op(this)
+        toX = target.x
+        toY = target.y
+        if (play) play()
+    }
 }
 
 
@@ -121,23 +121,23 @@ fun NodeWrapper.move(
  * @return A RotateTransition on this node
  */
 fun NodeWrapper.rotate(
-  time: Duration, angle: Number,
-  easing: MyInterpolator = MyInterpolator.EASE_BOTH, reversed: Boolean = false, play: Boolean = true,
-  op: RotateTransition.()->Unit = {}
+    time: Duration, angle: Number,
+    easing: MyInterpolator = MyInterpolator.EASE_BOTH, reversed: Boolean = false, play: Boolean = true,
+    op: RotateTransition.()->Unit = {}
 ): RotateTransition {
-  val target: Double
-  if (reversed) {
-	target = rotate
-	rotate = angle.toDouble()
-  } else {
-	target = angle.toDouble()
-  }
-  return RotateTransition(time, this.node).apply {
-	interpolator = easing
-	op(this)
-	toAngle = target
-	if (play) play()
-  }
+    val target: Double
+    if (reversed) {
+        target = rotate
+        rotate = angle.toDouble()
+    } else {
+        target = angle.toDouble()
+    }
+    return RotateTransition(time, this.node).apply {
+        interpolator = easing
+        op(this)
+        toAngle = target
+        if (play) play()
+    }
 }
 
 
@@ -153,25 +153,25 @@ fun NodeWrapper.rotate(
  * @return A ScaleTransition on this node
  */
 fun NodeWrapper.scale(
-  time: Duration, scale: Point2D,
-  easing: MyInterpolator = MyInterpolator.EASE_BOTH, reversed: Boolean = false, play: Boolean = true,
-  op: ScaleTransition.()->Unit = {}
+    time: Duration, scale: Point2D,
+    easing: MyInterpolator = MyInterpolator.EASE_BOTH, reversed: Boolean = false, play: Boolean = true,
+    op: ScaleTransition.()->Unit = {}
 ): ScaleTransition {
-  val target: Point2D
-  if (reversed) {
-	target = point(scaleX, scaleY)
-	scaleX = scale.x
-	scaleY = scale.y
-  } else {
-	target = scale
-  }
-  return ScaleTransition(time, this.node).apply {
-	interpolator = easing
-	op(this)
-	toX = target.x
-	toY = target.y
-	if (play) play()
-  }
+    val target: Point2D
+    if (reversed) {
+        target = point(scaleX, scaleY)
+        scaleX = scale.x
+        scaleY = scale.y
+    } else {
+        target = scale
+    }
+    return ScaleTransition(time, this.node).apply {
+        interpolator = easing
+        op(this)
+        toX = target.x
+        toY = target.y
+        if (play) play()
+    }
 }
 
 
@@ -187,26 +187,26 @@ fun NodeWrapper.scale(
  * @return A FadeTransition on this node
  */
 fun NodeWrapper.fade(
-  time: Duration,
-  opacity: Number,
-  easing: MyInterpolator = MyInterpolator.EASE_BOTH,
-  reversed: Boolean = false,
-  play: Boolean = true,
-  op: FadeTransition.()->Unit = {}
+    time: Duration,
+    opacity: Number,
+    easing: MyInterpolator = MyInterpolator.EASE_BOTH,
+    reversed: Boolean = false,
+    play: Boolean = true,
+    op: FadeTransition.()->Unit = {}
 ): FadeTransition {
-  val target: Double
-  if (reversed) {
-	target = this.opacity
-	this.opacity = opacity.toDouble()
-  } else {
-	target = opacity.toDouble()
-  }
-  return FadeTransition(time, this.node).apply {
-	interpolator = easing
-	op(this)
-	toValue = target
-	if (play) play()
-  }
+    val target: Double
+    if (reversed) {
+        target = this.opacity
+        this.opacity = opacity.toDouble()
+    } else {
+        target = opacity.toDouble()
+    }
+    return FadeTransition(time, this.node).apply {
+        interpolator = easing
+        op(this)
+        toValue = target
+        if (play) play()
+    }
 }
 
 
@@ -226,24 +226,24 @@ fun NodeWrapper.fade(
  * @return A ParallelTransition on this node
  */
 fun NodeWrapper.transform(
-  time: Duration,
-  destination: Point2D,
-  angle: Number,
-  scale: Point2D,
-  opacity: Number,
-  easing: MyInterpolator = MyInterpolator.EASE_BOTH,
-  reversed: Boolean = false,
-  play: Boolean = true,
-  op: ParallelTransition.()->Unit = {}
+    time: Duration,
+    destination: Point2D,
+    angle: Number,
+    scale: Point2D,
+    opacity: Number,
+    easing: MyInterpolator = MyInterpolator.EASE_BOTH,
+    reversed: Boolean = false,
+    play: Boolean = true,
+    op: ParallelTransition.()->Unit = {}
 ) = move(time, destination, easing, reversed, play)
-  .and(rotate(time, angle, easing, reversed, play))
-  .and(scale(time, scale, easing, reversed, play))
-  .and(fade(time, opacity, easing, reversed, play))
-  .apply {
-	interpolator = easing
-	op(this)
-	if (play) play()
-  }
+    .and(rotate(time, angle, easing, reversed, play))
+    .and(scale(time, scale, easing, reversed, play))
+    .and(fade(time, opacity, easing, reversed, play))
+    .apply {
+        interpolator = easing
+        op(this)
+        if (play) play()
+    }
 
 /**
  * A convenience function for creating a parallel animation from multiple animations.
@@ -254,13 +254,13 @@ fun NodeWrapper.transform(
  * @return A ParallelTransition
  */
 fun Animation.and(vararg animation: Animation, op: ParallelTransition.()->Unit = {}) = when {
-  this is ParallelTransition -> this.apply { children += animation }
-  else                       -> ParallelTransition(this, *animation)
+    this is ParallelTransition -> this.apply { children += animation }
+    else                       -> ParallelTransition(this, *animation)
 }.also(op)
 
 infix fun Animation.and(animation: Animation) = when {
-  this is ParallelTransition -> this.apply { children += animation }
-  else                       -> ParallelTransition(this, animation)
+    this is ParallelTransition -> this.apply { children += animation }
+    else                       -> ParallelTransition(this, animation)
 }
 
 /**
@@ -272,12 +272,12 @@ infix fun Animation.and(animation: Animation) = when {
  * @return A ParallelTransition
  */
 fun Iterable<Animation>.playParallel(
-  play: Boolean = true,
-  op: ParallelTransition.()->Unit = {}
+    play: Boolean = true,
+    op: ParallelTransition.()->Unit = {}
 ) = ParallelTransition().apply {
-  children.setAll(toList())
-  op(this)
-  if (play) play()
+    children.setAll(toList())
+    op(this)
+    if (play) play()
 }
 
 /**
@@ -289,13 +289,13 @@ fun Iterable<Animation>.playParallel(
  * @return A SequentialTransition
  */
 fun Animation.then(vararg animation: Animation, op: SequentialTransition.()->Unit = {}) = when {
-  this is SequentialTransition -> this.apply { children += animation }
-  else                         -> SequentialTransition(this, *animation)
+    this is SequentialTransition -> this.apply { children += animation }
+    else                         -> SequentialTransition(this, *animation)
 }.also(op)
 
 infix fun Animation.then(animation: Animation) = when {
-  this is SequentialTransition -> this.apply { children += animation }
-  else                         -> SequentialTransition(this, animation)
+    this is SequentialTransition -> this.apply { children += animation }
+    else                         -> SequentialTransition(this, animation)
 }
 
 /**
@@ -307,113 +307,107 @@ infix fun Animation.then(animation: Animation) = when {
  * @return A SequentialTransition
  */
 fun Iterable<Animation>.playSequential(
-  play: Boolean = true,
-  op: SequentialTransition.()->Unit = {}
+    play: Boolean = true,
+    op: SequentialTransition.()->Unit = {}
 ) = SequentialTransition().apply {
-  children.setAll(toList())
-  op(this)
-  if (play) play()
+    children.setAll(toList())
+    op(this)
+    if (play) play()
 }
 
 fun Shape.animateFill(
-  time: Duration, from: Color, to: Color,
-  easing: MyInterpolator = MyInterpolator.EASE_BOTH, reversed: Boolean = false, play: Boolean = true,
-  op: FillTransition.()->Unit = {}
-): FillTransition {
-  return FillTransition(time, this, from, to).apply {
-	interpolator = easing
-	if (reversed) {
-	  fromValue = to
-	  toValue = from
-	}
-	op(this)
-	if (play) play()
-  }
+    time: Duration, from: Color, to: Color,
+    easing: MyInterpolator = MyInterpolator.EASE_BOTH, reversed: Boolean = false, play: Boolean = true,
+    op: FillTransition.()->Unit = {}
+): FillTransition = FillTransition(time, this, from, to).apply {
+    interpolator = easing
+    if (reversed) {
+        fromValue = to
+        toValue = from
+    }
+    op(this)
+    if (play) play()
 }
 
 fun Shape.animateStroke(
-  time: Duration, from: Color, to: Color,
-  easing: MyInterpolator = MyInterpolator.EASE_BOTH, reversed: Boolean = false, play: Boolean = true,
-  op: StrokeTransition.()->Unit = {}
-): StrokeTransition {
-  return StrokeTransition(time, this, from, to).apply {
-	interpolator = easing
-	if (reversed) {
-	  fromValue = to
-	  toValue = from
-	}
-	op(this)
-	if (play) play()
-  }
+    time: Duration, from: Color, to: Color,
+    easing: MyInterpolator = MyInterpolator.EASE_BOTH, reversed: Boolean = false, play: Boolean = true,
+    op: StrokeTransition.()->Unit = {}
+): StrokeTransition = StrokeTransition(time, this, from, to).apply {
+    interpolator = easing
+    if (reversed) {
+        fromValue = to
+        toValue = from
+    }
+    op(this)
+    if (play) play()
 }
 
 fun Node.follow(
-  time: Duration, path: Shape,
-  easing: MyInterpolator = MyInterpolator.EASE_BOTH, reversed: Boolean = false, play: Boolean = true,
-  op: PathTransition.()->Unit = {}
-): PathTransition {
-  return PathTransition(time, path, this).apply {
-	interpolator = easing
-	op(this)
-	if (reversed && rate > 0.0) rate = -rate
-	if (play) play()
-  }
+    time: Duration, path: Shape,
+    easing: MyInterpolator = MyInterpolator.EASE_BOTH, reversed: Boolean = false, play: Boolean = true,
+    op: PathTransition.()->Unit = {}
+): PathTransition = PathTransition(time, path, this).apply {
+    interpolator = easing
+    op(this)
+    if (reversed && rate > 0.0) rate = -rate
+    if (play) play()
 }
 
 fun pause(time: Duration, play: Boolean = true, op: PauseTransition.()->Unit = {}) = PauseTransition(time).apply {
-  op(this)
-  if (play) play()
+    op(this)
+    if (play) play()
 }
 
 fun Timeline.keyframe(duration: Duration, op: (KeyFrameBuilder).()->Unit): KeyFrame {
-  val keyFrame = KeyFrameBuilder(duration).also(op).build()
-  return keyFrame.also { this += it }
+    val keyFrame = KeyFrameBuilder(duration).also(op).build()
+    return keyFrame.also { this += it }
 }
 
 class KeyFrameBuilder(val duration: Duration) {
 
-  var keyValues: MutableList<KeyValue> = ArrayList()
-  var name: String? = null
-  private var _onFinished: (ActionEvent)->Unit = {}
+    var keyValues: MutableList<KeyValue> = ArrayList()
+    var name: String? = null
+    private var _onFinished: (ActionEvent)->Unit = {}
 
-  fun setOnFinished(onFinished: (ActionEvent)->Unit) {
-	this._onFinished = onFinished
-  }
+    fun setOnFinished(onFinished: (ActionEvent)->Unit) {
+        this._onFinished = onFinished
+    }
 
-  operator fun plusAssign(keyValue: KeyValue) {
-	keyValues.add(keyValue)
-  }
+    operator fun plusAssign(keyValue: KeyValue) {
+        keyValues.add(keyValue)
+    }
 
-  fun <T> keyvalue(
-	writableValue: WritableValue<T>,
-	endValue: T,
-	interpolator: MyInterpolator = MyInterpolator.MY_DEFAULT_INTERPOLATOR
-  ): KeyValue {
-	val keyValue = interpolator.let { KeyValue(writableValue, endValue, it) }
-	this += keyValue
-	return keyValue
-  }
+    fun <T> keyvalue(
+        writableValue: WritableValue<T>,
+        endValue: T,
+        interpolator: MyInterpolator = MyInterpolator.MY_DEFAULT_INTERPOLATOR
+    ): KeyValue {
+        val keyValue = interpolator.let { KeyValue(writableValue, endValue, it) }
+        this += keyValue
+        return keyValue
+    }
 
-  internal fun build() = KeyFrame(duration, name, _onFinished, keyValues)
+    internal fun build() = KeyFrame(duration, name, _onFinished, keyValues)
 
 }
 
 fun <T> WritableValue<T>.animate(
-  endValue: T,
-  duration: Duration,
-  interpolator: MyInterpolator = MyInterpolator.MY_DEFAULT_INTERPOLATOR,
-  op: Timeline.()->Unit = {}
+    endValue: T,
+    duration: Duration,
+    interpolator: MyInterpolator = MyInterpolator.MY_DEFAULT_INTERPOLATOR,
+    op: Timeline.()->Unit = {}
 ) {
-  val writableValue = this
-  val timeline = Timeline()
+    val writableValue = this
+    val timeline = Timeline()
 
-  timeline.apply {
-	keyframe(duration) {
-	  keyvalue(writableValue, endValue, interpolator)
-	}
-	op()
-	play()
-  }
+    timeline.apply {
+        keyframe(duration) {
+            keyvalue(writableValue, endValue, interpolator)
+        }
+        op()
+        play()
+    }
 }
 
 val Number.millis: Duration get() = Duration.millis(this.toDouble())
@@ -441,580 +435,578 @@ operator fun Duration.minus(duration: Duration): Duration = this.subtract(durati
  * the create method, and there is also a StackPane extension function ([ViewTransition.moveToTop]) for convenience.
  */
 abstract class ViewTransition {
-  /**
-   * Create an animation to play for the transition between two nodes. The [StackPane] used as a placeholder during
-   * the transition is also provided.
-   *
-   * There are a number of useful extensions functions for nodes defined above to make animations easier. matt.lang.anno.See any of
-   * the ViewTransitions defined below for examples.
-   *
-   * @param current The node currently in the scenegraph that is to be replaced
-   * @param replacement The node that will be in the scenegraph after the transition
-   * @param stack The StackPane containing the nodes during the transition
-   * @return The animation that will play during the transition
-   */
-  abstract fun create(current: NodeWrapper, replacement: NodeWrapper, stack: StackPaneWrapper<NodeWrapper>): Animation
+    /**
+     * Create an animation to play for the transition between two nodes. The [StackPane] used as a placeholder during
+     * the transition is also provided.
+     *
+     * There are a number of useful extensions functions for nodes defined above to make animations easier. matt.lang.anno.See any of
+     * the ViewTransitions defined below for examples.
+     *
+     * @param current The node currently in the scenegraph that is to be replaced
+     * @param replacement The node that will be in the scenegraph after the transition
+     * @param stack The StackPane containing the nodes during the transition
+     * @return The animation that will play during the transition
+     */
+    abstract fun create(current: NodeWrapper, replacement: NodeWrapper, stack: StackPaneWrapper<NodeWrapper>): Animation
 
-  /**
-   * Will be called after the transition is finished and the replacement node has been docked. This function is useful
-   * for resetting changes made to the node during the transition, such as position, scale, and opacity.
-   *
-   * matt.lang.anno.See [Metro] for an example.
-   *
-   * @param removed The node that was removed from the scenegraph
-   * @param replacement The node now in the scenegraph
-   */
-  open fun onComplete(removed: NodeWrapper, replacement: NodeWrapper) = Unit
+    /**
+     * Will be called after the transition is finished and the replacement node has been docked. This function is useful
+     * for resetting changes made to the node during the transition, such as position, scale, and opacity.
+     *
+     * matt.lang.anno.See [Metro] for an example.
+     *
+     * @param removed The node that was removed from the scenegraph
+     * @param replacement The node now in the scenegraph
+     */
+    open fun onComplete(removed: NodeWrapper, replacement: NodeWrapper) = Unit
 
-  var setup: StackPaneWrapper<*>.()->Unit = {}
+    var setup: StackPaneWrapper<*>.()->Unit = {}
 
-  /**
-   * This allows users to modify the generated stack after the the ViewTransition is generated (so they can add things
-   * like AnchorPane and VGrow/HGrow constraints).
-   */
-  fun setup(setup: StackPaneWrapper<*>.()->Unit) {
-	this.setup = setup
-  }
+    /**
+     * This allows users to modify the generated stack after the the ViewTransition is generated (so they can add things
+     * like AnchorPane and VGrow/HGrow constraints).
+     */
+    fun setup(setup: StackPaneWrapper<*>.()->Unit) {
+        this.setup = setup
+    }
 
-  internal fun call(current: NodeWrapper, replacement: NodeWrapper, attach: (NodeWrapper)->Unit) {
-	current.isTransitioning = true
-	replacement.isTransitioning = true
-	//	val currentUIComponent = current.properties[UI_COMPONENT_PROPERTY] as? UIComponent
-	//	val replacementUIComponent = replacement.properties[UI_COMPONENT_PROPERTY] as? UIComponent
-	//	currentUIComponent?.muteDocking = true
-	//	replacementUIComponent?.muteDocking = true
+    internal fun call(current: NodeWrapper, replacement: NodeWrapper, attach: (NodeWrapper)->Unit) {
+        current.isTransitioning = true
+        replacement.isTransitioning = true
+        //	val currentUIComponent = current.properties[UI_COMPONENT_PROPERTY] as? UIComponent
+        //	val replacementUIComponent = replacement.properties[UI_COMPONENT_PROPERTY] as? UIComponent
+        //	currentUIComponent?.muteDocking = true
+        //	replacementUIComponent?.muteDocking = true
 
-	val stack = stack(current, replacement)
-	stack.setup()
-	attach(stack)
+        val stack = stack(current, replacement)
+        stack.setup()
+        attach(stack)
 
-	create(current, replacement, stack).apply {
-	  val oldFinish: EventHandler<ActionEvent>? = onFinished
-	  setOnFinished {
-		stack.children.clear()
-		current.removeFromParent()
-		replacement.removeFromParent()
-		stack.removeFromParent()
-		//		currentUIComponent?.let {
-		//		  it.muteDocking = false
-		//		  it.callOnUndock()
-		//		}
-		//		replacementUIComponent?.muteDocking = false
-		attach(replacement)
-		oldFinish?.handle(it)
-		onComplete(current, replacement)
-		current.isTransitioning = false
-		replacement.isTransitioning = false
-	  }
-	}.play()
-  }
+        create(current, replacement, stack).apply {
+            val oldFinish: EventHandler<ActionEvent>? = onFinished
+            setOnFinished {
+                stack.children.clear()
+                current.removeFromParent()
+                replacement.removeFromParent()
+                stack.removeFromParent()
+                //		currentUIComponent?.let {
+                //		  it.muteDocking = false
+                //		  it.callOnUndock()
+                //		}
+                //		replacementUIComponent?.muteDocking = false
+                attach(replacement)
+                oldFinish?.handle(it)
+                onComplete(current, replacement)
+                current.isTransitioning = false
+                replacement.isTransitioning = false
+            }
+        }.play()
+    }
 
-  /**
-   * If the given node exists in this [StackPane], move it to be on top (visually).
-   *
-   * @param node The node to move to the top of the stack
-   */
-  protected fun StackPaneWrapper<NodeWrapper>.moveToTop(node: NodeWrapper) {
-	if (children.remove(node)) children.add(node)
-  }
+    /**
+     * If the given node exists in this [StackPane], move it to be on top (visually).
+     *
+     * @param node The node to move to the top of the stack
+     */
+    protected fun StackPaneWrapper<NodeWrapper>.moveToTop(node: NodeWrapper) {
+        if (children.remove(node)) children.add(node)
+    }
 
-  protected fun Image.toCanvas() = Canvas(width, height).also {
-	it.graphicsContext2D.drawImage(this, 0.0, 0.0)
-  }
+    protected fun Image.toCanvas() = Canvas(width, height).also {
+        it.graphicsContext2D.drawImage(this, 0.0, 0.0)
+    }
 
-  /**
-   * Create a [StackPane] in which the transition will take place. You should generally put both the current and the
-   * replacement nodes in the stack, but it isn't technically required.
-   *
-   * matt.lang.anno.See [FadeThrough] for an example.
-   *
-   * By default this returns a StackPane with only the current and replacement nodes in it (the current node will be
-   * on top).
-   *
-   * @param current The node that is currently in the scenegraph
-   * @param replacement The node that will be in the scenegraph after the transition
-   * @return The [StackPane] that will be in the scenegraph during the transition
-   */
-  open fun stack(current: NodeWrapper, replacement: NodeWrapper) = StackPaneWrapper<NodeWrapper>(replacement, current)
+    /**
+     * Create a [StackPane] in which the transition will take place. You should generally put both the current and the
+     * replacement nodes in the stack, but it isn't technically required.
+     *
+     * matt.lang.anno.See [FadeThrough] for an example.
+     *
+     * By default this returns a StackPane with only the current and replacement nodes in it (the current node will be
+     * on top).
+     *
+     * @param current The node that is currently in the scenegraph
+     * @param replacement The node that will be in the scenegraph after the transition
+     * @return The [StackPane] that will be in the scenegraph during the transition
+     */
+    open fun stack(current: NodeWrapper, replacement: NodeWrapper) = StackPaneWrapper<NodeWrapper>(replacement, current)
 
-  companion object {
-	//	@Deprecated("Use `Slide(0.2.seconds)`", ReplaceWith("Slide(0.2.seconds)"))
-	//	val SlideIn = fun(existing: UIComponent, replacement: UIComponent, transitionCompleteCallback: ()->Unit) {
-	//	  replacement.root.translateX = existing.root.boundsInLocal.width
-	//
-	//	  val existingSlide = TranslateTransition(0.2.seconds, existing.root).apply {
-	//		toX = -existing.root.boundsInLocal.width
-	//		interpolator = Interpolator.EASE_OUT
-	//	  }
-	//
-	//	  val replacementSlide = TranslateTransition(0.2.seconds, replacement.root).apply {
-	//		toX = 0.0
-	//		onFinished = EventHandler { transitionCompleteCallback() }
-	//		interpolator = Interpolator.EASE_OUT
-	//	  }
-	//
-	//	  existingSlide.play()
-	//	  replacementSlide.play()
-	//	}
+    companion object {
+        //	@Deprecated("Use `Slide(0.2.seconds)`", ReplaceWith("Slide(0.2.seconds)"))
+        //	val SlideIn = fun(existing: UIComponent, replacement: UIComponent, transitionCompleteCallback: ()->Unit) {
+        //	  replacement.root.translateX = existing.root.boundsInLocal.width
+        //
+        //	  val existingSlide = TranslateTransition(0.2.seconds, existing.root).apply {
+        //		toX = -existing.root.boundsInLocal.width
+        //		interpolator = Interpolator.EASE_OUT
+        //	  }
+        //
+        //	  val replacementSlide = TranslateTransition(0.2.seconds, replacement.root).apply {
+        //		toX = 0.0
+        //		onFinished = EventHandler { transitionCompleteCallback() }
+        //		interpolator = Interpolator.EASE_OUT
+        //	  }
+        //
+        //	  existingSlide.play()
+        //	  replacementSlide.play()
+        //	}
 
-	//	@Deprecated("Use `Slide(0.2.seconds, matt.model.dir.Direction.LEFT)`", ReplaceWith("Slide(0.2.seconds, matt.model.dir.Direction.RIGHT)"))
-	//	val SlideOut = fun(existing: UIComponent, replacement: UIComponent, transitionCompleteCallback: ()->Unit) {
-	//	  replacement.root.translateX = -existing.root.boundsInLocal.width
-	//
-	//	  val existingSlide = TranslateTransition(0.2.seconds, existing.root).apply {
-	//		toX = existing.root.boundsInLocal.width
-	//		interpolator = Interpolator.EASE_OUT
-	//	  }
-	//
-	//	  val replacementSlide = TranslateTransition(0.2.seconds, replacement.root).apply {
-	//		toX = 0.0
-	//		onFinished = EventHandler { transitionCompleteCallback() }
-	//		interpolator = Interpolator.EASE_OUT
-	//	  }
-	//
-	//	  existingSlide.play()
-	//	  replacementSlide.play()
-	//	}
-  }
+        //	@Deprecated("Use `Slide(0.2.seconds, matt.model.dir.Direction.LEFT)`", ReplaceWith("Slide(0.2.seconds, matt.model.dir.Direction.RIGHT)"))
+        //	val SlideOut = fun(existing: UIComponent, replacement: UIComponent, transitionCompleteCallback: ()->Unit) {
+        //	  replacement.root.translateX = -existing.root.boundsInLocal.width
+        //
+        //	  val existingSlide = TranslateTransition(0.2.seconds, existing.root).apply {
+        //		toX = existing.root.boundsInLocal.width
+        //		interpolator = Interpolator.EASE_OUT
+        //	  }
+        //
+        //	  val replacementSlide = TranslateTransition(0.2.seconds, replacement.root).apply {
+        //		toX = 0.0
+        //		onFinished = EventHandler { transitionCompleteCallback() }
+        //		interpolator = Interpolator.EASE_OUT
+        //	  }
+        //
+        //	  existingSlide.play()
+        //	  replacementSlide.play()
+        //	}
+    }
 
-  enum class Direction {
-	UP, RIGHT, DOWN, LEFT;
+    enum class Direction {
+        UP, RIGHT, DOWN, LEFT;
 
-	fun reversed() = when (this) {
-	  UP    -> DOWN
-	  RIGHT -> LEFT
-	  DOWN  -> UP
-	  LEFT  -> RIGHT
-	}
-  }
+        fun reversed() = when (this) {
+            UP    -> DOWN
+            RIGHT -> LEFT
+            DOWN  -> UP
+            LEFT  -> RIGHT
+        }
+    }
 
-  /**
-   * A [ViewTransition] that smoothly fades from one node to another.
-   *
-   * @param duration How long the transition will take
-   */
-  class Fade(val duration: Duration): ViewTransition() {
-	override fun create(current: NodeWrapper, replacement: NodeWrapper, stack: StackPaneWrapper<NodeWrapper>) =
-	  current.fade(duration, 0, play = false)
+    /**
+     * A [ViewTransition] that smoothly fades from one node to another.
+     *
+     * @param duration How long the transition will take
+     */
+    class Fade(val duration: Duration): ViewTransition() {
+        override fun create(current: NodeWrapper, replacement: NodeWrapper, stack: StackPaneWrapper<NodeWrapper>) =
+            current.fade(duration, 0, play = false)
 
-	override fun onComplete(removed: NodeWrapper, replacement: NodeWrapper) {
-	  removed.opacity = 1.0
-	}
-  }
+        override fun onComplete(removed: NodeWrapper, replacement: NodeWrapper) {
+            removed.opacity = 1.0
+        }
+    }
 
-  /**
-   * A [ViewTransition] that fades from one node to another through a Paint (useful for fading through black).
-   *
-   * By default this fades through transparent, meaning it will show whatever is underneath the current node.
-   *
-   * @param duration How long the transition will take
-   * @param color The color to fade through (can be any [Paint])
-   */
-  class FadeThrough(duration: Duration, val color: Paint = Color.TRANSPARENT): ViewTransition() {
-	private val bg = SimplePaneWrapper<NodeWrapper>().apply {
-	  background = Background(
-		BackgroundFill(
-		  color,
-		  null,
-		  null
-		)
-	  )
-	}
-	val halfTime: Duration = duration.divide(2.0)
-	override fun create(
-	  current: NodeWrapper,
-	  replacement: NodeWrapper,
-	  stack: StackPaneWrapper<NodeWrapper>
-	) = current.fade(halfTime, 0, easing = MyInterpolator.EASE_IN, play = false)
-	  .then(replacement.fade(halfTime, 0, easing = MyInterpolator.EASE_OUT, reversed = true, play = false))
+    /**
+     * A [ViewTransition] that fades from one node to another through a Paint (useful for fading through black).
+     *
+     * By default this fades through transparent, meaning it will show whatever is underneath the current node.
+     *
+     * @param duration How long the transition will take
+     * @param color The color to fade through (can be any [Paint])
+     */
+    class FadeThrough(duration: Duration, val color: Paint = Color.TRANSPARENT): ViewTransition() {
+        private val bg = SimplePaneWrapper<NodeWrapper>().apply {
+            background = Background(
+                BackgroundFill(
+                    color,
+                    null,
+                    null
+                )
+            )
+        }
+        val halfTime: Duration = duration.divide(2.0)
+        override fun create(
+            current: NodeWrapper,
+            replacement: NodeWrapper,
+            stack: StackPaneWrapper<NodeWrapper>
+        ) = current.fade(halfTime, 0, easing = MyInterpolator.EASE_IN, play = false)
+            .then(replacement.fade(halfTime, 0, easing = MyInterpolator.EASE_OUT, reversed = true, play = false))
 
-	override fun stack(current: NodeWrapper, replacement: NodeWrapper) =
-	  StackPaneWrapper<NodeWrapper>(bg, replacement, current)
+        override fun stack(current: NodeWrapper, replacement: NodeWrapper) =
+            StackPaneWrapper<NodeWrapper>(bg, replacement, current)
 
-	override fun onComplete(removed: NodeWrapper, replacement: NodeWrapper) {
-	  removed.opacity = 1.0
-	}
-  }
+        override fun onComplete(removed: NodeWrapper, replacement: NodeWrapper) {
+            removed.opacity = 1.0
+        }
+    }
 
-  /**
-   * A [ViewTransition] that can be reversed
-   */
-  abstract class ReversibleViewTransition<out T: ViewTransition>: ViewTransition() {
-	/**
-	 * Create a transition to be the reverse of the current transition. It's generally recommended (though in no way
-	 * required) for the reverse transition to be a logical reversal of this transition.
-	 *
-	 * @return The reversed [ViewTransition]
-	 */
-	protected abstract fun reversed(): T
+    /**
+     * A [ViewTransition] that can be reversed
+     */
+    abstract class ReversibleViewTransition<out T: ViewTransition>: ViewTransition() {
+        /**
+         * Create a transition to be the reverse of the current transition. It's generally recommended (though in no way
+         * required) for the reverse transition to be a logical reversal of this transition.
+         *
+         * @return The reversed [ViewTransition]
+         */
+        protected abstract fun reversed(): T
 
-	fun reversed(op: T.()->Unit = {}): T = reversed().also(op)
-  }
+        fun reversed(op: T.()->Unit = {}): T = reversed().also(op)
+    }
 
-  /**
-   * A [ReversibleViewTransition] that slides one node out (in a given direction) while sliding another in. The effect
-   * is similar to panning the camera in the opposite direction.
-   *
-   * The reverse is a Slide in the opposite direction.
-   *
-   * @param duration How long the transition will take
-   * @param direction The direction to slide the nodes
-   */
-  class Slide(val duration: Duration, val direction: Direction = LEFT): ReversibleViewTransition<Slide>() {
-	override fun create(
-	  current: NodeWrapper,
-	  replacement: NodeWrapper,
-	  stack: StackPaneWrapper<NodeWrapper>
-	): Animation {
-	  val bounds = current.boundsInLocal
-	  val destination = when (direction) {
-		UP    -> point(0, -bounds.height)
-		RIGHT -> point(bounds.width, 0)
-		DOWN  -> point(0, bounds.height)
-		LEFT  -> point(-bounds.width, 0)
-	  }
-	  return current.move(duration, destination, play = false)
-		.and(replacement.move(duration, destination.multiply(-1.0), reversed = true, play = false))
-	}
+    /**
+     * A [ReversibleViewTransition] that slides one node out (in a given direction) while sliding another in. The effect
+     * is similar to panning the camera in the opposite direction.
+     *
+     * The reverse is a Slide in the opposite direction.
+     *
+     * @param duration How long the transition will take
+     * @param direction The direction to slide the nodes
+     */
+    class Slide(val duration: Duration, val direction: Direction = LEFT): ReversibleViewTransition<Slide>() {
+        override fun create(
+            current: NodeWrapper,
+            replacement: NodeWrapper,
+            stack: StackPaneWrapper<NodeWrapper>
+        ): Animation {
+            val bounds = current.boundsInLocal
+            val destination = when (direction) {
+                UP    -> point(0, -bounds.height)
+                RIGHT -> point(bounds.width, 0)
+                DOWN  -> point(0, bounds.height)
+                LEFT  -> point(-bounds.width, 0)
+            }
+            return current.move(duration, destination, play = false)
+                .and(replacement.move(duration, destination.multiply(-1.0), reversed = true, play = false))
+        }
 
-	override fun stack(current: NodeWrapper, replacement: NodeWrapper) = super.stack(replacement, current)
+        override fun stack(current: NodeWrapper, replacement: NodeWrapper) = super.stack(replacement, current)
 
-	override fun onComplete(removed: NodeWrapper, replacement: NodeWrapper) {
-	  removed.translateX = 0.0
-	  removed.translateY = 0.0
-	}
+        override fun onComplete(removed: NodeWrapper, replacement: NodeWrapper) {
+            removed.translateX = 0.0
+            removed.translateY = 0.0
+        }
 
-	override fun reversed() = Slide(duration, direction.reversed()).also { it.setup = setup }
-  }
+        override fun reversed() = Slide(duration, direction.reversed()).also { it.setup = setup }
+    }
 
-  /**
-   * A [ReversibleViewTransition] where a node slides in in a given direction covering another node.
-   *
-   * The reverse is a [Reveal] in the opposite direction
-   *
-   * @param duration How long the transition will take
-   * @param direction The direction to slide the node
-   */
-  class Cover(val duration: Duration, val direction: Direction = LEFT): ReversibleViewTransition<Reveal>() {
-	override fun create(
-	  current: NodeWrapper,
-	  replacement: NodeWrapper,
-	  stack: StackPaneWrapper<NodeWrapper>
-	): Animation {
-	  val bounds = current.boundsInLocal
-	  val destination = when (direction) {
-		UP    -> point(0, bounds.height)
-		RIGHT -> point(-bounds.width, 0)
-		DOWN  -> point(0, -bounds.height)
-		LEFT  -> point(bounds.width, 0)
-	  }
-	  return replacement.move(duration, destination, reversed = true, play = false)
-	}
+    /**
+     * A [ReversibleViewTransition] where a node slides in in a given direction covering another node.
+     *
+     * The reverse is a [Reveal] in the opposite direction
+     *
+     * @param duration How long the transition will take
+     * @param direction The direction to slide the node
+     */
+    class Cover(val duration: Duration, val direction: Direction = LEFT): ReversibleViewTransition<Reveal>() {
+        override fun create(
+            current: NodeWrapper,
+            replacement: NodeWrapper,
+            stack: StackPaneWrapper<NodeWrapper>
+        ): Animation {
+            val bounds = current.boundsInLocal
+            val destination = when (direction) {
+                UP    -> point(0, bounds.height)
+                RIGHT -> point(-bounds.width, 0)
+                DOWN  -> point(0, -bounds.height)
+                LEFT  -> point(bounds.width, 0)
+            }
+            return replacement.move(duration, destination, reversed = true, play = false)
+        }
 
-	override fun stack(current: NodeWrapper, replacement: NodeWrapper) = super.stack(replacement, current)
+        override fun stack(current: NodeWrapper, replacement: NodeWrapper) = super.stack(replacement, current)
 
-	override fun reversed() = Reveal(duration, direction.reversed()).also { it.setup = setup }
-  }
+        override fun reversed() = Reveal(duration, direction.reversed()).also { it.setup = setup }
+    }
 
 
-  /**
-   * A [ReversibleViewTransition] where a node slides out in a given direction revealing another node.
-   *
-   * The reverse is a [Cover] in the opposite direction
-   *
-   * @param duration How long the transition will take
-   * @param direction The direction to slide the node
-   */
-  class Reveal(val duration: Duration, val direction: Direction = LEFT): ReversibleViewTransition<Cover>() {
-	override fun create(
-	  current: NodeWrapper,
-	  replacement: NodeWrapper,
-	  stack: StackPaneWrapper<NodeWrapper>
-	): Animation {
-	  val bounds = current.boundsInLocal
-	  val destination = when (direction) {
-		UP    -> point(0, -bounds.height)
-		RIGHT -> point(bounds.width, 0)
-		DOWN  -> point(0, bounds.height)
-		LEFT  -> point(-bounds.width, 0)
-	  }
-	  return current.move(duration, destination, play = false)
-	}
+    /**
+     * A [ReversibleViewTransition] where a node slides out in a given direction revealing another node.
+     *
+     * The reverse is a [Cover] in the opposite direction
+     *
+     * @param duration How long the transition will take
+     * @param direction The direction to slide the node
+     */
+    class Reveal(val duration: Duration, val direction: Direction = LEFT): ReversibleViewTransition<Cover>() {
+        override fun create(
+            current: NodeWrapper,
+            replacement: NodeWrapper,
+            stack: StackPaneWrapper<NodeWrapper>
+        ): Animation {
+            val bounds = current.boundsInLocal
+            val destination = when (direction) {
+                UP    -> point(0, -bounds.height)
+                RIGHT -> point(bounds.width, 0)
+                DOWN  -> point(0, bounds.height)
+                LEFT  -> point(-bounds.width, 0)
+            }
+            return current.move(duration, destination, play = false)
+        }
 
-	override fun onComplete(removed: NodeWrapper, replacement: NodeWrapper) {
-	  removed.translateX = 0.0
-	  removed.translateY = 0.0
-	}
+        override fun onComplete(removed: NodeWrapper, replacement: NodeWrapper) {
+            removed.translateX = 0.0
+            removed.translateY = 0.0
+        }
 
-	override fun reversed() = Cover(duration, direction.reversed()).also { it.setup = setup }
-  }
+        override fun reversed() = Cover(duration, direction.reversed()).also { it.setup = setup }
+    }
 
-  /**
-   * A [ReversibleViewTransition] where a node fades and slides out in a given direction while another node fades and
-   * slides in. The effect is similar to effects commonly used in Windows applications (thus the name).
-   *
-   * The reverse is a Metro in the opposite direction.
-   *
-   * @param duration How long the transition will take
-   * @param direction The direction to slide the nodes
-   * @param distancePercentage The matt.hurricanefx.tornadofx.vector.distance to move the nodes as a percentage of the size of the current node
-   */
-  class Metro(val duration: Duration, val direction: Direction = LEFT, val distancePercentage: Double = 0.1):
-	  ReversibleViewTransition<Metro>() {
-	override fun create(
-	  current: NodeWrapper,
-	  replacement: NodeWrapper,
-	  stack: StackPaneWrapper<NodeWrapper>
-	): Animation {
-	  val bounds = current.boundsInLocal
-	  val destination = when (direction) {
-		UP    -> point(0, -bounds.height*distancePercentage)
-		RIGHT -> point(bounds.width*distancePercentage, 0)
-		DOWN  -> point(0, bounds.height*distancePercentage)
-		LEFT  -> point(-bounds.width*distancePercentage, 0)
-	  }
-	  return current.transform(duration.divide(2.0), destination, 0, point(1, 1), 0, play = false)
-		.then(
-		  replacement.transform(
-			duration.divide(2.0), destination.multiply(-1.0), 0, point(1, 1), 0,
-			reversed = true, play = false
-		  )
-		)
-	}
+    /**
+     * A [ReversibleViewTransition] where a node fades and slides out in a given direction while another node fades and
+     * slides in. The effect is similar to effects commonly used in Windows applications (thus the name).
+     *
+     * The reverse is a Metro in the opposite direction.
+     *
+     * @param duration How long the transition will take
+     * @param direction The direction to slide the nodes
+     * @param distancePercentage The matt.hurricanefx.tornadofx.vector.distance to move the nodes as a percentage of the size of the current node
+     */
+    class Metro(val duration: Duration, val direction: Direction = LEFT, val distancePercentage: Double = 0.1):
+        ReversibleViewTransition<Metro>() {
+        override fun create(
+            current: NodeWrapper,
+            replacement: NodeWrapper,
+            stack: StackPaneWrapper<NodeWrapper>
+        ): Animation {
+            val bounds = current.boundsInLocal
+            val destination = when (direction) {
+                UP    -> point(0, -bounds.height*distancePercentage)
+                RIGHT -> point(bounds.width*distancePercentage, 0)
+                DOWN  -> point(0, bounds.height*distancePercentage)
+                LEFT  -> point(-bounds.width*distancePercentage, 0)
+            }
+            return current.transform(duration.divide(2.0), destination, 0, point(1, 1), 0, play = false)
+                .then(
+                    replacement.transform(
+                        duration.divide(2.0), destination.multiply(-1.0), 0, point(1, 1), 0,
+                        reversed = true, play = false
+                    )
+                )
+        }
 
-	override fun onComplete(removed: NodeWrapper, replacement: NodeWrapper) {
-	  removed.translateX = 0.0
-	  removed.translateY = 0.0
-	  removed.opacity = 1.0
-	}
+        override fun onComplete(removed: NodeWrapper, replacement: NodeWrapper) {
+            removed.translateX = 0.0
+            removed.translateY = 0.0
+            removed.opacity = 1.0
+        }
 
-	override fun reversed() = Metro(duration, direction.reversed(), distancePercentage).also { it.setup = setup }
-  }
+        override fun reversed() = Metro(duration, direction.reversed(), distancePercentage).also { it.setup = setup }
+    }
 
-  /**
-   * A [ReversibleViewTransition] that swaps the two nodes in a way that looks like two cards in a deck being swapped.
-   *
-   * The reverse is a Swap in the opposite direction
-   *
-   * @param duration How long the transition will take
-   * @param direction The direction the current node will initially move
-   * @param scale The starting scale of the replacement node and ending scale of the current node
-   */
-  class Swap(val duration: Duration, val direction: Direction = LEFT, val scale: Point2D = point(.75, .75)):
-	  ReversibleViewTransition<Swap>() {
-	override fun create(
-	  current: NodeWrapper,
-	  replacement: NodeWrapper,
-	  stack: StackPaneWrapper<NodeWrapper>
-	): Animation {
-	  val bounds = current.boundsInLocal
-	  val destination = when (direction) {
-		UP    -> point(0, -bounds.height*0.5)
-		RIGHT -> point(bounds.width*0.5, 0)
-		DOWN  -> point(0, bounds.height*0.5)
-		LEFT  -> point(-bounds.width*0.5, 0)
-	  }
-	  val halfTime = duration.divide(2.0)
-	  return current.scale(duration, scale, play = false)
-		.and(replacement.scale(duration, scale, reversed = true, play = false))
-		.and(current.move(halfTime, destination).and(replacement.move(halfTime, destination.multiply(-1.0))) {
-		  setOnFinished { stack.moveToTop(replacement) }
-		}.then(current.move(halfTime, Point2D.ZERO).and(replacement.move(halfTime, Point2D.ZERO))))
-	}
+    /**
+     * A [ReversibleViewTransition] that swaps the two nodes in a way that looks like two cards in a deck being swapped.
+     *
+     * The reverse is a Swap in the opposite direction
+     *
+     * @param duration How long the transition will take
+     * @param direction The direction the current node will initially move
+     * @param scale The starting scale of the replacement node and ending scale of the current node
+     */
+    class Swap(val duration: Duration, val direction: Direction = LEFT, val scale: Point2D = point(.75, .75)):
+        ReversibleViewTransition<Swap>() {
+        override fun create(
+            current: NodeWrapper,
+            replacement: NodeWrapper,
+            stack: StackPaneWrapper<NodeWrapper>
+        ): Animation {
+            val bounds = current.boundsInLocal
+            val destination = when (direction) {
+                UP    -> point(0, -bounds.height*0.5)
+                RIGHT -> point(bounds.width*0.5, 0)
+                DOWN  -> point(0, bounds.height*0.5)
+                LEFT  -> point(-bounds.width*0.5, 0)
+            }
+            val halfTime = duration.divide(2.0)
+            return current.scale(duration, scale, play = false)
+                .and(replacement.scale(duration, scale, reversed = true, play = false))
+                .and(current.move(halfTime, destination).and(replacement.move(halfTime, destination.multiply(-1.0))) {
+                    setOnFinished { stack.moveToTop(replacement) }
+                }.then(current.move(halfTime, Point2D.ZERO).and(replacement.move(halfTime, Point2D.ZERO))))
+        }
 
-	override fun onComplete(removed: NodeWrapper, replacement: NodeWrapper) {
-	  removed.translateX = 0.0
-	  removed.translateY = 0.0
-	  removed.scaleX = 1.0
-	  removed.scaleY = 1.0
-	}
+        override fun onComplete(removed: NodeWrapper, replacement: NodeWrapper) {
+            removed.translateX = 0.0
+            removed.translateY = 0.0
+            removed.scaleX = 1.0
+            removed.scaleY = 1.0
+        }
 
-	override fun reversed() = Swap(duration, direction.reversed(), scale).also { it.setup = setup }
-  }
+        override fun reversed() = Swap(duration, direction.reversed(), scale).also { it.setup = setup }
+    }
 
-  /**
-   * A [ViewTransition] similar to flipping a node over to reveal another on its back. The effect has no perspective
-   * (it isn't 3D) due to the limits of JavaFX's affine transformation system.
-   *
-   * @param duration How long the transition will take
-   * @param vertical Whether to flip the card vertically or horizontally
-   */
-  class Flip(duration: Duration, vertical: Boolean = false): ViewTransition() {
-	val halfTime: Duration = duration.divide(2.0)
-	val targetAxis: Point3D = (if (vertical) Rotate.X_AXIS else Rotate.Y_AXIS)
+    /**
+     * A [ViewTransition] similar to flipping a node over to reveal another on its back. The effect has no perspective
+     * (it isn't 3D) due to the limits of JavaFX's affine transformation system.
+     *
+     * @param duration How long the transition will take
+     * @param vertical Whether to flip the card vertically or horizontally
+     */
+    class Flip(duration: Duration, vertical: Boolean = false): ViewTransition() {
+        val halfTime: Duration = duration.divide(2.0)
+        val targetAxis: Point3D = (if (vertical) Rotate.X_AXIS else Rotate.Y_AXIS)
 
-	override fun create(
-	  current: NodeWrapper,
-	  replacement: NodeWrapper,
-	  stack: StackPaneWrapper<NodeWrapper>
-	): Animation {
-	  return current.rotate(halfTime, 90, easing = MyInterpolator.EASE_IN, play = false) { axis = targetAxis }.then(
-		replacement.rotate(halfTime, 90, easing = MyInterpolator.EASE_OUT, reversed = true, play = false) {
-		  axis = targetAxis
-		}
-	  )
-	}
+        override fun create(
+            current: NodeWrapper,
+            replacement: NodeWrapper,
+            stack: StackPaneWrapper<NodeWrapper>
+        ): Animation = current.rotate(halfTime, 90, easing = MyInterpolator.EASE_IN, play = false) { axis = targetAxis }.then(
+            replacement.rotate(halfTime, 90, easing = MyInterpolator.EASE_OUT, reversed = true, play = false) {
+                axis = targetAxis
+            }
+        )
 
-	override fun onComplete(removed: NodeWrapper, replacement: NodeWrapper) {
-	  removed.rotate = 0.0
-	  removed.rotationAxis = Rotate.Z_AXIS
-	  replacement.rotationAxis = Rotate.Z_AXIS
-	}
-  }
+        override fun onComplete(removed: NodeWrapper, replacement: NodeWrapper) {
+            removed.rotate = 0.0
+            removed.rotationAxis = Rotate.Z_AXIS
+            replacement.rotationAxis = Rotate.Z_AXIS
+        }
+    }
 
-  /**
-   * A [ViewTransition] where a node spins and grows like a newspaper.
-   *
-   * The effect is similar to this: http://www.canstockphoto.com/spinning-news-paper-4032376.html
-   *
-   * @param duration How long the transition will take
-   * @param rotations How many time the paper will rotate (use a negative value for clockwise rotation)
-   */
-  class NewsFlash(val duration: Duration, val rotations: Number = 2): ViewTransition() {
-	override fun create(current: NodeWrapper, replacement: NodeWrapper, stack: StackPaneWrapper<NodeWrapper>) =
-	  replacement.transform(
-		time = duration,
-		destination = Point2D.ZERO,
-		angle = rotations.toDouble()*360,
-		scale = Point2D.ZERO,
-		opacity = 1,
-		easing = MyInterpolator.EASE_IN,
-		reversed = true,
-		play = false
-	  )
+    /**
+     * A [ViewTransition] where a node spins and grows like a newspaper.
+     *
+     * The effect is similar to this: http://www.canstockphoto.com/spinning-news-paper-4032376.html
+     *
+     * @param duration How long the transition will take
+     * @param rotations How many time the paper will rotate (use a negative value for clockwise rotation)
+     */
+    class NewsFlash(val duration: Duration, val rotations: Number = 2): ViewTransition() {
+        override fun create(current: NodeWrapper, replacement: NodeWrapper, stack: StackPaneWrapper<NodeWrapper>) =
+            replacement.transform(
+                time = duration,
+                destination = Point2D.ZERO,
+                angle = rotations.toDouble()*360,
+                scale = Point2D.ZERO,
+                opacity = 1,
+                easing = MyInterpolator.EASE_IN,
+                reversed = true,
+                play = false
+            )
 
-	override fun stack(current: NodeWrapper, replacement: NodeWrapper) = super.stack(replacement, current)
-  }
+        override fun stack(current: NodeWrapper, replacement: NodeWrapper) = super.stack(replacement, current)
+    }
 
-  /**
-   * A [ReversibleViewTransition] where a node grows and fades out revealing another node.
-   *
-   * The reverse is an [Implode]
-   *
-   * @param duration How long the transition will take
-   * @param scale How big to scale the node as it fades out
-   */
-  class Explode(val duration: Duration, val scale: Point2D = point(2, 2)): ReversibleViewTransition<Implode>() {
-	override fun create(
-	  current: NodeWrapper,
-	  replacement: NodeWrapper,
-	  stack: StackPaneWrapper<NodeWrapper>
-	) = current.transform(duration, Point2D.ZERO, 0, scale, 0, play = false)
+    /**
+     * A [ReversibleViewTransition] where a node grows and fades out revealing another node.
+     *
+     * The reverse is an [Implode]
+     *
+     * @param duration How long the transition will take
+     * @param scale How big to scale the node as it fades out
+     */
+    class Explode(val duration: Duration, val scale: Point2D = point(2, 2)): ReversibleViewTransition<Implode>() {
+        override fun create(
+            current: NodeWrapper,
+            replacement: NodeWrapper,
+            stack: StackPaneWrapper<NodeWrapper>
+        ) = current.transform(duration, Point2D.ZERO, 0, scale, 0, play = false)
 
-	override fun onComplete(removed: NodeWrapper, replacement: NodeWrapper) {
-	  removed.scaleX = 1.0
-	  removed.scaleY = 1.0
-	  removed.opacity = 1.0
-	}
+        override fun onComplete(removed: NodeWrapper, replacement: NodeWrapper) {
+            removed.scaleX = 1.0
+            removed.scaleY = 1.0
+            removed.opacity = 1.0
+        }
 
-	override fun reversed() = Implode(duration, scale).also { it.setup = setup }
-  }
+        override fun reversed() = Implode(duration, scale).also { it.setup = setup }
+    }
 
-  /**
-   * A [ReversibleViewTransition] where a node shrinks and fades in revealing another node.
-   *
-   * The reverse is an [Explode]
-   *
-   * @param duration How long the transition will take
-   * @param scale The initial size the node shrinks from
-   */
-  class Implode(val duration: Duration, val scale: Point2D = point(2, 2)): ReversibleViewTransition<Explode>() {
-	override fun create(
-	  current: NodeWrapper,
-	  replacement: NodeWrapper,
-	  stack: StackPaneWrapper<NodeWrapper>
-	) = replacement.transform(duration, Point2D.ZERO, 0, scale, 0, reversed = true, play = false)
+    /**
+     * A [ReversibleViewTransition] where a node shrinks and fades in revealing another node.
+     *
+     * The reverse is an [Explode]
+     *
+     * @param duration How long the transition will take
+     * @param scale The initial size the node shrinks from
+     */
+    class Implode(val duration: Duration, val scale: Point2D = point(2, 2)): ReversibleViewTransition<Explode>() {
+        override fun create(
+            current: NodeWrapper,
+            replacement: NodeWrapper,
+            stack: StackPaneWrapper<NodeWrapper>
+        ) = replacement.transform(duration, Point2D.ZERO, 0, scale, 0, reversed = true, play = false)
 
-	override fun stack(current: NodeWrapper, replacement: NodeWrapper) = super.stack(replacement, current)
+        override fun stack(current: NodeWrapper, replacement: NodeWrapper) = super.stack(replacement, current)
 
-	override fun reversed() = Explode(duration, scale).also { it.setup = setup }
-  }
+        override fun reversed() = Explode(duration, scale).also { it.setup = setup }
+    }
 
-  /**
-   * A [ReversibleViewTransition] where a node is wiped away in a given direction revealing another node.
-   *
-   * The reverse is an Wipe in the opposite direction
-   *
-   * @param duration How long the transition will take
-   * @param direction The direction the node is wiped away
-   */
-  class Wipe(val duration: Duration, val direction: Direction = LEFT): ReversibleViewTransition<Wipe>() {
-	override fun stack(current: NodeWrapper, replacement: NodeWrapper) =
-	  StackPaneWrapper<NodeWrapper>(replacement, current.snapshot(null, null).toCanvas().wrapped() as CanvasWrapper)
+    /**
+     * A [ReversibleViewTransition] where a node is wiped away in a given direction revealing another node.
+     *
+     * The reverse is an Wipe in the opposite direction
+     *
+     * @param duration How long the transition will take
+     * @param direction The direction the node is wiped away
+     */
+    class Wipe(val duration: Duration, val direction: Direction = LEFT): ReversibleViewTransition<Wipe>() {
+        override fun stack(current: NodeWrapper, replacement: NodeWrapper) =
+            StackPaneWrapper<NodeWrapper>(replacement, current.snapshot(null, null).toCanvas().wrapped() as CanvasWrapper)
 
-	override fun create(
-	  current: NodeWrapper,
-	  replacement: NodeWrapper,
-	  stack: StackPaneWrapper<NodeWrapper>
-	): Animation {
-	  val canvas = stack.children[1] as Canvas
-	  val gc = canvas.graphicsContext2D
-	  return object: Transition() {
-		var x = 0.0
-		var y = 0.0
-		var width = canvas.width
-		var height = canvas.height
+        override fun create(
+            current: NodeWrapper,
+            replacement: NodeWrapper,
+            stack: StackPaneWrapper<NodeWrapper>
+        ): Animation {
+            val canvas = stack.children[1] as Canvas
+            val gc = canvas.graphicsContext2D
+            return object: Transition() {
+                var x = 0.0
+                var y = 0.0
+                var width = canvas.width
+                var height = canvas.height
 
-		init {
-		  cycleDuration = duration
-		}
+                init {
+                    cycleDuration = duration
+                }
 
-		override fun interpolate(frac: Double) {
-		  when (direction) {
-			UP, DOWN    -> {
-			  height = frac*canvas.height
-			  if (direction == UP) y = canvas.height - height
-			}
+                override fun interpolate(frac: Double) {
+                    when (direction) {
+                        UP, DOWN    -> {
+                            height = frac*canvas.height
+                            if (direction == UP) y = canvas.height - height
+                        }
 
-			LEFT, RIGHT -> {
-			  width = frac*canvas.width
-			  if (direction == LEFT) x = canvas.width - width
-			}
-		  }
-		  gc.clearRect(x, y, width, height)
-		}
-	  }
-	}
+                        LEFT, RIGHT -> {
+                            width = frac*canvas.width
+                            if (direction == LEFT) x = canvas.width - width
+                        }
+                    }
+                    gc.clearRect(x, y, width, height)
+                }
+            }
+        }
 
-	override fun reversed() = Wipe(duration, direction.reversed()).also { it.setup = setup }
-  }
+        override fun reversed() = Wipe(duration, direction.reversed()).also { it.setup = setup }
+    }
 
-  /**
-   * A [ViewTransition] where a node is dissolved revealing another node.
-   *
-   * @param duration How long the transition will take
-   * @param hChunks The number of horizontal chunks the current node will be broken into
-   * @param vChunks The number of vertical chunks the current node will be broken into
-   */
-  class Dissolve(val duration: Duration, val hChunks: Int = 50, val vChunks: Int = 50): ViewTransition() {
-	override fun stack(current: NodeWrapper, replacement: NodeWrapper) =
-	  StackPaneWrapper(replacement, current.snapshot(null, null).toCanvas().wrapped() as CanvasWrapper)
+    /**
+     * A [ViewTransition] where a node is dissolved revealing another node.
+     *
+     * @param duration How long the transition will take
+     * @param hChunks The number of horizontal chunks the current node will be broken into
+     * @param vChunks The number of vertical chunks the current node will be broken into
+     */
+    class Dissolve(val duration: Duration, val hChunks: Int = 50, val vChunks: Int = 50): ViewTransition() {
+        override fun stack(current: NodeWrapper, replacement: NodeWrapper) =
+            StackPaneWrapper(replacement, current.snapshot(null, null).toCanvas().wrapped() as CanvasWrapper)
 
-	override fun create(
-	  current: NodeWrapper,
-	  replacement: NodeWrapper,
-	  stack: StackPaneWrapper<NodeWrapper>
-	): Animation {
-	  val canvas = stack.children[1] as Canvas
-	  val width = canvas.width/hChunks
-	  val height = canvas.height/vChunks
-	  val gc = canvas.graphicsContext2D
-	  val originalSize = hChunks*vChunks
-	  val indices = MutableList(originalSize) { it }
-	  indices.shuffle()
-	  return object: Transition() {
-		init {
-		  cycleDuration = duration
-		}
+        override fun create(
+            current: NodeWrapper,
+            replacement: NodeWrapper,
+            stack: StackPaneWrapper<NodeWrapper>
+        ): Animation {
+            val canvas = stack.children[1] as Canvas
+            val width = canvas.width/hChunks
+            val height = canvas.height/vChunks
+            val gc = canvas.graphicsContext2D
+            val originalSize = hChunks*vChunks
+            val indices = MutableList(originalSize) { it }
+            indices.shuffle()
+            return object: Transition() {
+                init {
+                    cycleDuration = duration
+                }
 
-		override fun interpolate(frac: Double) {
-		  if (indices.isEmpty()) return
-		  repeat((frac*originalSize).toInt() - originalSize + indices.lastIndex) {
-			val index = indices.removeAt(indices.lastIndex)
-			gc.clearRect(index%hChunks*width, index/hChunks*height, width, height)
-		  }
-		}
-	  }
-	}
-  }
+                override fun interpolate(frac: Double) {
+                    if (indices.isEmpty()) return
+                    repeat((frac*originalSize).toInt() - originalSize + indices.lastIndex) {
+                        val index = indices.removeAt(indices.lastIndex)
+                        gc.clearRect(index%hChunks*width, index/hChunks*height, width, height)
+                    }
+                }
+            }
+        }
+    }
 }

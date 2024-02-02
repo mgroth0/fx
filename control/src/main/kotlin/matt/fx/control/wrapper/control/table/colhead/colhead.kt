@@ -6,10 +6,10 @@ import matt.fx.graphics.wrapper.region.RegionWrapperImpl
 
 class TableColumnHeaderWrapper(node: TableColumnHeader): RegionWrapperImpl<TableColumnHeader, NodeWrapper>(node) {
 
-  override fun isInsideRow() = false
+    override fun isInsideRow() = false
 
-  override fun addChild(child: NodeWrapper, index: Int?) {
-	TODO()
-  }
+    override fun addChild(child: NodeWrapper, index: Int?) {
+        TODO()
+    }
 
 }

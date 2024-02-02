@@ -5,11 +5,11 @@ import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.impl.NodeWrapperImpl
 
 class SphereWrapper(
-  node: Sphere = Sphere(),
+    node: Sphere = Sphere(),
 ): NodeWrapperImpl<Sphere>(node) {
-  override fun addChild(child: NodeWrapper, index: Int?) {
-    TODO()
-  }
+    override fun addChild(child: NodeWrapper, index: Int?) {
+        TODO()
+    }
 
 
 }

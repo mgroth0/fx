@@ -11,8 +11,8 @@ import matt.auto.ascript.DoShellScript
 import matt.auto.ascript.interactiveOsascript
 import matt.auto.ascript.runAppleScript
 import matt.auto.compileAndOrRunApplescript
-import matt.auto.macapp.java.JavaMacApp
 import matt.auto.macapp.MacApp.Companion.getFrontmostProcessFromKotlinNative
+import matt.auto.macapp.java.JavaMacApp
 import matt.auto.macapp.sysevents.SystemEvents
 import matt.fx.graphics.mag.left
 import matt.fx.graphics.wrapper.stage.StageWrapper
@@ -126,13 +126,13 @@ fun sdtInTest() {
 }
 
 context(ReapingShellExecutionContext)
-        /*https://stackoverflow.com/questions/70647124/how-to-reduce-overhead-and-run-applescripts-faster*/
+/*https://stackoverflow.com/questions/70647124/how-to-reduce-overhead-and-run-applescripts-faster*/
 @Suppress("UNREACHABLE_CODE")
 fun appleLeft() {
     err(
         """
-	its not worth it. Doing it through matt.auto.applescript.applescript is extremely slow and there is no workaround for that. The only other option is to do it through objective C, which is extremely complicated and not worth it. You can try again if you want, but trust me its insane and you have to go through annoying accessibility APIs. Even with kotlin native, it is not worth it. Keyboard maestro and magnet seemed to have done exactly this and developed the perfect native code for this. But guess what, they are closed source. Maybe I should just respect their work and use their software for now. Its not that bad...
-  """.trimIndent()
+        its not worth it. Doing it through matt.auto.applescript.applescript is extremely slow and there is no workaround for that. The only other option is to do it through objective C, which is extremely complicated and not worth it. You can try again if you want, but trust me its insane and you have to go through annoying accessibility APIs. Even with kotlin native, it is not worth it. Keyboard maestro and magnet seemed to have done exactly this and developed the perfect native code for this. But guess what, they are closed source. Maybe I should just respect their work and use their software for now. Its not that bad...
+        """.trimIndent()
     )/*https://stackoverflow.com/questions/70647124/how-to-reduce-overhead-and-run-applescripts-faster*/
     sdtInTest()
     tic()

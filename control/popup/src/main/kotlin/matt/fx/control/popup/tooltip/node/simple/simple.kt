@@ -131,10 +131,10 @@ class MyFixedTooltip constructor() : PopupWindow() {
      * @param text A text string for the tooltip.
      */
     /* *************************************************************************
-       *                                                                         *
-       * Constructors                                                            *
-       *                                                                         *
-       **************************************************************************/
+     *                                                                         *
+     * Constructors                                                            *
+     *                                                                         *
+     **************************************************************************/
     /**
      * Creates a tooltip with an empty string for its text.
      */
@@ -147,39 +147,39 @@ class MyFixedTooltip constructor() : PopupWindow() {
 
     private class TooltipBehavior internal constructor(private val hideOnExit: Boolean) {
         /*
-             * There are two key concepts with Tooltip: activated and visible. A Tooltip
-             * is activated as soon as a mouse move occurs over the target node. When it
-             * becomes activated, we start off the ACTIVATION_TIMER. If the
-             * ACTIVATION_TIMER expires before another mouse event occurs, then we will
-             * show the popup. This timer typically lasts about 1 second.
-             *
-             * Once visible, we reset the ACTIVATION_TIMER and start the HIDE_TIMER.
-             * This second timer will allow the tooltip to remain visible for some time
-             * period (such as 5 seconds). If the mouse hasn't moved, and the HIDE_TIMER
-             * expires, then the tooltip is hidden and the tooltip is no longer
-             * activated.
-             *
-             * If another mouse move occurs, the ACTIVATION_TIMER starts again, and the
-             * same rules apply as above.
-             *
-             * If a mouse exit event occurs while the HIDE_TIMER is ticking, we reset
-             * the HIDE_TIMER. Thus, the tooltip disappears after 5 seconds from the
-             * last mouse move.
-             *
-             * If some other mouse event occurs while the HIDE_TIMER is running, other
-             * than mouse move or mouse enter/exit (such as a click), then the tooltip
-             * is hidden, the HIDE_TIMER stopped, and activated set to false.
-             *
-             * If a mouse exit occurs while the HIDE_TIMER is running, we stop the
-             * HIDE_TIMER and start the LEFT_TIMER, and immediately hide the tooltip.
-             * This timer is very short, maybe about a 1/2 second. If the mouse enters a
-             * new node which also has a tooltip before LEFT_TIMER expires, then the
-             * second tooltip is activated and shown immediately (the ACTIVATION_TIMER
-             * having been bypassed), and the HIDE_TIMER is started. If the LEFT_TIMER
-             * expires and there is no mouse movement over a control with a tooltip,
-             * then we are back to the initial steady state where the next mouse move
-             * over a node with a tooltip installed will start the ACTIVATION_TIMER.
-             */
+         * There are two key concepts with Tooltip: activated and visible. A Tooltip
+         * is activated as soon as a mouse move occurs over the target node. When it
+         * becomes activated, we start off the ACTIVATION_TIMER. If the
+         * ACTIVATION_TIMER expires before another mouse event occurs, then we will
+         * show the popup. This timer typically lasts about 1 second.
+         *
+         * Once visible, we reset the ACTIVATION_TIMER and start the HIDE_TIMER.
+         * This second timer will allow the tooltip to remain visible for some time
+         * period (such as 5 seconds). If the mouse hasn't moved, and the HIDE_TIMER
+         * expires, then the tooltip is hidden and the tooltip is no longer
+         * activated.
+         *
+         * If another mouse move occurs, the ACTIVATION_TIMER starts again, and the
+         * same rules apply as above.
+         *
+         * If a mouse exit event occurs while the HIDE_TIMER is ticking, we reset
+         * the HIDE_TIMER. Thus, the tooltip disappears after 5 seconds from the
+         * last mouse move.
+         *
+         * If some other mouse event occurs while the HIDE_TIMER is running, other
+         * than mouse move or mouse enter/exit (such as a click), then the tooltip
+         * is hidden, the HIDE_TIMER stopped, and activated set to false.
+         *
+         * If a mouse exit occurs while the HIDE_TIMER is running, we stop the
+         * HIDE_TIMER and start the LEFT_TIMER, and immediately hide the tooltip.
+         * This timer is very short, maybe about a 1/2 second. If the mouse enters a
+         * new node which also has a tooltip before LEFT_TIMER expires, then the
+         * second tooltip is activated and shown immediately (the ACTIVATION_TIMER
+         * having been bypassed), and the HIDE_TIMER is started. If the LEFT_TIMER
+         * expires and there is no mouse movement over a control with a tooltip,
+         * then we are back to the initial steady state where the next mouse move
+         * over a node with a tooltip installed will start the ACTIVATION_TIMER.
+         */
         private val activationTimer = Timeline()
         private val hideTimer = Timeline()
         private val leftTimer = Timeline()

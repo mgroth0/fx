@@ -14,79 +14,77 @@ import matt.obs.bindings.str.ObsS
 
 
 fun ET.button(
-  text: ObsS, graphic: NodeWrapper? = null, op: ButtonWrapper.()->Unit = {}
+    text: ObsS, graphic: NodeWrapper? = null, op: ButtonWrapper.()->Unit = {}
 ) = ButtonWrapper().attachTo(this, op) {
-  it.textProperty.bind(text)
-  if (graphic != null) it.graphic = graphic
+    it.textProperty.bind(text)
+    if (graphic != null) it.graphic = graphic
 }
 
 // Buttons
 fun ET.button(
-  text: String = "", graphic: NodeWrapper? = null, op: ButtonWrapper.()->Unit = {}
-): ButtonWrapper {
-  return ButtonWrapper().apply {
-	this.text = text
-	if (graphic != null) this.graphic = graphic
-	apply(op)    //	op()
-  }.attachTo(this, op)
-}
+    text: String = "", graphic: NodeWrapper? = null, op: ButtonWrapper.()->Unit = {}
+): ButtonWrapper = ButtonWrapper().apply {
+    this.text = text
+    if (graphic != null) this.graphic = graphic
+    apply(op)    //	op()
+}.attachTo(this, op)
 
 
 open class ButtonWrapper(
-  node: Button = Button(),
+    node: Button = Button(),
 ): ButtonBaseWrapper<Button>(node) {
 
-  constructor(text: String?, graphic: NodeWrapper? = null): this(Button(text, graphic?.node))
+    constructor(text: String?, graphic: NodeWrapper? = null): this(Button(text, graphic?.node))
 
-  var op: ()->Unit
-	set(value) {
-	  setOnAction {
-		value()
-	  }
-	}
-	get() = NEVER
+    var op: ()->Unit
+        set(value) {
+            setOnAction {
+                value()
+            }
+        }
+        get() = NEVER
 
-  fun disable() {
-	node.isDisable = true
-  }
+    fun disable() {
+        node.isDisable = true
+    }
 
-  fun enable() {
-	node.isDisable = false
-  }
+    fun enable() {
+        node.isDisable = false
+    }
 
-  fun doMyOwnBackgroundStuff(
-	hoverColor: FXColor,
-	clickColor: FXColor
-  ) {
-	style = "-fx-background-color: transparent;"
-
-
-	var mouseIsPressed = false
-	fun updateBackground() {
-	  style = if (mouseIsPressed) {
-		"-fx-background-color: ${clickColor.hex()};"
-	  } else if (hoverProperty.value) {
-		"-fx-background-color: ${hoverColor.hex()};"
-	  } else {
-		"-fx-background-color: transparent;"
-	  }
-	}
+    fun doMyOwnBackgroundStuff(
+        hoverColor: FXColor,
+        clickColor: FXColor
+    ) {
+        style = "-fx-background-color: transparent;"
 
 
-	onHover {
-	  updateBackground()
-	}
+        var mouseIsPressed = false
+        fun updateBackground() {
+            style = if (mouseIsPressed) {
+                "-fx-background-color: ${clickColor.hex()};"
+            } else if (hoverProperty.value) {
+                "-fx-background-color: ${hoverColor.hex()};"
+            } else {
+                "-fx-background-color: transparent;"
+            }
+        }
 
-	setOnMousePressed {
-	  mouseIsPressed = true
-	  updateBackground()
-	}
 
-	setOnMouseReleased {
-	  mouseIsPressed = false
-	  updateBackground()
-	}
-  }
+        onHover {
+            updateBackground()
+        }
+
+        setOnMousePressed {
+            mouseIsPressed = true
+            updateBackground()
+        }
+
+        setOnMouseReleased {
+            mouseIsPressed = false
+            updateBackground()
+        }
+    }
 
 
 }

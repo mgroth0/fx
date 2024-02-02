@@ -25,9 +25,9 @@ import matt.fx.graphics.fxthread.FXAppStateWatcher
 import matt.fx.graphics.service.WrapperServiceHub
 import matt.fx.graphics.style.insets
 import matt.lang.anno.Fixes
+import matt.lang.assertions.require.requireNot
 import matt.lang.function.Op
 import matt.lang.go
-import matt.lang.assertions.require.requireNot
 import matt.log.logger.Logger
 import matt.log.report.BugReport
 import matt.log.reporter.TracksTime
@@ -141,7 +141,7 @@ private class DefaultGlassAppEventHandler(
 
               with the NullPointerException Fix
 
-              */
+         */
 
         /*if (Platform.isNestedLoopRunning()) {
             Toolkit.getToolkit().exitAllNestedEventLoops()
@@ -222,7 +222,7 @@ private fun quitJavaFX() {
         .firstOrNull { it.isFullScreen }?.isFullScreen = false
 
     Window.getWindows().toList().sortedByDescending {
-        *//*ATTEMPT TO FIX THE BIG NullPointerException Bug Part 1*//*
+ *//*ATTEMPT TO FIX THE BIG NullPointerException Bug Part 1*//*
         var score = 0
 
         if (it is Stage && it.modality == Modality.APPLICATION_MODAL) score++
@@ -239,10 +239,10 @@ private fun quitJavaFX() {
         score
 
     }.forEach {
-        *//*In case of child windows some of them could already be closed
+ *//*In case of child windows some of them could already be closed
         so check if list still contains an object*//*
         if (it in Window.getWindows() && it.isShowing) {
-            *//*it.hide()*//*
+ *//*it.hide()*//*
             Event.fireEvent(
                 it,
                 WindowEvent(

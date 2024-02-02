@@ -6,16 +6,16 @@ import matt.fx.graphics.wrapper.region.RegionWrapper
 import matt.fx.graphics.wrapper.region.RegionWrapperImpl
 
 interface ControlWrapper: RegionWrapper<NodeWrapper> {
-  override val node: Control
+    override val node: Control
   /*val tooltipProp: Var<TooltipWrapper?>
   var tooltip: tooltipWrapper?*/
 }
 
 abstract class ControlWrapperImpl<N: Control>(node: N): RegionWrapperImpl<N, NodeWrapper>(node),
-														ControlWrapper {
+    ControlWrapper {
 
 
-  /*Don't use this. It requires that I use the built in Tooltip, which I do not*/
+    /*Don't use this. It requires that I use the built in Tooltip, which I do not*/
 /*  final override val tooltipProp by lazy {
 	node.tooltipProperty().toNullableProp().proxy(uncheckedWrapperConverter<Tooltip, tooltipWrapper>().nullable())
   }

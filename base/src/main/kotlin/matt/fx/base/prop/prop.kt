@@ -90,10 +90,8 @@ fun <S, T> S.observable(prop: KMutableProperty1<S, T>) = observable(this, prop)
 fun <S, T> observable(
     owner: S,
     prop: KProperty1<S, T>
-): ReadOnlyObjectProperty<T> {
-    return object : ReadOnlyObjectWrapper<T>(owner, prop.name) {
-        override fun get() = prop.get(owner)
-    }
+): ReadOnlyObjectProperty<T> = object : ReadOnlyObjectWrapper<T>(owner, prop.name) {
+    override fun get() = prop.get(owner)
 }
 
 /**

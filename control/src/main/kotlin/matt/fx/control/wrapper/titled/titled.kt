@@ -22,74 +22,80 @@ import java.text.Format
 
 
 fun ET.titledpane(
-  title: String? = null, node: NodeWrapper? = null, collapsible: Boolean = true, op: (TitledPaneWrapper).()->Unit = {}
+    title: String? = null, node: NodeWrapper? = null, collapsible: Boolean = true, op: (TitledPaneWrapper).()->Unit = {}
 ): TitledPaneWrapper {
-  val titledPane = TitledPaneWrapper().apply { title?.let { text = it }; graphic = node }
-  titledPane.isCollapsible = collapsible
-  attach(titledPane, op)
-  return titledPane
+    val titledPane = TitledPaneWrapper().apply {
+        title?.let { text = it };
+        graphic = node
+    }
+    titledPane.isCollapsible = collapsible
+    attach(titledPane, op)
+    return titledPane
 }
 
 fun ET.titledpane(
-  title: ValProp<String>,
-  node: NodeWrapper? = null,
-  collapsible: Boolean = true,
-  op: (TitledPaneWrapper).()->Unit = {}
+    title: ValProp<String>,
+    node: NodeWrapper? = null,
+    collapsible: Boolean = true,
+    op: (TitledPaneWrapper).()->Unit = {}
 ): TitledPaneWrapper {
-  val titledPane = TitledPaneWrapper().apply { text = ""; graphic = node }
-  titledPane.textProperty.bind(title)
-  titledPane.isCollapsible = collapsible
-  attach(titledPane, op)
-  return titledPane
+    val titledPane = TitledPaneWrapper().apply {
+        text = "";
+        graphic = node
+    }
+    titledPane.textProperty.bind(title)
+    titledPane.isCollapsible = collapsible
+    attach(titledPane, op)
+    return titledPane
 }
 
 open class TitledPaneWrapper(
-  node: TitledPane = TitledPane(),
+    node: TitledPane = TitledPane(),
 ): LabeledWrapper<TitledPane>(node), Titled {
 
-  final override val titleProperty by lazy { textProperty }
+    final override val titleProperty by lazy { textProperty }
 
-  var content: NodeWrapper?
-	get() = node.content?.wrapped()
-	set(value) {
-	  node.content = value?.node
-	}
+    var content: NodeWrapper?
+        get() = node.content?.wrapped()
+        set(value) {
+            node.content = value?.node
+        }
 
-  var isCollapsible: Boolean
-	get() = node.isCollapsible
-	set(value) {
-	  node.isCollapsible = value
-	}
-  var isExpanded: Boolean
-	get() = node.isExpanded
-	set(value) {
-	  node.isExpanded = value
-	}
+    var isCollapsible: Boolean
+        get() = node.isCollapsible
+        set(value) {
+            node.isCollapsible = value
+        }
+    var isExpanded: Boolean
+        get() = node.isExpanded
+        set(value) {
+            node.isExpanded = value
+        }
 
-  final override fun addChild(child: NodeWrapper, index: Int?) {
-	when (content) {
-	  is Pane -> content!!.addChild(child, index)
+    final override fun addChild(child: NodeWrapper, index: Int?) {
+        when (content) {
+            is Pane -> content!!.addChild(child, index)
 
-	  is Node -> {
-		val container = VBoxW()
-		content?.go {
-		  container.children.add(it)
-		}
-		container.children.add(child)
-		content = container
-	  }
+            is Node -> {
+                val container = VBoxW()
+                content?.go {
+                    container.children.add(it)
+                }
+                container.children.add(child)
+                content = container
+            }
 
-	  else    -> {
-		content = child
-	  }
-	}
-  }
+            else    -> {
+                content = child
+            }
+        }
+    }
 }
 
 
 inline fun <reified S: T, reified T: Any> TitledPaneWrapper.bind(
-  property: MObservableValNewAndOld<S>,
-  readonly: Boolean = false,
-  converter: StringConverter<T>? = null,
-  format: Format? = null
+    property: MObservableValNewAndOld<S>,
+    readonly: Boolean = false,
+    converter: StringConverter<T>? = null,
+    format: Format? = null
 ): Unit = err("bindStringProperty(textProperty, converter, format, property, readonly)")

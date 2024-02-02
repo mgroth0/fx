@@ -151,15 +151,11 @@ class StyleClassDSL(val s: Node) : MyStyleDsl() {
 }
 
 object FXColorStringConverter : StringConverter<FXColor> {
-    override fun toString(t: FXColor): String {
-        return ColorLikeCssConverter.toString(
-            t.toMColor()
-        )
-    }
+    override fun toString(t: FXColor): String = ColorLikeCssConverter.toString(
+        t.toMColor()
+    )
 
-    override fun fromString(s: String): FXColor {
-        return ((ColorLikeCssConverter.fromString(s) as IntColor).toFXColor())
-    }
+    override fun fromString(s: String): FXColor = ((ColorLikeCssConverter.fromString(s) as IntColor).toFXColor())
 
 }
 
@@ -169,9 +165,7 @@ fun NodeWrapper.sty(op: StyleClassDSL.() -> Unit) {
 }
 
 
-fun intColorToFXColor(i: Int): Color {
-    return Color.rgb(i shr 16 and 0xFF, i shr 8 and 0xFF, i and 0xFF)
-}
+fun intColorToFXColor(i: Int): Color = Color.rgb(i shr 16 and 0xFF, i shr 8 and 0xFF, i and 0xFF)
 
 
 /*part of this file was taken from tornadofx*/

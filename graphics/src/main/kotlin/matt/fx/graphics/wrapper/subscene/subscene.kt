@@ -4,32 +4,32 @@ import javafx.beans.property.ObjectProperty
 import javafx.scene.Parent
 import javafx.scene.SubScene
 import javafx.scene.paint.Paint
+import matt.fx.base.wrapper.obs.obsval.toNonNullableROProp
 import matt.fx.graphics.wrapper.node.impl.NodeWrapperImpl
 import matt.fx.graphics.wrapper.node.parent.ParentWrapper
-import matt.fx.base.wrapper.obs.obsval.toNonNullableROProp
 import matt.fx.graphics.wrapper.scenelike.SceneLikeWrapper
 
 
 class SubSceneWrapper<R: ParentWrapper<*>>(
-  node: SubScene
+    node: SubScene
 ): NodeWrapperImpl<SubScene>(node),
-   SceneLikeWrapper<SubScene, R> {
+    SceneLikeWrapper<SubScene, R> {
 
-  constructor(
-	root: ParentWrapper<*>,
-	width: Double,
-	height: Double
-  ): this(
-	SubScene(
-	  root.node,
-	  width,
-	  height
-	)
-  )
+    constructor(
+        root: ParentWrapper<*>,
+        width: Double,
+        height: Double
+    ): this(
+        SubScene(
+            root.node,
+            width,
+            height
+        )
+    )
 
-  override val rootProperty: ObjectProperty<Parent> get() = node.rootProperty()
-  override val widthProperty get() = node.widthProperty().toNonNullableROProp().cast<Double>()
-  override val heightProperty get() = node.heightProperty().toNonNullableROProp().cast<Double>()
-  override val fillProperty: ObjectProperty<Paint> get() = node.fillProperty()
+    override val rootProperty: ObjectProperty<Parent> get() = node.rootProperty()
+    override val widthProperty get() = node.widthProperty().toNonNullableROProp().cast<Double>()
+    override val heightProperty get() = node.heightProperty().toNonNullableROProp().cast<Double>()
+    override val fillProperty: ObjectProperty<Paint> get() = node.fillProperty()
 
 }

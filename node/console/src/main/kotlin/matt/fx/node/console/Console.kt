@@ -67,30 +67,23 @@ fun ParentWrapper<NodeWrapper>.processConsole(
     process: Process? = null,
     name: String = "new process console",
     op: ProcessConsole.() -> Unit = {}
-): ProcessConsole {
-    return addr(ProcessConsole(name).apply {
-        process?.let(::attachProcess)
-        op()
-    })
-}
+): ProcessConsole = addr(ProcessConsole(name).apply {
+    process?.let(::attachProcess)
+    op()
+})
 
 context(ReapingShellExecutionContext)
 fun ParentWrapper<NodeWrapper>.interceptConsole(
     name: String = "new intercept console",
     op: SystemRedirectConsole.() -> Unit = {}
-): SystemRedirectConsole {
-    return addr(SystemRedirectConsole(name).apply(op))
-}
+): SystemRedirectConsole = addr(SystemRedirectConsole(name).apply(op))
 
 context(ReapingShellExecutionContext)
 fun ParentWrapper<NodeWrapper>.customConsole(
     name: String = "new custom console",
     takesInput: Boolean = true,
     op: CustomConsole.() -> Unit = {}
-): CustomConsole {
-
-    return addr(CustomConsole(name, takesInput).apply(op))
-}
+): CustomConsole = addr(CustomConsole(name, takesInput).apply(op))
 
 
 private const val DEFAULT_MAX_LINES: Int = 1000

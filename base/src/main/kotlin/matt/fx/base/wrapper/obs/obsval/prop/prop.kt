@@ -83,7 +83,7 @@ open class NullableFXBackedBindableProp<T>(private val o: Property<T>) : Nullabl
         }
 
 
-  final   override val isFXBound get() = o.isBound
+    final   override val isFXBound get() = o.isBound
 
     /*override fun getBoundedBidirectionallyFrom(p: Property<T>) {
       Bindings.bindBidirectional(p, o)

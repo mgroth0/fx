@@ -63,73 +63,72 @@ class FxPlotRendererForNonFxApp<X, Y> : GenericPlotRenderer<X, Y, ChartWrapper<*
 
 
 class FxPlotRenderer<X, Y> : GenericPlotRenderer<X, Y, ChartWrapper<*>> {
-    override fun render(figData: GenericPlotData<X, Y>): ChartWrapper<*> {
-        return ensureInFXThreadInPlace {
-            buildNode {
-                val axisX = figData.xAxis.toFxAxis()
-                val axisY = figData.yAxis.toFxAxis()
-                scatterChart(
-                    x = axisX,
-                    y = axisY
-                ) {
-                    animated = false
-                    figData.title?.go {
-                        title = it
-                    }
-                    node.horizontalGridLinesVisibleProperty().set(false)
-                    node.verticalGridLinesVisibleProperty().set(false)
-                    fun showStrips(dir: VerticalOrHorizontal) {
-                        when (dir) {
-                            Horizontal -> {
-                                node.horizontalGridLinesVisibleProperty().set(true)
-                            }
-
-                            Vertical   -> {
-                                node.verticalGridLinesVisibleProperty().set(true)
-                            }
+    override fun render(figData: GenericPlotData<X, Y>): ChartWrapper<*> = ensureInFXThreadInPlace {
+        buildNode {
+            val axisX = figData.xAxis.toFxAxis()
+            val axisY = figData.yAxis.toFxAxis()
+            scatterChart(
+                x = axisX,
+                y = axisY
+            ) {
+                animated = false
+                figData.title?.go {
+                    title = it
+                }
+                node.horizontalGridLinesVisibleProperty().set(false)
+                node.verticalGridLinesVisibleProperty().set(false)
+                fun showStrips(dir: VerticalOrHorizontal) {
+                    when (dir) {
+                        Horizontal -> {
+                            node.horizontalGridLinesVisibleProperty().set(true)
                         }
-                        node.lookup(".chart-${dir.name.lowercase()}-grid-lines").style =
-                            "-fx-stroke-dash-array: null; -fx-stroke-width: 0.5;"
-                    }
-                    if (figData.xAxis is CategoricalAxis) {
-                        showStrips(Vertical)
-                    }
-                    if (figData.yAxis is CategoricalAxis) {
-                        showStrips(Horizontal)
-                    }
 
-                    val tmpStylesheet = JioFile.createTempFile("fx-stylesheet-", ".css")
-                    tmpStylesheet.toJFile().deleteOnExit()
-                    val stylesheetUrl = tmpStylesheet.betterURLIGuess
-                    node.stylesheets.add(stylesheetUrl)
+                        Vertical   -> {
+                            node.verticalGridLinesVisibleProperty().set(true)
+                        }
+                    }
+                    node.lookup(".chart-${dir.name.lowercase()}-grid-lines").style =
+                        "-fx-stroke-dash-array: null; -fx-stroke-width: 0.5;"
+                }
+                if (figData.xAxis is CategoricalAxis) {
+                    showStrips(Vertical)
+                }
+                if (figData.yAxis is CategoricalAxis) {
+                    showStrips(Horizontal)
+                }
 
-                    figData.series.forEachIndexed { idx, it ->
+                val tmpStylesheet = JioFile.createTempFile("fx-stylesheet-", ".css")
+                tmpStylesheet.toJFile().deleteOnExit()
+                val stylesheetUrl = tmpStylesheet.betterURLIGuess
+                node.stylesheets.add(stylesheetUrl)
 
-                        val addFun = data::class.functions.first { it.name == "add" && it.valueParameters.size == 1 }
-                        val s = it.toFxSeries()
-                        addFun.call(data, s)
+                figData.series.forEachIndexed { idx, it ->
+
+                    val addFun = data::class.functions.first { it.name == "add" && it.valueParameters.size == 1 }
+                    val s = it.toFxSeries()
+                    addFun.call(data, s)
 
                         /*
                         Setting the color this way is the most robust! most likely to work, and also applies most robustly everywhere including legends.
-                        * */
+                         * */
 
-                        val cls = when (idx) {
-                            0    -> ".chart-symbol"
-                            else -> ".default-color${idx}.chart-symbol"
-                        }
-                        val c = it.color.colorToUse()
-                        /*See Modena.css for reference!*/
-                        /*Need to override any properties that is overriden in the CSS of the default Modena per index, or else I will get random diamonds and stuff.*/
-                        /*this does not work well! Please stop using fx to make charts. Switching to python now...*/
-                        tmpStylesheet.appendLine(
-                            """
+                    val cls = when (idx) {
+                        0    -> ".chart-symbol"
+                        else -> ".default-color$idx.chart-symbol"
+                    }
+                    val c = it.color.colorToUse()
+                    /*See Modena.css for reference!*/
+                    /*Need to override any properties that is overriden in the CSS of the default Modena per index, or else I will get random diamonds and stuff.*/
+                    /*this does not work well! Please stop using fx to make charts. Switching to python now...*/
+                    tmpStylesheet.appendLine(
+                        """
                         $cls { 
                             -fx-background-color: ${c.hex()};
                             -fx-padding: 5;
                         }
-                    """.trimIndent()
-                        )
-                        /**/
+                        """.trimIndent()
+                    )
+                    /**/
                         /*
 
                         -fx-background-radius: 0;
@@ -139,10 +138,10 @@ class FxPlotRenderer<X, Y> : GenericPlotRenderer<X, Y, ChartWrapper<*>> {
 
                         -fx-shape: "";
 
-                        */
+                         */
 
 
-                        /*SET LEGEND COLOR*/
+                    /*SET LEGEND COLOR*/
                         /* node.style += """
                                .default-color${idx + 1}.chart-symbol {
                                   -fx-background-color: blue;
@@ -184,9 +183,8 @@ class FxPlotRenderer<X, Y> : GenericPlotRenderer<X, Y, ChartWrapper<*>> {
 //                    })
 //
 //                    setColor()
-                    }
-
                 }
+
             }
         }
     }

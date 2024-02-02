@@ -4,9 +4,9 @@ import javafx.application.Platform
 import javafx.embed.swing.SwingFXUtils
 import javafx.scene.image.Image
 import javafx.scene.image.ImageView
-import matt.lang.model.file.FsFile
 import matt.image.save
 import matt.lang.file.toJFile
+import matt.lang.model.file.FsFile
 import java.awt.image.BufferedImage
 
 

@@ -5,7 +5,7 @@ import matt.fx.control.popup.popwinwrap.PopupWindowWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
 
 class PopupWrapper(node: Popup): PopupWindowWrapper<Popup>(node) {
-  override fun addChild(child: NodeWrapper, index: Int?) {
-	TODO()
-  }
+    override fun addChild(child: NodeWrapper, index: Int?) {
+        TODO()
+    }
 }

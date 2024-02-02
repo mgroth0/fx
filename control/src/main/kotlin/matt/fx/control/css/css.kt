@@ -9,5 +9,5 @@ abstract class BooleanCssMetaData<T : Styleable>(
     property: String,
     initialValue: Boolean
 ) : CssMetaData<T, Boolean>(
-    property, BooleanConverter.getInstance(), initialValue
-)
+        property, BooleanConverter.getInstance(), initialValue
+    )

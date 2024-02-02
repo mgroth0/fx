@@ -8,9 +8,9 @@ import javafx.scene.control.TableRow
 import javafx.scene.control.TreeCell
 import javafx.scene.control.TreeItem
 import javafx.scene.control.TreeTableRow
-import matt.fx.control.wrapper.labeled.LabeledWrapper
 import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
 import matt.fx.base.wrapper.obs.obsval.toNonNullableROProp
+import matt.fx.control.wrapper.labeled.LabeledWrapper
 
 open class CellWrapper<E, N : Cell<E>>(
     node: N
@@ -36,7 +36,7 @@ class TableRowWrapper<E>(
     val item: E? get() = node.item
     override fun isInsideRow() = true
 
-  val selectedProperty by lazy {node.selectedProperty().toNonNullableROProp()}
+    val selectedProperty by lazy {node.selectedProperty().toNonNullableROProp()}
 
 }
 

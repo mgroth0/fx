@@ -125,7 +125,7 @@ fun TreeLikeWrapper<*, out FsFile>.nav(f: FsFile) {
             nextSubRoot.children.firstOrNull {
                 it.value in fam
             }?.let {
-                println("${it}?")
+                println("$it?")
                 if (it.value == f) {
                     println("found treeitem: $it")
                     it.parent?.chain { it.parent }?.forEach { it.isExpanded = true }
@@ -165,20 +165,18 @@ fun PaneWrapperImpl<*, *>.fileTree(
     rootFiles: BasicObservableListImpl<out FsFile>,
     strategy: FileTreePopulationStrategy = AUTOMATIC,
     op: (TreeViewWrapper<FsFile>.() -> Unit)? = null,
-): TreeViewWrapper<out FsFile> {
-    return TreeViewWrapper<FsFile>().apply {
-        this@fileTree.add(this)
+): TreeViewWrapper<out FsFile> = TreeViewWrapper<FsFile>().apply {
+    this@fileTree.add(this)
 
-        UnknownShellExecutionContext(UnixDirectCommandsOnly).scope {
-            setupGUI()
-        }
-
-        setupContent(rootFiles, strategy)
-
-
-        root!!.isExpanded = true
-        if (op != null) op()
+    UnknownShellExecutionContext(UnixDirectCommandsOnly).scope {
+        setupGUI()
     }
+
+    setupContent(rootFiles, strategy)
+
+
+    root!!.isExpanded = true
+    if (op != null) op()
 }
 
 context(ReapingShellExecutionContext)
@@ -186,20 +184,18 @@ fun PaneWrapperImpl<*, *>.fileTableTree(
     rootFiles: BasicObservableListImpl<FsFile>,
     strategy: FileTreePopulationStrategy = AUTOMATIC,
     op: (TreeTableViewWrapper<FsFile>.() -> Unit)? = null,
-): TreeTableViewWrapper<FsFile> {
-    return TreeTableViewWrapper<FsFile>().apply {
-        this@fileTableTree.add(this)
+): TreeTableViewWrapper<FsFile> = TreeTableViewWrapper<FsFile>().apply {
+    this@fileTableTree.add(this)
 
-        UnknownShellExecutionContext(UnixDirectCommandsOnly).scope {
-            setupGUI()
-        }
-        setupContent(rootFiles, strategy)
-
-
-        root!!.isExpanded = true
-        autoResizeColumns()
-        if (op != null) op()
+    UnknownShellExecutionContext(UnixDirectCommandsOnly).scope {
+        setupGUI()
     }
+    setupContent(rootFiles, strategy)
+
+
+    root!!.isExpanded = true
+    autoResizeColumns()
+    if (op != null) op()
 }
 
 

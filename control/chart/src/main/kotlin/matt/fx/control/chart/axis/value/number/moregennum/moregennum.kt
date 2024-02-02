@@ -34,10 +34,10 @@ class MoreGenericNumberAxis<T : Any>(
     lowerBound: T? = null,
     upperBound: T? = null,
 ) : MoreGenericValueAxis<T>(
-    lowerBound = lowerBound,
-    upperBound = upperBound,
-    converter = converter
-) {
+        lowerBound = lowerBound,
+        upperBound = upperBound,
+        converter = converter
+    ) {
     private var currentAnimationID: Any? = null
     private val animator = ChartLayoutAnimator(this)
     private val defaultFormatter = DefaultFormatter()
@@ -52,26 +52,18 @@ class MoreGenericNumberAxis<T : Any>(
             }
         }
 
-        override fun getBean(): Any {
-            return this@MoreGenericNumberAxis
-        }
+        override fun getBean(): Any = this@MoreGenericNumberAxis
 
-        override fun getName(): String {
-            return "forceZeroInRange"
-        }
+        override fun getName(): String = "forceZeroInRange"
     }
 
-    fun isForceZeroInRange(): Boolean {
-        return forceZeroInRange.value
-    }
+    fun isForceZeroInRange(): Boolean = forceZeroInRange.value
 
     fun setForceZeroInRange(value: Boolean) {
         forceZeroInRange.value = value
     }
 
-    fun forceZeroInRangeProperty(): BooleanProperty {
-        return forceZeroInRange
-    }
+    fun forceZeroInRangeProperty(): BooleanProperty = forceZeroInRange
 
     /*matt was here: this is my attempt to remove ticks*/
     fun maximizeTickUnit() {
@@ -211,7 +203,7 @@ class MoreGenericNumberAxis<T : Any>(
                 // This is a ridiculous amount of major tick marks, something has probably gone wrong
                 System.err.println(
                     "Warning we tried to create more than 2000 major tick marks on a NumberAxis. " +
-                            "Lower Bound=" + range.lowerBound + ", Upper Bound=" + range.upperBound + ", Tick Unit=" + range.tickUnit
+                        "Lower Bound=" + range.lowerBound + ", Upper Bound=" + range.upperBound + ", Tick Unit=" + range.tickUnit
                 )
             } else {
                 println("range.tickUnit=${range.tickUnit}")
@@ -252,7 +244,7 @@ class MoreGenericNumberAxis<T : Any>(
                 // This is a ridiculous amount of major tick marks, something has probably gone wrong
                 System.err.println(
                     ("Warning we tried to create more than 10000 minor tick marks on a NumberAxis. " +
-                            "Lower Bound=" + this.lowerBound.value + ", Upper Bound=" + this.upperBound.value + ", Tick Unit=" + tickUnit)
+                        "Lower Bound=" + this.lowerBound.value + ", Upper Bound=" + this.upperBound.value + ", Tick Unit=" + tickUnit)
                 )
                 return minorTickMarks.map { converter.convertToA(it.toDouble()) }
             }
@@ -482,7 +474,7 @@ class MoreGenericNumberAxis<T : Any>(
         var classCssMetaData: List<CssMetaData<out Styleable?, *>>? = null
           private set
 
-        */
+     */
     /**
      * Gets the `CssMetaData` associated with this class, which may include the
      * `CssMetaData` of its superclasses.

@@ -13,7 +13,7 @@ fun <T> observableListOf(): ObservableList<T> = FXCollections.observableArrayLis
  * Returns an empty new [ObservableList] with the given [extractor]. This list reports element updates.
  */
 fun <T> observableListOf(extractor: (T)->Array<Observable>): ObservableList<T> =
-  FXCollections.observableArrayList(extractor)
+    FXCollections.observableArrayList(extractor)
 
 fun <T> observableSetOf(): ObservableSet<T> = FXCollections.observableSet()
 
@@ -49,7 +49,7 @@ fun <T> ObservableList<T>.shuffle(random: Random): Unit = FXCollections.shuffle(
  * Fires only **one** change notification on the list.
  */
 fun <T: Comparable<T>> ObservableList<T>.sort() {
-  if (size > 1) FXCollections.sort(this)
+    if (size > 1) FXCollections.sort(this)
 }
 
 /**
@@ -57,7 +57,7 @@ fun <T: Comparable<T>> ObservableList<T>.sort() {
  * Fires only **one** change notification on the list.
  */
 fun <T> ObservableList<T>.sortWith(comparator: Comparator<in T>) {
-  if (size > 1) FXCollections.sort(this, comparator)
+    if (size > 1) FXCollections.sort(this, comparator)
 }
 
 /**
@@ -65,7 +65,7 @@ fun <T> ObservableList<T>.sortWith(comparator: Comparator<in T>) {
  * Fires only **one** change notification on the list.
  */
 inline fun <T, R: Comparable<R>> ObservableList<T>.sortBy(crossinline selector: (T)->R?) {
-  if (size > 1) sortWith(compareBy(selector))
+    if (size > 1) sortWith(compareBy(selector))
 }
 
 /**
@@ -73,7 +73,7 @@ inline fun <T, R: Comparable<R>> ObservableList<T>.sortBy(crossinline selector: 
  * Fires only **one** change notification on the list.
  */
 inline fun <T, R: Comparable<R>> ObservableList<T>.sortByDescending(crossinline selector: (T)->R?) {
-  if (size > 1) sortWith(compareByDescending(selector))
+    if (size > 1) sortWith(compareByDescending(selector))
 }
 
 
@@ -82,17 +82,17 @@ inline fun <T, R: Comparable<R>> ObservableList<T>.sortByDescending(crossinline 
  * Swaps the position of two items at two respective indices
  */
 fun <T> MutableList<T>.swap(indexOne: Int, indexTwo: Int) {
-  if (this is ObservableList<*>) {
-	if (indexOne == indexTwo) return
-	val min = Math.min(indexOne, indexTwo)
-	val max = Math.max(indexOne, indexTwo)
-	val o2 = removeAt(max)
-	val o1 = removeAt(min)
-	add(min, o2)
-	add(max, o1)
-  } else {
-	Collections.swap(this, indexOne, indexTwo)
-  }
+    if (this is ObservableList<*>) {
+        if (indexOne == indexTwo) return
+        val min = Math.min(indexOne, indexTwo)
+        val max = Math.max(indexOne, indexTwo)
+        val o2 = removeAt(max)
+        val o1 = removeAt(min)
+        add(min, o2)
+        add(max, o1)
+    } else {
+        Collections.swap(this, indexOne, indexTwo)
+    }
 }
 
 /**

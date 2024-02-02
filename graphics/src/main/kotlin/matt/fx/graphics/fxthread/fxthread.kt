@@ -9,9 +9,9 @@ import matt.fx.graphics.fxthread.FXAppState.DID_NOT_START_YET
 import matt.fx.graphics.fxthread.FXAppState.STARTED
 import matt.fx.graphics.fxthread.FXAppState.STOPPED
 import matt.fx.graphics.wrapper.node.NodeWrapper
+import matt.lang.assertions.require.requireEquals
 import matt.lang.exec.Exec
 import matt.lang.function.Produce
-import matt.lang.assertions.require.requireEquals
 import matt.model.flowlogic.runner.Run
 import matt.model.flowlogic.runner.Runner
 import matt.obs.subscribe.LatchManager
@@ -61,15 +61,11 @@ fun <T> runLaterReturn(op: () -> T): T {
     @Suppress("UNCHECKED_CAST") return (r as T)
 }
 
-inline fun <T> ensureInFXThreadInPlace(crossinline op: () -> T): T {
-    return if (Platform.isFxApplicationThread()) op()
-    else runLaterReturn { op() }
-}
+inline fun <T> ensureInFXThreadInPlace(crossinline op: () -> T): T = if (Platform.isFxApplicationThread()) op()
+else runLaterReturn { op() }
 
-inline fun ensureInFXThreadOrRunLater(crossinline op: () -> Unit) {
-    return if (Platform.isFxApplicationThread()) op()
-    else runLater { op() }
-}
+inline fun ensureInFXThreadOrRunLater(crossinline op: () -> Unit) = if (Platform.isFxApplicationThread()) op()
+else runLater { op() }
 
 
 fun runMuchLater(
@@ -85,11 +81,9 @@ fun runMuchLater(
 }
 
 
-inline fun <T : Any, V> inRunLater(crossinline op: T.(V) -> Unit): T.(V) -> Unit {
-    return {
-        runLater {
-            op(it)
-        }
+inline fun <T : Any, V> inRunLater(crossinline op: T.(V) -> Unit): T.(V) -> Unit = {
+    runLater {
+        op(it)
     }
 }
 

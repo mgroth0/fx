@@ -25,7 +25,6 @@ import matt.fx.control.chart.line.highperf.relinechart.xy.area.AreaChartForPriva
 import matt.fx.control.chart.linelike.LineLikeChartNodeWithOptionalSymbols
 import matt.fx.control.chart.linelike.LineLikeChartNodeWithOptionalSymbols.LineOrArea.line
 import matt.fx.graphics.anim.interp.MyInterpolator
-import java.util.*
 
 @ReWrittenFxClass(LineChart::class)
 open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
@@ -60,18 +59,12 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
             requestChartLayout()
         }
 
-        override fun getBean(): Any {
-            return this@MorePerfOptionsLineChart
-        }
+        override fun getBean(): Any = this@MorePerfOptionsLineChart
 
-        override fun getName(): String {
-            return "axisSortingPolicy"
-        }
+        override fun getName(): String = "axisSortingPolicy"
     }
 
-    fun getAxisSortingPolicy(): SortingPolicy {
-        return axisSortingPolicy.value
-    }
+    fun getAxisSortingPolicy(): SortingPolicy = axisSortingPolicy.value
 
     @Suppress("unused")
     fun setAxisSortingPolicy(value: SortingPolicy) {
@@ -79,9 +72,7 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
     }
 
     @Suppress("unused")
-    fun axisSortingPolicyProperty(): ObjectProperty<SortingPolicy> {
-        return axisSortingPolicy
-    }
+    fun axisSortingPolicyProperty(): ObjectProperty<SortingPolicy> = axisSortingPolicy
     /**
      * Construct a new LineChart with the given axis and data.
      *

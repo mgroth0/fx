@@ -25,135 +25,133 @@ import matt.obs.prop.BindableProperty
 private const val DEFAULT_RADIUS = 11.0
 
 abstract class HoverableSymbol(
-  char: String,
-  tooltipText: String,
-  baseColor: FXColor? = null,
-  radius: Double = DEFAULT_RADIUS
+    char: String,
+    tooltipText: String,
+    baseColor: FXColor? = null,
+    radius: Double = DEFAULT_RADIUS
 ): StackPaneW() {
-  companion object {
-	val hoverColor by lazy {
-	  DarkModeController.darkModeProp.binding {
-		if (it) FXColor.YELLOW else FXColor.BLUE
-	  }
-	}
-  }
+    companion object {
+        val hoverColor by lazy {
+            DarkModeController.darkModeProp.binding {
+                if (it) FXColor.YELLOW else FXColor.BLUE
+            }
+        }
+    }
 
-  private val circ = circle(radius = radius) {
-	stroke = Color.GRAY
-	strokeWidth = 2.0
-	this.fill = /*fill ?:*/ Color.TRANSPARENT
+    private val circ = circle(radius = radius) {
+        stroke = Color.GRAY
+        strokeWidth = 2.0
+        this.fill = /*fill ?:*/ Color.TRANSPARENT
 
-	sty {
-	  fxStroke = baseColor
-	}
+        sty {
+            fxStroke = baseColor
+        }
 
-  }
+    }
 
-  var fill: Paint?
-	get() = circ.fill
-	set(value) {
-	  circ.fill = value
-	}
+    var fill: Paint?
+        get() = circ.fill
+        set(value) {
+            circ.fill = value
+        }
 
-  private val txt = text(char) {
-	font = Font.font("Georgia").fixed().copy(
-	  posture = ITALIC,
-	  size = radius,
-	  weight = BOLD
-	).fx()
-	sty {
-	  fxFill = baseColor
-	}
-  }
-  private var builtTT = false
+    private val txt = text(char) {
+        font = Font.font("Georgia").fixed().copy(
+            posture = ITALIC,
+            size = radius,
+            weight = BOLD
+        ).fx()
+        sty {
+            fxFill = baseColor
+        }
+    }
+    private var builtTT = false
 
-  var char
-	get() = txt.text
-	set(value) {
-	  txt.text = value
-	}
+    var char
+        get() = txt.text
+        set(value) {
+            txt.text = value
+        }
 
-  init {
-	@Suppress("LeakingThis")
-	exactHeight = radius*2
-	@Suppress("LeakingThis")
-	exactWidth = radius * 2
-	hoverProperty.onChange { isHovering ->
+    init {
+        @Suppress("LeakingThis")
+        exactHeight = radius*2
+        @Suppress("LeakingThis")
+        exactWidth = radius * 2
+        hoverProperty.onChange { isHovering ->
 
-	  if (!builtTT) {
-		tt
-		builtTT = true
-	  }
-	  val e = if (isHovering) Color.YELLOW else null
-	  if (e != null) {
-		circ.sty {
-		  fxStroke = hoverColor.value
-		}
-		txt.sty {
-		  fxFill = hoverColor.value
-		}
-	  } else {
-		circ.sty {
-		  fxStroke = baseColor
-		}
-		txt.sty {
-		  fxFill = baseColor
-		}
-	  }
+            if (!builtTT) {
+                tt
+                builtTT = true
+            }
+            val e = if (isHovering) Color.YELLOW else null
+            if (e != null) {
+                circ.sty {
+                    fxStroke = hoverColor.value
+                }
+                txt.sty {
+                    fxFill = hoverColor.value
+                }
+            } else {
+                circ.sty {
+                    fxStroke = baseColor
+                }
+                txt.sty {
+                    fxFill = baseColor
+                }
+            }
 
-	}
-  }
+        }
+    }
 
 
-  protected open fun buildTooltipGraphic(text: String): ParentWrapper<*> {
-	return LabelWrapper(text)
-  }
+    protected open fun buildTooltipGraphic(text: String): ParentWrapper<*> = LabelWrapper(text)
 
-  val content: ParentWrapper<*> by lazy {
-	buildTooltipGraphic(tooltipText)
-  }
+    val content: ParentWrapper<*> by lazy {
+        buildTooltipGraphic(tooltipText)
+    }
 
-  private val tt by lazy {
+    private val tt by lazy {
 
-	tooltip(content = content) {
-	  comfortablyShowForeverUntilMouseMoved()
-	  showDelay = FXDuration.ZERO
-	  showDuration = FXDuration.INDEFINITE
-	  hideDelay = FXDuration.ZERO
-	}
+        tooltip(content = content) {
+            comfortablyShowForeverUntilMouseMoved()
+            showDelay = FXDuration.ZERO
+            showDuration = FXDuration.INDEFINITE
+            hideDelay = FXDuration.ZERO
+        }
 
-  }
+    }
 }
 
 
 fun ET.plusMinusSymbol(b: BindableProperty<Boolean>, radius: Double = DEFAULT_RADIUS, op: Dsl<PlusMinusSymbol> = {}) = PlusMinusSymbol(b, radius=radius).attachTo(this, op)
 
 open class PlusMinusSymbol(b: BindableProperty<Boolean>, radius: Double = DEFAULT_RADIUS): HoverableSymbol(
-  char = if (b.value) "-" else "+",
-  tooltipText = "",
-  radius=radius
+    char = if (b.value) "-" else "+",
+    tooltipText = "",
+    radius=radius
 ) {
-  init {
-	@Suppress("LeakingThis")
-	setOnMouseClicked {
-	  b.value = !b.value
-	  char = if (b.value) "-" else "+"
-	}
-  }
+    init {
+        @Suppress("LeakingThis")
+        setOnMouseClicked {
+            b.value = !b.value
+            char = if (b.value) "-" else "+"
+        }
+    }
 }
 
 fun ET.infoSymbol(text: String, op: Dsl<InfoSymbol> = {}) = InfoSymbol(text).attachTo(this, op)
 
 open class InfoSymbol(info: String): HoverableSymbol(
-  char = "i",
-  tooltipText = info
+    char = "i",
+    tooltipText = info
 )
 
 fun ET.tutorialSymbol(text: String, op: Dsl<TutorialSymbol> = {}) = TutorialSymbol(text).attachTo(this, op)
 
 open class TutorialSymbol(info: String): HoverableSymbol(
-  char = "?",
-  tooltipText = info
+    char = "?",
+    tooltipText = info
 )
 
 

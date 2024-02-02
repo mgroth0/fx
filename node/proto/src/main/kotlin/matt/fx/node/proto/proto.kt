@@ -74,25 +74,23 @@ fun iconSpacer() = VBoxWrapperImpl<NodeWrapper>().apply {
 }
 
 
-fun Direction.graphic(): NodeWrapperImpl<*>? {
-    return if (this == FORWARD) {
-        Icon("white/forward")
-    } else if (this == BACKWARD) {
+fun Direction.graphic(): NodeWrapperImpl<*>? = if (this == FORWARD) {
+    Icon("white/forward")
+} else if (this == BACKWARD) {
 
-        val canvas = CanvasWrapper(ICON_SIZE)
-        val image = IconImage("white/forward")
-        val xoff = 0.0 /*15.0*/
-        val gc: GraphicsContext = canvas.graphicsContext
-        gc.save()
-        gc.translate(image.width + xoff * 2, 0.0)
-        gc.scale(-1.0, 1.0)
-        gc.drawImage(image, xoff, 0.0)
-        gc.restore()
-        gc.drawImage(image, xoff, 0.0)
+    val canvas = CanvasWrapper(ICON_SIZE)
+    val image = IconImage("white/forward")
+    val xoff = 0.0 /*15.0*/
+    val gc: GraphicsContext = canvas.graphicsContext
+    gc.save()
+    gc.translate(image.width + xoff * 2, 0.0)
+    gc.scale(-1.0, 1.0)
+    gc.drawImage(image, xoff, 0.0)
+    gc.restore()
+    gc.drawImage(image, xoff, 0.0)
 
-        canvas
-    } else null
-}
+    canvas
+} else null
 
 
 class LinePrintTextArea : TextAreaWrapper() {

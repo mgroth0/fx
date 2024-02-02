@@ -8,22 +8,22 @@ import matt.fx.control.wrapper.menu.item.MenuItemWrapper
 import matt.obs.prop.BindableProperty
 
 class ValuedRadioMenuItem<V>(value: V, text: String, graphic: Node? = null): RadioMenuItemWrapper(text, graphic),
-																			 HasWritableValue<V> {
-  override val valueProperty = BindableProperty(value)
+    HasWritableValue<V> {
+    override val valueProperty = BindableProperty(value)
 }
 
 open class RadioMenuItemWrapper(
-  node: RadioMenuItem = RadioMenuItem(),
+    node: RadioMenuItem = RadioMenuItem(),
 ): MenuItemWrapper<RadioMenuItem>(node) {
 
-  constructor(text: String, graphic: Node? = null): this(RadioMenuItem(text, graphic))
+    constructor(text: String, graphic: Node? = null): this(RadioMenuItem(text, graphic))
 
 
-  var isSelected
-	get() = node.isSelected
-	set(value) {
-	  node.isSelected = value
-	}
+    var isSelected
+        get() = node.isSelected
+        set(value) {
+            node.isSelected = value
+        }
 
-  fun selectedProperty(): BooleanProperty = node.selectedProperty()
+    fun selectedProperty(): BooleanProperty = node.selectedProperty()
 }

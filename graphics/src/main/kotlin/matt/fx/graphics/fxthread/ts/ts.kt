@@ -14,92 +14,77 @@ import matt.obs.prop.ObsVal
 import matt.obs.watch.otherwatch.PropertyWatcher
 
 private class BlockingFXWatcher<T>(source: ObsVal<T>): MyBinding<T>(calcArg = {
-  source.value
+    source.value
 }) {
-  init {
-	source.onChange {
-	  ensureInFXThreadInPlace {
-		markInvalid()
-	  }
-	}
-  }
+    init {
+        source.onChange {
+            ensureInFXThreadInPlace {
+                markInvalid()
+            }
+        }
+    }
 }
 
 private class NonBlockingFXWatcher<T>(source: ObsVal<T>): MyBinding<T>(calcArg = {
-  source.value
+    source.value
 }) {
-  init {
-	source.onChange {
-	  ensureInFXThreadOrRunLater {
-		markInvalid()
-	  }
-	}
-  }
+    init {
+        source.onChange {
+            ensureInFXThreadOrRunLater {
+                markInvalid()
+            }
+        }
+    }
 }
 
 
-fun <T> ObsVal<T>.nonBlockingFXWatcher(): ObsVal<T> {
-  return (this as? NonBlockingFXWatcher<T>) ?: NonBlockingFXWatcher(this)
-}
+fun <T> ObsVal<T>.nonBlockingFXWatcher(): ObsVal<T> = (this as? NonBlockingFXWatcher<T>) ?: NonBlockingFXWatcher(this)
 
-fun <T> ObsVal<T>.blockingFXWatcher(): ObsVal<T> {
-
-  return (this as? BlockingFXWatcher<T>) ?: BlockingFXWatcher(this)
-
-}
+fun <T> ObsVal<T>.blockingFXWatcher(): ObsVal<T> = (this as? BlockingFXWatcher<T>) ?: BlockingFXWatcher(this)
 
 
 private class NonBlockingFXListWatcher<E>(source: MutableObsList<E>): BasicObservableListImpl<E>(source) {
-  init {
-	source.onChange {
-	  ensureInFXThreadOrRunLater {
-		mirror(it)
-	  }
-	}
-  }
+    init {
+        source.onChange {
+            ensureInFXThreadOrRunLater {
+                mirror(it)
+            }
+        }
+    }
 }
 
 private class BlockingFXListWatcher<E>(source: MutableObsList<E>): BasicObservableListImpl<E>(source) {
-  init {
-	source.onChange {
-	  ensureInFXThreadInPlace {
-		mirror(it)
-	  }
-	}
-  }
+    init {
+        source.onChange {
+            ensureInFXThreadInPlace {
+                mirror(it)
+            }
+        }
+    }
 }
 
 
-fun <E> MutableObsList<E>.nonBlockingFXWatcher(): MutableObsList<E> {
+fun <E> MutableObsList<E>.nonBlockingFXWatcher(): MutableObsList<E> = (this as? NonBlockingFXListWatcher<E>) ?: NonBlockingFXListWatcher(this)
 
-  return (this as? NonBlockingFXListWatcher<E>) ?: NonBlockingFXListWatcher(this)
-
-}
-
-fun <E> MutableObsList<E>.blockingFXWatcher(): MutableObsList<E> {
-
-
-  return (this as? BlockingFXListWatcher<E>) ?: BlockingFXListWatcher(this)
-
-}
+fun <E> MutableObsList<E>.blockingFXWatcher(): MutableObsList<E> = (this as? BlockingFXListWatcher<E>) ?: BlockingFXListWatcher(this)
 
 
 class FXThreadSafeProp<T>(value: T): BindableProperty<T>(value) {
-  override var value: T
-	get() = super.value
-	set(value) {
-	  runLater {
-		super.value = value
-	  }
-	}
+    override var value: T
+        get() = super.value
+        set(value) {
+            runLater {
+                super.value = value
+            }
+        }
 }
 
 fun <T: Any> ObsVal<T>.periodicFXUpdates() = GlobalFXWatcher.watch(this)
 
 object GlobalFXWatcher: PropertyWatcher(TheThreadProvider) {
-  override fun runOps(ops: List<Op>) {
-	runLater {
-	  ops.forEach { it() }
-	}
-  }
+    override fun runOps(ops: List<Op>) {
+        runLater {
+            ops.forEach { it() }
+        }
+    }
 }

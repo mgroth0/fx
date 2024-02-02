@@ -43,25 +43,17 @@ class DateTimePicker : DatePicker() {
         editor.commitValue()
     }
 
-    fun getDateTimeValue(): LocalDateTime? {
-        return dateTimeValue.get()
-    }
+    fun getDateTimeValue(): LocalDateTime? = dateTimeValue.get()
 
     fun setDateTimeValue(dateTimeValue: LocalDateTime?) {
         this.dateTimeValue.set(dateTimeValue)
     }
 
-    fun dateTimeValueProperty(): ObjectProperty<LocalDateTime?> {
-        return dateTimeValue
-    }
+    fun dateTimeValueProperty(): ObjectProperty<LocalDateTime?> = dateTimeValue
 
-    fun getFormat(): String {
-        return format.get()
-    }
+    fun getFormat(): String = format.get()
 
-    fun formatProperty(): ObjectProperty<String> {
-        return format
-    }
+    fun formatProperty(): ObjectProperty<String> = format
 
     fun setFormat(format: String) {
         this.format.set(format)

@@ -23,25 +23,25 @@ interface CellFactory<N, T, C : Cell<T>> {
 
 
     val cellFactoryProperty: Var<Callback<N, C>?>
-	@Open
-	var cellFactory: Callback<N, C>?
+    @Open
+    var cellFactory: Callback<N, C>?
         get() = cellFactoryProperty.value
         set(value) {
             cellFactoryProperty v value
         }
 
-	@Open fun setCellFact(value: (N) -> C) {
+    @Open fun setCellFact(value: (N) -> C) {
         cellFactoryProperty v value
     }
 
 
     fun simpleCellFactoryFromProps(op: (T) -> Pair<ObsS, ObsVal<NodeWrapper?>>)
 
-	@Open fun simpleCellFactory(prop: KProperty1<T, ObsS>) {
+    @Open fun simpleCellFactory(prop: KProperty1<T, ObsS>) {
         simpleCellFactoryFromProps { prop.get(it) to BindableProperty(null) }
     }
 
-	@Open fun simpleCellFactory(op: SimpleFactory<T>) {
+    @Open fun simpleCellFactory(op: SimpleFactory<T>) {
         val op2: (T) -> Pair<ObsS, ObsVal<NodeWrapper?>> = {
             val pair = op.call(it)
             BindableProperty(pair.first) to BindableProperty(pair.second)
@@ -49,7 +49,7 @@ interface CellFactory<N, T, C : Cell<T>> {
         simpleCellFactoryFromProps(op2)
     }
 
-	@Open fun firstPropCellFact(op: FirstPropFactory<T>) {
+    @Open fun firstPropCellFact(op: FirstPropFactory<T>) {
         val op2: (T) -> Pair<ObsS, ObsVal<NodeWrapper?>> = {
             val pair = op.call(it)
             pair.first to BindableProperty(pair.second)
@@ -57,7 +57,7 @@ interface CellFactory<N, T, C : Cell<T>> {
         simpleCellFactoryFromProps(op2)
     }
 
-	@Open fun secondPropCellFact(op: SecondPropFactory<T>) {
+    @Open fun secondPropCellFact(op: SecondPropFactory<T>) {
         val op2: (T) -> Pair<ObsS, ObsVal<NodeWrapper?>> = {
             val pair = op.call(it)
             BindableProperty(pair.first) to pair.second
@@ -65,7 +65,7 @@ interface CellFactory<N, T, C : Cell<T>> {
         simpleCellFactoryFromProps(op2)
     }
 
-	@Open fun bothPropCellFact(op: BothPropFactory<T>) {
+    @Open fun bothPropCellFact(op: BothPropFactory<T>) {
         val op2: (T) -> Pair<ObsS, ObsVal<NodeWrapper?>> = {
             val pair = op.call(it)
             pair.first to pair.second
@@ -92,7 +92,7 @@ fun interface BothPropFactory<P> {
 
 
 interface ListCellFactory<N, T> : CellFactory<N, T, ListCell<T>> {
-	@Open override fun simpleCellFactoryFromProps(op: (T) -> Pair<ObsS, ObsVal<NodeWrapper?>>) {
+    @Open override fun simpleCellFactoryFromProps(op: (T) -> Pair<ObsS, ObsVal<NodeWrapper?>>) {
         setCellFact {
             object : ListCell<T>() {
                 override fun updateItem(
@@ -106,7 +106,7 @@ interface ListCellFactory<N, T> : CellFactory<N, T, ListCell<T>> {
         }
     }
 
-	@Open fun useCheckbox(
+    @Open fun useCheckbox(
         converter: StringConverter<T>? = null,
         getter: (T) -> ObsB
     ) {
@@ -115,7 +115,7 @@ interface ListCellFactory<N, T> : CellFactory<N, T, ListCell<T>> {
 }
 
 interface TreeCellFactory<N, T> : CellFactory<N, T, TreeCell<T>> {
-	@Open override fun simpleCellFactoryFromProps(op: (T) -> Pair<ObsS, ObsVal<NodeWrapper?>>) {
+    @Open override fun simpleCellFactoryFromProps(op: (T) -> Pair<ObsS, ObsVal<NodeWrapper?>>) {
         setCellFact {
             object : TreeCell<T>() {
                 override fun updateItem(
@@ -132,7 +132,7 @@ interface TreeCellFactory<N, T> : CellFactory<N, T, TreeCell<T>> {
 
 
 interface TreeTableCellFactory<N, E, P> : CellFactory<N, P, TreeTableCell<E, P>> {
-	@Open override fun simpleCellFactoryFromProps(op: (P) -> Pair<ObsS, ObsVal<NodeWrapper?>>) {
+    @Open override fun simpleCellFactoryFromProps(op: (P) -> Pair<ObsS, ObsVal<NodeWrapper?>>) {
         setCellFact {
             object : TreeTableCell<E, P>() {
                 override fun updateItem(
@@ -148,7 +148,7 @@ interface TreeTableCellFactory<N, E, P> : CellFactory<N, P, TreeTableCell<E, P>>
 }
 
 interface TableCellFactory<N, E, P> : CellFactory<N, P, TableCell<E, P>> {
-	@Open override fun simpleCellFactoryFromProps(op: (P) -> Pair<ObsS, ObsVal<NodeWrapper?>>) {
+    @Open override fun simpleCellFactoryFromProps(op: (P) -> Pair<ObsS, ObsVal<NodeWrapper?>>) {
         setCellFact {
             object : TableCell<E, P>() {
                 override fun updateItem(

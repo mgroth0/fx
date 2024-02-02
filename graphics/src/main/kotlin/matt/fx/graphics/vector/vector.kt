@@ -75,149 +75,149 @@ fun Point3D.magnitude2(): Double = this.x*this.x + this.y*this.y + this.z*this.z
 // All them swizzles... :P
 
 val Point2D.xx: Point2D
-  get() = Point2D(this.x, this.x)
+    get() = Point2D(this.x, this.x)
 
 val Point2D.xy: Point2D
-  get() = Point2D(this.x, this.y)
+    get() = Point2D(this.x, this.y)
 
 val Point2D.yx: Point2D
-  get() = Point2D(this.y, this.x)
+    get() = Point2D(this.y, this.x)
 
 val Point2D.yy: Point2D
-  get() = Point2D(this.y, this.y)
+    get() = Point2D(this.y, this.y)
 
 val Point2D.xxx: Point3D
-  get() = Point3D(this.x, this.x, this.x)
+    get() = Point3D(this.x, this.x, this.x)
 
 val Point2D.xxy: Point3D
-  get() = Point3D(this.x, this.x, this.y)
+    get() = Point3D(this.x, this.x, this.y)
 
 val Point2D.xyx: Point3D
-  get() = Point3D(this.x, this.y, this.x)
+    get() = Point3D(this.x, this.y, this.x)
 
 val Point2D.xyy: Point3D
-  get() = Point3D(this.x, this.y, this.y)
+    get() = Point3D(this.x, this.y, this.y)
 
 val Point2D.yxx: Point3D
-  get() = Point3D(this.y, this.x, this.x)
+    get() = Point3D(this.y, this.x, this.x)
 
 val Point2D.yxy: Point3D
-  get() = Point3D(this.y, this.x, this.y)
+    get() = Point3D(this.y, this.x, this.y)
 
 val Point2D.yyx: Point3D
-  get() = Point3D(this.y, this.y, this.x)
+    get() = Point3D(this.y, this.y, this.x)
 
 val Point2D.yyy: Point3D
-  get() = Point3D(this.y, this.y, this.y)
+    get() = Point3D(this.y, this.y, this.y)
 
 
 val Point3D.xx: Point2D
-  get() = Point2D(this.x, this.x)
+    get() = Point2D(this.x, this.x)
 
 val Point3D.yx: Point2D
-  get() = Point2D(this.y, this.x)
+    get() = Point2D(this.y, this.x)
 
 val Point3D.zx: Point2D
-  get() = Point2D(this.z, this.x)
+    get() = Point2D(this.z, this.x)
 
 val Point3D.xy: Point2D
-  get() = Point2D(this.x, this.y)
+    get() = Point2D(this.x, this.y)
 
 val Point3D.yy: Point2D
-  get() = Point2D(this.y, this.y)
+    get() = Point2D(this.y, this.y)
 
 val Point3D.zy: Point2D
-  get() = Point2D(this.z, this.y)
+    get() = Point2D(this.z, this.y)
 
 val Point3D.xz: Point2D
-  get() = Point2D(this.x, this.z)
+    get() = Point2D(this.x, this.z)
 
 val Point3D.yz: Point2D
-  get() = Point2D(this.y, this.z)
+    get() = Point2D(this.y, this.z)
 
 val Point3D.zz: Point2D
-  get() = Point2D(this.z, this.z)
+    get() = Point2D(this.z, this.z)
 
 
 val Point3D.xxx: Point3D
-  get() = Point3D(this.x, this.x, this.x)
+    get() = Point3D(this.x, this.x, this.x)
 
 val Point3D.yxx: Point3D
-  get() = Point3D(this.y, this.x, this.x)
+    get() = Point3D(this.y, this.x, this.x)
 
 val Point3D.zxx: Point3D
-  get() = Point3D(this.z, this.x, this.x)
+    get() = Point3D(this.z, this.x, this.x)
 
 val Point3D.xyx: Point3D
-  get() = Point3D(this.x, this.y, this.x)
+    get() = Point3D(this.x, this.y, this.x)
 
 val Point3D.yyx: Point3D
-  get() = Point3D(this.y, this.y, this.x)
+    get() = Point3D(this.y, this.y, this.x)
 
 val Point3D.zyx: Point3D
-  get() = Point3D(this.z, this.y, this.x)
+    get() = Point3D(this.z, this.y, this.x)
 val Point3D.xzx: Point3D
-  get() = Point3D(this.x, this.z, this.x)
+    get() = Point3D(this.x, this.z, this.x)
 
 val Point3D.yzx: Point3D
-  get() = Point3D(this.y, this.z, this.x)
+    get() = Point3D(this.y, this.z, this.x)
 
 val Point3D.zzx: Point3D
-  get() = Point3D(this.z, this.z, this.x)
+    get() = Point3D(this.z, this.z, this.x)
 
 val Point3D.xxy: Point3D
-  get() = Point3D(this.x, this.x, this.y)
+    get() = Point3D(this.x, this.x, this.y)
 
 val Point3D.yxy: Point3D
-  get() = Point3D(this.y, this.x, this.y)
+    get() = Point3D(this.y, this.x, this.y)
 
 val Point3D.zxy: Point3D
-  get() = Point3D(this.z, this.x, this.y)
+    get() = Point3D(this.z, this.x, this.y)
 
 val Point3D.xyy: Point3D
-  get() = Point3D(this.x, this.y, this.y)
+    get() = Point3D(this.x, this.y, this.y)
 
 val Point3D.yyy: Point3D
-  get() = Point3D(this.y, this.y, this.y)
+    get() = Point3D(this.y, this.y, this.y)
 
 val Point3D.zyy: Point3D
-  get() = Point3D(this.z, this.y, this.y)
+    get() = Point3D(this.z, this.y, this.y)
 
 val Point3D.xzy: Point3D
-  get() = Point3D(this.x, this.z, this.y)
+    get() = Point3D(this.x, this.z, this.y)
 
 val Point3D.yzy: Point3D
-  get() = Point3D(this.y, this.z, this.y)
+    get() = Point3D(this.y, this.z, this.y)
 
 val Point3D.zzy: Point3D
-  get() = Point3D(this.z, this.z, this.y)
+    get() = Point3D(this.z, this.z, this.y)
 
 val Point3D.xxz: Point3D
-  get() = Point3D(this.x, this.x, this.z)
+    get() = Point3D(this.x, this.x, this.z)
 
 val Point3D.yxz: Point3D
-  get() = Point3D(this.y, this.x, this.z)
+    get() = Point3D(this.y, this.x, this.z)
 
 val Point3D.zxz: Point3D
-  get() = Point3D(this.z, this.x, this.z)
+    get() = Point3D(this.z, this.x, this.z)
 
 val Point3D.xyz: Point3D
-  get() = Point3D(this.x, this.y, this.z)
+    get() = Point3D(this.x, this.y, this.z)
 
 val Point3D.yyz: Point3D
-  get() = Point3D(this.y, this.y, this.z)
+    get() = Point3D(this.y, this.y, this.z)
 
 val Point3D.zyz: Point3D
-  get() = Point3D(this.z, this.y, this.z)
+    get() = Point3D(this.z, this.y, this.z)
 
 val Point3D.xzz: Point3D
-  get() = Point3D(this.x, this.z, this.z)
+    get() = Point3D(this.x, this.z, this.z)
 
 val Point3D.yzz: Point3D
-  get() = Point3D(this.y, this.z, this.z)
+    get() = Point3D(this.y, this.z, this.z)
 
 val Point3D.zzz: Point3D
-  get() = Point3D(this.z, this.z, this.z)
+    get() = Point3D(this.z, this.z, this.z)
 
 
 

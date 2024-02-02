@@ -84,30 +84,20 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
             requestAxisLayout()
         }
 
-        override fun getBean(): Any {
-            return this@MoreGenericValueAxis
-        }
+        override fun getBean(): Any = this@MoreGenericValueAxis
 
-        override fun getName(): String {
-            return "minorTickVisible"
-        }
+        override fun getName(): String = "minorTickVisible"
 
-        override fun getCssMetaData(): CssMetaData<MoreGenericValueAxis<out UpperBound>, Boolean> {
-            return StyleableProperties.MINOR_TICK_VISIBLE
-        }
+        override fun getCssMetaData(): CssMetaData<MoreGenericValueAxis<out UpperBound>, Boolean> = StyleableProperties.MINOR_TICK_VISIBLE
     }
 
-    fun isMinorTickVisible(): Boolean {
-        return minorTickVisible.get()
-    }
+    fun isMinorTickVisible(): Boolean = minorTickVisible.get()
 
     fun setMinorTickVisible(value: Boolean) {
         minorTickVisible.set(value)
     }
 
-    fun minorTickVisibleProperty(): BooleanProperty {
-        return minorTickVisible
-    }
+    fun minorTickVisibleProperty(): BooleanProperty = minorTickVisible
 
     /** The scale factor from data units to visual units  */
     internal val scale: ReadOnlyDoubleWrapper = object : ReadOnlyDoubleWrapper(this, "scale", 0.0) {
@@ -117,21 +107,15 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
         }
     }
 
-    fun getScale(): Double {
-        return scale.get()
-    }
+    fun getScale(): Double = scale.get()
 
     protected fun setScale(scale: Double) {
         this.scale.set(scale)
     }
 
-    fun scaleProperty(): ReadOnlyDoubleProperty {
-        return scale.readOnlyProperty
-    }
+    fun scaleProperty(): ReadOnlyDoubleProperty = scale.readOnlyProperty
 
-    fun scalePropertyImpl(): ReadOnlyDoubleWrapper {
-        return scale
-    }
+    fun scalePropertyImpl(): ReadOnlyDoubleWrapper = scale
 
 
     /** The value for the upper bound of this axis (maximum value). This is automatically set if auto ranging is on.  */
@@ -162,26 +146,18 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
                 requestAxisLayout()
             }
 
-            override fun getBean(): Any {
-                return this@MoreGenericValueAxis
-            }
+            override fun getBean(): Any = this@MoreGenericValueAxis
 
-            override fun getName(): String {
-                return "tickLabelFormatter"
-            }
+            override fun getName(): String = "tickLabelFormatter"
         }
 
-    fun getTickLabelFormatter(): StringConverter<in T> {
-        return tickLabelFormatter.value
-    }
+    fun getTickLabelFormatter(): StringConverter<in T> = tickLabelFormatter.value
 
     fun setTickLabelFormatter(value: StringConverter<in T>) {
         tickLabelFormatter.value = value
     }
 
-    fun tickLabelFormatterProperty(): ObjectProperty<StringConverter<in T>> {
-        return tickLabelFormatter
-    }
+    fun tickLabelFormatterProperty(): ObjectProperty<StringConverter<in T>> = tickLabelFormatter
 
     /** The length of minor tick mark lines. Set to 0 to not display minor tick marks.  */
     private val minorTickLength: DoubleProperty = object : StyleableDoubleProperty(5.0) {
@@ -189,30 +165,20 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
             requestAxisLayout()
         }
 
-        override fun getBean(): Any {
-            return this@MoreGenericValueAxis
-        }
+        override fun getBean(): Any = this@MoreGenericValueAxis
 
-        override fun getName(): String {
-            return "minorTickLength"
-        }
+        override fun getName(): String = "minorTickLength"
 
-        override fun getCssMetaData(): CssMetaData<MoreGenericValueAxis<out UpperBound>, Number> {
-            return StyleableProperties.MINOR_TICK_LENGTH
-        }
+        override fun getCssMetaData(): CssMetaData<MoreGenericValueAxis<out UpperBound>, Number> = StyleableProperties.MINOR_TICK_LENGTH
     }
 
-    fun getMinorTickLength(): Double {
-        return minorTickLength.get()
-    }
+    fun getMinorTickLength(): Double = minorTickLength.get()
 
     fun setMinorTickLength(value: Double) {
         minorTickLength.set(value)
     }
 
-    fun minorTickLengthProperty(): DoubleProperty {
-        return minorTickLength
-    }
+    fun minorTickLengthProperty(): DoubleProperty = minorTickLength
 
     /**
      * The number of minor tick divisions to be displayed between each major tick mark.
@@ -224,30 +190,20 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
             requestAxisLayout()
         }
 
-        override fun getBean(): Any {
-            return this@MoreGenericValueAxis
-        }
+        override fun getBean(): Any = this@MoreGenericValueAxis
 
-        override fun getName(): String {
-            return "minorTickCount"
-        }
+        override fun getName(): String = "minorTickCount"
 
-        override fun getCssMetaData(): CssMetaData<MoreGenericValueAxis<out UpperBound>, Number> {
-            return StyleableProperties.MINOR_TICK_COUNT
-        }
+        override fun getCssMetaData(): CssMetaData<MoreGenericValueAxis<out UpperBound>, Number> = StyleableProperties.MINOR_TICK_COUNT
     }
 
-    fun getMinorTickCount(): Int {
-        return minorTickCount.get()
-    }
+    fun getMinorTickCount(): Int = minorTickCount.get()
 
     fun setMinorTickCount(value: Int) {
         minorTickCount.set(value)
     }
 
-    fun minorTickCountProperty(): IntegerProperty {
-        return minorTickCount
-    }
+    fun minorTickCountProperty(): IntegerProperty = minorTickCount
     // -------------- CONSTRUCTORS -------------------------------------------------------------------------------------
     /**
      * Creates a auto-ranging matt.fx.control.wrapper.chart.axis.value.fxextend.ValueAxis.
@@ -470,9 +426,7 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
      * @param value The data value to work out display position for
      * @return display position
      */
-    override fun getDisplayPosition(value: T): Double {
-        return offset + (converter.convertToB(value) - currentLowerBound.get()) * getScale()
-    }
+    override fun getDisplayPosition(value: T): Double = offset + (converter.convertToB(value) - currentLowerBound.get()) * getScale()
 
     final /**
      * Gets the data value for the given display position on this axis. If the axis
@@ -482,9 +436,7 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
      * @return the nearest data value to the given pixel position or
      * null if not on axis;
      */
-    override fun getValueForDisplay(displayPosition: Double): T {
-        return toRealValue((displayPosition - offset) / getScale() + currentLowerBound.get())
-    }
+    override fun getValueForDisplay(displayPosition: Double): T = toRealValue((displayPosition - offset) / getScale() + currentLowerBound.get())
 
     final /**
      * Gets the display position of the zero line along this axis.
@@ -515,9 +467,7 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
      * @param value The data value to convert
      * @return Numeric value for the given data value
      */
-    override fun toNumericValue(value: T): Double {
-        return converter.convertToB(value)
-    }
+    override fun toNumericValue(value: T): Double = converter.convertToB(value)
 
     final /**
      * All axis values must be representable by some numeric value. This gets the data value for a given numeric value.
@@ -525,9 +475,7 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
      * @param value The numeric value to convert
      * @return Data value for given numeric value
      */
-    override fun toRealValue(value: Double): T {
-        return converter.convertToA(value)
-    }
+    override fun toRealValue(value: Double): T = converter.convertToA(value)
 
     // -------------- STYLESHEET HANDLING ------------------------------------------------------------------------------
     private object StyleableProperties {
@@ -537,10 +485,7 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
                 "-fx-minor-tick-length",
                 SizeConverter.getInstance(), 5.0
             ) {
-                override fun isSettable(n: MoreGenericValueAxis<out UpperBound>): Boolean {
-
-                    return n.minorTickLength.value == null || !n.minorTickLength.isBound
-                }
+                override fun isSettable(n: MoreGenericValueAxis<out UpperBound>): Boolean = n.minorTickLength.value == null || !n.minorTickLength.isBound
 
                 override fun getStyleableProperty(n: MoreGenericValueAxis<out UpperBound>): StyleableProperty<Number> {
                     @Suppress("UNCHECKED_CAST")
@@ -552,9 +497,7 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
                 "-fx-minor-tick-count",
                 SizeConverter.getInstance(), 5
             ) {
-                override fun isSettable(n: MoreGenericValueAxis<out UpperBound>): Boolean {
-                    return n.minorTickCount.value == null || !n.minorTickCount.isBound
-                }
+                override fun isSettable(n: MoreGenericValueAxis<out UpperBound>): Boolean = n.minorTickCount.value == null || !n.minorTickCount.isBound
 
                 override fun getStyleableProperty(n: MoreGenericValueAxis<out UpperBound>): StyleableProperty<Number> {
                     @Suppress("UNCHECKED_CAST")
@@ -568,9 +511,7 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
                 "-fx-minor-tick-visible",
                 true
             ) {
-                override fun isSettable(n: MoreGenericValueAxis<out UpperBound>): Boolean {
-                    return n.minorTickVisible.value == null || !n.minorTickVisible.isBound
-                }
+                override fun isSettable(n: MoreGenericValueAxis<out UpperBound>): Boolean = n.minorTickVisible.value == null || !n.minorTickVisible.isBound
 
                 override fun getStyleableProperty(n: MoreGenericValueAxis<out UpperBound>): StyleableProperty<Boolean> {
                     @Suppress("UNCHECKED_CAST")
@@ -604,9 +545,7 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
      * {@inheritDoc}
      * @since JavaFX 8.0
      */
-    override fun getCssMetaData(): List<CssMetaData<out Styleable?, *>>? {
-        return StyleableProperties.classCssMetaData
-    }
+    override fun getCssMetaData(): List<CssMetaData<out Styleable?, *>>? = StyleableProperties.classCssMetaData
 
 
 }

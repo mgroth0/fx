@@ -138,9 +138,7 @@ abstract class ObservableListWrapperImpl<E>(obs: ObservableList<E>) : FXBackedOb
         obs.removeListener(listener)
     }
 
-    final override fun subscribe(invalidationSubscriber: Runnable?): Subscription {
-        return obs.subscribe(invalidationSubscriber)
-    }
+    final override fun subscribe(invalidationSubscriber: Runnable?): Subscription = obs.subscribe(invalidationSubscriber)
 
     final override fun addListener(listener: ListChangeListener<E>) = obs.addListener(listener)
     final override fun removeListener(listener: ListChangeListener<E>) = obs.removeListener(listener)

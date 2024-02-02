@@ -15,64 +15,64 @@ fun <C: NodeWrapper> ET.flowpane(op: FlowPaneWrapper<C>.()->Unit = {}) = attach(
 
 open class FlowPaneWrapper<C: NodeWrapper>(node: FlowPane = FlowPane()): PaneWrapperImpl<FlowPane, C>(node) {
 
-  var orientation: Orientation
-	get() = node.orientation
-	set(value) {
-	  node.orientation = value
-	}
+    var orientation: Orientation
+        get() = node.orientation
+        set(value) {
+            node.orientation = value
+        }
 
-  val orientationProperty by lazy { node.orientationProperty().toNonNullableProp() }
+    val orientationProperty by lazy { node.orientationProperty().toNonNullableProp() }
 
-  var alignment: Pos
-	get() = node.alignment
-	set(value) {
-	  node.alignment = value
-	}
+    var alignment: Pos
+        get() = node.alignment
+        set(value) {
+            node.alignment = value
+        }
 
-  val alignmentProperty by lazy { node.alignmentProperty().toNonNullableProp() }
+    val alignmentProperty by lazy { node.alignmentProperty().toNonNullableProp() }
 
-  var rowValignment: VPos
-	get() = node.rowValignment
-	set(value) {
-	  node.rowValignment = value
-	}
+    var rowValignment: VPos
+        get() = node.rowValignment
+        set(value) {
+            node.rowValignment = value
+        }
 
-  val rowValignmentProperty by lazy { node.rowValignmentProperty().toNonNullableProp() }
+    val rowValignmentProperty by lazy { node.rowValignmentProperty().toNonNullableProp() }
 
-  var columnHalignment: HPos
-	get() = node.columnHalignment
-	set(value) {
-	  node.columnHalignment = value
-	}
+    var columnHalignment: HPos
+        get() = node.columnHalignment
+        set(value) {
+            node.columnHalignment = value
+        }
 
-  val columnHalignmentProperty by lazy { node.columnHalignmentProperty().toNonNullableProp() }
-
-
-  var hgap
-	get() = node.hgap
-	set(value) {
-	  node.hgap = value
-	}
-
-  val hgapProperty by lazy { node.hgapProperty().toNonNullableProp() }
+    val columnHalignmentProperty by lazy { node.columnHalignmentProperty().toNonNullableProp() }
 
 
-  var vgap
-	get() = node.vgap
-	set(value) {
-	  node.vgap = value
-	}
+    var hgap
+        get() = node.hgap
+        set(value) {
+            node.hgap = value
+        }
 
-  val vgapProperty by lazy { node.vgapProperty().toNonNullableProp() }
+    val hgapProperty by lazy { node.hgapProperty().toNonNullableProp() }
 
 
-  var prefWrapLength
-	get() = node.prefWrapLength
-	set(value) {
-	  node.prefWrapLength = value
-	}
+    var vgap
+        get() = node.vgap
+        set(value) {
+            node.vgap = value
+        }
 
-  val prefWrapLengthProperty by lazy { node.prefWrapLengthProperty().toNonNullableProp() }
+    val vgapProperty by lazy { node.vgapProperty().toNonNullableProp() }
+
+
+    var prefWrapLength
+        get() = node.prefWrapLength
+        set(value) {
+            node.prefWrapLength = value
+        }
+
+    val prefWrapLengthProperty by lazy { node.prefWrapLengthProperty().toNonNullableProp() }
 
 
 }

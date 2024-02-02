@@ -18,244 +18,244 @@ import matt.obs.prop.ObsVal
 import kotlin.time.Duration
 
 fun ET.swap(nodeProp: BindableProperty<out NW?>) = swapper(
-  prop = nodeProp
+    prop = nodeProp
 ) {
-  this
+    this
 }
 
 fun <P: Any, N: NodeWrapper> ET.swapperNeverNull(
-  prop: ObsVal<P>,
-  fadeOutDur: Duration? = null,
-  fadeInDur: Duration? = null,
-  op: (P).()->N,
+    prop: ObsVal<P>,
+    fadeOutDur: Duration? = null,
+    fadeInDur: Duration? = null,
+    op: (P).()->N,
 
-  ): Swapper<P, N> {
-  val swapper = Swapper<P, N>()
-  swapper.setupSwapping(prop, fadeOutDur = fadeOutDur, fadeInDur = fadeInDur, op = op)
-  return attach(swapper)
+): Swapper<P, N> {
+    val swapper = Swapper<P, N>()
+    swapper.setupSwapping(prop, fadeOutDur = fadeOutDur, fadeInDur = fadeInDur, op = op)
+    return attach(swapper)
 }
 
 fun <P, N: NodeWrapper> ET.swapper(
-  prop: ObsVal<P>,
-  nullMessage: String? = null,
-  fadeOutDur: Duration? = null,
-  fadeInDur: Duration? = null,
-  op: (P & Any).()->N,
+    prop: ObsVal<P>,
+    nullMessage: String? = null,
+    fadeOutDur: Duration? = null,
+    fadeInDur: Duration? = null,
+    op: (P & Any).()->N,
 
-  ): Swapper<P, N> {
-  val swapper = Swapper<P, N>()
-  swapper.setupSwapping(prop, nullMessage = nullMessage, fadeOutDur = fadeOutDur, fadeInDur = fadeInDur, op)
-  return attach(swapper)
+): Swapper<P, N> {
+    val swapper = Swapper<P, N>()
+    swapper.setupSwapping(prop, nullMessage = nullMessage, fadeOutDur = fadeOutDur, fadeInDur = fadeInDur, op)
+    return attach(swapper)
 }
 
 fun <P, N: NodeWrapper> ET.swapperNullable(
-  prop: ObsVal<P>,
-  fadeOutDur: Duration? = null,
-  fadeInDur: Duration? = null,
-  op: (P).()->N,
+    prop: ObsVal<P>,
+    fadeOutDur: Duration? = null,
+    fadeInDur: Duration? = null,
+    op: (P).()->N,
 ): Swapper<P, N> {
-  val swapper = Swapper<P, N>()
-  swapper.setupSwappingNullable(prop, fadeOutDur = fadeOutDur, fadeInDur = fadeInDur, op)
-  return attach(swapper)
+    val swapper = Swapper<P, N>()
+    swapper.setupSwappingNullable(prop, fadeOutDur = fadeOutDur, fadeInDur = fadeInDur, op)
+    return attach(swapper)
 }
 
 fun <P> ET.swapperR(
-  prop: ObsVal<P>,
-  nullMessage: String? = null,
-  fadeOutDur: Duration? = null,
-  fadeInDur: Duration? = null,
-  op: (ET).(P & Any)->Unit,
+    prop: ObsVal<P>,
+    nullMessage: String? = null,
+    fadeOutDur: Duration? = null,
+    fadeInDur: Duration? = null,
+    op: (ET).(P & Any)->Unit,
 ): Swapper<P, NW> {
-  val swapper = Swapper<P, NW>()
-  swapper.setupSwappingWithReceiver(prop, nullMessage = nullMessage, fadeOutDur = fadeOutDur, fadeInDur = fadeInDur, op)
-  return attach(swapper)
+    val swapper = Swapper<P, NW>()
+    swapper.setupSwappingWithReceiver(prop, nullMessage = nullMessage, fadeOutDur = fadeOutDur, fadeInDur = fadeInDur, op)
+    return attach(swapper)
 }
 
 fun <P> ET.swapperRNullable(
-  prop: ObsVal<P>,
-  fadeOutDur: Duration? = null,
-  fadeInDur: Duration? = null,
-  op: (ET).(P)->Unit,
+    prop: ObsVal<P>,
+    fadeOutDur: Duration? = null,
+    fadeInDur: Duration? = null,
+    op: (ET).(P)->Unit,
 ): Swapper<P, NW> {
-  val swapper = Swapper<P, NW>()
-  swapper.setupSwappingWithReceiverNullable(prop, fadeOutDur = fadeOutDur, fadeInDur = fadeInDur, op)
-  return attach(swapper)
+    val swapper = Swapper<P, NW>()
+    swapper.setupSwappingWithReceiverNullable(prop, fadeOutDur = fadeOutDur, fadeInDur = fadeInDur, op)
+    return attach(swapper)
 }
 
 open class Swapper<P, C: NodeWrapper>: RegionWrapperImpl<Region, C>(AnchorPane()) {
 
-  private val anchor get() = this@Swapper.node as AnchorPane
+    private val anchor get() = this@Swapper.node as AnchorPane
 
 
-  private var fxWatcherProp: ObsVal<P>? = null
-  private var listener: (MyListenerInter<*>)? = null
+    private var fxWatcherProp: ObsVal<P>? = null
+    private var listener: (MyListenerInter<*>)? = null
 
-  @Synchronized
-  fun setupSwappingWithReceiver(
-	prop: ObsVal<P>,
-	nullMessage: String? = null,
-	fadeOutDur: Duration? = null,
-	fadeInDur: Duration? = null,
-	op: (ET).(P & Any)->Unit,
+    @Synchronized
+    fun setupSwappingWithReceiver(
+        prop: ObsVal<P>,
+        nullMessage: String? = null,
+        fadeOutDur: Duration? = null,
+        fadeInDur: Duration? = null,
+        op: (ET).(P & Any)->Unit,
 
-	) {
-	initSetup(prop)
-	fun Swapper<P, C>.refresh(value: P?) {
-	  if (value == null) {
-		if (nullMessage != null) {
-		  setInnerNode(nullMessageNode(nullMessage), fadeOutDur = fadeOutDur, fadeInDur = fadeInDur)
-		} else {
-		  nullValueButNoMessage()
-		}
-	  } else {
-		val proxy = ProxyEventTargetWrapper {
-		  setInnerNode(it, fadeOutDur = fadeOutDur, fadeInDur = fadeInDur)
-		}
-		proxy.op(value)
-	  }
-	}
-	listener = fxWatcherProp!!.onChangeWithWeak(this) { swap, it ->
-	  swap.refresh(it)
-	}
-	refresh(fxWatcherProp!!.value)
-  }
+    ) {
+        initSetup(prop)
+        fun Swapper<P, C>.refresh(value: P?) {
+            if (value == null) {
+                if (nullMessage != null) {
+                    setInnerNode(nullMessageNode(nullMessage), fadeOutDur = fadeOutDur, fadeInDur = fadeInDur)
+                } else {
+                    nullValueButNoMessage()
+                }
+            } else {
+                val proxy = ProxyEventTargetWrapper {
+                    setInnerNode(it, fadeOutDur = fadeOutDur, fadeInDur = fadeInDur)
+                }
+                proxy.op(value)
+            }
+        }
+        listener = fxWatcherProp!!.onChangeWithWeak(this) { swap, it ->
+            swap.refresh(it)
+        }
+        refresh(fxWatcherProp!!.value)
+    }
 
-  @Synchronized
-  fun setupSwappingWithReceiverNullable(
-	prop: ObsVal<P>,
-	fadeOutDur: Duration? = null,
-	fadeInDur: Duration? = null,
-	op: (ET).(P)->Unit,
+    @Synchronized
+    fun setupSwappingWithReceiverNullable(
+        prop: ObsVal<P>,
+        fadeOutDur: Duration? = null,
+        fadeInDur: Duration? = null,
+        op: (ET).(P)->Unit,
 
-	) {
-	initSetup(prop)
-	fun Swapper<P, C>.refresh(value: P) {
-	  val proxy = ProxyEventTargetWrapper {
-		setInnerNode(it, fadeOutDur = fadeOutDur, fadeInDur = fadeInDur)
-	  }
-	  proxy.op(value)
-	}
-	listener = fxWatcherProp!!.onChangeWithWeak(this) { swap, it ->
-	  swap.refresh(it)
-	}
-	refresh(fxWatcherProp!!.value)
-  }
+    ) {
+        initSetup(prop)
+        fun Swapper<P, C>.refresh(value: P) {
+            val proxy = ProxyEventTargetWrapper {
+                setInnerNode(it, fadeOutDur = fadeOutDur, fadeInDur = fadeInDur)
+            }
+            proxy.op(value)
+        }
+        listener = fxWatcherProp!!.onChangeWithWeak(this) { swap, it ->
+            swap.refresh(it)
+        }
+        refresh(fxWatcherProp!!.value)
+    }
 
-  @Synchronized
-  fun setupSwapping(
-	prop: ObsVal<P>,
-	nullMessage: String? = null,
-	fadeOutDur: Duration? = null,
-	fadeInDur: Duration? = null,
-	op: (P & Any).()->C,
+    @Synchronized
+    fun setupSwapping(
+        prop: ObsVal<P>,
+        nullMessage: String? = null,
+        fadeOutDur: Duration? = null,
+        fadeInDur: Duration? = null,
+        op: (P & Any).()->C,
 
-	) {
-	initSetup(prop)
-	fun Swapper<P, C>.refresh(value: P?) {
-	  if (value == null) {
-		if (nullMessage != null) {
-		  setInnerNode(nullMessageNode(nullMessage), fadeOutDur = fadeOutDur, fadeInDur = fadeInDur)
-		} else {
-		  nullValueButNoMessage()
-		}
-	  } else {
-		setInnerNode(op(value), fadeOutDur = fadeOutDur, fadeInDur = fadeInDur)
-	  }
-	}
-	this.listener = fxWatcherProp!!.onChangeWithWeak(this) { swap, it ->
-	  swap.refresh(it)
-	}
-	refresh(fxWatcherProp!!.value)
-  }
+    ) {
+        initSetup(prop)
+        fun Swapper<P, C>.refresh(value: P?) {
+            if (value == null) {
+                if (nullMessage != null) {
+                    setInnerNode(nullMessageNode(nullMessage), fadeOutDur = fadeOutDur, fadeInDur = fadeInDur)
+                } else {
+                    nullValueButNoMessage()
+                }
+            } else {
+                setInnerNode(op(value), fadeOutDur = fadeOutDur, fadeInDur = fadeInDur)
+            }
+        }
+        this.listener = fxWatcherProp!!.onChangeWithWeak(this) { swap, it ->
+            swap.refresh(it)
+        }
+        refresh(fxWatcherProp!!.value)
+    }
 
-  @Synchronized
-  fun setupSwappingNullable(
-	prop: ObsVal<P>,
-	fadeOutDur: Duration? = null,
-	fadeInDur: Duration? = null,
-	op: (P).()->C,
-  ) {
-	initSetup(prop)
-	fun Swapper<P, C>.refresh(value: P) {
-	  setInnerNode(op(value), fadeOutDur = fadeOutDur, fadeInDur = fadeInDur)
-	}
-	this.listener = fxWatcherProp!!.onChangeWithWeak(this) { swap, it ->
-	  swap.refresh(it)
-	}
-	refresh(fxWatcherProp!!.value)
-  }
-
-
-  private fun initSetup(prop: ObsVal<P>) {
-	fxWatcherProp?.removeListener(listener!!)
-	fxWatcherProp = prop.nonBlockingFXWatcher()
-  }
-
-  val nullNodeFact = BindableProperty<(String)->NodeWrapper> {
-	TextWrapper(it)
-  }
-
-  private fun nullMessageNode(nullMessage: String) = nullNodeFact.value(nullMessage)
+    @Synchronized
+    fun setupSwappingNullable(
+        prop: ObsVal<P>,
+        fadeOutDur: Duration? = null,
+        fadeInDur: Duration? = null,
+        op: (P).()->C,
+    ) {
+        initSetup(prop)
+        fun Swapper<P, C>.refresh(value: P) {
+            setInnerNode(op(value), fadeOutDur = fadeOutDur, fadeInDur = fadeInDur)
+        }
+        this.listener = fxWatcherProp!!.onChangeWithWeak(this) { swap, it ->
+            swap.refresh(it)
+        }
+        refresh(fxWatcherProp!!.value)
+    }
 
 
-  private fun nullValueButNoMessage() {
-	anchor.children.clear()
-	clearLayoutProxyNetwork()
-  }
+    private fun initSetup(prop: ObsVal<P>) {
+        fxWatcherProp?.removeListener(listener!!)
+        fxWatcherProp = prop.nonBlockingFXWatcher()
+    }
 
-  private fun setInnerNode(
-	node: NodeWrapper,
-	fadeOutDur: Duration? = null,
-	fadeInDur: Duration? = null
-  ) {
-	if (fadeOutDur != null) {
-	  fade(
-		time = fadeOutDur.toFXDuration(),
-		opacity = 0.0
-	  ) {
-		setOnFinished {
-		  //		  println("half way! opacity is now $opacity")
-		  anchor.children.removeAll { it != node.node }
-		  addInnerNode(node, fadeInDur = fadeInDur)
-		}
-	  }
-	} else {
-	  anchor.children.removeAll { it != node.node }
-	  addInnerNode(node, fadeInDur = fadeInDur)
-	}
-  }
+    val nullNodeFact = BindableProperty<(String)->NodeWrapper> {
+        TextWrapper(it)
+    }
 
-  private fun addInnerNode(
-	node: NodeWrapper,
-	fadeInDur: Duration? = null
-  ) {
-	setAsLayoutProxyForAndProxiedFrom(node)
-	if (node.node !in anchor.children) anchor.children.add(node.node)
-	if (fadeInDur != null) {
-	  fade(
-		time = fadeInDur.toFXDuration(),
-		opacity = 1.0,
-	  ) {
-		setOnFinished {
-		  //		  println("done! opacity is now $opacity")
-		  node.setAsTopAnchor(0.0)
-		  node.setAsBottomAnchor(0.0)
-		  node.setAsLeftAnchor(0.0)
-		  node.setAsRightAnchor(0.0)
-		}
-	  }
-	} else {
-	  opacity = 1.0
-	  node.setAsTopAnchor(0.0)
-	  node.setAsBottomAnchor(0.0)
-	  node.setAsLeftAnchor(0.0)
-	  node.setAsRightAnchor(0.0)
-	}
+    private fun nullMessageNode(nullMessage: String) = nullNodeFact.value(nullMessage)
 
-  }
 
-  final override fun addChild(child: NodeWrapper, index: Int?) {
-	TODO()
-  }
+    private fun nullValueButNoMessage() {
+        anchor.children.clear()
+        clearLayoutProxyNetwork()
+    }
+
+    private fun setInnerNode(
+        node: NodeWrapper,
+        fadeOutDur: Duration? = null,
+        fadeInDur: Duration? = null
+    ) {
+        if (fadeOutDur != null) {
+            fade(
+                time = fadeOutDur.toFXDuration(),
+                opacity = 0.0
+            ) {
+                setOnFinished {
+                    //		  println("half way! opacity is now $opacity")
+                    anchor.children.removeAll { it != node.node }
+                    addInnerNode(node, fadeInDur = fadeInDur)
+                }
+            }
+        } else {
+            anchor.children.removeAll { it != node.node }
+            addInnerNode(node, fadeInDur = fadeInDur)
+        }
+    }
+
+    private fun addInnerNode(
+        node: NodeWrapper,
+        fadeInDur: Duration? = null
+    ) {
+        setAsLayoutProxyForAndProxiedFrom(node)
+        if (node.node !in anchor.children) anchor.children.add(node.node)
+        if (fadeInDur != null) {
+            fade(
+                time = fadeInDur.toFXDuration(),
+                opacity = 1.0,
+            ) {
+                setOnFinished {
+                    //		  println("done! opacity is now $opacity")
+                    node.setAsTopAnchor(0.0)
+                    node.setAsBottomAnchor(0.0)
+                    node.setAsLeftAnchor(0.0)
+                    node.setAsRightAnchor(0.0)
+                }
+            }
+        } else {
+            opacity = 1.0
+            node.setAsTopAnchor(0.0)
+            node.setAsBottomAnchor(0.0)
+            node.setAsLeftAnchor(0.0)
+            node.setAsRightAnchor(0.0)
+        }
+
+    }
+
+    final override fun addChild(child: NodeWrapper, index: Int?) {
+        TODO()
+    }
 }
 

@@ -138,13 +138,11 @@ private class PropListLabel<T>(
     }
 }
 
-fun userString(o: Any?): String {
-    return when (o) {
-        null        -> "null"
-        is Array<*> -> o.joinToString(
-            prefix = "[", postfix = "]", separator = ","
-        )
+fun userString(o: Any?): String = when (o) {
+    null        -> "null"
+    is Array<*> -> o.joinToString(
+        prefix = "[", postfix = "]", separator = ","
+    )
 
-        else        -> o.toString()
-    }
+    else        -> o.toString()
 }

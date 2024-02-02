@@ -372,10 +372,10 @@ private fun matt.file.JioFile.createNodeInner(renderHTMLAndSVG: Boolean = false)
                     prefWidth = 600.0
                 }
 
-                else               -> err("how to make node for files with extension:${singleExtension}")
+                else               -> err("how to make node for files with extension:$singleExtension")
             }
 
-            else       -> err("how to make node for files with extension:${singleExtension}")
+            else       -> err("how to make node for files with extension:$singleExtension")
         }
     } else return VBoxWrapperImpl(TextWrapper("file $this does not exist"))
 }

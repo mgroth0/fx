@@ -117,7 +117,10 @@ class ContextMenuWrapper(node: ContextMenu = ContextMenu()) : WindowWrapper<Cont
         keyCombination: KeyCombination? = null,
         graphic: Node? = null,
         op: MenuItemWrapper<*>.() -> Unit = {}
-    ) = SimpleMenuItem().apply { this.text = name; this.graphic = graphic }.also {
+    ) = SimpleMenuItem().apply {
+        this.text = name;
+        this.graphic = graphic
+    }.also {
         keyCombination?.apply { it.accelerator = this }
         graphic?.apply { it.graphic = this }
         op(it)

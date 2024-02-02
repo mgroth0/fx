@@ -11,16 +11,16 @@ fun backgroundFromColor(c: Paint) = Background(backgroundFill(c))
 
 
 fun Var<Background?>.ensureLastFillIsIfPresent(paint: Paint) {
-  val currentBG = value
-  if (currentBG != null) {
-	val currentBGFills = currentBG.fills
-	if (currentBGFills.last().fill != paint) {
-	  val standards = currentBGFills.filter { it.fill != paint }
-	  val example = standards.first()
-	  val cool = BackgroundFill(paint, example.radii, example.insets)
-	  value = Background(*standards.toTypedArray(), cool)
-	}
-  }
+    val currentBG = value
+    if (currentBG != null) {
+        val currentBGFills = currentBG.fills
+        if (currentBGFills.last().fill != paint) {
+            val standards = currentBGFills.filter { it.fill != paint }
+            val example = standards.first()
+            val cool = BackgroundFill(paint, example.radii, example.insets)
+            value = Background(*standards.toTypedArray(), cool)
+        }
+    }
 }
 
 

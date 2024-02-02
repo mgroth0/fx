@@ -5,11 +5,11 @@ import matt.lang.anno.Open
 import matt.obs.prop.Var
 
 interface HasWritableValue<V>: HasConstValue<V> {
-  val valueProperty: Var<V>
-	@Open
-	override var value: V
-	get() = valueProperty.value
-	set(value) {
-	  valueProperty.value = value
-	}
+    val valueProperty: Var<V>
+    @Open
+    override var value: V
+        get() = valueProperty.value
+        set(value) {
+            valueProperty.value = value
+        }
 }

@@ -16,7 +16,7 @@ import matt.fx.control.chart.line.highperf.relinechart.xy.XYChartForPackagePriva
 import matt.fx.control.chart.linelike.LineLikeChartNodeWithOptionalSymbols.LineOrArea.area
 import matt.fx.control.css.BooleanCssMetaData
 import matt.lang.go
-import java.util.*
+import java.util.Collections
 
 
 abstract class LineLikeChartNode<X, Y>(
@@ -51,7 +51,7 @@ abstract class LineLikeChartNodeWithOptionalSymbols<X, Y>(
     xAxis: AxisForPackagePrivateProps<X>,
     yAxis: AxisForPackagePrivateProps<Y>,
 
-    ) : LineLikeChartNode<X, Y>(xAxis, yAxis) {
+) : LineLikeChartNode<X, Y>(xAxis, yAxis) {
 
     val createSymbols: BooleanProperty = object : StyleableBooleanProperty(true) {
         override fun invalidated() {
@@ -72,26 +72,16 @@ abstract class LineLikeChartNodeWithOptionalSymbols<X, Y>(
             requestChartLayout()
         }
 
-        override fun getBean(): Any {
-            return this@LineLikeChartNodeWithOptionalSymbols
-        }
+        override fun getBean(): Any = this@LineLikeChartNodeWithOptionalSymbols
 
-        override fun getName(): String {
-            return "createSymbols"
-        }
+        override fun getName(): String = "createSymbols"
 
-        override fun getCssMetaData(): CssMetaData<out LineLikeChartNodeWithOptionalSymbols<*, *>, Boolean> {
-            return styleableProps.CREATE_SYMBOLS
-        }
+        override fun getCssMetaData(): CssMetaData<out LineLikeChartNodeWithOptionalSymbols<*, *>, Boolean> = styleableProps.CREATE_SYMBOLS
     }
 
-    fun createSymbolsProperty(): BooleanProperty {
-        return createSymbols
-    }
+    fun createSymbolsProperty(): BooleanProperty = createSymbols
 
-    fun getCreateSymbols(): Boolean {
-        return createSymbols.value
-    }
+    fun getCreateSymbols(): Boolean = createSymbols.value
 
     fun setCreateSymbols(value: Boolean) {
         createSymbols.value = value
@@ -155,14 +145,10 @@ abstract class LineLikeChartNodeWithOptionalSymbols<X, Y>(
             "-fx-create-symbols", true
         ) {
 
-            override fun isSettable(node: T): Boolean {
-                return !node.createSymbolsIsBound()
-            }
+            override fun isSettable(node: T): Boolean = !node.createSymbolsIsBound()
 
             @Suppress("UNCHECKED_CAST")
-            override fun getStyleableProperty(node: T): StyleableProperty<Boolean> {
-                return node.createSymbolsProperty() as StyleableProperty<Boolean>
-            }
+            override fun getStyleableProperty(node: T): StyleableProperty<Boolean> = node.createSymbolsProperty() as StyleableProperty<Boolean>
         }
 
 

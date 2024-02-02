@@ -88,7 +88,7 @@ interface StyleableWrapper {
 
     @Open    fun styleInfo(): String {
         val r = LineAppender()
-        r += ("${this::class}->${typeSelector}")
+        r += ("${this::class}->$typeSelector")
 
         r += ("\tstyleclasses")
         styleClass.forEach { sc ->
@@ -100,11 +100,11 @@ interface StyleableWrapper {
             r += ("\t\t$pc->${pc.pseudoClassName}")
         }
         r += ("\tsample")
-        r += ("\t\t${style}")
+        r += ("\t\t$style")
         if (false) {    // string too big!
             r += ("\tmeta (${cssMetaData.size})")
             cssMetaData.forEach {
-                r += ("\t\t${it}")
+                r += ("\t\t$it")
             }
         }
         return r.toString()
@@ -116,9 +116,7 @@ enum class FXStyle {
     fill, `text-fill`, `font-size`, `font-family`, `font-weight`, `font-style`;
 
     companion object {
-        fun of(vararg pairs: Pair<FXStyle, String>): String {
-            return pairs.joinToString("; ") { "${it.first.key}: ${it.second}" }
-        }
+        fun of(vararg pairs: Pair<FXStyle, String>): String = pairs.joinToString("; ") { "${it.first.key}: ${it.second}" }
     }
 
     val key = "-fx-$name"
@@ -128,8 +126,8 @@ fun String.parseFXStyle() =
     split(";").map { it.substringBefore(":") to it.substringAfter(":") }.associate { (key, value) ->
         (FXStyle.entries.firstOrNull { it.key == key.trim() } ?: err(
             """
-	unknown fx style key: $key in "${this@parseFXStyle}"
-  """.trimIndent()
+            unknown fx style key: $key in "${this@parseFXStyle}"
+            """.trimIndent()
         )) to value
     }
 

@@ -243,9 +243,7 @@ import matt.lang.classname.jvmQualifiedClassName
 
 
 object WrapperServiceImpl : WrapperService {
-    override fun <E : EventTarget> wrapped(e: E): EventTargetWrapper {
-        return e.wrapped()
-    }
+    override fun <E : EventTarget> wrapped(e: E): EventTargetWrapper = e.wrapped()
 }
 
 inline fun <reified W : EventTargetWrapper> EventTarget.findWrapper(): W? {
@@ -346,7 +344,7 @@ val constructorMap = lazyMap<KType, KFunction<EventTargetWrapper>> { typ ->
 	.mapNotNull { it.primaryConstructor }
 	.first {
 	  it.parameters.first().type.isSupertypeOf(typ)
-	  *//*(it.parameters.first().type.classifier as KClass<*>).qualifiedName == qName*//*
+ *//*(it.parameters.first().type.classifier as KClass<*>).qualifiedName == qName*//*
 	}
 }*/
 

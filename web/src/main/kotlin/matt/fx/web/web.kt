@@ -8,7 +8,7 @@ import javafx.scene.input.KeyCode
 import javafx.scene.layout.Priority
 import javafx.scene.web.WebEngine
 import javafx.scene.web.WebView
-import matt.lang.model.file.FsFile
+import matt.fx.base.mtofx.createROFXPropWrapper
 import matt.fx.control.lang.actionbutton
 import matt.fx.graphics.clip.copyToClipboard
 import matt.fx.graphics.fxthread.runLater
@@ -25,9 +25,9 @@ import matt.fx.graphics.wrapper.stage.StageWrapper
 import matt.fx.web.img.ImageRefreshingWebView
 import matt.gui.interact.openInNewWindow
 import matt.gui.menu.context.mcontextmenu
-import matt.fx.base.mtofx.createROFXPropWrapper
 import matt.lang.NEVER
 import matt.lang.assertions.require.requireNotEqual
+import matt.lang.model.file.FsFile
 import netscape.javascript.JSObject
 import org.intellij.lang.annotations.Language
 
@@ -232,9 +232,9 @@ fun WebViewWrapper.scrollTo(
 ) {
 
     engine.executeScript(
-        """
-	  window.scrollTo($xPos,$yPos)
-	""".trimIndent()
+"""
+window.scrollTo($xPos,$yPos)
+""".trimIndent()
     )
 
 }
@@ -243,9 +243,9 @@ fun WebViewWrapper.scrollTo(
 fun WebViewWrapper.scrollMult(factor: Double) {
 
     engine.executeScript(
-        """
-	  window.scrollTo(window.scrollX*${factor},window.scrollY*${factor})
-	""".trimIndent()
+"""
+window.scrollTo(window.scrollX*$factor,window.scrollY*$factor)
+""".trimIndent()
     )
 
 }
@@ -371,7 +371,7 @@ fun WebViewWrapper.interceptConsole() {
             console.log = function(message) {
                 java.log(message)
             }
-        """.trimIndent()
+            """.trimIndent()
         )
     }
 }
@@ -380,7 +380,7 @@ fun WebViewWrapper.interceptConsole() {
 @Suppress("unused")
 class JavaBridge {
     fun log(text: String?) {
-        println("WebView->JavaBridge:${text}")
+        println("WebView->JavaBridge:$text")
     }
 
     fun copy(s: Any) {
@@ -451,9 +451,9 @@ class WebViewWrapper(node: WebView = WebView()) : ParentWrapperImpl<WebView, Nod
         y: Double
     ) {
         engine.executeScript(
-            """
-	  window.scrollBy($x,$y)
-	""".trimIndent()
+"""
+window.scrollBy($x,$y)
+""".trimIndent()
         )
     }
 

@@ -9,9 +9,9 @@ import javafx.scene.transform.Transform
 import javafx.scene.transform.Translate
 import matt.fx.graphics.wrapper.SingularEventTargetWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
+import matt.lang.assertions.require.requireEquals
 import matt.lang.classname.JvmQualifiedClassName
 import matt.lang.classname.jvmQualifiedClassName
-import matt.lang.assertions.require.requireEquals
 
 abstract class TransformWrapper<E : Transform>(node: E) : SingularEventTargetWrapper<E>(node) {
     final override val properties: ObservableMap<Any, Any?>

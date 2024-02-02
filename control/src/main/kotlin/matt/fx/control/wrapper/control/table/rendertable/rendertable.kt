@@ -15,31 +15,27 @@ import matt.obs.prop.toVarProp
 class FXTableRenderer : FormattedTableRenderer<VBoxWrapper<*>> {
 
 
-    override fun render(figData: FormattedTabularData<*, *, *>): VBoxWrapper<*> {
+    override fun render(figData: FormattedTabularData<*, *, *>): VBoxWrapper<*> = buildNode {
+        v {
+            figData.title?.go {
+                label(it)
+            }
+            tableview(items = figData.rows().map { it.value }.toBasicObservableList()) {
 
-        return buildNode {
-            v {
-                figData.title?.go {
-                    label(it)
+                column(
+                    title = "row name",
+                ) {
+                    it.value.toVarProp()
                 }
-                tableview(items = figData.rows().map { it.value }.toBasicObservableList()) {
 
+                figData.columns().forEach { col ->
                     column(
-                        title = "row name",
+                        title = col.value
                     ) {
-                        it.value.toVarProp()
-                    }
-
-                    figData.columns().forEach { col ->
-                        column(
-                            title = col.value
-                        ) {
-                            col[it.value].toVarProp()
-                        }
+                        col[it.value].toVarProp()
                     }
                 }
             }
-
         }
 
     }

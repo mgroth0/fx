@@ -9,28 +9,28 @@ import javafx.stage.Stage
 import matt.fx.graphics.wrapper.node.NodeWrapper
 
 fun <T: Event> NodeWrapper.filterAndConsume(eventType: EventType<T>, handler: EventHandler<T>) {
-  addEventFilter(eventType) {
-	handler.handle(it)
-	it.consume()
-  }
+    addEventFilter(eventType) {
+        handler.handle(it)
+        it.consume()
+    }
 }
 
 fun <T: Event> NodeWrapper.handleAndConsume(eventType: EventType<T>, handler: EventHandler<T>) {
-  addEventHandler(eventType) {
-	handler.handle(it)
-	it.consume()
-  }
+    addEventHandler(eventType) {
+        handler.handle(it)
+        it.consume()
+    }
 }
 
 
 
 class DummyAppForFxThreadForScreen: Application() {
-  override fun start(primaryStage: Stage?) = Unit
+    override fun start(primaryStage: Stage?) = Unit
 }
 
 
 val String.fxWidth: Double
-  get() = Text(this).layoutBounds.width
+    get() = Text(this).layoutBounds.width
 
 
 

@@ -51,7 +51,7 @@ import matt.fx.control.popup.popupcontrol.node.MyPopupControl
 import matt.fx.control.popup.popupcontrol.node.bridge.MyPopUpCSSBridge
 import matt.fx.control.popup.tooltip.node.skin.MyTooltipSkin
 import matt.lang.addAll
-import java.util.*
+import java.util.Collections
 
 
 /*
@@ -421,10 +421,10 @@ class MyTooltip @JvmOverloads constructor(text: String? = null) : MyPopupControl
 
     fun activatedProperty(): ReadOnlyBooleanProperty = activated.readOnlyProperty
     /* *************************************************************************
-       *                                                                         *
-       * Methods                                                                 *
-       *                                                                         *
-       **************************************************************************/
+     *                                                                         *
+     * Methods                                                                 *
+     *                                                                         *
+     **************************************************************************/
     /** {@inheritDoc}  */
     override fun createDefaultSkin(): Skin<*> = MyTooltipSkin(this)
 
@@ -435,10 +435,10 @@ class MyTooltip @JvmOverloads constructor(text: String? = null) : MyPopupControl
      * @param text A text string for the tooltip.
      */
     /* *************************************************************************
-       *                                                                         *
-       * Constructors                                                            *
-       *                                                                         *
-       **************************************************************************/
+     *                                                                         *
+     * Constructors                                                            *
+     *                                                                         *
+     **************************************************************************/
     /**
      * Creates a tooltip with an empty string for its text.
      */
@@ -455,59 +455,57 @@ class MyTooltip @JvmOverloads constructor(text: String? = null) : MyPopupControl
      */
     override fun getCssMetaData(): List<CssMetaData<out Styleable, *>> = classCssMetaData
 
-    override fun getStyleableParent(): Styleable {
-        return if (BEHAVIOR.hoveredNode == null) {
-            super.getStyleableParent()
-        } else BEHAVIOR.hoveredNode!!
-    }
+    override fun getStyleableParent(): Styleable = if (BEHAVIOR.hoveredNode == null) {
+        super.getStyleableParent()
+    } else BEHAVIOR.hoveredNode!!
 
     /* *************************************************************************
-       *                                                                         *
-       * Support classes                                                         *
-       *                                                                         *
-       **************************************************************************/
+     *                                                                         *
+     * Support classes                                                         *
+     *                                                                         *
+     **************************************************************************/
     private class MyToolTipCSSBridge internal constructor(override val popupControl: MyTooltip) :
         MyPopUpCSSBridge(popupControl) {
-        init {
-            accessibleRole = TOOLTIP
+            init {
+                accessibleRole = TOOLTIP
+            }
         }
-    }
 
     private class TooltipBehavior internal constructor(private val hideOnExit: Boolean) {
         /*
-             * There are two key concepts with Tooltip: activated and visible. A Tooltip
-             * is activated as soon as a mouse move occurs over the target node. When it
-             * becomes activated, we start off the ACTIVATION_TIMER. If the
-             * ACTIVATION_TIMER expires before another mouse event occurs, then we will
-             * show the popup. This timer typically lasts about 1 second.
-             *
-             * Once visible, we reset the ACTIVATION_TIMER and start the HIDE_TIMER.
-             * This second timer will allow the tooltip to remain visible for some time
-             * period (such as 5 seconds). If the mouse hasn't moved, and the HIDE_TIMER
-             * expires, then the tooltip is hidden and the tooltip is no longer
-             * activated.
-             *
-             * If another mouse move occurs, the ACTIVATION_TIMER starts again, and the
-             * same rules apply as above.
-             *
-             * If a mouse exit event occurs while the HIDE_TIMER is ticking, we reset
-             * the HIDE_TIMER. Thus, the tooltip disappears after 5 seconds from the
-             * last mouse move.
-             *
-             * If some other mouse event occurs while the HIDE_TIMER is running, other
-             * than mouse move or mouse enter/exit (such as a click), then the tooltip
-             * is hidden, the HIDE_TIMER stopped, and activated set to false.
-             *
-             * If a mouse exit occurs while the HIDE_TIMER is running, we stop the
-             * HIDE_TIMER and start the LEFT_TIMER, and immediately hide the tooltip.
-             * This timer is very short, maybe about a 1/2 second. If the mouse enters a
-             * new node which also has a tooltip before LEFT_TIMER expires, then the
-             * second tooltip is activated and shown immediately (the ACTIVATION_TIMER
-             * having been bypassed), and the HIDE_TIMER is started. If the LEFT_TIMER
-             * expires and there is no mouse movement over a control with a tooltip,
-             * then we are back to the initial steady state where the next mouse move
-             * over a node with a tooltip installed will start the ACTIVATION_TIMER.
-             */
+         * There are two key concepts with Tooltip: activated and visible. A Tooltip
+         * is activated as soon as a mouse move occurs over the target node. When it
+         * becomes activated, we start off the ACTIVATION_TIMER. If the
+         * ACTIVATION_TIMER expires before another mouse event occurs, then we will
+         * show the popup. This timer typically lasts about 1 second.
+         *
+         * Once visible, we reset the ACTIVATION_TIMER and start the HIDE_TIMER.
+         * This second timer will allow the tooltip to remain visible for some time
+         * period (such as 5 seconds). If the mouse hasn't moved, and the HIDE_TIMER
+         * expires, then the tooltip is hidden and the tooltip is no longer
+         * activated.
+         *
+         * If another mouse move occurs, the ACTIVATION_TIMER starts again, and the
+         * same rules apply as above.
+         *
+         * If a mouse exit event occurs while the HIDE_TIMER is ticking, we reset
+         * the HIDE_TIMER. Thus, the tooltip disappears after 5 seconds from the
+         * last mouse move.
+         *
+         * If some other mouse event occurs while the HIDE_TIMER is running, other
+         * than mouse move or mouse enter/exit (such as a click), then the tooltip
+         * is hidden, the HIDE_TIMER stopped, and activated set to false.
+         *
+         * If a mouse exit occurs while the HIDE_TIMER is running, we stop the
+         * HIDE_TIMER and start the LEFT_TIMER, and immediately hide the tooltip.
+         * This timer is very short, maybe about a 1/2 second. If the mouse enters a
+         * new node which also has a tooltip before LEFT_TIMER expires, then the
+         * second tooltip is activated and shown immediately (the ACTIVATION_TIMER
+         * having been bypassed), and the HIDE_TIMER is started. If the LEFT_TIMER
+         * expires and there is no mouse movement over a control with a tooltip,
+         * then we are back to the initial steady state where the next mouse move
+         * over a node with a tooltip installed will start the ACTIVATION_TIMER.
+         */
         private val activationTimer = Timeline()
         private val hideTimer = Timeline()
         private val leftTimer = Timeline()
@@ -860,9 +858,7 @@ class MyTooltip @JvmOverloads constructor(text: String? = null) : MyPopupControl
                 ),
                 LEFT
             ) {
-                override fun isSettable(cssBridge: MyToolTipCSSBridge): Boolean {
-                    return !cssBridge.popupControl.textAlignmentProperty().isBound
-                }
+                override fun isSettable(cssBridge: MyToolTipCSSBridge): Boolean = !cssBridge.popupControl.textAlignmentProperty().isBound
 
                 @Suppress("UNCHECKED_CAST")
                 override fun getStyleableProperty(cssBridge: MyToolTipCSSBridge) =

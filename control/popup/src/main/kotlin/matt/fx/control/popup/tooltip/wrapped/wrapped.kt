@@ -30,7 +30,7 @@ fun TextInputDialog.wrapped(): TextInputDialogWrapper = findWrapper() ?: TextInp
 
 
 fun Dialog<*>.wrapped(): DialogWrapper<*> = findWrapper() ?: when (this) {
-  is ChoiceDialog<*> -> wrapped()
-  is TextInputDialog -> wrapped()
-  else               -> findWrapper() ?: DialogWrapper(this)
+    is ChoiceDialog<*> -> wrapped()
+    is TextInputDialog -> wrapped()
+    else               -> findWrapper() ?: DialogWrapper(this)
 }

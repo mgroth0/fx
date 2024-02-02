@@ -21,8 +21,8 @@ import matt.fx.control.chart.scatter.ScatterChartWrapper
 import matt.fx.control.chart.scatter.scatter.ScatterChartForWrapper
 import matt.fx.control.chart.stackedbar.StackedBarChartWrapper
 import matt.fx.control.chart.stackedbar.stackedb.StackedBarChartForWrapper
-import matt.fx.control.wrapper.wrapped.util.cannotFindWrapper
 import matt.fx.control.wrapper.wrapped.findWrapper
+import matt.fx.control.wrapper.wrapped.util.cannotFindWrapper
 import matt.model.data.mathable.MathAndComparable
 
 /*fun PieChart.wrapped(): PieChartWrapper = findWrapper() ?: PieChartWrapper(this@wrapped)*/

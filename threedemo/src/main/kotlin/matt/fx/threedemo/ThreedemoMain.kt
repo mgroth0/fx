@@ -3,6 +3,7 @@ package matt.fx.threedemo
 import javafx.scene.PerspectiveCamera
 import javafx.scene.transform.Rotate
 import javafx.scene.transform.Translate
+import matt.exec.app.contextForMainOnly
 import matt.fx.graphics.hotkey.hotkeys
 import matt.fx.graphics.wrapper.camera.PerspectiveCameraWrapper
 import matt.fx.graphics.wrapper.group.GroupWrapper
@@ -11,7 +12,6 @@ import matt.fx.graphics.wrapper.node.shape.threed.box.BoxWrapper3D
 import matt.fx.graphics.wrapper.transform.RotateWrapper
 import matt.fx.graphics.wrapper.transform.TranslateWrapper
 import matt.gui.app.GuiApp
-import matt.exec.app.contextForMainOnly
 import matt.gui.mscene.MScene
 
 val demoBox by lazy {
@@ -29,8 +29,7 @@ val demoBox by lazy {
 }
 
 fun main() = with(contextForMainOnly()) {
-    GuiApp(
-    ) {
+    GuiApp {
         scene = MScene(GroupWrapper<NodeWrapper>().apply {
             addChild(demoBox)
         })

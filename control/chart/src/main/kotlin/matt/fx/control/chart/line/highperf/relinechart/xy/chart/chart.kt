@@ -35,7 +35,7 @@ import matt.fx.base.rewrite.ReWrittenFxClass
 import matt.fx.control.chart.line.highperf.relinechart.xy.chart.ChartForPrivateProps.StyleableProperties.classCssMetaData
 import matt.fx.control.css.BooleanCssMetaData
 import matt.lang.anno.Open
-import java.util.*
+import java.util.Collections
 
 /**
  * Base class for all charts. It has 3 parts the title, legend and chartContent. The chart content is populated by the
@@ -65,9 +65,7 @@ abstract class ChartForPrivateProps : Region() {
             layoutChartChildren(snapPositionY(top), snapPositionX(left), contentWidth, contentHeight)
         }
 
-        override fun usesMirroring(): Boolean {
-            return useChartContentMirroring
-        }
+        override fun usesMirroring(): Boolean = useChartContentMirroring
     }
 
     // Determines if chart content should be mirrored if node orientation is right-to-left.
@@ -82,26 +80,18 @@ abstract class ChartForPrivateProps : Region() {
             titleLabel.text = get()
         }
 
-        override fun getBean(): Any {
-            return this@ChartForPrivateProps
-        }
+        override fun getBean(): Any = this@ChartForPrivateProps
 
-        override fun getName(): String {
-            return "title"
-        }
+        override fun getName(): String = "title"
     }
 
-    fun getTitle(): String? {
-        return title.get()
-    }
+    fun getTitle(): String? = title.get()
 
     fun setTitle(value: String) {
         title.set(value)
     }
 
-    fun titleProperty(): StringProperty {
-        return title
-    }
+    fun titleProperty(): StringProperty = title
 
     /**
      * The side of the chart where the title is displayed
@@ -112,30 +102,20 @@ abstract class ChartForPrivateProps : Region() {
             requestLayout()
         }
 
-        override fun getCssMetaData(): CssMetaData<out Styleable, Side> {
-            return StyleableProperties.TITLE_SIDE
-        }
+        override fun getCssMetaData(): CssMetaData<out Styleable, Side> = StyleableProperties.TITLE_SIDE
 
-        override fun getBean(): Any {
-            return this@ChartForPrivateProps
-        }
+        override fun getBean(): Any = this@ChartForPrivateProps
 
-        override fun getName(): String {
-            return "titleSide"
-        }
+        override fun getName(): String = "titleSide"
     }
 
-    fun getTitleSide(): Side {
-        return titleSide.get()
-    }
+    fun getTitleSide(): Side = titleSide.get()
 
     fun setTitleSide(value: Side) {
         titleSide.set(value)
     }
 
-    fun titleSideProperty(): ObjectProperty<Side> {
-        return titleSide
-    }
+    fun titleSideProperty(): ObjectProperty<Side> = titleSide
 
     /**
      * The node to display as the Legend. Subclasses can set a node here to be displayed on a side as the legend. If
@@ -153,26 +133,18 @@ abstract class ChartForPrivateProps : Region() {
             old = newLegend
         }
 
-        override fun getBean(): Any {
-            return this@ChartForPrivateProps
-        }
+        override fun getBean(): Any = this@ChartForPrivateProps
 
-        override fun getName(): String {
-            return "legend"
-        }
+        override fun getName(): String = "legend"
     }
 
-    protected fun getLegend(): Node? {
-        return legend.value
-    }
+    protected fun getLegend(): Node? = legend.value
 
     protected fun setLegend(value: Node?) {
         legend.value = value
     }
 
-    protected fun legendProperty(): ObjectProperty<Node> {
-        return legend
-    }
+    protected fun legendProperty(): ObjectProperty<Node> = legend
 
     /**
      * When true the chart will display a legend if the chart implementation supports a legend.
@@ -182,30 +154,20 @@ abstract class ChartForPrivateProps : Region() {
             requestLayout()
         }
 
-        override fun getCssMetaData(): CssMetaData<ChartForPrivateProps, Boolean> {
-            return StyleableProperties.LEGEND_VISIBLE
-        }
+        override fun getCssMetaData(): CssMetaData<ChartForPrivateProps, Boolean> = StyleableProperties.LEGEND_VISIBLE
 
-        override fun getBean(): Any {
-            return this@ChartForPrivateProps
-        }
+        override fun getBean(): Any = this@ChartForPrivateProps
 
-        override fun getName(): String {
-            return "legendVisible"
-        }
+        override fun getName(): String = "legendVisible"
     }
 
-    fun isLegendVisible(): Boolean {
-        return legendVisible.value
-    }
+    fun isLegendVisible(): Boolean = legendVisible.value
 
     fun setLegendVisible(value: Boolean) {
         legendVisible.value = value
     }
 
-    fun legendVisibleProperty(): BooleanProperty {
-        return legendVisible
-    }
+    fun legendVisibleProperty(): BooleanProperty = legendVisible
 
     /**
      * The side of the chart where the legend should be displayed
@@ -220,30 +182,20 @@ abstract class ChartForPrivateProps : Region() {
             requestLayout()
         }
 
-        override fun getCssMetaData(): CssMetaData<out Styleable, Side> {
-            return StyleableProperties.LEGEND_SIDE
-        }
+        override fun getCssMetaData(): CssMetaData<out Styleable, Side> = StyleableProperties.LEGEND_SIDE
 
-        override fun getBean(): Any {
-            return this@ChartForPrivateProps
-        }
+        override fun getBean(): Any = this@ChartForPrivateProps
 
-        override fun getName(): String {
-            return "legendSide"
-        }
+        override fun getName(): String = "legendSide"
     }
 
-    fun getLegendSide(): Side {
-        return legendSide.get()
-    }
+    fun getLegendSide(): Side = legendSide.get()
 
     fun setLegendSide(value: Side) {
         legendSide.set(value)
     }
 
-    fun legendSideProperty(): ObjectProperty<Side> {
-        return legendSide
-    }
+    fun legendSideProperty(): ObjectProperty<Side> = legendSide
 
     /** When true any data changes will be animated.  */
     internal val animated: BooleanProperty = SimpleBooleanProperty(this, "animated", true)
@@ -253,17 +205,13 @@ abstract class ChartForPrivateProps : Region() {
      *
      * @return true if data changes will be animated and false otherwise.
      */
-    fun getAnimated(): Boolean {
-        return animated.get()
-    }
+    fun getAnimated(): Boolean = animated.get()
 
     fun setAnimated(value: Boolean) {
         animated.set(value)
     }
 
-    fun animatedProperty(): BooleanProperty {
-        return animated
-    }
+    fun animatedProperty(): BooleanProperty = animated
 
     // -------------- PROTECTED PROPERTIES -----------------------------------------------------------------------------
     protected val chartChildren: ObservableList<Node>
@@ -319,9 +267,7 @@ abstract class ChartForPrivateProps : Region() {
      * is visible and in a scene.
      * @return true if animation is enabled and the node is visible and in a scene
      */
-    protected fun shouldAnimate(): Boolean {
-        return getAnimated() && NodeHelper.isTreeShowing(this)
-    }
+    protected fun shouldAnimate(): Boolean = getAnimated() && NodeHelper.isTreeShowing(this)
 
     /**
      * Called to update and layout the chart children available from getChartChildren()
@@ -449,33 +395,25 @@ abstract class ChartForPrivateProps : Region() {
      * Charts are sized outside in, user tells chart how much space it has and chart draws inside that. So minimum
      * height is a constant 150.
      */
-    override fun computeMinHeight(width: Double): Double {
-        return 150.0
-    }
+    override fun computeMinHeight(width: Double): Double = 150.0
 
     final /**
      * Charts are sized outside in, user tells chart how much space it has and chart draws inside that. So minimum
      * width is a constant 200.
      */
-    override fun computeMinWidth(height: Double): Double {
-        return 200.0
-    }
+    override fun computeMinWidth(height: Double): Double = 200.0
 
     final /**
      * Charts are sized outside in, user tells chart how much space it has and chart draws inside that. So preferred
      * width is a constant 500.
      */
-    override fun computePrefWidth(height: Double): Double {
-        return 500.0
-    }
+    override fun computePrefWidth(height: Double): Double = 500.0
 
     final /**
      * Charts are sized outside in, user tells chart how much space it has and chart draws inside that. So preferred
      * height is a constant 400.
      */
-    override fun computePrefHeight(width: Double): Double {
-        return 400.0
-    }
+    override fun computePrefHeight(width: Double): Double = 400.0
 
     // -------------- STYLESHEET HANDLING ------------------------------------------------------------------------------
     private object StyleableProperties {
@@ -484,9 +422,7 @@ abstract class ChartForPrivateProps : Region() {
             EnumConverter(Side::class.java),
             TOP
         ) {
-            override fun isSettable(node: ChartForPrivateProps): Boolean {
-                return node.titleSide.value == null || !node.titleSide.isBound
-            }
+            override fun isSettable(node: ChartForPrivateProps): Boolean = node.titleSide.value == null || !node.titleSide.isBound
 
             override fun getStyleableProperty(node: ChartForPrivateProps): StyleableProperty<Side> {
                 @Suppress("UNCHECKED_CAST")
@@ -498,9 +434,7 @@ abstract class ChartForPrivateProps : Region() {
             EnumConverter(Side::class.java),
             BOTTOM
         ) {
-            override fun isSettable(node: ChartForPrivateProps): Boolean {
-                return node.legendSide.value == null || !node.legendSide.isBound
-            }
+            override fun isSettable(node: ChartForPrivateProps): Boolean = node.legendSide.value == null || !node.legendSide.isBound
 
             override fun getStyleableProperty(node: ChartForPrivateProps): StyleableProperty<Side> {
                 @Suppress("UNCHECKED_CAST")
@@ -512,9 +446,7 @@ abstract class ChartForPrivateProps : Region() {
                 "-fx-legend-visible",
                 true
             ) {
-                override fun isSettable(node: ChartForPrivateProps): Boolean {
-                    return node.legendVisible.value == null || !node.legendVisible.isBound
-                }
+                override fun isSettable(node: ChartForPrivateProps): Boolean = node.legendVisible.value == null || !node.legendVisible.isBound
 
                 override fun getStyleableProperty(node: ChartForPrivateProps): StyleableProperty<Boolean?> {
                     @Suppress("UNCHECKED_CAST")
@@ -536,9 +468,7 @@ abstract class ChartForPrivateProps : Region() {
      * {@inheritDoc}
      * @since JavaFX 8.0
      */
-    override fun getCssMetaData(): List<CssMetaData<out Styleable?, *>>? {
-        return classCssMetaData
-    }
+    override fun getCssMetaData(): List<CssMetaData<out Styleable?, *>>? = classCssMetaData
 
     companion object {
         // -------------- PRIVATE FIELDS -----------------------------------------------------------------------------------

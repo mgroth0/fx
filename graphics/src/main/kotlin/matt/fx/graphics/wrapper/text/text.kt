@@ -42,9 +42,7 @@ open class TextWrapper(
     private val textLength get() = text.length
     private val textTruncated get() = text.truncateWithElipses(100)
 
-    final override fun reflectingToStringProps(): Set<KProperty<*>> {
-        return setOf(::textLength, ::textTruncated)
-    }
+    final override fun reflectingToStringProps(): Set<KProperty<*>> = setOf(::textLength, ::textTruncated)
 
     final override val textProperty by lazy { node.textProperty().toNonNullableProp() }
     final override val fontProperty by lazy { node.fontProperty().toNonNullableProp() }

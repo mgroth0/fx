@@ -22,7 +22,7 @@ fun <T> ListViewWrapper<T & Any>.onUserSelect(clickCount: Int = 2, action: (T) -
     addEventFilter(MouseEvent.MOUSE_CLICKED) { event ->
         val selectedItem = this.selectedItem
         if (event.clickCount == clickCount && selectedItem != null && event.target.wrapped().let{
-            it is NodeWrapper && it.isInsideRow()
+                it is NodeWrapper && it.isInsideRow()
             })
             action(selectedItem)
     }

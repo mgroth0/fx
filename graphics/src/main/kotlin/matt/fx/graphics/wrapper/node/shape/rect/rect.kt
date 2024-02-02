@@ -12,61 +12,61 @@ import matt.lang.anno.Open
 import matt.lang.delegation.lazyVarDelegate
 
 fun NodeWrapperImpl<Parent>.rectangle(
-  x: Number = 0.0,
-  y: Number = 0.0,
-  width: Number = 0.0,
-  height: Number = 0.0,
-  op: RectangleWrapper.()->Unit = {}
+    x: Number = 0.0,
+    y: Number = 0.0,
+    width: Number = 0.0,
+    height: Number = 0.0,
+    op: RectangleWrapper.()->Unit = {}
 ) =
-  RectangleWrapper(x.toDouble(), y.toDouble(), width.toDouble(), height.toDouble()).attachTo(this, op)
+    RectangleWrapper(x.toDouble(), y.toDouble(), width.toDouble(), height.toDouble()).attachTo(this, op)
 
 
 open class RectangleWrapper(
-  node: Rectangle = Rectangle(),
+    node: Rectangle = Rectangle(),
 ): ShapeWrapper<Rectangle>(node), SizeControlled {
-  constructor(x: Double, y: Double, width: Double, height: Double): this(Rectangle(x, y, width, height))
-  constructor(width: Double, height: Double, fill: Paint): this(Rectangle(width, height, fill))
-  constructor(width: Double, height: Double): this(Rectangle(width, height))
+    constructor(x: Double, y: Double, width: Double, height: Double): this(Rectangle(x, y, width, height))
+    constructor(width: Double, height: Double, fill: Paint): this(Rectangle(width, height, fill))
+    constructor(width: Double, height: Double): this(Rectangle(width, height))
 
-  final //  var width
-  //	get() = node.width
-  //	set(value) {
-  //	  node.width = value
-  //	}
-  override val widthProperty by lazy {
-	node.widthProperty().toNonNullableProp().cast<Double>()
-  }
+    final //  var width
+    //	get() = node.width
+    //	set(value) {
+    //	  node.width = value
+    //	}
+    override val widthProperty by lazy {
+        node.widthProperty().toNonNullableProp().cast<Double>()
+    }
 
-  final //  var height
-  //	get() = node.height
-  //	set(value) {
-  //	  node.height = value
-  //	}
-  override val heightProperty by lazy { node.heightProperty().toNonNullableProp().cast<Double>() }
+    final //  var height
+    //	get() = node.height
+    //	set(value) {
+    //	  node.height = value
+    //	}
+    override val heightProperty by lazy { node.heightProperty().toNonNullableProp().cast<Double>() }
 
 
-  val xProperty by lazy {
-	node.xProperty().toNonNullableProp().cast<Double>()
-  }
-  var x by lazyVarDelegate { xProperty }
-  val yProperty by lazy {
-	node.yProperty().toNonNullableProp().cast<Double>()
-  }
-  var y by lazyVarDelegate { yProperty }
+    val xProperty by lazy {
+        node.xProperty().toNonNullableProp().cast<Double>()
+    }
+    var x by lazyVarDelegate { xProperty }
+    val yProperty by lazy {
+        node.yProperty().toNonNullableProp().cast<Double>()
+    }
+    var y by lazyVarDelegate { yProperty }
 
 
     @Open
     override var height
-	get() = node.height
-	set(value) {
-	  node.height = value
-	}
+        get() = node.height
+        set(value) {
+            node.height = value
+        }
 
-  final override var width
-	get() = node.width
-	set(value) {
-	  node.width = value
-	}
+    final override var width
+        get() = node.width
+        set(value) {
+            node.width = value
+        }
 
 
 }

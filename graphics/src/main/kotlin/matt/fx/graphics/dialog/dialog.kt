@@ -3,7 +3,6 @@ package matt.fx.graphics.dialog
 import javafx.stage.DirectoryChooser
 import javafx.stage.FileChooser
 import javafx.stage.FileChooser.ExtensionFilter
-import matt.lang.model.file.FsFile
 import matt.file.construct.toMFile
 import matt.file.ext.FileExtension
 import matt.fx.graphics.dialog.ChooseFileFor.OPEN
@@ -14,6 +13,7 @@ import matt.fx.graphics.wrapper.window.WindowWrapper
 import matt.lang.file.toJFile
 import matt.lang.function.Dsl
 import matt.lang.go
+import matt.lang.model.file.FsFile
 import matt.lang.model.file.MacFileSystem
 
 
@@ -140,9 +140,7 @@ class ChooseFileDSL(
 class ChoseMultipleFilesDSL(
     stage: StageWrapper?
 ) : ChoseFileBase<List<FsFile>>(stage) {
-    override fun showDialog(): List<FsFile>? {
-        return createChooser().showOpenMultipleDialog(stage?.node)?.let { it.map { it.toMFile(MacFileSystem) } }
-    }
+    override fun showDialog(): List<FsFile>? = createChooser().showOpenMultipleDialog(stage?.node)?.let { it.map { it.toMFile(MacFileSystem) } }
 }
 
 class ChooseFolderDSL(
@@ -150,10 +148,8 @@ class ChooseFolderDSL(
 ) : ChoseFile {
     override var initialDir: FsFile? = null
     override var title: String? = null
-    fun showDialog(): FsFile? {
-        return DirectoryChooser().apply {
-            initialDir?.go { initialDirectory = it.toJFile() }
-            title?.go { this.title = it }
-        }.showDialog(stage?.node)?.toMFile(MacFileSystem)
-    }
+    fun showDialog(): FsFile? = DirectoryChooser().apply {
+        initialDir?.go { initialDirectory = it.toJFile() }
+        title?.go { this.title = it }
+    }.showDialog(stage?.node)?.toMFile(MacFileSystem)
 }

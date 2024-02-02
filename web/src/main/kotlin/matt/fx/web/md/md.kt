@@ -17,9 +17,9 @@ class MarkDownViewer : VBoxW() {
         vgrow = ALWAYS
         engine.loadContent(
             """
-		<body style="background: black">
-		</body>
-	  """.trimIndent()
+            <body style="background: black">
+            </body>
+            """.trimIndent()
         )
     }
     val markdown = BindableProperty("").apply {

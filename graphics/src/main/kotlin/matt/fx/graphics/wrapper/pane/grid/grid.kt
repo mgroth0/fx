@@ -8,6 +8,8 @@ import javafx.scene.layout.ColumnConstraints
 import javafx.scene.layout.GridPane
 import javafx.scene.layout.Priority
 import javafx.scene.layout.RowConstraints
+import matt.fx.base.wrapper.obs.collect.list.createMutableWrapper
+import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.graphics.style.inset.MarginableConstraints
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NW
@@ -16,8 +18,6 @@ import matt.fx.graphics.wrapper.node.attach
 import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
 import matt.fx.graphics.wrapper.pane.grid.GridPaneWrapper.GridDSLType.COL
 import matt.fx.graphics.wrapper.pane.grid.GridPaneWrapper.GridDSLType.ROW
-import matt.fx.base.wrapper.obs.collect.list.createMutableWrapper
-import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.lang.assertions.require.requireNotEqual
 
 

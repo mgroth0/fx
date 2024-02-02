@@ -30,9 +30,7 @@ class SeriesConverter<X, Y>() : BiConverter<Series<X, Y>, SeriesWrapper<X, Y>>, 
         return a.wrapped() as SeriesWrapper<X, Y>
     }
 
-    override fun convertToA(b: SeriesWrapper<X, Y>): Series<X, Y> {
-        return b.series
-    }
+    override fun convertToA(b: SeriesWrapper<X, Y>): Series<X, Y> = b.series
 }
 
 fun <X, Y> Series<X, Y>.wrapped() = wrappers[this] ?: SeriesWrapper(this)

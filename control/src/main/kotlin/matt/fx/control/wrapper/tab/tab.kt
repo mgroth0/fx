@@ -78,8 +78,6 @@ fun <W : NodeWrapper> TabPaneWrapper<TabWrapper<W>>.tab(
 fun <C : NodeWrapper> TabPaneWrapper<TabWrapper<VBoxWrapper<C>>>.vtab(
     s: String = "",
     op: VBoxWrapper<C>.() -> Unit = {}
-): TabWrapper<VBoxWrapper<C>> {
-    return tab(s, VBoxWrapperImpl(), closable = false) {
-        op()
-    }
+): TabWrapper<VBoxWrapper<C>> = tab(s, VBoxWrapperImpl(), closable = false) {
+    op()
 }

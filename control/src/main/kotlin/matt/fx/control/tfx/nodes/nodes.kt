@@ -9,55 +9,55 @@ import javafx.scene.control.TreeTableColumn
 import javafx.util.Callback
 import matt.fx.graphics.wrapper.node.NodeWrapper
 inline fun <T: NodeWrapper> T.splitpaneConstraints(op: SplitPaneConstraint.()->Unit): T {
-  val c = SplitPaneConstraint()
-  c.op()
-  return c.applyToNode(this)
+    val c = SplitPaneConstraint()
+    c.op()
+    return c.applyToNode(this)
 }
 
 
 class TableColumnCellCache<T>(private val cacheProvider: (T)->Node) {
-  private val store = mutableMapOf<T, Node>()
-  fun getOrCreateNode(value: T) = store.getOrPut(value) { cacheProvider(value) }
+    private val store = mutableMapOf<T, Node>()
+    fun getOrCreateNode(value: T) = store.getOrPut(value) { cacheProvider(value) }
 }
 
 fun <S, T> TableColumn<S, T>.cellDecorator(decorator: TableCell<S, T>.(T)->Unit) {
-  val originalFactory = cellFactory
+    val originalFactory = cellFactory
 
-  cellFactory = Callback { column: TableColumn<S, T> ->
-	val cell = originalFactory.call(column)
-	cell.itemProperty().addListener { _, _, newValue ->
-	  if (newValue != null) decorator(cell, newValue)
-	}
-	cell
-  }
+    cellFactory = Callback { column: TableColumn<S, T> ->
+        val cell = originalFactory.call(column)
+        cell.itemProperty().addListener { _, _, newValue ->
+            if (newValue != null) decorator(cell, newValue)
+        }
+        cell
+    }
 }
 
 fun <S, T> TreeTableColumn<S, T>.cellFormat(formatter: (TreeTableCell<S, T>.(T)->Unit)) {
-  cellFactory = Callback { _: TreeTableColumn<S, T> ->
-	object: TreeTableCell<S, T>() {
-	  private val defaultStyle = style
+    cellFactory = Callback { _: TreeTableColumn<S, T> ->
+        object: TreeTableCell<S, T>() {
+            private val defaultStyle = style
 
-	  // technically defined as TreeTableCell.DEFAULT_STYLE_CLASS = "tree-table-cell", but this is private
-	  private val defaultStyleClass = listOf(*styleClass.toTypedArray())
+            // technically defined as TreeTableCell.DEFAULT_STYLE_CLASS = "tree-table-cell", but this is private
+            private val defaultStyleClass = listOf(*styleClass.toTypedArray())
 
-	  override fun updateItem(item: T, empty: Boolean) {
-		super.updateItem(item, empty)
+            override fun updateItem(item: T, empty: Boolean) {
+                super.updateItem(item, empty)
 
-		if (item == null || empty) {
-		  text = null
-		  graphic = null
-		  style = defaultStyle
-		  styleClass.setAll(defaultStyleClass)
-		} else {
-		  formatter(this, item)
-		}
-	  }
-	}
-  }
+                if (item == null || empty) {
+                    text = null
+                    graphic = null
+                    style = defaultStyle
+                    styleClass.setAll(defaultStyleClass)
+                } else {
+                    formatter(this, item)
+                }
+            }
+        }
+    }
 }
 
 enum class EditEventType(val editing: Boolean) {
-  StartEdit(true), CommitEdit(false), CancelEdit(false)
+    StartEdit(true), CommitEdit(false), CancelEdit(false)
 }
 
 
@@ -67,10 +67,10 @@ val <S, T> TreeTableCell<S, T>.rowItem: S get() = treeTableView.getTreeItem(inde
 
 
 class SplitPaneConstraint(
-  var isResizableWithParent: Boolean? = null
+    var isResizableWithParent: Boolean? = null
 ) {
-  fun <T: NodeWrapper> applyToNode(node: T): T {
-	isResizableWithParent?.let { SplitPane.setResizableWithParent(node.node, it) }
-	return node
-  }
+    fun <T: NodeWrapper> applyToNode(node: T): T {
+        isResizableWithParent?.let { SplitPane.setResizableWithParent(node.node, it) }
+        return node
+    }
 }

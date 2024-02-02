@@ -173,7 +173,7 @@ class ProcessConsolePane(
         ) // without this, still takes up space while invisible
         procProp.bind(this@ProcessConsolePane.processProp)
         this@ProcessConsolePane.runningProp.onChange {
-            println("runningProp:${it}")
+            println("runningProp:$it")
             runLater { refresh() }
         }
     }
@@ -207,20 +207,18 @@ class ProcessConsolePane(
     private var msTimerTimeline: Timeline? = null
     private var secTimerTimeline: Timeline? = null
     private var minTimerTimeline: Timeline? = null
-    private fun formatMillis(ms: Long): String {
-        return when {
-            ms == 0L -> ""
-            ms < 1000L -> "$ms ms"
-            else -> {
-                val d = ms.milliseconds
-                when {
-                    d < ONE_MINUTE -> d.toString(DurationUnit.SECONDS, decimals = 2)
-                    else           -> d.toString(DurationUnit.MINUTES, decimals = 2)
-                }
+    private fun formatMillis(ms: Long): String = when {
+        ms == 0L -> ""
+        ms < 1000L -> "$ms ms"
+        else -> {
+            val d = ms.milliseconds
+            when {
+                d < ONE_MINUTE -> d.toString(DurationUnit.SECONDS, decimals = 2)
+                else           -> d.toString(DurationUnit.MINUTES, decimals = 2)
             }
-
-
         }
+
+
     }
 
     private fun timerTimeline(
@@ -240,7 +238,7 @@ class ProcessConsolePane(
     init {
         val vbox = this
         processProp.onChange {
-            println("processProp:${it}")
+            println("processProp:$it")
             if (it != null) {
                 console.reset()
             }

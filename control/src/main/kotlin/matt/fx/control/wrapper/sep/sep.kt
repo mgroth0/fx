@@ -9,21 +9,21 @@ import matt.fx.graphics.wrapper.node.attach
 
 
 fun ET.separator(
-  orientation: Orientation = Orientation.HORIZONTAL, op: SeparatorWrapper.()->Unit = {}
+    orientation: Orientation = Orientation.HORIZONTAL, op: SeparatorWrapper.()->Unit = {}
 ) = attach(SeparatorWrapper(orientation), op)
 
 
 open class SeparatorWrapper(
-  node: Separator = Separator(),
+    node: Separator = Separator(),
 ): ControlWrapperImpl<Separator>(node) {
 
-  constructor(
-	o: Orientation
-  ): this(Separator(o))
+    constructor(
+        o: Orientation
+    ): this(Separator(o))
 
-  final override fun addChild(child: NodeWrapper, index: Int?) {
-	TODO()
-  }
+    final override fun addChild(child: NodeWrapper, index: Int?) {
+        TODO()
+    }
 
 
 }

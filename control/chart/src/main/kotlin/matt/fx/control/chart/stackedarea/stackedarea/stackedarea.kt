@@ -26,7 +26,9 @@ import matt.fx.control.chart.linelike.LineLikeChartNodeWithOptionalSymbols
 import matt.fx.control.chart.stackedarea.stackedarea.StackedAreaChartForWrapper.PartOf.CURRENT
 import matt.fx.control.chart.stackedarea.stackedarea.StackedAreaChartForWrapper.PartOf.PREVIOUS
 import matt.model.data.mathable.DoubleWrapper
-import java.util.*
+import java.util.Collections
+import java.util.NavigableMap
+import java.util.TreeMap
 import kotlin.math.min
 
 class StackedAreaChartForWrapper<X : Any, Y : Any> @JvmOverloads constructor(
@@ -377,7 +379,7 @@ class StackedAreaChartForWrapper<X : Any, Y : Any> @JvmOverloads constructor(
                                 if (he != null && le != null) {
                                     // If there's both point above and below this point, interpolate
                                     accum[xv] = (xv - le.key) / (he.key - le.key) *
-                                            (le.value + he.value) + yv
+                                        (le.value + he.value) + yv
                                 } else if (he != null) {
                                     // The point is before the first point in the previously accumulated series
                                     accum[xv] = he.value + yv
@@ -403,7 +405,7 @@ class StackedAreaChartForWrapper<X : Any, Y : Any> @JvmOverloads constructor(
                     if (he != null && le != null) {
                         // Interpolate the for the point from current series and add the accumulated value
                         accum[k] = (k - le.key) / (he.key - le.key) *
-                                (le.value + he.value) + v
+                            (le.value + he.value) + v
                     } else if (he != null) {
                         // There accumulated value is before the first value in the current series
                         accum[k] = he.value + v
@@ -423,7 +425,7 @@ class StackedAreaChartForWrapper<X : Any, Y : Any> @JvmOverloads constructor(
                 // being past the first series
             }
             if (totalMinY != Double.MAX_VALUE) ya.invalidateRange(
-                Arrays.asList(
+                java.util.Arrays.asList(
                     ya.toRealValue(totalMinY)!!,
                     ya.toRealValue(Collections.max(prevAccum.values))!!
                 )
@@ -903,8 +905,6 @@ class StackedAreaChartForWrapper<X : Any, Y : Any> @JvmOverloads constructor(
         private fun doubleValue(
             number: Number?,
             nullDefault: Double = 0.0
-        ): Double {
-            return number?.toDouble() ?: nullDefault
-        }
+        ): Double = number?.toDouble() ?: nullDefault
     }
 }

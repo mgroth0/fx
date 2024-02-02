@@ -104,15 +104,15 @@ abstract class SingularEventTargetWrapper<out N : EventTarget>(
 
         requireDoesNotContain(wrappers, node) {
             """
-		
-		This is ${this}
-		
-		A second ${this::class.simpleName} was created for ${node}
-		
-		The first one is ${wrappers[node]}
-		
-		
-	  """.trimMargin()
+            
+            This is $this
+            
+            A second ${this::class.simpleName} was created for $node
+            
+            The first one is ${wrappers[node]}
+            
+            
+            """.trimMargin()
         }/*println("putting ${superNode.toStringBasic()} in wrappers for ${this.toStringBasic()}")*/
         wrappers[node] = this
     }

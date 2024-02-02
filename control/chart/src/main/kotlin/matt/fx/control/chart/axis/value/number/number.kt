@@ -60,7 +60,7 @@ class OldNumberAxisWrapper(node: NumberAxis = NumberAxis()): OldValueAxisWrapper
 
   //  constructor(converter: ValueAxisConverter<T>): this(MoreGenericNumberAxis(converter))
 
-  *//*val tickUnitProperty by lazy { node.tickUnit }
+ *//*val tickUnitProperty by lazy { node.tickUnit }
   var tickUnit by tickUnitProperty*//*
 
 

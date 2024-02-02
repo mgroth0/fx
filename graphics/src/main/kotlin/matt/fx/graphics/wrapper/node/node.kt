@@ -67,13 +67,11 @@ inline fun <reified T : NodeWrapper> NW.findRecursivelyFirstOrNull(
 
 inline fun <reified T : NodeWrapper> NW.recurseSelfAndChildNodes(
     shuffleChildrenOrders: Boolean = false
-): Sequence<T> {
-    return recurse {
-        (it as? RegionWrapper<*>)?.children?.let {
-            if (shuffleChildrenOrders) it.shuffled() else it
-        } ?: listOf()
-    }.filterIsInstance<T>()
-}
+): Sequence<T> = recurse {
+    (it as? RegionWrapper<*>)?.children?.let {
+        if (shuffleChildrenOrders) it.shuffled() else it
+    } ?: listOf()
+}.filterIsInstance<T>()
 
 
 typealias NW = NodeWrapper
@@ -807,7 +805,5 @@ fun NW.minYRelativeTo(ancestor: NodeWrapper): Double? {
     }
 }
 
-fun NW.maxYRelativeTo(ancestor: NodeWrapper): Double? {
-    return minYRelativeTo(ancestor)?.plus(boundsInParent.height)
-}
+fun NW.maxYRelativeTo(ancestor: NodeWrapper): Double? = minYRelativeTo(ancestor)?.plus(boundsInParent.height)
 

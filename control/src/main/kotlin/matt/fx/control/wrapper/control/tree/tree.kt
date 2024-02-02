@@ -23,69 +23,69 @@ fun <T: Any> TreeViewWrapper<T>.items(): Sequence<TreeItemWrapper<T>> = root!!.r
 
 
 fun <T: Any> TreeViewWrapper<T>.select(o: T?) {
-  Platform.runLater {
-	when {
-	  o != null -> {
-		selectionModel.select(items().firstOrNull { it == o }?.node)
-	  }
+    Platform.runLater {
+        when {
+            o != null -> {
+                selectionModel.select(items().firstOrNull { it == o }?.node)
+            }
 
-	  else      -> selectionModel.clearSelection()
-	}
-  }
+            else      -> selectionModel.clearSelection()
+        }
+    }
 }
 
 
 fun <T: Any> ET.treeview(root: TreeItemWrapper<T>? = null, op: TreeViewWrapper<T>.()->Unit = {}) =
-  TreeViewWrapper<T>().attachTo(this, op) {
-	if (root != null) it.root = root
-  }
+    TreeViewWrapper<T>().attachTo(this, op) {
+        if (root != null) it.root = root
+    }
 
 
 class TreeViewWrapper<T: Any>(node: TreeView<T> = TreeView(), op: TreeViewWrapper<T>.()->Unit = {}):
-  ControlWrapperImpl<TreeView<T>>(node),
-  TreeLikeWrapper<TreeView<T>, T>,
-  TreeCellFactory<TreeView<T>, T> {
-  init {
-	op()
-  }
+    ControlWrapperImpl<TreeView<T>>(node),
+    TreeLikeWrapper<TreeView<T>, T>,
+    TreeCellFactory<TreeView<T>, T> {
+    init {
+        op()
+    }
 
 
-  fun editableProperty(): BooleanProperty = node.editableProperty()
+    fun editableProperty(): BooleanProperty = node.editableProperty()
 
 
-  override val cellFactoryProperty by lazy { node.cellFactoryProperty().toNullableProp() }
+    override val cellFactoryProperty by lazy { node.cellFactoryProperty().toNullableProp() }
 
 
-  override val rootProperty by lazy {node.rootProperty().toNullableProp().proxy(uncheckedNullableWrapperConverter<TreeItem<T>,TreeItemWrapper<T>>())}
+    override val rootProperty by lazy {node.rootProperty().toNullableProp().proxy(uncheckedNullableWrapperConverter<TreeItem<T>,TreeItemWrapper<T>>())}
 
-  override var isShowRoot: Boolean
-	get() = node.isShowRoot
-	set(value) {
-	  node.isShowRoot = value
-	}
+    override var isShowRoot: Boolean
+        get() = node.isShowRoot
+        set(value) {
+            node.isShowRoot = value
+        }
 
-  override val selectionModel by lazy { node.selectionModel.wrap() }
-  override fun scrollTo(i: Int) = node.scrollTo(i)
-  override fun addChild(child: NodeWrapper, index: Int?) {
-	TODO()
-  }
+    override val selectionModel by lazy { node.selectionModel.wrap() }
+    override fun scrollTo(i: Int) = node.scrollTo(i)
+    override fun addChild(child: NodeWrapper, index: Int?) {
+        TODO()
+    }
 
-  override fun getRow(ti: TreeItem<T>) = node.getRow(ti)
+    override fun getRow(ti: TreeItem<T>) = node.getRow(ti)
 
 
-  fun populate(
-	itemFactory: (T)->TreeItemWrapper<T> = { TreeItemWrapper(it) },
-	childFactory: (TreeItemWrapper<T>)->Iterable<T>?
-  ) = populateTree(root!!, itemFactory, childFactory)
+    fun populate(
+        itemFactory: (T)->TreeItemWrapper<T> = { TreeItemWrapper(it) },
+        childFactory: (TreeItemWrapper<T>)->Iterable<T>?
+    ) = populateTree(root!!, itemFactory, childFactory)
 
 }
 
 
 fun <T: Any> TreeViewWrapper<T>.bindSelected(property: Property<T>) {
 
-  selectedItemProperty.onChange { property.value = it?.value }
+    selectedItemProperty.onChange { property.value = it?.value }
 }
 
 fun <T: Any> TreeViewWrapper<T>.multiSelect(enable: Boolean = true) {
-  selectionModel.selectionMode = if (enable) SelectionMode.MULTIPLE else SelectionMode.SINGLE
+    selectionModel.selectionMode = if (enable) SelectionMode.MULTIPLE else SelectionMode.SINGLE
 }
