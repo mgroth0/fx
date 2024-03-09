@@ -13,7 +13,7 @@ import matt.fx.graphics.wrapper.node.attach
 import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
 import matt.lang.assertions.require.requireNull
 
-fun <C: NodeWrapper> ET.borderpane(op: BorderPaneWrapper<C>.()->Unit = {}) = attach(BorderPaneWrapper(), op)
+fun <C: NodeWrapper> ET.borderpane(op: BorderPaneWrapper<C>.() -> Unit = {}) = attach(BorderPaneWrapper(), op)
 open class BorderPaneWrapper<C: NodeWrapper>(node: BorderPane = BorderPane()): PaneWrapperImpl<BorderPane, C>(node) {
 
     var center: NW?
@@ -61,20 +61,25 @@ open class BorderPaneWrapper<C: NodeWrapper>(node: BorderPane = BorderPane()): P
 
     final override fun addChild(child: NodeWrapper, index: Int?) {
         requireNull(index)
-        /*center = child*/
-        /*this needs to do nothing, or else behavior is undefined.*/
-	/*children of border pane should always be set like:
+        /*center = child
+
+
+    // this needs to do nothing, or else behavior is undefined.
+
+
+
+
+        // children of border pane should always be set like:
 
 	borderpane {
 		left = text("left")
 		right = text("right")
 	}
 
-	I don't know why having a default here like `center = child` breaks things. I really don't get it, but I've proven that this breaks things. The child ends up not being visible anywhere.
+	// I don't know why having a default here like `center = child` breaks things. I really don't get it, but I've proven that this breaks things. The child ends up not being visible anywhere.
 
-	 * */
+         */
     }
-
 }
 
 
@@ -82,7 +87,7 @@ open class BorderPaneWrapper<C: NodeWrapper>(node: BorderPane = BorderPane()): P
 /**
  * Access BorderPane constraints to manipulate and apply on this control
  */
-inline fun <T: Node> T.borderpaneConstraints(op: (BorderPaneConstraint.()->Unit)): T {
+inline fun <T: Node> T.borderpaneConstraints(op: (BorderPaneConstraint.() -> Unit)): T {
     val bpc = BorderPaneConstraint(this)
     bpc.op()
     return bpc.applyToNode(this)

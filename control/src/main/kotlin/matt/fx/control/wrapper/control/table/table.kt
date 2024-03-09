@@ -10,6 +10,8 @@ import javafx.scene.control.TableColumn
 import javafx.scene.control.TablePosition
 import javafx.scene.control.TableRow
 import javafx.scene.control.TableView
+import javafx.scene.control.TableView.ResizeFeatures
+import javafx.scene.control.TableView.TableViewFocusModel
 import javafx.scene.input.InputEvent
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
@@ -18,6 +20,8 @@ import javafx.util.Callback
 import matt.async.thread.namedThread
 import matt.fx.base.wrapper.obs.collect.list.createMutableWrapper
 import matt.fx.base.wrapper.obs.collect.list.mfxMutableListConverter
+import matt.fx.base.wrapper.obs.obsval.NullableFXBackedReadOnlyBindableProp
+import matt.fx.base.wrapper.obs.obsval.prop.NonNullFXBackedBindableProp
 import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
 import matt.fx.base.wrapper.obs.obsval.toNullableROProp
@@ -33,8 +37,8 @@ import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NW
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
+import matt.lang.common.go
 import matt.lang.function.Op
-import matt.lang.go
 import matt.lang.setall.setAll
 import matt.obs.bind.binding
 import matt.obs.bindings.bool.ObsB
@@ -43,8 +47,9 @@ import matt.obs.col.olist.MutableObsList
 import matt.obs.col.olist.sync.toSyncedList
 import matt.obs.col.olist.toMutableObsList
 import matt.obs.prop.ObsVal
-import matt.obs.prop.VarProp
+import matt.obs.prop.writable.VarProp
 import matt.time.dur.sleep
+import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 
 fun <T : Any> ET.tableview(
@@ -56,13 +61,13 @@ fun <T : Any> ET.tableview(
             if (items is MutableObsList<T>) {
                 it.items = items
             } else {
-                it.items = items.toMutableObsList().apply {
-                    items.onChange {
-                        setAll(items)
+                it.items =
+                    items.toMutableObsList().apply {
+                        items.onChange {
+                            setAll(items)
+                        }
                     }
-                }
             }
-
         }
     }
 
@@ -75,7 +80,7 @@ fun <T : Any> ET.tableview(
     }
 
 open class TableViewWrapper<E : Any>(
-    node: TableView<E> = TableView<E>(),
+    node: TableView<E> = TableView<E>()
 ) : ControlWrapperImpl<TableView<E>>(node), TableLikeWrapper<E>, ColumnsDSL<E> by ColumnsDSLImpl<E>(node.columns) {
 
     constructor(items: ObservableList<E>) : this(TableView(items))
@@ -85,7 +90,7 @@ open class TableViewWrapper<E : Any>(
 
     final override fun isInsideRow() = true
 
-    val editableProperty by lazy { node.editableProperty().toNonNullableProp() }
+    val editableProperty: NonNullFXBackedBindableProp<Boolean> by lazy { node.editableProperty().toNonNullableProp() }
 
     var isEditable by editableProperty
 
@@ -98,7 +103,9 @@ open class TableViewWrapper<E : Any>(
         )
     }
 
-    val columnResizePolicyProperty by lazy { node.columnResizePolicyProperty().toNonNullableProp() }
+    val columnResizePolicyProperty: NonNullFXBackedBindableProp<Callback<ResizeFeatures<Any>, Boolean>> by lazy {
+        node.columnResizePolicyProperty().toNonNullableProp()
+    }
     var columnResizePolicy by columnResizePolicyProperty
 
 
@@ -115,7 +122,7 @@ open class TableViewWrapper<E : Any>(
     fun scrollToWithWeirdDirtyFix(
         i: Int,
         recursionLevel: Int = 5,
-        sleepTime: kotlin.time.Duration = 100.milliseconds,
+        sleepTime: Duration = 100.milliseconds,
         callback: Op = {}
     ) {
         scrollTo(i) /*scrollTo is not working well... hope this helps*/
@@ -137,9 +144,9 @@ open class TableViewWrapper<E : Any>(
     }
 
     fun scrollTo(e: E) = node.scrollTo(e)
-    val focusModel get() = node.focusModel
+    val focusModel: TableViewFocusModel<E> get() = node.focusModel
     fun sort() = node.sort()
-    val editingCellProperty by lazy { node.editingCellProperty().toNullableROProp() }
+    val editingCellProperty: NullableFXBackedReadOnlyBindableProp<TablePosition<E, *>> by lazy { node.editingCellProperty().toNullableROProp() }
     fun edit(
         row: Int,
         col: TableColumn<E, *>
@@ -149,13 +156,14 @@ open class TableViewWrapper<E : Any>(
     fun makeIndexColumn(
         name: String = "#",
         startNumber: Int = 1
-    ): TableColumn<E, Number> = TableColumn<E, Number>(name).apply {
-        isSortable = false
-        prefWidth = width
+    ): TableColumn<E, Number> =
+        TableColumn<E, Number>(name).apply {
+            isSortable = false
+            prefWidth = width
 
-        this@TableViewWrapper.columns += this
-        setCellValueFactory { ReadOnlyObjectWrapper(items!!.indexOf(it.value) + startNumber) }
-    }
+            this@TableViewWrapper.columns += this
+            setCellValueFactory { ReadOnlyObjectWrapper(items!!.indexOf(it.value) + startNumber) }
+        }
 
 
     final override fun addChild(
@@ -170,7 +178,7 @@ open class TableViewWrapper<E : Any>(
         var startRow = 0
         var startColumn = columns.first()
 
-        // Record start position and clear selection unless Control is down
+        /* Record start position and clear selection unless Control is down */
         addEventFilter(MouseEvent.MOUSE_PRESSED) {
             startRow = 0
 
@@ -187,7 +195,7 @@ open class TableViewWrapper<E : Any>(
             }
         }
 
-        // Select items while dragging
+        /* Select items while dragging */
         addEventFilter(MouseEvent.MOUSE_DRAGGED) {
             (it.pickResult.intersectedNode as? TableCell<*, *>)?.apply {
                 if (items!!.size > index) {
@@ -205,29 +213,31 @@ open class TableViewWrapper<E : Any>(
     }
 
 
-    //  call the method after inserting the data into table
+    /* call the method after inserting the data into table */
     fun autoResizeColumns() {
         columnResizePolicy = TableView.UNCONSTRAINED_RESIZE_POLICY
         columns.associateWith { column ->
 
-            val dataList = (0..<items!!.size).map {
-                column.getCellData(it)
-            }
+            val dataList =
+                (0..<items!!.size).map {
+                    column.getCellData(it)
+                }
             if (dataList.any { it is NW }) {
                 null /*prevent resizing of nodeColumn which is managed separately. Trying to resize those here leads to issues because getCellData() returns a different node then the one being displayed*/
             } else {
-                val textWidths = dataList.mapNotNull {
-                    it?.toString()?.fxWidth ?: 0.0
-                }.toTypedArray()
+                val textWidths =
+                    dataList.mapNotNull {
+                        it?.toString()?.fxWidth ?: 0.0
+                    }.toTypedArray()
 
-                val widths = listOf(
-                    *textWidths,
-                    column.text.fxWidth
-                )
+                val widths =
+                    listOf(
+                        *textWidths,
+                        column.text.fxWidth
+                    )
                 val bareMinW = widths.maxOrNull() ?: 0.0
                 bareMinW + 10.0
             }
-
         }.forEach { (column, w) ->
             w?.go(column::setPrefWidth)
         }
@@ -276,7 +286,6 @@ open class TableViewWrapper<E : Any>(
             backingList.remove(it)
             backingList.add(end, it)
             if (select) selectionModel.select(it)
-
         }
     }
 
@@ -315,17 +324,19 @@ open class TableViewWrapper<E : Any>(
     }
 
 
-    fun regainFocusAfterEdit() = apply {
-        editingCellProperty.onChange {
-            if (it == null)
-                requestFocus()
+    fun regainFocusAfterEdit() =
+        apply {
+            editingCellProperty.onChange {
+                if (it == null)
+                    requestFocus()
+            }
         }
-    }
 
 
-    fun editableWhen(predicate: ObsB) = apply {
-        editableProperty.bind(predicate)
-    }
+    fun editableWhen(predicate: ObsB) =
+        apply {
+            editableProperty.bind(predicate)
+        }
 
 
     /**
@@ -336,7 +347,7 @@ open class TableViewWrapper<E : Any>(
     fun onEditCommit(onCommit: TableColumn.CellEditEvent<E, Any>.(E) -> Unit) {
         fun addEventHandlerForColumn(column: TableColumn<E, *>) {
             column.addEventHandler(TableColumn.editCommitEvent<E, Any>()) { event ->
-                // Make sure the domain object gets the new value before we notify our handler
+                /* Make sure the domain object gets the new value before we notify our handler */
                 runLater {
                     onCommit(event, event.rowValue)
                 }
@@ -397,8 +408,6 @@ open class TableViewWrapper<E : Any>(
     fun multiSelect(enable: Boolean = true) {
         selectionModel.selectionMode = if (enable) SelectionMode.MULTIPLE else SelectionMode.SINGLE
     }
-
-
 }
 
 

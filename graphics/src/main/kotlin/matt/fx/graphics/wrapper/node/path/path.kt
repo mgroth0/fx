@@ -16,12 +16,12 @@ import matt.fx.graphics.wrapper.node.attachTo
 import matt.fx.graphics.wrapper.node.impl.NodeWrapperImpl
 import matt.fx.graphics.wrapper.node.shape.ShapeWrapper
 
-fun NodeWrapperImpl<Parent>.path(vararg elements: PathElement, op: PathWrapper.()->Unit = {}) =
+fun NodeWrapperImpl<Parent>.path(vararg elements: PathElement, op: PathWrapper.() -> Unit = {}) =
     PathWrapper(*elements).attachTo(this, op)
 
 
 open class PathWrapper(
-    node: Path = Path(),
+    node: Path = Path()
 ): ShapeWrapper<Path>(node) {
     constructor(
         vararg elements: PathElement
@@ -32,9 +32,10 @@ open class PathWrapper(
 
 
 
-    fun moveTo(x: Number = 0.0, y: Number = 0.0) = apply {
-        elements.add(MoveTo(x.toDouble(), y.toDouble()))
-    }
+    fun moveTo(x: Number = 0.0, y: Number = 0.0) =
+        apply {
+            elements.add(MoveTo(x.toDouble(), y.toDouble()))
+        }
 
     fun hlineTo(x: Number) = apply { elements.add(HLineTo(x.toDouble())) }
 
@@ -45,7 +46,7 @@ open class PathWrapper(
         controlY: Number = 0.0,
         x: Number = 0.0,
         y: Number = 0.0,
-        op: QuadCurveTo.()->Unit = {}
+        op: QuadCurveTo.() -> Unit = {}
     ) = apply {
         elements.add(QuadCurveTo(controlX.toDouble(), controlY.toDouble(), x.toDouble(), y.toDouble()).also(op))
     }
@@ -57,7 +58,7 @@ open class PathWrapper(
         controlY2: Number = 0.0,
         x: Number = 0.0,
         y: Number = 0.0,
-        op: CubicCurveTo.()->Unit = {}
+        op: CubicCurveTo.() -> Unit = {}
     ) = apply {
         elements.add(
             CubicCurveTo(
@@ -66,15 +67,20 @@ open class PathWrapper(
         )
     }
 
-    fun lineTo(x: Number = 0.0, y: Number = 0.0) = apply {
-        elements.add(LineTo(x.toDouble(), y.toDouble()))
-    }
+    fun lineTo(x: Number = 0.0, y: Number = 0.0) =
+        apply {
+            elements.add(LineTo(x.toDouble(), y.toDouble()))
+        }
 
     fun arcTo(
-        radiusX: Number = 0.0, radiusY: Number = 0.0,
-        xAxisRotation: Number = 0.0, x: Number = 0.0,
-        y: Number = 0.0, largeArcFlag: Boolean = false,
-        sweepFlag: Boolean = false, op: ArcTo.()->Unit = {}
+        radiusX: Number = 0.0,
+        radiusY: Number = 0.0,
+        xAxisRotation: Number = 0.0,
+        x: Number = 0.0,
+        y: Number = 0.0,
+        largeArcFlag: Boolean = false,
+        sweepFlag: Boolean = false,
+        op: ArcTo.() -> Unit = {}
     ) = apply {
         elements.add(
             ArcTo(
@@ -85,8 +91,6 @@ open class PathWrapper(
     }
 
     fun closepath() = apply { elements.add(ClosePath()) }
-
-
 }
 
 

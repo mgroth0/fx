@@ -5,7 +5,7 @@ import javafx.application.Platform.runLater
 import javafx.geometry.Insets
 import javafx.scene.Node
 import javafx.scene.paint.Color
-import matt.color.IntColor
+import matt.color.common.IntColor
 import matt.css.MyStyleDsl
 import matt.css.props.ColorLikeCssConverter
 import matt.fx.graphics.wrapper.FXNodeWrapperDSL
@@ -15,11 +15,11 @@ import matt.fx.graphics.wrapper.style.FXColor
 import matt.fx.graphics.wrapper.style.toFXColor
 import matt.fx.graphics.wrapper.style.toMColor
 import matt.lang.assertions.require.requireEquals
+import matt.log.warn.common.warn
 import matt.log.warn.dumpStack
-import matt.log.warn.warn
-import matt.obs.prop.BindableProperty
+import matt.obs.prop.writable.BindableProperty
 import matt.prim.converters.StringConverter
-import matt.rstruct.loader.systemResourceLoader
+import matt.rstruct.loader.desktop.systemResourceLoader
 import java.util.logging.Level
 import kotlin.reflect.KProperty
 
@@ -28,7 +28,6 @@ object DarkModeController {
     private val detector = OsThemeDetector.getDetector()
 
     init {
-        //	LoggerFactory.getLogger(MacOSThemeDetector::class.java)
         /*warn("asked for help on github...")*/
         java.util.logging.LogManager.getLogManager().loggerNames.asIterator().forEach {
             /*println("logger:${it}")*/
@@ -82,9 +81,9 @@ fun SceneWrapper<*>.reloadStyle(darkMode: Boolean) {
         stylesheets.add(DARK_MODENA_CSS.toString())
         stylesheets.add(CUSTOM_CSS.toString())
 
-        //     ensure that even while the screen is loading it is black. So not white flashes or flickering while refreshing
+        /* ensure that even while the screen is loading it is black. So not white flashes or flickering while refreshing */
         fill =
-            Color.BLACK    //        maybe also possible by styleing .root in css, but if I remember correctly that also affects other nodes
+            Color.BLACK    /* maybe also possible by styleing .root in css, but if I remember correctly that also affects other nodes */
     }
 }
 
@@ -144,24 +143,24 @@ class StyleClassDSL(val s: Node) : MyStyleDsl() {
         s.style = ""
     }
 
-    var fxTextFill: Color? by custom(FXColorStringConverter)
-    var fxStroke: Color? by custom(FXColorStringConverter)
-    var fxFill: Color? by custom(FXColorStringConverter)
-    var fxBackgroundColor: Color? by custom(FXColorStringConverter)
+    var fxTextFill: Color? by Custom(FXColorStringConverter)
+    var fxStroke: Color? by Custom(FXColorStringConverter)
+    var fxFill: Color? by Custom(FXColorStringConverter)
+    var fxBackgroundColor: Color? by Custom(FXColorStringConverter)
 }
 
 object FXColorStringConverter : StringConverter<FXColor> {
-    override fun toString(t: FXColor): String = ColorLikeCssConverter.toString(
-        t.toMColor()
-    )
+    override fun toString(t: FXColor): String =
+        ColorLikeCssConverter.toString(
+            t.toMColor()
+        )
 
     override fun fromString(s: String): FXColor = ((ColorLikeCssConverter.fromString(s) as IntColor).toFXColor())
-
 }
 
 
 fun NodeWrapper.sty(op: StyleClassDSL.() -> Unit) {
-    StyleClassDSL(this.node).apply(op)
+    StyleClassDSL(node).apply(op)
 }
 
 
@@ -212,10 +211,10 @@ fun Insets.copy(
     horizontal: Number? = null,
     vertical: Number? = null
 ) = Insets(
-    vertical?.toDouble() ?: this.top,
-    horizontal?.toDouble() ?: this.right,
-    vertical?.toDouble() ?: this.bottom,
-    horizontal?.toDouble() ?: this.left
+    vertical?.toDouble() ?: top,
+    horizontal?.toDouble() ?: right,
+    vertical?.toDouble() ?: bottom,
+    horizontal?.toDouble() ?: left
 )
 
 val Insets.horizontal: Double

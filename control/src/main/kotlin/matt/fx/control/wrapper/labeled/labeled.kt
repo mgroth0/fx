@@ -65,6 +65,4 @@ open class LabeledWrapper<N : Labeled>(node: N) : ControlWrapperImpl<N>(node), C
         requireNull(index)
         graphic = child
     }
-
-
 }

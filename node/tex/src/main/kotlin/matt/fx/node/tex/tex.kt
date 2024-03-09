@@ -3,7 +3,7 @@ package matt.fx.node.tex
 import javafx.scene.paint.Color
 import kotlinx.serialization.Serializable
 import matt.caching.cache.LRUCache
-import matt.collect.map.dmap.withStoringDefault
+import matt.collect.map.dmap.inter.withStoringDefault
 import matt.fig.modell.EquationIr
 import matt.fig.render.EquationRenderer
 import matt.fx.graphics.style.DarkModeController
@@ -12,11 +12,11 @@ import matt.fx.node.proto.scaledcanvas.ScaledCanvas
 import matt.fx.node.proto.scaledcanvas.toCanvas
 import matt.fx.node.tex.internal.TexToPixelRenderer
 import matt.fx.node.tex.internal.isValidTeX
-import matt.lang.go
+import matt.lang.common.go
 import matt.lang.model.value.Value
 import matt.model.code.tex.TexCode
 import matt.obs.math.double.op.times
-import matt.obs.prop.BindableProperty
+import matt.obs.prop.writable.BindableProperty
 
 @Serializable
 class EquationNotReallyIrTex(val code: TexCode) : EquationIr
@@ -38,9 +38,10 @@ class TexNodeFactory(val scale: Double) {
     fun isValidTex(code: TexCode) = code.isValidTeX()
 
 
-    fun toCanvas(code: TexCode) = texPixels[code to DarkModeController.darkModeProp.value].value?.toCanvas()?.let {
-        TexCanvas(it, scaleCoef, this, code)
-    }
+    fun toCanvas(code: TexCode) =
+        texPixels[code to DarkModeController.darkModeProp.value].value?.toCanvas()?.let {
+            TexCanvas(it, scaleCoef, this, code)
+        }
 
 
     internal val texPixels by lazy {

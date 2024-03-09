@@ -15,12 +15,11 @@ fun <X : Any, Y : Any> ET.stackedareachart(
 
 
 open class StackedAreaChartWrapper<X : Any, Y : Any>(
-    node: StackedAreaChartForWrapper<X, Y>,
+    node: StackedAreaChartForWrapper<X, Y>
 ) : XYChartWrapper<X, Y, StackedAreaChartForWrapper<X, Y>>(node) {
 
     constructor(
         x: MAxis<X>,
         y: MAxis<Y>
     ) : this(StackedAreaChartForWrapper(x.node, y.node))
-
 }

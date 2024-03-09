@@ -9,7 +9,7 @@ import matt.obs.bind.smartBind
 import matt.obs.prop.ValProp
 
 class CheckMenuItemWrapper(
-    node: CheckMenuItem = CheckMenuItem(),
+    node: CheckMenuItem = CheckMenuItem()
 ): MenuItemWrapper<CheckMenuItem>(node) {
 
 

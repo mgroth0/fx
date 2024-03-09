@@ -12,9 +12,9 @@ import matt.fx.graphics.wrapper.region.RegionWrapper
 import matt.fx.graphics.wrapper.sizeman.SizeManaged
 import matt.lang.anno.Open
 import matt.lang.setall.setAll
-import matt.obs.prop.Var
+import matt.obs.prop.writable.Var
 
-fun <T> TreeItem<T>.treeitem(value: T? = null, op: TreeItem<T>.()->Unit = {}): TreeItem<T> {
+fun <T> TreeItem<T>.treeitem(value: T? = null, op: TreeItem<T>.() -> Unit = {}): TreeItem<T> {
     val treeItem = value?.let { TreeItem<T>(it) } ?: TreeItem<T>()
     treeItem.op()
     this += treeItem
@@ -22,7 +22,7 @@ fun <T> TreeItem<T>.treeitem(value: T? = null, op: TreeItem<T>.()->Unit = {}): T
 }
 
 operator fun <T> TreeItem<T>.plusAssign(treeItem: TreeItem<T>) {
-    this.children.add(treeItem)
+    children.add(treeItem)
 }
 
 interface TreeLikeWrapper<N: Region, T: Any>: RegionWrapper<NodeWrapper>, SelectingControl<TreeItem<T>>, SizeManaged {
@@ -53,8 +53,8 @@ interface TreeLikeWrapper<N: Region, T: Any>: RegionWrapper<NodeWrapper>, Select
  */
 fun <T: Any> populateTree(
     item: TreeItemWrapper<T>,
-    itemFactory: (T)->TreeItemWrapper<T>,
-    childFactory: (TreeItemWrapper<T>)->Iterable<T>?
+    itemFactory: (T) -> TreeItemWrapper<T>,
+    childFactory: (TreeItemWrapper<T>) -> Iterable<T>?
 ) {
     val children = childFactory.invoke(item)
 
@@ -63,24 +63,26 @@ fun <T: Any> populateTree(
         forEach { populateTree(it, itemFactory, childFactory) }
     }
 
-    (children as? ObservableList<T>)?.addListener(ListChangeListener { change ->
-        while (change.next()) {
-            if (change.wasPermutated()) {
-                item.children.subList(change.from, change.to).clear()
-                val permutated = change.list.subList(change.from, change.to).map { itemFactory(it) }
-                item.children.addAll(change.from, permutated)
-                permutated.forEach { populateTree(it, itemFactory, childFactory) }
-            } else {
-                if (change.wasRemoved()) {
-                    val removed = change.removed.flatMap { removed -> item.children.filter { it.value == removed } }
-                    item.children.removeAll(removed)
-                }
-                if (change.wasAdded()) {
-                    val added = change.addedSubList.map { itemFactory(it) }
-                    item.children.addAll(change.from, added)
-                    added.forEach { populateTree(it, itemFactory, childFactory) }
+    (children as? ObservableList<T>)?.addListener(
+        ListChangeListener { change ->
+            while (change.next()) {
+                if (change.wasPermutated()) {
+                    item.children.subList(change.from, change.to).clear()
+                    val permutated = change.list.subList(change.from, change.to).map { itemFactory(it) }
+                    item.children.addAll(change.from, permutated)
+                    permutated.forEach { populateTree(it, itemFactory, childFactory) }
+                } else {
+                    if (change.wasRemoved()) {
+                        val removed = change.removed.flatMap { removed -> item.children.filter { it.value == removed } }
+                        item.children.removeAll(removed)
+                    }
+                    if (change.wasAdded()) {
+                        val added = change.addedSubList.map { itemFactory(it) }
+                        item.children.addAll(change.from, added)
+                        added.forEach { populateTree(it, itemFactory, childFactory) }
+                    }
                 }
             }
         }
-    })
+    )
 }

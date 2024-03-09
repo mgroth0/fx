@@ -1,7 +1,7 @@
 package matt.fx.graphics.wrapper.node.tri
 
 import matt.fx.graphics.wrapper.node.shape.poly.PolygonWrapper
-import matt.obs.prop.BindableProperty
+import matt.obs.prop.writable.BindableProperty
 
 class Triangle : PolygonWrapper() {
     private fun Double.hToTri(): DoubleArray {
@@ -25,5 +25,4 @@ class Triangle : PolygonWrapper() {
             it.hToTri().toList()
         }
     }
-
 }

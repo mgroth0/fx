@@ -2,7 +2,7 @@ package matt.fx.graphics.wrapper.sizeman
 
 import matt.lang.anno.Open
 import matt.obs.math.double.ObsD
-import matt.obs.prop.Var
+import matt.obs.prop.writable.Var
 
 interface SizeControlled : HeightControlled, WidthControlled, Sized
 
@@ -40,7 +40,6 @@ interface SizeManaged : HeightManaged, WidthManaged, Sized {
         this minBind other
         this maxBind other
     }
-
 }
 
 interface HeightManaged : HasHeight {
@@ -91,7 +90,6 @@ interface WidthManaged : HasWidth {
         set(value) {
             maxWidthProperty.value = value
         }
-
 }
 
 interface Sized : HasWidth, HasHeight

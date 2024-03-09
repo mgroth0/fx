@@ -15,8 +15,8 @@ import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
 import matt.fx.graphics.wrapper.text.text
 import matt.gui.mscene.MScene
 import matt.gui.mstage.MStage
-import matt.obs.prop.VarProp
-import matt.time.dur.sec
+import matt.obs.prop.writable.VarProp
+import matt.time.dur.common.sec
 import java.util.WeakHashMap
 
 const val NOTIFICATION_WIDTH = 200.0
@@ -32,50 +32,50 @@ fun notification(
 ) {
 
     Platform.runLater {
-        val stage = MStage().apply {
-            pullBackWhenOffScreen = false
-            isAlwaysOnTop = true
-        }
-        stage.scene = MScene(
-            VBoxWrapperImpl<NodeWrapper>().apply {
-                this.alignment = TOP_CENTER
-                Platform.runLater {
-                    backgroundFill = Color.SKYBLUE
-                }
-                exactHeight = 100.00
-                exactWidth = NOTIFICATION_WIDTH
-                this.text(text) {
+        val stage =
+            MStage().apply {
+                pullBackWhenOffScreen = false
+                isAlwaysOnTop = true
+            }
+        stage.scene =
+            MScene(
+                VBoxWrapperImpl<NodeWrapper>().apply {
+                    alignment = TOP_CENTER
                     Platform.runLater {
-                        fill = Color.YELLOW
+                        backgroundFill = Color.SKYBLUE
+                    }
+                    exactHeight = 100.00
+                    exactWidth = NOTIFICATION_WIDTH
+                    this.text(text) {
+                        Platform.runLater {
+                            fill = Color.YELLOW
+                        }
+                    }
+                    setOnMousePressed {
+                        stage.close()
                     }
                 }
-                setOnMousePressed {
-                    stage.close()
-                }
+            ).apply {
+                fill = Color.SKYBLUE
             }
-        ).apply {
-            this.fill = Color.SKYBLUE
-        }
         val screen = Screen.getScreens().minByOrNull { it.bounds.minX }!!
-        //	stage.x = screen.bounds.minX - 110.0
-        //	stage.y = screen.bounds.minY + 50.0
-        //	println("screen.bounds.minX=${ screen.bounds.minX}")
-        //	println("stage.x1=${stage.x}")
 
         stage.x = screen.bounds.minX - NOTIFICATION_WIDTH - 10.0
         stage.y = screen.bounds.minY + 50.0 + Y_MOVE_AMOUNT * openNotifications.size
         notificationYs[stage] = stage.y
 
-        val fakeXProp = VarProp(stage.x).apply {
-            onChange {
-                stage.x = it
+        val fakeXProp =
+            VarProp(stage.x).apply {
+                onChange {
+                    stage.x = it
+                }
             }
-        }
-        val fakeYProp = VarProp(stage.y).apply {
-            onChange {
-                stage.y = it
+        val fakeYProp =
+            VarProp(stage.y).apply {
+                onChange {
+                    stage.y = it
+                }
             }
-        }
         fakeYProps[stage] = fakeYProp
 
         stage.showingProperty.onChange {
@@ -92,7 +92,6 @@ fun notification(
                         notificationYs[it] = notificationYs[it]!! - Y_MOVE_AMOUNT
                     }
                 }
-
             }
         }
         stage.show()

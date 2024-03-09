@@ -14,19 +14,18 @@ interface WrapperService : MattService {
     fun <E : EventTarget> wrapped(e: E): EventTargetWrapper
 
     @Open
-    fun <E : EventTarget, W : EventTargetWrapper> uncheckedWrapperConverter() = object : BiConverter<E, W> {
+    fun <E : EventTarget, W : EventTargetWrapper> uncheckedWrapperConverter() =
+        object : BiConverter<E, W> {
 
 
-        override fun convertToB(a: E): W {
-            @Suppress("UNCHECKED_CAST") return wrapped(a) as W
+            override fun convertToB(a: E): W {
+                @Suppress("UNCHECKED_CAST") return wrapped(a) as W
+            }
+
+            override fun convertToA(b: W): E {
+                @Suppress("UNCHECKED_CAST") return b.node as E
+            }
         }
-
-        override fun convertToA(b: W): E {
-            @Suppress("UNCHECKED_CAST") return b.node as E
-        }
-
-
-    }
 }
 
 object WrapperServiceHub : ServiceHub<WrapperService>()

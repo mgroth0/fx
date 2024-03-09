@@ -50,7 +50,6 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
     data: ObservableList<Series<X, Y>> = FXCollections.observableArrayList()
 ) :
     XYChartForPackagePrivateProps<X, Y>(xAxis, yAxis) {
-        // -------------- PRIVATE FIELDS -------------------------------------------
         private val seriesCategoryMap: MutableMap<Series<X, Y>, MutableMap<String?, Data<X, Y>>> = HashMap()
         private var orientation: Orientation? = null
         private var categoryAxis: CategoryAxisForCatAxisWrapper? = null
@@ -59,22 +58,22 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
         private var bottomPos = 0.0
         private var pt: ParallelTransition? = null
 
-        // For storing data values in case removed and added immediately.
+        /* For storing data values in case removed and added immediately. */
         private val XYValueMap: MutableMap<Data<X, Y>, Double> = HashMap()
-        // -------------- PUBLIC PROPERTIES ----------------------------------------
         /** The gap to leave between bars in the same category  */
-        private val barGap: DoubleProperty = object : StyleableDoubleProperty(4.0) {
-            override fun invalidated() {
-                get()
-                requestChartLayout()
+        private val barGap: DoubleProperty =
+            object : StyleableDoubleProperty(4.0) {
+                override fun invalidated() {
+                    get()
+                    requestChartLayout()
+                }
+
+                override fun getBean(): Any = this@BarChartForWrapper
+
+                override fun getName(): String = "barGap"
+
+                override fun getCssMetaData(): CssMetaData<BarChartForWrapper<*, *>, Number> = BAR_GAP
             }
-
-            override fun getBean(): Any = this@BarChartForWrapper
-
-            override fun getName(): String = "barGap"
-
-            override fun getCssMetaData(): CssMetaData<BarChartForWrapper<*, *>, Number> = BAR_GAP
-        }
 
         fun getBarGap(): Double = barGap.value
 
@@ -85,18 +84,19 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
         fun barGapProperty(): DoubleProperty = barGap
 
         /** The gap to leave between bars in separate categories  */
-        private val categoryGap: DoubleProperty = object : StyleableDoubleProperty(10.0) {
-            override fun invalidated() {
-                get()
-                requestChartLayout()
+        private val categoryGap: DoubleProperty =
+            object : StyleableDoubleProperty(10.0) {
+                override fun invalidated() {
+                    get()
+                    requestChartLayout()
+                }
+
+                override fun getBean(): Any = this@BarChartForWrapper
+
+                override fun getName(): String = "categoryGap"
+
+                override fun getCssMetaData(): CssMetaData<BarChartForWrapper<*, *>, Number> = CATEGORY_GAP
             }
-
-            override fun getBean(): Any = this@BarChartForWrapper
-
-            override fun getName(): String = "categoryGap"
-
-            override fun getCssMetaData(): CssMetaData<BarChartForWrapper<*, *>, Number> = CATEGORY_GAP
-        }
 
         fun getCategoryGap(): Double = categoryGap.value
 
@@ -125,29 +125,29 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
             setCategoryGap(categoryGap)
         }
 
-        // -------------- PROTECTED METHODS ----------------------------------------
         override fun dataItemAdded(
             series: Series<X, Y>,
             itemIndex: Int,
             item: Data<X, Y>
         ) {
             val category: String?
-            category = if (orientation == VERTICAL) {
-                item.xValueProp.value as String?
-            } else {
-                item.yValueProp.value as String?
-            }
+            category =
+                if (orientation == VERTICAL) {
+                    item.xValueProp.value as String?
+                } else {
+                    item.yValueProp.value as String?
+                }
             var categoryMap = seriesCategoryMap[series]
             if (categoryMap == null) {
                 categoryMap = HashMap()
                 seriesCategoryMap[series] = categoryMap
             }
-            // check if category is already present
+            /* check if category is already present */
             if (!categoryAxis!!.categories.value.contains(category)) {
-                // note: cat axis categories can be updated only when autoranging is true.
+                /* note: cat axis categories can be updated only when autoranging is true. */
                 categoryAxis!!.categories.value.add(itemIndex, category)
             } else if (categoryMap.containsKey(category)) {
-                // RT-21162 : replacing the previous data, first remove the node from scenegraph.
+                /* RT-21162 : replacing the previous data, first remove the node from scenegraph. */
                 val data = categoryMap[category]!!
                 plotChildren.remove(data.nodeProp.value)
                 removeDataItemFromDisplay(series, data)
@@ -172,10 +172,11 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
             if (shouldAnimate()) {
                 XYValueMap.clear()
                 dataRemoveTimeline = createDataRemoveTimeline(item, bar, series)
-                dataRemoveTimeline!!.onFinished = EventHandler {
-                    item.setSeries(null)
-                    removeDataItemFromDisplay(series, item)
-                }
+                dataRemoveTimeline!!.onFinished =
+                    EventHandler {
+                        item.setSeries(null)
+                        removeDataItemFromDisplay(series, item)
+                    }
                 dataRemoveTimeline!!.play()
             } else {
                 processDataRemove(series, item)
@@ -194,13 +195,21 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
                 barVal = (item.xValueProp.value as Number?)!!.toDouble()
                 currentVal = (item.currentX.value as Number?)!!.toDouble()
             }
-            if (currentVal > 0 && barVal < 0) { // going from positive to negative
-                // add style class negative
+            if (currentVal > 0 && barVal < 0) {
+                /*
+ going from positive to negative
+ add style class negative
+                 */
                 item.nodeProp.value.styleClass.add(NEGATIVE_STYLE)
-            } else if (currentVal < 0 && barVal > 0) { // going from negative to positive
-                // remove style class negative
-                // RT-21164 upside down bars: was adding NEGATIVE_STYLE styleclass
-                // instead of removing it; when going from negative to positive
+            } else if (currentVal < 0 &&
+                barVal > 0
+            ) {
+                /*
+ going from negative to positive
+ remove style class negative
+ RT-21164 upside down bars: was adding NEGATIVE_STYLE styleclass
+ instead of removing it; when going from negative to positive
+                 */
                 item.nodeProp.value.styleClass.remove(NEGATIVE_STYLE)
             }
         }
@@ -221,25 +230,29 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
             series: Series<X, Y>,
             seriesIndex: Int
         ) {
-            // handle any data already in series
-            // create entry in the map
+            /*
+            handle any data already in series
+            create entry in the map
+             */
             val categoryMap: MutableMap<String?, Data<X, Y>> = HashMap()
             for (j in series.data.value.indices) {
                 val item = series.data.value[j]
                 val bar = createBar(series, seriesIndex, item, j)
                 var category: String?
-                category = if (orientation == VERTICAL) {
-                    item.xValueProp.value as String?
-                } else {
-                    item.yValueProp.value as String?
-                }
+                category =
+                    if (orientation == VERTICAL) {
+                        item.xValueProp.value as String?
+                    } else {
+                        item.yValueProp.value as String?
+                    }
                 categoryMap[category] = item
                 if (shouldAnimate()) {
                     animateDataAdd(item, bar)
                 } else {
-                    // RT-21164 check if bar value is negative to add NEGATIVE_STYLE style class
+                    /* RT-21164 check if bar value is negative to add NEGATIVE_STYLE style class */
                     val barVal =
-                        if (orientation == VERTICAL) (item.yValueProp.value as Number?)!!.toDouble() else (item.xValueProp.value as Number?)!!.toDouble()
+                        if (orientation == VERTICAL) (item.yValueProp.value as Number?)!!.toDouble()
+                        else (item.xValueProp.value as Number?)!!.toDouble()
                     if (barVal < 0) {
                         bar.styleClass.add(NEGATIVE_STYLE)
                     }
@@ -250,30 +263,32 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
         }
 
         override fun seriesRemoved(series: Series<X, Y>) {
-            // remove all symbol nodes
+            /* remove all symbol nodes */
             if (shouldAnimate()) {
                 pt = ParallelTransition()
-                pt!!.onFinished = EventHandler {
-                    removeSeriesFromDisplay(
-                        series
-                    )
-                }
+                pt!!.onFinished =
+                    EventHandler {
+                        removeSeriesFromDisplay(
+                            series
+                        )
+                    }
                 XYValueMap.clear()
                 for (d in series.data.value) {
                     val bar = d.nodeProp.value
-                    // Animate series deletion
+                    /* Animate series deletion */
                     if (seriesSize > 1) {
                         val t = createDataRemoveTimeline(d, bar, series)
                         pt!!.children.add(t)
                     } else {
-                        // fade out last series
+                        /* fade out last series */
                         val ft = FadeTransition(Duration.millis(700.0), bar)
                         ft.fromValue = 1.0
                         ft.toValue = 0.0
-                        ft.onFinished = EventHandler {
-                            processDataRemove(series, d)
-                            bar.opacity = 1.0
-                        }
+                        ft.onFinished =
+                            EventHandler {
+                                processDataRemove(series, d)
+                                bar.opacity = 1.0
+                            }
                         pt!!.children.add(ft)
                     }
                 }
@@ -309,16 +324,17 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
         /** {@inheritDoc}  */
         override fun layoutPlotChildren() {
             val catSpace = categoryAxis!!.categorySpacing.value
-            // calculate bar spacing
+            /* calculate bar spacing */
             val availableBarSpace = catSpace - (getCategoryGap() + getBarGap())
             var barWidth = availableBarSpace / seriesSize - getBarGap()
             val barOffset = -((catSpace - getCategoryGap()) / 2)
-            val zeroPos = if (valueAxis!!.lowerBound.value as Double > 0.0) valueAxisGetDisplayPosition(
-                valueAxis!!.lowerBound
-            ) else valueAxis!!.zeroPosition
-            // RT-24813 : if the data in a series gets too large, barWidth can get negative.
+            val zeroPos =
+                if (valueAxis!!.lowerBound.value as Double > 0.0) valueAxisGetDisplayPosition(
+                    valueAxis!!.lowerBound
+                ) else valueAxis!!.zeroPosition
+            /* RT-24813 : if the data in a series gets too large, barWidth can get negative. */
             if (barWidth <= 0) barWidth = 1.0
-            // update bar positions and sizes
+            /* update bar positions and sizes */
             var catIndex = 0
             for (category in categoryAxis!!.categories.value) {
                 var index = 0
@@ -373,7 +389,6 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
             return legendItem
         }
 
-        // -------------- PRIVATE METHODS ------------------------------------------
         private fun updateMap(
             series: Series<X, Y>,
             item: Data<X, Y>
@@ -412,14 +427,16 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
                 item.yValueProp.value = yAxis.toRealValue(barVal)
                 animate(
                     KeyFrame(
-                        Duration.ZERO, KeyValue(
+                        Duration.ZERO,
+                        KeyValue(
                             item.currentYProperty(),
                             item.currentY.value,
                             MyInterpolator.MY_DEFAULT_INTERPOLATOR
                         )
                     ),
                     KeyFrame(
-                        Duration.millis(700.0), KeyValue(
+                        Duration.millis(700.0),
+                        KeyValue(
                             item.currentYProperty(),
                             item.yValueProp.value, MyInterpolator.EASE_BOTH
                         )
@@ -435,14 +452,16 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
                 item.xValueProp.value = xAxis.toRealValue(barVal)
                 animate(
                     KeyFrame(
-                        Duration.ZERO, KeyValue(
+                        Duration.ZERO,
+                        KeyValue(
                             item.currentXProperty(),
                             item.currentX.value,
                             MyInterpolator.MY_DEFAULT_INTERPOLATOR
                         )
                     ),
                     KeyFrame(
-                        Duration.millis(700.0), KeyValue(
+                        Duration.millis(700.0),
+                        KeyValue(
                             item.currentXProperty(),
                             item.xValueProp.value, MyInterpolator.EASE_BOTH
                         )
@@ -459,14 +478,13 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
         ): Timeline {
             val t = Timeline()
             if (orientation == VERTICAL) {
-                //            item.setYValue(getYAxis().toRealValue(getYAxis().getZeroPosition()));
-
-                // save data values in case the same data item gets added immediately.
+                /* save data values in case the same data item gets added immediately. */
                 XYValueMap[item] = (item.yValueProp.value as Number?)!!.toDouble()
                 item.yValueProp.value = yAxis.toRealValue(bottomPos)
                 t.keyFrames.addAll(
                     KeyFrame(
-                        Duration.ZERO, KeyValue(
+                        Duration.ZERO,
+                        KeyValue(
                             item.currentYProperty(), item.currentY.value,
                             MyInterpolator.MY_DEFAULT_INTERPOLATOR
                         )
@@ -475,7 +493,8 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
                         Duration.millis(700.0), {
                             processDataRemove(series, item)
                             XYValueMap.clear()
-                        }, KeyValue(
+                        },
+                        KeyValue(
                             item.currentYProperty(),
                             item.yValueProp.value,
                             MyInterpolator.EASE_BOTH
@@ -483,12 +502,13 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
                     )
                 )
             } else {
-                // save data values in case the same data item gets added immediately.
+                /* save data values in case the same data item gets added immediately. */
                 XYValueMap[item] = (item.xValueProp.value as Number?)!!.toDouble()
                 item.xValueProp.value = xAxis.toRealValue(xAxis.zeroPosition)
                 t.keyFrames.addAll(
                     KeyFrame(
-                        Duration.ZERO, KeyValue(
+                        Duration.ZERO,
+                        KeyValue(
                             item.currentXProperty(), item.currentX.value,
                             MyInterpolator.MY_DEFAULT_INTERPOLATOR
                         )
@@ -497,7 +517,8 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
                         Duration.millis(700.0), {
                             processDataRemove(series, item)
                             XYValueMap.clear()
-                        }, KeyValue(
+                        },
+                        KeyValue(
                             item.currentXProperty(),
                             item.xValueProp.value,
                             MyInterpolator.EASE_BOTH
@@ -526,7 +547,7 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
         private fun restoreDataValues(item: Data<X, Y>) {
             val value = XYValueMap[item]
             if (value != null) {
-                // Restoring original X/Y values
+                /* Restoring original X/Y values */
                 @Suppress("UNCHECKED_CAST")
                 if (orientation == VERTICAL) {
                     item.yValue = (value as Y)
@@ -590,7 +611,6 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
             return catmap?.get(category)
         }
 
-        // -------------- STYLESHEET HANDLING ------------------------------------------------------------------------------
     /*
      * Super-lazy instantiation pattern from Bill Pugh.
      */
@@ -605,14 +625,18 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
                     override fun isSettable(node: BarChartForWrapper<*, *>): Boolean = node.barGap.value == null || !node.barGap.isBound
 
                     @Suppress("UNCHECKED_CAST")
-                    override fun getStyleableProperty(node: BarChartForWrapper<*, *>): StyleableProperty<Number?> = node.barGapProperty() as StyleableProperty<Number?>
+                    override fun getStyleableProperty(
+                        node: BarChartForWrapper<*, *>
+                    ): StyleableProperty<Number?> = node.barGapProperty() as StyleableProperty<Number?>
                 }
             internal val CATEGORY_GAP: CssMetaData<BarChartForWrapper<*, *>, Number> =
                 object : CssMetaData<BarChartForWrapper<*, *>, Number>(
                     "-fx-category-gap",
                     SizeConverter.getInstance(), 10.0
                 ) {
-                    override fun isSettable(node: BarChartForWrapper<*, *>): Boolean = node.categoryGap.value == null || !node.categoryGap.isBound
+                    override fun isSettable(
+                        node: BarChartForWrapper<*, *>
+                    ): Boolean = node.categoryGap.value == null || !node.categoryGap.isBound
 
                     override fun getStyleableProperty(node: BarChartForWrapper<*, *>): StyleableProperty<Number?> {
                         @Suppress("UNCHECKED_CAST")
@@ -625,7 +649,6 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
                 styleables.add(CATEGORY_GAP)
                 Collections.unmodifiableList(styleables)
             }
-
         }
 
         /**
@@ -640,9 +663,9 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
          * @param xAxis The x axis to use
          * @param yAxis The y axis to use
          * @param data The data to use, this is the actual list used so any changes to it will be reflected in the chart
-         */
-        // -------------- CONSTRUCTOR ----------------------------------------------
-        /**
+
+
+
          * Construct a new BarChart with the given axis. The two axis should be a ValueAxis/NumberAxis and a CategoryAxis,
          * they can be in either order depending on if you want a horizontal or vertical bar chart.
          *
@@ -664,7 +687,7 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
                 valueAxis = xAxis as MoreGenericValueAxis<*>?
                 orientation = HORIZONTAL
             }
-            // update css
+            /* update css */
             pseudoClassStateChanged(HORIZONTAL_PSEUDOCLASS_STATE, orientation == HORIZONTAL)
             pseudoClassStateChanged(VERTICAL_PSEUDOCLASS_STATE, orientation == VERTICAL)
             setData(data)

@@ -11,7 +11,7 @@ class ProcpaneTests() : FxTests() {
     @Test
     fun instantiateClasses() {
         FXTester.runFXHeadlessApp {
-            ProcessInspectPane(ExecProcessSpawner(this).sendCommand("echo", "hi"))
+            ProcessInspectPane(ExecProcessSpawner(this).sendCommand("echo", "hi").process)
         }
     }
 }

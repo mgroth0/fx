@@ -8,7 +8,7 @@ import matt.fx.control.chart.line.highperf.relinechart.xy.chart.ChartForPrivateP
 import matt.fx.graphics.wrapper.inter.titled.Titled
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.region.RegionWrapperImpl
-import matt.lang.NOT_IMPLEMENTED
+import matt.lang.common.NOT_IMPLEMENTED
 
 
 open class ChartWrapper<N: ChartForPrivateProps>(node: N): RegionWrapperImpl<N, NodeWrapper>(node), Titled {
@@ -23,5 +23,4 @@ open class ChartWrapper<N: ChartForPrivateProps>(node: N): RegionWrapperImpl<N, 
 
     val legendVisibleProperty: NonNullFXBackedBindableProp<Boolean> by lazy { node.legendVisibleProperty().toNonNullableProp() }
     var isLegendVisible by legendVisibleProperty
-
 }

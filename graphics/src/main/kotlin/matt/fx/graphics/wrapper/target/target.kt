@@ -4,7 +4,7 @@ import matt.fx.graphics.wrapper.EventTargetWrapper
 import matt.obs.prop.ObsVal
 
 
-fun <T: EventTargetWrapper> T.replaceChildren(op: T.()->Unit) {
+fun <T: EventTargetWrapper> T.replaceChildren(op: T.() -> Unit) {
     childList?.clear()
     op(this)
 }
@@ -17,8 +17,8 @@ fun <T: EventTargetWrapper> T.replaceChildren(op: T.()->Unit) {
  *
  * The onChangeBuilder is run immediately with the current value of the property.
  */
-fun <S: EventTargetWrapper, T> S.dynamicContent(property: ObsVal<T>, onChangeBuilder: S.(T?)->Unit) {
-    val onChange: (T?)->Unit = {
+fun <S: EventTargetWrapper, T> S.dynamicContent(property: ObsVal<T>, onChangeBuilder: S.(T?) -> Unit) {
+    val onChange: (T?) -> Unit = {
         childList?.clear()
         onChangeBuilder(this@dynamicContent, it)
     }

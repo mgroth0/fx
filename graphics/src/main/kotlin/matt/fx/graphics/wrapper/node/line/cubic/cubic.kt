@@ -15,7 +15,7 @@ fun NodeWrapperImpl<Parent>.cubiccurve(
     controlY2: Number = 0.0,
     endX: Number = 0.0,
     endY: Number = 0.0,
-    op: CubicCurveWrapper.()->Unit = {}
+    op: CubicCurveWrapper.() -> Unit = {}
 ) =
     CubicCurveWrapper(
         startX.toDouble(), startY.toDouble(), controlX1.toDouble(), controlY1.toDouble(), controlX2.toDouble(),
@@ -23,7 +23,7 @@ fun NodeWrapperImpl<Parent>.cubiccurve(
     ).attachTo(this, op)
 
 open class CubicCurveWrapper(
-    node: CubicCurve = CubicCurve(),
+    node: CubicCurve = CubicCurve()
 ): ShapeWrapper<CubicCurve>(node) {
 
     constructor(
@@ -36,5 +36,4 @@ open class CubicCurveWrapper(
         endX: Double,
         endY: Double
     ): this(CubicCurve(startX, startY, controlX1, controlY1, controlX2, controlY2, endX, endY))
-
 }

@@ -18,7 +18,7 @@ fun ET.line(
 
 
 open class LineWrapper(
-    node: Line = Line(),
+    node: Line = Line()
 ) : ShapeWrapper<Line>(node) {
 
     constructor(
@@ -30,10 +30,11 @@ open class LineWrapper(
 
 
     var bothXs: Double
-        get() = run {
-            requireEquals(startX, endX)
-            startX
-        }
+        get() =
+            run {
+                requireEquals(startX, endX)
+                startX
+            }
         set(value) {
             startX = value
             endX = value
@@ -67,6 +68,4 @@ open class LineWrapper(
         }
 
     val endYProperty by lazy { node.endYProperty().toNonNullableProp() }
-
-
 }

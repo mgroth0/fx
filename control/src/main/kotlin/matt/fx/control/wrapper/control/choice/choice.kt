@@ -1,5 +1,6 @@
 package matt.fx.control.wrapper.control.choice
 
+import javafx.beans.property.ObjectProperty
 import javafx.event.ActionEvent
 import javafx.scene.control.ChoiceBox
 import javafx.scene.input.KeyCode.ENTER
@@ -20,16 +21,17 @@ import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.lang.anno.SeeURL
 import matt.lang.assertions.require.requireNull
+import matt.lang.common.go
 import matt.lang.delegation.lazyVarDelegate
-import matt.lang.go
 import matt.obs.bind.smartBind
 import matt.obs.col.olist.MutableObsList
 import matt.obs.col.olist.toBasicObservableList
-import matt.obs.prop.BindableProperty
 import matt.obs.prop.ValProp
+import matt.obs.prop.writable.BindableProperty
 import matt.prim.str.upper
-import matt.time.dur.sec
+import matt.time.dur.common.sec
 import java.lang.System.currentTimeMillis
+import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
 
 inline fun <T : Any> ET.choicebox(
@@ -39,7 +41,7 @@ inline fun <T : Any> ET.choicebox(
     op: ChoiceBoxWrapper<T>.() -> Unit = {}
 ): ChoiceBoxWrapper<T> {
     contract {
-        callsInPlace(op, kotlin.contracts.InvocationKind.EXACTLY_ONCE)
+        callsInPlace(op, InvocationKind.EXACTLY_ONCE)
     }
     return ChoiceBoxWrapper<T>().attachTo(this, op) {
         if (values != null) it.items = (values as? MutableObsList<T>) ?: values.toBasicObservableList()
@@ -61,7 +63,7 @@ inline fun <T : Any> ET.choicebox(
 
 
 class ChoiceBoxWrapper<T : Any>(
-    node: ChoiceBox<T> = ChoiceBox(),
+    node: ChoiceBox<T> = ChoiceBox()
 ) : ControlWrapperImpl<ChoiceBox<T>>(node), SelectingControl<T>, HasWritableValue<T?> {
 
     constructor(items: MutableObsList<T>) : this(ChoiceBox(items.createFXWrapper()))
@@ -81,19 +83,19 @@ class ChoiceBoxWrapper<T : Any>(
             node.converter = value
         }
 
-    val converterProperty by lazy {
+    val converterProperty: ObjectProperty<StringConverter<T>> by lazy {
         node.converterProperty()
     }
 
     fun <R> convertBy(op: (T) -> R) {
-        converter = object : StringConverter<T?>() {
-            override fun toString(`object`: T?): String = `object`?.let { op(it) }.toString()
+        converter =
+            object : StringConverter<T?>() {
+                override fun toString(`object`: T?): String = `object`?.let { op(it) }.toString()
 
-            override fun fromString(string: String?): T? {
-                TODO()
+                override fun fromString(string: String?): T? {
+                    TODO()
+                }
             }
-
-        }
     }
 
     val itemsProperty by lazy { node.itemsProperty().toNullableProp().proxy(mfxMutableListConverter<T>().nullable()) }
@@ -156,6 +158,7 @@ fun <T : Any> ChoiceBoxWrapper<T>.bind(
 ) =
     valueProperty.smartBind(property, readonly)
 
+@Suppress("ForbiddenAnnotation")
 @JvmName("bindNonNull")
 fun <T : Any> ChoiceBoxWrapper<T>.bind(
     property: ValProp<T>,

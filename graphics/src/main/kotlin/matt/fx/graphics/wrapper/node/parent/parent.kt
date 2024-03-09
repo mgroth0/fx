@@ -52,10 +52,10 @@ interface ParentWrapper<C : NodeWrapper> : NodeWrapper {
         add(child)
         return child
     }
-
 }
 
-abstract class ParentWrapperImpl<out N : Parent, C : NodeWrapper>(node: N) : NodeWrapperImpl<N>(node),
+abstract class ParentWrapperImpl<out N : Parent, C : NodeWrapper>(node: N) :
+    NodeWrapperImpl<N>(node),
     ParentWrapper<C> {
 
 
@@ -68,24 +68,15 @@ abstract class ParentWrapperImpl<out N : Parent, C : NodeWrapper>(node: N) : Nod
     }
 
     fun requestLayout() = node.requestLayout()
-
 }
 
 val NodeWrapper.parent get() : ParentWrapper<*>? = node.parent?.wrapped() as ParentWrapper<*>?
 
-fun NodeWrapper.parentProperty() = node.parentProperty().toNullableROProp().binding {
-    it?.wrapped()
-}
+fun NodeWrapper.parentProperty() =
+    node.parentProperty().toNullableROProp().binding {
+        it?.wrapped()
+    }
 
 
-//@Suppress("UNCHECKED_CAST", "PLATFORM_CLASS_MAPPED_TO_KOTLIN")
-//private fun Parent.getChildrenReflectively(): MutableList<Node>? {
-//    val getter = this.javaClass.findMethodByName("getChildren")
-//    if (getter != null && java.util.List::class.java.isAssignableFrom(getter.returnType)) {
-//        getter.isAccessible = true
-//        return getter.invoke(this) as MutableList<Node>
-//    }
-//    return null
-//}
 
 

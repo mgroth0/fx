@@ -10,7 +10,7 @@ const val DEFAULT_IGNORE_FIX = false
 data class FxHotKey(
     val hotKey: Hotkey,
     override val previous: FxPrevHotKey? = null,
-    override val isIgnoreFix: Boolean = DEFAULT_IGNORE_FIX,
+    override val isIgnoreFix: Boolean = DEFAULT_IGNORE_FIX
 ) : FxHotKeyLike(), KeyStrokeProps by hotKey {
 
     val theOp get() = hotKey.handler
@@ -20,7 +20,7 @@ data class FxHotKey(
 data class FxPrevHotKey(
     override val keyStroke: KeyStroke,
     override val previous: FxPrevHotKey? = null,
-    override val isIgnoreFix: Boolean = DEFAULT_IGNORE_FIX,
+    override val isIgnoreFix: Boolean = DEFAULT_IGNORE_FIX
 ) : FxHotKeyLike(), KeyStrokeProps by keyStroke
 
 sealed class FxHotKeyLike : KeyStrokeProps {
@@ -28,6 +28,5 @@ sealed class FxHotKeyLike : KeyStrokeProps {
     abstract val previous: FxPrevHotKey?
 
     abstract val keyStroke: KeyStroke
-
 }
 

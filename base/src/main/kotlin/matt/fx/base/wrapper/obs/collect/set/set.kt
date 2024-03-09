@@ -5,6 +5,9 @@ import javafx.beans.Observable
 import javafx.collections.ObservableSet
 import javafx.collections.SetChangeListener
 import matt.collect.map.FakeMutableSet
+import matt.lang.anno.JetBrainsYouTrackProject.KT
+import matt.lang.anno.Open
+import matt.lang.anno.YouTrackIssue
 import matt.lang.convert.BiConverter
 import matt.lang.function.Consume
 import matt.lang.function.Op
@@ -25,6 +28,7 @@ import matt.obs.listen.SetListener
 import matt.obs.listen.SetListenerBase
 import matt.obs.listen.update.SetUpdate
 import matt.obs.prop.ObsVal
+import java.util.Spliterator
 
 fun <E> ObservableSet<E>.createImmutableWrapper() = FXBackedImmutableObservableSet(this)
 fun <E> ObservableSet<E>.createMutableWrapper() = FXBackedMutableObservableSet(this)
@@ -40,73 +44,103 @@ fun <E> MyObservableSetWrapper<E>.onRemove(op: Consume<E>) = listen(onAdd = { },
 
 fun <E> MyObservableSetWrapper<E>.listen(
     onAdd: ((E) -> Unit),
-    onRemove: ((E) -> Unit),
+    onRemove: ((E) -> Unit)
 ) {
-    addListener(SetChangeListener {
-        if (it.wasAdded()) {
-            onAdd(it.elementAdded)
+    addListener(
+        SetChangeListener {
+            if (it.wasAdded()) {
+                onAdd(it.elementAdded)
+            }
+            if (it.wasRemoved()) {
+                onRemove(it.elementRemoved)
+            }
         }
-        if (it.wasRemoved()) {
-            onRemove(it.elementRemoved)
+    )
+}
+
+
+fun <E> MyObservableSetWrapper<E>.changeListener(op: (SetChangeListener.Change<out E>) -> Unit) =
+    run {
+        val l = SetChangeListener<E> { op(it) }
+        addListener(l)
+        l
+    }
+
+fun <E> MyObservableSetWrapper<E>.onChange(op: (SetChangeListener.Change<out E>) -> Unit) =
+    apply {
+        addListener(SetChangeListener { op(it) })
+    }
+
+
+/*Should itself be a Set!*/
+@YouTrackIssue(KT, 65555)
+interface MyObservableSetWrapperPlusSet<E> : MyObservableSetWrapper<E> {
+    val size: Int
+    fun isEmpty(): Boolean
+    fun iterator(): Iterator<E>
+    fun containsAll(elements: Collection<E>): Boolean
+    fun contains(element: E): Boolean
+    @Open
+    fun tempDebugSetDelegate() =
+        object: Set<E> {
+            override val size: Int
+                get() = this@MyObservableSetWrapperPlusSet.size
+
+            override fun isEmpty(): Boolean = this@MyObservableSetWrapperPlusSet.isEmpty()
+
+            override fun iterator(): Iterator<E> = this@MyObservableSetWrapperPlusSet.iterator()
+
+            override fun containsAll(elements: Collection<E>): Boolean = this@MyObservableSetWrapperPlusSet.containsAll(elements)
+
+            override fun contains(element: E): Boolean = this@MyObservableSetWrapperPlusSet.contains(element)
         }
-    })
 }
 
+fun <E> mfxSetConverter() =
+    object : BiConverter<ObservableSet<E>, ObsSet<E>> {
+        override fun convertToB(a: ObservableSet<E>): ObsSet<E> {
+            @Suppress("UNCHECKED_CAST")
+            return when (a) {
+                is MBackedFXObservableSet<*> -> a.mSet as ObsSet<E>
+                else                         -> a.createMutableWrapper()
+            }
+        }
 
-fun <E> MyObservableSetWrapper<E>.changeListener(op: (SetChangeListener.Change<out E>) -> Unit) = run {
-    val l = SetChangeListener<E> { op(it) }
-    addListener(l)
-    l
-}
-
-fun <E> MyObservableSetWrapper<E>.onChange(op: (SetChangeListener.Change<out E>) -> Unit) = apply {
-    addListener(SetChangeListener { op(it) })
-}
-
-
-interface MyObservableSetWrapperPlusSet<E> : MyObservableSetWrapper<E>, Set<E>
-//interface MyObservableSetWrapperPlusMutableSet<E>: MyObservableSetWrapperPlusSet<E>, MutableSet<E>
-
-fun <E> mfxSetConverter() = object : BiConverter<ObservableSet<E>, ObsSet<E>> {
-    override fun convertToB(a: ObservableSet<E>): ObsSet<E> {
-        @Suppress("UNCHECKED_CAST")
-        return when (a) {
-            is MBackedFXObservableSet<*> -> a.mSet as ObsSet<E>
-            else                         -> a.createMutableWrapper()
+        override fun convertToA(b: ObsSet<E>): ObservableSet<E> {
+            @Suppress("UNCHECKED_CAST")
+            return when (b) {
+                is FXBackedObsSet<*> -> b.obs as ObservableSet<E>
+                else                 -> b.createFXWrapper()
+            }
         }
     }
 
-    override fun convertToA(b: ObsSet<E>): ObservableSet<E> {
-        @Suppress("UNCHECKED_CAST")
-        return when (b) {
-            is FXBackedObsSet<*> -> b.obs as ObservableSet<E>
-            else                 -> b.createFXWrapper()
+
+
+fun <E> mfxMutableSetConverter() =
+    object : BiConverter<ObservableSet<E>, MutableObsSet<E>> {
+        override fun convertToB(a: ObservableSet<E>): MutableObsSet<E> {
+            @Suppress("UNCHECKED_CAST")
+            return when (a) {
+                is MBackedFXObservableSet<*> -> a.mSet as MutableObsSet<E>
+                else                         -> a.createMutableWrapper()
+            }
+        }
+
+        override fun convertToA(b: MutableObsSet<E>): ObservableSet<E> {
+            @Suppress("UNCHECKED_CAST")
+            return when (b) {
+                is FXBackedObsSet<*> -> b.obs as ObservableSet<E>
+
+                else                 -> b.createMutableFXWrapper()
+            }
         }
     }
-}
-
-fun <E> mfxMutableSetConverter() = object : BiConverter<ObservableSet<E>, MutableObsSet<E>> {
-    override fun convertToB(a: ObservableSet<E>): MutableObsSet<E> {
-        @Suppress("UNCHECKED_CAST")
-        return when (a) {
-            is MBackedFXObservableSet<*> -> a.mSet as MutableObsSet<E>
-            else                         -> a.createMutableWrapper()
-        }
-    }
-
-    override fun convertToA(b: MutableObsSet<E>): ObservableSet<E> {
-        @Suppress("UNCHECKED_CAST")
-        return when (b) {
-            is FXBackedObsSet<*> -> b.obs as ObservableSet<E>
-
-            else                 -> b.createMutableFXWrapper()
-        }
-    }
-}
 
 abstract class FXBackedObsSet<E>(internal val obs: ObservableSet<E>)
 
-abstract class ObservableSetWrapperImpl<E>(obs: ObservableSet<E>) : FXBackedObsSet<E>(obs),
+abstract class ObservableSetWrapperImpl<E>(obs: ObservableSet<E>) :
+    FXBackedObsSet<E>(obs),
     MyObservableSetWrapperPlusSet<E>,
     Observable by obs {
     final override fun addListener(listener: SetChangeListener<E>) = obs.addListener(listener)
@@ -114,13 +148,18 @@ abstract class ObservableSetWrapperImpl<E>(obs: ObservableSet<E>) : FXBackedObsS
 }
 
 interface FXOSetWrapperAndBasic<E> : MyObservableSetWrapper<E>, ObsSet<E>, BindableSet<E>
+
 interface FXOLMutableSetWrapperAndBasic<E> : FXOSetWrapperAndBasic<E>, MutableSet<E>
 
-class FXBackedMutableObservableSetBase<E>(obs: ObservableSet<E>) : ObservableSetWrapperImpl<E>(obs),
+class FXBackedMutableObservableSetBase<E>(obs: ObservableSet<E>) :
+    ObservableSetWrapperImpl<E>(obs),
     MutableObsSet<E>,
     MutableSet<E> by obs,
     FXOLMutableSetWrapperAndBasic<E>,
     BindableSet<E> {
+
+    @YouTrackIssue(KT, 65555)
+    override fun spliterator(): Spliterator<E> = super<MutableSet>.spliterator()
 
 
     val bindableSetHelper by lazy { BindableSetImpl(this) }
@@ -176,9 +215,10 @@ class FXBackedMutableObservableSetBase<E>(obs: ObservableSet<E>) : ObservableSet
         listenerName: String?,
         op: (SetChange<E>) -> Unit
     ): SetListener<E> {
-        val listener = SetListener {
-            op(it)
-        }
+        val listener =
+            SetListener {
+                op(it)
+            }
         if (listenerName != null) {
             listener.name = listenerName
         }
@@ -191,16 +231,15 @@ class FXBackedMutableObservableSetBase<E>(obs: ObservableSet<E>) : ObservableSet
 
     @Synchronized
     override fun addListener(listener: SetListenerBase<E>): SetListenerBase<E> {
-        val oListener = SetChangeListener<E> {
-            if (it.wasRemoved()) {
-                listener.notify(SetUpdate(RemoveElementFromSet(obs, it.elementRemoved)))
+        val oListener =
+            SetChangeListener<E> {
+                if (it.wasRemoved()) {
+                    listener.notify(SetUpdate(RemoveElementFromSet(obs, it.elementRemoved)))
+                }
+                if (it.wasAdded()) {
+                    listener.notify(SetUpdate(AddIntoSet(obs, it.elementAdded)))
+                }
             }
-            if (it.wasAdded()) {
-                listener.notify(SetUpdate(AddIntoSet(obs, it.elementAdded)))
-            }
-
-
-        }
         addListener(oListener)
         listenersMap[listener] = oListener
         return listener
@@ -217,33 +256,39 @@ class FXBackedMutableObservableSetBase<E>(obs: ObservableSet<E>) : ObservableSet
     override fun releaseUpdatesAfter(op: Op) {
         TODO()
     }
-
 }
 
 
-class FXBackedImmutableObservableSet<E>(obs: ObservableSet<E>) : FXBackedObsSet<E>(obs),
+class FXBackedImmutableObservableSet<E>(obs: ObservableSet<E>) :
+    FXBackedObsSet<E>(obs),
     FXOSetWrapperAndBasic<E> by FXBackedMutableObservableSetBase(
         obs
     )
 
 
-class FXBackedMutableObservableSet<E>(obs: ObservableSet<E>) : FXBackedObsSet<E>(obs),
+class FXBackedMutableObservableSet<E>(obs: ObservableSet<E>) :
+    FXBackedObsSet<E>(obs),
     FXOLMutableSetWrapperAndBasic<E> by FXBackedMutableObservableSetBase(
         obs
     ),
-    MutableObsSet<E>
+    MutableObsSet<E> {
+    @YouTrackIssue(KT, 65555)
+    override fun spliterator(): Spliterator<E> = super<FXOLMutableSetWrapperAndBasic>.spliterator()
+}
 
 fun <E> MutableObsSet<E>.createMutableFXWrapper() = MutableMBackedFXObservableSet(this)
 fun <E> ObsSet<E>.createFXWrapper() = MBackedFXObservableSet(this)
-open class MBackedFXObservableSet<E>(internal open val mSet: ObsSet<E>) : ObservableSet<E>,
+open class MBackedFXObservableSet<E>(internal open val mSet: ObsSet<E>) :
+    ObservableSet<E>,
     MutableSet<E> by FakeMutableSet(mSet) {
 
     private val invalidationListenerMap = mutableMapOf<InvalidationListener, MyListenerInter<*>>()
     private val changeListenerMap = mutableMapOf<SetChangeListener<in E>, MyListenerInter<*>>()
     final override fun addListener(listener: InvalidationListener) {
-        invalidationListenerMap[listener] = mSet.observe {
-            listener.invalidated(this)
-        }
+        invalidationListenerMap[listener] =
+            mSet.observe {
+                listener.invalidated(this)
+            }
     }
 
     final override fun removeListener(listener: InvalidationListener) {
@@ -251,54 +296,56 @@ open class MBackedFXObservableSet<E>(internal open val mSet: ObsSet<E>) : Observ
     }
 
     final override fun addListener(listener: SetChangeListener<in E>) {
-        changeListenerMap[listener] = mSet.onChange {
+        changeListenerMap[listener] =
+            mSet.onChange {
 
-            listener.onChanged(object : SetChangeListener.Change<E>(this) {
-
-
-                override fun getElementAdded() = when (it) {
-                    is SetRemoval          -> null
-                    is ClearSet            -> null
-                    is AddIntoSet          -> it.added
-                    is MultiAddIntoSet     -> TODO()
-                    is MultiRemovalFromSet -> null
-                }
-
-                override fun getElementRemoved() = when (it) {
-                    is SetRemoval          -> it.removed
-                    is ClearSet            -> TODO()
-                    is AddIntoSet          -> null
-                    is MultiAddIntoSet     -> null
-                    is MultiRemovalFromSet -> TODO()
-                }
-
-                override fun wasAdded() = when (it) {
-                    is SetRemoval          -> false
-                    is ClearSet            -> false
-                    is AddIntoSet          -> true
-                    is MultiAddIntoSet     -> true
-                    is MultiRemovalFromSet -> false
-                }
-
-                override fun wasRemoved() = when (it) {
-                    is SetRemoval          -> true
-                    is ClearSet            -> true
-                    is AddIntoSet          -> false
-                    is MultiAddIntoSet     -> false
-                    is MultiRemovalFromSet -> true
-                }
+                listener.onChanged(
+                    object : SetChangeListener.Change<E>(this) {
 
 
-            })
+                        override fun getElementAdded() =
+                            when (it) {
+                                is SetRemoval          -> null
+                                is ClearSet            -> null
+                                is AddIntoSet          -> it.added
+                                is MultiAddIntoSet     -> TODO()
+                                is MultiRemovalFromSet -> null
+                            }
 
+                        override fun getElementRemoved() =
+                            when (it) {
+                                is SetRemoval          -> it.removed
+                                is ClearSet            -> TODO()
+                                is AddIntoSet          -> null
+                                is MultiAddIntoSet     -> null
+                                is MultiRemovalFromSet -> TODO()
+                            }
 
-        }
+                        override fun wasAdded() =
+                            when (it) {
+                                is SetRemoval          -> false
+                                is ClearSet            -> false
+                                is AddIntoSet          -> true
+                                is MultiAddIntoSet     -> true
+                                is MultiRemovalFromSet -> false
+                            }
+
+                        override fun wasRemoved() =
+                            when (it) {
+                                is SetRemoval          -> true
+                                is ClearSet            -> true
+                                is AddIntoSet          -> false
+                                is MultiAddIntoSet     -> false
+                                is MultiRemovalFromSet -> true
+                            }
+                    }
+                )
+            }
     }
 
     final override fun removeListener(listener: SetChangeListener<in E>) {
         changeListenerMap[listener]?.tryRemovingListener()
     }
-
 }
 
 class MutableMBackedFXObservableSet<E>(override val mSet: MutableObsSet<E>) : MBackedFXObservableSet<E>(mSet)

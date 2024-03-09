@@ -57,5 +57,4 @@ internal class NodeBuilder() : EventTargetWrapper {
     override fun isInsideRow(): Boolean {
         TODO()
     }
-
 }

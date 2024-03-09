@@ -7,21 +7,23 @@ import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.obs.bind.smartBind
 import matt.obs.prop.ObsVal
-import matt.obs.prop.VarProp
+import matt.obs.prop.writable.VarProp
 
 
 fun ET.colorpicker(
-    color: Color? = null, op: ColorPickerWrapper.()->Unit = {}
+    color: Color? = null,
+    op: ColorPickerWrapper.() -> Unit = {}
 ) = ColorPickerWrapper().attachTo(this, op) {
     if (color != null) it.value = color
 }
 
 fun ET.colorpicker(
-    colorProperty: VarProp<Color?>, op: ColorPickerWrapper.()->Unit = {}
+    colorProperty: VarProp<Color?>,
+    op: ColorPickerWrapper.() -> Unit = {}
 ) = ColorPickerWrapper().apply { bind(colorProperty) }.attachTo(this, op) {}
 
 class ColorPickerWrapper(
-    node: ColorPicker = ColorPicker(),
+    node: ColorPicker = ColorPicker()
 ): ComboBoxBaseWrapper<Color, ColorPicker>(node)
 
 fun ColorPickerWrapper.bind(property: ObsVal<Color?>, readonly: Boolean = false) =

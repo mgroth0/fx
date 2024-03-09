@@ -1,6 +1,7 @@
 package matt.fx.graphics.wrapper.window
 
 import javafx.beans.property.ReadOnlyObjectProperty
+import javafx.collections.ObservableMap
 import javafx.event.Event
 import javafx.event.EventHandler
 import javafx.event.EventType
@@ -16,16 +17,18 @@ import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.scene.SceneWrapper
 import matt.fx.graphics.wrapper.sizeman.SizeControlled
 import matt.fx.graphics.wrapper.stage.StageWrapper
-import matt.lang.NOT_IMPLEMENTED
 import matt.lang.anno.Open
 import matt.lang.assertions.require.requireNotEqual
+import matt.lang.common.NOT_IMPLEMENTED
 import matt.lang.delegation.lazyDelegate
 
 interface HasScene {
     val scene: SceneWrapper<*>?
 }
 
-open class WindowWrapper<W : Window>(final override val node: W) : SingularEventTargetWrapper<W>(node), SizeControlled,
+open class WindowWrapper<W : Window>(node: W) :
+    SingularEventTargetWrapper<W>(node),
+    SizeControlled,
     HasScene {
 
     companion object {
@@ -33,17 +36,17 @@ open class WindowWrapper<W : Window>(final override val node: W) : SingularEvent
         fun guessMainStage() = windows().filterIsInstance<StageWrapper>().firstOrNull()
     }
 
-    @Open  override fun removeFromParent(): Unit = NOT_IMPLEMENTED
+    @Open override fun removeFromParent(): Unit = NOT_IMPLEMENTED
 
-    @Open  override fun isInsideRow() = false
+    @Open override fun isInsideRow() = false
 
     var pullBackWhenOffScreen = true
 
     fun requestFocus() = node.requestFocus()
 
 
-    final override val properties get() = node.properties
-    @Open  override fun addChild(
+    final override val properties: ObservableMap<Any, Any?> get() = node.properties
+    @Open override fun addChild(
         child: NodeWrapper,
         index: Int?
     ) {
@@ -64,7 +67,7 @@ open class WindowWrapper<W : Window>(final override val node: W) : SingularEvent
 
 
     @Suppress("SENSELESS_COMPARISON")
-    val focusedProperty by lazy {
+    val focusedProperty: NonNullFXBackedReadOnlyBindableProp<Boolean> by lazy {
         requireNotEqual(node, null) /*debug*/
         node.focusedProperty().toNonNullableROProp()
     }
@@ -90,21 +93,10 @@ open class WindowWrapper<W : Window>(final override val node: W) : SingularEvent
     val yProperty by lazy { node.yProperty().toNonNullableROProp() }
 
 
-    //
-    //  var height
-    //	get() = node.height
-    //	set(value) {
-    //	  node.height = value
-    //	}
 
     final override val heightProperty by lazy { node.heightProperty().toNonNullableROProp().cast<Double>() }
 
 
-    //  var width
-    //	get() = node.width
-    //	set(value) {
-    //	  node.width = value
-    //	}
 
     final override val widthProperty by lazy { node.widthProperty().toNonNullableROProp().cast<Double>() }
 
@@ -146,7 +138,6 @@ open class WindowWrapper<W : Window>(final override val node: W) : SingularEvent
         eventType: EventType<T>,
         handler: EventHandler<T>
     ) = node.removeEventHandler(eventType, handler)
-
 }
 
 

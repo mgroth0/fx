@@ -17,9 +17,13 @@ import matt.fx.control.chart.axis.value.axis.NumberRangeProps
 import matt.fx.control.chart.axis.value.axis.RangeProps
 import matt.fx.control.chart.axis.value.moregenval.MoreGenericValueAxis
 import matt.fx.graphics.anim.interp.MyInterpolator.Companion.MY_DEFAULT_INTERPOLATOR
-import matt.lang.NEVER
-import matt.obs.prop.BindableProperty
+import matt.lang.common.NEVER
+import matt.obs.prop.writable.BindableProperty
+import kotlin.math.abs
 import kotlin.math.ceil
+import kotlin.math.floor
+import kotlin.math.log10
+import kotlin.math.pow
 import kotlin.math.round
 
 
@@ -32,7 +36,7 @@ import kotlin.math.round
 class MoreGenericNumberAxis<T : Any>(
     converter: ValueAxisConverter<T>,
     lowerBound: T? = null,
-    upperBound: T? = null,
+    upperBound: T? = null
 ) : MoreGenericValueAxis<T>(
         lowerBound = lowerBound,
         upperBound = upperBound,
@@ -41,21 +45,21 @@ class MoreGenericNumberAxis<T : Any>(
     private var currentAnimationID: Any? = null
     private val animator = ChartLayoutAnimator(this)
     private val defaultFormatter = DefaultFormatter()
-    // -------------- PUBLIC PROPERTIES --------------------------------------------------------------------------------
     /** When true zero is always included in the visible range. This only has effect if auto-ranging is on.  */
-    private val forceZeroInRange: BooleanProperty = object : BooleanPropertyBase(true) {
-        override fun invalidated() {
-            // This will affect layout if we are auto ranging
-            if (isAutoRanging()) {
-                requestAxisLayout()
-                invalidateRange()
+    private val forceZeroInRange: BooleanProperty =
+        object : BooleanPropertyBase(true) {
+            override fun invalidated() {
+                /* This will affect layout if we are auto ranging */
+                if (isAutoRanging()) {
+                    requestAxisLayout()
+                    invalidateRange()
+                }
             }
+
+            override fun getBean(): Any = this@MoreGenericNumberAxis
+
+            override fun getName(): String = "forceZeroInRange"
         }
-
-        override fun getBean(): Any = this@MoreGenericNumberAxis
-
-        override fun getName(): String = "forceZeroInRange"
-    }
 
     fun isForceZeroInRange(): Boolean = forceZeroInRange.value
 
@@ -71,14 +75,15 @@ class MoreGenericNumberAxis<T : Any>(
     }
 
     /**  The value between each major tick mark in data units. This is automatically set if we are auto-ranging.  */
-    val tickUnit = BindableProperty(5.0.convert()).apply {
-        onChange {
-            if (!isAutoRanging()) {
-                invalidateRange()
-                requestAxisLayout()
+    val tickUnit =
+        BindableProperty(5.0.convert()).apply {
+            onChange {
+                if (!isAutoRanging()) {
+                    invalidateRange()
+                    requestAxisLayout()
+                }
             }
         }
-    }
 
     /*
       private val tickUnit:  = object: StyleableDoubleProperty(5.0) {
@@ -112,7 +117,6 @@ class MoreGenericNumberAxis<T : Any>(
       }*/
 
 
-    // -------------- PROTECTED METHODS --------------------------------------------------------------------------------
     /**
      * Get the string label name for a tick mark with the given value.
      *
@@ -133,13 +137,14 @@ class MoreGenericNumberAxis<T : Any>(
 
 
     override val range: NumberRangeProps
-        get() = NumberRangeProps(
-            lowerBound = lowerBound.value.convert(),
-            upperBound = upperBound.value.convert(),
-            tickUnit = tickUnit.value.convert(),
-            scale = scale.value,
-            /*currentFormatterProperty.get()*/
-        )
+        get() =
+            NumberRangeProps(
+                lowerBound = lowerBound.value.convert(),
+                upperBound = upperBound.value.convert(),
+                tickUnit = tickUnit.value.convert(),
+                scale = scale.value
+                /*currentFormatterProperty.get()*/
+            )
 
     /**
      * Called to set the current axis range to the given range. If isAnimating() is true then this method should
@@ -153,26 +158,29 @@ class MoreGenericNumberAxis<T : Any>(
         animate: Boolean
     ) {
         range as NumberRangeProps
-        /*val formatter = rangeProps[4] as String*/
-        /*currentFormatterProperty.set(formatter)*/
-        val oldLowerBound = this.lowerBound.value
-        this.lowerBound.value = (range.lowerBound.convert())
-        this.upperBound.value = (range.upperBound.convert())
-        this.tickUnit.value = (range.tickUnit.convert())
+        /*val formatter = rangeProps[4] as String
+
+
+        currentFormatterProperty.set(formatter)*/
+        val oldLowerBound = lowerBound.value
+        lowerBound.value = (range.lowerBound.convert())
+        upperBound.value = (range.upperBound.convert())
+        tickUnit.value = (range.tickUnit.convert())
         if (animate) {
             animator.stop(currentAnimationID)
-            currentAnimationID = animator.animate(
-                KeyFrame(
-                    Duration.ZERO,
-                    KeyValue(currentLowerBound, oldLowerBound.convert(), MY_DEFAULT_INTERPOLATOR),
-                    KeyValue(scalePropertyImpl(), getScale(), MY_DEFAULT_INTERPOLATOR)
-                ),
-                KeyFrame(
-                    Duration.millis(700.0),
-                    KeyValue(currentLowerBound, range.lowerBound, MY_DEFAULT_INTERPOLATOR),
-                    KeyValue(scalePropertyImpl(), range.scale, MY_DEFAULT_INTERPOLATOR)
+            currentAnimationID =
+                animator.animate(
+                    KeyFrame(
+                        Duration.ZERO,
+                        KeyValue(currentLowerBound, oldLowerBound.convert(), MY_DEFAULT_INTERPOLATOR),
+                        KeyValue(scalePropertyImpl(), getScale(), MY_DEFAULT_INTERPOLATOR)
+                    ),
+                    KeyFrame(
+                        Duration.millis(700.0),
+                        KeyValue(currentLowerBound, range.lowerBound, MY_DEFAULT_INTERPOLATOR),
+                        KeyValue(scalePropertyImpl(), range.scale, MY_DEFAULT_INTERPOLATOR)
+                    )
                 )
-            )
         } else {
             currentLowerBound.set(range.lowerBound)
             setScale(range.scale)
@@ -200,7 +208,7 @@ class MoreGenericNumberAxis<T : Any>(
         } else if (range.tickUnit > 0) {
             tickValues.add(range.lowerBound)
             if ((range.upperBound - range.lowerBound) / range.tickUnit > 2000) {
-                // This is a ridiculous amount of major tick marks, something has probably gone wrong
+                /* This is a ridiculous amount of major tick marks, something has probably gone wrong */
                 System.err.println(
                     "Warning we tried to create more than 2000 major tick marks on a NumberAxis. " +
                         "Lower Bound=" + range.lowerBound + ", Upper Bound=" + range.upperBound + ", Tick Unit=" + range.tickUnit
@@ -208,10 +216,11 @@ class MoreGenericNumberAxis<T : Any>(
             } else {
                 println("range.tickUnit=${range.tickUnit}")
                 if (range.lowerBound + range.tickUnit < range.upperBound) {
-                    // If tickUnit is integer, start with the nearest integer
-                    var major = if (round(range.tickUnit) == range.tickUnit) ceil(
-                        range.lowerBound
-                    ) else range.lowerBound + range.tickUnit
+                    /* If tickUnit is integer, start with the nearest integer */
+                    var major =
+                        if (round(range.tickUnit) == range.tickUnit) ceil(
+                            range.lowerBound
+                        ) else range.lowerBound + range.tickUnit
                     val count = ceil((range.upperBound - major) / range.tickUnit).toInt()
                     var i = 0
                     while (major < range.upperBound && i < count) {
@@ -237,14 +246,16 @@ class MoreGenericNumberAxis<T : Any>(
         val minorTickMarks: MutableList<Number> = ArrayList()
         val lowerBound = lowerBound
         val upperBound = upperBound
-        val tickUnit = this.tickUnit.value.convert()
+        val tickUnit = tickUnit.value.convert()
         val minorUnit = tickUnit / Math.max(1, minorTickCount.get())
         if (tickUnit > 0) {
             if (((upperBound.value.convert() - lowerBound.value.convert()) / minorUnit) > 10000) {
-                // This is a ridiculous amount of major tick marks, something has probably gone wrong
+                /* This is a ridiculous amount of major tick marks, something has probably gone wrong */
                 System.err.println(
-                    ("Warning we tried to create more than 10000 minor tick marks on a NumberAxis. " +
-                        "Lower Bound=" + this.lowerBound.value + ", Upper Bound=" + this.upperBound.value + ", Tick Unit=" + tickUnit)
+                    (
+                        "Warning we tried to create more than 10000 minor tick marks on a NumberAxis. " +
+                            "Lower Bound=" + this.lowerBound.value + ", Upper Bound=" + this.upperBound.value + ", Tick Unit=" + tickUnit
+                    )
                 )
                 return minorTickMarks.map { converter.convertToA(it.toDouble()) }
             }
@@ -291,10 +302,7 @@ class MoreGenericNumberAxis<T : Any>(
     override fun measureTickMarkSize(
         value: T,
         range: RangeProps
-    ): Dimension2D {
-        //	val formatter = rangeProps[4] as String
-        return measureTickMarkSize(value, tickLabelRotation.value/*, formatter*/)
-    }
+    ): Dimension2D = measureTickMarkSize(value, tickLabelRotation.value/*, formatter*/)
 
     /**
      * Measures the size of the label for a given tick mark value. This uses the font that is set for the tick marks.
@@ -342,7 +350,7 @@ class MoreGenericNumberAxis<T : Any>(
         var maxValue = maxValue
 
         val side = effectiveSide
-        // check if we need to force zero into range
+        /* check if we need to force zero into range */
         if (isForceZeroInRange()) {
             if (maxValue < 0) {
                 maxValue = 0.0
@@ -350,44 +358,44 @@ class MoreGenericNumberAxis<T : Any>(
                 minValue = 0.0
             }
         }
-        // calculate the number of tick-marks we can fit in the given length
-        var numOfTickMarks = Math.floor(length / labelSize).toInt()
-        // can never have less than 2 tick marks one for each end
-        numOfTickMarks = Math.max(numOfTickMarks, 2)
-        val minorTickCount = Math.max(minorTickCount.get(), 1)
+        /* calculate the number of tick-marks we can fit in the given length */
+        var numOfTickMarks = floor(length / labelSize).toInt()
+        /* can never have less than 2 tick marks one for each end */
+        numOfTickMarks = numOfTickMarks.coerceAtLeast(2)
+        val minorTickCount = minorTickCount.get().coerceAtLeast(1)
         var range = maxValue - minValue
         if (range != 0.0 && range / (numOfTickMarks * minorTickCount) <= Math.ulp(minValue)) {
             range = 0.0
         }
-        // pad min and max by 2%, checking if the range is zero
+        /* pad min and max by 2%, checking if the range is zero */
         val paddedRange: Double =
-            if ((range == 0.0)) if (minValue == 0.0) 2.0 else Math.abs(minValue) * 0.02 else Math.abs(range) * 1.02
+            if ((range == 0.0)) if (minValue == 0.0) 2.0 else abs(minValue) * 0.02 else abs(range) * 1.02
         val padding = (paddedRange - range) / 2
-        // if min and max are not zero then add padding to them
+        /* if min and max are not zero then add padding to them */
         var paddedMin = minValue - padding
         var paddedMax = maxValue + padding
-        // check padding has not pushed min or max over zero line
+        /* check padding has not pushed min or max over zero line */
         if ((paddedMin < 0 && minValue >= 0) || (paddedMin > 0 && minValue <= 0)) {
-            // padding pushed min above or below zero so clamp to 0
+            /* padding pushed min above or below zero so clamp to 0 */
             paddedMin = 0.0
         }
         if ((paddedMax < 0 && maxValue >= 0) || (paddedMax > 0 && maxValue <= 0)) {
-            // padding pushed min above or below zero so clamp to 0
+            /* padding pushed min above or below zero so clamp to 0 */
             paddedMax = 0.0
         }
-        // calculate tick unit for the number of ticks can have in the given data range
+        /* calculate tick unit for the number of ticks can have in the given data range */
         var tickUnit = paddedRange / numOfTickMarks.toDouble()
-        // search for the best tick unit that fits
+        /* search for the best tick unit that fits */
         var tickUnitRounded = 0.0
         var minRounded = 0.0
         var maxRounded = 0.0
         var count = 0
         var reqLength = Double.MAX_VALUE
         var formatter = "0.00000000"
-        // loop till we find a set of ticks that fit length and result in a total of less than 20 tick marks
+        /* loop till we find a set of ticks that fit length and result in a total of less than 20 tick marks */
         while (reqLength > length || count > 20) {
-            var exp = Math.floor(Math.log10(tickUnit)).toInt()
-            val mant = tickUnit / Math.pow(10.0, exp.toDouble())
+            var exp = floor(log10(tickUnit)).toInt()
+            val mant = tickUnit / 10.0.pow(exp.toDouble())
             var ratio = mant
             if (mant > 5.0) {
                 exp++
@@ -402,7 +410,7 @@ class MoreGenericNumberAxis<T : Any>(
             } else {
                 val ratioHasFrac = Math.rint(ratio) != ratio
                 val formatterB = StringBuilder("0")
-                val n = if (ratioHasFrac) Math.abs(exp) + 1 else Math.abs(exp)
+                val n = if (ratioHasFrac) abs(exp) + 1 else abs(exp)
                 if (n > 0) formatterB.append(".")
                 for (i in 0..<n) {
                     formatterB.append("0")
@@ -410,23 +418,26 @@ class MoreGenericNumberAxis<T : Any>(
                 formatter = formatterB.toString()
             }
             tickUnitRounded = ratio * Math.pow(10.0, exp.toDouble())
-            // move min and max to nearest tick mark
-            minRounded = Math.floor(paddedMin / tickUnitRounded) * tickUnitRounded
-            maxRounded = Math.ceil(paddedMax / tickUnitRounded) * tickUnitRounded
-            // calculate the required length to display the chosen tick marks for real, this will handle if there are
-            // huge numbers involved etc or special formatting of the tick mark label text
+            /* move min and max to nearest tick mark */
+            minRounded = floor(paddedMin / tickUnitRounded) * tickUnitRounded
+            maxRounded = ceil(paddedMax / tickUnitRounded) * tickUnitRounded
+            /*
+            calculate the required length to display the chosen tick marks for real, this will handle if there are
+            huge numbers involved etc or special formatting of the tick mark label text
+             */
             var maxReqTickGap = 0.0
             var last = 0.0
-            count = Math.ceil((maxRounded - minRounded) / tickUnitRounded).toInt()
+            count = ceil((maxRounded - minRounded) / tickUnitRounded).toInt()
             var major = minRounded
             var i = 0
             while (major <= maxRounded && i < count) {
                 val markSize = measureTickMarkSize(converter.convertToA(major), tickLabelRotation.value/*, formatter*/)
                 val size = if (side.isVertical) markSize.height else markSize.width
-                if (i == 0) { // first
+                if (i == 0) {
+                    /* first */
                     last = size / 2
                 } else {
-                    maxReqTickGap = Math.max(maxReqTickGap, last + 6 + (size / 2))
+                    maxReqTickGap = maxReqTickGap.coerceAtLeast(last + 6 + (size / 2))
                 }
                 major += tickUnitRounded
                 i++
@@ -434,17 +445,19 @@ class MoreGenericNumberAxis<T : Any>(
             reqLength = (count - 1) * maxReqTickGap
             tickUnit = tickUnitRounded
 
-            // fix for RT-35600 where a massive tick unit was being selected
-            // unnecessarily. There is probably a better solution, but this works
-            // well enough for now.
+            /*
+            fix for RT-35600 where a massive tick unit was being selected
+            unnecessarily. There is probably a better solution, but this works
+            well enough for now.
+             */
             if (numOfTickMarks == 2 && reqLength > length) {
                 break
             }
-            if (reqLength > length || count > 20) tickUnit *= 2.0 // This is just for the while loop, if there are still too many ticks
+            if (reqLength > length || count > 20) tickUnit *= 2.0 /* This is just for the while loop, if there are still too many ticks */
         }
-        // calculate new scale
+        /* calculate new scale */
         val newScale = calculateNewScale(length, minRounded, maxRounded)
-        // return new range
+        /* return new range */
         return NumberRangeProps(
             lowerBound = minRounded,
             upperBound = maxRounded,
@@ -452,46 +465,54 @@ class MoreGenericNumberAxis<T : Any>(
             scale = newScale,
             formatter = formatter
         )
-
     }
-    /*
-      // -------------- STYLESHEET HANDLING ------------------------------------------------------------------------------
-      private object StyleableProperties {
-        val TICK_UNIT: CssMetaData<MoreGenericNumberAxis<*>, Number> =
-          object: CssMetaData<MoreGenericNumberAxis<*>, Number>(
-            "-fx-tick-unit",
-            SizeConverter.getInstance(), 5.0
-          ) {
-            override fun isSettable(n: MoreGenericNumberAxis<*>): Boolean {
-              return n.tickUnit.value == null || !n.tickUnit.isBound
-            }
 
-            override fun getStyleableProperty(n: MoreGenericNumberAxis<*>): StyleableProperty<Number> {
-              @Suppress("UNCHECKED_CAST")
-              return n.tickUnitProperty() as StyleableProperty<Number>
-            }
-          }
-        var classCssMetaData: List<CssMetaData<out Styleable?, *>>? = null
-          private set
 
-     */
+
+
+
+
     /**
+
+
+     private object StyleableProperties {
+     val TICK_UNIT: CssMetaData<MoreGenericNumberAxis<*>, Number> =
+     object: CssMetaData<MoreGenericNumberAxis<*>, Number>(
+     "-fx-tick-unit",
+     SizeConverter.getInstance(), 5.0
+     ) {
+     override fun isSettable(n: MoreGenericNumberAxis<*>): Boolean {
+     return n.tickUnit.value == null || !n.tickUnit.isBound
+     }
+
+     override fun getStyleableProperty(n: MoreGenericNumberAxis<*>): StyleableProperty<Number> {
+     @Suppress("UNCHECKED_CAST")
+     return n.tickUnitProperty() as StyleableProperty<Number>
+     }
+     }
+     var classCssMetaData: List<CssMetaData<out Styleable?, *>>? = null
+     private set
+
+
+
+
      * Gets the `CssMetaData` associated with this class, which may include the
      * `CssMetaData` of its superclasses.
      * @return the `CssMetaData`
      * @since JavaFX 8.0
-     *//*
 
-	init {
-	  val styleables: MutableList<CssMetaData<out Styleable?, *>> = ArrayList(
-		getClassCssMetaData()
-	  )
-	  styleables.add(TICK_UNIT)
-	  classCssMetaData = Collections.unmodifiableList(styleables)
-	}
-  }*/
 
-    /**
+     init {
+     val styleables: MutableList<CssMetaData<out Styleable?, *>> = ArrayList(
+     getClassCssMetaData()
+     )
+     styleables.add(TICK_UNIT)
+     classCssMetaData = Collections.unmodifiableList(styleables)
+     }
+
+
+
+
      * {@inheritDoc}
      * @since JavaFX 8.0
      */
@@ -499,7 +520,6 @@ class MoreGenericNumberAxis<T : Any>(
         return listOf()
         /*return StyleableProperties.classCssMetaData*/
     }
-    // -------------- INNER CLASSES ------------------------------------------------------------------------------------
     /**
      * Default number formatter for NumberAxis, this stays in sync with auto-ranging and formats values appropriately.
      * You can wrap this formatter to add prefixes or suffixes;
@@ -544,16 +564,13 @@ class MoreGenericNumberAxis<T : Any>(
          */
         override fun fromString(string: String): T {
             NEVER
-            /*try {*/
-            //	  val prefixLength = if ((prefix == null)) 0 else prefix!!.length
-            //	  val suffixLength = if ((suffix == null)) 0 else suffix!!.length
-            //	  return converter.convertToA(
-            //		formatter.parse(string.substring(prefixLength, string.length - suffixLength)).toDouble()
-            //	  )
-            /*} catch (e: ParseException) {
+            /*try {
+
+
+
+            } catch (e: ParseException) {
               return null
             }*/
         }
     }
-
 }

@@ -5,6 +5,7 @@ import javafx.geometry.Pos
 import javafx.scene.Node
 import javafx.scene.layout.HBox
 import javafx.scene.layout.Priority
+import matt.fx.base.wrapper.obs.obsval.prop.NonNullFXBackedBindableProp
 import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.graphics.style.inset.MarginableConstraints
 import matt.fx.graphics.wrapper.ET
@@ -15,20 +16,20 @@ import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
 import matt.fx.graphics.wrapper.pane.SimplePaneWrapper
 import matt.fx.graphics.wrapper.pane.box.BoxWrapper
 import matt.fx.graphics.wrapper.pane.box.BoxWrapperImpl
-import matt.lang.B
+import matt.lang.common.B
 import matt.lang.delegation.lazyVarDelegate
-import matt.obs.prop.Var
+import matt.obs.prop.writable.Var
 
 fun ET.h(
     spacing: Number? = null,
     alignment: Pos? = null,
-    op: HBoxWrapper<NW>.()->Unit = {}
+    op: HBoxWrapper<NW>.() -> Unit = {}
 ) = hbox(spacing, alignment, op)
 
 fun <C: NodeWrapper> ET.hbox(
     spacing: Number? = null,
     alignment: Pos? = null,
-    op: HBoxWrapper<C>.()->Unit = {}
+    op: HBoxWrapper<C>.() -> Unit = {}
 ): HBoxWrapper<C> {
     val hbox = HBoxWrapperImpl<C>(HBox())
     if (alignment != null) hbox.alignment = alignment
@@ -46,18 +47,17 @@ interface HBoxWrapper<C: NodeWrapper>: BoxWrapper<C> {
 open class HBoxWrapperImpl<C: NodeWrapper>(node: HBox = HBox()): BoxWrapperImpl<HBox, C>(node), HBoxWrapper<C> {
     constructor(vararg nodes: NodeWrapper): this(HBox(*nodes.map { it.node }.toTypedArray()))
 
-    final override val fillHeightProperty by lazy {
+    final override val fillHeightProperty: NonNullFXBackedBindableProp<Boolean> by lazy {
         node.fillHeightProperty().toNonNullableProp()
     }
     final override var isFillHeight by lazyVarDelegate { fillHeightProperty }
-
 }
 
-fun HBoxWrapperImpl<NodeWrapper>.spacer(prio: Priority = Priority.ALWAYS, op: PaneWrapperImpl<*, *>.()->Unit = {}) =
+fun HBoxWrapperImpl<NodeWrapper>.spacer(prio: Priority = Priority.ALWAYS, op: PaneWrapperImpl<*, *>.() -> Unit = {}) =
     attach(SimplePaneWrapper<NodeWrapper>().apply { hGrow = prio }, op)
 
 
-inline fun <T: Node> T.hboxConstraints(op: (HBoxConstraint.()->Unit)): T {
+inline fun <T: Node> T.hboxConstraints(op: (HBoxConstraint.() -> Unit)): T {
     val c = HBoxConstraint(this)
     c.op()
     return c.applyToNode(this)

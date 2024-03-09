@@ -15,7 +15,7 @@ fun Media.play(): java.lang.Exception {
 }
 
 class MediaViewWrapper(
-    node: MediaView = MediaView(),
+    node: MediaView = MediaView()
 ) : NodeWrapperImpl<MediaView>(node) {
     override fun addChild(
         child: NodeWrapper,
@@ -29,7 +29,6 @@ class MediaViewWrapper(
 
     val fitWidthProperty by lazy { node.fitWidthProperty().toNonNullableProp().cast<Double>() }
     val fitHeightProperty by lazy { node.fitHeightProperty().toNonNullableProp().cast<Double>() }
-
 }
 
 

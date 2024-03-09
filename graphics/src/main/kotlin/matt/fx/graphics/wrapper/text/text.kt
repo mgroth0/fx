@@ -1,5 +1,6 @@
 package matt.fx.graphics.wrapper.text
 
+import javafx.beans.property.DoubleProperty
 import javafx.beans.property.ObjectProperty
 import javafx.scene.text.Text
 import javafx.scene.text.TextAlignment
@@ -34,7 +35,7 @@ fun ET.text(
 }
 
 open class TextWrapper(
-    node: Text = Text(),
+    node: Text = Text()
 ) : ShapeWrapper<Text>(node), ColoredText {
 
     constructor(text: String) : this(Text(text))
@@ -48,7 +49,7 @@ open class TextWrapper(
     final override val fontProperty by lazy { node.fontProperty().toNonNullableProp() }
     final override val textFillProperty by lazy { node.fillProperty().toNullableProp() }
 
-    val wrappingWidthProperty get() = node.wrappingWidthProperty()
+    val wrappingWidthProperty: DoubleProperty get() = node.wrappingWidthProperty()
 
     var textAlignment: TextAlignment
         get() = node.textAlignment
@@ -62,6 +63,4 @@ open class TextWrapper(
     var x by lazyVarDelegate { xProperty }
     val yProperty by lazy { node.yProperty().toNonNullableProp().cast<Double>() }
     var y by lazyVarDelegate { yProperty }
-
-
 }

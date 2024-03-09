@@ -28,10 +28,11 @@ class MBackedFXListChange<E>(
 
     private var index = -1
 
-    private val mChanges = when (mChange) {
-        is AtomicListChange -> mChange.changes
-        else                -> listOf(mChange)
-    }
+    private val mChanges =
+        when (mChange) {
+            is AtomicListChange -> mChange.changes
+            else                -> listOf(mChange)
+        }
     private var currentMChange: ListChange<E>? = null
 
     override fun next(): Boolean {
@@ -46,47 +47,49 @@ class MBackedFXListChange<E>(
         currentMChange = null
     }
 
-    override fun getFrom() = currentMChange!!.run {
-        when (this) {
-            is RemoveAt              -> index
-            is ClearList             -> 0
-            is AddAtEnd              -> collection.size - 1
-            is RemoveElementFromList -> index
-            is MultiAddAtEnd         -> collection.size - added.size
-            is AddAt                 -> index
-            is MultiAddAt            -> TODO("${this::class.simpleName}")
-            is ReplaceAt             -> lowestChangedIndex
-            is RemoveAtIndices       -> lowestChangedIndex
-            is RemoveElements        -> TODO("${this::class.simpleName}")
-            is RetainAllList         -> lowestChangedIndex
-            is AtomicListChange      -> TODO("${this::class.simpleName}")
-        }
-    }
-
-    override fun getTo() = currentMChange!!.run {
-        when (this) {
-            is RemoveAt              -> index
-            is ClearList             -> 0
-            is AddAtEnd              -> collection.size
-            is RemoveElementFromList -> index
-            is MultiAddAtEnd         -> collection.size
-            is AddAt                 -> index + 1
-            is MultiAddAt            -> TODO("${this::class.simpleName}")
-            is ReplaceAt             -> lowestChangedIndex + 1
-            is RemoveAtIndices       -> {
-                removedElementsIndexed.zipWithNext { a, b -> requireEquals(b.index.i, a.index.i + 1) }
-                lowestChangedIndex
+    override fun getFrom() =
+        currentMChange!!.run {
+            when (this) {
+                is RemoveAt              -> index
+                is ClearList             -> 0
+                is AddAtEnd              -> collection.size - 1
+                is RemoveElementFromList -> index
+                is MultiAddAtEnd         -> collection.size - added.size
+                is AddAt                 -> index
+                is MultiAddAt            -> TODO("${this::class.simpleName}")
+                is ReplaceAt             -> lowestChangedIndex
+                is RemoveAtIndices       -> lowestChangedIndex
+                is RemoveElements        -> TODO("${this::class.simpleName}")
+                is RetainAllList         -> lowestChangedIndex
+                is AtomicListChange      -> TODO("${this::class.simpleName}")
             }
-
-            is RemoveElements        -> TODO("${this::class.simpleName}")
-            is RetainAllList         -> {
-                if (removedSize > 1) TODO()
-                lowestChangedIndex
-            }
-
-            is AtomicListChange      -> TODO("${this::class.simpleName}")
         }
-    }
+
+    override fun getTo() =
+        currentMChange!!.run {
+            when (this) {
+                is RemoveAt              -> index
+                is ClearList             -> 0
+                is AddAtEnd              -> collection.size
+                is RemoveElementFromList -> index
+                is MultiAddAtEnd         -> collection.size
+                is AddAt                 -> index + 1
+                is MultiAddAt            -> TODO("${this::class.simpleName}")
+                is ReplaceAt             -> lowestChangedIndex + 1
+                is RemoveAtIndices       -> {
+                    removedElementsIndexed.zipWithNext { a, b -> requireEquals(b.index.i, a.index.i + 1) }
+                    lowestChangedIndex
+                }
+
+                is RemoveElements        -> TODO("${this::class.simpleName}")
+                is RetainAllList         -> {
+                    if (removedSize > 1) TODO()
+                    lowestChangedIndex
+                }
+
+                is AtomicListChange      -> TODO("${this::class.simpleName}")
+            }
+        }
 
     override fun getRemoved() = (currentMChange!! as? ListRemovalBase)?.removedElements ?: listOf()
     override fun getAddedSubList() = (currentMChange!! as? ListAdditionBase)?.addedElements ?: listOf()

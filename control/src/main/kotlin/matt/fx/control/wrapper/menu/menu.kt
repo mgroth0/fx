@@ -34,9 +34,8 @@ class MenuWrapper(node: Menu) : MenuItemWrapper<Menu>(node), ContextMenuBuilder 
 
     val items: ObservableList<MenuItem> get() = node.items
 
-    //Menu-related operator functions
     operator fun <T : MenuItem> plusAssign(menuItem: T) {
-        this.items += menuItem
+        items += menuItem
     }
 
 
@@ -63,7 +62,7 @@ class MenuWrapper(node: Menu) : MenuItemWrapper<Menu>(node), ContextMenuBuilder 
         graphic: Node? = null,
         op: MenuItemWrapper<*>.() -> Unit = {}
     ) = SimpleMenuItem().apply {
-        this.text = name;
+        text = name
         this.graphic = graphic
     }.also {
         keyCombination?.apply { it.accelerator = this }
@@ -170,5 +169,4 @@ class MenuWrapper(node: Menu) : MenuItemWrapper<Menu>(node), ContextMenuBuilder 
             op()
         }
     }
-
 }

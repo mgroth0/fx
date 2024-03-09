@@ -8,5 +8,4 @@ class DoubleFieldWrapper(node: DoubleField): ControlWrapperImpl<DoubleField>(nod
     override fun addChild(child: NodeWrapper, index: Int?) {
         TODO()
     }
-
 }

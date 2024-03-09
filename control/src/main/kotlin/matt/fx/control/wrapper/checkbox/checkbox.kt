@@ -8,7 +8,7 @@ import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.lang.assertions.require.requireNull
 import matt.obs.bind.smartBind
-import matt.obs.prop.Var
+import matt.obs.prop.writable.Var
 
 fun ET.checkbox(
     text: String = "",
@@ -26,7 +26,7 @@ fun ET.checkbox(
 
 
 class CheckBoxWrapper(
-    node: CheckBox = CheckBox(),
+    node: CheckBox = CheckBox()
 ) : ButtonBaseWrapper<CheckBox>(node) {
 
     constructor(text: String?) : this(CheckBox(text))
@@ -56,7 +56,6 @@ class CheckBoxWrapper(
         }
 
     val indeterminateProperty: NonNullFXBackedBindableProp<Boolean> get() = node.indeterminateProperty().toNonNullableProp()
-
 }
 
 fun CheckBoxWrapper.bind(

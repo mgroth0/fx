@@ -25,36 +25,39 @@ import matt.fx.graphics.wrapper.stage.StageWrapper
 import matt.fx.web.img.ImageRefreshingWebView
 import matt.gui.interact.openInNewWindow
 import matt.gui.menu.context.mcontextmenu
-import matt.lang.NEVER
 import matt.lang.assertions.require.requireNotEqual
+import matt.lang.common.NEVER
 import matt.lang.model.file.FsFile
 import netscape.javascript.JSObject
 import org.intellij.lang.annotations.Language
 
-fun NW.testWebView(op: WebViewWrapper.() -> Unit = {}) = webview {
-    //	  engine.loadContent(segSeg.code)
-    /*engine.loadContent("<html><body>hello world</html></body>")*/
-    fun doLoad() = Platform.runLater {
-        engine.load("http://info.cern.ch/hypertext/WWW/TheProject.html")
-    }
-    doLoad()
-    setOnMouseClicked {
-        println("doing load")
+fun NW.testWebView(op: WebViewWrapper.() -> Unit = {}) =
+    webview {
+        /*engine.loadContent("<html><body>hello world</html></body>")*/
+        fun doLoad() =
+            Platform.runLater {
+                engine.load("http://info.cern.ch/hypertext/WWW/TheProject.html")
+            }
         doLoad()
-        println("send load command")
+        setOnMouseClicked {
+            println("doing load")
+            doLoad()
+            println("send load command")
+        }
+        op()
     }
-    op()
-}
 
-fun WebViewWrapper.exactWidthProperty() = SimpleDoubleProperty().also {
-    minWidthProperty.bind(it)
-    maxWidthProperty.bind(it)
-}
+fun WebViewWrapper.exactWidthProperty() =
+    SimpleDoubleProperty().also {
+        minWidthProperty.bind(it)
+        maxWidthProperty.bind(it)
+    }
 
-fun WebViewWrapper.exactHeightProperty() = SimpleDoubleProperty().also {
-    minHeightProperty.bind(it)
-    maxHeightProperty.bind(it)
-}
+fun WebViewWrapper.exactHeightProperty() =
+    SimpleDoubleProperty().also {
+        minHeightProperty.bind(it)
+        maxHeightProperty.bind(it)
+    }
 
 var WebViewWrapper.exactWidth: Number
     set(value) {
@@ -90,14 +93,14 @@ infix fun WebViewWrapper.perfectBind(other: StageWrapper) {
 infix fun WebViewWrapper.maxBind(other: RegionWrapper<*>) {
     maxHeightProperty.bind(
         other.heightProperty.createROFXPropWrapper()
-    ) // gotta be strict with webview, which I think tries to be big
+    ) /* gotta be strict with webview, which I think tries to be big */
     maxWidthProperty.bind(other.widthProperty.createROFXPropWrapper())
 }
 
 infix fun WebViewWrapper.maxBind(other: StageWrapper) {
     maxHeightProperty.bind(
         other.heightProperty.createROFXPropWrapper()
-    ) // gotta be strict with webview, which I think tries to be big
+    ) /* gotta be strict with webview, which I think tries to be big */
     maxWidthProperty.bind(other.widthProperty.createROFXPropWrapper())
 }
 
@@ -135,11 +138,6 @@ fun solve(
     y2: Double,
     z2: Double
 ): Pair<Double, Double> {
-    //                y1 = z1*A + B
-    //                y2 = z2*A + B
-
-    //                y2 = z2*A + ( y1 - z1*A )
-    //                y2 - y1 = z2*A - Z1*A
     val A = (y2 - y1) / (z2 - z1)
     val B = (y1 - (z1 * A))
     return A to B
@@ -148,7 +146,7 @@ fun solve(
 const val Y1 = 0.35
 const val Z1 = 150.0
 
-// this lower zoom may make the text small, but that will REALLY help prevent text overlap  // 1.1474 // 1.0
+/* this lower zoom may make the text small, but that will REALLY help prevent text overlap  // 1.1474 // 1.0 */
 const val Y2 = 0.55
 const val Z2 = 1080.0
 val AB = solve(Y1, Z1, Y2, Z2)
@@ -177,9 +175,6 @@ fun WebViewWrapper.specialZooming(par: RegionWrapper<*>? = null) {
             zoom *= SPECIAL_ZOOM_RATE
 
             scrollBy(SCROLL_COMPENSATION_RATE * (width / 2.0) / zoom, SCROLL_COMPENSATION_RATE * (height / 2.0) / zoom)
-
-            //      println("zoom=${zoom}")
-
         } else if (it.code == KeyCode.MINUS) {
 
             if (zoom == 0.0) zoom = 1.0
@@ -190,7 +185,6 @@ fun WebViewWrapper.specialZooming(par: RegionWrapper<*>? = null) {
                 -SCROLL_COMPENSATION_RATE * (width / 2.0) / zoom,
                 -SCROLL_COMPENSATION_RATE * (height / 2.0) / zoom
             )
-            //      println("zoom=${zoom}")
         }
     }
     setOnZoom {
@@ -201,7 +195,6 @@ fun WebViewWrapper.specialZooming(par: RegionWrapper<*>? = null) {
         zoom *= it.zoomFactor
         val compensation = it.zoomFactor - 1.0
         scrollBy(compensation * (width / 2.0) / zoom, compensation * (height / 2.0) / zoom)
-        //    println("zoom=${zoom}")
     }
 
 
@@ -215,14 +208,9 @@ fun WebViewWrapper.specialZooming(par: RegionWrapper<*>? = null) {
                 par.widthProperty.onChange {
                     zoom = perfectZoom(it.toDouble())
                 }.removeAfterInvocation = true
-                //		par.widthProperty.onChangeOnce(NewListener {
-                //		  zoom = perfectZoom(it.toDouble())
-                //		})
             }
         }
     }
-
-
 }
 
 
@@ -236,7 +224,6 @@ fun WebViewWrapper.scrollTo(
 window.scrollTo($xPos,$yPos)
 """.trimIndent()
     )
-
 }
 
 
@@ -247,17 +234,16 @@ fun WebViewWrapper.scrollMult(factor: Double) {
 window.scrollTo(window.scrollX*$factor,window.scrollY*$factor)
 """.trimIndent()
     )
-
 }
 
 
 fun RegionWrapper<*>.specialTransferingToWindowAndBack(par: PaneWrapper<*>) {
     val vb = this
-    this.setOnKeyPressed { k ->
+    setOnKeyPressed { k ->
         if (k.code == KeyCode.W && k.isMetaDown) {
-            if (this.scene?.root == this) {
-                this.removeFromParent()
-                (this.scene!!.window as StageWrapper).close()
+            if (scene?.root == this) {
+                removeFromParent()
+                (scene!!.window as StageWrapper).close()
                 par.add(vb)
                 perfectBind(par)
                 if (this is WebViewPane) {
@@ -268,9 +254,9 @@ fun RegionWrapper<*>.specialTransferingToWindowAndBack(par: PaneWrapper<*>) {
             }
         }
         setOnDoubleClick {
-            if (this.scene?.root != this) {
-                this.removeFromParent()
-                this.openInNewWindow().apply {
+            if (scene?.root != this) {
+                removeFromParent()
+                openInNewWindow().apply {
                     this@specialTransferingToWindowAndBack.perfectBind(this)
                     setOnCloseRequest {
                         this@specialTransferingToWindowAndBack.removeFromParent()
@@ -283,7 +269,6 @@ fun RegionWrapper<*>.specialTransferingToWindowAndBack(par: PaneWrapper<*>) {
                 if (this is WebViewPane) {
                     runLater { wv.zoom = perfectZoom(vb.width) }
                 }
-
             }
         }
     }
@@ -304,11 +289,12 @@ open class WebViewPane private constructor(
     }
 
 
-    val wv = if (file != null) ImageRefreshingWebView(file) else {
-        WebViewWrapper().apply {
-            engine.loadContent(html)
+    val wv =
+        if (file != null) ImageRefreshingWebView(file) else {
+            WebViewWrapper().apply {
+                engine.loadContent(html)
+            }
         }
-    }
 
     init {
         if (html != null) {
@@ -319,9 +305,11 @@ open class WebViewPane private constructor(
         actionbutton("refresh") {
             this@WebViewPane.wv.engine.reload()
         }
-        add(wv.apply {
-            vgrow = Priority.ALWAYS
-        })
+        add(
+            wv.apply {
+                vgrow = Priority.ALWAYS
+            }
+        )
     }
 }
 
@@ -330,11 +318,11 @@ open class WebViewPane private constructor(
 fun WebViewWrapper.specialTransferingToWindowAndBack(par: PaneWrapperImpl<*, *>) {
 
     val wv = this
-    this.setOnKeyPressed { k ->
+    setOnKeyPressed { k ->
         if (k.code == KeyCode.W && k.isMetaDown) {
-            if (this.scene?.root == this) {
-                this.removeFromParent()
-                (this.scene?.window as StageWrapper).close()
+            if (scene?.root == this) {
+                removeFromParent()
+                (scene?.window as StageWrapper).close()
                 par.add(wv)
                 perfectBind(par)
                 runLater { zoom = perfectZoom(par.width) }
@@ -344,20 +332,20 @@ fun WebViewWrapper.specialTransferingToWindowAndBack(par: PaneWrapperImpl<*, *>)
     }
 
     setOnDoubleClick {
-        if (this.scene?.root != this) {
-            this.removeFromParent()
+        if (scene?.root != this) {
+            removeFromParent()
 
-            this.openInNewWindow().apply {
+            openInNewWindow().apply {
                 this@specialTransferingToWindowAndBack.perfectBind(this)
                 setOnCloseRequest {
-                    this.removeFromParent()
+                    removeFromParent()
                     par.add(wv)
                     Platform.runLater {
                         this@specialTransferingToWindowAndBack.zoom = perfectZoom(par.width)
                     }
                 }
             }
-            runLater { zoom = perfectZoom(this.width) }
+            runLater { zoom = perfectZoom(width) }
         }
     }
 }
@@ -463,6 +451,4 @@ window.scrollBy($x,$y)
     ) {
         TODO()
     }
-
-
 }

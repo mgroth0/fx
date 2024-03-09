@@ -15,7 +15,6 @@ fun Image.transferPixelsTo(wi: WritableImage) {
         0,
         0
     )
-
 }
 
 fun WritableImage.loadPixelsFrom(im: Image) {
@@ -29,5 +28,4 @@ fun WritableImage.loadPixelsFrom(im: Image) {
         0,
         0
     )
-
 }

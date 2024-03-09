@@ -97,7 +97,6 @@ import java.util.Collections
  */
 @ReWrittenFxClass(Axis::class)
 abstract class AxisForPackagePrivateProps<T> : Region() {
-    // -------------- PRIVATE FIELDS -----------------------------------------------------------------------------------
     var measure = Text()
     private var effectiveOrientation: Orientation? = null
 
@@ -114,14 +113,14 @@ abstract class AxisForPackagePrivateProps<T> : Region() {
      * See if the current range is valid, if it is not then any range dependent calulcations need to redone on the next layout pass
      *
      * @return true if current range calculations are valid
+     *
+     * True when the current range invalid and all dependent calculations need to be updated
      */
-    /** True when the current range invalid and all dependent calculations need to be updated  */
     protected var isRangeValid = false
     var measureInvalid = false
     var tickLabelsVisibleInvalid = false
     private val labelsToSkip = BitSet()
 
-    // -------------- PUBLIC PROPERTIES --------------------------------------------------------------------------------
     internal val tickMarks: ObservableList<TickMark<T>> = FXCollections.observableArrayList()
     private val unmodifiableTickMarks = FXCollections.unmodifiableObservableList(tickMarks)
 
@@ -134,23 +133,24 @@ abstract class AxisForPackagePrivateProps<T> : Region() {
     fun getTickMarks(): ObservableList<TickMark<T>> = unmodifiableTickMarks
 
     /** The side of the plot which this axis is being drawn on  */
-    internal val side: ObjectProperty<Side> = object : StyleableObjectProperty<Side>() {
-        override fun invalidated() {
-            // cause refreshTickMarks
-            val edge = get()
-            pseudoClassStateChanged(TOP_PSEUDOCLASS_STATE, edge == TOP)
-            pseudoClassStateChanged(RIGHT_PSEUDOCLASS_STATE, edge == RIGHT)
-            pseudoClassStateChanged(BOTTOM_PSEUDOCLASS_STATE, edge == BOTTOM)
-            pseudoClassStateChanged(LEFT_PSEUDOCLASS_STATE, edge == LEFT)
-            requestAxisLayout()
+    internal val side: ObjectProperty<Side> =
+        object : StyleableObjectProperty<Side>() {
+            override fun invalidated() {
+                /* cause refreshTickMarks */
+                val edge = get()
+                pseudoClassStateChanged(TOP_PSEUDOCLASS_STATE, edge == TOP)
+                pseudoClassStateChanged(RIGHT_PSEUDOCLASS_STATE, edge == RIGHT)
+                pseudoClassStateChanged(BOTTOM_PSEUDOCLASS_STATE, edge == BOTTOM)
+                pseudoClassStateChanged(LEFT_PSEUDOCLASS_STATE, edge == LEFT)
+                requestAxisLayout()
+            }
+
+            override fun getCssMetaData(): CssMetaData<out Styleable, Side> = StyleableProperties.SIDE
+
+            override fun getBean(): Any = this@AxisForPackagePrivateProps
+
+            override fun getName(): String = "side"
         }
-
-        override fun getCssMetaData(): CssMetaData<out Styleable, Side> = StyleableProperties.SIDE
-
-        override fun getBean(): Any = this@AxisForPackagePrivateProps
-
-        override fun getName(): String = "side"
-    }
 
     fun getSide(): Side = side.get()
 
@@ -167,23 +167,30 @@ abstract class AxisForPackagePrivateProps<T> : Region() {
     val effectiveSide: Side
         get() {
             val side = getSide()
-            @Suppress("SENSELESS_COMPARISON") return if (side == null || side.isVertical && effectiveOrientation == HORIZONTAL || side.isHorizontal && effectiveOrientation == VERTICAL) {
-                // Means side == null && effectiveOrientation == null produces Side.BOTTOM
+            @Suppress("SENSELESS_COMPARISON") return if (
+                side == null
+                || side.isVertical
+                && effectiveOrientation == HORIZONTAL
+                || side.isHorizontal
+                && effectiveOrientation == VERTICAL
+            ) {
+                /* Means side == null && effectiveOrientation == null produces Side.BOTTOM */
                 if (effectiveOrientation == VERTICAL) LEFT else BOTTOM
             } else side
         }
 
     /** The axis label  */
-    private val label: ObjectProperty<String> = object : ObjectPropertyBase<String>() {
-        override fun invalidated() {
-            axisLabel.text = get()
-            requestAxisLayout()
+    private val label: ObjectProperty<String> =
+        object : ObjectPropertyBase<String>() {
+            override fun invalidated() {
+                axisLabel.text = get()
+                requestAxisLayout()
+            }
+
+            override fun getBean(): Any = this@AxisForPackagePrivateProps
+
+            override fun getName(): String = "label"
         }
-
-        override fun getBean(): Any = this@AxisForPackagePrivateProps
-
-        override fun getName(): String = "label"
-    }
 
     fun getLabel(): String? = label.get()
 
@@ -194,18 +201,19 @@ abstract class AxisForPackagePrivateProps<T> : Region() {
     fun labelProperty(): ObjectProperty<String> = label
 
     /** true if tick marks should be displayed  */
-    private val tickMarkVisible: BooleanProperty = object : StyleableBooleanProperty(true) {
-        override fun invalidated() {
-            tickMarkPath.isVisible = get()
-            requestAxisLayout()
+    private val tickMarkVisible: BooleanProperty =
+        object : StyleableBooleanProperty(true) {
+            override fun invalidated() {
+                tickMarkPath.isVisible = get()
+                requestAxisLayout()
+            }
+
+            override fun getCssMetaData(): CssMetaData<AxisForPackagePrivateProps<*>, Boolean> = StyleableProperties.TICK_MARK_VISIBLE
+
+            override fun getBean(): Any = this@AxisForPackagePrivateProps
+
+            override fun getName(): String = "tickMarkVisible"
         }
-
-        override fun getCssMetaData(): CssMetaData<AxisForPackagePrivateProps<*>, Boolean> = StyleableProperties.TICK_MARK_VISIBLE
-
-        override fun getBean(): Any = this@AxisForPackagePrivateProps
-
-        override fun getName(): String = "tickMarkVisible"
-    }
 
     fun isTickMarkVisible(): Boolean = tickMarkVisible.get()
 
@@ -216,22 +224,23 @@ abstract class AxisForPackagePrivateProps<T> : Region() {
     fun tickMarkVisibleProperty(): BooleanProperty = tickMarkVisible
 
     /** true if tick mark labels should be displayed  */
-    private val tickLabelsVisible: BooleanProperty = object : StyleableBooleanProperty(true) {
-        override fun invalidated() {
-            // update textNode visibility for each tick
-            for (tick in tickMarks) {
-                tick.setTextVisible(get())
+    private val tickLabelsVisible: BooleanProperty =
+        object : StyleableBooleanProperty(true) {
+            override fun invalidated() {
+                /* update textNode visibility for each tick */
+                for (tick in tickMarks) {
+                    tick.setTextVisible(get())
+                }
+                tickLabelsVisibleInvalid = true
+                requestAxisLayout()
             }
-            tickLabelsVisibleInvalid = true
-            requestAxisLayout()
+
+            override fun getCssMetaData(): CssMetaData<AxisForPackagePrivateProps<*>, Boolean> = StyleableProperties.TICK_LABELS_VISIBLE
+
+            override fun getBean(): Any = this@AxisForPackagePrivateProps
+
+            override fun getName(): String = "tickLabelsVisible"
         }
-
-        override fun getCssMetaData(): CssMetaData<AxisForPackagePrivateProps<*>, Boolean> = StyleableProperties.TICK_LABELS_VISIBLE
-
-        override fun getBean(): Any = this@AxisForPackagePrivateProps
-
-        override fun getName(): String = "tickLabelsVisible"
-    }
 
     fun isTickLabelsVisible(): Boolean = tickLabelsVisible.get()
 
@@ -242,21 +251,22 @@ abstract class AxisForPackagePrivateProps<T> : Region() {
     fun tickLabelsVisibleProperty(): BooleanProperty = tickLabelsVisible
 
     /** The length of tick mark lines  */
-    private val tickLength: DoubleProperty = object : StyleableDoubleProperty(8.0) {
-        override fun invalidated() {
-            if (this.get() < 0 && !this.isBound) {
-                this.set(0.0)
+    private val tickLength: DoubleProperty =
+        object : StyleableDoubleProperty(8.0) {
+            override fun invalidated() {
+                if (get() < 0 && !isBound) {
+                    set(0.0)
+                }
+                /* this effects preferred size so request layout */
+                requestAxisLayout()
             }
-            // this effects preferred size so request layout
-            requestAxisLayout()
+
+            override fun getCssMetaData(): CssMetaData<AxisForPackagePrivateProps<*>, Number> = StyleableProperties.TICK_LENGTH
+
+            override fun getBean(): Any = this@AxisForPackagePrivateProps
+
+            override fun getName(): String = "tickLength"
         }
-
-        override fun getCssMetaData(): CssMetaData<AxisForPackagePrivateProps<*>, Number> = StyleableProperties.TICK_LENGTH
-
-        override fun getBean(): Any = this@AxisForPackagePrivateProps
-
-        override fun getName(): String = "tickLength"
-    }
 
     fun getTickLength(): Double = tickLength.get()
 
@@ -267,19 +277,22 @@ abstract class AxisForPackagePrivateProps<T> : Region() {
     fun tickLengthProperty(): DoubleProperty = tickLength
 
     /** This is true when the axis determines its range from the data automatically  */
-    private val autoRanging: BooleanProperty = object : BooleanPropertyBase(true) {
-        override fun invalidated() {
-            if (get()) {
-                // auto range turned on, so need to auto range now
-                //                autoRangeValid = false;
-                requestAxisLayout()
+    private val autoRanging: BooleanProperty =
+        object : BooleanPropertyBase(true) {
+            override fun invalidated() {
+                if (get()) {
+                    /*
+                    auto range turned on, so need to auto range now
+                    autoRangeValid = false;
+                     */
+                    requestAxisLayout()
+                }
             }
+
+            override fun getBean(): Any = this@AxisForPackagePrivateProps
+
+            override fun getName(): String = "autoRanging"
         }
-
-        override fun getBean(): Any = this@AxisForPackagePrivateProps
-
-        override fun getName(): String = "autoRanging"
-    }
 
     fun isAutoRanging(): Boolean = autoRanging.get()
 
@@ -318,19 +331,20 @@ abstract class AxisForPackagePrivateProps<T> : Region() {
     fun tickLabelFontProperty(): ObjectProperty<Font> = tickLabelFont
 
     /** The fill for all tick labels  */
-    private val tickLabelFill: ObjectProperty<Paint> = object : StyleableObjectProperty<Paint>(Color.BLACK) {
-        override fun invalidated() {
-            for (tick in tickMarks) {
-                tick.textNode.fill = getTickLabelFill()
+    private val tickLabelFill: ObjectProperty<Paint> =
+        object : StyleableObjectProperty<Paint>(Color.BLACK) {
+            override fun invalidated() {
+                for (tick in tickMarks) {
+                    tick.textNode.fill = getTickLabelFill()
+                }
             }
+
+            override fun getCssMetaData(): CssMetaData<out Styleable, Paint> = StyleableProperties.TICK_LABEL_FILL
+
+            override fun getBean(): Any = this@AxisForPackagePrivateProps
+
+            override fun getName(): String = "tickLabelFill"
         }
-
-        override fun getCssMetaData(): CssMetaData<out Styleable, Paint> = StyleableProperties.TICK_LABEL_FILL
-
-        override fun getBean(): Any = this@AxisForPackagePrivateProps
-
-        override fun getName(): String = "tickLabelFill"
-    }
 
     fun getTickLabelFill(): Paint = tickLabelFill.get()
 
@@ -341,17 +355,18 @@ abstract class AxisForPackagePrivateProps<T> : Region() {
     fun tickLabelFillProperty(): ObjectProperty<Paint> = tickLabelFill
 
     /** The gap between tick labels and the tick mark lines  */
-    private val tickLabelGap: DoubleProperty = object : StyleableDoubleProperty(3.0) {
-        override fun invalidated() {
-            requestAxisLayout()
+    private val tickLabelGap: DoubleProperty =
+        object : StyleableDoubleProperty(3.0) {
+            override fun invalidated() {
+                requestAxisLayout()
+            }
+
+            override fun getCssMetaData(): CssMetaData<AxisForPackagePrivateProps<*>, Number> = StyleableProperties.TICK_LABEL_TICK_GAP
+
+            override fun getBean(): Any = this@AxisForPackagePrivateProps
+
+            override fun getName(): String = "tickLabelGap"
         }
-
-        override fun getCssMetaData(): CssMetaData<AxisForPackagePrivateProps<*>, Number> = StyleableProperties.TICK_LABEL_TICK_GAP
-
-        override fun getBean(): Any = this@AxisForPackagePrivateProps
-
-        override fun getName(): String = "tickLabelGap"
-    }
 
     fun getTickLabelGap(): Double = tickLabelGap.get()
 
@@ -382,18 +397,19 @@ abstract class AxisForPackagePrivateProps<T> : Region() {
     /**
      * Rotation in degrees of tick mark labels from their normal horizontal.
      */
-    internal val tickLabelRotation: DoubleProperty = object : DoublePropertyBase(0.0) {
-        override fun invalidated() {
-            if (isAutoRanging()) {
-                invalidateRange() // NumberAxis and CategoryAxis use this property in autorange
+    internal val tickLabelRotation: DoubleProperty =
+        object : DoublePropertyBase(0.0) {
+            override fun invalidated() {
+                if (isAutoRanging()) {
+                    invalidateRange() /* NumberAxis and CategoryAxis use this property in autorange */
+                }
+                requestAxisLayout()
             }
-            requestAxisLayout()
+
+            override fun getBean(): Any = this@AxisForPackagePrivateProps
+
+            override fun getName(): String = "tickLabelRotation"
         }
-
-        override fun getBean(): Any = this@AxisForPackagePrivateProps
-
-        override fun getName(): String = "tickLabelRotation"
-    }
 
     fun getTickLabelRotation(): Double = tickLabelRotation.value
 
@@ -402,7 +418,6 @@ abstract class AxisForPackagePrivateProps<T> : Region() {
     }
 
     fun tickLabelRotationProperty(): DoubleProperty = tickLabelRotation
-    // -------------- METHODS ------------------------------------------------------------------------------------------
     /**
      * Mark the current range invalid, this will cause anything that depends on the range to be recalculated on the
      * next layout.
@@ -549,62 +564,70 @@ abstract class AxisForPackagePrivateProps<T> : Region() {
     override fun computePrefHeight(width: Double): Double {
         val side = effectiveSide
         return if (side.isVertical) {
-            // TODO for now we have no hard and fast answer here, I guess it should work
-            // TODO out the minimum size needed to display min, max and zero tick mark labels.
+            /*
+            TODO for now we have no hard and fast answer here, I guess it should work
+            TODO out the minimum size needed to display min, max and zero tick mark labels.
+             */
             100.0
-        } else { // HORIZONTAL
-            // we need to first auto range as this may/will effect tick marks
+        } else {
+            /*
+ HORIZONTAL
+ we need to first auto range as this may/will effect tick marks
+             */
             val range = autoRange(width)
-            // calculate max tick label height
+            /* calculate max tick label height */
             var maxLabelHeight = 0.0
-            // calculate the new tick marks
+            /* calculate the new tick marks */
             if (isTickLabelsVisible()) {
                 val newTickValues = calculateTickValues(width, range)
                 for (value in newTickValues) {
                     maxLabelHeight = Math.max(maxLabelHeight, measureTickMarkSize(value, range).height)
                 }
             }
-            // calculate tick mark length
+            /* calculate tick mark length */
             val tickMarkLength: Double =
                 if (isTickMarkVisible()) if (getTickLength() > 0) getTickLength() else 0.0 else 0.0
-            // calculate label height
+            /* calculate label height */
             val labelHeight: Double =
                 if (axisLabel.text == null || axisLabel.text.length == 0) 0.0 else axisLabel.prefHeight(-1.0)
             maxLabelHeight + getTickLabelGap() + tickMarkLength + labelHeight
         }
     }
 
-    final /**
+    /**
      * Computes the preferred width of this axis for the given height. If axis orientation
      * is vertical, it takes into account the tick mark length, tick label gap and
      * label height.
      *
      * @return the computed preferred width for this axis
      */
-    override fun computePrefWidth(height: Double): Double {
+    final override fun computePrefWidth(height: Double): Double {
         val side = effectiveSide
         return if (side.isVertical) {
-            // we need to first auto range as this may/will effect tick marks
+            /* we need to first auto range as this may/will effect tick marks */
             val range = autoRange(height)
-            // calculate max tick label width
+            /* calculate max tick label width */
             var maxLabelWidth = 0.0
-            // calculate the new tick marks
+            /* calculate the new tick marks */
             if (isTickLabelsVisible()) {
                 val newTickValues = calculateTickValues(height, range)
                 for (value in newTickValues) {
                     maxLabelWidth = Math.max(maxLabelWidth, measureTickMarkSize(value, range).width)
                 }
             }
-            // calculate tick mark length
+            /* calculate tick mark length */
             val tickMarkLength: Double =
                 if (isTickMarkVisible()) if (getTickLength() > 0) getTickLength() else 0.0 else 0.0
-            // calculate label height
+            /* calculate label height */
             val labelHeight: Double =
                 if (axisLabel.text == null || axisLabel.text.length == 0) 0.0 else axisLabel.prefHeight(-1.0)
             maxLabelWidth + getTickLabelGap() + tickMarkLength + labelHeight
-        } else { // HORIZONTAL
-            // TODO for now we have no hard and fast answer here, I guess it should work
-            // TODO out the minimum size needed to display min, max and zero tick mark labels.
+        } else {
+            /*
+ HORIZONTAL
+ TODO for now we have no hard and fast answer here, I guess it should work
+ TODO out the minimum size needed to display min, max and zero tick mark labels.
+             */
             100.0
         }
     }
@@ -621,46 +644,47 @@ abstract class AxisForPackagePrivateProps<T> : Region() {
      */
     override fun layoutChildren() {
         val isFirstPass = oldLength == 0.0
-        // auto range if it is not valid
+        /* auto range if it is not valid */
         val side = effectiveSide
         val length = if (side.isVertical) height else width
         val rangeInvalid = !isRangeValid
         val lengthDiffers = oldLength != length
         if (lengthDiffers || rangeInvalid) {
-            // get range
+            /* get range */
             val range: Any
             if (isAutoRanging()) {
-                // auto range
+                /* auto range */
                 range = autoRange(length)
-                // set current range to new range
+                /* set current range to new range */
                 setRange(range, getAnimated() && !isFirstPass && NodeHelper.isTreeShowing(this) && rangeInvalid)
             } else {
                 range = this.range
             }
-            // calculate new tick marks
+            /* calculate new tick marks */
             val newTickValues = calculateTickValues(length, range)
 
-            // remove everything
+            /* remove everything */
             val tickMarkIterator = tickMarks.iterator()
             while (tickMarkIterator.hasNext()) {
                 val tick = tickMarkIterator.next()
                 if (shouldAnimate()) {
                     val ft = FadeTransition(Duration.millis(250.0), tick.textNode)
                     ft.toValue = 0.0
-                    ft.onFinished = EventHandler {
-                        children.remove(
-                            tick.textNode
-                        )
-                    }
+                    ft.onFinished =
+                        EventHandler {
+                            children.remove(
+                                tick.textNode
+                            )
+                        }
                     ft.play()
                 } else {
                     children.remove(tick.textNode)
                 }
-                // we have to remove the tick mark immediately so we don't draw tick line for it or grid lines and fills
+                /* we have to remove the tick mark immediately so we don't draw tick line for it or grid lines and fills */
                 tickMarkIterator.remove()
             }
 
-            // add new tick marks for new values
+            /* add new tick marks for new values */
             for (newValue in newTickValues) {
                 val tick = TickMark<T>()
                 tick.setValue(newValue)
@@ -679,17 +703,19 @@ abstract class AxisForPackagePrivateProps<T> : Region() {
                 }
             }
 
-            // call tick marks updated to inform subclasses that we have updated tick marks
+            /* call tick marks updated to inform subclasses that we have updated tick marks */
             tickMarksUpdated()
-            // mark all done
+            /* mark all done */
             oldLength = length
             isRangeValid = true
         }
         if (lengthDiffers || rangeInvalid || measureInvalid || tickLabelsVisibleInvalid) {
             measureInvalid = false
             tickLabelsVisibleInvalid = false
-            // RT-12272 : tick labels overlapping
-            // first check if all visible labels fit, if not, retain every nth label
+            /*
+            RT-12272 : tick labels overlapping
+            first check if all visible labels fit, if not, retain every nth label
+             */
             labelsToSkip.clear()
             var numLabelsToSkip = 0
             var totalLabelsSize = 0.0
@@ -714,8 +740,10 @@ abstract class AxisForPackagePrivateProps<T> : Region() {
                 }
             }
 
-            // now check if labels for bounds overlap nearby labels, this can happen due to JDK-8097501
-            // use tickLabelGap to prevent sticking
+            /*
+            now check if labels for bounds overlap nearby labels, this can happen due to JDK-8097501
+            use tickLabelGap to prevent sticking
+             */
             if (tickMarks.size > 2) {
                 var m1 = tickMarks[0]
                 var m2 = tickMarks[1]
@@ -736,15 +764,15 @@ abstract class AxisForPackagePrivateProps<T> : Region() {
         side: Side,
         length: Double
     ) {
-        // clear tick mark path elements as we will recreate
+        /* clear tick mark path elements as we will recreate */
         tickMarkPath.elements.clear()
-        // do layout of axis label, tick mark lines and text
+        /* do layout of axis label, tick mark lines and text */
         val width = width
         val height = height
         val tickMarkLength: Double = if (isTickMarkVisible() && getTickLength() > 0) getTickLength() else 0.0
         val effectiveLabelRotation = effectiveTickLabelRotation
         if (LEFT == side) {
-            // offset path to make strokes snap to pixel
+            /* offset path to make strokes snap to pixel */
             tickMarkPath.layoutX = -0.5
             tickMarkPath.layoutY = 0.5
             if (getLabel() != null) {
@@ -766,7 +794,7 @@ abstract class AxisForPackagePrivateProps<T> : Region() {
                 )
             }
         } else if (RIGHT == side) {
-            // offset path to make strokes snap to pixel
+            /* offset path to make strokes snap to pixel */
             tickMarkPath.layoutX = 0.5
             tickMarkPath.layoutY = 0.5
             if (getLabel() != null) {
@@ -785,7 +813,7 @@ abstract class AxisForPackagePrivateProps<T> : Region() {
                 )
             }
         } else if (TOP == side) {
-            // offset path to make strokes snap to pixel
+            /* offset path to make strokes snap to pixel */
             tickMarkPath.layoutX = 0.5
             tickMarkPath.layoutY = -0.5
             if (getLabel() != null) {
@@ -807,8 +835,10 @@ abstract class AxisForPackagePrivateProps<T> : Region() {
                 )
             }
         } else {
-            // BOTTOM
-            // offset path to make strokes snap to pixel
+            /*
+            BOTTOM
+            offset path to make strokes snap to pixel
+             */
             tickMarkPath.layoutX = 0.5
             tickMarkPath.layoutY = 0.5
             if (getLabel() != null) {
@@ -900,10 +930,10 @@ abstract class AxisForPackagePrivateProps<T> : Region() {
         endX: Double,
         endY: Double
     ) {
-        // check if position is inside bounds
+        /* check if position is inside bounds */
         if (tick.getPosition() >= 0 && tick.getPosition() <= Math.ceil(length)) {
             tick.textNode.isVisible = tick.isTextVisible()
-            // add tick mark line
+            /* add tick mark line */
             tickMarkPath.elements.addAll(
                 MoveTo(startX, startY), LineTo(endX, endY)
             )
@@ -977,29 +1007,25 @@ abstract class AxisForPackagePrivateProps<T> : Region() {
         val size = measureTickMarkSize(value, effectiveTickLabelRotation)
         return if (side.isVertical) size.height else size.width
     }
-    // -------------- TICKMARK INNER CLASS -----------------------------------------------------------------------------
     /**
      * TickMark represents the label text, its associated properties for each tick
      * along the Axis.
      * @since JavaFX 2.0
      */
-    class TickMark<T>
-    /**
-     * Creates and initializes an instance of TickMark.
-     */
-    {
+    class TickMark<T> {
         /**
          * The display text for tick mark
          */
-        private val label: StringProperty = object : StringPropertyBase() {
-            override fun invalidated() {
-                textNode.text = value
+        private val label: StringProperty =
+            object : StringPropertyBase() {
+                override fun invalidated() {
+                    textNode.text = value
+                }
+
+                override fun getBean(): Any = this@TickMark
+
+                override fun getName(): String = "label"
             }
-
-            override fun getBean(): Any = this@TickMark
-
-            override fun getName(): String = "label"
-        }
 
         fun getLabel(): String = label.get()
 
@@ -1036,17 +1062,18 @@ abstract class AxisForPackagePrivateProps<T> : Region() {
         var textNode = Text()
 
         /** true if tick mark labels should be displayed  */
-        private val textVisible: BooleanProperty = object : BooleanPropertyBase(true) {
-            override fun invalidated() {
-                if (!get()) {
-                    textNode.isVisible = false
+        private val textVisible: BooleanProperty =
+            object : BooleanPropertyBase(true) {
+                override fun invalidated() {
+                    if (!get()) {
+                        textNode.isVisible = false
+                    }
                 }
+
+                override fun getBean(): Any = this@TickMark
+
+                override fun getName(): String = "textVisible"
             }
-
-            override fun getBean(): Any = this@TickMark
-
-            override fun getName(): String = "textVisible"
-        }
 
         /**
          * Indicates whether this tick mark label text is displayed or not.
@@ -1069,7 +1096,6 @@ abstract class AxisForPackagePrivateProps<T> : Region() {
         override fun toString(): String = value.get().toString()
     }
 
-    // -------------- STYLESHEET HANDLING ------------------------------------------------------------------------------
     @Suppress("UNCHECKED_CAST")
     private object StyleableProperties {
         val SIDE: CssMetaData<AxisForPackagePrivateProps<*>, Side> =
@@ -1092,7 +1118,9 @@ abstract class AxisForPackagePrivateProps<T> : Region() {
             object : FontCssMetaData<AxisForPackagePrivateProps<*>>(
                 "-fx-tick-label-font", Font.font("system", 8.0)
             ) {
-                override fun isSettable(n: AxisForPackagePrivateProps<*>): Boolean = n.tickLabelFont.value == null || !n.tickLabelFont.isBound
+                override fun isSettable(
+                    n: AxisForPackagePrivateProps<*>
+                ): Boolean = n.tickLabelFont.value == null || !n.tickLabelFont.isBound
 
                 override fun getStyleableProperty(n: AxisForPackagePrivateProps<*>): StyleableProperty<Font> = n.tickLabelFontProperty() as StyleableProperty<Font>
             }
@@ -1100,7 +1128,9 @@ abstract class AxisForPackagePrivateProps<T> : Region() {
             object : CssMetaData<AxisForPackagePrivateProps<*>, Paint>(
                 "-fx-tick-label-fill", PaintConverter.getInstance(), Color.BLACK
             ) {
-                override fun isSettable(n: AxisForPackagePrivateProps<*>): Boolean = (n.tickLabelFill.value == null) or !n.tickLabelFill.isBound
+                override fun isSettable(
+                    n: AxisForPackagePrivateProps<*>
+                ): Boolean = (n.tickLabelFill.value == null) or !n.tickLabelFill.isBound
 
                 override fun getStyleableProperty(n: AxisForPackagePrivateProps<*>): StyleableProperty<Paint> = n.tickLabelFillProperty() as StyleableProperty<Paint>
             }
@@ -1116,13 +1146,17 @@ abstract class AxisForPackagePrivateProps<T> : Region() {
             object : BooleanCssMetaData<AxisForPackagePrivateProps<*>>(
                 "-fx-tick-mark-visible", true
             ) {
-                override fun isSettable(n: AxisForPackagePrivateProps<*>): Boolean = n.tickMarkVisible.value == null || !n.tickMarkVisible.isBound
+                override fun isSettable(
+                    n: AxisForPackagePrivateProps<*>
+                ): Boolean = n.tickMarkVisible.value == null || !n.tickMarkVisible.isBound
 
                 override fun getStyleableProperty(n: AxisForPackagePrivateProps<*>): StyleableProperty<Boolean?> = n.tickMarkVisibleProperty() as StyleableProperty<Boolean?>
             }
         val TICK_LABELS_VISIBLE: CssMetaData<AxisForPackagePrivateProps<*>, Boolean> =
             object : BooleanCssMetaData<AxisForPackagePrivateProps<*>>("-fx-tick-labels-visible", true) {
-                override fun isSettable(n: AxisForPackagePrivateProps<*>): Boolean = n.tickLabelsVisible.value == null || !n.tickLabelsVisible.isBound
+                override fun isSettable(
+                    n: AxisForPackagePrivateProps<*>
+                ): Boolean = n.tickLabelsVisible.value == null || !n.tickLabelsVisible.isBound
 
                 override fun getStyleableProperty(n: AxisForPackagePrivateProps<*>): StyleableProperty<Boolean?> = n.tickLabelsVisibleProperty() as StyleableProperty<Boolean?>
             }
@@ -1144,7 +1178,6 @@ abstract class AxisForPackagePrivateProps<T> : Region() {
      * @since JavaFX 8.0
      */
     @Open override fun getCssMetaData(): List<CssMetaData<out Styleable?, *>>? = classCssMetaData
-    // -------------- CONSTRUCTOR --------------------------------------------------------------------------------------
     /**
      * Creates and initializes a new instance of the Axis class.
      */

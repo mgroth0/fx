@@ -17,7 +17,7 @@ import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
 
-fun ET.menubutton(text: String = "", graphic: NodeWrapper? = null, op: MenuButtonWrapper.()->Unit = {}) =
+fun ET.menubutton(text: String = "", graphic: NodeWrapper? = null, op: MenuButtonWrapper.() -> Unit = {}) =
     MenuButtonWrapper().apply {
         this.text = text
     }.attachTo(this, op) {
@@ -25,13 +25,16 @@ fun ET.menubutton(text: String = "", graphic: NodeWrapper? = null, op: MenuButto
     }
 
 open class MenuButtonWrapper(
-    node: MenuButton = MenuButton(),
+    node: MenuButton = MenuButton()
 ): ButtonBaseWrapper<MenuButton>(node) {
 
     val items: ObservableList<MenuItem> get() = node.items
 
     fun menu(
-        name: String? = null, keyCombination: KeyCombination? = null, graphic: Node? = null, op: MenuWrapper.()->Unit = {}
+        name: String? = null,
+        keyCombination: KeyCombination? = null,
+        graphic: Node? = null,
+        op: MenuWrapper.() -> Unit = {}
     ) = MenuWrapper(name, graphic).also {
         keyCombination?.apply { it.accelerator = this }
         op(it)
@@ -39,7 +42,7 @@ open class MenuButtonWrapper(
     }
 
 
-    fun menu(name: String? = null, keyCombination: String, graphic: Node? = null, op: MenuWrapper.()->Unit = {}) =
+    fun menu(name: String? = null, keyCombination: String, graphic: Node? = null, op: MenuWrapper.() -> Unit = {}) =
         menu(name, KeyCombination.valueOf(keyCombination), graphic, op)
 
 
@@ -48,7 +51,9 @@ open class MenuButtonWrapper(
      * of the item. The item action is configured with the `action` builder.
      */
     fun customitem(
-        keyCombination: KeyCombination? = null, hideOnClick: Boolean = true, op: CustomMenuItemWrapper.()->Unit = {}
+        keyCombination: KeyCombination? = null,
+        hideOnClick: Boolean = true,
+        op: CustomMenuItemWrapper.() -> Unit = {}
     ) = CustomMenuItemWrapper().also {
         it.node.isHideOnClick = hideOnClick
         keyCombination?.apply { it.accelerator = this }
@@ -61,7 +66,7 @@ open class MenuButtonWrapper(
         name: String,
         keyCombination: KeyCombination? = null,
         graphic: Node? = null,
-        op: MenuItemWrapper<MenuItem>.()->Unit = {}
+        op: MenuItemWrapper<MenuItem>.() -> Unit = {}
     ) = MenuItemWrapper.construct(name, graphic).also {
         keyCombination?.apply { it.accelerator = this }
         graphic?.apply { it.graphic = graphic }
@@ -76,7 +81,7 @@ open class MenuButtonWrapper(
         keyCombination: KeyCombination? = null,
         graphic: Node? = null,
         value: V,
-        op: ValuedRadioMenuItem<V>.()->Unit = {}
+        op: ValuedRadioMenuItem<V>.() -> Unit = {}
     ) = ValuedRadioMenuItem(value, name, graphic).also {
         toggleGroup?.apply { it.node.toggleGroup = this }
         keyCombination?.apply { it.accelerator = this }
@@ -86,13 +91,14 @@ open class MenuButtonWrapper(
     }
 
     fun checkmenuitem(
-        name: String, keyCombination: KeyCombination? = null, graphic: Node? = null, op: CheckMenuItemWrapper.()->Unit = {}
+        name: String,
+        keyCombination: KeyCombination? = null,
+        graphic: Node? = null,
+        op: CheckMenuItemWrapper.() -> Unit = {}
     ) = CheckMenuItemWrapper(name, graphic).also {
         keyCombination?.apply { it.accelerator = this }
         graphic?.apply { it.graphic = graphic }
         op(it)
         items += it.node
     }
-
-
 }

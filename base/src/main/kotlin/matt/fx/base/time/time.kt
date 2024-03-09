@@ -4,4 +4,4 @@ import kotlin.time.Duration
 
 typealias FXDuration = javafx.util.Duration
 
-fun Duration.toFXDuration(): FXDuration = FXDuration.millis(this.inWholeMilliseconds.toDouble())
+fun Duration.toFXDuration(): FXDuration = FXDuration.millis(inWholeMilliseconds.toDouble())

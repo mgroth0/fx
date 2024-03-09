@@ -7,4 +7,4 @@ import javafx.scene.control.ToolBar
     ReplaceWith("no matt.fx.control.layout.children{} wrapper"),
     DeprecationLevel.WARNING
 )
-fun ToolBar.children(op: ToolBar.()->Unit) = apply { op() }
+fun ToolBar.children(op: ToolBar.() -> Unit) = apply { op() }

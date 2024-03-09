@@ -39,7 +39,6 @@ class StackedAreaChartForWrapper<X : Any, Y : Any> @JvmOverloads constructor(
     /** A multiplier for teh Y values that we store for each series, it is used to animate in a new series  */
     private val seriesYMultiplierMap: MutableMap<Series<X, Y>, DoubleProperty> = HashMap()
     private var timeline: Timeline? = null
-    // -------------- PUBLIC PROPERTIES ----------------------------------------
 
 
     /**
@@ -53,9 +52,7 @@ class StackedAreaChartForWrapper<X : Any, Y : Any> @JvmOverloads constructor(
      * @param data The data to use, this is the actual list used so any changes to it will be reflected in the chart
      *
      * @throws java.lang.IllegalArgumentException if yAxis is not a ValueAxis
-     */
-    // -------------- CONSTRUCTORS ----------------------------------------------
-    /**
+
      * Construct a new Area Chart with the given axis
      *
      * @param xAxis The x axis to use
@@ -85,15 +82,17 @@ class StackedAreaChartForWrapper<X : Any, Y : Any> @JvmOverloads constructor(
                 val x2 = xAxis.toNumericValue(item.xValue)
                 @Suppress("UNUSED_VARIABLE") val y2 = yAxis.toNumericValue(item.yValue)
 
-//                //1. y intercept of the line : y = ((y3-y1)/(x3-x1)) * x2 + (x3y1 - y3x1)/(x3 -x1)
+                /* //1. y intercept of the line */
                 val y = (y3 - y1) / (x3 - x1) * x2 + (x3 * y1 - y3 * x1) / (x3 - x1)
                 item.currentY.value = yAxis.toRealValue(y)
                 item.setCurrentX(xAxis.toRealValue(x2)!!)
-                //2. we can simply use the midpoint on the line as well..
-//                double x = (x3 + x1)/2;
-//                double y = (y3 + y1)/2;
-//                item.setCurrentX(x);
-//                item.setCurrentY(y);
+                /*
+                2. we can simply use the midpoint on the line as well..
+                double x = (x3 + x1)/2;
+                double y = (y3 + y1)/2;
+                item.setCurrentX(x);
+                item.setCurrentY(y);
+                 */
             } else if (itemIndex == 0 && series.data.value.size > 1) {
                 animate = true
                 item.currentX.value = series.data.value[1].xValue
@@ -104,7 +103,7 @@ class StackedAreaChartForWrapper<X : Any, Y : Any> @JvmOverloads constructor(
                 item.currentX.value = series.data.value[last].xValue
                 item.setCurrentY(series.data.value[last].yValue)
             } else if (symbol != null) {
-                // fade in new symbol
+                /* fade in new symbol */
                 symbol.opacity = 0.0
                 plotChildren.add(symbol)
                 val ft = FadeTransition(Duration.millis(500.0), symbol)
@@ -130,7 +129,8 @@ class StackedAreaChartForWrapper<X : Any, Y : Any> @JvmOverloads constructor(
                         )
                     ),
                     KeyFrame(
-                        Duration.millis(800.0), KeyValue(
+                        Duration.millis(800.0),
+                        KeyValue(
                             item.currentYProperty(),
                             item.yValue, Interpolator.EASE_BOTH
                         ),
@@ -153,14 +153,16 @@ class StackedAreaChartForWrapper<X : Any, Y : Any> @JvmOverloads constructor(
         val symbol = item.node
         symbol?.focusTraversableProperty()?.unbind()
 
-        // remove item from sorted list
+        /* remove item from sorted list */
         val itemIndex = series.getItemIndex(item)
         if (shouldAnimate()) {
             var animate = false
-            // dataSize represents size of currently visible data. After this operation, the number will decrement by 1
+            /* dataSize represents size of currently visible data. After this operation, the number will decrement by 1 */
             val dataSize = series.dataSize
-            // This is the size of current data list in Series. Note that it might be totaly different from dataSize as
-            // some big operation might have happened on the list.
+            /*
+            This is the size of current data list in Series. Note that it might be totaly different from dataSize as
+            some big operation might have happened on the list.
+             */
             val dataListSize = series.data.value.size
             if (itemIndex > 0 && itemIndex < dataSize - 1) {
                 animate = true
@@ -173,17 +175,19 @@ class StackedAreaChartForWrapper<X : Any, Y : Any> @JvmOverloads constructor(
                 val x2 = xAxis.toNumericValue(item.xValue)
                 val y2 = yAxis.toNumericValue(item.yValue)
 
-//                //1.  y intercept of the line : y = ((y3-y1)/(x3-x1)) * x2 + (x3y1 - y3x1)/(x3 -x1)
+                /* //1.  y intercept of the line */
                 val y = (y3 - y1) / (x3 - x1) * x2 + (x3 * y1 - y3 * x1) / (x3 - x1)
                 item.currentX.value = xAxis.toRealValue(x2)
                 item.currentY.value = yAxis.toRealValue(y2)
                 item.xValue = xAxis.toRealValue(x2)!!
                 item.yValue = (yAxis.toRealValue(y)!!)
-                //2.  we can simply use the midpoint on the line as well..
-//                double x = (x3 + x1)/2;
-//                double y = (y3 + y1)/2;
-//                item.setCurrentX(x);
-//                item.setCurrentY(y);
+                /*
+                2.  we can simply use the midpoint on the line as well..
+                double x = (x3 + x1)/2;
+                double y = (y3 + y1)/2;
+                item.setCurrentX(x);
+                item.setCurrentY(y);
+                 */
             } else if (itemIndex == 0 && dataListSize > 1) {
                 animate = true
                 item.xValue = (series.data.value[0].xValue)
@@ -194,15 +198,16 @@ class StackedAreaChartForWrapper<X : Any, Y : Any> @JvmOverloads constructor(
                 item.xValue = (series.data.value[last].xValue)
                 item.yValue = (series.data.value[last].yValue)
             } else if (symbol != null) {
-                // fade out symbol
+                /* fade out symbol */
                 symbol.opacity = 0.0
                 val ft = FadeTransition(Duration.millis(500.0), symbol)
                 ft.toValue = 0.0
-                ft.onFinished = EventHandler {
-                    plotChildren.remove(symbol)
-                    removeDataItemFromDisplay(series, item)
-                    symbol.opacity = 1.0
-                }
+                ft.onFinished =
+                    EventHandler {
+                        plotChildren.remove(symbol)
+                        removeDataItemFromDisplay(series, item)
+                        symbol.opacity = 1.0
+                    }
                 ft.play()
             } else {
                 item.setSeries(null)
@@ -211,10 +216,12 @@ class StackedAreaChartForWrapper<X : Any, Y : Any> @JvmOverloads constructor(
             if (animate) {
                 animate(
                     KeyFrame(
-                        Duration.ZERO, KeyValue(
+                        Duration.ZERO,
+                        KeyValue(
                             item.currentYProperty(),
                             item.currentY.value
-                        ), KeyValue(
+                        ),
+                        KeyValue(
                             item.currentXProperty(),
                             item.currentX.value
                         )
@@ -239,12 +246,12 @@ class StackedAreaChartForWrapper<X : Any, Y : Any> @JvmOverloads constructor(
             plotChildren.remove(symbol)
             removeDataItemFromDisplay(series, item)
         }
-        //Note: better animation here, point should move from old position to new position at center point between prev and next symbols
+        /* Note: better animation here, point should move from old position to new position at center point between prev and next symbols */
     }
 
 
     override fun seriesChanged(c: Change<out Series<*, *>>) {
-        // Update style classes for all series lines and symbols
+        /* Update style classes for all series lines and symbols */
         for (i in 0..<dataSize) {
             val s = data.value[i]
             val seriesLine = (s.node.value as Group).children[1] as Path
@@ -263,17 +270,17 @@ class StackedAreaChartForWrapper<X : Any, Y : Any> @JvmOverloads constructor(
         series: Series<X, Y>,
         seriesIndex: Int
     ) {
-        // create new paths for series
+        /* create new paths for series */
         val seriesLine = Path()
         val fillPath = Path()
         seriesLine.strokeLineJoin = BEVEL
         fillPath.strokeLineJoin = BEVEL
         val areaGroup = Group(fillPath, seriesLine)
         series.node.value = areaGroup
-        // create series Y multiplier
+        /* create series Y multiplier */
         val seriesYAnimMultiplier: DoubleProperty = SimpleDoubleProperty(this, "seriesYMultiplier")
         seriesYMultiplierMap[series] = seriesYAnimMultiplier
-        // handle any data already in series
+        /* handle any data already in series */
         if (shouldAnimate()) {
             seriesYAnimMultiplier.value = 0.0
         } else {
@@ -282,7 +289,7 @@ class StackedAreaChartForWrapper<X : Any, Y : Any> @JvmOverloads constructor(
         plotChildren.add(areaGroup)
         val keyFrames: MutableList<KeyFrame> = ArrayList()
         if (shouldAnimate()) {
-            // animate in new series
+            /* animate in new series */
             keyFrames.add(
                 KeyFrame(
                     Duration.ZERO,
@@ -310,7 +317,7 @@ class StackedAreaChartForWrapper<X : Any, Y : Any> @JvmOverloads constructor(
                 if (shouldAnimate()) symbol.opacity = 0.0
                 plotChildren.add(symbol)
                 if (shouldAnimate()) {
-                    // fade in new symbol
+                    /* fade in new symbol */
                     keyFrames.add(KeyFrame(Duration.ZERO, KeyValue(symbol.opacityProperty(), 0)))
                     keyFrames.add(KeyFrame(Duration.millis(200.0), KeyValue(symbol.opacityProperty(), 1)))
                 }
@@ -320,9 +327,9 @@ class StackedAreaChartForWrapper<X : Any, Y : Any> @JvmOverloads constructor(
     }
 
     override fun seriesRemoved(series: Series<X, Y>) {
-        // remove series Y multiplier
+        /* remove series Y multiplier */
         seriesYMultiplierMap.remove(series)
-        // remove all symbol nodes
+        /* remove all symbol nodes */
         if (shouldAnimate()) {
             timeline = Timeline(*createSeriesRemoveTimeLine(series, 400))
             timeline!!.play()
@@ -335,8 +342,10 @@ class StackedAreaChartForWrapper<X : Any, Y : Any> @JvmOverloads constructor(
 
     /** {@inheritDoc}  */
     override fun updateAxisRange() {
-        // This override is necessary to update axis range based on cumulative Y value for the
-        // Y axis instead of the normal way where max value in the data range is used.
+        /*
+        This override is necessary to update axis range based on cumulative Y value for the
+        Y axis instead of the normal way where max value in the data range is used.
+         */
         val xa = xAxis
         val ya = yAxis
         if (xa.isAutoRanging()) {
@@ -365,55 +374,55 @@ class StackedAreaChartForWrapper<X : Any, Y : Any> @JvmOverloads constructor(
                         val yv = ya.toNumericValue(item.yValue)
                         currentValues[xv] = yv
                         if (first) {
-                            // On the first pass, just fill the map
+                            /* On the first pass, just fill the map */
                             accum[xv] = yv
-                            // minimum is applicable only in the first series
+                            /* minimum is applicable only in the first series */
                             totalMinY = min(totalMinY, yv)
                         } else {
                             if (prevAccum.containsKey(xv)) {
                                 accum[xv] = prevAccum[xv]!! + yv
                             } else {
-                                // If the point wasn't yet in the previous (accumulated) series
+                                /* If the point wasn't yet in the previous (accumulated) series */
                                 val he = prevAccum.higherEntry(xv)
                                 val le = prevAccum.lowerEntry(xv)
                                 if (he != null && le != null) {
-                                    // If there's both point above and below this point, interpolate
+                                    /* If there's both point above and below this point, interpolate */
                                     accum[xv] = (xv - le.key) / (he.key - le.key) *
                                         (le.value + he.value) + yv
                                 } else if (he != null) {
-                                    // The point is before the first point in the previously accumulated series
+                                    /* The point is before the first point in the previously accumulated series */
                                     accum[xv] = he.value + yv
                                 } else if (le != null) {
-                                    // The point is after the last point in the previously accumulated series
+                                    /* The point is after the last point in the previously accumulated series */
                                     accum[xv] = le.value + yv
                                 } else {
-                                    // The previously accumulated series is empty
+                                    /* The previously accumulated series is empty */
                                     accum[xv] = yv
                                 }
                             }
                         }
                     }
                 }
-                // Now update all the keys that were in the previous series, but not in the new one
+                /* Now update all the keys that were in the previous series, but not in the new one */
                 for ((k, v) in prevAccum) {
                     if (accum.keys.contains(k)) {
                         continue
                     }
-                    // Look at the values of the current series
+                    /* Look at the values of the current series */
                     val he = currentValues.higherEntry(k)
                     val le = currentValues.lowerEntry(k)
                     if (he != null && le != null) {
-                        // Interpolate the for the point from current series and add the accumulated value
+                        /* Interpolate the for the point from current series and add the accumulated value */
                         accum[k] = (k - le.key) / (he.key - le.key) *
                             (le.value + he.value) + v
                     } else if (he != null) {
-                        // There accumulated value is before the first value in the current series
+                        /* There accumulated value is before the first value in the current series */
                         accum[k] = he.value + v
                     } else if (le != null) {
-                        // There accumulated value is after the last value in the current series
+                        /* There accumulated value is after the last value in the current series */
                         accum[k] = le.value + v
                     } else {
-                        // The current series are empty
+                        /* The current series are empty */
                         accum[k] = v
                     }
                 }
@@ -421,8 +430,10 @@ class StackedAreaChartForWrapper<X : Any, Y : Any> @JvmOverloads constructor(
                 prevAccum.putAll(accum)
                 accum.clear()
                 first =
-                    totalMinY == Double.MAX_VALUE // If there was already some value in the series, we can consider as
-                // being past the first series
+                    totalMinY == Double.MAX_VALUE /*
+ If there was already some value in the series, we can consider as
+ being past the first series
+                     */
             }
             if (totalMinY != Double.MAX_VALUE) ya.invalidateRange(
                 java.util.Arrays.asList(
@@ -436,27 +447,31 @@ class StackedAreaChartForWrapper<X : Any, Y : Any> @JvmOverloads constructor(
     /** {@inheritDoc}  */
     override fun layoutPlotChildren() {
         val currentSeriesData = ArrayList<DataPointInfo<X, Y>>()
-        // AggregateData hold the data points of both the current and the previous series.
-        // The goal is to collect all the data, sort it and iterate.
+        /*
+        AggregateData hold the data points of both the current and the previous series.
+        The goal is to collect all the data, sort it and iterate.
+         */
         val aggregateData = ArrayList<DataPointInfo<X, Y>>()
 
-        for (seriesIndex in 0..<dataSize) { // for every series
+        for (seriesIndex in 0..<dataSize) {
+            /* for every series */
             val series = data.value[seriesIndex]
             aggregateData.clear()
-            // copy currentSeriesData accumulated in the previous iteration to aggregate.
+            /* copy currentSeriesData accumulated in the previous iteration to aggregate. */
             for (data in currentSeriesData) {
                 data.partOf = PREVIOUS
                 aggregateData.add(data)
             }
             currentSeriesData.clear()
-            // now copy actual data of the current series.
+            /* now copy actual data of the current series. */
             val it = getDisplayedDataIterator(series)
             while (it.hasNext()) {
                 val item = it.next()
-                val itemInfo = DataPointInfo(
-                    item, item.xValue,
-                    item.yValue, CURRENT
-                )
+                val itemInfo =
+                    DataPointInfo(
+                        item, item.xValue,
+                        item.yValue, CURRENT
+                    )
                 aggregateData.add(itemInfo)
             }
             val seriesYAnimMultiplier = seriesYMultiplierMap[series]
@@ -465,7 +480,7 @@ class StackedAreaChartForWrapper<X : Any, Y : Any> @JvmOverloads constructor(
             seriesLine.elements.clear()
             fillPath.elements.clear()
             var dataIndex = 0
-            // Sort data points from prev and current series
+            /* Sort data points from prev and current series */
             sortAggregateList(aggregateData)
             val yAxis = yAxis
             val xAxis = xAxis
@@ -476,26 +491,30 @@ class StackedAreaChartForWrapper<X : Any, Y : Any> @JvmOverloads constructor(
             var basePosition = yAxis.zeroPosition
             if (java.lang.Double.isNaN(basePosition)) {
                 val valueYAxis = yAxis as MoreGenericNumberAxis<Y>
-                basePosition = if ((valueYAxis.lowerBound.value as DoubleWrapper<*>).asDouble > 0) {
-                    valueYAxis.getDisplayPosition(valueYAxis.lowerBound.value)
-                } else {
-                    valueYAxis.getDisplayPosition(valueYAxis.upperBound.value)
-                }
+                basePosition =
+                    if ((valueYAxis.lowerBound.value as DoubleWrapper<*>).asDouble > 0) {
+                        valueYAxis.getDisplayPosition(valueYAxis.lowerBound.value)
+                    } else {
+                        valueYAxis.getDisplayPosition(valueYAxis.upperBound.value)
+                    }
             }
-            // Iterate over the aggregate data : this process accumulates data points
-            // cumulatively from the bottom to top of stack
+            /*
+            Iterate over the aggregate data : this process accumulates data points
+            cumulatively from the bottom to top of stack
+             */
             for (dataInfo in aggregateData) {
                 if (dataIndex == lastCurrentIndex) lastCurrent = true
                 if (dataIndex == firstCurrentIndex) firstCurrent = true
                 val item = dataInfo.dataItem
-                if (dataInfo.partOf == CURRENT) { // handle data from current series
+                if (dataInfo.partOf == CURRENT) {
+                    /* handle data from current series */
                     var pIndex = findPreviousPrevious(aggregateData, dataIndex)
                     val nIndex = findNextPrevious(aggregateData, dataIndex)
                     var prevPoint: DataPointInfo<X, Y>?
                     var nextPoint: DataPointInfo<X, Y>?
                     if (pIndex == -1 || nIndex == -1 && aggregateData[pIndex].x != dataInfo.x) {
                         if (firstCurrent) {
-                            // Need to add the drop down point.
+                            /* Need to add the drop down point. */
                             val ddItem: Data<X, Y> = Data(dataInfo.x!!, yAxis.toRealValue(0.0)!!)
                             addDropDown(
                                 currentSeriesData, ddItem, ddItem.xValue, ddItem.yValue,
@@ -503,15 +522,16 @@ class StackedAreaChartForWrapper<X : Any, Y : Any> @JvmOverloads constructor(
                             )
                         }
                         val x = xAxis.getDisplayPosition(item!!.currentX.value)
-                        val y = yAxis.getDisplayPosition(
-                            yAxis.toRealValue(yAxis.toNumericValue(item.currentY.value!!) * seriesYAnimMultiplier!!.value!!)!!
-                        )
+                        val y =
+                            yAxis.getDisplayPosition(
+                                yAxis.toRealValue(yAxis.toNumericValue(item.currentY.value!!) * seriesYAnimMultiplier!!.value!!)!!
+                            )
                         addPoint(
                             currentSeriesData, item, item.xValue, item.yValue, x, y,
                             CURRENT, false, if (firstCurrent) false else true
                         )
                         if (dataIndex == lastCurrentIndex) {
-                            // need to add drop down point
+                            /* need to add drop down point */
                             val ddItem: Data<X, Y> = Data(dataInfo.x!!, yAxis.toRealValue(0.0)!!)
                             addDropDown(
                                 currentSeriesData, ddItem, ddItem.xValue, ddItem.yValue,
@@ -520,20 +540,27 @@ class StackedAreaChartForWrapper<X : Any, Y : Any> @JvmOverloads constructor(
                         }
                     } else {
                         prevPoint = aggregateData[pIndex]
-                        if (prevPoint.x == dataInfo.x) { // Need to add Y values
-                            // Check if prevPoint is a dropdown - as the stable sort preserves the order.
-                            // If so, find the non dropdown previous point on previous series.
+                        if (prevPoint.x ==
+                            dataInfo.x
+                        ) {
+                            /*
+ Need to add Y values
+ Check if prevPoint is a dropdown - as the stable sort preserves the order.
+ If so, find the non dropdown previous point on previous series.
+                             */
                             if (prevPoint.dropDown) {
                                 pIndex = findPreviousPrevious(aggregateData, pIndex)
                                 prevPoint = aggregateData[pIndex]
-                                // If lastCurrent - add this drop down
+                                /* If lastCurrent - add this drop down */
                             }
-                            if (prevPoint.x == dataInfo.x) { // simply add
+                            if (prevPoint.x == dataInfo.x) {
+                                /* simply add */
                                 val x = xAxis.getDisplayPosition(item!!.currentX.value)
                                 val yv = yAxis.toNumericValue(item.currentY.value) + yAxis.toNumericValue(prevPoint.y!!)
-                                val y = yAxis.getDisplayPosition(
-                                    yAxis.toRealValue(yv * seriesYAnimMultiplier!!.value)!!
-                                )
+                                val y =
+                                    yAxis.getDisplayPosition(
+                                        yAxis.toRealValue(yv * seriesYAnimMultiplier!!.value)!!
+                                    )
                                 addPoint(
                                     currentSeriesData,
                                     item,
@@ -557,25 +584,27 @@ class StackedAreaChartForWrapper<X : Any, Y : Any> @JvmOverloads constructor(
                                 )
                             }
                         } else {
-                            // interpolate
+                            /* interpolate */
                             nextPoint = if (nIndex == -1) null else aggregateData[nIndex]
                             prevPoint = if (pIndex == -1) null else aggregateData[pIndex]
                             val yValue = yAxis.toNumericValue(item!!.currentY.value)
                             if (prevPoint != null && nextPoint != null) {
                                 val x = xAxis.getDisplayPosition(item.currentX.value)
-                                val displayY = interpolate(
-                                    prevPoint.displayX,
-                                    prevPoint.displayY, nextPoint.displayX, nextPoint.displayY, x
-                                )
-                                val dataY = interpolate(
-                                    xAxis.toNumericValue(prevPoint.x!!),
-                                    yAxis.toNumericValue(prevPoint.y!!),
-                                    xAxis.toNumericValue(nextPoint.x!!),
-                                    yAxis.toNumericValue(nextPoint.y!!),
-                                    xAxis.toNumericValue(dataInfo.x!!)
-                                )
+                                val displayY =
+                                    interpolate(
+                                        prevPoint.displayX,
+                                        prevPoint.displayY, nextPoint.displayX, nextPoint.displayY, x
+                                    )
+                                val dataY =
+                                    interpolate(
+                                        xAxis.toNumericValue(prevPoint.x!!),
+                                        yAxis.toNumericValue(prevPoint.y!!),
+                                        xAxis.toNumericValue(nextPoint.x!!),
+                                        yAxis.toNumericValue(nextPoint.y!!),
+                                        xAxis.toNumericValue(dataInfo.x!!)
+                                    )
                                 if (firstCurrent) {
-                                    // now create the drop down point
+                                    /* now create the drop down point */
                                     val ddItem: Data<X, Y> = Data(dataInfo.x!!, yAxis.toRealValue(dataY)!!)
                                     addDropDown(
                                         currentSeriesData,
@@ -588,7 +617,7 @@ class StackedAreaChartForWrapper<X : Any, Y : Any> @JvmOverloads constructor(
                                 }
                                 val y =
                                     yAxis.getDisplayPosition(yAxis.toRealValue((yValue + dataY) * seriesYAnimMultiplier!!.value)!!)
-                                // Add the current point
+                                /* Add the current point */
                                 addPoint(
                                     currentSeriesData,
                                     item,
@@ -601,7 +630,7 @@ class StackedAreaChartForWrapper<X : Any, Y : Any> @JvmOverloads constructor(
                                     if (firstCurrent) false else true
                                 )
                                 if (dataIndex == lastCurrentIndex) {
-                                    // add drop down point
+                                    /* add drop down point */
                                     val ddItem: Data<X, Y> = Data(dataInfo.x!!, yAxis.toRealValue(dataY)!!)
                                     addDropDown(
                                         currentSeriesData,
@@ -612,14 +641,17 @@ class StackedAreaChartForWrapper<X : Any, Y : Any> @JvmOverloads constructor(
                                         displayY
                                     )
                                 }
-                                // Note: add drop down if last current
+                                /* Note: add drop down if last current */
                             } else {
-                                // we do not need to take care of this as it is
-                                // already handled above with check of if(pIndex == -1 or nIndex == -1)
+                                /*
+                                we do not need to take care of this as it is
+                                already handled above with check of if(pIndex == -1 or nIndex == -1)
+                                 */
                             }
                         }
                     }
-                } else { // handle data from Previous series.
+                } else {
+                    /* handle data from Previous series. */
                     val pIndex = findPreviousCurrent(aggregateData, dataIndex)
                     val nIndex = findNextCurrent(aggregateData, dataIndex)
                     var prevPoint: DataPointInfo<X, Y>
@@ -654,22 +686,24 @@ class StackedAreaChartForWrapper<X : Any, Y : Any> @JvmOverloads constructor(
                         } else {
                             nextPoint = aggregateData[nIndex]
                             if (nextPoint.x == dataInfo.x) {
-                                // do nothing as the current point is already there.
+                                /* do nothing as the current point is already there. */
                             } else {
-                                // interpolate on the current series.
+                                /* interpolate on the current series. */
                                 prevPoint = aggregateData[pIndex]
                                 val x = xAxis.getDisplayPosition(item!!.currentX.value)
-                                val dataY = interpolate(
-                                    xAxis.toNumericValue(prevPoint.x!!),
-                                    yAxis.toNumericValue(prevPoint.y!!),
-                                    xAxis.toNumericValue(nextPoint.x!!),
-                                    yAxis.toNumericValue(nextPoint.y!!),
-                                    xAxis.toNumericValue(dataInfo.x!!)
-                                )
+                                val dataY =
+                                    interpolate(
+                                        xAxis.toNumericValue(prevPoint.x!!),
+                                        yAxis.toNumericValue(prevPoint.y!!),
+                                        xAxis.toNumericValue(nextPoint.x!!),
+                                        yAxis.toNumericValue(nextPoint.y!!),
+                                        xAxis.toNumericValue(dataInfo.x!!)
+                                    )
                                 val yv = yAxis.toNumericValue(dataInfo.y!!) + dataY
-                                val y = yAxis.getDisplayPosition(
-                                    yAxis.toRealValue(yv * seriesYAnimMultiplier!!.value)!!
-                                )
+                                val y =
+                                    yAxis.getDisplayPosition(
+                                        yAxis.toRealValue(yv * seriesYAnimMultiplier!!.value)!!
+                                    )
                                 addPoint(
                                     currentSeriesData,
                                     Data(dataInfo.x!!, yAxis.toRealValue(dataY)!!),
@@ -688,9 +722,10 @@ class StackedAreaChartForWrapper<X : Any, Y : Any> @JvmOverloads constructor(
                 dataIndex++
                 if (firstCurrent) firstCurrent = false
                 if (lastCurrent) lastCurrent = false
-            } // end of inner for loop
-
-            // Draw the SeriesLine and Series fill
+            } /*
+ end of inner for loop
+ Draw the SeriesLine and Series fill
+             */
             if (!currentSeriesData.isEmpty()) {
                 seriesLine.elements.add(MoveTo(currentSeriesData[0].displayX, currentSeriesData[0].displayY))
                 fillPath.elements.add(MoveTo(currentSeriesData[0].displayX, currentSeriesData[0].displayY))
@@ -702,7 +737,7 @@ class StackedAreaChartForWrapper<X : Any, Y : Any> @JvmOverloads constructor(
                     seriesLine.elements.add(MoveTo(point.displayX, point.displayY))
                 }
                 fillPath.elements.add(LineTo(point.displayX, point.displayY))
-                // draw symbols only for actual data points and skip for interpolated points.
+                /* draw symbols only for actual data points and skip for interpolated points. */
                 if (!point.skipSymbol) {
                     val symbol = point.dataItem!!.node
                     if (symbol != null) {
@@ -721,7 +756,7 @@ class StackedAreaChartForWrapper<X : Any, Y : Any> @JvmOverloads constructor(
             if (!fillPath.elements.isEmpty()) {
                 fillPath.elements.add(ClosePath())
             }
-        } // end of out for loop
+        } /* end of out for loop */
     }
 
     private fun addDropDown(
@@ -759,8 +794,10 @@ class StackedAreaChartForWrapper<X : Any, Y : Any> @JvmOverloads constructor(
     }
 
 
-    //-------------------- helper methods to retrieve data points from the previous
-    // or current data series.
+    /*
+-------------------- helper methods to retrieve data points from the previous
+or current data series.
+*/
     private fun findNextCurrent(
         points: ArrayList<DataPointInfo<X, Y>>,
         index: Int
@@ -810,14 +847,16 @@ class StackedAreaChartForWrapper<X : Any, Y : Any> @JvmOverloads constructor(
     }
 
     private fun sortAggregateList(aggregateList: ArrayList<DataPointInfo<X, Y>>) {
-        Collections.sort(aggregateList,
+        Collections.sort(
+            aggregateList,
             Comparator { o1: DataPointInfo<X, Y>, o2: DataPointInfo<X, Y> ->
                 val d1 = o1.dataItem
                 val d2 = o2.dataItem
                 val val1 = xAxis.toNumericValue(d1!!.xValue)
                 val val2 = xAxis.toNumericValue(d2!!.xValue)
                 if (val1 < val2) -1 else if (val1 == val2) 0 else 1
-            })
+            }
+        )
     }
 
     private fun interpolate(
@@ -827,14 +866,13 @@ class StackedAreaChartForWrapper<X : Any, Y : Any> @JvmOverloads constructor(
         highY: Double,
         x: Double
     ): Double {
-        // using y = mx+c find the y for the given x.
+        /* using y = mx+c find the y for the given x. */
         return (highY - lowY) / (highX - lowX) * (x - lowX) + lowY
     }
 
 
     override val lineOrArea = LineOrArea.area
 
-    // -------------- INNER CLASSES --------------------------------------------
     /*
      * Helper class to hold data and display and other information for each
      * data point
@@ -846,11 +884,10 @@ class StackedAreaChartForWrapper<X : Any, Y : Any> @JvmOverloads constructor(
         var displayY = 0.0
         var dataItem: Data<X, Y>? = null
         var partOf: PartOf? = null
-        var skipSymbol = false // interpolated point - skip drawing symbol
-        var lineTo = false // should there be a lineTo to this point on SeriesLine.
-        var dropDown = false // Is this a drop down point ( non data point).
+        var skipSymbol = false /* interpolated point - skip drawing symbol */
+        var lineTo = false /* should there be a lineTo to this point on SeriesLine. */
+        var dropDown = false /* Is this a drop down point ( non data point). */
 
-        //----- Constructors --------------------
         constructor()
         constructor(
             item: Data<X, Y>?,
@@ -889,7 +926,7 @@ class StackedAreaChartForWrapper<X : Any, Y : Any> @JvmOverloads constructor(
         }
     }
 
-    // To indicate if the data point belongs to the current or the previous series.
+    /* To indicate if the data point belongs to the current or the previous series. */
     internal enum class PartOf {
         CURRENT,
         PREVIOUS
@@ -901,7 +938,6 @@ class StackedAreaChartForWrapper<X : Any, Y : Any> @JvmOverloads constructor(
     override fun getCssMetaData() = StyleableProperties.classCssMetaData
 
     companion object {
-        // -------------- METHODS ------------------------------------------------------------------------------------------
         private fun doubleValue(
             number: Number?,
             nullDefault: Double = 0.0

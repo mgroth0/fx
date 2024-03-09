@@ -11,7 +11,7 @@ import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attach
 import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
 
-fun <C: NodeWrapper> ET.flowpane(op: FlowPaneWrapper<C>.()->Unit = {}) = attach(FlowPaneWrapper(), op)
+fun <C: NodeWrapper> ET.flowpane(op: FlowPaneWrapper<C>.() -> Unit = {}) = attach(FlowPaneWrapper(), op)
 
 open class FlowPaneWrapper<C: NodeWrapper>(node: FlowPane = FlowPane()): PaneWrapperImpl<FlowPane, C>(node) {
 
@@ -73,6 +73,4 @@ open class FlowPaneWrapper<C: NodeWrapper>(node: FlowPane = FlowPane()): PaneWra
         }
 
     val prefWrapLengthProperty by lazy { node.prefWrapLengthProperty().toNonNullableProp() }
-
-
 }

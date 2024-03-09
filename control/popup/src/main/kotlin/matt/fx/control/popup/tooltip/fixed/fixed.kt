@@ -17,13 +17,13 @@ import matt.fx.graphics.service.nullableParentConverter
 import matt.fx.graphics.wrapper.node.NW
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.lang.assertions.require.requireNull
+import matt.lang.common.go
 import matt.lang.delegation.lazyVarDelegate
-import matt.lang.go
-import matt.obs.prop.VarProp
+import matt.obs.prop.writable.VarProp
 
 fun NW.install(newToolTip: FixedTooltipWrapper) {
     MyFixedTooltip.install(
-        this.node, newToolTip.node
+        node, newToolTip.node
     )
 }
 
@@ -32,13 +32,14 @@ fun NW.tooltip(
     graphic: NW? = null,
     op: FixedTooltipWrapper.() -> Unit = {}
 ): FixedTooltipWrapper {
-    val newToolTip = FixedTooltipWrapper().apply {
+    val newToolTip =
+        FixedTooltipWrapper().apply {
 
 
-        this.content = LabelWrapper(text, graphic?.node)
-        comfortablyShowForeverUntilEscaped()
-        op()
-    }
+            content = LabelWrapper(text, graphic?.node)
+            comfortablyShowForeverUntilEscaped()
+            op()
+        }
     install(newToolTip)
     return newToolTip
 }
@@ -47,11 +48,12 @@ fun NW.tooltip(
     content: NW?,
     op: FixedTooltipWrapper.() -> Unit = {}
 ): FixedTooltipWrapper {
-    val newToolTip = FixedTooltipWrapper().apply {
-        this.content = content
-        comfortablyShowForeverUntilEscaped()
-        op()
-    }
+    val newToolTip =
+        FixedTooltipWrapper().apply {
+            this.content = content
+            comfortablyShowForeverUntilEscaped()
+            op()
+        }
     install(newToolTip)
     return newToolTip
 }
@@ -102,38 +104,44 @@ open class FixedTooltipWrapper(node: MyFixedTooltip = MyFixedTooltip()) : PopupW
             node.setShowDuration(value)
         }
     var consumeAutoHidingEvents by node::consumeAutoHidingEvents
-    var isAutoFix by node.autoFixProperty().toNonNullableProp()
-    var isAutoHide by node.autoHideProperty().toNonNullableProp()
+    var isAutoFix: Boolean by node.autoFixProperty().toNonNullableProp()
+    var isAutoHide: Boolean by node.autoHideProperty().toNonNullableProp()
 
 
     private var transparentMouseEventHandler: EventHandler<MouseEvent>? = null
 
-    val sendMouseEventsToProp = VarProp<SendMouseEvents?>(null).apply {
-        onChange { opt ->
-            synchronized(this) {
-                if (opt == null) {
-                    transparentMouseEventHandler?.go {
-                        removeEventFilter(MouseEvent.ANY, it)
-                        transparentMouseEventHandler = null
-                    }
-                } else {
+    val sendMouseEventsToProp =
+        VarProp<SendMouseEvents?>(null).apply {
+            onChange { opt ->
+                synchronized(this) {
+                    if (opt == null) {
+                        transparentMouseEventHandler?.go {
+                            removeEventFilter(MouseEvent.ANY, it)
+                            transparentMouseEventHandler = null
+                        }
+                    } else {
 
-                    addEventFilter(MouseEvent.ANY, EventHandler<MouseEvent> {
-                        correctTooltipNativeMouseEvent(
-                            it, target = when (opt) {
-                                AutoDetectUnderlyingScene -> null
-                                is Owner                  -> node.ownerWindow.scene
-                                is SpecificScene          -> opt.scene
-                            }, exclude = scene!!.node
+                        addEventFilter(
+                            MouseEvent.ANY,
+                            EventHandler<MouseEvent> {
+                                correctTooltipNativeMouseEvent(
+                                    it,
+                                    target =
+                                        when (opt) {
+                                            AutoDetectUnderlyingScene -> null
+                                            is Owner                  -> node.ownerWindow.scene
+                                            is SpecificScene          -> opt.scene
+                                        },
+                                    exclude = scene!!.node
+                                )
+                                it.consume()
+                            }.also {
+                                transparentMouseEventHandler = it
+                            }
                         )
-                        it.consume()
-                    }.also {
-                        transparentMouseEventHandler = it
-                    })
+                    }
                 }
             }
         }
-    }
     var sendMouseEventsTo by sendMouseEventsToProp
-
 }

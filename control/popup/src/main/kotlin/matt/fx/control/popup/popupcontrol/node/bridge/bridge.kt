@@ -22,7 +22,7 @@ open class MyPopUpCSSBridge(open val popupControl: MyPopupControl): Pane() {
 
 
     init {
-        // To initialize the class helper at the begining each constructor of this class
+        /* To initialize the class helper at the begining each constructor of this class */
         helper.initHelper(this)
     }
 
@@ -60,7 +60,7 @@ open class MyPopUpCSSBridge(open val popupControl: MyPopupControl): Pane() {
         }
     }
 
-    final /**
+    /**
      * Requests a layout pass to be performed before the next scene is
      * rendered. This is batched up asynchronously to happen once per
      * "pulse", or frame of animation.
@@ -70,22 +70,22 @@ open class MyPopUpCSSBridge(open val popupControl: MyPopupControl): Pane() {
      * added directly to the scene's dirty layout list, otherwise requestLayout
      * will be invoked on its parent.
      */
-    override fun requestLayout() {
+    final override fun requestLayout() {
         prefWidthCache.set(popupControl, -1.0)
         prefHeightCache.set(popupControl, -1.0)
         minWidthCache.set(popupControl, -1.0)
         minHeightCache.set(popupControl, -1.0)
         maxWidthCache.set(popupControl, -1.0)
         maxHeightCache.set(popupControl, -1.0)
-        //skinSizeComputed = false; -- RT-33073 disabled this
+        /* skinSizeComputed = false; -- RT-33073 disabled this */
         super.requestLayout()
     }
 
-    final /**
+    /**
      * This method should be treated as final and should not be overridden by any subclasses of CSSBridge.
      * @return the styleable parent
      */
-    override fun getStyleableParent(): Styleable = popupControl.getStyleableParent()
+    final override fun getStyleableParent(): Styleable = popupControl.getStyleableParent()
 
     final override fun getCssMetaData(): List<CssMetaData<out Styleable, *>> = popupControl.getCssMetaData()
 
@@ -105,18 +105,19 @@ open class MyPopUpCSSBridge(open val popupControl: MyPopupControl): Pane() {
     internal fun doProcessCSS() {
         MyCSSBridgeHelper.superProcessCSS(this)
         if (popupControl.getSkin() == null) {
-            // try to create default skin
+            /* try to create default skin */
             val defaultSkin: Skin<*>? = popupControl.createDefaultSkinInternal()
             if (defaultSkin != null) {
                 popupControl.skinProperty().set(defaultSkin)
                 MyCSSBridgeHelper.superProcessCSS(this)
             } else {
-                val msg = "The -fx-skin property has not been defined in CSS for " + this +
-                    " and createDefaultSkin() returned null."
+                val msg =
+                    "The -fx-skin property has not been defined in CSS for " + this +
+                        " and createDefaultSkin() returned null."
                 val errors: MutableList<ParseError>? = StyleManager.getErrors()
                 if (errors != null) {
                     val error = ParseError(msg)
-                    errors.add(error) // RT-19884
+                    errors.add(error) /* RT-19884 */
                 }
                 Logging.getControlsLogger().severe(msg)
             }

@@ -2,6 +2,7 @@ package matt.fx.graphics.wrapper.imageview
 
 import javafx.scene.image.Image
 import javafx.scene.image.ImageView
+import matt.fx.base.wrapper.obs.obsval.prop.NonNullFXBackedBindableProp
 import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
 import matt.fx.graphics.wrapper.ET
@@ -12,35 +13,35 @@ import matt.fx.graphics.wrapper.node.impl.NodeWrapperImpl
 import matt.fx.graphics.wrapper.region.RegionWrapperImpl
 import matt.lang.delegation.lazyVarDelegate
 import matt.obs.bind.binding
-import matt.obs.prop.BindableProperty
 import matt.obs.prop.ObsVal
+import matt.obs.prop.writable.BindableProperty
 
 
-fun ET.imageview(url: String? = null, lazyLoad: Boolean = true, op: ImageViewWrapper.()->Unit = {}) =
+fun ET.imageview(url: String? = null, lazyLoad: Boolean = true, op: ImageViewWrapper.() -> Unit = {}) =
     attach(
-        if (url == null) ImageViewWrapper() else ImageViewWrapper().apply { this.image = Image(url, lazyLoad) }, op
+        if (url == null) ImageViewWrapper() else ImageViewWrapper().apply { image = Image(url, lazyLoad) }, op
     )
 
 fun ET.imageview(
     url: ObsVal<String>,
     lazyLoad: Boolean = true,
-    op: ImageViewWrapper.()->Unit = {}
+    op: ImageViewWrapper.() -> Unit = {}
 ) = ImageViewWrapper().attachTo(this, op) { imageView ->
     imageView.imageProperty.bind(url.binding { Image(it, lazyLoad) })
 }
 
-fun ET.imageview(image: ObsVal<Image?>, op: ImageViewWrapper.()->Unit = {}) =
+fun ET.imageview(image: ObsVal<Image?>, op: ImageViewWrapper.() -> Unit = {}) =
     ImageViewWrapper().attachTo(this, op) {
         it.imageProperty.bind(image)
     }
 
-fun ET.imageview(image: Image, op: ImageViewWrapper.()->Unit = {}) =
+fun ET.imageview(image: Image, op: ImageViewWrapper.() -> Unit = {}) =
     ImageViewWrapper().apply { this.image = image }.attachTo(this, op)
 
 
 class ImageViewWrapper(
-    node: ImageView = ImageView(),
-): NodeWrapperImpl<ImageView>(node), matt.image.Image {
+    node: ImageView = ImageView()
+): NodeWrapperImpl<ImageView>(node), matt.image.common.Image {
 
     constructor(image: Image): this(ImageView(image))
     constructor(imageURL: String): this(ImageView(imageURL))
@@ -50,7 +51,7 @@ class ImageViewWrapper(
     var image by lazyVarDelegate { imageProperty }
 
 
-    val preserveRatioProperty by lazy { node.preserveRatioProperty().toNonNullableProp() }
+    val preserveRatioProperty: NonNullFXBackedBindableProp<Boolean> by lazy { node.preserveRatioProperty().toNonNullableProp() }
     var isPreserveRatio by lazyVarDelegate { preserveRatioProperty }
 
 
@@ -95,5 +96,4 @@ class ImageViewWrapper(
     override fun addChild(child: NodeWrapper, index: Int?) {
         TODO()
     }
-
 }

@@ -14,6 +14,7 @@ import javafx.scene.paint.Paint
 import matt.file.construct.toMFile
 import matt.fx.base.wrapper.obs.collect.list.createImmutableWrapper
 import matt.fx.base.wrapper.obs.collect.list.createMutableWrapper
+import matt.fx.base.wrapper.obs.obsval.prop.NonNullFXBackedBindableProp
 import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
 import matt.fx.base.wrapper.obs.obsval.toNonNullableROProp
@@ -31,13 +32,13 @@ import matt.fx.graphics.wrapper.node.parent.parent
 import matt.fx.graphics.wrapper.region.RegionWrapper.Companion.computePrefWidthFun
 import matt.fx.graphics.wrapper.sizeman.SizeManaged
 import matt.fx.image.toBufferedImage
-import matt.image.Png
+import matt.image.common.Png
 import matt.image.convert.toPng
-import matt.lang.NEVER
 import matt.lang.anno.Open
+import matt.lang.common.NEVER
+import matt.lang.common.err
 import matt.lang.convert.BiConverter
 import matt.lang.delegation.lazyVarDelegate
-import matt.lang.err
 import matt.lang.model.file.FsFile
 import matt.lang.model.file.MacFileSystem
 import matt.model.data.rect.IntRectSize
@@ -46,11 +47,11 @@ import matt.obs.bindhelp.bindMultipleTargetsTogether
 import matt.obs.col.olist.ImmutableObsList
 import matt.obs.col.olist.mappedlist.toLazyMappedList
 import matt.obs.col.olist.sync.toSyncedList
-import matt.obs.prop.BindableProperty
 import matt.obs.prop.ObsVal
-import matt.obs.prop.Var
-import matt.obs.prop.VarProp
 import matt.obs.prop.proxy.ProxyProp
+import matt.obs.prop.writable.BindableProperty
+import matt.obs.prop.writable.Var
+import matt.obs.prop.writable.VarProp
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.jvm.isAccessible
 
@@ -132,11 +133,10 @@ interface RegionWrapper<C : NodeWrapper> : ParentWrapper<C>, SizeManaged, PngRas
     var backgroundFill: Paint?
         set(value) {
             if (value == null) {
-                this.background = null
+                background = null
             } else {
                 background = backgroundFromColor(value)
             }
-
         }
         get() {
             err("no getter yet")
@@ -210,17 +210,19 @@ interface RegionWrapper<C : NodeWrapper> : ParentWrapper<C>, SizeManaged, PngRas
     @Open
     var useMaxSize: Boolean
         get() = maxWidth == Double.MAX_VALUE && maxHeight == Double.MAX_VALUE
-        set(value) = if (value) {
-            useMaxWidth = true;
-            useMaxHeight = true
-        } else Unit
+        set(value) =
+            if (value) {
+                useMaxWidth = true
+                useMaxHeight = true
+            } else Unit
 
     @Open
     var usePrefWidth: Boolean
         get() = width == prefWidth
-        set(value) = if (value) run {
-            minWidth = (Region.USE_PREF_SIZE)
-        } else Unit
+        set(value) =
+            if (value) run {
+                minWidth = (Region.USE_PREF_SIZE)
+            } else Unit
 
     @Open
     var usePrefHeight: Boolean
@@ -233,7 +235,7 @@ interface RegionWrapper<C : NodeWrapper> : ParentWrapper<C>, SizeManaged, PngRas
         set(value) = if (value) setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE) else Unit
 
 
-    @Open   override fun addChild(
+    @Open override fun addChild(
         child: NodeWrapper,
         index: Int?
     ) {
@@ -242,17 +244,19 @@ interface RegionWrapper<C : NodeWrapper> : ParentWrapper<C>, SizeManaged, PngRas
 
 
     val children: ImmutableObsList<C>
-
-
 }
 
-fun RegionWrapper<*>.computePrefWidth(height: Double) = (computePrefWidthFun.invoke(node, height) as Double).also {
-    println("computed pref width of $node with height $height is $it")
-}
+fun RegionWrapper<*>.computePrefWidth(height: Double) =
+    (computePrefWidthFun.invoke(node, height) as Double).also {
+        println("computed pref width of $node with height $height is $it")
+    }
 
 
 open class RegionWrapperImpl<N : Region, C : NodeWrapper>(node: N) : ParentWrapperImpl<N, C>(node), RegionWrapper<C> {
-    /*any temporary border changes might want to come back to this after*//*used to be an ugly lazy map that lead to errors. manual is better for this.*/
+    /*any temporary border changes might want to come back to this after
+
+
+    used to be an ugly lazy map that lead to errors. manual is better for this.*/
     var defaultBorder: Border = Border.EMPTY
 
     companion object {
@@ -287,17 +291,19 @@ open class RegionWrapperImpl<N : Region, C : NodeWrapper>(node: N) : ParentWrapp
     final override val maxHeightProperty by lazy { node.maxHeightProperty().toNonNullableProp().cast<Double>() }
 
 
-    @Open override val children: ImmutableObsList<C> by lazy {    /*trying to avoid initializing wrappers to quickly (and getting the wrong ones as a result)*/
+    @Open override val children: ImmutableObsList<C> by lazy {
+        /*trying to avoid initializing wrappers to quickly (and getting the wrong ones as a result)*/
         node.childrenUnmodifiable.createImmutableWrapper().toLazyMappedList {
             uncheckedWrapperConverter<Node, C>().convertToB(it)
         }
     }
 
-    final override fun rasterize(size: IntRectSize): Png = DefaultStudio(
-        size
-    ).shoot(this).toBufferedImage().toPng()
+    final override fun rasterize(size: IntRectSize): Png =
+        DefaultStudio(
+            size
+        ).shoot(this).toBufferedImage().toPng()
 
-    final override val paddingProperty by lazy { node.paddingProperty().toNonNullableProp() }
+    final override val paddingProperty: NonNullFXBackedBindableProp<Insets> by lazy { node.paddingProperty().toNonNullableProp() }
 
     final override var padding by lazyVarDelegate {
         paddingProperty
@@ -305,13 +311,14 @@ open class RegionWrapperImpl<N : Region, C : NodeWrapper>(node: N) : ParentWrapp
 
 
     final override val paddingVerticalProperty: ProxyProp<Insets, Double> by lazy {
-        paddingProperty.proxy(object : BiConverter<Insets, Double> {
-            override fun convertToB(a: Insets): Double = a.vertical
+        paddingProperty.proxy(
+            object : BiConverter<Insets, Double> {
+                override fun convertToB(a: Insets): Double = a.vertical
 
 
-            override fun convertToA(b: Double): Insets = padding.copy(vertical = b)
-
-        })
+                override fun convertToA(b: Double): Insets = padding.copy(vertical = b)
+            }
+        )
     }
     final override var paddingVertical by lazyVarDelegate { paddingVerticalProperty }
 
@@ -333,7 +340,6 @@ open class RegionWrapperImpl<N : Region, C : NodeWrapper>(node: N) : ParentWrapp
             )
         }
     }
-
 }
 
 

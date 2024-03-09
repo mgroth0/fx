@@ -18,8 +18,8 @@ import matt.obs.bind.binding
 import matt.obs.math.double.op.div
 import matt.obs.math.double.op.minus
 import matt.obs.math.double.op.times
-import matt.obs.prop.BindableProperty
-import matt.obs.prop.VarProp
+import matt.obs.prop.writable.BindableProperty
+import matt.obs.prop.writable.VarProp
 
 
 class HistogramImpl<Y : MathAndComparable<Y>> : RegionWrapperImpl<Region, NodeWrapper>(VBox()), Titled, Histogram<Y> {
@@ -36,7 +36,7 @@ class HistogramImpl<Y : MathAndComparable<Y>> : RegionWrapperImpl<Region, NodeWr
     private val dataProperty = VarProp(listOf<Y>())
     override var data by dataProperty
 
-    val numBins = VarProp(5)
+    private val numBins = VarProp(5)
 
     override fun addChild(
         child: NodeWrapper,
@@ -47,7 +47,6 @@ class HistogramImpl<Y : MathAndComparable<Y>> : RegionWrapperImpl<Region, NodeWr
         } else {
             root.children.add(child.node)
         }
-
     }
 
 
@@ -76,12 +75,13 @@ class HistogramImpl<Y : MathAndComparable<Y>> : RegionWrapperImpl<Region, NodeWr
 
             val range = maxX - minX
             val binRatio = 1.0 / safeNumBins
-            val bins = List(safeNumBins) {
-                Bin(
-                    minX = minX + (range * (binRatio * it)),
-                    maxX = minX + (range * (binRatio * (it + 1)))
-                )
-            }
+            val bins =
+                List(safeNumBins) {
+                    Bin(
+                        minX = minX + (range * (binRatio * it)),
+                        maxX = minX + (range * (binRatio * (it + 1)))
+                    )
+                }
 
             safeData.forEach { d ->
                 bins.first { b ->
@@ -114,17 +114,10 @@ class HistogramImpl<Y : MathAndComparable<Y>> : RegionWrapperImpl<Region, NodeWr
                         )
 
                         tooltip(bin.toString())
-
-
                     }
                 }
-
-
             }
-
         }
-
-
     }
 
     init {
@@ -137,7 +130,6 @@ class HistogramImpl<Y : MathAndComparable<Y>> : RegionWrapperImpl<Region, NodeWr
         numBins.onChange {
             refresh()
         }
-
     }
 
 
@@ -146,6 +138,5 @@ class HistogramImpl<Y : MathAndComparable<Y>> : RegionWrapperImpl<Region, NodeWr
         val maxX: X,
         var count: Int = 0
     )
-
 }
 

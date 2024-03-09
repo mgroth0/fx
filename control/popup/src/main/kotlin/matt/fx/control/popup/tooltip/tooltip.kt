@@ -20,29 +20,9 @@ import matt.fx.graphics.service.nullableNodeConverter
 import matt.fx.graphics.stylelock.toNonNullableStyleProp
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.lang.assertions.require.requireNull
-import matt.lang.go
-import matt.obs.prop.Var
-import matt.obs.prop.VarProp
-/*
-fun NW.install(newToolTip: TooltipWrapper) {
- *//*if (this is ControlWrapperImpl<*>) {
-	tooltip = newToolTip
-  } else {*//*
-  MyTooltip.install(
-	this.node, newToolTip.node
-  )
- *//*}*//*
-}
-
-fun NW.tooltip(text: String = "", graphic: NW? = null, op: TooltipWrapper.()->Unit = {}): TooltipWrapper {
-  val newToolTip = TooltipWrapper(text).apply {
-	this.graphic = graphic
-	comfortablyShowForeverUntilEscaped()
-	op()
-  }
-  install(newToolTip)
-  return newToolTip
-}*/
+import matt.lang.common.go
+import matt.obs.prop.writable.Var
+import matt.obs.prop.writable.VarProp
 
 
 open class TooltipWrapper(node: MyTooltip = MyTooltip()): PopupControlWrapper<MyTooltip>(node), TextAndGraphic {
@@ -93,40 +73,46 @@ open class TooltipWrapper(node: MyTooltip = MyTooltip()): PopupControlWrapper<My
             node.setShowDuration(value)
         }
     var consumeAutoHidingEvents by node::consumeAutoHidingEvents
-    var isAutoFix by node.autoFixProperty().toNonNullableProp()
-    var isAutoHide by node.autoHideProperty().toNonNullableProp()
+    var isAutoFix: Boolean by node.autoFixProperty().toNonNullableProp()
+    var isAutoHide: Boolean by node.autoHideProperty().toNonNullableProp()
 
 
     private var transparentMouseEventHandler: EventHandler<MouseEvent>? = null
 
-    val sendMouseEventsToProp = VarProp<SendMouseEvents?>(null).apply {
-        onChange { opt ->
-            synchronized(this) {
-                if (opt == null) {
-                    transparentMouseEventHandler?.go {
-                        removeEventFilter(MouseEvent.ANY, it)
-                        transparentMouseEventHandler = null
-                    }
-                } else {
+    val sendMouseEventsToProp =
+        VarProp<SendMouseEvents?>(null).apply {
+            onChange { opt ->
+                synchronized(this) {
+                    if (opt == null) {
+                        transparentMouseEventHandler?.go {
+                            removeEventFilter(MouseEvent.ANY, it)
+                            transparentMouseEventHandler = null
+                        }
+                    } else {
 
-                    addEventFilter(MouseEvent.ANY, EventHandler<MouseEvent> {
-                        correctTooltipNativeMouseEvent(
-                            it, target = when (opt) {
-                                AutoDetectUnderlyingScene -> null
-                                is Owner                  -> node.ownerWindow.scene
-                                is SpecificScene          -> opt.scene
-                            }, exclude = scene!!.node
+                        addEventFilter(
+                            MouseEvent.ANY,
+                            EventHandler<MouseEvent> {
+                                correctTooltipNativeMouseEvent(
+                                    it,
+                                    target =
+                                        when (opt) {
+                                            AutoDetectUnderlyingScene -> null
+                                            is Owner                  -> node.ownerWindow.scene
+                                            is SpecificScene          -> opt.scene
+                                        },
+                                    exclude = scene!!.node
+                                )
+                                it.consume()
+                            }.also {
+                                transparentMouseEventHandler = it
+                            }
                         )
-                        it.consume()
-                    }.also {
-                        transparentMouseEventHandler = it
-                    })
+                    }
                 }
             }
         }
-    }
     var sendMouseEventsTo by sendMouseEventsToProp
-
 }
 
 sealed interface SendMouseEvents
@@ -144,31 +130,48 @@ private val processMouseEvent by lazy {
 }
 
 internal fun correctTooltipNativeMouseEvent(
-    event: MouseEvent, target: Scene? = null, exclude: Scene
+    event: MouseEvent,
+    target: Scene? = null,
+    exclude: Scene
 ): Boolean {
     val targetScene = target ?: getTargetScene(event, exclude)
     if (targetScene != null) {
         val chooser = PickResultChooser()
 
 
-        val local = targetScene.root.screenToLocal(
-            event.screenX, event.screenY
-        )
+        val local =
+            targetScene.root.screenToLocal(
+                event.screenX, event.screenY
+            )
 
         NodeHelper.pickNode(
-            targetScene.root, PickRay(
+            targetScene.root,
+            PickRay(
                 local.x,        /*event.screenX - targetScene.window.x - targetScene.x,*/
                 local.y,        /*event.screenY - targetScene.window.y - targetScene.y,*/
                 1.0, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY
-            ), chooser
+            ),
+            chooser
         )
 
-	/*	targetScene.root.impl_pickNode(
-		  PickRay(
-			local.x,
-	 *//*event.screenX - targetScene.window.x - targetScene.x,*//*
+        /*	targetScene.root.impl_pickNode(
+              PickRay(
+                local.x,
+
+
+
+            event.screenX - targetScene.window.x - targetScene.x,
+
+
+
 		local.y,
-	 *//*event.screenY - targetScene.window.y - targetScene.y,*//*
+
+
+
+        event.screenY - targetScene.window.y - targetScene.y,
+
+
+
 		1.0,
 		Double.NEGATIVE_INFINITY,
 		Double.POSITIVE_INFINITY
@@ -178,23 +181,33 @@ internal fun correctTooltipNativeMouseEvent(
 
 
         val res: PickResult? = chooser.toPickResult()
-        if (res != null) {    /*val pos: Point2D =
+        if (res != null) {
+            /*val pos: Point2D =
 		res.getIntersectedNode().localToScene(res.getIntersectedPoint().getX(), res.getIntersectedPoint().getY())*/
 
-            val pos = res.intersectedNode.localToScene(
-                res.intersectedPoint.x, res.intersectedPoint.y
-            )
+            val pos =
+                res.intersectedNode.localToScene(
+                    res.intersectedPoint.x, res.intersectedPoint.y
+                )
 
 
-            val newEvent = MouseEvent(
-                null, null, event.eventType, pos.x, pos.y, event.screenX, event.screenY, event.button, event.clickCount,
-                event.isShiftDown, event.isControlDown, event.isAltDown, event.isMetaDown, event.isPrimaryButtonDown,
-                event.isMiddleButtonDown, event.isSecondaryButtonDown, event.isSynthesized, event.isPopupTrigger,
-                event.isStillSincePress, res
-            )
+            val newEvent =
+                MouseEvent(
+                    null, null, event.eventType, pos.x, pos.y, event.screenX, event.screenY, event.button, event.clickCount,
+                    event.isShiftDown, event.isControlDown, event.isAltDown, event.isMetaDown, event.isPrimaryButtonDown,
+                    event.isMiddleButtonDown, event.isSecondaryButtonDown, event.isSynthesized, event.isPopupTrigger,
+                    event.isStillSincePress, res
+                )
 
-            processMouseEvent.invoke(targetScene, newEvent)    //	  m.invoke(targetScene, newEvent)
-            /*targetScene.root.fireEvent(newEvent)*/    /*targetScene.eventDispatcher.dispatchEvent(newEvent,)*/    /*targetScene.impl_processMouseEvent(newEvent)*/
+            processMouseEvent.invoke(targetScene, newEvent)
+            /*targetScene.root.fireEvent(newEvent)
+
+
+            targetScene.eventDispatcher.dispatchEvent(newEvent,)
+
+
+
+            targetScene.impl_processMouseEvent(newEvent)*/
 
 
 
@@ -222,7 +235,6 @@ private fun getTargetScene(event: MouseEvent, exclude: Scene): Scene? {
             if (sx < x && x < sx + sw && sy < y && y < sy + sh && w.scene !== exclude) return w.scene
             w = itr.next()
         }
-
     }
     return null
 }

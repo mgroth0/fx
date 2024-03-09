@@ -1,6 +1,7 @@
 package matt.fx.control.wrapper.menu.item
 
 import javafx.beans.property.BooleanProperty
+import javafx.collections.ObservableMap
 import javafx.event.ActionEvent
 import javafx.event.EventHandler
 import javafx.scene.Node
@@ -34,7 +35,7 @@ open class MenuItemWrapper<N : MenuItem>(
     }
 
 
-    final override val properties get() = node.properties
+    final override val properties: ObservableMap<Any, Any?> get() = node.properties
 
     val visibleProperty by lazy { node.visibleProperty().toNonNullableProp() }
     val disableProperty by lazy { node.disableProperty().toNonNullableProp() }
@@ -78,7 +79,6 @@ open class MenuItemWrapper<N : MenuItem>(
         }
 
 
-    // -- MenuItem helpers
     fun visibleWhen(expr: () -> ObsB) = visibleWhen(expr())
 
     fun visibleWhen(predicate: ObsB) = visibleProperty.bind(predicate)
@@ -101,7 +101,6 @@ open class MenuItemWrapper<N : MenuItem>(
     }
 
     final override fun isInsideRow() = false
-
 }
 
 

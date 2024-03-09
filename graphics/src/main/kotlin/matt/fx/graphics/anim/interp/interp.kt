@@ -40,23 +40,26 @@ abstract class MyInterpolator: Interpolator() {
         val MY_DEFAULT_INTERPOLATOR = LINEAR
     }
 
-    final override fun interpolate(startValue: Any?, endValue: Any?, fraction: Double): Any = when {
-        (startValue is Number && endValue is Number)                                 -> super.interpolate(
-            startValue, endValue, fraction
-        )
+    final override fun interpolate(startValue: Any?, endValue: Any?, fraction: Double): Any =
+        when {
+            (startValue is Number && endValue is Number)                                 ->
+                super.interpolate(
+                    startValue, endValue, fraction
+                )
 
-        (startValue is Interpolatable<*> && endValue is Interpolatable<*>)           -> super.interpolate(
-            startValue, endValue, fraction
-        )
+            (startValue is Interpolatable<*> && endValue is Interpolatable<*>)           ->
+                super.interpolate(
+                    startValue, endValue, fraction
+                )
 
-        (startValue is BasicInterpolatable<*> && endValue is BasicInterpolatable<*>) -> startValue.interpolate(
-            endValue, curve(fraction)
-        )
+            (startValue is BasicInterpolatable<*> && endValue is BasicInterpolatable<*>) ->
+                startValue.interpolate(
+                    endValue, curve(fraction)
+                )
 
-        else                                                                         -> super.interpolate(
-            startValue, endValue, fraction
-        )
-    }
-
-
+            else                                                                         ->
+                super.interpolate(
+                    startValue, endValue, fraction
+                )
+        }
 }

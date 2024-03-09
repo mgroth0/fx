@@ -5,8 +5,8 @@ import javafx.scene.Node
 import javafx.scene.control.ProgressBar
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.impl.NodeWrapperImpl
-import matt.lang.NOT_IMPLEMENTED
-import matt.log.warn.warn
+import matt.lang.common.NOT_IMPLEMENTED
+import matt.log.warn.common.warn
 
 
 sealed class ThreadSafeNodeWrapper<N: Node>(

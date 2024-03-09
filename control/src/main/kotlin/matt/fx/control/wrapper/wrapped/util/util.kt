@@ -10,11 +10,4 @@ class CannotFindWrapperException(val cls: KClass<out EventTarget>) : Exception(
     "what is the wrapper for ${cls.qualifiedName}?"
 )
 
-/*?: run {
-  val theMap = constructorMap
-//	  W::class.starProjectedType
-  val theConstructor = theMap[W::class.starProjectedType]
-  theConstructor.call(this) as W
-}*//*?: W::class.primaryConstructor!!.call(this)*/
-
 

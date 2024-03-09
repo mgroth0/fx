@@ -20,7 +20,7 @@ import matt.fx.graphics.wrapper.style.FXColor
 import matt.fx.graphics.wrapper.text.text
 import matt.lang.function.Dsl
 import matt.obs.bind.binding
-import matt.obs.prop.BindableProperty
+import matt.obs.prop.writable.BindableProperty
 
 private const val DEFAULT_RADIUS = 11.0
 
@@ -38,16 +38,16 @@ abstract class HoverableSymbol(
         }
     }
 
-    private val circ = circle(radius = radius) {
-        stroke = Color.GRAY
-        strokeWidth = 2.0
-        this.fill = /*fill ?:*/ Color.TRANSPARENT
+    private val circ =
+        circle(radius = radius) {
+            stroke = Color.GRAY
+            strokeWidth = 2.0
+            fill = /*fill ?:*/ Color.TRANSPARENT
 
-        sty {
-            fxStroke = baseColor
+            sty {
+                fxStroke = baseColor
+            }
         }
-
-    }
 
     var fill: Paint?
         get() = circ.fill
@@ -55,16 +55,18 @@ abstract class HoverableSymbol(
             circ.fill = value
         }
 
-    private val txt = text(char) {
-        font = Font.font("Georgia").fixed().copy(
-            posture = ITALIC,
-            size = radius,
-            weight = BOLD
-        ).fx()
-        sty {
-            fxFill = baseColor
+    private val txt =
+        text(char) {
+            font =
+                Font.font("Georgia").fixed().copy(
+                    posture = ITALIC,
+                    size = radius,
+                    weight = BOLD
+                ).fx()
+            sty {
+                fxFill = baseColor
+            }
         }
-    }
     private var builtTT = false
 
     var char
@@ -75,7 +77,7 @@ abstract class HoverableSymbol(
 
     init {
         @Suppress("LeakingThis")
-        exactHeight = radius*2
+        exactHeight = radius * 2
         @Suppress("LeakingThis")
         exactWidth = radius * 2
         hoverProperty.onChange { isHovering ->
@@ -100,7 +102,6 @@ abstract class HoverableSymbol(
                     fxFill = baseColor
                 }
             }
-
         }
     }
 
@@ -119,17 +120,21 @@ abstract class HoverableSymbol(
             showDuration = FXDuration.INDEFINITE
             hideDelay = FXDuration.ZERO
         }
-
     }
 }
 
 
-fun ET.plusMinusSymbol(b: BindableProperty<Boolean>, radius: Double = DEFAULT_RADIUS, op: Dsl<PlusMinusSymbol> = {}) = PlusMinusSymbol(b, radius=radius).attachTo(this, op)
+fun ET.plusMinusSymbol(
+    b: BindableProperty<Boolean>,
+    radius: Double = DEFAULT_RADIUS,
+    op: Dsl<PlusMinusSymbol> = {
+    }
+) = PlusMinusSymbol(b, radius = radius).attachTo(this, op)
 
 open class PlusMinusSymbol(b: BindableProperty<Boolean>, radius: Double = DEFAULT_RADIUS): HoverableSymbol(
     char = if (b.value) "-" else "+",
     tooltipText = "",
-    radius=radius
+    radius = radius
 ) {
     init {
         @Suppress("LeakingThis")

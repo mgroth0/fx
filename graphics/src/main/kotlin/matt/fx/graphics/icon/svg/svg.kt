@@ -12,17 +12,17 @@ import java.io.InputStream
 /*fixes black and white issue!?*/
 fun svgToImage2(
     svg: FsFile,
-    size: IntRectSize = ICON_SIZE.toIntSize(),
+    size: IntRectSize = ICON_SIZE.toIntSize()
 ) = svgToImage2(svg.toJioFile().inputStream(), size = size)
 
 
 fun svgToFXImage(
     svg: InputStream,
-    size: IntRectSize = ICON_SIZE.toIntSize(),
+    size: IntRectSize = ICON_SIZE.toIntSize()
 ) = svgToImage2(svg, size).toFXImage()
 
 fun svgToFXImage(
     svg: FsFile,
-    size: IntRectSize = ICON_SIZE.toIntSize(),
+    size: IntRectSize = ICON_SIZE.toIntSize()
 ) = svgToImage2(svg, size).toFXImage()
 

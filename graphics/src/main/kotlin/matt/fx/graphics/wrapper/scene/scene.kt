@@ -1,6 +1,7 @@
 package matt.fx.graphics.wrapper.scene
 
 import javafx.beans.property.ObjectProperty
+import javafx.collections.ObservableMap
 import javafx.event.Event
 import javafx.event.EventHandler
 import javafx.event.EventType
@@ -68,7 +69,7 @@ open class SceneWrapper<R : ParentWrapper<*>>(
     val window get() = windowProperty.value
     val stage get() = window as StageWrapper
 
-    final override val properties get() = node.properties
+    final override val properties: ObservableMap<Any, Any?> get() = node.properties
     final override fun removeFromParent() {
         (window as? StageWrapper)?.let { it.scene = null }
     }
@@ -108,9 +109,12 @@ open class SceneWrapper<R : ParentWrapper<*>>(
       stylesheets.toLazyMappedList {
         parser.parse(URI(it).toURL())
       }
-    }*/
+    }
 
-    /*inner class ParsedStyles internal constructor() {
+
+
+
+    inner class ParsedStyles internal constructor() {
       val fxBase by lazy {
         parsedStyleSheets.mapNotNull {
           it.rules.filter {
@@ -157,6 +161,4 @@ open class SceneWrapper<R : ParentWrapper<*>>(
         }
       }
     }*/
-
-
 }

@@ -1,5 +1,6 @@
 package matt.fx.control.chart.axis
 
+import matt.fx.base.wrapper.obs.obsval.prop.NonNullFXBackedBindableProp
 import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
 import matt.fx.control.chart.axis.value.axis.AxisForPackagePrivateProps
@@ -9,14 +10,14 @@ import matt.fx.graphics.wrapper.region.RegionWrapperImpl
 typealias MAxis<T> = AxisWrapper<T, out AxisForPackagePrivateProps<T>>
 
 abstract class AxisWrapper<T, N : AxisForPackagePrivateProps<T>>(node: N) : RegionWrapperImpl<N, NodeWrapper>(node) {
-    val autoRangingProperty by lazy { node.autoRangingProperty().toNonNullableProp() }
+    val autoRangingProperty: NonNullFXBackedBindableProp<Boolean> by lazy { node.autoRangingProperty().toNonNullableProp() }
     var isAutoRanging by autoRangingProperty
-    val tickMarkVisibleProperty by lazy { node.tickMarkVisibleProperty().toNonNullableProp() }
+    val tickMarkVisibleProperty: NonNullFXBackedBindableProp<Boolean> by lazy { node.tickMarkVisibleProperty().toNonNullableProp() }
     var isTickMarkVisible by tickMarkVisibleProperty
 
-    val tickLabelsVisibleProperty by lazy { node.tickLabelsVisibleProperty().toNonNullableProp() }
+    val tickLabelsVisibleProperty: NonNullFXBackedBindableProp<Boolean> by lazy { node.tickLabelsVisibleProperty().toNonNullableProp() }
     var isTickLabelsVisible by tickLabelsVisibleProperty
-    val animatedProperty by lazy { node.animatedProperty().toNonNullableProp() }
+    val animatedProperty: NonNullFXBackedBindableProp<Boolean> by lazy { node.animatedProperty().toNonNullableProp() }
     var animated by animatedProperty
     final override fun addChild(
         child: NodeWrapper,

@@ -14,7 +14,7 @@ import matt.lang.exec.Exec
 import matt.lang.function.Produce
 import matt.model.flowlogic.runner.Run
 import matt.model.flowlogic.runner.Runner
-import matt.obs.subscribe.LatchManager
+import matt.obs.subscribe.j.LatchManager
 import matt.service.scheduler.Scheduler
 import kotlin.time.Duration
 
@@ -61,11 +61,13 @@ fun <T> runLaterReturn(op: () -> T): T {
     @Suppress("UNCHECKED_CAST") return (r as T)
 }
 
-inline fun <T> ensureInFXThreadInPlace(crossinline op: () -> T): T = if (Platform.isFxApplicationThread()) op()
-else runLaterReturn { op() }
+inline fun <T> ensureInFXThreadInPlace(crossinline op: () -> T): T =
+    if (Platform.isFxApplicationThread()) op()
+    else runLaterReturn { op() }
 
-inline fun ensureInFXThreadOrRunLater(crossinline op: () -> Unit) = if (Platform.isFxApplicationThread()) op()
-else runLater { op() }
+inline fun ensureInFXThreadOrRunLater(crossinline op: () -> Unit) =
+    if (Platform.isFxApplicationThread()) op()
+    else runLater { op() }
 
 
 fun runMuchLater(
@@ -103,9 +105,10 @@ object FXScheduler : Scheduler {
 
 object FXRunner : Runner {
     override fun <R> run(op: Produce<R>): Run<R> {
-        val run = ThreadRunner.run {
-            runLaterReturn(op)
-        }
+        val run =
+            ThreadRunner.run {
+                runLaterReturn(op)
+            }
         return run
     }
 }

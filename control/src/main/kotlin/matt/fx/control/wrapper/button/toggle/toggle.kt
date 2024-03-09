@@ -16,11 +16,12 @@ import matt.fx.graphics.style.background.backgroundFill
 import matt.fx.graphics.style.background.ensureLastFillIsIfPresent
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.attachTo
-import matt.lang.go
+import matt.lang.common.DoNothing
+import matt.lang.common.go
 import matt.obs.bind.binding
 import matt.obs.listen.OldAndNewListenerImpl
-import matt.obs.prop.BindableProperty
-import matt.obs.prop.VarProp
+import matt.obs.prop.writable.BindableProperty
+import matt.obs.prop.writable.VarProp
 
 /**
  * Create a togglebutton inside the current or given toggle group. The optional value parameter will be matched against
@@ -67,23 +68,26 @@ fun <V : Any> ET.togglebutton(
 }
 
 
-class ValuedToggleButton<V : Any>(value: V) : ToggleButtonWrapper(ToggleButton()),
+class ValuedToggleButton<V : Any>(value: V) :
+    ToggleButtonWrapper(ToggleButton()),
     HasWritableValue<V>,
     SelectableValue<V> {
 
     override val valueProperty = BindableProperty(value)
 
-    override val toggleMechanism = BindableProperty<ToggleMechanism<V>?>(null).apply {
-        addListener(OldAndNewListenerImpl { old, new ->
-            old?.removeToggle(this@ValuedToggleButton)
-            new?.addToggle(this@ValuedToggleButton)
-        })
-    }
-
+    override val toggleMechanism =
+        BindableProperty<ToggleMechanism<V>?>(null).apply {
+            addListener(
+                OldAndNewListenerImpl { old, new ->
+                    old?.removeToggle(this@ValuedToggleButton)
+                    new?.addToggle(this@ValuedToggleButton)
+                }
+            )
+        }
 }
 
 open class ToggleButtonWrapper(
-    node: ToggleButton = ToggleButton(),
+    node: ToggleButton = ToggleButton()
 ) : ButtonBaseWrapper<ToggleButton>(node), Selectable {
 
     final override val selectedProperty by lazy {
@@ -95,8 +99,8 @@ open class ToggleButtonWrapper(
     }
 
 
-    /*attempts to copy style logic from modena.css*/
-    /*ignores mnemonics*/
+    /*attempts to copy style logic from modena.css
+    ignores mnemonics*/
     fun setupSelectionColor(p: Paint) {
 
         /*pseudoClassStates
@@ -120,19 +124,20 @@ open class ToggleButtonWrapper(
                 val lastIsCurrentlyP = v.fills.last().fill == p
                 if (s) {
                     if (lastIsCurrentlyP) {
-                        /*do nothing*/
+                        DoNothing
                     } else {
                         sProp.applyStyle(AUTHOR, Background(*v.fills.toTypedArray(), backgroundFill(p)))
                     }
                 } else {
                     if (lastIsCurrentlyP) {
                         sProp.applyStyle(
-                            AUTHOR, Background(
+                            AUTHOR,
+                            Background(
                                 *v.fills.subList(0, v.fills.size - 1).toTypedArray()
                             )
                         )
                     } else {
-                        /*do nothing*/
+                        DoNothing
                     }
                 }
             }
@@ -150,69 +155,6 @@ open class ToggleButtonWrapper(
         /*selectedProperty.onChange {
           update()
         }*/
-
-
-        //	backgroundProperty.bind(
-        //
-        //	)
-        //	selectedProperty
-
-        //
-        //	@Suppress("UNCHECKED_CAST")
-        //	val BACKGROUND: CssMetaData<Region, Background> = object: CssMetaData<Region, Background>(
-        //	  "-fx-region-background",
-        //	  MyBackgroundConverter.INSTANCE,
-        //	  null,
-        //	  false,
-        //	  Background.getClassCssMetaData()
-        //	) {
-        //	  override fun isSettable(node: Region): Boolean {
-        //		return !node.backgroundProperty().isBound
-        //	  }
-        //
-        //
-        //	  override fun getStyleableProperty(node: Region): StyleableProperty<Background?> {
-        //		return node.backgroundProperty() as StyleableProperty<Background?>
-        //	  }
-        //	}
-        //
-        //	BACKGROUND.getInitialValue()
-        //	BACKGROUND.getStyleableProperty()
-        //	BACKGROUND.converter
-        //	BACKGROUND.isSettable()
-        //	(node.backgroundProperty() as StyleableObjectProperty<Background>).also {
-        //	  it.applyStyle()
-        //	  it.cssMetaData
-        //	  it.styleOrigin
-        //	}
-        //
-        //	node.lookup()
-        //
-        //
-        //
-        //	backgroundProperty.bind(
-        //	  selectedProperty.binding(
-        //		armedProp,
-        //		hoverProperty,
-        //		focusedProperty,
-        //		disableProperty
-        //	  ) {
-        //		backgroundFromColor(Color.TRANSPARENT)
-        //	  }
-        //	)
-        //
-        //	val shouldBe = selectedProperty.binding {
-        //	  if (it == true) p else Color.TRANSPARENT
-        //	}
-        //
-        //	fun update() = backgroundProperty.ensureLastFillIsIfPresent(shouldBe.value)
-        //	update()
-        //	shouldBe.matt.hurricanefx.eye.wrapper.obs.collect.list.onChange {
-        //	  update()
-        //	}
-        //	backgroundProperty.matt.hurricanefx.eye.wrapper.obs.collect.list.onChange {
-        //	  update()
-        //	}
     }
 
     @Deprecated(
@@ -220,9 +162,10 @@ open class ToggleButtonWrapper(
         level = DeprecationLevel.ERROR
     )
     fun setupSelectionColorOldWay(p: Paint) {
-        val shouldBe = selectedProperty.binding {
-            if (it == true) p else Color.TRANSPARENT
-        }
+        val shouldBe =
+            selectedProperty.binding {
+                if (it == true) p else Color.TRANSPARENT
+            }
 
         fun update() = backgroundProperty.ensureLastFillIsIfPresent(shouldBe.value)
         update()
@@ -233,5 +176,4 @@ open class ToggleButtonWrapper(
             update()
         }
     }
-
 }

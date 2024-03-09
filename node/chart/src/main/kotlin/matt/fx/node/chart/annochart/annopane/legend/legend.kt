@@ -35,7 +35,7 @@ class MyLegend(
     }
 
     class LegendItem(
-        val nodeGen: ()->NodeWrapper,
+        val nodeGen: () -> NodeWrapper,
         val label: String
     )
 }

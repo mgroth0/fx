@@ -48,19 +48,17 @@ fun <T : MathAndComparable<T>> TickConfigurer<T>.showBestTicksNoLayout(axis: Num
 
     val converter = tickLabelConverter(amountShown)
 
-    val stringConverter = object : StringConverter<T>() {
+    val stringConverter =
+        object : StringConverter<T>() {
 
-        override fun toString(`object`: T): String = converter.invoke(`object`)
+            override fun toString(`object`: T): String = converter.invoke(`object`)
 
-        override fun fromString(string: String): T {
-            TODO()
+            override fun fromString(string: String): T {
+                TODO()
+            }
         }
 
-
-    }
-
     axis.tickLabelFormatter = stringConverter
-
 }
 
 fun <T : MathAndComparable<T>> TickConfigurer<T>.showBestTicksIn(

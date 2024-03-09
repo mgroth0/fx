@@ -44,21 +44,7 @@ class FXPropertyDelegate<T>(val fxProperty: Property<T>) : ReadWriteProperty<Any
     ) {
         fxProperty.value = value
     }
-
 }
-
-//fun <T> Any.getProperty(prop: KMutableProperty1<*, T>): ObjectProperty<T> {
-//    // avoid kotlin-reflect dependency
-//    val field =
-//        requireNotNull(
-//            javaClass.findFieldByName("${prop.name}\$delegate")
-//        ) { "No delegate field with name '${prop.name}' found" }
-//
-//    field.isAccessible = true
-//    val delegate = field.get(this) as FXPropertyDelegate<in Nothing>
-//    @Suppress("UNCHECKED_CAST")
-//    return delegate.fxProperty as ObjectProperty<T>
-//}
 
 fun Class<*>.findFieldByName(name: String): Field? {
     val field = (declaredFields + fields).find { it.name == name }
@@ -72,17 +58,7 @@ fun Class<*>.findFieldByName(name: String): Field? {
  */
 fun <S, T> S.observable(prop: KMutableProperty1<S, T>) = observable(this, prop)
 
-///**
-// * Convert an owner instance and a corresponding property reference into an observable
-// */
-//@JvmName("observableFromMutableProperty")
-//fun <S, T> observable(owner: S, prop: KMutableProperty1<S, T>): ObsVal<T> {
-//
-//  return object: VarProp<T>(owner, prop.name) {
-//	override fun get() = prop.get(owner)
-//	override fun set(v: T) = prop.set(owner, v)
-//  }
-//}
+
 
 /**
  * Convert an owner instance and a corresponding property reference into a readonly observable
@@ -90,9 +66,10 @@ fun <S, T> S.observable(prop: KMutableProperty1<S, T>) = observable(this, prop)
 fun <S, T> observable(
     owner: S,
     prop: KProperty1<S, T>
-): ReadOnlyObjectProperty<T> = object : ReadOnlyObjectWrapper<T>(owner, prop.name) {
-    override fun get() = prop.get(owner)
-}
+): ReadOnlyObjectProperty<T> =
+    object : ReadOnlyObjectWrapper<T>(owner, prop.name) {
+        override fun get() = prop.get(owner)
+    }
 
 /**
  * Convert an bean instance and a corresponding getter/setter reference into a writable observable.
@@ -124,9 +101,6 @@ open class PojoProperty<T>(
 }
 
 
-//@JvmName("pojoObservable")
-//inline fun <reified T : Any> Any.observable(propName: String) =
-//    this.observable(propertyName = propName, propertyType = T::class)
 
 /**
  * Convert a pojo bean instance into a writable observable.
@@ -144,15 +118,17 @@ fun <S : Any, T : Any> S.observable(
     @Suppress("UNUSED_PARAMETER") propertyType: KClass<T>? = null
 ): ObjectProperty<T> {
     if (getter == null && propertyName == null) throw AssertionError("Either getter or propertyName must be provided")
-    val propName = propertyName
-        ?: getter?.name?.substring(3)?.decap()
+    val propName =
+        propertyName
+            ?: getter?.name?.substring(3)?.decap()
 
-    val r = JavaBeanObjectPropertyBuilder.create().apply {
-        bean(this@observable)
-        this.name(propName)
-        if (getter != null) this.getter(getter.javaMethod)
-        if (setter != null) this.setter(setter.javaMethod)
-    }.build()
+    val r =
+        JavaBeanObjectPropertyBuilder.create().apply {
+            bean(this@observable)
+            name(propName)
+            if (getter != null) this.getter(getter.javaMethod)
+            if (setter != null) this.setter(setter.javaMethod)
+        }.build()
 
 
     @Suppress("UNCHECKED_CAST")
@@ -165,7 +141,7 @@ enum class SingleAssignThreadSafetyMode {
 }
 
 fun <T> singleAssign(threadSafetyMode: SingleAssignThreadSafetyMode = SYNCHRONIZED): SingleAssign<T> =
-    if (threadSafetyMode == SYNCHRONIZED) SynchronizedSingleAssign() else UnsynchronizedSingleAssign()
+    if (threadSafetyMode == SYNCHRONIZED) SynchronizedSingleAssign() else UnSynchronizedSingleAssign()
 
 interface SingleAssign<T> {
     fun isInitialized(): Boolean
@@ -181,10 +157,10 @@ interface SingleAssign<T> {
     )
 }
 
-private class SynchronizedSingleAssign<T> : UnsynchronizedSingleAssign<T>() {
+private class SynchronizedSingleAssign<T> : UnSynchronizedSingleAssign<T>() {
 
     @Volatile
-    override var _value: Any? = UNINITIALIZED_VALUE
+    override var _value: Any? = UnInitializedValue
 
     override operator fun setValue(
         thisRef: Any?,
@@ -195,11 +171,11 @@ private class SynchronizedSingleAssign<T> : UnsynchronizedSingleAssign<T>() {
     }
 }
 
-private open class UnsynchronizedSingleAssign<T> : SingleAssign<T> {
+private open class UnSynchronizedSingleAssign<T> : SingleAssign<T> {
 
-    protected object UNINITIALIZED_VALUE
+    protected object UnInitializedValue
 
-    protected open var _value: Any? = UNINITIALIZED_VALUE
+    protected open var _value: Any? = UnInitializedValue
 
     final override operator fun getValue(
         thisRef: Any?,
@@ -220,7 +196,7 @@ private open class UnsynchronizedSingleAssign<T> : SingleAssign<T> {
         _value = value
     }
 
-    final override fun isInitialized() = _value != UNINITIALIZED_VALUE
+    final override fun isInitialized() = _value != UnInitializedValue
 }
 
 /**

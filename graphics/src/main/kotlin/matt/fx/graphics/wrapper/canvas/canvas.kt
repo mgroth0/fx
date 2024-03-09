@@ -11,8 +11,8 @@ import matt.fx.graphics.wrapper.node.attach
 import matt.fx.graphics.wrapper.node.impl.NodeWrapperImpl
 import matt.fx.graphics.wrapper.sizeman.HasHeight
 import matt.fx.graphics.wrapper.sizeman.HasWidth
-import matt.lang.NOT_IMPLEMENTED
 import matt.lang.anno.Open
+import matt.lang.common.NOT_IMPLEMENTED
 import matt.lang.delegation.lazyVarDelegate
 import matt.model.data.rect.DoubleRectSize
 import matt.obs.math.double.ObsD
@@ -87,7 +87,5 @@ open class CanvasWrapper(node: Canvas = Canvas()) : NodeWrapperImpl<Canvas>(node
 
 
     final override val pixelWriter: PixelWriter by lazy { graphicsContext.pixelWriter }
-
-
 }
 

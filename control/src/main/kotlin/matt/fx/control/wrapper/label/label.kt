@@ -53,7 +53,7 @@ fun ET.label(text: String = "", graphic: NodeWrapper? = null, wrap: Boolean? = n
 
 
 open class LabelWrapper(
-    node: Label = Label(),
+    node: Label = Label()
 ) : LabeledWrapper<Label>(node) {
 
     constructor(
@@ -68,6 +68,4 @@ open class LabelWrapper(
         requireNull(index)
         graphic = child
     }
-
-
 }

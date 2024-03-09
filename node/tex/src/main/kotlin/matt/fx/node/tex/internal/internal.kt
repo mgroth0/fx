@@ -2,13 +2,13 @@ package matt.fx.node.tex.internal
 
 import javafx.scene.paint.Color
 import matt.caching.cache.LRUCache
-import matt.collect.map.dmap.withStoringDefault
+import matt.collect.map.dmap.inter.withStoringDefault
 import matt.fig.modell.EquationIr
 import matt.fig.render.EquationRenderer
 import matt.fx.graphics.style.intColorToFXColor
 import matt.fx.graphics.wrapper.style.toFXColor
 import matt.fx.node.tex.EquationNotReallyIrTex
-import matt.log.warn.warn
+import matt.log.warn.common.warn
 import matt.model.code.tex.TexCode
 import org.scilab.forge.jlatexmath.TeXFormula
 import java.awt.image.PixelGrabber
@@ -43,12 +43,13 @@ class TexToPixelRenderer(
 
             val bgFX = bg.toFXColor()
             val tf = TeXFormula(code.code)
-            val img = tf.createBufferedImage(
-                TeXFormula.SERIF,
-                texFontSize,
-                fg,
-                bg
-            )
+            val img =
+                tf.createBufferedImage(
+                    TeXFormula.SERIF,
+                    texFontSize,
+                    fg,
+                    bg
+                )
 
             val width = img.getWidth(null)
             val height = img.getHeight(null)
@@ -70,6 +71,5 @@ class TexToPixelRenderer(
             println(e.message)
             null
         }
-
     }
 }

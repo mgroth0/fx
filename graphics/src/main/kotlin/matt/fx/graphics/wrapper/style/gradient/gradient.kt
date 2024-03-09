@@ -24,15 +24,16 @@ class LinearGradientDSL(): LinearGradientIdea {
         offset: Double,
         color: Color
     ) {
-        stops += Stop(offset,color)
+        stops += Stop(offset, color)
     }
-    fun getGradient() = LinearGradient(
-        startX,
-        startY,
-        endX,
-        endY,
-        proportional,
-        cycleMethod,
-        *stops.toTypedArray()
-    )
+    fun getGradient() =
+        LinearGradient(
+            startX,
+            startY,
+            endX,
+            endY,
+            proportional,
+            cycleMethod,
+            *stops.toTypedArray()
+        )
 }

@@ -18,18 +18,19 @@ import matt.fx.graphics.wrapper.pane.vbox.VBoxW
 import matt.fx.graphics.wrapper.text.TextWrapper
 import matt.fx.graphics.wrapper.text.text
 import matt.fx.graphics.wrapper.text.textlike.MONO_FONT
-import matt.lang.NEVER
+import matt.lang.common.NEVER
 import matt.obs.bind.smartBind
 import matt.obs.math.double.op.times
 import matt.obs.prop.ObsVal
-import matt.obs.prop.Var
+import matt.obs.prop.writable.Var
 import java.lang.ref.WeakReference
 import kotlin.time.Duration.Companion.milliseconds
 
-fun ET.progressindicator(op: ProgressIndicatorWrapper.() -> Unit = {}) = ProgressIndicatorWrapper().attachTo(
-    this,
-    op
-)
+fun ET.progressindicator(op: ProgressIndicatorWrapper.() -> Unit = {}) =
+    ProgressIndicatorWrapper().attachTo(
+        this,
+        op
+    )
 
 fun ET.progressindicator(
     property: Var<Double>,
@@ -42,7 +43,7 @@ fun ET.progressindicator(
 
 
 class ProgressIndicatorWrapper(
-    node: ProgressIndicator = ProgressIndicator(),
+    node: ProgressIndicator = ProgressIndicator()
 ) : ControlWrapperImpl<ProgressIndicator>(node) {
 
 
@@ -79,9 +80,10 @@ class PerformantProgressIndicator : VBoxW() {
         init {
             var next = ".."
             every(300.milliseconds) {
-                val toChange = synchronized(PerformantProgressIndicator) {
-                    instances.toSet()
-                }
+                val toChange =
+                    synchronized(PerformantProgressIndicator) {
+                        instances.toSet()
+                    }
                 if (FXAppStateWatcher.getState() == STOPPED) {
                     cancel()
                     return@every
@@ -95,7 +97,6 @@ class PerformantProgressIndicator : VBoxW() {
                         } else {
                             deRefed.text = next
                         }
-
                     }
                     if (toRemove.isNotEmpty()) {
                         synchronized(PerformantProgressIndicator) {
@@ -103,12 +104,13 @@ class PerformantProgressIndicator : VBoxW() {
                         }
                     }
                 }
-                next = when (next) {
-                    "."   -> ".."
-                    ".."  -> "..."
-                    "..." -> "."
-                    else  -> NEVER
-                }
+                next =
+                    when (next) {
+                        "."   -> ".."
+                        ".."  -> "..."
+                        "..." -> "."
+                        else  -> NEVER
+                    }
             }
         }
 
@@ -124,26 +126,13 @@ class PerformantProgressIndicator : VBoxW() {
         h {
             exactWidthProperty.bindWeakly(widthProperty * 0.25)
         }
-
-
-        /*	parentProperty().onChange {
-              synchronized(PerformantProgressIndicator) {
-                if (it != null) {
-                  instances += t
-                } else {
-                  instances -= t
-                  if (instances.isEmpty()) {
-                    instances = mutableSetOf() *//*reduce memory consumption*//*
-		  }
-		}
-	  }
-	}*/
     }
 
-    private val t = text(".") {
-        textAlignment = TextAlignment.LEFT
-        font = myFont
-    }
+    private val t =
+        text(".") {
+            textAlignment = TextAlignment.LEFT
+            font = myFont
+        }
 
     init {
         synchronized(PerformantProgressIndicator) {

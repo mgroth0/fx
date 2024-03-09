@@ -5,7 +5,7 @@ import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.impl.NodeWrapperImpl
 
 class MeshViewWrapper(
-    node: MeshView = MeshView(),
+    node: MeshView = MeshView()
 ): NodeWrapperImpl<MeshView>(node) {
     override fun addChild(child: NodeWrapper, index: Int?) {
         TODO()

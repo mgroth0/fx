@@ -9,17 +9,18 @@ import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.lang.convert.BiConverter
 import matt.model.op.convert.MyNumberStringConverter
-import matt.obs.prop.Var
+import matt.obs.prop.writable.Var
 import matt.prim.converters.StringConverter
 import kotlin.reflect.KClass
 
 
-val converters = mapOf<KClass<*>, StringConverter<*>>(
-    Number::class to MyNumberStringConverter
-)
+val converters =
+    mapOf<KClass<*>, StringConverter<*>>(
+        Number::class to MyNumberStringConverter
+    )
 
 
-inline fun <reified T: Any> ET.textfield(property: Var<T>, op: TextFieldWrapper.()->Unit = {}) =
+inline fun <reified T: Any> ET.textfield(property: Var<T>, op: TextFieldWrapper.() -> Unit = {}) =
     textfield().apply {
         if (T::class == String::class) {
             @Suppress("UNCHECKED_CAST")
@@ -32,28 +33,16 @@ inline fun <reified T: Any> ET.textfield(property: Var<T>, op: TextFieldWrapper.
         op(this)
     }
 
-///*@JvmName("textfieldNumber") */inline fun ET.textfield(
-//  property: Var<Number>,
-//  op: TextFieldWrapper.()->Unit = {}
-//): TextFieldWrapper = textfield().apply {
-//  textProperty.bindBidirectional(property, MyNumberStringConverter)
-//  op(this)
-//}
 
-//@JvmName("textfieldInt") fun EventTargetWrapper.textfield(
-//  property: ValProp<Int>,
-//  op: TextFieldWrapper.()->Unit = {}
-//) = textfield().apply {
-//  bind(property)
-//  op(this)
-//}
-
-fun ET.textfield(value: String? = null, op: TextFieldWrapper.()->Unit = {}) = TextFieldWrapper().attachTo(this, op) {
-    if (value != null) it.text = value
-}
+fun ET.textfield(value: String? = null, op: TextFieldWrapper.() -> Unit = {}) =
+    TextFieldWrapper().attachTo(this, op) {
+        if (value != null) it.text = value
+    }
 
 fun <T> ET.textfield(
-    property: Var<T>, converter: StringConverter<T>, op: TextFieldWrapper.()->Unit = {}
+    property: Var<T>,
+    converter: StringConverter<T>,
+    op: TextFieldWrapper.() -> Unit = {}
 ) = textfield().apply {
     textProperty.bindBidirectional(property, converter)
     op(this)
@@ -61,11 +50,11 @@ fun <T> ET.textfield(
 
 
 open class TextFieldWrapper(
-    node: TextField = TextField(),
+    node: TextField = TextField()
 ): TextInputControlWrapper<TextField>(node), HasWritableValue<String> {
     constructor(text: String?): this(TextField(text))
 
-    fun setOnAction(op: (ActionEvent)->Unit) {
+    fun setOnAction(op: (ActionEvent) -> Unit) {
         node.setOnAction(op)
     }
 
@@ -77,7 +66,7 @@ open class TextFieldWrapper(
     }
 }
 
-fun TextFieldWrapper.action(op: ()->Unit) = setOnAction { op() }
+fun TextFieldWrapper.action(op: () -> Unit) = setOnAction { op() }
 
 
 class FakeFocusTextFieldWrapper(

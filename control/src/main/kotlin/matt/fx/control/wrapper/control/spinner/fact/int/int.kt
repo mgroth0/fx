@@ -16,20 +16,21 @@ class MyIntegerSpinnerValueFactory @JvmOverloads constructor(
    *                                                                     *
    * Properties                                                          *
    *                                                                     *
-   **********************************************************************/ // --- min
-    private val min: IntegerProperty = object: SimpleIntegerProperty(this, "min") {
-        override fun invalidated() {
-            val currentValue = this@MyIntegerSpinnerValueFactory.value ?: return
-            val newMin = get()
-            if (newMin > getMax()) {
-                setMin(getMax())
-                return
-            }
-            if (currentValue < newMin) {
-                this@MyIntegerSpinnerValueFactory.value = newMin
+   **********************************************************************/
+    private val min: IntegerProperty =
+        object: SimpleIntegerProperty(this, "min") {
+            override fun invalidated() {
+                val currentValue = this@MyIntegerSpinnerValueFactory.value ?: return
+                val newMin = get()
+                if (newMin > getMax()) {
+                    setMin(getMax())
+                    return
+                }
+                if (currentValue < newMin) {
+                    this@MyIntegerSpinnerValueFactory.value = newMin
+                }
             }
         }
-    }
 
     fun setMin(value: Int) {
         min.set(value)
@@ -43,20 +44,20 @@ class MyIntegerSpinnerValueFactory @JvmOverloads constructor(
      */
     fun minProperty(): IntegerProperty = min
 
-    // --- max
-    private val max: IntegerProperty = object: SimpleIntegerProperty(this, "max") {
-        override fun invalidated() {
-            val currentValue = this@MyIntegerSpinnerValueFactory.value ?: return
-            val newMax = get()
-            if (newMax < getMin()) {
-                setMax(getMin())
-                return
-            }
-            if (currentValue > newMax) {
-                this@MyIntegerSpinnerValueFactory.value = newMax
+    private val max: IntegerProperty =
+        object: SimpleIntegerProperty(this, "max") {
+            override fun invalidated() {
+                val currentValue = this@MyIntegerSpinnerValueFactory.value ?: return
+                val newMax = get()
+                if (newMax < getMin()) {
+                    setMax(getMin())
+                    return
+                }
+                if (currentValue > newMax) {
+                    this@MyIntegerSpinnerValueFactory.value = newMax
+                }
             }
         }
-    }
 
     fun setMax(value: Int) {
         max.set(value)
@@ -70,7 +71,6 @@ class MyIntegerSpinnerValueFactory @JvmOverloads constructor(
      */
     fun maxProperty(): IntegerProperty = max
 
-    // --- amountToStepBy
     private val amountToStepBy: IntegerProperty = SimpleIntegerProperty(this, "amountToStepBy")
     /**
      * Constructs a new IntegerSpinnerValueFactory.
@@ -81,8 +81,8 @@ class MyIntegerSpinnerValueFactory @JvmOverloads constructor(
      * be within the bounds of the min and max arguments, or
      * else the min value will be used.
      * @param amountToStepBy The amount to increment or decrement by, per step.
-     */
-    /**
+
+
      * Constructs a new IntegerSpinnerValueFactory with a default
      * `amountToStepBy` of one.
      *
@@ -91,12 +91,8 @@ class MyIntegerSpinnerValueFactory @JvmOverloads constructor(
      * @param initialValue The value of the Spinner when first instantiated, must
      * be within the bounds of the min and max arguments, or
      * else the min value will be used.
-     *//* *********************************************************************
-      *                                                                     *
-      * Constructors                                                        *
-      *                                                                     *
-      **********************************************************************/
-    /**
+
+
      * Constructs a new IntegerSpinnerValueFactory that sets the initial value
      * to be equal to the min value, and a default `amountToStepBy` of one.
      *
@@ -110,19 +106,22 @@ class MyIntegerSpinnerValueFactory @JvmOverloads constructor(
 
 
         /*this is the key change I (Matt) introduced: if the user doesn't enter a valid int, just default to the minimum.*/
-        converter = object: javafx.util.StringConverter<Int?>() {
-            override fun toString(`object`: Int?): String = `object`.toString()
+        converter =
+            object: javafx.util.StringConverter<Int?>() {
+                override fun toString(`object`: Int?): String = `object`.toString()
 
-            override fun fromString(string: String): Int? = string.toIntOrNull() ?: value
-        }
+                override fun fromString(string: String): Int? = string.toIntOrNull() ?: value
+            }
 
 
 
         valueProperty().addListener { _: ObservableValue<out Int?>?, _: Int?, newValue: Int? ->
             if (newValue == null) return@addListener
 
-            // when the value is set, we need to react to ensure it is a
-            // valid value (and if not, blow up appropriately)
+            /*
+            when the value is set, we need to react to ensure it is a
+            valid value (and if not, blow up appropriately)
+             */
             if (newValue < getMin()) {
                 value = getMin()
             } else if (newValue > getMax()) {
@@ -142,16 +141,14 @@ class MyIntegerSpinnerValueFactory @JvmOverloads constructor(
      * Sets the amount to increment or decrement by, per step.
      * @return the amount to increment or decrement by, per step
      */
-    fun amountToStepByProperty(): IntegerProperty = amountToStepBy/* *********************************************************************
-     *                                                                     *
-     * Overridden methods                                                  *
-     *                                                                     *
-     **********************************************************************/
+    fun amountToStepByProperty(): IntegerProperty = amountToStepBy
+
+
     /** {@inheritDoc}  */
     override fun decrement(steps: Int) {
         val min = getMin()
         val max = getMax()
-        val newIndex = value!! - steps*getAmountToStepBy()
+        val newIndex = value!! - steps * getAmountToStepBy()
         value = if (newIndex >= min) newIndex else if (isWrapAround) wrapValuePublic(newIndex, min, max) + 1 else min
     }
 
@@ -160,7 +157,7 @@ class MyIntegerSpinnerValueFactory @JvmOverloads constructor(
         val min = getMin()
         val max = getMax()
         val currentValue = value!!
-        val newIndex = currentValue + steps*getAmountToStepBy()
+        val newIndex = currentValue + steps * getAmountToStepBy()
         value = if (newIndex <= max) newIndex else if (isWrapAround) wrapValuePublic(newIndex, min, max) - 1 else max
     }
 }
@@ -174,7 +171,7 @@ private fun wrapValuePublic(value: Int, min: Int, max: Int): Int {
     if (max == 0) {
         throw RuntimeException()
     }
-    var r = value%max
+    var r = value % max
     if (r > min && max < min) {
         r = r + max - min
     } else if (r < min && max > min) {

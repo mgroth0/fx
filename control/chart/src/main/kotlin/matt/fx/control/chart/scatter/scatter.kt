@@ -25,5 +25,4 @@ open class ScatterChartWrapper<X: Any, Y: Any>(
         x: MAxis<X>,
         y: MAxis<Y>
     ) : this(ScatterChartForWrapper(x.node, y.node))
-
 }

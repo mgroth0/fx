@@ -14,9 +14,9 @@ import matt.lang.anno.Open
 
 
 abstract class TableColumnBaseWrapper<E: Any, P, F: TableColumnBase<E, P>>(
-    @Open override val node: TableColumnBase<E, P>
+    node: F
 ):
-    SingularEventTargetWrapper<TableColumnBase<E, P>>(node),
+    SingularEventTargetWrapper<F>(node),
         WidthManaged {
     fun widthProperty(): ReadOnlyDoubleProperty = node.widthProperty()
 
@@ -35,8 +35,6 @@ abstract class TableColumnBaseWrapper<E: Any, P, F: TableColumnBase<E, P>>(
     @Open override fun addChild(child: NodeWrapper, index: Int?) {
         TODO()
     }
-
-
 }
 
 /**

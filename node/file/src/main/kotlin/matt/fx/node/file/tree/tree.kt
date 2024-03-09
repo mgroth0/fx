@@ -43,61 +43,68 @@ import matt.gui.interact.openInNewWindow
 import matt.gui.menu.context.mcontextmenu
 import matt.gui.mstage.WMode.CLOSE
 import matt.gui.refresh.refreshWhileInSceneEvery
-import matt.lang.NEVER
-import matt.lang.inList
+import matt.kjlib.socket.client.clients.InterAppServices
+import matt.lang.common.NEVER
+import matt.lang.common.inList
+import matt.lang.common.scope
 import matt.lang.model.file.FsFile
 import matt.lang.model.file.MacFileSystem
-import matt.lang.scope
 import matt.log.taball
-import matt.log.warn.warn
+import matt.log.warn.common.warn
 import matt.obs.col.olist.BasicObservableListImpl
 import matt.obs.col.olist.toBasicObservableList
 import matt.obs.listen.OldAndNewListenerImpl
 import matt.obs.math.double.op.div
-import matt.obs.prop.BindableProperty
-import matt.shell.context.ReapingShellExecutionContext
-import matt.shell.context.UnknownShellExecutionContext
-import matt.shell.context.shell.UnixDirectCommandsOnly
-import matt.time.dur.sec
+import matt.obs.prop.writable.BindableProperty
+import matt.shell.common.context.shell.UnixDirectCommandsOnly
+import matt.shell.commonj.context.ReapingShellExecutionContext
+import matt.shell.commonj.context.UnknownShellExecutionContext
+import matt.time.dur.common.sec
 
 private const val HEIGHT = 300.0
 
-context(ReapingShellExecutionContext)
+context(ReapingShellExecutionContext, InterAppServices)
 fun fileTreeAndViewerPane(
     rootFile: FsFile,
     doubleClickInsteadOfSelect: Boolean = false
 ) = HBoxWrapperImpl<NodeWrapper>().apply {
     val hBox = this
     alignment = CENTER_LEFT
-    val treeTableView = fileTableTree(rootFile).apply {
-        prefHeightProperty.value = HEIGHT
-        maxWidthProperty.bind(hBox.widthProperty / 2.0)
-        hgrow = ALWAYS
-    }
-    val viewBox = vbox<NodeWrapper> {
-        prefWidthProperty.bind(hBox.widthProperty / 2.0) /*less aggressive to solve these issues?*/
-        prefHeightProperty.bind(hBox.heightProperty)
-        hgrow = ALWAYS
-    }
+    val treeTableView =
+        fileTableTree(rootFile).apply {
+            prefHeightProperty.value = HEIGHT
+            maxWidthProperty.bind(hBox.widthProperty / 2.0)
+            hgrow = ALWAYS
+        }
+    val viewBox =
+        vbox<NodeWrapper> {
+            prefWidthProperty.bind(hBox.widthProperty / 2.0) /*less aggressive to solve these issues?*/
+            prefHeightProperty.bind(hBox.heightProperty)
+            hgrow = ALWAYS
+        }
 
     if (doubleClickInsteadOfSelect) {
         treeTableView.setOnDoubleClick {
             treeTableView.selectedItem?.let {
                 viewBox.clear()
-                viewBox.add(it.value.toJioFile().createNode(renderHTMLAndSVG = true).apply {
-                    perfectBind(viewBox)
-                    specialTransferingToWindowAndBack(viewBox)
-                })
+                viewBox.add(
+                    it.value.toJioFile().createNode(renderHTMLAndSVG = true).apply {
+                        perfectBind(viewBox)
+                        specialTransferingToWindowAndBack(viewBox)
+                    }
+                )
             }
         }
     } else {
         treeTableView.onSelect { file ->
             viewBox.clear()
             if (file != null) {
-                viewBox.add(file.value.toJioFile().createNode(renderHTMLAndSVG = true).apply {
-                    perfectBind(viewBox)
-                    specialTransferingToWindowAndBack(viewBox)
-                })
+                viewBox.add(
+                    file.value.toJioFile().createNode(renderHTMLAndSVG = true).apply {
+                        perfectBind(viewBox)
+                        specialTransferingToWindowAndBack(viewBox)
+                    }
+                )
             }
         }
     }
@@ -141,65 +148,65 @@ fun TreeLikeWrapper<*, out FsFile>.nav(f: FsFile) {
             }
         }
     }
-
-
 }
 
-context(ReapingShellExecutionContext)
+context(ReapingShellExecutionContext, InterAppServices)
 fun PaneWrapperImpl<*, *>.fileTree(
     rootFile: FsFile,
     strategy: FileTreePopulationStrategy = AUTOMATIC,
-    op: (TreeViewWrapper<FsFile>.() -> Unit)? = null,
+    op: (TreeViewWrapper<FsFile>.() -> Unit)? = null
 ): TreeViewWrapper<out FsFile> = fileTree(rootFile.inList().toBasicObservableList(), strategy, op)
 
-context(ReapingShellExecutionContext)
+context(ReapingShellExecutionContext, InterAppServices)
 fun PaneWrapperImpl<*, *>.fileTableTree(
     rootFile: FsFile,
     strategy: FileTreePopulationStrategy = AUTOMATIC,
-    op: (TreeTableViewWrapper<FsFile>.() -> Unit)? = null,
+    op: (TreeTableViewWrapper<FsFile>.() -> Unit)? = null
 ): TreeTableViewWrapper<FsFile> = fileTableTree(rootFile.inList().toBasicObservableList(), strategy, op)
 
 
-context(ReapingShellExecutionContext)
+context(ReapingShellExecutionContext, InterAppServices)
 fun PaneWrapperImpl<*, *>.fileTree(
     rootFiles: BasicObservableListImpl<out FsFile>,
     strategy: FileTreePopulationStrategy = AUTOMATIC,
-    op: (TreeViewWrapper<FsFile>.() -> Unit)? = null,
-): TreeViewWrapper<out FsFile> = TreeViewWrapper<FsFile>().apply {
-    this@fileTree.add(this)
+    op: (TreeViewWrapper<FsFile>.() -> Unit)? = null
+): TreeViewWrapper<out FsFile> =
+    TreeViewWrapper<FsFile>().apply {
+        this@fileTree.add(this)
 
-    UnknownShellExecutionContext(UnixDirectCommandsOnly).scope {
-        setupGUI()
+        UnknownShellExecutionContext(UnixDirectCommandsOnly).scope {
+            setupGUI()
+        }
+
+        setupContent(rootFiles, strategy)
+
+
+        root!!.isExpanded = true
+        if (op != null) op()
     }
 
-    setupContent(rootFiles, strategy)
-
-
-    root!!.isExpanded = true
-    if (op != null) op()
-}
-
-context(ReapingShellExecutionContext)
+context(ReapingShellExecutionContext, InterAppServices)
 fun PaneWrapperImpl<*, *>.fileTableTree(
     rootFiles: BasicObservableListImpl<FsFile>,
     strategy: FileTreePopulationStrategy = AUTOMATIC,
-    op: (TreeTableViewWrapper<FsFile>.() -> Unit)? = null,
-): TreeTableViewWrapper<FsFile> = TreeTableViewWrapper<FsFile>().apply {
-    this@fileTableTree.add(this)
+    op: (TreeTableViewWrapper<FsFile>.() -> Unit)? = null
+): TreeTableViewWrapper<FsFile> =
+    TreeTableViewWrapper<FsFile>().apply {
+        this@fileTableTree.add(this)
 
-    UnknownShellExecutionContext(UnixDirectCommandsOnly).scope {
-        setupGUI()
+        UnknownShellExecutionContext(UnixDirectCommandsOnly).scope {
+            setupGUI()
+        }
+        setupContent(rootFiles, strategy)
+
+
+        root!!.isExpanded = true
+        autoResizeColumns()
+        if (op != null) op()
     }
-    setupContent(rootFiles, strategy)
 
 
-    root!!.isExpanded = true
-    autoResizeColumns()
-    if (op != null) op()
-}
-
-
-context(ReapingShellExecutionContext)
+context(ReapingShellExecutionContext, InterAppServices)
 private fun TreeLikeWrapper<*, FsFile>.setupGUI() {
 
     selectionModel.selectionMode = MULTIPLE
@@ -213,13 +220,14 @@ private fun TreeLikeWrapper<*, FsFile>.setupGUI() {
             node.setCellFactory {
                 TreeCellWrapper<FsFile>().apply {
                     setOnDoubleClick {
-                        this.treeItem?.value?.toJioFile()?.open()
+                        treeItem?.value?.toJioFile()?.open()
                     }
 
-                    val dragIconCache = lazyMap<FsFile, NodeWrapper> {
-                        /*without this cache, performance suffers because i think new drag icons are being created constantly?*/
-                        it.toJioFile().draggableIcon()
-                    }
+                    val dragIconCache =
+                        lazyMap<FsFile, NodeWrapper> {
+                            /*without this cache, performance suffers because i think new drag icons are being created constantly?*/
+                            it.toJioFile().draggableIcon()
+                        }
                     updateItemOv = { item: FsFile?, empty: Boolean ->
                         if (empty || item == null) {
                             if (text.isNotBlank()) text = ""
@@ -237,18 +245,19 @@ private fun TreeLikeWrapper<*, FsFile>.setupGUI() {
             node.setRowFactory {
                 TreeTableRowWrapper<FsFile>().apply {
                     setOnDoubleClick {
-                        this.treeItem?.value?.toJioFile()?.open()
+                        treeItem?.value?.toJioFile()?.open()
                     }
                 }.node
             }
-            val nameCol = column("name", FsFile::abspath) {
-                simpleCellFactory { value ->
-                    mFile(
-                        value,
-                        MacFileSystem
-                    ).let { it.name to it.toJioFile().draggableIcon() }
+            val nameCol =
+                column("name", FsFile::abspath) {
+                    simpleCellFactory { value ->
+                        mFile(
+                            value,
+                            MacFileSystem
+                        ).let { it.name to it.toJioFile().draggableIcon() }
+                    }
                 }
-            }
             column("ext", FsFile::singleExtension)
 
             showSizesProp = BindableProperty(false)
@@ -287,10 +296,12 @@ private fun TreeLikeWrapper<*, FsFile>.setupGUI() {
                         this@setupGUI.selectedValue?.let {
                             VBoxWrapperImpl<NodeWrapper>().apply {
                                 val container = this
-                                add(it.toJioFile().createNode(renderHTMLAndSVG = true).apply {
-                                    perfectBind(container)
-                                    specialTransferingToWindowAndBack(container)
-                                })
+                                add(
+                                    it.toJioFile().createNode(renderHTMLAndSVG = true).apply {
+                                        perfectBind(container)
+                                        specialTransferingToWindowAndBack(container)
+                                    }
+                                )
                             }.openInNewWindow(
                                 wMode = CLOSE,
                                 decorated = true,
@@ -311,23 +322,19 @@ private fun TreeLikeWrapper<*, FsFile>.setupGUI() {
 
                 else -> {
                     "move all to trash" does {
-                        //		  confirm("delete all?") {
                         selects.forEach {
                             it.value.toJioFile().moveToTrash()
                         }
-                        //		  }
                     }
                 }
             }
         }
     }
-
-
 }
 
 private fun TreeLikeWrapper<*, FsFile>.setupContent(
     rootFiles: BasicObservableListImpl<out FsFile>,
-    strategy: FileTreePopulationStrategy,
+    strategy: FileTreePopulationStrategy
 ) {
     root = TreeItemWrapper<FsFile>()
     root!!.children.bind(rootFiles) {
@@ -357,7 +364,8 @@ private fun TreeLikeWrapper<*, FsFile>.setupPopulating(strategy: FileTreePopulat
             if (root!!.children.flatMap { it.recurse { it.children } }.any {
                     !it.children.map { it.value }
                         .sameContentsAnyOrder(it.value.toJioFile().listFiles()?.toList() ?: listOf())
-                }) {
+                }
+            ) {
                 rePop()
             }
         }
@@ -366,15 +374,18 @@ private fun TreeLikeWrapper<*, FsFile>.setupPopulating(strategy: FileTreePopulat
         setOnSelectionChange { v ->
             if (v != null) {
                 (v.wrapped() as FileTreeItem).refreshChilds()
-                v.children.forEach { (it.wrapped() as FileTreeItem).refreshChilds() } /*so i can always see which have matt.fx.control.layout.children*/
+                v.children.forEach {
+                    (it.wrapped() as FileTreeItem).refreshChilds()
+                } /*so i can always see which have matt.fx.control.layout.children*/
             }
         }
     }
 }
 
 
-private fun matt.file.JioFile.childs() = listFilesAsList()
-    ?.sortedWith(FILE_SORT_RULE)
+private fun matt.file.JioFile.childs() =
+    listFilesAsList()
+        ?.sortedWith(FILE_SORT_RULE)
 
 
 private val FILE_SORT_RULE = compareBy<FsFile> { !it.toJioFile().isDirectory }.then(compareBy { it.name })
@@ -388,17 +399,17 @@ enum class FileTreePopulationStrategy {
 private class FileTreeItem(file: FsFile) : TreeItemWrapper<FsFile>(file) {
 
     init {
-        expandedProperty.addListener(OldAndNewListenerImpl { o, n ->
-            if (o != n && !n) {
-                (this@FileTreeItem as TreeItemWrapper<FsFile>).recurse { it.children }.forEach { it.isExpanded = false }
+        expandedProperty.addListener(
+            OldAndNewListenerImpl { o, n ->
+                if (o != n && !n) {
+                    (this@FileTreeItem as TreeItemWrapper<FsFile>).recurse { it.children }.forEach { it.isExpanded = false }
+                }
             }
-        })
+        )
     }
 
     fun refreshChilds() {
-        //	println("refreshing childs of ${value}")
         val childs = value.toJioFile().childs() ?: listOf()
-        //	taball("childs", childs)
         children.removeAll { it.value !in childs }
         childs.filter { it !in children.map { it.value } }.forEach {
             children.add(FileTreeItem(it))

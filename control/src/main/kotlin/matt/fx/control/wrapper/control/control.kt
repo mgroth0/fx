@@ -11,14 +11,23 @@ interface ControlWrapper: RegionWrapper<NodeWrapper> {
   var tooltip: tooltipWrapper?*/
 }
 
-abstract class ControlWrapperImpl<N: Control>(node: N): RegionWrapperImpl<N, NodeWrapper>(node),
+abstract class ControlWrapperImpl<N: Control>(node: N):
+    RegionWrapperImpl<N, NodeWrapper>(node),
     ControlWrapper {
 
 
-    /*Don't use this. It requires that I use the built in Tooltip, which I do not*/
-/*  final override val tooltipProp by lazy {
+    /*
+
+    // Don't use this. It requires that I use the built in Tooltip, which I do not
+
+          final override val tooltipProp by lazy {
 	node.tooltipProperty().toNullableProp().proxy(uncheckedWrapperConverter<Tooltip, tooltipWrapper>().nullable())
   }
-  final override var tooltip by lazyVarDelegate { tooltipProp }*/
 
+
+  final override var tooltip by lazyVarDelegate { tooltipProp }
+
+
+
+     */
 }

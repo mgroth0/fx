@@ -7,5 +7,4 @@ class IntegerFieldWrapper(node: IntegerField): ControlWrapperImpl<IntegerField>(
     override fun addChild(child: NodeWrapper, index: Int?) {
         TODO()
     }
-
 }

@@ -2,10 +2,10 @@ package matt.fx.graphics.lang
 
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.scene.SceneWrapper
-import matt.lang.err
+import matt.lang.common.err
 import matt.lang.setall.setAll
 
-fun NodeWrapper.setOnFocusLost(op: ()->Unit) {
+fun NodeWrapper.setOnFocusLost(op: () -> Unit) {
     focusedProperty.onChange { it: Boolean? ->
         if (it == null) err("here it is")
         if (!it) {
@@ -14,7 +14,7 @@ fun NodeWrapper.setOnFocusLost(op: ()->Unit) {
     }
 }
 
-fun NodeWrapper.setOnFocusGained(op: ()->Unit) {
+fun NodeWrapper.setOnFocusGained(op: () -> Unit) {
     focusedProperty.onChange { it: Boolean? ->
         if (it == null) err("here it is")
         if (it) {
@@ -35,7 +35,7 @@ fun <T> MutableList<T>.removeAllButLastN(num: Int) {
 
 
 @Suppress("unused")
-fun SceneWrapper<*>.onDoubleClickConsume(action: ()->Unit) {
+fun SceneWrapper<*>.onDoubleClickConsume(action: () -> Unit) {
     node.setOnMouseClicked {
         if (it.clickCount == 2) {
             action()

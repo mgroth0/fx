@@ -31,5 +31,4 @@ class SubSceneWrapper<R: ParentWrapper<*>>(
     override val widthProperty get() = node.widthProperty().toNonNullableROProp().cast<Double>()
     override val heightProperty get() = node.heightProperty().toNonNullableROProp().cast<Double>()
     override val fillProperty: ObjectProperty<Paint> get() = node.fillProperty()
-
 }

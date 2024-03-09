@@ -21,14 +21,14 @@ import matt.fx.node.chart.annochart.annopane.Annotateable
 import matt.fx.node.chart.annochart.annopane.AnnotationPane
 import matt.fx.node.chart.annochart.inner.applyBounds
 import matt.fx.node.chart.annochart.inner.calcAutoBounds
-import matt.lang.go
+import matt.lang.common.go
 import matt.model.data.mathable.MathAndComparable
 import matt.model.data.xyz.Dim2D
 import matt.obs.col.olist.ImmutableObsList
 import matt.obs.col.olist.basicMutableObservableListOf
 import matt.obs.col.olist.cat.concatenatedTo
 import matt.obs.col.olist.mappedlist.toMappedList
-import matt.obs.prop.BindableProperty
+import matt.obs.prop.writable.BindableProperty
 
 
 fun <X : MathAndComparable<X>, Y : MathAndComparable<Y>> ET.annoChart(
@@ -37,7 +37,7 @@ fun <X : MathAndComparable<X>, Y : MathAndComparable<Y>> ET.annoChart(
     op: AnnotateableChart<X, Y>.() -> Unit = {}
 ) = AnnotateableChart(
     xAxis = xAxis.minimal(),
-    yAxis = yAxis.minimal(),
+    yAxis = yAxis.minimal()
 ).attachTo(this, op)
 
 open class AnnotateableChart<X : MathAndComparable<X>, Y : MathAndComparable<Y>> private constructor(
@@ -56,11 +56,14 @@ open class AnnotateableChart<X : MathAndComparable<X>, Y : MathAndComparable<Y>>
     )
 
 
-    val chart = (if (scatter) ScatterChartWrapper(x = xAxis, y = yAxis) else LineChartWrapper(
-        x = xAxis, y = yAxis
-    )).apply {
-        configureForHighPerformance()
-    }
+    val chart =
+        (
+            if (scatter) ScatterChartWrapper(x = xAxis, y = yAxis) else LineChartWrapper(
+                x = xAxis, y = yAxis
+            )
+        ).apply {
+            configureForHighPerformance()
+        }
 
     val title = chart.titleProperty
 
@@ -72,18 +75,19 @@ open class AnnotateableChart<X : MathAndComparable<X>, Y : MathAndComparable<Y>>
     val verticalZeroLineVisibleProperty get() = chart.verticalZeroLineVisibleProperty
     private val annotationSeries = basicMutableObservableListOf<SeriesWrapper<X, Y>>()
     val realData = basicMutableObservableListOf<SeriesWrapper<X, Y>>()
-    private val annoPane = AnnotationPane(
-        NumericChartLocater(
-            lineChart = chart, xAxis = xAxis, yAxis = yAxis
-        ),
-        chartBoundsProp = chart.layoutBoundsProperty,
-        chartHeightProp = chart.heightProperty,
-        chartWidthProp = chart.widthProperty,
-        xAxis = xAxis,
-        yAxis = yAxis,
-        annotationSeries = annotationSeries,
-        realData = realData
-    )
+    private val annoPane =
+        AnnotationPane(
+            NumericChartLocater(
+                lineChart = chart, xAxis = xAxis, yAxis = yAxis
+            ),
+            chartBoundsProp = chart.layoutBoundsProperty,
+            chartHeightProp = chart.heightProperty,
+            chartWidthProp = chart.widthProperty,
+            xAxis = xAxis,
+            yAxis = yAxis,
+            annotationSeries = annotationSeries,
+            realData = realData
+        )
 
     final override fun layoutXOf(x: X) = annoPane.layoutXOf(x)
     final override fun layoutYOf(y: Y) = annoPane.layoutYOf(y)
@@ -130,20 +134,22 @@ open class AnnotateableChart<X : MathAndComparable<X>, Y : MathAndComparable<Y>>
         Source, DownSampled
     }
 
-    private val dataViews = lazyMap<VisibleDataMode, ImmutableObsList<SeriesWrapper<X, Y>>> {
-        when (it) {
-            Source      -> annotationSeries.concatenatedTo(realData)
-            DownSampled -> annotationSeries.concatenatedTo(downSampledRealData)
+    private val dataViews =
+        lazyMap<VisibleDataMode, ImmutableObsList<SeriesWrapper<X, Y>>> {
+            when (it) {
+                Source      -> annotationSeries.concatenatedTo(realData)
+                DownSampled -> annotationSeries.concatenatedTo(downSampledRealData)
+            }
         }
-    }
 
     @Suppress("MemberVisibilityCanBePrivate")
-    val visibleDataModeProp = BindableProperty(Source).apply {
-        chart.data.bind(dataViews[value])
-        onChange {
-            chart.data.bind(dataViews[it])
+    val visibleDataModeProp =
+        BindableProperty(Source).apply {
+            chart.data.bind(dataViews[value])
+            onChange {
+                chart.data.bind(dataViews[it])
+            }
         }
-    }
     var visibleDataMode by visibleDataModeProp
 
     init {
@@ -160,7 +166,7 @@ open class AnnotateableChart<X : MathAndComparable<X>, Y : MathAndComparable<Y>>
     private fun yValues() = realData.asSequence().flatMap { aSeries -> aSeries.data.map { it.yValue } }
     private fun xValues() = realData.asSequence().flatMap { aSeries -> aSeries.data.map { it.xValue } }
     fun autoRangeY(
-        forceMin: Y? = null,
+        forceMin: Y? = null
     ) {
         calcAutoBounds(
             mn = yValues().minOrNull(), mx = yValues().maxOrNull(), forceMin = forceMin
@@ -173,17 +179,16 @@ open class AnnotateableChart<X : MathAndComparable<X>, Y : MathAndComparable<Y>>
         )?.go(xAxis::applyBounds)
     }
 
-    private fun autoRange(dim: Dim2D) = when (dim) {
-        Dim2D.X -> autoRangeX()
-        Dim2D.Y -> autoRangeY()
-    }
+    private fun autoRange(dim: Dim2D) =
+        when (dim) {
+            Dim2D.X -> autoRangeX()
+            Dim2D.Y -> autoRangeY()
+        }
 
 
     final override fun clearAnnotations() {
         annotationSeries.clear()
         annoPane.clear()
     }
-
-
 }
 

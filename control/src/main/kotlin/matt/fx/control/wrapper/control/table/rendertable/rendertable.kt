@@ -7,37 +7,36 @@ import matt.fx.control.wrapper.label.label
 import matt.fx.graphics.wrapper.getterdsl.buildNode
 import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapper
 import matt.fx.graphics.wrapper.pane.vbox.v
-import matt.lang.go
+import matt.lang.common.go
 import matt.obs.col.olist.toBasicObservableList
-import matt.obs.prop.toVarProp
+import matt.obs.prop.writable.toVarProp
 
 
 class FXTableRenderer : FormattedTableRenderer<VBoxWrapper<*>> {
 
 
-    override fun render(figData: FormattedTabularData<*, *, *>): VBoxWrapper<*> = buildNode {
-        v {
-            figData.title?.go {
-                label(it)
-            }
-            tableview(items = figData.rows().map { it.value }.toBasicObservableList()) {
-
-                column(
-                    title = "row name",
-                ) {
-                    it.value.toVarProp()
+    override fun render(figData: FormattedTabularData<*, *, *>): VBoxWrapper<*> =
+        buildNode {
+            v {
+                figData.title?.go {
+                    label(it)
                 }
+                tableview(items = figData.rows().map { it.value }.toBasicObservableList()) {
 
-                figData.columns().forEach { col ->
                     column(
-                        title = col.value
+                        title = "row name"
                     ) {
-                        col[it.value].toVarProp()
+                        it.value.toVarProp()
+                    }
+
+                    figData.columns().forEach { col ->
+                        column(
+                            title = col.value
+                        ) {
+                            col[it.value].toVarProp()
+                        }
                     }
                 }
             }
         }
-
-    }
-
 }

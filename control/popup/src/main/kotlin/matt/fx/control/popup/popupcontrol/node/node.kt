@@ -30,23 +30,26 @@ import javafx.stage.PopupWindow.AnchorLocation.CONTENT_TOP_LEFT
 import matt.fx.base.rewrite.ReWrittenFxClass
 import matt.fx.control.popup.popupcontrol.node.bridge.MyPopUpCSSBridge
 import matt.lang.anno.Open
-import matt.lang.go
+import matt.lang.common.go
+import java.lang.reflect.Method
 import java.util.Collections
 
 /**
  * An extension of PopupWindow that allows for CSS styling.
  * @since JavaFX 2.0
+ *
+ *
+ *
+ *
+ * Why Matt had to override this class:
+ *
+ * because the bridge thing is the source of all my tooltip style issues, and it is package private
+ *
+ * this is the original reason, but not the only
+ *
+ *
  */
 
-/*
-
-Why Matt had to override this class:
-
-because the bridge thing is the source of all my tooltip style issues, and it is package private
-
-this is the original reason, but not the only
-
-* */
 
 @ReWrittenFxClass(PopupControl::class)
 open class MyPopupControl: PopupWindow(), Skinnable, Styleable {
@@ -65,13 +68,16 @@ open class MyPopupControl: PopupWindow(), Skinnable, Styleable {
      * CSS, in such a way that it participates and applies to the skin,
      * exactly the way that normal Skin's work for normal Controls.
      * @since JavaFX 2.1
+     *
+     *
+     *     TODO the fact that PopupWindow uses a group for auto-moving things
+     *     around means that the scene resize semantics don't work if the
+     *     child is a resizable. I will need to replicate those semantics
+     *     here sometime, such that if the Skin provides a resizable, it is
+     *     given to match the popup window's width & height.
      */
     protected var bridge: MyPopUpCSSBridge = MyPopUpCSSBridge(this)
-    // TODO the fact that PopupWindow uses a group for auto-moving things
-    // around means that the scene resize semantics don't work if the
-    // child is a resizable. I will need to replicate those semantics
-    // here sometime, such that if the Skin provides a resizable, it is
-    // given to match the popup window's width & height.
+
     /**
      * The id of this `PopupControl`. This simple string identifier is useful for
      * finding a specific Node within the scene graph. While the id of a Node
@@ -97,7 +103,7 @@ open class MyPopupControl: PopupWindow(), Skinnable, Styleable {
      */
     fun setId(value: String) = idProperty().set(value)
 
-    final /**
+    /**
      * The id of this `PopupControl`. This simple string identifier is useful for
      * finding a specific Node within the scene graph. While the id of a Node
      * should be unique within the scene graph, this uniqueness is not enforced.
@@ -108,13 +114,13 @@ open class MyPopupControl: PopupWindow(), Skinnable, Styleable {
      * method or `null`, if no id has been assigned.
      * @defaultValue `null`
      */
-    override fun getId(): String? = idProperty().get()
+    final override fun getId(): String? = idProperty().get()
 
-    final /**
+    /**
      * Returns the list of String identifiers that make up the styleClass
      * for this PopupControl.
      */
-    override fun getStyleClass(): ObservableList<String> = bridge.styleClass
+    final override fun getStyleClass(): ObservableList<String> = bridge.styleClass
 
     fun setStyle(value: String) {
         styleProperty().set(value)
@@ -136,7 +142,7 @@ open class MyPopupControl: PopupWindow(), Skinnable, Styleable {
      */
     fun styleProperty(): StringProperty = bridge.styleProperty()
 
-    final /**
+    /**
      * Skin is responsible for rendering this `PopupControl`. From the
      * perspective of the `PopupControl`, the `Skin` is a black box.
      * It listens and responds to changes in state in a `PopupControl`.
@@ -149,7 +155,7 @@ open class MyPopupControl: PopupWindow(), Skinnable, Styleable {
      *
      * A skin may be `null`.
      */
-    override fun skinProperty(): ObjectProperty<Skin<*>> = skin
+    final override fun skinProperty(): ObjectProperty<Skin<*>> = skin
 
     final override fun setSkin(value: Skin<*>) {
         skinProperty().value = value
@@ -157,71 +163,82 @@ open class MyPopupControl: PopupWindow(), Skinnable, Styleable {
 
     final override fun getSkin(): Skin<*>? = skinProperty().value
 
-    private val skin: ObjectProperty<Skin<*>> = object: ObjectPropertyBase<Skin<*>>() {
-        // We store a reference to the oldValue so that we can handle
-        // changes in the skin properly in the case of binding. This is
-        // only needed because invalidated() does not currently take
-        // a reference to the old value.
-        private var oldValue: Skin<*>? = null
-        override fun set(v: Skin<*>?) {
-            if (if (v == null) oldValue == null else oldValue != null && v.javaClass == oldValue!!.javaClass) return
-            super.set(v)
-        }
-
-        override fun invalidated() {
-            val skin = get()
-
-            // Collect the name of the currently installed skin class. We do this
-            // so that subsequent updates from CSS to the same skin class will not
-            // result in reinstalling the skin
-            currentSkinClassName = skin?.javaClass?.name
-
-            // if someone calls setSkin, we need to make it look like they
-            // called set on skinClassName in order to keep CSS from overwriting
-            // the skin.
-            skinClassNameProperty().set(currentSkinClassName)
-
-            // Let CSS know that this property has been manually changed
-            // Dispose of the old skin
-            if (oldValue != null) {
-                oldValue!!.dispose()
+    private val skin: ObjectProperty<Skin<*>> =
+        object: ObjectPropertyBase<Skin<*>>() {
+            /*
+We store a reference to the oldValue so that we can handle
+changes in the skin properly in the case of binding. This is
+only needed because invalidated() does not currently take
+a reference to the old value.
+*/
+            private var oldValue: Skin<*>? = null
+            override fun set(v: Skin<*>?) {
+                if (if (v == null) oldValue == null else oldValue != null && v.javaClass == oldValue!!.javaClass) return
+                super.set(v)
             }
 
-            // Get the new value, and save it off as the new oldValue
-            oldValue = value
-            prefWidthCache = -1.0
-            prefHeightCache = -1.0
-            minWidthCache = -1.0
-            minHeightCache = -1.0
-            maxWidthCache = -1.0
-            maxHeightCache = -1.0
-            skinSizeComputed = false
-            val n: Node? = skinNode
-            n?.go {
-                bridge.children.setAll(it)
-            } ?: bridge.children.clear()
+            override fun invalidated() {
+                val skin = get()
 
-            // let the new skin modify this control
-            skin?.install()
+                /*
+                Collect the name of the currently installed skin class. We do this
+                so that subsequent updates from CSS to the same skin class will not
+                result in reinstalling the skin
+                 */
+                currentSkinClassName = skin?.javaClass?.name
 
-            // calling NodeHelper.reapplyCSS() as the styleable properties may now
-            // be different, as we will now be able to return styleable properties
-            // belonging to the skin. If NodeHelper.reapplyCSS() is not called, the
-            // getCssMetaData() method is never called, so the
-            // skin properties are never exposed.
-            NodeHelper.reapplyCSS(bridge)
+                /*
+                if someone calls setSkin, we need to make it look like they
+                called set on skinClassName in order to keep CSS from overwriting
+                the skin.
+                 */
+                skinClassNameProperty().set(currentSkinClassName)
 
-            // DEBUG: Log that we've changed the skin
-            val logger = Logging.getControlsLogger()
-            if (logger.isLoggable(FINEST)) {
-                logger.finest("Stored skin[$value] on $this")
+                /*
+                Let CSS know that this property has been manually changed
+                Dispose of the old skin
+                 */
+                if (oldValue != null) {
+                    oldValue!!.dispose()
+                }
+
+                /* Get the new value, and save it off as the new oldValue */
+                oldValue = value
+                prefWidthCache = -1.0
+                prefHeightCache = -1.0
+                minWidthCache = -1.0
+                minHeightCache = -1.0
+                maxWidthCache = -1.0
+                maxHeightCache = -1.0
+                skinSizeComputed = false
+                val n: Node? = skinNode
+                n?.go {
+                    bridge.children.setAll(it)
+                } ?: bridge.children.clear()
+
+                /* let the new skin modify this control */
+                skin?.install()
+
+                /*
+                calling NodeHelper.reapplyCSS() as the styleable properties may now
+                be different, as we will now be able to return styleable properties
+                belonging to the skin. If NodeHelper.reapplyCSS() is not called, the
+                getCssMetaData() method is never called, so the
+                skin properties are never exposed.
+                 */
+                NodeHelper.reapplyCSS(bridge)
+
+                /* DEBUG: Log that we've changed the skin */
+                val logger = Logging.getControlsLogger()
+                if (logger.isLoggable(FINEST)) {
+                    logger.finest("Stored skin[$value] on $this")
+                }
             }
+
+            override fun getBean(): Any = this@MyPopupControl
+
+            override fun getName(): String = "skin"
         }
-
-        override fun getBean(): Any = this@MyPopupControl
-
-        override fun getName(): String = "skin"
-    }
 
     /**
      * Keeps a reference to the name of the class currently acting as the skin.
@@ -234,45 +251,50 @@ open class MyPopupControl: PopupWindow(), Skinnable, Styleable {
     private var skinClassName: StringProperty? = null
     private fun skinClassNameProperty(): StringProperty {
         if (skinClassName == null) {
-            skinClassName = object: StyleableStringProperty() {
-                override fun set(v: String?) {
-                    // do not allow the skin to be set to null through CSS
-                    if (v.isNullOrEmpty() || v == get()) return
-                    super.set(v)
-                }
-
-                public override fun invalidated() {
-
-                    //
-                    // if the current skin is not null, then
-                    // see if then check to see if the current skin's class name
-                    // is the same as skinClassName. If it is, then there is
-                    // no need to load the skin class. Note that the only time
-                    // this would be the case is if someone called setSkin since
-                    // the skin would be set ahead of the skinClassName
-                    // (skinClassName is set from the skinProperty's invalidated
-                    // method, so the skin would be set, then the skinClassName).
-                    // If the skinClassName is set first (via CSS), then this
-                    // invalidated method won't get called unless the value
-                    // has changed (thus, we won't reload the same skin).
-                    //
-                    if (get() != null) {
-                        if (get() != currentSkinClassName) {
-                            controlLoadSkinClass.invoke(this@MyPopupControl, get())
-                            //			  Control.loadSkinClass(this@MyPopupControl, get())
-                        }
-                        // CSS should not set skin to null
-                        //                    } else {
-                        //                        setSkin(null);
+            skinClassName =
+                object: StyleableStringProperty() {
+                    override fun set(v: String?) {
+                        /* do not allow the skin to be set to null through CSS */
+                        if (v.isNullOrEmpty() || v == get()) return
+                        super.set(v)
                     }
+
+                    public override fun invalidated() {
+
+                        /*
+
+                        if the current skin is not null, then
+                        see if then check to see if the current skin's class name
+                        is the same as skinClassName. If it is, then there is
+                        no need to load the skin class. Note that the only time
+                        this would be the case is if someone called setSkin since
+                        the skin would be set ahead of the skinClassName
+                        (skinClassName is set from the skinProperty's invalidated
+                        method, so the skin would be set, then the skinClassName).
+                        If the skinClassName is set first (via CSS), then this
+                        invalidated method won't get called unless the value
+                        has changed (thus, we won't reload the same skin).
+
+                         */
+                        if (get() != null) {
+                            if (get() != currentSkinClassName) {
+                                controlLoadSkinClass.invoke(this@MyPopupControl, get())
+                                /* Control.loadSkinClass(this@MyPopupControl, get()) */
+                            }
+                            /*
+                            CSS should not set skin to null
+                            } else {
+                            setSkin(null);
+                             */
+                        }
+                    }
+
+                    override fun getBean(): Any = this@MyPopupControl
+
+                    override fun getName(): String = "skinClassName"
+
+                    override fun getCssMetaData(): CssMetaData<MyPopUpCSSBridge, String> = SKIN
                 }
-
-                override fun getBean(): Any = this@MyPopupControl
-
-                override fun getName(): String = "skinClassName"
-
-                override fun getCssMetaData(): CssMetaData<MyPopUpCSSBridge, String> = SKIN
-            }
         }
         return skinClassName!!
     }
@@ -343,15 +365,16 @@ open class MyPopupControl: PopupWindow(), Skinnable, Styleable {
 
     fun minWidthProperty(): DoubleProperty {
         if (minWidth == null) {
-            minWidth = object: DoublePropertyBase(USE_COMPUTED_SIZE) {
-                public override fun invalidated() {
-                    if (isShowing) bridge.requestLayout()
+            minWidth =
+                object: DoublePropertyBase(USE_COMPUTED_SIZE) {
+                    public override fun invalidated() {
+                        if (isShowing) bridge.requestLayout()
+                    }
+
+                    override fun getBean(): Any = this@MyPopupControl
+
+                    override fun getName(): String = "minWidth"
                 }
-
-                override fun getBean(): Any = this@MyPopupControl
-
-                override fun getName(): String = "minWidth"
-            }
         }
         return minWidth!!
     }
@@ -416,15 +439,16 @@ open class MyPopupControl: PopupWindow(), Skinnable, Styleable {
 
     fun minHeightProperty(): DoubleProperty {
         if (minHeight == null) {
-            minHeight = object: DoublePropertyBase(USE_COMPUTED_SIZE) {
-                public override fun invalidated() {
-                    if (isShowing) bridge.requestLayout()
+            minHeight =
+                object: DoublePropertyBase(USE_COMPUTED_SIZE) {
+                    public override fun invalidated() {
+                        if (isShowing) bridge.requestLayout()
+                    }
+
+                    override fun getBean(): Any = this@MyPopupControl
+
+                    override fun getName(): String = "minHeight"
                 }
-
-                override fun getBean(): Any = this@MyPopupControl
-
-                override fun getName(): String = "minHeight"
-            }
         }
         return minHeight!!
     }
@@ -488,15 +512,16 @@ open class MyPopupControl: PopupWindow(), Skinnable, Styleable {
 
     fun prefWidthProperty(): DoubleProperty {
         if (prefWidth == null) {
-            prefWidth = object: DoublePropertyBase(USE_COMPUTED_SIZE) {
-                public override fun invalidated() {
-                    if (isShowing) bridge.requestLayout()
+            prefWidth =
+                object: DoublePropertyBase(USE_COMPUTED_SIZE) {
+                    public override fun invalidated() {
+                        if (isShowing) bridge.requestLayout()
+                    }
+
+                    override fun getBean(): Any = this@MyPopupControl
+
+                    override fun getName(): String = "prefWidth"
                 }
-
-                override fun getBean(): Any = this@MyPopupControl
-
-                override fun getName(): String = "prefWidth"
-            }
         }
         return prefWidth!!
     }
@@ -544,15 +569,16 @@ open class MyPopupControl: PopupWindow(), Skinnable, Styleable {
 
     fun prefHeightProperty(): DoubleProperty {
         if (prefHeight == null) {
-            prefHeight = object: DoublePropertyBase(USE_COMPUTED_SIZE) {
-                public override fun invalidated() {
-                    if (isShowing) bridge.requestLayout()
+            prefHeight =
+                object: DoublePropertyBase(USE_COMPUTED_SIZE) {
+                    public override fun invalidated() {
+                        if (isShowing) bridge.requestLayout()
+                    }
+
+                    override fun getBean(): Any = this@MyPopupControl
+
+                    override fun getName(): String = "prefHeight"
                 }
-
-                override fun getBean(): Any = this@MyPopupControl
-
-                override fun getName(): String = "prefHeight"
-            }
         }
         return prefHeight!!
     }
@@ -631,15 +657,16 @@ open class MyPopupControl: PopupWindow(), Skinnable, Styleable {
 
     fun maxWidthProperty(): DoubleProperty {
         if (maxWidth == null) {
-            maxWidth = object: DoublePropertyBase(USE_COMPUTED_SIZE) {
-                public override fun invalidated() {
-                    if (isShowing) bridge.requestLayout()
+            maxWidth =
+                object: DoublePropertyBase(USE_COMPUTED_SIZE) {
+                    public override fun invalidated() {
+                        if (isShowing) bridge.requestLayout()
+                    }
+
+                    override fun getBean(): Any = this@MyPopupControl
+
+                    override fun getName(): String = "maxWidth"
                 }
-
-                override fun getBean(): Any = this@MyPopupControl
-
-                override fun getName(): String = "maxWidth"
-            }
         }
         return maxWidth!!
     }
@@ -702,15 +729,16 @@ open class MyPopupControl: PopupWindow(), Skinnable, Styleable {
 
     fun maxHeightProperty(): DoubleProperty {
         if (maxHeight == null) {
-            maxHeight = object: DoublePropertyBase(USE_COMPUTED_SIZE) {
-                public override fun invalidated() {
-                    if (isShowing) bridge.requestLayout()
+            maxHeight =
+                object: DoublePropertyBase(USE_COMPUTED_SIZE) {
+                    public override fun invalidated() {
+                        if (isShowing) bridge.requestLayout()
+                    }
+
+                    override fun getBean(): Any = this@MyPopupControl
+
+                    override fun getName(): String = "maxHeight"
                 }
-
-                override fun getBean(): Any = this@MyPopupControl
-
-                override fun getName(): String = "maxHeight"
-            }
         }
         return maxHeight!!
     }
@@ -871,11 +899,13 @@ open class MyPopupControl: PopupWindow(), Skinnable, Styleable {
         return theOverride
     }
 
-    // Implementation of the Resizable interface.
-    // Because only the skin can know the min, pref, and max sizes, these
-    // functions are implemented to delegate to skin. If there is no skin then
-    // we simply return 0 for all the values since a Control without a Skin
-    // doesn't render
+    /*
+Implementation of the Resizable interface.
+Because only the skin can know the min, pref, and max sizes, these
+functions are implemented to delegate to skin. If there is no skin then
+we simply return 0 for all the values since a Control without a Skin
+doesn't render
+*/
     private fun recalculateMinWidth(height: Double): Double {
         recomputeSkinSize()
         return skinNode?.minWidth(height) ?: 0.0
@@ -906,17 +936,21 @@ open class MyPopupControl: PopupWindow(), Skinnable, Styleable {
         return if (skinNode == null) 0.0 else skinNode!!.prefHeight(width)
     }
 
+    /* public double getBaselineOffset() { return getSkinNode() == null? 0 : getSkinNode().getBaselineOffset(); } */
+
     private fun recomputeSkinSize() {
         if (!skinSizeComputed) {
-            // RT-14094, RT-16754: We need the skins of the popup
-            // and it children before the stage is visible so we
-            // can calculate the popup position based on content
-            // size.
+            /*
+            RT-14094, RT-16754: We need the skins of the popup
+            and it children before the stage is visible so we
+            can calculate the popup position based on content
+            size.
+             */
             bridge.applyCss()
             skinSizeComputed = true
         }
     }
-    //    public double getBaselineOffset() { return getSkinNode() == null? 0 : getSkinNode().getBaselineOffset(); }
+
     /**
      * Create a new instance of the default skin for this control. This is called to create a skin for the control if
      * no skin is provided via CSS `-fx-skin` or set explicitly in a sub-class with `setSkin(...)`.
@@ -950,14 +984,14 @@ open class MyPopupControl: PopupWindow(), Skinnable, Styleable {
         bridge.pseudoClassStateChanged(pseudoClass, active)
     }
 
-    final /**
+    /**
      * {@inheritDoc}
      * @return "PopupControl"
      * @since JavaFX 8.0
      */
-    override fun getTypeSelector(): String = "PopupControl"
+    final override fun getTypeSelector(): String = "PopupControl"
 
-    @Open  /**
+    /**
      * {@inheritDoc}
      *
      * A PopupControl&#39;s styles are based on the popup &quot;owner&quot; which is the
@@ -974,6 +1008,7 @@ open class MyPopupControl: PopupWindow(), Skinnable, Styleable {
      * or null.
      * @since JavaFX 8.0
      */
+    @Open
     override fun getStyleableParent(): Styleable {
         val ownerNode = ownerNode
         if (ownerNode != null) return ownerNode else {
@@ -986,18 +1021,18 @@ open class MyPopupControl: PopupWindow(), Skinnable, Styleable {
         return bridge.parent
     }
 
-    final /**
+    /**
      * {@inheritDoc}
      * @since JavaFX 8.0
      */
-    override fun getPseudoClassStates(): ObservableSet<PseudoClass> = FXCollections.emptyObservableSet()
+    final override fun getPseudoClassStates(): ObservableSet<PseudoClass> = FXCollections.emptyObservableSet()
 
     final override fun getStyleableNode(): Node = bridge
 
 
     companion object {
 
-        val controlLoadSkinClass by lazy {
+        val controlLoadSkinClass: Method by lazy {
             Control::class.java.getMethod("loadSkinClass").apply {
                 isAccessible = true
             }
@@ -1020,7 +1055,7 @@ open class MyPopupControl: PopupWindow(), Skinnable, Styleable {
         const val USE_COMPUTED_SIZE = -1.0
 
         init {
-            // Ensures that the default application user agent stylesheet is loaded
+            /* Ensures that the default application user agent stylesheet is loaded */
             if (Application.getUserAgentStylesheet() == null) {
                 PlatformImpl.setDefaultPlatformUserAgentStylesheet()
             }
@@ -1031,16 +1066,17 @@ open class MyPopupControl: PopupWindow(), Skinnable, Styleable {
 	 *                         StyleSheet Handling                             *
 	 *                                                                         *
 	 **************************************************************************/
-        private val SKIN: CssMetaData<MyPopUpCSSBridge, String> = object: CssMetaData<MyPopUpCSSBridge, String>(
-            "-fx-skin",
-            StringConverter.getInstance()
-        ) {
-            override fun isSettable(cssBridge: MyPopUpCSSBridge): Boolean = !cssBridge.popupControl.skinProperty().isBound
+        private val SKIN: CssMetaData<MyPopUpCSSBridge, String> =
+            object: CssMetaData<MyPopUpCSSBridge, String>(
+                "-fx-skin",
+                StringConverter.getInstance()
+            ) {
+                override fun isSettable(cssBridge: MyPopUpCSSBridge): Boolean = !cssBridge.popupControl.skinProperty().isBound
 
-            @Suppress("UNCHECKED_CAST")
-            override fun getStyleableProperty(cssBridge: MyPopUpCSSBridge): StyleableProperty<String> =
-                cssBridge.popupControl.skinClassNameProperty() as StyleableProperty<String>
-        }
+                @Suppress("UNCHECKED_CAST")
+                override fun getStyleableProperty(cssBridge: MyPopUpCSSBridge): StyleableProperty<String> =
+                    cssBridge.popupControl.skinClassNameProperty() as StyleableProperty<String>
+            }
 
         /**
          * Gets the `CssMetaData` associated with this class, which may include the
@@ -1056,7 +1092,6 @@ open class MyPopupControl: PopupWindow(), Skinnable, Styleable {
             )
             Collections.unmodifiableList(styleables)
         }
-
     }
 
 

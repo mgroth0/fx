@@ -5,7 +5,7 @@ import javafx.geometry.Rectangle2D
 import javafx.stage.Screen
 import javafx.stage.Stage
 import matt.async.thread.namedThread
-import matt.auto.ascript.AppleScriptExpression
+import matt.auto.ascript.AppleScriptExpressionImpl
 import matt.auto.ascript.AppleScriptString
 import matt.auto.ascript.DoShellScript
 import matt.auto.ascript.interactiveOsascript
@@ -16,9 +16,11 @@ import matt.auto.macapp.java.JavaMacApp
 import matt.auto.macapp.sysevents.SystemEvents
 import matt.fx.graphics.mag.left
 import matt.fx.graphics.wrapper.stage.StageWrapper
-import matt.lang.err
+import matt.lang.common.err
+import matt.lang.common.substringAfterSingular
+import matt.lang.common.substringBeforeSingular
 import matt.log.profile.stopwatch.tic
-import matt.shell.context.ReapingShellExecutionContext
+import matt.shell.commonj.context.ReapingShellExecutionContext
 
 context(ReapingShellExecutionContext)
 fun moveFrontmostWindowByApplescript(
@@ -28,10 +30,11 @@ fun moveFrontmostWindowByApplescript(
     height: Number
 ) {
     println(
-        "MOVE:" + compileAndOrRunApplescript(
-            "moveFrontmostWindow", x.toInt().toString(), y.toInt().toString(), width.toInt().toString(),
-            height.toInt().toString()
-        )
+        "MOVE:" +
+            compileAndOrRunApplescript(
+                "moveFrontmostWindow", x.toInt().toString(), y.toInt().toString(), width.toInt().toString(),
+                height.toInt().toString()
+            )
     )
 }
 
@@ -46,50 +49,50 @@ fun moveAppWindowByApplescript(
 
     runAppleScript {
         tell(SystemEvents) {
-            val frontmostProcess by AppleScriptExpression("get first application process whose name is \"$app\"")
+            val frontmostProcess by AppleScriptExpressionImpl("get first application process whose name is \"$app\"")
             tell("frontmostProcess") {
                 tell("(1st window whose value of attribute \"AXMain\" is true)") {
-                    set("windowTitle", AppleScriptExpression("value of attribute \"AXTitle\""))
-                    set("position", AppleScriptExpression("{${x.toInt()}, ${y.toInt()}}"))
-                    set("size", AppleScriptExpression("{${width.toInt()}, ${height.toInt()}}"))
+                    set("windowTitle", AppleScriptExpressionImpl("value of attribute \"AXTitle\""))
+                    set("position", AppleScriptExpressionImpl("{${x.toInt()}, ${y.toInt()}}"))
+                    set("size", AppleScriptExpressionImpl("{${width.toInt()}, ${height.toInt()}}"))
                 }
             }
         }
     }
-
 }
 
 context(ReapingShellExecutionContext)
 fun getFrontmostWindowPositionAndSizeByApplescript(): Rectangle2D {
     var s = compileAndOrRunApplescript("getFrontmostWindowPositionAndSize")
-    val x = s.substringBefore(",").trim().toInt()
-    s = s.substringAfter(",")
-    val y = s.substringBefore(",").trim().toInt()
-    s = s.substringAfter(",")
-    val width = s.substringBefore(",").trim().toInt()
-    s = s.substringAfter(",")
+    val x = s.substringBeforeSingular(",").trim().toInt()
+    s = s.substringAfterSingular(",")
+    val y = s.substringBeforeSingular(",").trim().toInt()
+    s = s.substringAfterSingular(",")
+    val width = s.substringBeforeSingular(",").trim().toInt()
+    s = s.substringAfterSingular(",")
     val height = s.trim().toInt().toString()
     return Rectangle2D(x.toDouble(), y.toDouble(), width.toDouble(), height.toDouble())
 }
 
 context(ReapingShellExecutionContext)
 fun getAppWindowPositionAndSizeByApplescript(app: String): Rectangle2D {
-    var s = runAppleScript {
-        tell(SystemEvents) {
-            val frontmostProcess by AppleScriptExpression("get first application process whose name is \"$app\"")
-            tell("frontmostProcess") {
-                tell("(1st window whose value of attribute \"AXMain\" is true)") {
-                    `return`(AppleScriptExpression("{position, size}"))
+    var s =
+        runAppleScript {
+            tell(SystemEvents) {
+                val frontmostProcess by AppleScriptExpressionImpl("get first application process whose name is \"$app\"")
+                tell("frontmostProcess") {
+                    tell("(1st window whose value of attribute \"AXMain\" is true)") {
+                        `return`(AppleScriptExpressionImpl("{position, size}"))
+                    }
                 }
             }
         }
-    }
-    val x = s.substringBefore(",").trim().toInt()
-    s = s.substringAfter(",")
-    val y = s.substringBefore(",").trim().toInt()
-    s = s.substringAfter(",")
-    val width = s.substringBefore(",").trim().toInt()
-    s = s.substringAfter(",")
+    val x = s.substringBeforeSingular(",").trim().toInt()
+    s = s.substringAfterSingular(",")
+    val y = s.substringBeforeSingular(",").trim().toInt()
+    s = s.substringAfterSingular(",")
+    val width = s.substringBeforeSingular(",").trim().toInt()
+    s = s.substringAfterSingular(",")
     val height = s.trim().toInt().toString()
     return Rectangle2D(x.toDouble(), y.toDouble(), width.toDouble(), height.toDouble())
 }
@@ -99,12 +102,13 @@ context(ReapingShellExecutionContext)
 fun sdtInTest() {
 
 
-    val writerP = interactiveOsascript {
-        log(AppleScriptString("in script 1"))
-        set("stdin", DoShellScript("cat", "0<&3"))
-        log(AppleScriptString("in script 2"))
-        `return`(AppleScriptString("hello, ").concat(AppleScriptExpression("stdin")))
-    }
+    val writerP =
+        interactiveOsascript {
+            log(AppleScriptString("in script 1"))
+            set("stdin", DoShellScript("cat", "0<&3"))
+            log(AppleScriptString("in script 2"))
+            `return`(AppleScriptString("hello, ").concat(AppleScriptExpressionImpl("stdin")))
+        }
     val p = writerP.second
     val reader = p.inputStream.bufferedReader()
     val readerE = p.errorStream.bufferedReader()
@@ -136,7 +140,7 @@ fun appleLeft() {
     )/*https://stackoverflow.com/questions/70647124/how-to-reduce-overhead-and-run-applescripts-faster*/
     sdtInTest()
     tic()
-    val app = getFrontmostProcessFromKotlinNative() // NOSONAR
+    val app = getFrontmostProcessFromKotlinNative()
     if (app !is JavaMacApp) {
         val bounds = getFrontmostWindowPositionAndSizeByApplescript()
         runLater {

@@ -64,8 +64,6 @@ interface EventTargetWrapper {
      * Did the event occur inside a TableRow, TreeTableRow or ListCell?
      */
     fun isInsideRow(): Boolean
-
-
 }
 
 
@@ -75,15 +73,11 @@ sealed class EventTargetWrapperImpl<out N : EventTarget> : PropReflectingStringa
 
     final override var hotKeyHandler: HotKeyEventHandler? = null
     final override var hotKeyFilter: HotKeyEventHandler? = null
-
-
 }
 
 abstract class SingularEventTargetWrapper<out N : EventTarget>(
-    node: N
+    @Open final override val node: N
 ) : EventTargetWrapperImpl<N>() {
-
-    @Open override val node = node
 
     companion object {
         private val wrappers: ConcurrentMap<EventTarget, EventTargetWrapper> =
@@ -95,9 +89,12 @@ abstract class SingularEventTargetWrapper<out N : EventTarget>(
 
     init {
 
-//        sun.security.util.MemoryCache(true,1)
 
-        /*println("checking for ${this.toStringBasic()} with ${superNode.toStringBasic()}")*//*if ("Scene@" in superNode.toStringBasic()) {
+        /*println("checking for ${this.toStringBasic()} with ${superNode.toStringBasic()}")
+
+
+
+        if ("Scene@" in superNode.toStringBasic()) {
           Thread.dumpStack()
         }*/
 
@@ -113,7 +110,7 @@ abstract class SingularEventTargetWrapper<out N : EventTarget>(
             
             
             """.trimMargin()
-        }/*println("putting ${superNode.toStringBasic()} in wrappers for ${this.toStringBasic()}")*/
+        } /*println("putting ${superNode.toStringBasic()} in wrappers for ${this.toStringBasic()}")*/
         wrappers[node] = this
     }
 }
@@ -147,5 +144,4 @@ class ProxyEventTargetWrapper(private val addOp: (NW) -> Unit) : EventTargetWrap
     override fun isInsideRow(): Boolean {
         TODO()
     }
-
 }

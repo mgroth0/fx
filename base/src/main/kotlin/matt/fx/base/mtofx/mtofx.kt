@@ -6,12 +6,12 @@ import javafx.beans.property.ReadOnlyObjectProperty
 import javafx.beans.property.ReadOnlyObjectWrapper
 import javafx.beans.value.ChangeListener
 import javafx.beans.value.ObservableValue
-import matt.lang.NOT_IMPLEMENTED
+import matt.lang.common.NOT_IMPLEMENTED
 import matt.obs.listen.OldAndNewListenerImpl
 import matt.obs.listen.OldNewListener
 import matt.obs.listen.update.ValueChange
 import matt.obs.prop.ObsVal
-import matt.obs.prop.WritableMObservableVal
+import matt.obs.prop.writable.WritableMObservableVal
 import matt.service.scheduler.Scheduler
 
 fun <T> ObsVal<T>.createROFXPropWrapper(scheduler: Scheduler? = null): ReadOnlyObjectProperty<T> {
@@ -32,9 +32,11 @@ fun <T> WritableMObservableVal<T, ValueChange<T>, OldNewListener<T>>.createWrita
 
 class MtoFXWritablePropWrapper<T>(val p: WritableMObservableVal<T, ValueChange<T>, OldNewListener<T>>): Property<T> {
     override fun addListener(listener: ChangeListener<in T>) {
-        p.addListener(OldAndNewListenerImpl { o, n ->
-            listener.changed(this@MtoFXWritablePropWrapper, o, n)
-        })
+        p.addListener(
+            OldAndNewListenerImpl { o, n ->
+                listener.changed(this@MtoFXWritablePropWrapper, o, n)
+            }
+        )
     }
 
     override fun addListener(listener: InvalidationListener) {

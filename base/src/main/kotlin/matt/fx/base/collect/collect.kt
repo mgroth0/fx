@@ -12,7 +12,7 @@ fun <T> observableListOf(): ObservableList<T> = FXCollections.observableArrayLis
 /**
  * Returns an empty new [ObservableList] with the given [extractor]. This list reports element updates.
  */
-fun <T> observableListOf(extractor: (T)->Array<Observable>): ObservableList<T> =
+fun <T> observableListOf(extractor: (T) -> Array<Observable>): ObservableList<T> =
     FXCollections.observableArrayList(extractor)
 
 fun <T> observableSetOf(): ObservableSet<T> = FXCollections.observableSet()
@@ -64,7 +64,7 @@ fun <T> ObservableList<T>.sortWith(comparator: Comparator<in T>) {
  * Sorts elements in the observable list according to natural sort order of the value returned by specified [selector] function.
  * Fires only **one** change notification on the list.
  */
-inline fun <T, R: Comparable<R>> ObservableList<T>.sortBy(crossinline selector: (T)->R?) {
+inline fun <T, R: Comparable<R>> ObservableList<T>.sortBy(crossinline selector: (T) -> R?) {
     if (size > 1) sortWith(compareBy(selector))
 }
 
@@ -72,7 +72,7 @@ inline fun <T, R: Comparable<R>> ObservableList<T>.sortBy(crossinline selector: 
  * Sorts elements in the observable list descending according to natural sort order of the value returned by specified [selector] function.
  * Fires only **one** change notification on the list.
  */
-inline fun <T, R: Comparable<R>> ObservableList<T>.sortByDescending(crossinline selector: (T)->R?) {
+inline fun <T, R: Comparable<R>> ObservableList<T>.sortByDescending(crossinline selector: (T) -> R?) {
     if (size > 1) sortWith(compareByDescending(selector))
 }
 

@@ -31,8 +31,6 @@ fun <T : Any> ET.listview(
         }
     }
 
-//fun <T> ET.listview(values: ReadOnlyListProperty<T>, op: ListViewWrapper<T>.()->Unit = {}) =
-//  listview(values as ObservableValue<ObservableList<T>>, op)
 
 fun <T : Any> ET.listview(
     values: ObservableValue<ObservableList<T>>,
@@ -42,11 +40,10 @@ fun <T : Any> ET.listview(
 }
 
 open class ListViewWrapper<E : Any>(
-    node: ListView<E> = ListView<E>(),
+    node: ListView<E> = ListView<E>()
 ) : ControlWrapperImpl<ListView<E>>(node), SelectingControl<E>, ListCellFactory<ListView<E>, E> {
 
     constructor(items: ObservableList<E>) : this(ListView(items))
-//    constructor(items: MutableObsList<E>) : this(items.createMutableFXWrapper())
     constructor(items: ImmutableObsList<E>) : this((items as? MutableObsList<E>)?.createMutableFXWrapper()  ?: items.createFXWrapper())
 
     fun scrollTo(i: Int) = node.scrollTo(i)
@@ -77,8 +74,6 @@ open class ListViewWrapper<E : Any>(
     ) {
         TODO()
     }
-
-
 }
 
 
@@ -93,9 +88,10 @@ fun <T : Any> ListViewWrapper<T>.selectWhere(
 }
 
 
-fun ListViewWrapper<*>.editableWhen(predicate: ObservableValue<Boolean>) = apply {
-    editableProperty().bind(predicate)
-}
+fun ListViewWrapper<*>.editableWhen(predicate: ObservableValue<Boolean>) =
+    apply {
+        editableProperty().bind(predicate)
+    }
 
 
 fun ListViewWrapper<String>.setupForModifying(

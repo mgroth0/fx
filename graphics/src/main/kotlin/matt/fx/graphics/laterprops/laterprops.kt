@@ -5,14 +5,16 @@ import javafx.beans.property.BooleanProperty
 import javafx.beans.property.DoubleProperty
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleDoubleProperty
-import matt.lang.jDefault
+import matt.lang.common.jDefault
 
-fun BooleanProperty.later() = LaterBoolean().apply {
-    bindBidirectional(this@later)
-}
-fun DoubleProperty.later() = LaterDouble().apply {
-    bindBidirectional(this@later)
-}
+fun BooleanProperty.later() =
+    LaterBoolean().apply {
+        bindBidirectional(this@later)
+    }
+fun DoubleProperty.later() =
+    LaterDouble().apply {
+        bindBidirectional(this@later)
+    }
 
 class LaterBoolean(b: Boolean = Boolean::class.jDefault!!): SimpleBooleanProperty(b) {
     override fun setValue(v: Boolean?) {

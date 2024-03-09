@@ -16,10 +16,10 @@ import matt.fx.graphics.wrapper.style.parseFXStyle
 import matt.fx.graphics.wrapper.style.toStyleString
 import matt.fx.graphics.wrapper.text.textlike.ColoredText
 import matt.lang.anno.Open
-import matt.lang.err
-import matt.log.warn.warn
-import matt.obs.prop.BindableProperty
-import matt.obs.prop.mutateOnChange
+import matt.lang.common.err
+import matt.log.warn.common.warn
+import matt.obs.prop.writable.BindableProperty
+import matt.obs.prop.writable.mutateOnChange
 
 open class TextInputControlWrapper<N: TextInputControl>(node: N): ControlWrapperImpl<N>(node), ColoredText {
 
@@ -42,7 +42,6 @@ open class TextInputControlWrapper<N: TextInputControl>(node: N): ControlWrapper
                 } else {
                     node.style = node.style.parseFXStyle().plus(FXStyle.`text-fill` to it.toString()).toStyleString()
                 }
-
             }
         }
     }
@@ -70,10 +69,11 @@ open class TextInputControlWrapper<N: TextInputControl>(node: N): ControlWrapper
     /**
      * Remove leading or trailing whitespace from a Text Input Control.
      */
-    fun trimWhitespace() = focusedProperty.onChange { focused: Boolean? ->
-        if (focused == null) err("here it is")
-        if (!focused) text = text.trim()
-    }
+    fun trimWhitespace() =
+        focusedProperty.onChange { focused: Boolean? ->
+            if (focused == null) err("here it is")
+            if (!focused) text = text.trim()
+        }
 
     /**
      * Remove any whitespace from a Text Input Control.
@@ -92,8 +92,8 @@ open class TextInputControlWrapper<N: TextInputControl>(node: N): ControlWrapper
         textProperty.mutateOnChange { it?.replace(Regex("[^0-9${allowedChars.joinToString("")}]"), "") }
 
 
-    fun editableWhen(predicate: ObservableValue<Boolean>) = apply {
-        editableProperty().bind(predicate)
-    }
-
+    fun editableWhen(predicate: ObservableValue<Boolean>) =
+        apply {
+            editableProperty().bind(predicate)
+        }
 }

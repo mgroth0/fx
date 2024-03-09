@@ -7,7 +7,7 @@ import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.lang.assertions.require.requireNull
 
 open class CustomMenuItemWrapper(
-    node: CustomMenuItem = CustomMenuItem(),
+    node: CustomMenuItem = CustomMenuItem()
 ) : MenuItemWrapper<CustomMenuItem>(node) {
     constructor(
         g: Node,
@@ -27,5 +27,4 @@ open class CustomMenuItemWrapper(
         requireNull(index)
         content = child.node
     }
-
 }

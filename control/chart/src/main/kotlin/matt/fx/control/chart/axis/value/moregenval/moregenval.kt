@@ -32,7 +32,7 @@ import matt.fx.control.chart.axis.value.axis.NullRangeProp
 import matt.fx.control.chart.axis.value.axis.RangeProps
 import matt.fx.control.css.BooleanCssMetaData
 import matt.lang.anno.Open
-import matt.obs.prop.BindableProperty
+import matt.obs.prop.writable.BindableProperty
 import java.util.Collections
 
 
@@ -54,7 +54,6 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
     protected fun InternalData.convert() = converter.convertToA(this)
 
 
-    // -------------- PRIVATE FIELDS -----------------------------------------------------------------------------------
     private val minorTickPath = Path()
     private var offset = 0.0
 
@@ -69,27 +68,26 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
     /** List of the values at which there are minor ticks  */
     private var minorTickMarkValues: List<T>? = null
     private var minorTickMarksDirty = true
-    // -------------- PRIVATE PROPERTIES -------------------------------------------------------------------------------
     /**
      * The current value for the lowerBound of this axis (minimum value).
      * This may be the same as lowerBound or different. It is used by NumberAxis to animate the
      * lowerBound from the old value to the new value.
      */
     protected val currentLowerBound: DoubleProperty = SimpleDoubleProperty(this, "currentLowerBound")
-    // -------------- PUBLIC PROPERTIES --------------------------------------------------------------------------------
     /** true if minor tick marks should be displayed  */
-    private val minorTickVisible: BooleanProperty = object : StyleableBooleanProperty(true) {
-        override fun invalidated() {
-            minorTickPath.isVisible = get()
-            requestAxisLayout()
+    private val minorTickVisible: BooleanProperty =
+        object : StyleableBooleanProperty(true) {
+            override fun invalidated() {
+                minorTickPath.isVisible = get()
+                requestAxisLayout()
+            }
+
+            override fun getBean(): Any = this@MoreGenericValueAxis
+
+            override fun getName(): String = "minorTickVisible"
+
+            override fun getCssMetaData(): CssMetaData<MoreGenericValueAxis<out UpperBound>, Boolean> = StyleableProperties.MINOR_TICK_VISIBLE
         }
-
-        override fun getBean(): Any = this@MoreGenericValueAxis
-
-        override fun getName(): String = "minorTickVisible"
-
-        override fun getCssMetaData(): CssMetaData<MoreGenericValueAxis<out UpperBound>, Boolean> = StyleableProperties.MINOR_TICK_VISIBLE
-    }
 
     fun isMinorTickVisible(): Boolean = minorTickVisible.get()
 
@@ -100,12 +98,13 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
     fun minorTickVisibleProperty(): BooleanProperty = minorTickVisible
 
     /** The scale factor from data units to visual units  */
-    internal val scale: ReadOnlyDoubleWrapper = object : ReadOnlyDoubleWrapper(this, "scale", 0.0) {
-        override fun invalidated() {
-            requestAxisLayout()
-            measureInvalid = true
+    internal val scale: ReadOnlyDoubleWrapper =
+        object : ReadOnlyDoubleWrapper(this, "scale", 0.0) {
+            override fun invalidated() {
+                requestAxisLayout()
+                measureInvalid = true
+            }
         }
-    }
 
     fun getScale(): Double = scale.get()
 
@@ -119,24 +118,26 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
 
 
     /** The value for the upper bound of this axis (maximum value). This is automatically set if auto ranging is on.  */
-    val upperBound = BindableProperty(converter.convertToA(100.0)).apply {
-        onChange {
-            if (!isAutoRanging()) {
-                invalidateRange()
-                requestAxisLayout()
+    val upperBound =
+        BindableProperty(converter.convertToA(100.0)).apply {
+            onChange {
+                if (!isAutoRanging()) {
+                    invalidateRange()
+                    requestAxisLayout()
+                }
             }
         }
-    }
 
     /** The value for the lower bound of this axis (minimum value). This is automatically set if auto ranging is on.  */
-    val lowerBound = BindableProperty(converter.convertToA(0.0)).apply {
-        onChange {
-            if (!isAutoRanging()) {
-                invalidateRange()
-                requestAxisLayout()
+    val lowerBound =
+        BindableProperty(converter.convertToA(0.0)).apply {
+            onChange {
+                if (!isAutoRanging()) {
+                    invalidateRange()
+                    requestAxisLayout()
+                }
             }
         }
-    }
 
     /** StringConverter used to format tick mark labels. If null a default will be used  */
     protected val tickLabelFormatter: ObjectProperty<StringConverter<in T>> =
@@ -160,17 +161,18 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
     fun tickLabelFormatterProperty(): ObjectProperty<StringConverter<in T>> = tickLabelFormatter
 
     /** The length of minor tick mark lines. Set to 0 to not display minor tick marks.  */
-    private val minorTickLength: DoubleProperty = object : StyleableDoubleProperty(5.0) {
-        override fun invalidated() {
-            requestAxisLayout()
+    private val minorTickLength: DoubleProperty =
+        object : StyleableDoubleProperty(5.0) {
+            override fun invalidated() {
+                requestAxisLayout()
+            }
+
+            override fun getBean(): Any = this@MoreGenericValueAxis
+
+            override fun getName(): String = "minorTickLength"
+
+            override fun getCssMetaData(): CssMetaData<MoreGenericValueAxis<out UpperBound>, Number> = StyleableProperties.MINOR_TICK_LENGTH
         }
-
-        override fun getBean(): Any = this@MoreGenericValueAxis
-
-        override fun getName(): String = "minorTickLength"
-
-        override fun getCssMetaData(): CssMetaData<MoreGenericValueAxis<out UpperBound>, Number> = StyleableProperties.MINOR_TICK_LENGTH
-    }
 
     fun getMinorTickLength(): Double = minorTickLength.get()
 
@@ -184,18 +186,19 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
      * The number of minor tick divisions to be displayed between each major tick mark.
      * The number of actual minor tick marks will be one less than this.
      */
-    protected val minorTickCount: IntegerProperty = object : StyleableIntegerProperty(5) {
-        override fun invalidated() {
-            invalidateRange()
-            requestAxisLayout()
+    protected val minorTickCount: IntegerProperty =
+        object : StyleableIntegerProperty(5) {
+            override fun invalidated() {
+                invalidateRange()
+                requestAxisLayout()
+            }
+
+            override fun getBean(): Any = this@MoreGenericValueAxis
+
+            override fun getName(): String = "minorTickCount"
+
+            override fun getCssMetaData(): CssMetaData<MoreGenericValueAxis<out UpperBound>, Number> = StyleableProperties.MINOR_TICK_COUNT
         }
-
-        override fun getBean(): Any = this@MoreGenericValueAxis
-
-        override fun getName(): String = "minorTickCount"
-
-        override fun getCssMetaData(): CssMetaData<MoreGenericValueAxis<out UpperBound>, Number> = StyleableProperties.MINOR_TICK_COUNT
-    }
 
     fun getMinorTickCount(): Int = minorTickCount.get()
 
@@ -204,7 +207,6 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
     }
 
     fun minorTickCountProperty(): IntegerProperty = minorTickCount
-    // -------------- CONSTRUCTORS -------------------------------------------------------------------------------------
     /**
      * Creates a auto-ranging matt.fx.control.wrapper.chart.axis.value.fxextend.ValueAxis.
      */
@@ -218,8 +220,7 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
             setAutoRanging(false)
         }
     }
-    // -------------- PROTECTED METHODS --------------------------------------------------------------------------------
-    final /**
+    /**
      * This calculates the upper and lower bound based on the data provided to invalidateRange() method. This must not
      * affect the state of the axis. Any results of the auto-ranging should be
      * returned in the range object. This will we passed to setRange() if it has been decided to adopt this range for
@@ -228,10 +229,10 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
      * @param length The length of the axis in screen coordinates
      * @return Range information, this is implementation dependent
      */
-    override fun autoRange(length: Double): RangeProps {
-        // guess a sensible starting size for label size, that is approx 2 lines vertically or 2 charts horizontally
+    final override fun autoRange(length: Double): RangeProps {
+        /* guess a sensible starting size for label size, that is approx 2 lines vertically or 2 charts horizontally */
         return if (isAutoRanging()) {
-            // guess a sensible starting size for label size, that is approx 2 lines vertically or 2 charts horizontally
+            /* guess a sensible starting size for label size, that is approx 2 lines vertically or 2 charts horizontally */
             val labelSize = tickLabelFont.value.size * 2
             autoRange(dataMinValue, dataMaxValue, length, labelSize)
         } else {
@@ -258,7 +259,8 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
         if (side.isVertical) {
             offset = length
             newScale = if (upperBound - lowerBound == 0.0) -length else -(length / (upperBound - lowerBound))
-        } else { // HORIZONTAL
+        } else {
+            /* HORIZONTAL */
             offset = 0.0
             newScale = if (upperBound - lowerBound == 0.0) length else length / (upperBound - lowerBound)
         }
@@ -282,8 +284,10 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
         length: Double,
         labelSize: Double
     ): RangeProps {
-        return NullRangeProp // this method should have been abstract as there is no way for it to
-        // return anything correct. so just return null.
+        return NullRangeProp /*
+ this method should have been abstract as there is no way for it to
+ return anything correct. so just return null.
+         */
     }
 
     /**
@@ -299,26 +303,26 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
      */
     final override fun tickMarksUpdated() {
         super.tickMarksUpdated()
-        // recalculate minor tick marks
+        /* recalculate minor tick marks */
         minorTickMarkValues = calculateMinorTickMarks()
         minorTickMarksDirty = true
     }
 
-    final /**
+    /**
      * Invoked during the layout pass to layout this axis and all its content.
      */
-    override fun layoutChildren() {
+    final override fun layoutChildren() {
         val side = effectiveSide
         /*val side = getEffectiveSide()*/
         val length = if (side.isVertical) height else width
-        // if we are not auto ranging we need to calculate the new scale
+        /* if we are not auto ranging we need to calculate the new scale */
         if (!isAutoRanging()) {
-            // calculate new scale
+            /* calculate new scale */
             setScale(calculateNewScale(length, lowerBound.value.convert(), upperBound.value.convert()))
-            // update current lower bound
+            /* update current lower bound */
             currentLowerBound.set(converter.convertToB(lowerBound.value))
         }
-        // we have done all auto calcs, let Axis position major tickmarks
+        /* we have done all auto calcs, let Axis position major tickmarks */
         super.layoutChildren()
         if (minorTickMarksDirty) {
             minorTickMarksDirty = false
@@ -333,13 +337,13 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
         val numMinorTicks = (tickMarks.size - 1) * (Math.max(1, getMinorTickCount()) - 1)
         val neededLength = ((tickMarks.size + numMinorTicks) * 2).toDouble()
 
-        // Update minor tickmarks
+        /* Update minor tickmarks */
         minorTickPath.elements.clear()
-        // Don't draw minor tick marks if there isn't enough space for them!
+        /* Don't draw minor tick marks if there isn't enough space for them! */
         val minorTickLength = Math.max(0.0, getMinorTickLength())
         if (minorTickLength > 0 && length > neededLength) {
             if (LEFT == side) {
-                // snap minorTickPath to pixels
+                /* snap minorTickPath to pixels */
                 minorTickPath.layoutX = -0.5
                 minorTickPath.layoutY = 0.5
                 for (value in minorTickMarkValues!!) {
@@ -352,7 +356,7 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
                     }
                 }
             } else if (RIGHT == side) {
-                // snap minorTickPath to pixels
+                /* snap minorTickPath to pixels */
                 minorTickPath.layoutX = 0.5
                 minorTickPath.layoutY = 0.5
                 for (value in minorTickMarkValues!!) {
@@ -365,7 +369,7 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
                     }
                 }
             } else if (TOP == side) {
-                // snap minorTickPath to pixels
+                /* snap minorTickPath to pixels */
                 minorTickPath.layoutX = 0.5
                 minorTickPath.layoutY = -0.5
                 for (value in minorTickMarkValues!!) {
@@ -377,8 +381,11 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
                         )
                     }
                 }
-            } else { // BOTTOM
-                // snap minorTickPath to pixels
+            } else {
+                /*
+ BOTTOM
+ snap minorTickPath to pixels
+                 */
                 minorTickPath.layoutX = 0.5
                 minorTickPath.layoutY = 0.5
                 for (value in minorTickMarkValues!!) {
@@ -393,22 +400,23 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
             }
         }
     }
-    // -------------- METHODS ------------------------------------------------------------------------------------------
-    final /**
+    /**
      * Called when the data has changed and the range may not be valid anymore. This is only called by the chart if
      * isAutoRanging() returns true. If we are auto ranging it will cause layout to be requested and auto ranging to
      * happen on next layout pass.
      *
      * @param data The current set of all data that needs to be plotted on this axis
      */
-    override fun invalidateRange(data: List<T>) {
+    final override fun invalidateRange(data: List<T>) {
         if (data.isEmpty()) {
             dataMaxValue = upperBound.value.convert()
             dataMinValue = lowerBound.value.convert()
         } else {
             dataMinValue = Double.MAX_VALUE
-            // We need to init to the lowest negative double (which is NOT Double.MIN_VALUE)
-            // in order to find the maximum (positive or negative)
+            /*
+            We need to init to the lowest negative double (which is NOT Double.MIN_VALUE)
+            in order to find the maximum (positive or negative)
+             */
             dataMaxValue = -Double.MAX_VALUE
         }
         for (dataValue in data) {
@@ -418,7 +426,7 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
         super.invalidateRange(data)
     }
 
-    final /**
+    /**
      * Gets the display position along this axis for a given value.
      * If the value is not in the current range, the returned value will be an extrapolation of the display
      * position.
@@ -426,9 +434,9 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
      * @param value The data value to work out display position for
      * @return display position
      */
-    override fun getDisplayPosition(value: T): Double = offset + (converter.convertToB(value) - currentLowerBound.get()) * getScale()
+    final override fun getDisplayPosition(value: T): Double = offset + (converter.convertToB(value) - currentLowerBound.get()) * getScale()
 
-    final /**
+    /**
      * Gets the data value for the given display position on this axis. If the axis
      * is a CategoryAxis this will be the nearest value.
      *
@@ -436,48 +444,50 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
      * @return the nearest data value to the given pixel position or
      * null if not on axis;
      */
-    override fun getValueForDisplay(displayPosition: Double): T = toRealValue((displayPosition - offset) / getScale() + currentLowerBound.get())
+    final override fun getValueForDisplay(
+        displayPosition: Double
+    ): T = toRealValue((displayPosition - offset) / getScale() + currentLowerBound.get())
 
-    final /**
+    /**
      * Gets the display position of the zero line along this axis.
      *
      * @return display position or Double.NaN if zero is not in current range;
      */
 
 
-    override val zeroPosition: Double
-        get() = if (0 < lowerBound.value.convert() || 0 > upperBound.value.convert()) Double.NaN else getDisplayPosition(
-            0.0.convert()
-        )
+    final override val zeroPosition: Double
+        get() =
+            if (0 < lowerBound.value.convert() || 0 > upperBound.value.convert()) Double.NaN else getDisplayPosition(
+                0.0.convert()
+            )
 
-    final /**
+    /**
      * Checks if the given value is plottable on this axis
      *
      * @param value The value to check if its on axis
      * @return true if the given value is plottable on this axis
      */
-    override fun isValueOnAxis(value: T): Boolean {
+    final override fun isValueOnAxis(value: T): Boolean {
         val num = converter.convertToB(value)
         return num >= lowerBound.value.convert() && num <= upperBound.value.convert()
     }
 
-    final /**
+    /**
      * All axis values must be representable by some numeric value. This gets the numeric value for a given data value.
      *
      * @param value The data value to convert
      * @return Numeric value for the given data value
      */
-    override fun toNumericValue(value: T): Double = converter.convertToB(value)
+    final override fun toNumericValue(value: T): Double = converter.convertToB(value)
 
-    final /**
+    /**
      * All axis values must be representable by some numeric value. This gets the data value for a given numeric value.
      *
      * @param value The numeric value to convert
      * @return Data value for given numeric value
      */
-    override fun toRealValue(value: Double): T = converter.convertToA(value)
+    final override fun toRealValue(value: Double): T = converter.convertToA(value)
 
-    // -------------- STYLESHEET HANDLING ------------------------------------------------------------------------------
     private object StyleableProperties {
 
         val MINOR_TICK_LENGTH: CssMetaData<MoreGenericValueAxis<out UpperBound>, Number> =
@@ -485,7 +495,9 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
                 "-fx-minor-tick-length",
                 SizeConverter.getInstance(), 5.0
             ) {
-                override fun isSettable(n: MoreGenericValueAxis<out UpperBound>): Boolean = n.minorTickLength.value == null || !n.minorTickLength.isBound
+                override fun isSettable(
+                    n: MoreGenericValueAxis<out UpperBound>
+                ): Boolean = n.minorTickLength.value == null || !n.minorTickLength.isBound
 
                 override fun getStyleableProperty(n: MoreGenericValueAxis<out UpperBound>): StyleableProperty<Number> {
                     @Suppress("UNCHECKED_CAST")
@@ -497,7 +509,9 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
                 "-fx-minor-tick-count",
                 SizeConverter.getInstance(), 5
             ) {
-                override fun isSettable(n: MoreGenericValueAxis<out UpperBound>): Boolean = n.minorTickCount.value == null || !n.minorTickCount.isBound
+                override fun isSettable(
+                    n: MoreGenericValueAxis<out UpperBound>
+                ): Boolean = n.minorTickCount.value == null || !n.minorTickCount.isBound
 
                 override fun getStyleableProperty(n: MoreGenericValueAxis<out UpperBound>): StyleableProperty<Number> {
                     @Suppress("UNCHECKED_CAST")
@@ -511,7 +525,9 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
                 "-fx-minor-tick-visible",
                 true
             ) {
-                override fun isSettable(n: MoreGenericValueAxis<out UpperBound>): Boolean = n.minorTickVisible.value == null || !n.minorTickVisible.isBound
+                override fun isSettable(
+                    n: MoreGenericValueAxis<out UpperBound>
+                ): Boolean = n.minorTickVisible.value == null || !n.minorTickVisible.isBound
 
                 override fun getStyleableProperty(n: MoreGenericValueAxis<out UpperBound>): StyleableProperty<Boolean> {
                     @Suppress("UNCHECKED_CAST")
@@ -529,9 +545,10 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
          */
 
         init {
-            val styleables: MutableList<CssMetaData<out Styleable?, *>> = ArrayList(
-                getClassCssMetaData()
-            )
+            val styleables: MutableList<CssMetaData<out Styleable?, *>> =
+                ArrayList(
+                    getClassCssMetaData()
+                )
             styleables.add(MINOR_TICK_COUNT)
             styleables.add(MINOR_TICK_LENGTH)
             styleables.add(MINOR_TICK_COUNT)
@@ -546,6 +563,4 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
      * @since JavaFX 8.0
      */
     override fun getCssMetaData(): List<CssMetaData<out Styleable?, *>>? = StyleableProperties.classCssMetaData
-
-
 }

@@ -33,9 +33,7 @@ class ScatterChartForWrapper<X, Y> @JvmOverloads constructor(
      * @param xAxis The x axis to use
      * @param yAxis The y axis to use
      * @param data The data to use, this is the actual list used so any changes to it will be reflected in the chart
-     */
-    // -------------- CONSTRUCTORS ----------------------------------------------
-    /**
+
      * Construct a new ScatterChart with the given axis and data.
      *
      * @param xAxis The x axis to use
@@ -44,7 +42,6 @@ class ScatterChartForWrapper<X, Y> @JvmOverloads constructor(
     init {
         setData(data)
     }
-    // -------------- METHODS ------------------------------------------------------------------------------------------
     /** {@inheritDoc}  */
     override fun dataItemAdded(
         series: Series<X, Y>,
@@ -52,7 +49,7 @@ class ScatterChartForWrapper<X, Y> @JvmOverloads constructor(
         item: Data<X, Y>
     ) {
         var symbol = item.nodeProp.value
-        // check if symbol has already been created
+        /* check if symbol has already been created */
         if (symbol == null) {
             symbol = StackPane()
             symbol.setAccessibleRole(TEXT)
@@ -60,12 +57,12 @@ class ScatterChartForWrapper<X, Y> @JvmOverloads constructor(
             symbol.focusTraversableProperty().bind(Platform.accessibilityActiveProperty())
             item.nodeProp.value = symbol
         }
-        // set symbol styles
+        /* set symbol styles */
         symbol.styleClass.setAll(
             "chart-symbol", "series" + data.value.indexOf(series), "data$itemIndex",
             series.defaultColorStyleClass
         )
-        // add and fade in new symbol if animated
+        /* add and fade in new symbol if animated */
         if (shouldAnimate()) {
             symbol.opacity = 0.0
             plotChildren.add(symbol)
@@ -85,14 +82,15 @@ class ScatterChartForWrapper<X, Y> @JvmOverloads constructor(
         val symbol = item.nodeProp.value
         symbol?.focusTraversableProperty()?.unbind()
         if (shouldAnimate()) {
-            // fade out old symbol
+            /* fade out old symbol */
             val ft = FadeTransition(Duration.millis(500.0), symbol)
             ft.toValue = 0.0
-            ft.onFinished = EventHandler {
-                plotChildren.remove(symbol)
-                removeDataItemFromDisplay(series, item)
-                symbol!!.opacity = 1.0
-            }
+            ft.onFinished =
+                EventHandler {
+                    plotChildren.remove(symbol)
+                    removeDataItemFromDisplay(series, item)
+                    symbol!!.opacity = 1.0
+                }
             ft.play()
         } else {
             plotChildren.remove(symbol)
@@ -105,7 +103,7 @@ class ScatterChartForWrapper<X, Y> @JvmOverloads constructor(
         series: Series<X, Y>,
         seriesIndex: Int
     ) {
-        // handle any data already in series
+        /* handle any data already in series */
         for (j in series.data.value.indices) {
             dataItemAdded(series, j, series.data.value[j])
         }
@@ -113,23 +111,25 @@ class ScatterChartForWrapper<X, Y> @JvmOverloads constructor(
 
     /** {@inheritDoc}  */
     override fun seriesRemoved(series: Series<X, Y>) {
-        // remove all symbol nodes
+        /* remove all symbol nodes */
         if (shouldAnimate()) {
             parallelTransition = ParallelTransition()
-            parallelTransition!!.onFinished = EventHandler {
-                removeSeriesFromDisplay(
-                    series
-                )
-            }
+            parallelTransition!!.onFinished =
+                EventHandler {
+                    removeSeriesFromDisplay(
+                        series
+                    )
+                }
             for (d in series.data.value) {
                 val symbol = d.nodeProp.value
-                // fade out old symbol
+                /* fade out old symbol */
                 val ft = FadeTransition(Duration.millis(500.0), symbol)
                 ft.toValue = 0.0
-                ft.onFinished = EventHandler {
-                    plotChildren.remove(symbol)
-                    symbol.opacity = 1.0
-                }
+                ft.onFinished =
+                    EventHandler {
+                        plotChildren.remove(symbol)
+                        symbol.opacity = 1.0
+                    }
                 parallelTransition!!.children.add(ft)
             }
             parallelTransition!!.play()
@@ -150,7 +150,7 @@ class ScatterChartForWrapper<X, Y> @JvmOverloads constructor(
 
     /** {@inheritDoc}  */
     override fun layoutPlotChildren() {
-        // update symbol positions
+        /* update symbol positions */
         for (seriesIndex in 0..<dataSize) {
             val series = data.value[seriesIndex]
             val it = getDisplayedDataIterator(series)

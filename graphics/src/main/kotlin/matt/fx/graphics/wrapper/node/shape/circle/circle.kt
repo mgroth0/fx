@@ -7,25 +7,25 @@ import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.fx.graphics.wrapper.node.impl.NodeWrapperImpl
 import matt.fx.graphics.wrapper.node.shape.ShapeWrapper
-import matt.obs.prop.BindableProperty
 import matt.obs.prop.ObsVal
+import matt.obs.prop.writable.BindableProperty
 
 fun NodeWrapperImpl<Parent>.circle(
     centerX: Number = 0.0,
     centerY: Number = 0.0,
     radius: Number = 0.0,
-    op: CircleWrapper.()->Unit = {}
+    op: CircleWrapper.() -> Unit = {}
 ) =
     CircleWrapper(centerX.toDouble(), centerY.toDouble(), radius.toDouble()).attachTo(this, op)
 
 open class CircleWrapper(
-    node: Circle = Circle(),
+    node: Circle = Circle()
 ): ShapeWrapper<Circle>(node) {
 
     constructor(
         centerX: Double,
         centerY: Double,
-        radius: Double,
+        radius: Double
     ): this(Circle(centerX, centerY, radius))
 
     constructor(radius: Double, fill: Paint): this(Circle(radius, fill))
@@ -43,7 +43,6 @@ open class CircleWrapper(
 
 
     fun toPoint() = DynamicPoint(x = centerXProperty.cast(), y = centerYProperty.cast())
-
 }
 
 

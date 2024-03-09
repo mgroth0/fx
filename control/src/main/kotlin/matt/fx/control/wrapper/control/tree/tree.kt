@@ -35,13 +35,13 @@ fun <T: Any> TreeViewWrapper<T>.select(o: T?) {
 }
 
 
-fun <T: Any> ET.treeview(root: TreeItemWrapper<T>? = null, op: TreeViewWrapper<T>.()->Unit = {}) =
+fun <T: Any> ET.treeview(root: TreeItemWrapper<T>? = null, op: TreeViewWrapper<T>.() -> Unit = {}) =
     TreeViewWrapper<T>().attachTo(this, op) {
         if (root != null) it.root = root
     }
 
 
-class TreeViewWrapper<T: Any>(node: TreeView<T> = TreeView(), op: TreeViewWrapper<T>.()->Unit = {}):
+class TreeViewWrapper<T: Any>(node: TreeView<T> = TreeView(), op: TreeViewWrapper<T>.() -> Unit = {}):
     ControlWrapperImpl<TreeView<T>>(node),
     TreeLikeWrapper<TreeView<T>, T>,
     TreeCellFactory<TreeView<T>, T> {
@@ -56,7 +56,9 @@ class TreeViewWrapper<T: Any>(node: TreeView<T> = TreeView(), op: TreeViewWrappe
     override val cellFactoryProperty by lazy { node.cellFactoryProperty().toNullableProp() }
 
 
-    override val rootProperty by lazy {node.rootProperty().toNullableProp().proxy(uncheckedNullableWrapperConverter<TreeItem<T>,TreeItemWrapper<T>>())}
+    override val rootProperty by lazy {
+        node.rootProperty().toNullableProp().proxy(uncheckedNullableWrapperConverter<TreeItem<T>, TreeItemWrapper<T>>())
+    }
 
     override var isShowRoot: Boolean
         get() = node.isShowRoot
@@ -74,10 +76,9 @@ class TreeViewWrapper<T: Any>(node: TreeView<T> = TreeView(), op: TreeViewWrappe
 
 
     fun populate(
-        itemFactory: (T)->TreeItemWrapper<T> = { TreeItemWrapper(it) },
-        childFactory: (TreeItemWrapper<T>)->Iterable<T>?
+        itemFactory: (T) -> TreeItemWrapper<T> = { TreeItemWrapper(it) },
+        childFactory: (TreeItemWrapper<T>) -> Iterable<T>?
     ) = populateTree(root!!, itemFactory, childFactory)
-
 }
 
 

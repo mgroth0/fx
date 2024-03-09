@@ -8,15 +8,15 @@ import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
 import matt.fx.graphics.wrapper.text.TextWrapper
-import matt.log.warn.warn
+import matt.log.warn.common.warn
 import kotlin.reflect.full.declaredMembers
 import kotlin.reflect.jvm.isAccessible
 
 
-fun <C: NodeWrapper> ET.textflow(op: TextFlowWrapper<C>.()->Unit = {}) = TextFlowWrapper<C>().attachTo(this, op)
+fun <C: NodeWrapper> ET.textflow(op: TextFlowWrapper<C>.() -> Unit = {}) = TextFlowWrapper<C>().attachTo(this, op)
 
 open class TextFlowWrapper<C: NodeWrapper>(
-    node: TextFlow = TextFlow(),
+    node: TextFlow = TextFlow()
 ): PaneWrapperImpl<TextFlow, C>(node) {
 
     constructor(vararg nodes: Node?): this(TextFlow(*nodes))
@@ -36,7 +36,5 @@ open class TextFlowWrapper<C: NodeWrapper>(
         warn("could include any node that has text...")
         return children.filterIsInstance<TextWrapper>().joinToString("") { it.text }
     }
-
-
 }
 

@@ -26,7 +26,7 @@ inline fun confirm(
     cancelButton: ButtonType = ButtonType.CANCEL,
     owner: WindowWrapper<*>? = WindowWrapper.guessMainStage(),
     title: String? = null,
-    actionFn: ()->Unit
+    actionFn: () -> Unit
 ) {
     alert(CONFIRMATION, header, content, confirmButton, cancelButton, owner = owner, title = title) {
         if (it == confirmButton) actionFn()
@@ -40,7 +40,7 @@ inline fun alert(
     vararg buttons: ButtonType,
     owner: WindowWrapper<*>? = WindowWrapper.guessMainStage(),
     title: String? = null,
-    actionFn: Alert.(ButtonType)->Unit = {}
+    actionFn: Alert.(ButtonType) -> Unit = {}
 ): Alert {
 
     val alert = Alert(type, content ?: "", *buttons)
@@ -63,7 +63,7 @@ fun asyncAlert(
     owner: WindowWrapper<*>? = WindowWrapper.guessMainStage(),
     title: String? = null,
     closeOnEscape: Boolean = true,
-    op: Alert.()->Unit = {}
+    op: Alert.() -> Unit = {}
 ): Run<ButtonType> {
     val result = LoadedValueSlot<ButtonType>()
     val run = ResultRun(result)
@@ -94,7 +94,7 @@ inline fun warning(
     vararg buttons: ButtonType,
     owner: WindowWrapper<*>? = WindowWrapper.guessMainStage(),
     title: String? = null,
-    actionFn: Alert.(ButtonType)->Unit = {}
+    actionFn: Alert.(ButtonType) -> Unit = {}
 ) =
     alert(WARNING, header, content, *buttons, owner = owner, title = title, actionFn = actionFn)
 
@@ -104,7 +104,7 @@ inline fun errorAlert(
     vararg buttons: ButtonType,
     owner: WindowWrapper<*>? = WindowWrapper.guessMainStage(),
     title: String? = null,
-    actionFn: Alert.(ButtonType)->Unit = {}
+    actionFn: Alert.(ButtonType) -> Unit = {}
 ) =
     alert(ERROR, header, content, *buttons, owner = owner, title = title, actionFn = actionFn)
 
@@ -114,7 +114,7 @@ inline fun information(
     vararg buttons: ButtonType,
     owner: WindowWrapper<*>? = WindowWrapper.guessMainStage(),
     title: String? = null,
-    actionFn: Alert.(ButtonType)->Unit = {}
+    actionFn: Alert.(ButtonType) -> Unit = {}
 ) =
     alert(INFORMATION, header, content, *buttons, owner = owner, title = title, actionFn = actionFn)
 
@@ -124,7 +124,7 @@ inline fun confirmation(
     vararg buttons: ButtonType,
     owner: WindowWrapper<*>? = WindowWrapper.guessMainStage(),
     title: String? = null,
-    actionFn: Alert.(ButtonType)->Unit = {}
+    actionFn: Alert.(ButtonType) -> Unit = {}
 ) =
     alert(CONFIRMATION, header, content, *buttons, owner = owner, title = title, actionFn = actionFn)
 

@@ -1,11 +1,11 @@
 package matt.fx.control.wrapper.control.spinner
 
-import javafx.beans.binding.Bindings.bindBidirectional
 import javafx.scene.control.Spinner
 import javafx.scene.control.SpinnerValueFactory
 import javafx.scene.control.SpinnerValueFactory.IntegerSpinnerValueFactory
 import matt.fx.base.converter.ConverterConverter
 import matt.fx.base.wrapper.obs.collect.list.createFXWrapper
+import matt.fx.base.wrapper.obs.obsval.prop.NonNullFXBackedBindableProp
 import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
 import matt.fx.base.wrapper.obs.obsval.toNonNullableROProp
@@ -16,16 +16,17 @@ import matt.fx.graphics.fxthread.runLater
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
+import matt.lang.common.err
+import matt.lang.common.go
 import matt.lang.convert.BiConverter
 import matt.lang.delegation.lazyVarDelegate
-import matt.lang.err
-import matt.lang.go
 import matt.model.flowlogic.recursionblocker.RecursionBlocker
 import matt.obs.bind.smartBind
 import matt.obs.col.olist.MutableObsList
-import matt.obs.prop.BindableProperty
 import matt.obs.prop.ObsVal
-import matt.obs.prop.Var
+import matt.obs.prop.proxy.ProxyProp
+import matt.obs.prop.writable.BindableProperty
+import matt.obs.prop.writable.Var
 import matt.prim.converters.StringConverter
 
 
@@ -37,7 +38,7 @@ fun <T: Any> ET.spinner(
     property: Var<T>? = null,
     enableScroll: Boolean = false,
     converter: StringConverter<T>? = null,
-    op: SpinnerWrapper<T>.()->Unit = {}
+    op: SpinnerWrapper<T>.() -> Unit = {}
 ) = SpinnerWrapper<T>().also {
     it.attachTo(this, op)
 
@@ -64,24 +65,28 @@ inline fun <reified T: Number> ET.spinner(
     property: BindableProperty<T>? = null,
     enableScroll: Boolean = false,
     converter: StringConverter<T>? = null,
-    noinline op: SpinnerWrapper<T>.()->Unit = {}
+    noinline op: SpinnerWrapper<T>.() -> Unit = {}
 ): SpinnerWrapper<T> {
     /*property is IntegerProperty && property !is DoubleProperty && property !is FloatProperty) ||*/
-    val isInt = min is Int || max is Int || initialValue is Int ||
-        T::class == Int::class || T::class == java.lang.Integer::class || T::class.javaPrimitiveType == java.lang.Integer::class.java
-    val spinner = if (isInt) {
-        SpinnerWrapper<T>(
-            min?.toInt() ?: 0,
-            max?.toInt() ?: 100,
-            initialValue?.toInt() ?: 0,
-            amountToStepBy?.toInt() ?: 1
-        )
-    } else {
-        SpinnerWrapper(
-            min?.toDouble() ?: 0.0, max?.toDouble() ?: 100.0, initialValue?.toDouble()
-                ?: 0.0, amountToStepBy?.toDouble() ?: 1.0
-        )
-    }
+    val isInt =
+        min is Int || max is Int || initialValue is Int ||
+            T::class == Int::class || T::class == java.lang.Integer::class || T::class.javaPrimitiveType == java.lang.Integer::class.java
+    val spinner =
+        if (isInt) {
+            SpinnerWrapper<T>(
+                min?.toInt() ?: 0,
+                max?.toInt() ?: 100,
+                initialValue?.toInt() ?: 0,
+                amountToStepBy?.toInt() ?: 1
+            )
+        } else {
+            SpinnerWrapper(
+                min?.toDouble() ?: 0.0, max?.toDouble() ?: 100.0,
+                initialValue?.toDouble()
+                    ?: 0.0,
+                amountToStepBy?.toDouble() ?: 1.0
+            )
+        }
     if (property != null) {
         spinner.valueFactory!!.valueProperty.bindBidirectional(property)
     }
@@ -100,7 +105,7 @@ fun <T: Any> ET.spinner(
     property: Var<T>? = null,
     enableScroll: Boolean = false,
     converter: StringConverter<T>? = null,
-    op: SpinnerWrapper<T>.()->Unit = {}
+    op: SpinnerWrapper<T>.() -> Unit = {}
 ) = SpinnerWrapper(items).attachTo(this, op) {
     if (property != null) it.valueFactory!!.valueProperty.apply {
         bindBidirectional(property)
@@ -119,7 +124,7 @@ fun <T: Any> ET.spinner(
     property: Var<T>? = null,
     enableScroll: Boolean = false,
     converter: StringConverter<T>? = null,
-    op: SpinnerWrapper<T>.()->Unit = {}
+    op: SpinnerWrapper<T>.() -> Unit = {}
 ) = SpinnerWrapper(valueFactory).attachTo(this, op) {
     if (property != null) it.valueFactory!!.valueProperty.apply {
         bindBidirectional(property)
@@ -135,7 +140,7 @@ fun <T: Any> ET.spinner(
 internal fun <T: Any> SpinnerWrapper<T>.initialConfig(
     editable: Boolean = false,
     enableScroll: Boolean = false,
-    converter: StringConverter<T>?,
+    converter: StringConverter<T>?
 ) {
     isEditable = editable
 
@@ -149,15 +154,12 @@ internal fun <T: Any> SpinnerWrapper<T>.initialConfig(
 
         /*causes converter to be used GUIs so first one converts to correct string...*/
         node.editor.text = it.convertToA(value)
-
     }
-
-
 }
 
 
 class SpinnerWrapper<T: Any>(
-    node: Spinner<T> = Spinner<T>(),
+    node: Spinner<T> = Spinner<T>()
 ): ControlWrapperImpl<Spinner<T>>(node) {
     constructor(
         min: Int,
@@ -212,7 +214,6 @@ class SpinnerWrapper<T: Any>(
                 override fun convertToB(a: SpinnerValueFactory<T>?): SpinnerValueFactoryWrapper<T>? = a?.wrap()
 
                 override fun convertToA(b: SpinnerValueFactoryWrapper<T>?): SpinnerValueFactory<T>? = b?.svf
-
             }
         )
     }
@@ -223,7 +224,7 @@ class SpinnerWrapper<T: Any>(
     fun bindBidirectional(
         prop: Var<T?>,
         default: T,
-        acceptIf: (T?) -> Boolean,
+        acceptIf: (T?) -> Boolean
     ) {
         val fact = valueFactory!!
         val rBlocker = RecursionBlocker()
@@ -245,12 +246,13 @@ class SpinnerWrapper<T: Any>(
         val svf = valueFactory?.svf
         if (svf is IntegerSpinnerValueFactory) {
 
-            val newSVF = MyIntegerSpinnerValueFactory(
-                min = svf.min,
-                max = svf.max,
-                initialValue = svf.value,
-                amountToStepBy = svf.amountToStepBy
-            )
+            val newSVF =
+                MyIntegerSpinnerValueFactory(
+                    min = svf.min,
+                    max = svf.max,
+                    initialValue = svf.value,
+                    amountToStepBy = svf.amountToStepBy
+                )
 
             @Suppress("UNCHECKED_CAST")
             valueFactory = SpinnerValueFactoryWrapper(newSVF as SpinnerValueFactory<T>)
@@ -287,8 +289,6 @@ class SpinnerWrapper<T: Any>(
             if (!newValue) increment(0)
         }
     }
-
-
 }
 
 fun <T: Any> SpinnerWrapper<T>.bind(property: ObsVal<T>, readonly: Boolean = false) =
@@ -299,22 +299,21 @@ fun <T: Any> SpinnerValueFactory<T>.wrap() = SpinnerValueFactoryWrapper(this)
 class SpinnerValueFactoryWrapper<T: Any>(internal val svf: SpinnerValueFactory<T>) {
     fun increment(steps: Int) = svf.increment(steps)
     fun decrement(steps: Int) = svf.decrement(steps)
-    val valueProperty by lazy { svf.valueProperty().toNonNullableProp() }
+    val valueProperty: NonNullFXBackedBindableProp<T> by lazy { svf.valueProperty().toNonNullableProp() }
     var value by valueProperty
 
 
     /*internal because if you set these later, gui does NOT automatically update. No easy way to fix this other than using the extension methods at the top of the file*/
-    internal val converterProperty by lazy {
+    internal val converterProperty: ProxyProp<javafx.util.StringConverter<T>, StringConverter<T>> by lazy {
         svf.converterProperty().toNonNullableProp().proxy(ConverterConverter())
     }
     internal var converter by converterProperty
 
-    val wrapAroundProperty by lazy {
+    val wrapAroundProperty: NonNullFXBackedBindableProp<Boolean> by lazy {
         svf.wrapAroundProperty().toNonNullableProp()
     }
 
     var wrapAround by lazyVarDelegate {
         wrapAroundProperty
     }
-
 }

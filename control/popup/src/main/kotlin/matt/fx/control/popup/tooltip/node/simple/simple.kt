@@ -47,9 +47,10 @@ class MyFixedTooltip constructor() : PopupWindow() {
     fun setShowDelay(showDelay: Duration) = showDelayProperty.set(showDelay)
 
     val showDelay: Duration get() = showDelayProperty.get()
-    private val showDelayProperty: ObjectProperty<Duration> = SimpleObjectProperty(
-        Duration(1000.0)
-    )
+    private val showDelayProperty: ObjectProperty<Duration> =
+        SimpleObjectProperty(
+            Duration(1000.0)
+        )
 
     /**
      * The duration that the tooltip should remain showing for until it is no longer visible to the user.
@@ -64,9 +65,10 @@ class MyFixedTooltip constructor() : PopupWindow() {
     fun showDurationProperty(): ObjectProperty<Duration> = showDurationProperty
     fun setShowDuration(showDuration: Duration) = showDurationProperty.set(showDuration)
     val showDuration: Duration get() = showDurationProperty.get()
-    private val showDurationProperty: ObjectProperty<Duration> = SimpleObjectProperty(
-        Duration(5000.0)
-    )
+    private val showDurationProperty: ObjectProperty<Duration> =
+        SimpleObjectProperty(
+            Duration(5000.0)
+        )
 
     /**
      * The duration in which to continue showing the tooltip after the mouse has left the node. Once this time has
@@ -81,9 +83,10 @@ class MyFixedTooltip constructor() : PopupWindow() {
     fun setHideDelay(hideDelay: Duration) = hideDelayProperty.set(hideDelay)
 
     val hideDelay: Duration get() = hideDelayProperty.get()
-    private val hideDelayProperty: ObjectProperty<Duration> = SimpleObjectProperty(
-        Duration(200.0)
-    )
+    private val hideDelayProperty: ObjectProperty<Duration> =
+        SimpleObjectProperty(
+            Duration(200.0)
+        )
 
     /**
      * An MANDATORY icon for the Tooltip. This can be positioned relative to the
@@ -103,12 +106,13 @@ class MyFixedTooltip constructor() : PopupWindow() {
     fun getContent(): Parent? = contentProperty().value
 
 
-    private val content: ObjectProperty<Parent?> = object : SimpleObjectProperty<Parent?>() {
+    private val content: ObjectProperty<Parent?> =
+        object : SimpleObjectProperty<Parent?>() {
 
-        override fun getBean(): Any = this@MyFixedTooltip
+            override fun getBean(): Any = this@MyFixedTooltip
 
-        override fun getName(): String = "content"
-    }
+            override fun getName(): String = "content"
+        }
 
 
     /**
@@ -124,20 +128,6 @@ class MyFixedTooltip constructor() : PopupWindow() {
 
     fun activatedProperty(): ReadOnlyBooleanProperty = activated.readOnlyProperty
 
-
-    /**
-     * Creates a tooltip with the specified text.
-     *
-     * @param text A text string for the tooltip.
-     */
-    /* *************************************************************************
-     *                                                                         *
-     * Constructors                                                            *
-     *                                                                         *
-     **************************************************************************/
-    /**
-     * Creates a tooltip with an empty string for its text.
-     */
     init {
         contentProperty().addListener { _, _, newValue ->
             scene.root = newValue
@@ -216,211 +206,244 @@ class MyFixedTooltip constructor() : PopupWindow() {
          * (if ACTIVATION_TIMER is running), or skip the ACTIVATION_TIMER and just
          * show the tooltip (if the LEFT_TIMER is running).
          */
-        private val MOVE_HANDLER = EventHandler<MouseEvent> { event: MouseEvent ->
-            //Screen coordinates need to be actual for dynamic tooltip.
-            //See Tooltip.setText
-            lastMouseX = event.screenX
-            lastMouseY = event.screenY
+        private val MOVE_HANDLER =
+            EventHandler<MouseEvent> { event: MouseEvent ->
+                /*
+Screen coordinates need to be actual for dynamic tooltip.
+See Tooltip.setText
+*/
+                lastMouseX = event.screenX
+                lastMouseY = event.screenY
 
-            // If the HIDE_TIMER is running, then we don't want this event
-            // handler to do anything, or change any state at all.
+                /*
+                If the HIDE_TIMER is running, then we don't want this event
+                handler to do anything, or change any state at all.
+                 */
 
-            if (hideTimer.status == Animation.Status.RUNNING) {
-                return@EventHandler
-            }
-
-            // Note that the "install" step will both register this handler
-            // with the target node and also associate the tooltip with the
-            // target node, by stashing it in the client properties of the node.
-            hoveredNode = event.source as Node
-            val t = hoveredNode!!.properties[TOOLTIP_PROP_KEY] as MyFixedTooltip?
-            if (t != null) {
-                // In theory we should never get here with an invisible or
-                // non-existant window hierarchy, but might in some cases where
-                // people are feeding fake mouse events into the hierarchy. So
-                // we'll guard against that case.
-                val owner = getWindow(hoveredNode)
-                val treeVisible = isWindowHierarchyVisible(hoveredNode)
-                if (owner != null && treeVisible) {
-                    // Now we know that the currently HOVERED node has a tooltip
-                    // and that it is part of a visible window Hierarchy.
-                    // If LEFT_TIMER is running, then we make this tooltip
-                    // visible immediately, stop the LEFT_TIMER, and start the
-                    // HIDE_TIMER.
-                    if (leftTimer.status == Animation.Status.RUNNING) {
-                        if (visibleTooltip != null) visibleTooltip!!.hide()
-                        visibleTooltip = t
-                        t.show(
-                            owner, event.screenX + TOOLTIP_XOFFSET,
-                            event.screenY + TOOLTIP_YOFFSET
-                        )
-                        leftTimer.stop()
-                        @Suppress("SENSELESS_COMPARISON")
-                        if (t.showDuration != null) {
-                            hideTimer.keyFrames.setAll(KeyFrame(t.showDuration))
-                        }
-                        hideTimer.playFromStart()
-                    } else {
-                        // Force the CSS to be processed for the tooltip so that it uses the
-                        // appropriate timings for showDelay, showDuration, and hideDelay.
-                        if (!cssForced) {
-                            val opacity = t.opacity
-                            t.opacity = 0.0
-                            t.show(owner)
-                            t.hide()
-                            t.opacity = opacity
-                            cssForced = true
-                        }
-
-                        // Start / restart the timer and make sure the tooltip
-                        // is marked as activated.
-                        t.setActivated(true)
-                        activatedTooltip = t
-                        activationTimer.stop()
-                        @Suppress("SENSELESS_COMPARISON")
-                        if (t.showDelay != null) {
-                            activationTimer.keyFrames.setAll(KeyFrame(t.showDelay))
-                        }
-                        activationTimer.playFromStart()
-                    }
+                if (hideTimer.status == Animation.Status.RUNNING) {
+                    return@EventHandler
                 }
-            } else {
-                // TODO should deregister, no point being here anymore!
+
+                /*
+                Note that the "install" step will both register this handler
+                with the target node and also associate the tooltip with the
+                target node, by stashing it in the client properties of the node.
+                 */
+                hoveredNode = event.source as Node
+                val t = hoveredNode!!.properties[TOOLTIP_PROP_KEY] as MyFixedTooltip?
+                if (t != null) {
+                    /*
+                    In theory we should never get here with an invisible or
+                    non-existant window hierarchy, but might in some cases where
+                    people are feeding fake mouse events into the hierarchy. So
+                    we'll guard against that case.
+                     */
+                    val owner = getWindow(hoveredNode)
+                    val treeVisible = isWindowHierarchyVisible(hoveredNode)
+                    if (owner != null && treeVisible) {
+                        /*
+                        Now we know that the currently HOVERED node has a tooltip
+                        and that it is part of a visible window Hierarchy.
+                        If LEFT_TIMER is running, then we make this tooltip
+                        visible immediately, stop the LEFT_TIMER, and start the
+                        HIDE_TIMER.
+                         */
+                        if (leftTimer.status == Animation.Status.RUNNING) {
+                            if (visibleTooltip != null) visibleTooltip!!.hide()
+                            visibleTooltip = t
+                            t.show(
+                                owner, event.screenX + TOOLTIP_XOFFSET,
+                                event.screenY + TOOLTIP_YOFFSET
+                            )
+                            leftTimer.stop()
+                            @Suppress("SENSELESS_COMPARISON")
+                            if (t.showDuration != null) {
+                                hideTimer.keyFrames.setAll(KeyFrame(t.showDuration))
+                            }
+                            hideTimer.playFromStart()
+                        } else {
+                            /*
+                            Force the CSS to be processed for the tooltip so that it uses the
+                            appropriate timings for showDelay, showDuration, and hideDelay.
+                             */
+                            if (!cssForced) {
+                                val opacity = t.opacity
+                                t.opacity = 0.0
+                                t.show(owner)
+                                t.hide()
+                                t.opacity = opacity
+                                cssForced = true
+                            }
+
+                            /*
+                            Start / restart the timer and make sure the tooltip
+                            is marked as activated.
+                             */
+                            t.setActivated(true)
+                            activatedTooltip = t
+                            activationTimer.stop()
+                            @Suppress("SENSELESS_COMPARISON")
+                            if (t.showDelay != null) {
+                                activationTimer.keyFrames.setAll(KeyFrame(t.showDelay))
+                            }
+                            activationTimer.playFromStart()
+                        }
+                    }
+                } else {
+                    /* TODO should deregister, no point being here anymore! */
+                }
             }
-        }
 
         /**
          * Registers for mouse exit events. If the ACTIVATION_TIMER is running then
          * this will simply stop it. If the HIDE_TIMER is running then this will
          * stop the HIDE_TIMER, hide the tooltip, and start the LEFT_TIMER.
          */
-        private val LEAVING_HANDLER = EventHandler<MouseEvent> { event: MouseEvent ->
-            // detect bogus mouse exit events, if it didn't really move then ignore it
-            if (activationTimer.status == Animation.Status.RUNNING) {
-                activationTimer.stop()
-            } else if (hideTimer.status == Animation.Status.RUNNING) {
-                assert(visibleTooltip != null)
-                hideTimer.stop()
-                if (hideOnExit) visibleTooltip!!.hide()
-                val source = event.source as Node
-                val t = source.properties[TOOLTIP_PROP_KEY] as MyFixedTooltip?
-                if (t != null) {
-                    @Suppress("SENSELESS_COMPARISON")
-                    if (t.hideDelay != null) {
-                        leftTimer.keyFrames.setAll(KeyFrame(t.hideDelay))
+        private val LEAVING_HANDLER =
+            EventHandler<MouseEvent> { event: MouseEvent ->
+                /* detect bogus mouse exit events, if it didn't really move then ignore it */
+                if (activationTimer.status == Animation.Status.RUNNING) {
+                    activationTimer.stop()
+                } else if (hideTimer.status == Animation.Status.RUNNING) {
+                    assert(visibleTooltip != null)
+                    hideTimer.stop()
+                    if (hideOnExit) visibleTooltip!!.hide()
+                    val source = event.source as Node
+                    val t = source.properties[TOOLTIP_PROP_KEY] as MyFixedTooltip?
+                    if (t != null) {
+                        @Suppress("SENSELESS_COMPARISON")
+                        if (t.hideDelay != null) {
+                            leftTimer.keyFrames.setAll(KeyFrame(t.hideDelay))
+                        }
+                        leftTimer.playFromStart()
                     }
-                    leftTimer.playFromStart()
                 }
+                hoveredNode = null
+                activatedTooltip = null
+                if (hideOnExit) visibleTooltip = null
             }
-            hoveredNode = null
-            activatedTooltip = null
-            if (hideOnExit) visibleTooltip = null
-        }
 
         /**
          * Registers for mouse click, press, release, drag events. If any of these
          * occur, then the tooltip is hidden (if it is visible), it is deactivated,
          * and any and all timers are stopped.
          */
-        private val KILL_HANDLER = EventHandler { _: MouseEvent? -> /*MouseEvent must be nullable here, as I call this with a null somewhere*/
-            activationTimer.stop()
-            hideTimer.stop()
-            leftTimer.stop()
-            if (visibleTooltip != null) visibleTooltip!!.hide()
-            hoveredNode = null
-            activatedTooltip = null
-            visibleTooltip = null
-        }
+        private val KILL_HANDLER =
+            EventHandler { _: MouseEvent? ->
+                /*MouseEvent must be nullable here, as I call this with a null somewhere*/
+                activationTimer.stop()
+                hideTimer.stop()
+                leftTimer.stop()
+                if (visibleTooltip != null) visibleTooltip!!.hide()
+                hoveredNode = null
+                activatedTooltip = null
+                visibleTooltip = null
+            }
 
         init {
-            activationTimer.onFinished = EventHandler {
-                assert(activatedTooltip != null)
-                val owner = getWindow(hoveredNode)
-                val treeVisible = isWindowHierarchyVisible(hoveredNode)
+            activationTimer.onFinished =
+                EventHandler {
+                    assert(activatedTooltip != null)
+                    val owner = getWindow(hoveredNode)
+                    val treeVisible = isWindowHierarchyVisible(hoveredNode)
 
-                // If the ACTIVATED tooltip is part of a visible window
-                // hierarchy, we can go ahead and show the tooltip and
-                // start the HIDE_TIMER.
-                //
-                // If the owner is null or invisible, then it either means a
-                // bug in our code, the node was removed from a scene or
-                // window or made invisible, or the node is not part of a
-                // visible window hierarchy. In that case, we don't show the
-                // tooltip, and we don't start the HIDE_TIMER. We simply let
-                // ACTIVATED_TIMER expire, and wait until the next mouse
-                // the movement to start it again.
-                if (owner != null && owner.isShowing && treeVisible) {
-                    var x = lastMouseX
-                    var y = lastMouseY
+                    /*
+                    If the ACTIVATED tooltip is part of a visible window
+                    hierarchy, we can go ahead and show the tooltip and
+                    start the HIDE_TIMER.
 
-                    // The tooltip always inherits the nodeOrientation of
-                    // the Node that it is attached to (see RT-26147). It
-                    // is possible to override this for the Tooltip content
-                    // (but not the popup placement) by setting the
-                    // nodeOrientation on tooltip.getScene().getRoot().
-                    val nodeOrientation = hoveredNode!!.effectiveNodeOrientation
-                    activatedTooltip!!.scene.nodeOrientation = nodeOrientation
-                    if (nodeOrientation == RIGHT_TO_LEFT) {
-                        x -= activatedTooltip!!.width
-                    }
-                    activatedTooltip!!.show(
-                        owner,
-                        x + TOOLTIP_XOFFSET,
-                        y + TOOLTIP_YOFFSET
-                    )
+                    If the owner is null or invisible, then it either means a
+                    bug in our code, the node was removed from a scene or
+                    window or made invisible, or the node is not part of a
+                    visible window hierarchy. In that case, we don't show the
+                    tooltip, and we don't start the HIDE_TIMER. We simply let
+                    ACTIVATED_TIMER expire, and wait until the next mouse
+                    the movement to start it again.
+                     */
+                    if (owner != null && owner.isShowing && treeVisible) {
+                        var x = lastMouseX
+                        var y = lastMouseY
 
-                    // RT-37107: Ensure the tooltip is displayed in a position
-                    // where it will not be under the mouse, even when the tooltip
-                    // is near the edge of the screen
-                    if (y + TOOLTIP_YOFFSET > activatedTooltip!!.anchorY) {
-                        // the tooltip has been shifted vertically upwards,
-                        // most likely to be underneath the mouse cursor, so we
-                        // need to shift it further by hiding and reshowing
-                        // in another location
-                        activatedTooltip!!.hide()
-                        y -= activatedTooltip!!.height
-                        activatedTooltip!!.show(owner, x + TOOLTIP_XOFFSET, y)
+                        /*
+                        The tooltip always inherits the nodeOrientation of
+                        the Node that it is attached to (see RT-26147). It
+                        is possible to override this for the Tooltip content
+                        (but not the popup placement) by setting the
+                        nodeOrientation on tooltip.getScene().getRoot().
+                         */
+                        val nodeOrientation = hoveredNode!!.effectiveNodeOrientation
+                        activatedTooltip!!.scene.nodeOrientation = nodeOrientation
+                        if (nodeOrientation == RIGHT_TO_LEFT) {
+                            x -= activatedTooltip!!.width
+                        }
+                        activatedTooltip!!.show(
+                            owner,
+                            x + TOOLTIP_XOFFSET,
+                            y + TOOLTIP_YOFFSET
+                        )
+
+                        /*
+                        RT-37107: Ensure the tooltip is displayed in a position
+                        where it will not be under the mouse, even when the tooltip
+                        is near the edge of the screen
+                         */
+                        if (y + TOOLTIP_YOFFSET > activatedTooltip!!.anchorY) {
+                            /*
+                            the tooltip has been shifted vertically upwards,
+                            most likely to be underneath the mouse cursor, so we
+                            need to shift it further by hiding and reshowing
+                            in another location
+                             */
+                            activatedTooltip!!.hide()
+                            y -= activatedTooltip!!.height
+                            activatedTooltip!!.show(owner, x + TOOLTIP_XOFFSET, y)
+                        }
+                        visibleTooltip = activatedTooltip
+                        hoveredNode = null
+                        @Suppress("SENSELESS_COMPARISON")
+                        if (activatedTooltip!!.showDuration != null) {
+                            hideTimer.keyFrames.setAll(KeyFrame(activatedTooltip!!.showDuration))
+                        }
+                        hideTimer.playFromStart()
                     }
-                    visibleTooltip = activatedTooltip
-                    hoveredNode = null
-                    @Suppress("SENSELESS_COMPARISON")
-                    if (activatedTooltip!!.showDuration != null) {
-                        hideTimer.keyFrames.setAll(KeyFrame(activatedTooltip!!.showDuration))
-                    }
-                    hideTimer.playFromStart()
+
+                    /*
+                    Once the activation timer has expired, the tooltip is no
+                    longer in the activated state, it is only in the visible
+                    state, so we go ahead and set activated to false
+                     */
+                    activatedTooltip!!.setActivated(false)
+                    activatedTooltip = null
                 }
-
-                // Once the activation timer has expired, the tooltip is no
-                // longer in the activated state, it is only in the visible
-                // state, so we go ahead and set activated to false
-                activatedTooltip!!.setActivated(false)
-                activatedTooltip = null
-            }
-            hideTimer.onFinished = EventHandler { _: ActionEvent? ->
-                assert(visibleTooltip != null)
-                visibleTooltip!!.hide()
-                visibleTooltip = null
-                hoveredNode = null
-            }
-            leftTimer.onFinished = EventHandler { _: ActionEvent? ->
-                if (!hideOnExit) {
-                    // Hide the currently visible tooltip.
+            hideTimer.onFinished =
+                EventHandler { _: ActionEvent? ->
                     assert(visibleTooltip != null)
                     visibleTooltip!!.hide()
                     visibleTooltip = null
                     hoveredNode = null
                 }
-            }
+            leftTimer.onFinished =
+                EventHandler { _: ActionEvent? ->
+                    if (!hideOnExit) {
+                        /* Hide the currently visible tooltip. */
+                        assert(visibleTooltip != null)
+                        visibleTooltip!!.hide()
+                        visibleTooltip = null
+                        hoveredNode = null
+                    }
+                }
         }
 
         fun install(
             node: Node?,
             t: MyFixedTooltip
         ) {
-            // Install the MOVE_HANDLER, LEAVING_HANDLER, and KILL_HANDLER on
-            // the given node. Stash the tooltip in the node's client properties
-            // map so that it is not gc'd. The handlers must all be installed
-            // with a TODO weak reference so as not to cause a memory leak
+            /*
+            Install the MOVE_HANDLER, LEAVING_HANDLER, and KILL_HANDLER on
+            the given node. Stash the tooltip in the node's client properties
+            map so that it is not gc'd. The handlers must all be installed
+            with a TODO weak reference so as not to cause a memory leak
+             */
             if (node == null) return
             node.addEventHandler(MouseEvent.MOUSE_MOVED, MOVE_HANDLER)
             node.addEventHandler(MouseEvent.MOUSE_EXITED, LEAVING_HANDLER)
@@ -471,12 +494,14 @@ class MyFixedTooltip constructor() : PopupWindow() {
     companion object {
         private const val TOOLTIP_PROP_KEY = "fx.Tooltip"
 
-        // RT-31134 : the tooltip style includes a shadow around the tooltip with a
-        // width of 9 and height of 5. This causes mouse events to not reach the control
-        // underneath resulting in losing hover state on the control while the tooltip is showing.
-        // Displaying the tooltip at an offset indicated below resolves this issue.
-        // RT-37107: The y-offset was upped to 7 to ensure no overlaps when the tooltip
-        // is shown near the right edge of the screen.
+        /*
+RT-31134 : the tooltip style includes a shadow around the tooltip with a
+width of 9 and height of 5. This causes mouse events to not reach the control
+underneath resulting in losing hover state on the control while the tooltip is showing.
+Displaying the tooltip at an offset indicated below resolves this issue.
+RT-37107: The y-offset was upped to 7 to ensure no overlaps when the tooltip
+is shown near the right edge of the screen.
+*/
         private const val TOOLTIP_XOFFSET = 10
         private const val TOOLTIP_YOFFSET = 7
         private val BEHAVIOR = TooltipBehavior(false)
@@ -522,11 +547,10 @@ class MyFixedTooltip constructor() : PopupWindow() {
         val classCssMetaData: List<CssMetaData<out Styleable, *>> by lazy {
 
             mutableListOf()
-
         }
 
 
-        //  override val bridge = MyPopUpCSSBridge()
+        /* override val bridge = MyPopUpCSSBridge() */
     }
 }
 

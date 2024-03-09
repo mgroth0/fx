@@ -14,27 +14,28 @@ import matt.fx.graphics.wrapper.canvas.CanvasWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attach
 import matt.fx.graphics.wrapper.region.RegionWrapperImpl
-import matt.lang.NEVER
-import matt.lang.go
+import matt.lang.common.NEVER
+import matt.lang.common.go
 import matt.obs.math.double.op.div
 import matt.obs.math.double.op.minus
 import matt.obs.math.double.op.times
-import matt.obs.prop.BindableProperty
+import matt.obs.prop.writable.BindableProperty
 import matt.time.UnixTime
 import java.awt.image.BufferedImage
 import java.lang.ref.WeakReference
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 
-fun Array<Array<Color?>>.toCanvas() = ScaledCanvas(
-    width = this[0].size.toDouble(), height = this.size.toDouble(), initialScale = 1.0
-).apply {
-    this@toCanvas.forEachIndexed { x, row ->
-        row.forEachIndexed { y, c ->
-            this[y, x]/*dont understand why this is reversed*/ = c!!
+fun Array<Array<Color?>>.toCanvas() =
+    ScaledCanvas(
+        width = this[0].size.toDouble(), height = size.toDouble(), initialScale = 1.0
+    ).apply {
+        this@toCanvas.forEachIndexed { x, row ->
+            row.forEachIndexed { y, c ->
+                this[y, x]/*dont understand why this is reversed*/ = c!!
+            }
         }
     }
-}
 
 fun EventTargetWrapper.scaledCanvas(
     width: Number,
@@ -44,7 +45,8 @@ fun EventTargetWrapper.scaledCanvas(
 ) = attach(
     ScaledCanvas(
         width = width, height = height, initialScale = scale.toDouble()
-    ), op
+    ),
+    op
 )
 
 fun EventTargetWrapper.scaledCanvas(
@@ -81,7 +83,7 @@ open class ScaledCanvas(
     constructor(
         height: Number,
         width: Number,
-        initialScale: Double = 1.0,
+        initialScale: Double = 1.0
     ) : this(CanvasWrapper(width = width.toDouble(), height = height.toDouble()), initialScale)
 
     constructor(
@@ -92,40 +94,38 @@ open class ScaledCanvas(
     val scale = BindableProperty(initialScale)
 
 
-    private val loadingIndicator = lazy {
+    private val loadingIndicator =
+        lazy {
 
-        /*val prog = ProgressIndicatorWrapper()*/
-        val prog = PerformantProgressIndicator()
+            /*val prog = ProgressIndicatorWrapper()*/
+            val prog = PerformantProgressIndicator()
 
-        prog.apply {
+            prog.apply {
 
-            if (delayLoadingIndicatorBy != null) {
-                isVisible = false
-                val weakThis = WeakReference(this)
-                worker.schedule(UnixTime() + delayLoadingIndicatorBy) {
-                    weakThis.get()?.go {
-                        runLater {
-                            it.isVisible = true
+                if (delayLoadingIndicatorBy != null) {
+                    isVisible = false
+                    val weakThis = WeakReference(this)
+                    worker.schedule(UnixTime() + delayLoadingIndicatorBy) {
+                        weakThis.get()?.go {
+                            runLater {
+                                it.isVisible = true
+                            }
                         }
                     }
                 }
-            }
 
-            //	  this.progress = 0.5 /*to prevent animation*/
-            progressIndicatorWidthAndHeight?.go {
-                this.exactWidth = it
-                this.exactHeight = it
-            }
-        }.node
-
-    }
+                progressIndicatorWidthAndHeight?.go {
+                    exactWidth = it
+                    exactHeight = it
+                }
+            }.node
+        }
 
     private val paneChildren = this@ScaledCanvas.node.children
 
     fun showAsLoading() {
         paneChildren.remove(canvas.node)
         paneChildren.add(loadingIndicator.value)
-
     }
 
     fun showCanvas() {
@@ -144,7 +144,6 @@ open class ScaledCanvas(
         }
         if (initializeInLoadingMode) showAsLoading()
         else showCanvas()
-
     }
 
     final override fun addChild(

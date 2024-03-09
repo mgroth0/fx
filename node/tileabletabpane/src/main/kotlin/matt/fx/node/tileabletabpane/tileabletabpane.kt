@@ -14,7 +14,7 @@ import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
 import matt.fx.graphics.wrapper.region.RegionWrapper
 import matt.gui.menu.context.mcontextmenu
 import matt.obs.math.double.op.div
-import matt.obs.prop.VarProp
+import matt.obs.prop.writable.VarProp
 import java.util.concurrent.Semaphore
 
 open class TileableTabPane(
@@ -23,18 +23,20 @@ open class TileableTabPane(
 ): VBoxWrapperImpl<NodeWrapper>() {
     private val mysem = Semaphore(1)
     var lastSelected: Int? = null
-    val istabmodeprop = VarProp(true).apply {
-        onChange {
-            reset()
+    val istabmodeprop =
+        VarProp(true).apply {
+            onChange {
+                reset()
+            }
         }
-    }
     var istabmode: Boolean by istabmodeprop
 
-    var orientationProp: VarProp<Orientation> = VarProp(orientation).apply {
-        onChange {
-            reset()
+    var orientationProp: VarProp<Orientation> =
+        VarProp(orientation).apply {
+            onChange {
+                reset()
+            }
         }
-    }
     var orientation by orientationProp
 
     init {
@@ -43,8 +45,9 @@ open class TileableTabPane(
             item(switch_to_tiles) {
 
                 this@TileableTabPane.istabmodeprop.onChange {
-                    text = if (it) switch_to_tiles
-                    else "switch to tabs"
+                    text =
+                        if (it) switch_to_tiles
+                        else "switch to tabs"
                 }
                 setOnAction { this@TileableTabPane.switch() }
             }
@@ -56,38 +59,44 @@ open class TileableTabPane(
         istabmode = !istabmode
     }
 
-    protected fun reset() = mysem.with {
-        if (istabmode) tabmode()
-        else tilemode()
-    }
+    protected fun reset() =
+        mysem.with {
+            if (istabmode) tabmode()
+            else tilemode()
+        }
 
     private fun tabmode() {
         clear()
-        add(TabPaneWrapper(*panes.map {
-            TabWrapper(it.first, it.second).apply {
-                isClosable = false
-                it.second.prefHeightProperty.bind(this@TileableTabPane.heightProperty)
-                it.second.prefWidthProperty.bind(this@TileableTabPane.widthProperty)
-            }
-        }.toTypedArray()).apply {
-            vgrow = ALWAYS
+        add(
+            TabPaneWrapper(
+                *panes.map {
+                    TabWrapper(it.first, it.second).apply {
+                        isClosable = false
+                        it.second.prefHeightProperty.bind(this@TileableTabPane.heightProperty)
+                        it.second.prefWidthProperty.bind(this@TileableTabPane.widthProperty)
+                    }
+                }.toTypedArray()
+            ).apply {
+                vgrow = ALWAYS
 
-            if (this@TileableTabPane.lastSelected != null && this@TileableTabPane.lastSelected!! < this@TileableTabPane.panes.size) {
-                selectionModel.selectIndex(this@TileableTabPane.lastSelected!!)
+                if (this@TileableTabPane.lastSelected != null && this@TileableTabPane.lastSelected!! < this@TileableTabPane.panes.size) {
+                    selectionModel.selectIndex(this@TileableTabPane.lastSelected!!)
+                }
+                selectionModel.selectedIndexProperty.onChange {
+                    this@TileableTabPane.lastSelected = it
+                }
             }
-            selectionModel.selectedIndexProperty.onChange {
-                this@TileableTabPane.lastSelected = it
-            }
-        })
+        )
     }
 
     private fun tilemode() {
         clear()
         var root: PaneWrapper<*> = this
         if (orientation == HORIZONTAL) {
-            root = root.hbox<NodeWrapper> {
-                vgrow = ALWAYS
-            }
+            root =
+                root.hbox<NodeWrapper> {
+                    vgrow = ALWAYS
+                }
         }
         for (pane in panes) {
             root.add(pane.second)
@@ -95,12 +104,12 @@ open class TileableTabPane(
         val nchildren = panes.size.toDouble()
         panes.map { it.second }.forEach {
             if (orientation == VERTICAL) {
-                it.minHeightProperty.bind(root.heightProperty/(nchildren))
-                it.maxHeightProperty.bind(root.heightProperty/(nchildren))
+                it.minHeightProperty.bind(root.heightProperty / (nchildren))
+                it.maxHeightProperty.bind(root.heightProperty / (nchildren))
                 it.vgrow = ALWAYS
             } else {
-                it.minWidthProperty.bind(root.widthProperty/(nchildren))
-                it.maxWidthProperty.bind(root.widthProperty/(nchildren))
+                it.minWidthProperty.bind(root.widthProperty / (nchildren))
+                it.maxWidthProperty.bind(root.widthProperty / (nchildren))
                 it.hgrow = ALWAYS
             }
         }

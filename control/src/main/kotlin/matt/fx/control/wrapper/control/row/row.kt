@@ -36,8 +36,7 @@ class TableRowWrapper<E>(
     val item: E? get() = node.item
     override fun isInsideRow() = true
 
-    val selectedProperty by lazy {node.selectedProperty().toNonNullableROProp()}
-
+    val selectedProperty by lazy { node.selectedProperty().toNonNullableROProp() }
 }
 
 class TreeCellOverride<T>(var updateItemOv: (item: T, empty: Boolean) -> Unit = { _, _ -> Unit }) : TreeCell<T>() {

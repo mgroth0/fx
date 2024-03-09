@@ -13,12 +13,13 @@ import matt.fx.control.wrapper.tab.TabPaneWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.impl.NodeWrapperImpl
 import matt.http.url.query.buildQueryURL
-import matt.lang.NEVER
 import matt.lang.assertions.require.requireNot
-import matt.lang.opt
-import matt.log.warn.warn
-import matt.obs.prop.BindableProperty
-import matt.obs.prop.Var
+import matt.lang.common.NEVER
+import matt.lang.common.opt
+import matt.log.warn.common.warn
+import matt.obs.prop.onChangeUntilInclusive
+import matt.obs.prop.writable.BindableProperty
+import matt.obs.prop.writable.Var
 import matt.prim.str.urlEncode
 import java.awt.Desktop
 import java.net.URI
@@ -33,15 +34,17 @@ fun Scrolls.scrollToMinYOf(node: NodeWrapperImpl<*>) {
 }
 
 
-fun ColumnConstraints.exactWidthProperty() = BindableProperty<Double?>(null).also {
-    minWidthProperty().bind(it.createROFXPropWrapper())
-    maxWidthProperty().bind(it.createROFXPropWrapper())
-}
+fun ColumnConstraints.exactWidthProperty() =
+    BindableProperty<Double?>(null).also {
+        minWidthProperty().bind(it.createROFXPropWrapper())
+        maxWidthProperty().bind(it.createROFXPropWrapper())
+    }
 
-fun RowConstraints.exactHeightProperty() = BindableProperty<Double?>(null).also {
-    minHeightProperty().bind(it.createROFXPropWrapper())
-    maxHeightProperty().bind(it.createROFXPropWrapper())
-}
+fun RowConstraints.exactHeightProperty() =
+    BindableProperty<Double?>(null).also {
+        minHeightProperty().bind(it.createROFXPropWrapper())
+        maxHeightProperty().bind(it.createROFXPropWrapper())
+    }
 
 
 var ColumnConstraints.exactWidth: Number
@@ -69,7 +72,7 @@ fun <N : NodeWrapper> TabPaneWrapper<in TabWrapper<N>>.lazyTab(
 
 abstract class LazyTab<N : NodeWrapper?>(
     name: String,
-    closable: Boolean = true,
+    closable: Boolean = true
 ) : TabWrapper<N>(name) {
     abstract fun nodeOp(): N
 
@@ -92,13 +95,11 @@ fun NodeWrapper.disableContextMenu() {
 }
 
 
-//fun BooleanProperty.checkbox() = CheckBoxWrapper(name).also {
-//  it.selectedProperty.bindBidirectional(this)
-//}
-fun Var<Boolean>.checkbox(name: String? = null) = CheckBoxWrapper(name).also {
-    warn("need auto name name")
-    it.selectedProperty.bindBidirectional(this)
-}
+fun Var<Boolean>.checkbox(name: String? = null) =
+    CheckBoxWrapper(name).also {
+        warn("need auto name name")
+        it.selectedProperty.bindBidirectional(this)
+    }
 
 
 class TreeTableTreeView<T>(val table: Boolean) : TreeTableView<T>() {
@@ -137,6 +138,6 @@ fun mailtoURL(
     body: String? = null
 ) = buildQueryURL(
     "mailto:$address",
-    *opt(subject) { "subject" to this.urlEncode() },
-    *opt(body) { "body" to this.urlEncode() }
+    *opt(subject) { "subject" to urlEncode() },
+    *opt(body) { "body" to urlEncode() }
 )

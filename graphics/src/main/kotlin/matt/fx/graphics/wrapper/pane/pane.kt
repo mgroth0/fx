@@ -1,5 +1,6 @@
 package matt.fx.graphics.wrapper.pane
 
+import javafx.collections.ObservableList
 import javafx.scene.Cursor
 import javafx.scene.Node
 import javafx.scene.input.MouseEvent
@@ -47,7 +48,7 @@ interface PaneWrapper<C : NodeWrapper> : RegionWrapper<C> {
         children.add(child as C)
     }
 
-    @Open   operator fun Collection<C>.unaryPlus() {
+    @Open operator fun Collection<C>.unaryPlus() {
         addAll(this)
     }
 
@@ -55,7 +56,7 @@ interface PaneWrapper<C : NodeWrapper> : RegionWrapper<C> {
     override val children: MutableObsList<C>
 
 
-    @Open    fun resizer(corner: Corner) {
+    @Open fun resizer(corner: Corner) {
         /*var y = 0.0
           var x = 0.0*/
         var initEventX = 0.0
@@ -71,72 +72,75 @@ interface PaneWrapper<C : NodeWrapper> : RegionWrapper<C> {
             @Suppress(
                 "UNUSED_PARAMETER"
             ) event: MouseEvent
-        ): Boolean {    /*return event.y > region.height - RESIZE_MARGIN*/
+        ): Boolean {
+            /*return event.y > region.height - RESIZE_MARGIN*/
             return true
         }
-        add(RectangleWrapper(50.0, 50.0, Color.BLUE).apply {
-            setOnMouseReleased {
-                dragging = false
-                cursor = Cursor.DEFAULT
-            }
+        add(
+            RectangleWrapper(50.0, 50.0, Color.BLUE).apply {
+                setOnMouseReleased {
+                    dragging = false
+                    cursor = Cursor.DEFAULT
+                }
 
-            setOnMouseMoved {
-                cursor = if (isInDraggableZone(it) || dragging) {
-                    when (corner) {
-                        NW -> Cursor.NW_RESIZE
-                        NE -> Cursor.NE_RESIZE
-                        SW -> Cursor.SW_RESIZE
-                        SE -> Cursor.SE_RESIZE
+                setOnMouseMoved {
+                    cursor =
+                        if (isInDraggableZone(it) || dragging) {
+                            when (corner) {
+                                NW -> Cursor.NW_RESIZE
+                                NE -> Cursor.NE_RESIZE
+                                SW -> Cursor.SW_RESIZE
+                                SE -> Cursor.SE_RESIZE
+                            }
+                        } else {
+                            Cursor.DEFAULT
+                        }
+                }
+                setOnMouseDragged {
+                    if (dragging) {
+
+                        when (corner) {
+                            NW -> {
+                                stage!!.y = initStageY + (it.screenY - initEventY)
+                                stage!!.height = initStageMaxY - stage!!.y
+                                stage!!.x = initStageX + (it.screenX - initEventX)
+                                stage!!.width = initStageMaxX - stage!!.x
+                            }
+
+                            NE -> {
+                                stage!!.y = initStageY + (it.screenY - initEventY)
+                                stage!!.height = initStageMaxY - stage!!.y
+                                stage!!.width = initStageWidth + (it.screenX - initEventX)
+                            }
+
+                            SW -> {
+                                stage!!.height = initStageHeight + (it.screenY - initEventY)
+                                stage!!.x = initStageX + (it.screenX - initEventX)
+                                stage!!.width = initStageMaxX - stage!!.x
+                            }
+
+                            SE -> {
+                                stage!!.height = initStageHeight + (it.screenY - initEventY)
+                                stage!!.width = initStageWidth + (it.screenX - initEventX)
+                            }
+                        }
                     }
-                } else {
-                    Cursor.DEFAULT
                 }
-            }
-            setOnMouseDragged {
-                if (dragging) {
-
-                    when (corner) {
-                        NW -> {
-                            stage!!.y = initStageY + (it.screenY - initEventY)
-                            stage!!.height = initStageMaxY - stage!!.y
-                            stage!!.x = initStageX + (it.screenX - initEventX)
-                            stage!!.width = initStageMaxX - stage!!.x
-                        }
-
-                        NE -> {
-                            stage!!.y = initStageY + (it.screenY - initEventY)
-                            stage!!.height = initStageMaxY - stage!!.y
-                            stage!!.width = initStageWidth + (it.screenX - initEventX)
-                        }
-
-                        SW -> {
-                            stage!!.height = initStageHeight + (it.screenY - initEventY)
-                            stage!!.x = initStageX + (it.screenX - initEventX)
-                            stage!!.width = initStageMaxX - stage!!.x
-                        }
-
-                        SE -> {
-                            stage!!.height = initStageHeight + (it.screenY - initEventY)
-                            stage!!.width = initStageWidth + (it.screenX - initEventX)
-                        }
+                setOnMousePressed {
+                    if (isInDraggableZone(it)) {
+                        dragging = true
+                        initEventX = it.screenX
+                        initEventY = it.screenY
+                        initStageHeight = stage!!.height
+                        initStageWidth = stage!!.width
+                        initStageX = stage!!.x
+                        initStageY = stage!!.y
+                        initStageMaxY = initStageHeight + initStageY
+                        initStageMaxX = initStageWidth + initStageX
                     }
                 }
             }
-            setOnMousePressed {
-                if (isInDraggableZone(it)) {
-                    dragging = true
-                    initEventX = it.screenX
-                    initEventY = it.screenY
-                    initStageHeight = stage!!.height
-                    initStageWidth = stage!!.width
-                    initStageX = stage!!.x
-                    initStageY = stage!!.y
-                    initStageMaxY = initStageHeight + initStageY
-                    initStageMaxX = initStageWidth + initStageX
-                }
-            }
-        })
-
+        )
     }
 
     @Open fun addAll(vararg nodes: C) = children.addAll(nodes)
@@ -147,26 +151,32 @@ interface PaneWrapper<C : NodeWrapper> : RegionWrapper<C> {
 
 fun <C : NodeWrapper> PaneWrapper<C>.spacer(size: Double = 20.0) {
 
-    addChild(SimplePaneWrapper<VBoxWrapperImpl<*>>().apply {
-        minWidth = size
-        minHeight = size
-    })
+    addChild(
+        SimplePaneWrapper<VBoxWrapperImpl<*>>().apply {
+            minWidth = size
+            minHeight = size
+        }
+    )
 }
 
 fun <C : NodeWrapper> PaneWrapper<C>.hSpacer(size: Double = 20.0) {
 
-    addChild(SimplePaneWrapper<VBoxWrapperImpl<*>>().apply {
-        minWidth = size
-        minHeight = 1.0
-    })
+    addChild(
+        SimplePaneWrapper<VBoxWrapperImpl<*>>().apply {
+            minWidth = size
+            minHeight = 1.0
+        }
+    )
 }
 
 fun <C : NodeWrapper> PaneWrapper<C>.vSpacer(size: Double = 20.0) {
 
-    addChild(SimplePaneWrapper<VBoxWrapperImpl<*>>().apply {
-        minWidth = 1.0
-        minHeight = size
-    })
+    addChild(
+        SimplePaneWrapper<VBoxWrapperImpl<*>>().apply {
+            minWidth = 1.0
+            minHeight = size
+        }
+    )
 }
 
 
@@ -178,7 +188,15 @@ open class PaneWrapperImpl<N : Pane, C : NodeWrapper>(
 ) : RegionWrapperImpl<N, C>(node), PaneWrapper<C> {
 
 
-    final override val childList get() = node.children
+    open override fun addChild(
+        child: NodeWrapper,
+        index: Int?
+    ) {
+        super<PaneWrapper>.addChild(child, index)
+    }
+
+
+    final override val childList: ObservableList<Node> get() = node.children
     final override val children by lazy {
         node.children.createMutableWrapper().toSyncedList(uncheckedWrapperConverter<Node, C>())
     }

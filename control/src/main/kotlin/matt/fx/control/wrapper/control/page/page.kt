@@ -4,6 +4,7 @@ import javafx.scene.Node
 import javafx.scene.control.Pagination
 import javafx.scene.text.Text
 import javafx.util.Callback
+import matt.fx.base.wrapper.obs.obsval.prop.NonNullFXBackedBindableProp
 import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
 import matt.fx.control.wrapper.control.ControlWrapperImpl
@@ -16,7 +17,9 @@ import matt.lang.function.Op
 import matt.obs.col.olist.MutableObsList
 
 fun ET.pagination(
-    pageCount: Int? = null, pageIndex: Int? = null, op: PaginationWrapper.()->Unit = {}
+    pageCount: Int? = null,
+    pageIndex: Int? = null,
+    op: PaginationWrapper.() -> Unit = {}
 ): PaginationWrapper {
     val pagination = PaginationWrapper()
     if (pageCount != null) pagination.pageCount = pageCount
@@ -28,7 +31,7 @@ fun ET.pagination(
 class PaginationWrapper(node: Pagination = Pagination()): ControlWrapperImpl<Pagination>(node) {
     val pageCountProperty = node.pageCountProperty().toNonNullableProp().cast<Int>()
     var pageCount by pageCountProperty
-    val currentPageIndexProperty = node.currentPageIndexProperty().toNonNullableProp()
+    val currentPageIndexProperty: NonNullFXBackedBindableProp<Number> = node.currentPageIndexProperty().toNonNullableProp()
     var currentPageIndex by currentPageIndexProperty
 
   /*  init {
@@ -42,25 +45,7 @@ class PaginationWrapper(node: Pagination = Pagination()): ControlWrapperImpl<Pag
 
     val pageFactoryProperty by lazy { node.pageFactoryProperty().toNullableProp() }
     var pageFactory by pageFactoryProperty
-    //
-    //  private val refreshSem = java.util.concurrent.Semaphore(1)
-    //  fun refresh() {
-    //	thread {
-    //	  refreshSem.acquire()
-    //	  val oldPageFactory = pageFactory
-    //	  runLater {
-    //		pageFactory = null
-    //		runLater {
-    //		  pageFactory = oldPageFactory
-    //		  runLater {
-    //			currentPageIndex = pageCount - 1
-    //			refreshSem.release()
-    //		  }
-    //		}
-    //	  }
-    //	}
-    //
-    //  }
+
 
     override fun addChild(child: NodeWrapper, index: Int?) {
         TODO()
@@ -71,20 +56,21 @@ fun listPagination(list: MutableObsList<out NodeWrapper>) = ListPagination(list)
 
 class ListPagination<E>(
     private val list: MutableObsList<E>,
-    factory: (E)->NodeWrapper
+    factory: (E) -> NodeWrapper
 ): AnchorPaneWrapperImpl<NW>() {
 
     private val paginator = PaginationWrapper()
 
-    private val myFactory = Callback<Int, Node> { pageIndex ->
-        list.getOrNull(pageIndex)?.let {
-            factory(it).node
-        } ?: Text("nothing at index: $pageIndex")
-    }
+    private val myFactory =
+        Callback<Int, Node> { pageIndex ->
+            list.getOrNull(pageIndex)?.let {
+                factory(it).node
+            } ?: Text("nothing at index: $pageIndex")
+        }
 
     init {
         allSides = paginator
-        list.onChangeWithWeak(this) { lp,_ ->
+        list.onChangeWithWeak(this) { lp, _ ->
             lp.refresh()
         }
         refresh()
@@ -108,5 +94,4 @@ class ListPagination<E>(
         refreshingAfter = false
         refresh()
     }
-
 }

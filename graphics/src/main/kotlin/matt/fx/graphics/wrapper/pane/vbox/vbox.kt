@@ -5,6 +5,7 @@ import javafx.geometry.Pos
 import javafx.scene.Node
 import javafx.scene.layout.Priority
 import javafx.scene.layout.VBox
+import matt.fx.base.wrapper.obs.obsval.prop.NonNullFXBackedBindableProp
 import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.graphics.style.inset.MarginableConstraints
 import matt.fx.graphics.wrapper.ET
@@ -16,20 +17,20 @@ import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
 import matt.fx.graphics.wrapper.pane.SimplePaneWrapper
 import matt.fx.graphics.wrapper.pane.box.BoxWrapper
 import matt.fx.graphics.wrapper.pane.box.BoxWrapperImpl
-import matt.lang.B
+import matt.lang.common.B
 import matt.lang.delegation.lazyVarDelegate
-import matt.obs.prop.Var
+import matt.obs.prop.writable.Var
 
 fun ET.v(
     spacing: Number? = null,
     alignment: Pos? = null,
-    op: VBoxWrapper<NW>.()->Unit = {}
+    op: VBoxWrapper<NW>.() -> Unit = {}
 ) = vbox(spacing, alignment, op)
 
 fun <C: NodeWrapper> ET.vbox(
     spacing: Number? = null,
     alignment: Pos? = null,
-    op: VBoxWrapper<C>.()->Unit = {}
+    op: VBoxWrapper<C>.() -> Unit = {}
 ): VBoxWrapper<C> {
     val vbox = VBoxWrapperImpl<C>(VBox())
     if (alignment != null) vbox.alignment = alignment
@@ -48,13 +49,13 @@ open class VBoxWrapperImpl<C: NodeWrapper>(node: VBox = VBox()): BoxWrapperImpl<
     constructor(vararg nodes: C): this(VBox(*nodes.map { it.node }.toTypedArray()))
 
 
-    final override val fillWidthProperty by lazy {
+    final override val fillWidthProperty: NonNullFXBackedBindableProp<Boolean> by lazy {
         node.fillWidthProperty().toNonNullableProp()
     }
     final override var isFillWidth by lazyVarDelegate { fillWidthProperty }
 }
 
-fun VBoxWrapperImpl<PaneWrapper<*>>.spacer(prio: Priority = Priority.ALWAYS, op: PaneWrapperImpl<*, *>.()->Unit = {}) =
+fun VBoxWrapperImpl<PaneWrapper<*>>.spacer(prio: Priority = Priority.ALWAYS, op: PaneWrapperImpl<*, *>.() -> Unit = {}) =
     attach(SimplePaneWrapper<NodeWrapper>().apply { vGrow = prio }, op)
 
 
@@ -72,7 +73,7 @@ class VBoxConstraint(
 }
 
 
-inline fun <T: Node> T.vboxConstraints(op: (VBoxConstraint.()->Unit)): T {
+inline fun <T: Node> T.vboxConstraints(op: (VBoxConstraint.() -> Unit)): T {
     val c = VBoxConstraint(this)
     c.op()
     return c.applyToNode(this)

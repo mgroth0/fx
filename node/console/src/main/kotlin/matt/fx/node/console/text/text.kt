@@ -6,10 +6,11 @@ import javafx.scene.Cursor.HAND
 import javafx.scene.paint.Color
 import javafx.scene.paint.Color.YELLOW
 import javafx.scene.text.Font
+import kotlinx.coroutines.runBlocking
 import matt.auto.term.parseterm.TransformableOutput
 import matt.auto.term.parseterm.open
 import matt.auto.term.parseterm.parseTerminalOutput
-import matt.color.rgb
+import matt.color.common.rgb
 import matt.fx.base.time.toFXDuration
 import matt.fx.base.wrapper.obs.obsval.toNonNullableROProp
 import matt.fx.graphics.anim.animation.keyframe
@@ -25,26 +26,28 @@ import matt.fx.graphics.wrapper.text.textlike.DarkLightFXColor
 import matt.fx.graphics.wrapper.text.textlike.MONO_FONT
 import matt.fx.graphics.wrapper.text.textlike.highlightOnHover
 import matt.fx.graphics.wrapper.textflow.TextFlowWrapper
+import matt.kjlib.socket.client.clients.InterAppServices
+import matt.lang.common.ifTrueOrNull
 import matt.lang.function.Op
-import matt.lang.ifTrueOrNull
 import matt.obs.bind.binding
 import matt.obs.bind.deepBinding
 import matt.obs.bindings.bool.and
 import matt.obs.bindings.comp.gt
 import matt.obs.bindings.comp.lt
 import matt.obs.listen.whenEqualsOnce
-import matt.obs.prop.BindableProperty
 import matt.obs.prop.ObsVal
-import matt.obs.prop.VarProp
-import matt.time.dur.ms
+import matt.obs.prop.writable.BindableProperty
+import matt.obs.prop.writable.VarProp
+import matt.time.dur.common.ms
 
 private const val PROMPT = "> "
 private val PROMPT_COLOR: Color = Color.GREEN
 private val INPUT_COLOR = rgb(100, 100, 255).toFXColor()
 private val CLICKABLE_COLOR: Color = Color.BLUE
-private val HOVER_COLOR = DarkLightFXColor(
-    darkColor = Color.LIGHTBLUE, lightColor = Color.DARKBLUE
-)
+private val HOVER_COLOR =
+    DarkLightFXColor(
+        darkColor = Color.LIGHTBLUE, lightColor = Color.DARKBLUE
+    )
 private val NEWLINES = listOf('\n', '\r')
 
 class ConsoleTextFlow(
@@ -88,11 +91,12 @@ class ConsoleTextFlow(
 
     private var currentLine = OutputText()
     private var blinkRemote: BlinkRemote? = null
-    private var separatorText = takesInput ifTrueOrNull {
-        SepText().also {
-            blinkRemote = it.blink()
+    private var separatorText =
+        takesInput ifTrueOrNull {
+            SepText().also {
+                blinkRemote = it.blink()
+            }
         }
-    }
     private var unsentInputText = takesInput ifTrueOrNull { InputText() }
     fun prepStoredInput() = unsentInputText!!.text + "\n"
 
@@ -112,18 +116,21 @@ class ConsoleTextFlow(
     fun displayInputAsSentAndClearStoredInput() {
 
         blinkRemote!!.stop()
-        currentLine = OutputText().also {
-            it.text = "\n"
-            add(it)
-        }
+        currentLine =
+            OutputText().also {
+                it.text = "\n"
+                add(it)
+            }
         if (takesInput) {
-            separatorText = SepText(newline = false).also {
-                blinkRemote = it.blink()
-                add(it)
-            }
-            unsentInputText = InputText().also {
-                add(it)
-            }
+            separatorText =
+                SepText(newline = false).also {
+                    blinkRemote = it.blink()
+                    add(it)
+                }
+            unsentInputText =
+                InputText().also {
+                    add(it)
+                }
         }
         currentLineCount++
     }
@@ -143,6 +150,7 @@ class ConsoleTextFlow(
     }
 
 
+    context(InterAppServices)
     fun displayNewText(newText: String) {
         newText.forEach { c ->
             currentLine.text += c
@@ -177,18 +185,25 @@ class ConsoleTextFlow(
                     }
                     maybeAddBasicText(finishedLineText.substring(lastPart.indices.last + 1))
                 }
-                currentLine = OutputText().also {
-                    children.add(
-                        if (takesInput) children.size - 2 else children.size, it
-                    )
-                }
+                currentLine =
+                    OutputText().also {
+                        children.add(
+                            if (takesInput) children.size - 2 else children.size, it
+                        )
+                    }
                 currentLineCount++
                 checkLineBuffer()
             }
         }
     }
 
-    private fun TransformableOutput.toNode() = ClickableText(text) { open() }
+    context(InterAppServices)
+    private fun TransformableOutput.toNode() =
+        ClickableText(text) {
+            runBlocking {
+                open()
+            }
+        }
 
     private fun checkLineBuffer() {
         if (maxLines != null) {
@@ -219,11 +234,12 @@ class ConsoleTextFlow(
 
     private fun SepText(newline: Boolean = true) = SepBlock(this@ConsoleTextFlow.font, newline = newline)
     private fun InputText() = InputBlock(this@ConsoleTextFlow.font)
-    private fun OutputText(text: String? = null) = BasicOutputText(this@ConsoleTextFlow.font).apply {
-        if (text != null) {
-            this.text = text
+    private fun OutputText(text: String? = null) =
+        BasicOutputText(this@ConsoleTextFlow.font).apply {
+            if (text != null) {
+                this.text = text
+            }
         }
-    }
 
     private fun ClickableText(
         text: String,
@@ -231,8 +247,6 @@ class ConsoleTextFlow(
     ) = ClickableOutputText(this@ConsoleTextFlow.font, op).apply {
         this.text = text
     }
-
-
 }
 
 
@@ -259,7 +273,6 @@ private class ClickableOutputText(
 }
 
 
-//sealed interface OutputSubBlock : NodeWrapper
 
 private class SepBlock(
     font: ObsVal<Font>,
@@ -294,34 +307,37 @@ private abstract class BaseText(
 class BlinkRemote(val stop: Op)
 
 private fun TextWrapper.blink(): BlinkRemote {
-    val theTimeline = timeline {
-        isAutoReverse = true
-        cycleCount = Timeline.INDEFINITE
-        val fillProp = node.fillProperty()
-        keyframe(0.ms.toFXDuration()) {
-            keyvalue(fillProp, PROMPT_COLOR)
-        }
-        keyframe(350.ms.toFXDuration()) {
-            keyvalue(fillProp, Color.BLUE)
-        }
-    }
-    val remoteEnabled = BindableProperty(true)
-    val preShouldBlink = sceneProperty.deepBinding { it?.windowProperty ?: VarProp(null) }
-    val shouldBlink = preShouldBlink.deepBinding {
-        it?.focusedProperty ?: VarProp(false)
-    }
-    val reallyShouldBlink = shouldBlink and remoteEnabled
-    if (reallyShouldBlink.value) theTimeline.play()
-    val listener = reallyShouldBlink.onChange {
-        if (it) theTimeline.play()
-        else {
-            theTimeline.stop()
-            theTimeline.statusProperty().toNonNullableROProp().whenEqualsOnce(STOPPED) {
-                /*ironically, if I use fillViaStyleSinceThereIsSomeBug here it will not work*/
-                fill = PROMPT_COLOR
+    val theTimeline =
+        timeline {
+            isAutoReverse = true
+            cycleCount = Timeline.INDEFINITE
+            val fillProp = node.fillProperty()
+            keyframe(0.ms.toFXDuration()) {
+                keyvalue(fillProp, PROMPT_COLOR)
+            }
+            keyframe(350.ms.toFXDuration()) {
+                keyvalue(fillProp, Color.BLUE)
             }
         }
-    }
+    val remoteEnabled = BindableProperty(true)
+    val preShouldBlink = sceneProperty.deepBinding { it?.windowProperty ?: VarProp(null) }
+    val shouldBlink =
+        preShouldBlink.deepBinding {
+            it?.focusedProperty ?: VarProp(false)
+        }
+    val reallyShouldBlink = shouldBlink and remoteEnabled
+    if (reallyShouldBlink.value) theTimeline.play()
+    val listener =
+        reallyShouldBlink.onChange {
+            if (it) theTimeline.play()
+            else {
+                theTimeline.stop()
+                theTimeline.statusProperty().toNonNullableROProp().whenEqualsOnce(STOPPED) {
+                    /*ironically, if I use fillViaStyleSinceThereIsSomeBug here it will not work*/
+                    fill = PROMPT_COLOR
+                }
+            }
+        }
     return BlinkRemote(stop = {
         remoteEnabled.value = false
         listener.removeListener()

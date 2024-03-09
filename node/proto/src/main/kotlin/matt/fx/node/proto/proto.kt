@@ -19,7 +19,7 @@ import matt.fx.graphics.wrapper.node.line.line
 import matt.fx.graphics.wrapper.pane.SimplePaneWrapper
 import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
 import matt.fx.graphics.wrapper.style.FXColor
-import matt.lang.l
+import matt.lang.common.l
 import matt.model.data.dir.Direction
 import matt.model.data.dir.Direction.BACKWARD
 import matt.model.data.dir.Direction.FORWARD
@@ -28,8 +28,8 @@ import matt.model.flowlogic.recursionblocker.RecursionBlocker
 import matt.obs.bind.binding
 import matt.obs.math.double.op.times
 import matt.obs.prop.ObsVal
-import matt.obs.prop.VarProp
-import matt.rstruct.loader.systemResourceLoader
+import matt.obs.prop.writable.VarProp
+import matt.rstruct.loader.desktop.systemResourceLoader
 import kotlin.reflect.KClass
 
 fun NW.svgIcon(
@@ -48,49 +48,54 @@ fun NW.svgIcon(
     }
 }
 
-fun navDrawerButtonGraphic(prefHeight: ObsVal<Double>) = SimplePaneWrapper<NW>().apply {
-    val pn = this
-    prefHeightProperty.bind(prefHeight)
-    val w = 30
-    prefWidth = w.toDouble()
-    val hM = 4
-    repeat(3) { y ->
-        line(startX = hM, startY = 0.0, endX = w - hM, endY = 0.0) {
-            l(startYProperty, endYProperty).forEach {
-                it.bind(
-                    pn.heightProperty * (0.25 + y * 0.25)
+fun navDrawerButtonGraphic(prefHeight: ObsVal<Double>) =
+    SimplePaneWrapper<NW>().apply {
+        val pn = this
+        prefHeightProperty.bind(prefHeight)
+        val w = 30
+        prefWidth = w.toDouble()
+        val hM = 4
+        repeat(3) { y ->
+            line(startX = hM, startY = 0.0, endX = w - hM, endY = 0.0) {
+                l(startYProperty, endYProperty).forEach {
+                    it.bind(
+                        pn.heightProperty * (0.25 + y * 0.25)
+                    )
+                }
+                strokeProperty.bind(
+                    DarkModeController.darkModeProp.binding {
+                        if (it) FXColor.WHITE else FXColor.BLACK
+                    }
                 )
             }
-            strokeProperty.bind(DarkModeController.darkModeProp.binding {
-                if (it) FXColor.WHITE else FXColor.BLACK
-            })
         }
     }
-}
 
-fun iconSpacer() = VBoxWrapperImpl<NodeWrapper>().apply {
-    exactHeight = 20.0
-    exactWidth = 5.0
-}
+fun iconSpacer() =
+    VBoxWrapperImpl<NodeWrapper>().apply {
+        exactHeight = 20.0
+        exactWidth = 5.0
+    }
 
 
-fun Direction.graphic(): NodeWrapperImpl<*>? = if (this == FORWARD) {
-    Icon("white/forward")
-} else if (this == BACKWARD) {
+fun Direction.graphic(): NodeWrapperImpl<*>? =
+    if (this == FORWARD) {
+        Icon("white/forward")
+    } else if (this == BACKWARD) {
 
-    val canvas = CanvasWrapper(ICON_SIZE)
-    val image = IconImage("white/forward")
-    val xoff = 0.0 /*15.0*/
-    val gc: GraphicsContext = canvas.graphicsContext
-    gc.save()
-    gc.translate(image.width + xoff * 2, 0.0)
-    gc.scale(-1.0, 1.0)
-    gc.drawImage(image, xoff, 0.0)
-    gc.restore()
-    gc.drawImage(image, xoff, 0.0)
+        val canvas = CanvasWrapper(ICON_SIZE)
+        val image = IconImage("white/forward")
+        val xoff = 0.0 /*15.0*/
+        val gc: GraphicsContext = canvas.graphicsContext
+        gc.save()
+        gc.translate(image.width + xoff * 2, 0.0)
+        gc.scale(-1.0, 1.0)
+        gc.drawImage(image, xoff, 0.0)
+        gc.restore()
+        gc.drawImage(image, xoff, 0.0)
 
-    canvas
-} else null
+        canvas
+    } else null
 
 
 class LinePrintTextArea : TextAreaWrapper() {
@@ -132,7 +137,6 @@ class EnumTabPane<E : Enum<E>, C : NW>(
             }
         }
     }
-
 }
 
 class EnumTab<E : Enum<E>, C : NW>(

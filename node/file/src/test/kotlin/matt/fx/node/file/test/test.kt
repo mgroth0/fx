@@ -1,7 +1,7 @@
 package matt.fx.node.file.test
 
 
-import matt.file.commons.TEMP_DIR
+import matt.file.commons.reg.TEMP_DIR
 import matt.fx.node.file.draggableIcon
 import matt.mbuild.mtest.fx.FXTester
 import matt.mbuild.mtest.fx.FxTests

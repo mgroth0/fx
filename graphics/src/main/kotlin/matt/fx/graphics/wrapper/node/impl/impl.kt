@@ -3,6 +3,7 @@ package matt.fx.graphics.wrapper.node.impl
 import javafx.scene.Cursor
 import javafx.scene.Node
 import javafx.scene.Scene
+import matt.fx.base.wrapper.obs.obsval.NonNullFXBackedReadOnlyBindableProp
 import matt.fx.base.wrapper.obs.obsval.prop.NullableFXBackedBindableProp
 import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
@@ -17,11 +18,8 @@ import matt.fx.graphics.wrapper.style.StyleableWrapperImpl2
 import matt.lang.delegation.lazyDelegate
 import matt.model.flowlogic.recursionblocker.RecursionBlocker
 import matt.obs.bind.binding
-import matt.obs.prop.BindableProperty
+import matt.obs.prop.writable.BindableProperty
 
-//private operator fun <T, V> ReadOnlyProperty<T, V>.getValue(t: T, property: KProperty<*>): V {
-//	return error("abc")
-//}
 abstract class NodeWrapperImpl<out N : Node>(
     node: N
 ) : SingularEventTargetWrapper<N>(node), StyleableWrapper by StyleableWrapperImpl2(node), NodeWrapper {
@@ -51,12 +49,13 @@ abstract class NodeWrapperImpl<out N : Node>(
         )
     }
 
-    final override val scene by lazyDelegate {    /*lazy because there is an issue where the inner mechanics of this property causes the wrong scene wrapper to be built during the SceneWrapper's initialization*/
+    final override val scene by lazyDelegate {
+        /*lazy because there is an issue where the inner mechanics of this property causes the wrong scene wrapper to be built during the SceneWrapper's initialization*/
         sceneProperty
     }
 
 
-    final override val focusedProperty by lazy { node.focusedProperty().toNonNullableROProp() }
+    final override val focusedProperty: NonNullFXBackedReadOnlyBindableProp<Boolean> by lazy { node.focusedProperty().toNonNullableROProp() }
     final override val isFocused by lazyDelegate {
         focusedProperty
     }
@@ -116,6 +115,4 @@ abstract class NodeWrapperImpl<out N : Node>(
     final override val visibleAndManagedProp by lazy {
         _visibleAndManagedProp
     }
-
-
 }

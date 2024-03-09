@@ -22,7 +22,7 @@ import matt.obs.col.olist.MutableObsList
 import matt.obs.col.olist.toBasicObservableList
 import matt.obs.prop.ObsVal
 import matt.obs.prop.ValProp
-import matt.obs.prop.VarProp
+import matt.obs.prop.writable.VarProp
 
 fun <T: Any> ComboBoxWrapper<T>.bindSelected(property: VarProp<T?>) {
     selectionModel.selectedItemProperty.onChange {
@@ -33,7 +33,7 @@ fun <T: Any> ComboBoxWrapper<T>.bindSelected(property: VarProp<T?>) {
 fun <T: Any> ET.combobox(
     property: VarProp<T?>? = null,
     values: List<T>? = null,
-    op: ComboBoxWrapper<T>.()->Unit = {}
+    op: ComboBoxWrapper<T>.() -> Unit = {}
 ) =
     ComboBoxWrapper<T>().attachTo(this, op) {
         if (values != null) it.items = values as? MutableObsList<T> ?: values.toBasicObservableList()
@@ -41,7 +41,7 @@ fun <T: Any> ET.combobox(
     }
 
 class ComboBoxWrapper<E: Any>(
-    node: ComboBox<E> = ComboBox<E>(),
+    node: ComboBox<E> = ComboBox<E>()
 ): ComboBoxBaseWrapper<E, ComboBox<E>>(node), SelectingControl<E>, ListCellFactory<ListView<E>, E> {
 
     constructor(items: MutableObsList<E>): this(ComboBox<E>(items.createFXWrapper()))
@@ -63,7 +63,6 @@ class ComboBoxWrapper<E: Any>(
     fun converterProperty(): ObjectProperty<StringConverter<E>> = node.converterProperty()
 
     override val selectionModel by lazy { node.selectionModel.wrap() }
-
 }
 
 open class ComboBoxBaseWrapper<T: Any, N: ComboBoxBase<T>>(node: N): ControlWrapperImpl<N>(node) {
@@ -88,14 +87,13 @@ open class ComboBoxBaseWrapper<T: Any, N: ComboBoxBase<T>>(node: N): ControlWrap
     final override fun addChild(child: NodeWrapper, index: Int?) {
         TODO()
     }
-
-
 }
 
 
-fun ComboBoxBaseWrapper<*, *>.editableWhen(predicate: ObsVal<Boolean>) = apply {
-    editableProperty.bind(predicate)
-}
+fun ComboBoxBaseWrapper<*, *>.editableWhen(predicate: ObsVal<Boolean>) =
+    apply {
+        editableProperty.bind(predicate)
+    }
 
 fun <T: Any> ComboBoxBaseWrapper<T, *>.bind(property: ValProp<T?>, readonly: Boolean = false) =
     valueProperty.smartBind(property, readonly)

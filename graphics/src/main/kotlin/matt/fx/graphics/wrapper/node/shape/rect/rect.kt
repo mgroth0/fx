@@ -16,33 +16,23 @@ fun NodeWrapperImpl<Parent>.rectangle(
     y: Number = 0.0,
     width: Number = 0.0,
     height: Number = 0.0,
-    op: RectangleWrapper.()->Unit = {}
+    op: RectangleWrapper.() -> Unit = {}
 ) =
     RectangleWrapper(x.toDouble(), y.toDouble(), width.toDouble(), height.toDouble()).attachTo(this, op)
 
 
 open class RectangleWrapper(
-    node: Rectangle = Rectangle(),
+    node: Rectangle = Rectangle()
 ): ShapeWrapper<Rectangle>(node), SizeControlled {
     constructor(x: Double, y: Double, width: Double, height: Double): this(Rectangle(x, y, width, height))
     constructor(width: Double, height: Double, fill: Paint): this(Rectangle(width, height, fill))
     constructor(width: Double, height: Double): this(Rectangle(width, height))
 
-    final //  var width
-    //	get() = node.width
-    //	set(value) {
-    //	  node.width = value
-    //	}
-    override val widthProperty by lazy {
+    final override val widthProperty by lazy {
         node.widthProperty().toNonNullableProp().cast<Double>()
     }
 
-    final //  var height
-    //	get() = node.height
-    //	set(value) {
-    //	  node.height = value
-    //	}
-    override val heightProperty by lazy { node.heightProperty().toNonNullableProp().cast<Double>() }
+    final override val heightProperty by lazy { node.heightProperty().toNonNullableProp().cast<Double>() }
 
 
     val xProperty by lazy {
@@ -67,6 +57,4 @@ open class RectangleWrapper(
         set(value) {
             node.width = value
         }
-
-
 }

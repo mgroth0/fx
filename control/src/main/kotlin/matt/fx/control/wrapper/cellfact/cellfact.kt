@@ -14,9 +14,9 @@ import matt.lang.anno.Open
 import matt.obs.bind.binding
 import matt.obs.bindings.bool.ObsB
 import matt.obs.bindings.str.ObsS
-import matt.obs.prop.BindableProperty
 import matt.obs.prop.ObsVal
-import matt.obs.prop.Var
+import matt.obs.prop.writable.BindableProperty
+import matt.obs.prop.writable.Var
 import kotlin.reflect.KProperty1
 
 interface CellFactory<N, T, C : Cell<T>> {
@@ -170,21 +170,7 @@ private fun Cell<*>.clear() {
     graphic = null
 }
 
-//private fun <T> Cell<T>.simpleUpdateLogic(
-//  item: T,
-//  empty: Boolean,
-//  op: (T)->Pair<String?, Node?>
-//) {
-//  if (empty || item == null) clear()
-//  else {
-//	op(item).let {
-//	  text = it.first
-//	  matt.fx.control.inter.getGraphic = it.second
-//	}
-//  }
-//}
 
-//@JvmName("simpleUpdateLogicT")
 private fun <T> Cell<T>.simpleUpdateLogic(
     item: T,
     empty: Boolean,
@@ -199,6 +185,3 @@ private fun <T> Cell<T>.simpleUpdateLogic(
     }
 }
 
-//sealed class StringNode
-//class StringNodeValues(val t: String, val g: Node)
-//class TextPropertyGraphicValue(val t: Text, val g: Node)

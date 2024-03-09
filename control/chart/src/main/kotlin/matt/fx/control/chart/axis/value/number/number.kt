@@ -22,7 +22,7 @@ fun <T : MathAndComparable<T>> numAxis(
 fun <T : MathAndComparable<T>> NumericalAxis<T>.numAxis() = NumberAxisWrapper(valueCodec.converter, tickConfigurer)
 
 class NumberAxisWrapper<T : MathAndComparable<T>>(
-    override val node: MoreGenericNumberAxis<T>,
+    node: MoreGenericNumberAxis<T>,
     val tickConfigurer: TickConfigurer<T>
 ) : ValueAxisWrapper<T>(node) {
 
@@ -46,25 +46,10 @@ class NumberAxisWrapper<T : MathAndComparable<T>>(
     var tickUnit by tickUnitProperty
 
 
-    fun maximizeTickUnit() = node.maximizeTickUnit()
+    fun maximizeTickUnit() = (node as MoreGenericNumberAxis<T>).maximizeTickUnit()
 
     fun displayPixelOf(v: T) = node.getDisplayPosition(v)
 
     fun valueForDisplayPixel(pixel: Double) = node.getValueForDisplay(pixel)
-
 }
 
-/*
-
-class OldNumberAxisWrapper(node: NumberAxis = NumberAxis()): OldValueAxisWrapper<Number>(node) {
-
-  //  constructor(converter: ValueAxisConverter<T>): this(MoreGenericNumberAxis(converter))
-
- *//*val tickUnitProperty by lazy { node.tickUnit }
-  var tickUnit by tickUnitProperty*//*
-
-
-
-  //  fun maximizeTickUnit() = node.maximizeTickUnit()
-
-}*/

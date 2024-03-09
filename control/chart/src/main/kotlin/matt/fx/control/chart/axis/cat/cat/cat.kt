@@ -39,7 +39,6 @@ import java.util.Collections
  */
 @ReWrittenFxClass(CategoryAxis::class)
 class CategoryAxisForCatAxisWrapper : AxisForPackagePrivateProps<String> {
-    // -------------- PRIVATE FIELDS -------------------------------------------
     internal val allDataCategories: MutableList<String> = ArrayList()
     private var changeIsLocal = false
 
@@ -51,8 +50,10 @@ class CategoryAxisForCatAxisWrapper : AxisForPackagePrivateProps<String> {
         ListChangeListener { c: Change<out String?> ->
             while (c.next()) {
                 if (!c.addedSubList.isEmpty()) {
-                    // remove duplicates else they will get rendered on the chart.
-                    // Ideally we should be using a Set for categories.
+                    /*
+                    remove duplicates else they will get rendered on the chart.
+                    Ideally we should be using a Set for categories.
+                     */
                     for (addedStr in c.addedSubList) checkAndRemoveDuplicates(addedStr!!)
                 }
                 if (!isAutoRanging()) {
@@ -63,19 +64,19 @@ class CategoryAxisForCatAxisWrapper : AxisForPackagePrivateProps<String> {
                 requestAxisLayout()
             }
         }
-    // -------------- PUBLIC PROPERTIES ----------------------------------------
     /** The margin between the axis start and the first tick-mark  */
-    private val startMargin: DoubleProperty = object : StyleableDoubleProperty(5.0) {
-        override fun invalidated() {
-            requestAxisLayout()
+    private val startMargin: DoubleProperty =
+        object : StyleableDoubleProperty(5.0) {
+            override fun invalidated() {
+                requestAxisLayout()
+            }
+
+            override fun getCssMetaData(): CssMetaData<CategoryAxisForCatAxisWrapper, Number> = StyleableProperties.START_MARGIN
+
+            override fun getBean(): Any = this@CategoryAxisForCatAxisWrapper
+
+            override fun getName(): String = "startMargin"
         }
-
-        override fun getCssMetaData(): CssMetaData<CategoryAxisForCatAxisWrapper, Number> = StyleableProperties.START_MARGIN
-
-        override fun getBean(): Any = this@CategoryAxisForCatAxisWrapper
-
-        override fun getName(): String = "startMargin"
-    }
 
     fun getStartMargin(): Double = startMargin.value
 
@@ -86,17 +87,18 @@ class CategoryAxisForCatAxisWrapper : AxisForPackagePrivateProps<String> {
     fun startMarginProperty(): DoubleProperty = startMargin
 
     /** The margin between the last tick mark and the axis end  */
-    private val endMargin: DoubleProperty = object : StyleableDoubleProperty(5.0) {
-        override fun invalidated() {
-            requestAxisLayout()
+    private val endMargin: DoubleProperty =
+        object : StyleableDoubleProperty(5.0) {
+            override fun invalidated() {
+                requestAxisLayout()
+            }
+
+            override fun getCssMetaData(): CssMetaData<CategoryAxisForCatAxisWrapper, Number> = StyleableProperties.END_MARGIN
+
+            override fun getBean(): Any = this@CategoryAxisForCatAxisWrapper
+
+            override fun getName(): String = "endMargin"
         }
-
-        override fun getCssMetaData(): CssMetaData<CategoryAxisForCatAxisWrapper, Number> = StyleableProperties.END_MARGIN
-
-        override fun getBean(): Any = this@CategoryAxisForCatAxisWrapper
-
-        override fun getName(): String = "endMargin"
-    }
 
     fun getEndMargin(): Double = endMargin.value
 
@@ -109,17 +111,18 @@ class CategoryAxisForCatAxisWrapper : AxisForPackagePrivateProps<String> {
     /** If this is true then half the space between ticks is left at the start
      * and end
      */
-    private val gapStartAndEnd: BooleanProperty = object : StyleableBooleanProperty(true) {
-        override fun invalidated() {
-            requestAxisLayout()
+    private val gapStartAndEnd: BooleanProperty =
+        object : StyleableBooleanProperty(true) {
+            override fun invalidated() {
+                requestAxisLayout()
+            }
+
+            override fun getCssMetaData(): CssMetaData<CategoryAxisForCatAxisWrapper, Boolean> = StyleableProperties.GAP_START_AND_END
+
+            override fun getBean(): Any = this@CategoryAxisForCatAxisWrapper
+
+            override fun getName(): String = "gapStartAndEnd"
         }
-
-        override fun getCssMetaData(): CssMetaData<CategoryAxisForCatAxisWrapper, Boolean> = StyleableProperties.GAP_START_AND_END
-
-        override fun getBean(): Any = this@CategoryAxisForCatAxisWrapper
-
-        override fun getName(): String = "gapStartAndEnd"
-    }
 
     fun isGapStartAndEnd(): Boolean = gapStartAndEnd.value
 
@@ -136,7 +139,7 @@ class CategoryAxisForCatAxisWrapper : AxisForPackagePrivateProps<String> {
                 requireNull(duplicate) { "Duplicate category added; " + duplicate + " already present" }
                 val newItems = get()
                 if (old !== newItems) {
-                    // Add and remove listeners
+                    /* Add and remove listeners */
                     if (old != null) old!!.removeListener(itemsListener)
                     newItems?.addListener(itemsListener)
                     old = newItems
@@ -198,7 +201,6 @@ class CategoryAxisForCatAxisWrapper : AxisForPackagePrivateProps<String> {
     fun getCategorySpacing(): Double = categorySpacing.get()
 
     fun categorySpacingProperty(): ReadOnlyDoubleProperty = categorySpacing.readOnlyProperty
-    // -------------- CONSTRUCTORS -------------------------------------------------------------------------------------
     /**
      * Create a auto-ranging category axis with an empty list of categories.
      */
@@ -217,7 +219,6 @@ class CategoryAxisForCatAxisWrapper : AxisForPackagePrivateProps<String> {
         setCategories(categories)
     }
 
-    // -------------- PRIVATE METHODS ----------------------------------------------------------------------------------
     private fun calculateNewSpacing(
         length: Double,
         categories: List<String>?
@@ -225,10 +226,10 @@ class CategoryAxisForCatAxisWrapper : AxisForPackagePrivateProps<String> {
         var newCategorySpacing = 1.0
         if (categories != null) {
             val bVal = (if (isGapStartAndEnd()) categories.size else categories.size - 1).toDouble()
-            // RT-14092 flickering  : check if bVal is 0
+            /* RT-14092 flickering  : check if bVal is 0 */
             newCategorySpacing = if (bVal == 0.0) 1.0 else (length - getStartMargin() - getEndMargin()) / bVal
         }
-        // if autoranging is off setRange is not called so we update categorySpacing
+        /* if autoranging is off setRange is not called so we update categorySpacing */
         if (!isAutoRanging()) categorySpacing.set(newCategorySpacing)
         return newCategorySpacing
     }
@@ -242,16 +243,17 @@ class CategoryAxisForCatAxisWrapper : AxisForPackagePrivateProps<String> {
         @Suppress("VARIABLE_WITH_REDUNDANT_INITIALIZER")
         var newPos = 1.0
         val offset: Double = if (isGapStartAndEnd()) catSpacing / 2 else 0.0
-        newPos = if (side.isHorizontal) {
-            0 + getStartMargin() + offset
-        } else { // VERTICAL
-            length - getStartMargin() - offset
-        }
-        // if autoranging is off setRange is not called so we update first cateogory pos.
+        newPos =
+            if (side.isHorizontal) {
+                0 + getStartMargin() + offset
+            } else {
+                /* VERTICAL */
+                length - getStartMargin() - offset
+            }
+        /* if autoranging is off setRange is not called so we update first cateogory pos. */
         if (!isAutoRanging()) firstCategoryPos.set(newPos)
         return newPos
     }
-    // -------------- PROTECTED METHODS --------------------------------------------------------------------------------
     /**
      * Called to get the current axis range.
      *
@@ -260,12 +262,13 @@ class CategoryAxisForCatAxisWrapper : AxisForPackagePrivateProps<String> {
 
 
     override val range: RangeProps
-        get() = CategoryRangeProps(
-            allDataCategories = getCategories()!!,
-            newCategorySpacing = categorySpacing.get(),
-            newFirstPos = firstCategoryPos.get(),
-            tickLabelRotation = effectiveTickLabelRotation
-        )
+        get() =
+            CategoryRangeProps(
+                allDataCategories = getCategories()!!,
+                newCategorySpacing = categorySpacing.get(),
+                newFirstPos = firstCategoryPos.get(),
+                tickLabelRotation = effectiveTickLabelRotation
+            )
 
 
     /**
@@ -282,7 +285,6 @@ class CategoryAxisForCatAxisWrapper : AxisForPackagePrivateProps<String> {
         val rangeArray = range as CategoryRangeProps
 
         val categories = rangeArray.allDataCategories
-        //        if (categories.isEmpty()) new java.lang.Throwable().printStackTrace();
         val newCategorySpacing = rangeArray.newCategorySpacing
         val newFirstCategoryPos = rangeArray.newFirstPos
         effectiveTickLabelRotation = rangeArray.tickLabelRotation
@@ -291,18 +293,19 @@ class CategoryAxisForCatAxisWrapper : AxisForPackagePrivateProps<String> {
         changeIsLocal = false
         if (animate) {
             animator.stop(currentAnimationID)
-            currentAnimationID = animator.animate(
-                KeyFrame(
-                    Duration.ZERO,
-                    KeyValue(firstCategoryPos, firstCategoryPos.get()),
-                    KeyValue(categorySpacing, categorySpacing.get())
-                ),
-                KeyFrame(
-                    Duration.millis(1000.0),
-                    KeyValue(firstCategoryPos, newFirstCategoryPos),
-                    KeyValue(categorySpacing, newCategorySpacing)
+            currentAnimationID =
+                animator.animate(
+                    KeyFrame(
+                        Duration.ZERO,
+                        KeyValue(firstCategoryPos, firstCategoryPos.get()),
+                        KeyValue(categorySpacing, categorySpacing.get())
+                    ),
+                    KeyFrame(
+                        Duration.millis(1000.0),
+                        KeyValue(firstCategoryPos, newFirstCategoryPos),
+                        KeyValue(categorySpacing, newCategorySpacing)
+                    )
                 )
-            )
         } else {
             categorySpacing.set(newCategorySpacing)
             firstCategoryPos.set(newFirstCategoryPos)
@@ -320,14 +323,14 @@ class CategoryAxisForCatAxisWrapper : AxisForPackagePrivateProps<String> {
      */
     override fun autoRange(length: Double): RangeProps {
         val side = effectiveSide
-        // TODO check if we can display all categories
+        /* TODO check if we can display all categories */
         val newCategorySpacing = calculateNewSpacing(length, allDataCategories)
         val newFirstPos = calculateNewFirstPos(length, newCategorySpacing)
         var tickLabelRotation = tickLabelRotation.value
         if (length >= 0) {
             val requiredLengthToDisplay = calculateRequiredSize(side.isVertical, tickLabelRotation)
             if (requiredLengthToDisplay > length) {
-                // try to rotate the text to increase the density
+                /* try to rotate the text to increase the density */
                 if (side.isHorizontal && tickLabelRotation != 90.0) {
                     tickLabelRotation = 90.0
                 }
@@ -348,14 +351,14 @@ class CategoryAxisForCatAxisWrapper : AxisForPackagePrivateProps<String> {
         axisVertical: Boolean,
         tickLabelRotation: Double
     ): Double {
-        // Calculate the max space required between categories labels
+        /* Calculate the max space required between categories labels */
         var maxReqTickGap = 0.0
         var last = 0.0
         var first = true
         for (category in allDataCategories) {
             val textSize = measureTickMarkSize(category, tickLabelRotation)
             val size = if (axisVertical || tickLabelRotation != 0.0) textSize.height else textSize.width
-            // TODO better handle calculations for rotated text, overlapping text etc
+            /* TODO better handle calculations for rotated text, overlapping text etc */
             if (first) {
                 first = false
                 last = size / 2
@@ -385,7 +388,7 @@ class CategoryAxisForCatAxisWrapper : AxisForPackagePrivateProps<String> {
      * @return A formatted string for the given value
      */
     override fun getTickMarkLabel(value: String): String {
-        // TODO use formatter
+        /* TODO use formatter */
         return value
     }
 
@@ -406,7 +409,6 @@ class CategoryAxisForCatAxisWrapper : AxisForPackagePrivateProps<String> {
     }
 
 
-    // -------------- METHODS ------------------------------------------------------------------------------------------
     /**
      * Called when data has changed and the range may not be valid any more. This is only called by the chart if
      * isAutoRanging() returns true. If we are auto ranging it will cause layout to be requested and auto ranging to
@@ -416,17 +418,18 @@ class CategoryAxisForCatAxisWrapper : AxisForPackagePrivateProps<String> {
      */
     override fun invalidateRange(data: List<String>) {
         super.invalidateRange(data)
-        // Create unique set of category names
+        /* Create unique set of category names */
         val categoryNames: MutableList<String> = ArrayList()
         categoryNames.addAll(allDataCategories)
-        //RT-21141 allDataCategories needs to be updated based on data -
-        // and should maintain the order it originally had for the categories already present.
-        // and remove categories not present in data
+        /*
+        RT-21141 allDataCategories needs to be updated based on data -
+        and should maintain the order it originally had for the categories already present.
+        and remove categories not present in data
+         */
         for (cat in allDataCategories) {
             if (!data.contains(cat)) categoryNames.remove(cat)
         }
-        // add any new category found in data
-        //        for(String cat : data) {
+        /* add any new category found in data */
         for (i in data.indices) {
             val len = categoryNames.size
             if (!categoryNames.contains(data[i])) categoryNames.add(if (i > len) len else i, data[i])
@@ -446,7 +449,7 @@ class CategoryAxisForCatAxisWrapper : AxisForPackagePrivateProps<String> {
      * @return display position or Double.NaN if value not one of the categories
      */
     override fun getDisplayPosition(value: String): Double {
-        // find index of value
+        /* find index of value */
         val cat = getCategories()
         if (!cat!!.contains(value)) {
             return Double.NaN
@@ -471,7 +474,8 @@ class CategoryAxisForCatAxisWrapper : AxisForPackagePrivateProps<String> {
             if (displayPosition < 0 || displayPosition > width) return null
             val d = (displayPosition - firstCategoryPos.get()) / categorySpacing.get()
             toRealValue(d)
-        } else { // VERTICAL
+        } else {
+            /* VERTICAL */
             if (displayPosition < 0 || displayPosition > height) return null
             val d = (displayPosition - firstCategoryPos.get()) / (categorySpacing.get() * -1)
             toRealValue(d)
@@ -519,7 +523,6 @@ class CategoryAxisForCatAxisWrapper : AxisForPackagePrivateProps<String> {
     override val zeroPosition: Double
         get() = Double.NaN
 
-    // -------------- STYLESHEET HANDLING ------------------------------------------------------------------------------
     private object StyleableProperties {
         val START_MARGIN: CssMetaData<CategoryAxisForCatAxisWrapper, Number> =
             object : CssMetaData<CategoryAxisForCatAxisWrapper, Number>(
@@ -529,7 +532,9 @@ class CategoryAxisForCatAxisWrapper : AxisForPackagePrivateProps<String> {
                 override fun isSettable(n: CategoryAxisForCatAxisWrapper): Boolean = n.startMargin.value == null || !n.startMargin.isBound
 
                 @Suppress("UNCHECKED_CAST")
-                override fun getStyleableProperty(n: CategoryAxisForCatAxisWrapper): StyleableProperty<Number?> = n.startMarginProperty() as StyleableProperty<Number?>
+                override fun getStyleableProperty(
+                    n: CategoryAxisForCatAxisWrapper
+                ): StyleableProperty<Number?> = n.startMarginProperty() as StyleableProperty<Number?>
             }
         val END_MARGIN: CssMetaData<CategoryAxisForCatAxisWrapper, Number> =
             object : CssMetaData<CategoryAxisForCatAxisWrapper, Number>(
@@ -539,17 +544,23 @@ class CategoryAxisForCatAxisWrapper : AxisForPackagePrivateProps<String> {
                 override fun isSettable(n: CategoryAxisForCatAxisWrapper): Boolean = n.endMargin.value == null || !n.endMargin.isBound
 
                 @Suppress("UNCHECKED_CAST")
-                override fun getStyleableProperty(n: CategoryAxisForCatAxisWrapper): StyleableProperty<Number?> = n.endMarginProperty() as StyleableProperty<Number?>
+                override fun getStyleableProperty(
+                    n: CategoryAxisForCatAxisWrapper
+                ): StyleableProperty<Number?> = n.endMarginProperty() as StyleableProperty<Number?>
             }
         val GAP_START_AND_END: CssMetaData<CategoryAxisForCatAxisWrapper, Boolean> =
             object : BooleanCssMetaData<CategoryAxisForCatAxisWrapper>(
                 "-fx-gap-start-and-end",
                 true
             ) {
-                override fun isSettable(n: CategoryAxisForCatAxisWrapper): Boolean = n.gapStartAndEnd.value == null || !n.gapStartAndEnd.isBound
+                override fun isSettable(
+                    n: CategoryAxisForCatAxisWrapper
+                ): Boolean = n.gapStartAndEnd.value == null || !n.gapStartAndEnd.isBound
 
                 @Suppress("UNCHECKED_CAST")
-                override fun getStyleableProperty(n: CategoryAxisForCatAxisWrapper): StyleableProperty<Boolean?> = n.gapStartAndEndProperty() as StyleableProperty<Boolean?>
+                override fun getStyleableProperty(
+                    n: CategoryAxisForCatAxisWrapper
+                ): StyleableProperty<Boolean?> = n.gapStartAndEndProperty() as StyleableProperty<Boolean?>
             }
         val classCssMetaData: List<CssMetaData<out Styleable?, *>> by lazy {
             val styleables: MutableList<CssMetaData<out Styleable?, *>> = ArrayList(getClassCssMetaData())
@@ -558,7 +569,6 @@ class CategoryAxisForCatAxisWrapper : AxisForPackagePrivateProps<String> {
             styleables.add(GAP_START_AND_END)
             Collections.unmodifiableList(styleables)
         }
-
     }
 
     /**

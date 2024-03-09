@@ -12,16 +12,19 @@ fun NodeWrapperImpl<Parent>.ellipse(
     centerY: Number = 0.0,
     radiusX: Number = 0.0,
     radiusY: Number = 0.0,
-    op: EllipseWrapper.()->Unit = {}
+    op: EllipseWrapper.() -> Unit = {}
 ) =
     EllipseWrapper(centerX.toDouble(), centerY.toDouble(), radiusX.toDouble(), radiusY.toDouble()).attachTo(this, op)
 
 open class EllipseWrapper(
-    node: Ellipse = Ellipse(),
+    node: Ellipse = Ellipse()
 ): ShapeWrapper<Ellipse>(node) {
 
     constructor(
-        centerX: Double, centerY: Double, radiusX: Double, radiusY: Double
+        centerX: Double,
+        centerY: Double,
+        radiusX: Double,
+        radiusY: Double
     ): this(Ellipse(centerX, centerY, radiusX, radiusY))
 
 
@@ -41,6 +44,4 @@ open class EllipseWrapper(
         }
 
     val radiusYProperty by lazy { node.radiusYProperty().toNonNullableProp().cast<Double>() }
-
-
 }

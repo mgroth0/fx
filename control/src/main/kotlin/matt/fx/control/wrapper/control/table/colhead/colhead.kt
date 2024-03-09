@@ -11,5 +11,4 @@ class TableColumnHeaderWrapper(node: TableColumnHeader): RegionWrapperImpl<Table
     override fun addChild(child: NodeWrapper, index: Int?) {
         TODO()
     }
-
 }

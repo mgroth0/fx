@@ -1,6 +1,7 @@
 package matt.fx.control.wrapper.control.text.area
 
 import javafx.scene.control.TextArea
+import matt.fx.base.wrapper.obs.obsval.prop.NonNullFXBackedBindableProp
 import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.control.wrapper.control.text.input.TextInputControlWrapper
 import matt.fx.graphics.fxthread.runLater
@@ -9,7 +10,7 @@ import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.obs.bindings.str.ObsS
-import matt.obs.prop.VarProp
+import matt.obs.prop.writable.VarProp
 import matt.prim.converters.StringConverter
 
 fun ET.textarea(
@@ -40,7 +41,7 @@ fun <T> ET.textarea(
 
 
 open class TextAreaWrapper(
-    node: TextArea = TextArea(),
+    node: TextArea = TextArea()
 ) : TextInputControlWrapper<TextArea>(node) {
 
     constructor(text: String) : this(TextArea(text))
@@ -53,18 +54,19 @@ open class TextAreaWrapper(
     }
 
 
-    val wrapTextProperty by lazy { node.wrapTextProperty().toNonNullableProp() }
+    val wrapTextProperty: NonNullFXBackedBindableProp<Boolean> by lazy { node.wrapTextProperty().toNonNullableProp() }
     var isWrapText by wrapTextProperty
 
 
     fun receiveTextFrom(prop: ObsS) {
-        textProperty.bind(prop.periodicFXUpdates().also {
-            it.onChange {
-                runLater {
-                    end()
+        textProperty.bind(
+            prop.periodicFXUpdates().also {
+                it.onChange {
+                    runLater {
+                        end()
+                    }
                 }
             }
-        })
+        )
     }
-
 }

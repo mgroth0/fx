@@ -12,9 +12,10 @@ import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attach
 import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
 
-inline fun <C: NodeWrapper> ET.stackpane(initialChildren: Iterable<C>? = null, op: StackPaneWrapper<C>.()->Unit = {}) = attach(
-    StackPaneWrapper<C>().apply { if (initialChildren != null) children.addAll(initialChildren) }, op
-)
+inline fun <C: NodeWrapper> ET.stackpane(initialChildren: Iterable<C>? = null, op: StackPaneWrapper<C>.() -> Unit = {}) =
+    attach(
+        StackPaneWrapper<C>().apply { if (initialChildren != null) children.addAll(initialChildren) }, op
+    )
 
 open class StackPaneW: StackPaneWrapper<NW>()
 
@@ -49,7 +50,7 @@ class StackpaneConstraint(
 
 
 
-inline fun <T: Node> T.stackpaneConstraints(op: (StackpaneConstraint.()->Unit)): T {
+inline fun <T: Node> T.stackpaneConstraints(op: (StackpaneConstraint.() -> Unit)): T {
     val c = StackpaneConstraint(this)
     c.op()
     return c.applyToNode(this)

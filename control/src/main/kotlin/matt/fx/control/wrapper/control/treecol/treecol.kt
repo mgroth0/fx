@@ -16,7 +16,7 @@ import matt.fx.control.wrapper.wrapped.wrapped
 
 
 class TreeTableColumnWrapper<E: Any, P>(
-    override val node: TreeTableColumn<E, P>
+    node: TreeTableColumn<E, P>
 ): TableColumnBaseWrapper<TreeItem<E>, P, TreeTableColumn<E, P>>(node),
     TreeTableCellFactory<TreeTableColumn<E, P>, E, P>,
     CellValueFactory<CellDataFeatures<E, P>, P>,
@@ -41,6 +41,4 @@ class TreeTableColumnWrapper<E: Any, P>(
     override fun removeFromParent() {
         node.treeTableView.columns.remove(node)
     }
-
-
 }

@@ -9,7 +9,7 @@ import matt.fx.graphics.wrapper.node.NodeWrapper
 
 
 
-fun actionbutton(text: String = "", graphic: NodeWrapper? = null, action: ButtonWrapper.(ActionEvent)->Unit) =
+fun actionbutton(text: String = "", graphic: NodeWrapper? = null, action: ButtonWrapper.(ActionEvent) -> Unit) =
     ButtonWrapper(text, graphic).apply {
         setOnAction {
             action(it)
@@ -20,7 +20,7 @@ fun actionbutton(text: String = "", graphic: NodeWrapper? = null, action: Button
 fun EventTargetWrapper.actionbutton(
     text: String = "",
     graphic: NodeWrapper? = null,
-    action: ButtonWrapper.(ActionEvent)->Unit
+    action: ButtonWrapper.(ActionEvent) -> Unit
 ) = ButtonWrapper(text, graphic).apply {
     setOnAction {
         action(it)
@@ -29,7 +29,7 @@ fun EventTargetWrapper.actionbutton(
     this@actionbutton.addChild(this)
 }
 
-infix fun ButtonWrapper.withAction(newOp: ()->Unit) = this.apply { op = newOp }
+infix fun ButtonWrapper.withAction(newOp: () -> Unit) = apply { op = newOp }
 
 fun EventTargetWrapper.removecontextmenu() {
     if (this is Control) {

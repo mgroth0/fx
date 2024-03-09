@@ -1,5 +1,6 @@
 package matt.fx.control.chart.line
 
+import matt.fx.base.wrapper.obs.obsval.prop.NonNullFXBackedBindableProp
 import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.control.chart.axis.MAxis
 import matt.fx.control.chart.axis.value.number.NumberAxisWrapper
@@ -8,7 +9,7 @@ import matt.fx.control.chart.line.highperf.relinechart.xy.XYChartForPackagePriva
 import matt.fx.control.chart.xy.XYChartWrapper
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.attachTo
-import matt.log.warn.warn
+import matt.log.warn.common.warn
 import matt.model.data.mathable.MathAndComparable
 import matt.model.data.point.BasicPoint
 
@@ -31,7 +32,7 @@ open class LineChartWrapper<X : MathAndComparable<X>, Y : MathAndComparable<Y>>(
         y: MAxis<Y>
     ) : this(MorePerfOptionsLineChart(x.node, y.node))
 
-    val createSymbolsProperty by lazy { node.createSymbolsProperty().toNonNullableProp() }
+    val createSymbolsProperty: NonNullFXBackedBindableProp<Boolean> by lazy { node.createSymbolsProperty().toNonNullableProp() }
     var createSymbols by createSymbolsProperty
 
 
@@ -53,8 +54,6 @@ open class LineChartWrapper<X : MathAndComparable<X>, Y : MathAndComparable<Y>>(
             (yAxis as NumberAxisWrapper<Y>).valueForDisplayPixel(yPixels)
         )
     }
-
-
 }
 
 class NumericChartLocater<X : MathAndComparable<X>, Y : MathAndComparable<Y>>(

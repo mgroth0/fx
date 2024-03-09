@@ -21,7 +21,7 @@ fun <T : TabWrapper<*>> ET.tabpane(op: TabPaneWrapper<T>.() -> Unit = {}) = TabP
 
 
 open class TabPaneWrapper<T : TabWrapper<*>>(
-    node: TabPane = TabPane(),
+    node: TabPane = TabPane()
 ) : ControlWrapperImpl<TabPane>(node), Selects<T> {
     constructor(vararg tabs: T) : this(
         TabPane(
@@ -29,8 +29,6 @@ open class TabPaneWrapper<T : TabWrapper<*>>(
         )
     )
 
-    //  /*non null*/final override val selectedItemProperty: ObsVal<T> by lazy { selectionModel.selectedItemProperty.cast() }
-    //  /*non null*/override val selectedItem: T by selectedItemProperty
 
     val tabs get() = node.tabs.createMutableWrapper().toSyncedList<Tab, T>(uncheckedWrapperConverter())
 
@@ -57,7 +55,6 @@ open class TabPaneWrapper<T : TabWrapper<*>>(
         if (index == null) (this as TabPaneWrapper<TabWrapper<NodeWrapper>>).add(tab)
         else (this as TabPaneWrapper<TabWrapper<NodeWrapper>>).add(index, tab)
     }
-
 }
 
 
@@ -78,6 +75,7 @@ fun <W : NodeWrapper> TabPaneWrapper<TabWrapper<W>>.tab(
 fun <C : NodeWrapper> TabPaneWrapper<TabWrapper<VBoxWrapper<C>>>.vtab(
     s: String = "",
     op: VBoxWrapper<C>.() -> Unit = {}
-): TabWrapper<VBoxWrapper<C>> = tab(s, VBoxWrapperImpl(), closable = false) {
-    op()
-}
+): TabWrapper<VBoxWrapper<C>> =
+    tab(s, VBoxWrapperImpl(), closable = false) {
+        op()
+    }

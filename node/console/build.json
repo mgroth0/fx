@@ -11,7 +11,11 @@
             "cfg": "implementation",
             "path": ":k:auto"
         },
-
+        {
+            "type": "Project",
+            "cfg": "implementation",
+            "path": ":k:file:watch"
+        },
         {
             "type": "Project",
             "cfg": "testImplementation",

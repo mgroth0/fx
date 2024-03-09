@@ -26,10 +26,10 @@ import matt.fx.graphics.service.WrapperServiceHub
 import matt.fx.graphics.style.insets
 import matt.lang.anno.Fixes
 import matt.lang.assertions.require.requireNot
+import matt.lang.common.go
 import matt.lang.function.Op
-import matt.lang.go
 import matt.log.logger.Logger
-import matt.log.report.BugReport
+import matt.log.report.desktop.BugReport
 import matt.log.reporter.TracksTime
 import matt.model.code.report.Reporter
 
@@ -42,7 +42,7 @@ fun runFXAppBlocking(
     usePreloaderApp: Boolean = false,
     reporter: Reporter? = null,
     throwOnApplicationThreadThrowable: Boolean = DEFAULT_THROW_ON_APP_THREAD_THROWABLE,
-    fxOp: () -> Unit,
+    fxOp: () -> Unit
 ) {
     synchronized(monitor) {
         requireNot(didRunFXApp) {
@@ -54,7 +54,7 @@ fun runFXAppBlocking(
     WrapperServiceHub.install(WrapperServiceImpl)
     (reporter as? TracksTime)?.toc("running FX App")
     fxBlock = fxOp
-    namedThread(isDaemon = true,name="disable FX Logger Thread") {
+    namedThread(isDaemon = true, name = "disable FX Logger Thread") {
         Logging.getJavaFXLogger().disableLogging()
         /* dodge "Unsupported JavaFX configuration..." part 1 */
     }
@@ -120,7 +120,8 @@ class FirstPreloader : Preloader() {
 }
 
 
-val ERROR_POP_UP_TEXT = """
+val ERROR_POP_UP_TEXT =
+    """
   The application has encountered an unexpected error. Please submit a bug report. To help further, leave a comment in the bug report listing the steps you took that caused the error.
   """.trim()
 
@@ -135,17 +136,23 @@ private class DefaultGlassAppEventHandler(
         time: Long
     ) {
 
-        /*Emulate:
+        /*
 
-              com.sun.javafx.tk.quantum.GlassStage.requestClosingAllWindows
 
-              with the NullPointerException Fix
+//        Emulate:
+//
+//              com.sun.javafx.tk.quantum.GlassStage.requestClosingAllWindows
+//
+//              with the NullPointerException Fix
+
+
+
+        if (Platform.isNestedLoopRunning()) {
+            Toolkit.getToolkit().exitAllNestedEventLoops()
+        }
+
 
          */
-
-        /*if (Platform.isNestedLoopRunning()) {
-            Toolkit.getToolkit().exitAllNestedEventLoops()
-        }*/
 
 
 
@@ -155,8 +162,6 @@ private class DefaultGlassAppEventHandler(
             @Fixes("Big NullPointerException Bug")
             buildInHandler.handleQuitAction(app, time)
         }
-
-
     }
 
     override fun handleThemeChanged(themeName: String?): Boolean {
@@ -180,17 +185,7 @@ private class DefaultGlassAppEventHandler(
             }
         } else op()
     }
-
 }
-//
-//@Fixes("Big NullPointerException Bug")
-//private class MyGlassApEventHandler : DefaultGlassAppEventHandler() {
-//    override fun handleQuitAction(app: com.sun.glass.ui.Application?, time: Long) {
-//
-//
-//    }
-//
-//}
 
 @Fixes("Big NullPointerException Bug")
 private fun tryToCloseDeepestDialog() {
@@ -222,7 +217,17 @@ private fun quitJavaFX() {
         .firstOrNull { it.isFullScreen }?.isFullScreen = false
 
     Window.getWindows().toList().sortedByDescending {
- *//*ATTEMPT TO FIX THE BIG NullPointerException Bug Part 1*//*
+
+
+ATTEMPT TO FIX THE BIG NullPointerException Bug Part 1
+
+
+
+
+
+
+
+
         var score = 0
 
         if (it is Stage && it.modality == Modality.APPLICATION_MODAL) score++
@@ -239,10 +244,34 @@ private fun quitJavaFX() {
         score
 
     }.forEach {
- *//*In case of child windows some of them could already be closed
-        so check if list still contains an object*//*
+
+
+
+
+
+
+In case of child windows some of them could already be closed
+        so check if list still contains an object
+
+
+
+
+
         if (it in Window.getWindows() && it.isShowing) {
- *//*it.hide()*//*
+
+
+
+
+
+
+
+it.hide()
+
+
+
+
+
+
             Event.fireEvent(
                 it,
                 WindowEvent(
@@ -255,41 +284,23 @@ private fun quitJavaFX() {
 }*/
 
 
-//val TEMP_DEBUG_LOG_FILE = TEMP_DIR["deephys"]["temp_debug.log"].apply {
-//    mkparents()
-//    text = ""
-//}
+
 
 
 class MinimalFXApp : Application() {
 
 
-    //  companion object {
-    //	var fxStop: (() -> Unit)? = null
-    //  }
     override fun start(primaryStage: Stage?) {
         FXAppStateWatcher.markAsStarted()
-//        Thread.setDefaultUncaughtExceptionHandler { t, e ->
-//            TEMP_DEBUG_LOG_FILE.appendln("UNCAUGHT EXCEPTION: ${e}, $t, ${e.stackTraceToString()}")
-//        }
-//        TEMP_DEBUG_LOG_FILE.appendln("here1")
         if (exitAndReThrowOnAppThrowable!!) {
-//            TEMP_DEBUG_LOG_FILE.appendln("here2: ${Thread.currentThread().name},${Thread.currentThread().id}")
             Thread.currentThread().setUncaughtExceptionHandler { _, e ->
-//                TEMP_DEBUG_LOG_FILE.appendln("here3")
                 applicationThreadIssue = e
                 Platform.exit()
-//                TEMP_DEBUG_LOG_FILE.appendln("here4")
                 Platform.runLater {
-//                    TEMP_DEBUG_LOG_FILE.appendln("here5")
                     Platform.exit()
-//                    TEMP_DEBUG_LOG_FILE.appendln("here6")
                 }
-//                TEMP_DEBUG_LOG_FILE.appendln("here7")
             }
-//            TEMP_DEBUG_LOG_FILE.appendln("here8")
         }
-//        TEMP_DEBUG_LOG_FILE.appendln("here9")
 
 
         /*GOAL: TO PREVENT THE BIG NullPointerException BUG THAT I JUST EMAILED THE OPENJFX LISTSERV ABOUT*/
@@ -309,23 +320,24 @@ class MinimalFXApp : Application() {
             } catch (e: Exception) {
                 val bugText = BugReport(t = Thread.currentThread(), e = e).text
                 println("\n\n$bugText\n\n")
-                val debugScene = Scene(
-                    VBox(
-                        Label(ERROR_POP_UP_TEXT).apply {
-                            isWrapText = true
-                            font = Font.font(18.0)
-                            insets(25.0)
-                        },
-                        VBox().apply {
-                            minHeight = 50.0
-                        },
-                        TextArea(bugText).apply {
-                            insets(25.0)
+                val debugScene =
+                    Scene(
+                        VBox(
+                            Label(ERROR_POP_UP_TEXT).apply {
+                                isWrapText = true
+                                font = Font.font(18.0)
+                                insets(25.0)
+                            },
+                            VBox().apply {
+                                minHeight = 50.0
+                            },
+                            TextArea(bugText).apply {
+                                insets(25.0)
+                            }
+                        ).apply {
+                            alignment = CENTER
                         }
-                    ).apply {
-                        alignment = CENTER
-                    }
-                )
+                    )
                 primaryStage!!.apply {
                     title = "JavaFX Application Failed To Start"
                     scene = debugScene
@@ -334,7 +346,6 @@ class MinimalFXApp : Application() {
                     centerOnScreen()
                 }
                 primaryStage.show()
-
             }
         }
 
@@ -342,13 +353,65 @@ class MinimalFXApp : Application() {
         fxStopwatch?.toc("finished starting main app")
     }
 
-    /*DO_NOT_SHUTDOWN_WITH_FX_THREAD*//*DO_NOT_SHUTDOWN_WITH_FX_THREAD*//*DO_NOT_SHUTDOWN_WITH_FX_THREAD*//*DO_NOT_SHUTDOWN_WITH_FX_THREAD*//*DO_NOT_SHUTDOWN_WITH_FX_THREAD*//*DO_NOT_SHUTDOWN_WITH_FX_THREAD*/
+    /*DO_NOT_SHUTDOWN_WITH_FX_THREAD
+
+
+
+    DO_NOT_SHUTDOWN_WITH_FX_THREAD
+
+
+
+    DO_NOT_SHUTDOWN_WITH_FX_THREAD
+
+
+
+    DO_NOT_SHUTDOWN_WITH_FX_THREAD
+
+
+
+    DO_NOT_SHUTDOWN_WITH_FX_THREAD
+
+
+
+    DO_NOT_SHUTDOWN_WITH_FX_THREAD*/
     override fun stop() {
 
 
         FXAppStateWatcher.markAsStopped(cause = applicationThreadIssue)
-        /*DO_NOT_SHUTDOWN_WITH_FX_THREAD*/    /*DO_NOT_SHUTDOWN_WITH_FX_THREAD*/    /*DO_NOT_SHUTDOWN_WITH_FX_THREAD*/    /*DO_NOT_SHUTDOWN_WITH_FX_THREAD*/    /*DO_NOT_SHUTDOWN_WITH_FX_THREAD*/    /*DO_NOT_SHUTDOWN_WITH_FX_THREAD*/
-    }/*DO_NOT_SHUTDOWN_WITH_FX_THREAD*//*DO_NOT_SHUTDOWN_WITH_FX_THREAD*//*DO_NOT_SHUTDOWN_WITH_FX_THREAD*//*DO_NOT_SHUTDOWN_WITH_FX_THREAD*//*DO_NOT_SHUTDOWN_WITH_FX_THREAD*//*DO_NOT_SHUTDOWN_WITH_FX_THREAD*/
+        /*DO_NOT_SHUTDOWN_WITH_FX_THREAD
+
+
+    DO_NOT_SHUTDOWN_WITH_FX_THREAD
+
+
+    DO_NOT_SHUTDOWN_WITH_FX_THREAD
+
+
+    DO_NOT_SHUTDOWN_WITH_FX_THREAD
+
+
+    DO_NOT_SHUTDOWN_WITH_FX_THREAD
+
+
+    DO_NOT_SHUTDOWN_WITH_FX_THREAD*/
+    } /*DO_NOT_SHUTDOWN_WITH_FX_THREAD
+
+
+
+DO_NOT_SHUTDOWN_WITH_FX_THREAD
+
+
+
+DO_NOT_SHUTDOWN_WITH_FX_THREAD
+
+
+DO_NOT_SHUTDOWN_WITH_FX_THREAD
+
+
+DO_NOT_SHUTDOWN_WITH_FX_THREAD
+
+
+DO_NOT_SHUTDOWN_WITH_FX_THREAD*/
 }
 
 

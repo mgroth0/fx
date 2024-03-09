@@ -13,7 +13,7 @@ import matt.fx.graphics.wrapper.pane.PaneWrapper
 import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
 
 
-fun ET.accordion(vararg panes: TitledPane, op: AccordionWrapper.()->Unit = {}): AccordionWrapper {
+fun ET.accordion(vararg panes: TitledPane, op: AccordionWrapper.() -> Unit = {}): AccordionWrapper {
     val accordion = AccordionWrapper()
     if (panes.isNotEmpty()) accordion.panes.addAll(panes)
     attach(accordion, op)
@@ -27,12 +27,13 @@ class AccordionWrapper(node: Accordion = Accordion()): ControlWrapperImpl<Accord
         title: String = "",
         node: T,
         expanded: Boolean = false,
-        op: T.()->Unit = {}
+        op: T.() -> Unit = {}
     ): TitledPaneWrapper {
-        val fold = TitledPaneWrapper().apply {
-            text = title
-            graphic = node
-        }
+        val fold =
+            TitledPaneWrapper().apply {
+                text = title
+                graphic = node
+            }
         fold.isExpanded = expanded
         panes += fold.node
         op(node)
@@ -44,11 +45,11 @@ class AccordionWrapper(node: Accordion = Accordion()): ControlWrapperImpl<Accord
         ReplaceWith("Accordion.fold(title, node, op)"),
         DeprecationLevel.WARNING
     )
-    fun fold(title: String = "", op: PaneWrapper<NodeWrapper>.()->Unit = {}): TitledPaneWrapper {
+    fun fold(title: String = "", op: PaneWrapper<NodeWrapper>.() -> Unit = {}): TitledPaneWrapper {
         val vbox = VBoxWrapperImpl<NodeWrapper>().also(op)
         val fold =
             TitledPaneWrapper().apply {
-                text = title;
+                text = title
                 graphic = if (vbox.children.size == 1) vbox.children[0] else vbox
             }
         panes += fold.node
@@ -59,6 +60,4 @@ class AccordionWrapper(node: Accordion = Accordion()): ControlWrapperImpl<Accord
         require(index == null)
         node.panes.add(TitledPane("new titled pane", child.node))
     }
-
-
 }

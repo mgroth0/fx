@@ -17,9 +17,9 @@ import matt.obs.bindings.str.ObsS
 import matt.obs.bindings.str.plus
 import matt.obs.listen.OldAndNewListenerImpl
 import matt.obs.math.double.op.div
-import matt.obs.prop.BindableProperty
 import matt.obs.prop.MObservableROValBase
-import matt.obs.prop.VarProp
+import matt.obs.prop.writable.BindableProperty
+import matt.obs.prop.writable.VarProp
 import kotlin.contracts.ExperimentalContracts
 import kotlin.reflect.KAnnotatedElement
 import kotlin.reflect.KFunction
@@ -28,14 +28,16 @@ import kotlin.reflect.KProperty
 
 @ExperimentalContracts
 class ProcessInspectPane(initialValue: Process?) : HBoxWrapperImpl<NodeWrapper>() {
-    val procProp = VarProp(initialValue).apply {
-        addListener(OldAndNewListenerImpl { oldValue, newValue ->
-            if (newValue != oldValue) {
-                update(newValue)
-            }
-
-        })
-    }
+    val procProp =
+        VarProp(initialValue).apply {
+            addListener(
+                OldAndNewListenerImpl { oldValue, newValue ->
+                    if (newValue != oldValue) {
+                        update(newValue)
+                    }
+                }
+            )
+        }
     private val propLabel: PropListLabel<ProcessOrHandleWrapper> by lazy {
 
 
@@ -66,19 +68,24 @@ class ProcessInspectPane(initialValue: Process?) : HBoxWrapperImpl<NodeWrapper>(
         if (p != null) {
             treetableview<ProcessOrHandleWrapper> {
                 prefWidthProperty.bind(this@ProcessInspectPane.widthProperty / 2.0)
-                val col = (column("pid") { cdf: TreeTableColumn.CellDataFeatures<ProcessOrHandleWrapper, String> ->
-                    cdf.value?.value?.pid()?.let { pid ->
-                        BindableProperty(pid.toString())
-                    } ?: BindableProperty("null")
-                }).apply {
-                    prefWidth = 100.0
-                }
-                sortOrder.setAll(col.node) // not working for matt.fx.control.layout.children?
-                (column("main program") { cdf: TreeTableColumn.CellDataFeatures<ProcessOrHandleWrapper, String> ->
-                    cdf.value?.value?.command()?.let { com ->
-                        BindableProperty(mFile(com, MacFileSystem).name)
-                    } ?: BindableProperty("null")
-                }).apply {
+                val col =
+                    (
+                        column("pid") { cdf: TreeTableColumn.CellDataFeatures<ProcessOrHandleWrapper, String> ->
+                            cdf.value?.value?.pid()?.let { pid ->
+                                BindableProperty(pid.toString())
+                            } ?: BindableProperty("null")
+                        }
+                    ).apply {
+                        prefWidth = 100.0
+                    }
+                sortOrder.setAll(col.node) /* not working for children? */
+                (
+                    column("main program") { cdf: TreeTableColumn.CellDataFeatures<ProcessOrHandleWrapper, String> ->
+                        cdf.value?.value?.command()?.let { com ->
+                            BindableProperty(mFile(com, MacFileSystem).name)
+                        } ?: BindableProperty("null")
+                    }
+                ).apply {
                     prefWidth = 100.0
                 }
 
@@ -101,11 +108,12 @@ private class PropListLabel<T>(
     private vararg val props: Pair<String, KAnnotatedElement>,
     op: LabelWrapper.() -> Unit = {}
 ) : LabelWrapper() {
-    val oProp = VarProp<T?>(initialValue).apply {
-        onChange {
-            update(it)
+    val oProp =
+        VarProp<T?>(initialValue).apply {
+            onChange {
+                update(it)
+            }
         }
-    }
 
     init {
         refresh()
@@ -119,18 +127,20 @@ private class PropListLabel<T>(
     private fun update(o: T?) {
         var s: ObsS = BindableProperty("")
         props.forEach { (name, v) ->
-            val value = if (o == null) {
-                ""
-            } else when (v) {
-                is KFunction<*> -> v.call(o)
-                is KProperty<*> -> v.getter.call(o)
-                else            -> v
-            }
-            s = if (value is MObservableROValBase<*, *, *>) {
-                s.plus("$name:\t").plus(value.nonBlockingFXWatcher().binding { userString(it) }).plus("\n")
-            } else {
-                s.plus("$name:\t${userString(value)}\n")
-            }
+            val value =
+                if (o == null) {
+                    ""
+                } else when (v) {
+                    is KFunction<*> -> v.call(o)
+                    is KProperty<*> -> v.getter.call(o)
+                    else            -> v
+                }
+            s =
+                if (value is MObservableROValBase<*, *, *>) {
+                    s.plus("$name:\t").plus(value.nonBlockingFXWatcher().binding { userString(it) }).plus("\n")
+                } else {
+                    s.plus("$name:\t${userString(value)}\n")
+                }
         }
         s = s.binding { it.trim() }
         textProperty.unbind()
@@ -138,11 +148,13 @@ private class PropListLabel<T>(
     }
 }
 
-fun userString(o: Any?): String = when (o) {
-    null        -> "null"
-    is Array<*> -> o.joinToString(
-        prefix = "[", postfix = "]", separator = ","
-    )
+fun userString(o: Any?): String =
+    when (o) {
+        null        -> "null"
+        is Array<*> ->
+            o.joinToString(
+                prefix = "[", postfix = "]", separator = ","
+            )
 
-    else        -> o.toString()
-}
+        else        -> o.toString()
+    }

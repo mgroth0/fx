@@ -9,14 +9,14 @@ import matt.fx.graphics.wrapper.node.shape.ShapeWrapper
 fun NodeWrapperImpl<Parent>.svgpath(
     content: String? = null,
     fillRule: FillRule? = null,
-    op: SVGPathWrapper.()->Unit = {}
+    op: SVGPathWrapper.() -> Unit = {}
 ) = SVGPathWrapper().attachTo(this, op) {
     if (content != null) it.content = content
     if (fillRule != null) it.fillRule = fillRule
 }
 
 open class SVGPathWrapper(
-    node: SVGPath = SVGPath(),
+    node: SVGPath = SVGPath()
 ): ShapeWrapper<SVGPath>(node) {
     var content: String
         get() = node.content

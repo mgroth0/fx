@@ -20,15 +20,17 @@ import matt.fx.graphics.wrapper.node.NodeWrapper
  */
 fun <T> ListViewWrapper<T & Any>.onUserSelect(clickCount: Int = 2, action: (T) -> Unit) {
     addEventFilter(MouseEvent.MOUSE_CLICKED) { event ->
-        val selectedItem = this.selectedItem
-        if (event.clickCount == clickCount && selectedItem != null && event.target.wrapped().let{
+        val selectedItem = selectedItem
+        if (event.clickCount == clickCount && selectedItem != null &&
+            event.target.wrapped().let {
                 it is NodeWrapper && it.isInsideRow()
-            })
+            }
+        )
             action(selectedItem)
     }
 
     addEventFilter(KeyEvent.KEY_PRESSED) { event ->
-        val selectedItem = this.selectedItem
+        val selectedItem = selectedItem
         if (event.code == KeyCode.ENTER && !event.isMetaDown && selectedItem != null)
             action(selectedItem)
     }
@@ -36,7 +38,7 @@ fun <T> ListViewWrapper<T & Any>.onUserSelect(clickCount: Int = 2, action: (T) -
 
 fun <T> ListViewWrapper<T & Any>.onUserDelete(action: (T) -> Unit) {
     addEventFilter(KeyEvent.KEY_PRESSED) { event ->
-        val selectedItem = this.selectedItem
+        val selectedItem = selectedItem
         if (event.code == KeyCode.BACK_SPACE && selectedItem != null)
             action(selectedItem)
     }

@@ -2,7 +2,9 @@ package matt.fx.control.wrapper.scroll
 
 import javafx.geometry.Bounds
 import javafx.scene.control.ScrollPane
+import javafx.scene.control.ScrollPane.ScrollBarPolicy
 import matt.collect.itr.recurse.chain.chain
+import matt.fx.base.wrapper.obs.obsval.prop.NonNullFXBackedBindableProp
 import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.control.wrapper.control.ControlWrapperImpl
 import matt.fx.control.wrapper.wrapped.wrapped
@@ -24,14 +26,14 @@ fun NW.isFullyVisibleIn(sp: ScrollPaneWrapper<*>): Boolean {
     val content = sp.content!!
     requireZero(sp.vmin)
     requireOne(sp.vmax)
-    if (this.parent!!.chain { it.parent }.none { it == sp }) return false
-    if (!this.isVisible) return false
-    if (!this.isManaged) return false
-    val minY = this.minYRelativeTo(content)
+    if (parent!!.chain { it.parent }.none { it == sp }) return false
+    if (!isVisible) return false
+    if (!isManaged) return false
+    val minY = minYRelativeTo(content)
     val maxY =
-        this.maxYRelativeTo(
+        maxYRelativeTo(
             content
-        ) // /* println("vValueConverted=${sp.vValueConverted},vValueConvertedMax=${sp.vValueConvertedMax},minY=${minY},maxY=${maxY}")*/ /*,boundsInParent.height=${boundsInParent.height},boundsInLocal.height=${boundsInLocal.height},boundsInScene.height=${boundsInScene.height}*/
+        )
     require(minY != null && maxY != null)
     return minY >= sp.vValueConverted && maxY <= sp.vValueConvertedMax
 }
@@ -46,12 +48,6 @@ infix fun RegionWrapper<*>.wrappedIn(sp: ScrollPaneWrapper<in NodeWrapper>): Scr
 }
 
 
-//fun <C: NodeWrapper> ScrollPaneNoBars(content: C? = null): ScrollPaneWrapper<C> {
-//  return (content?.let { ScrollPaneWrapper(it) } ?: ScrollPaneWrapper()).apply {
-//	vbarPolicy = NEVER
-//	hbarPolicy = NEVER
-//  }
-//}
 
 
 fun <C : NodeWrapper> ET.scrollpane(
@@ -102,23 +98,23 @@ open class ScrollPaneWrapper<C : NodeWrapper>(node: ScrollPane = ScrollPane()) :
         }
 
 
-    val vbarPolicyProperty by lazy {
+    val vbarPolicyProperty: NonNullFXBackedBindableProp<ScrollBarPolicy> by lazy {
         node.vbarPolicyProperty().toNonNullableProp()
     }
 
     var vbarPolicy by vbarPolicyProperty
 
-    val hbarPolicyProp by lazy {
+    val hbarPolicyProp: NonNullFXBackedBindableProp<ScrollBarPolicy> by lazy {
         node.hbarPolicyProperty().toNonNullableProp()
     }
 
     var hbarPolicy by hbarPolicyProp
 
 
-    val fitToWidthProperty by lazy { node.fitToWidthProperty().toNonNullableProp() }
+    val fitToWidthProperty: NonNullFXBackedBindableProp<Boolean> by lazy { node.fitToWidthProperty().toNonNullableProp() }
     var isFitToWidth by fitToWidthProperty
 
-    val fitToHeightProperty by lazy { node.fitToHeightProperty().toNonNullableProp() }
+    val fitToHeightProperty: NonNullFXBackedBindableProp<Boolean> by lazy { node.fitToHeightProperty().toNonNullableProp() }
     var isFitToHeight by fitToHeightProperty
 
     var prefViewportWidth
@@ -145,7 +141,8 @@ open class ScrollPaneWrapper<C : NodeWrapper>(node: ScrollPane = ScrollPane()) :
             node.content = value?.node
         }
 
-    fun scrollToMinYOf(node: NodeWrapperImpl<*>): Boolean {/*scrolling values range from 0 to 1*/
+    fun scrollToMinYOf(node: NodeWrapperImpl<*>): Boolean {
+        /*scrolling values range from 0 to 1*/
         minYRelativeTo(node)?.let {
             /*there was an issue with this code. no idea if in "it/content" below, "content" is supposed to be "content" or "node"*/
             vvalue =
@@ -164,11 +161,8 @@ open class ScrollPaneWrapper<C : NodeWrapper>(node: ScrollPane = ScrollPane()) :
         index: Int?
     ) {
         requireNull(index)
-        /*content = node*/ /*TORNADOFX DEFAULT*/
+
+        /*content = node // TORNADOFX DEFAULT*/
         content!!.addChild(child) /*MATT'S WAY*/
-
-
     }
-
-
 }

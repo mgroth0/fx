@@ -6,9 +6,9 @@ import javafx.css.Styleable
 import javafx.scene.Node
 import javafx.scene.paint.Color
 import matt.color.AwtColor
-import matt.color.ContrastAlgorithm
-import matt.color.IntColor
-import matt.color.calculateContrastingColor
+import matt.color.common.ContrastAlgorithm
+import matt.color.common.IntColor
+import matt.color.common.calculateContrastingColor
 import matt.color.name.findName
 import matt.color.toAwtColor
 import matt.color.toMColor
@@ -16,9 +16,11 @@ import matt.fx.base.wrapper.obs.collect.list.createMutableWrapper
 import matt.fx.base.wrapper.obs.collect.set.createImmutableWrapper
 import matt.fx.graphics.wrapper.style.FXStyle.fill
 import matt.fx.graphics.wrapper.style.FXStyle.`text-fill`
-import matt.lang.NOT_IMPLEMENTED
 import matt.lang.anno.Open
-import matt.lang.err
+import matt.lang.common.NOT_IMPLEMENTED
+import matt.lang.common.err
+import matt.lang.common.substringAfterSingular
+import matt.lang.common.substringBeforeSingular
 import matt.obs.col.olist.MutableObsList
 import matt.obs.col.oset.ObsSet
 import matt.prim.str.LineAppender
@@ -74,19 +76,19 @@ interface StyleableWrapper {
     fun getTheStyle(): String?
 
 
-    @Open    var fillStyle: Color
+    @Open var fillStyle: Color
         get() = NOT_IMPLEMENTED
         set(value) {
             style += "${fill.key}: ${value.toMColor().hex()};"
         }
-    @Open   var textFillStyle: Color
+    @Open var textFillStyle: Color
         get() = NOT_IMPLEMENTED
         set(value) {
             style += "${`text-fill`.key}: ${value.toMColor().hex()};"
         }
 
 
-    @Open    fun styleInfo(): String {
+    @Open fun styleInfo(): String {
         val r = LineAppender()
         r += ("${this::class}->$typeSelector")
 
@@ -101,7 +103,8 @@ interface StyleableWrapper {
         }
         r += ("\tsample")
         r += ("\t\t$style")
-        if (false) {    // string too big!
+        if (false) {
+            /* string too big! */
             r += ("\tmeta (${cssMetaData.size})")
             cssMetaData.forEach {
                 r += ("\t\t$it")
@@ -123,12 +126,14 @@ enum class FXStyle {
 }
 
 fun String.parseFXStyle() =
-    split(";").map { it.substringBefore(":") to it.substringAfter(":") }.associate { (key, value) ->
-        (FXStyle.entries.firstOrNull { it.key == key.trim() } ?: err(
-            """
-            unknown fx style key: $key in "${this@parseFXStyle}"
-            """.trimIndent()
-        )) to value
+    split(";").map { it.substringBeforeSingular(":") to it.substringAfterSingular(":") }.associate { (key, value) ->
+        (
+            FXStyle.entries.firstOrNull { it.key == key.trim() } ?: err(
+                """
+                unknown fx style key: $key in "${this@parseFXStyle}"
+                """.trimIndent()
+            )
+        ) to value
     }
 
 typealias FXStyleMap = Map<FXStyle, String>

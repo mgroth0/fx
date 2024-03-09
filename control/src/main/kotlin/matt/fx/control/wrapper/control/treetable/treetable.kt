@@ -35,10 +35,10 @@ import matt.fx.graphics.service.uncheckedNullableWrapperConverter
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
-import matt.lang.go
+import matt.lang.common.go
 import matt.obs.prop.ObsVal
-import matt.obs.prop.VarProp
-import matt.obs.prop.toVarProp
+import matt.obs.prop.writable.VarProp
+import matt.obs.prop.writable.toVarProp
 import kotlin.reflect.KFunction
 import kotlin.reflect.KMutableProperty1
 import kotlin.reflect.KProperty1
@@ -57,7 +57,7 @@ fun <T : Any> TreeTableViewWrapper<T>.select(o: T?) {
     }
 }
 
-// this one is different! it will apply a special width for the first coolColumn (which it assumes is for arrows)
+/* this one is different! it will apply a special width for the first coolColumn (which it assumes is for arrows) */
 fun <T : Any> TreeTableViewWrapper<T>.autoResizeColumns() {
     val roo = root ?: return
     columnResizePolicy = TreeTableView.UNCONSTRAINED_RESIZE_POLICY
@@ -65,16 +65,21 @@ fun <T : Any> TreeTableViewWrapper<T>.autoResizeColumns() {
     columns.forEachIndexed { index, column ->
         if (index == 0) {
             column.prefWidth =
-                roo.recursionDepth { it.children } * 15.0 // guess. works with depth=2. maybe can be smaller.
+                roo.recursionDepth { it.children } * 15.0 /* guess. works with depth=2. maybe can be smaller. */
         } else {
             column.setPrefWidth(
-                ((roo.recurseToFlat({ it.children }).map {
-                    column.getCellData(it.node)
-                }.map {
-                    "$it".fxWidth
-                }.toMutableList() + listOf(
-                    column.text.fxWidth
-                )).maxOrNull() ?: 0.0) + 10.0
+                (
+                    (
+                        roo.recurseToFlat({ it.children }).map {
+                            column.getCellData(it.node)
+                        }.map {
+                            "$it".fxWidth
+                        }.toMutableList() +
+                            listOf(
+                                column.text.fxWidth
+                            )
+                    ).maxOrNull() ?: 0.0
+                ) + 10.0
             )
         }
     }
@@ -89,8 +94,6 @@ val <T: Any> TreeTableViewWrapper<T>.selectedCell: TreeTablePosition<T, *>?
 val <T: Any> TreeTableViewWrapper<T>.selectedColumn: TreeTableColumn<T, *>?
     get() = selectedCell?.tableColumn
 
-//val <T> TreeTableViewWrapper<T>.selectedValue: Any?
-//  get() = selectedColumn?.getCellObservableValue(selectionModel.selectedItem)?.value
 
 fun <T> ET.treetableview(
     root: TreeItemWrapper<T & Any>? = null,
@@ -101,7 +104,7 @@ fun <T> ET.treetableview(
     }
 
 class TreeTableViewWrapper<E : Any>(
-    node: TreeTableView<E> = TreeTableView(),
+    node: TreeTableView<E> = TreeTableView()
 ) : ControlWrapperImpl<TreeTableView<E>>(node),
     TreeLikeWrapper<TreeTableView<E>, E>,
     TableLikeWrapper<TreeItem<E>> {
@@ -154,14 +157,10 @@ class TreeTableViewWrapper<E : Any>(
         noinline op: TreeTableColumnWrapper<E, P>.() -> Unit = {}
     ): TreeTableColumnWrapper<E, P> {
         val column = TreeTableColumnWrapper<E, P>(title)
-        column.cellValueFactory = Callback {
-            prop.call(it.value.value).toVarProp()
-            //	  it.value.value?.let {
-            //		observable(
-            //		  it, prop
-            //		)
-            //	  }
-        } /*Matt: added null safety here way later because I ran into a NPE here... thought I went years without this null safety first so maybe the null was my fault?*/
+        column.cellValueFactory =
+            Callback {
+                prop.call(it.value.value).toVarProp()
+            } /*Matt: added null safety here way later because I ran into a NPE here... thought I went years without this null safety first so maybe the null was my fault?*/
         addColumnInternal(column)
         return column.also(op)
     }
@@ -173,19 +172,15 @@ class TreeTableViewWrapper<E : Any>(
         noinline op: TreeTableColumnWrapper<E, P>.() -> Unit = {}
     ): TreeTableColumnWrapper<E, P> {
         val column = TreeTableColumnWrapper<E, P>(title)
-        column.cellValueFactory = Callback {
-            prop.call(it.value.value).toVarProp()
-            //	  it.value.value?.let {
-            //		observable(
-            //		  it, prop
-            //		)
-            //	  }
-        } /*Matt: added null safety here way later because I ran into a NPE here... thought I went years without this null safety first so maybe the null was my fault?*/
+        column.cellValueFactory =
+            Callback {
+                prop.call(it.value.value).toVarProp()
+            } /*Matt: added null safety here way later because I ran into a NPE here... thought I went years without this null safety first so maybe the null was my fault?*/
         addColumnInternal(column)
         return column.also(op)
     }
 
-
+    @Suppress("ForbiddenAnnotation")
     @JvmName(name = "columnForObservableProperty")
     fun <P> column(
         title: String,
@@ -241,30 +236,6 @@ class TreeTableViewWrapper<E : Any>(
     }
 
 
-    //  /**
-    //   * Create a matt.hurricanefx.tableview.coolColumn using the propertyName of the attribute you want shown.
-    //   */
-    //  fun <P> column(
-    //	title: String,
-    //	propertyName: String,
-    //	op: TreeTableColumnWrapper<E, P>.()->Unit = {}
-    //  ): TreeTableColumnWrapper<E, P> {
-    //	val column = TreeTableColumnWrapper<E, P>(title)
-    //	column.cellValueFactory = TreeItemPropertyValueFactory<E, P>(propertyName)
-    //	addColumnInternal(column)
-    //	return column.also(op)
-    //  }
-
-
-    //  /**
-    //   * Create a matt.hurricanefx.tableview.coolColumn using the getter of the attribute you want shown.
-    //   */
-    //  @JvmName("pojoColumn")
-    //  fun <P> column(title: String, getter: KFunction<P>): TreeTableColumnWrapper<E, P> {
-    //	val startIndex = if (getter.name.startsWith("is") && getter.name[2].isUpperCase()) 2 else 3
-    //	val propName = getter.name.substring(startIndex).decap()
-    //	return this.column(title, propName)
-    //  }
 
 
     fun <P> addColumnInternal(
@@ -281,29 +252,31 @@ class TreeTableViewWrapper<E : Any>(
     /**
      * Matt was here!
      */
+    @Suppress("ForbiddenAnnotation")
     @JvmName("coolColumn")
     inline fun <P> column(
         getter: KFunction<P>,
         op: TreeTableColumnWrapper<E, P>.() -> Unit = {}
-    ): TreeTableColumnWrapper<E, P> = column(getter.name) {
-        VarProp(getter.call(it.value.value))
-    }.apply(op)
+    ): TreeTableColumnWrapper<E, P> =
+        column(getter.name) {
+            VarProp(getter.call(it.value.value))
+        }.apply(op)
 
 
     /**
      * Matt was here!
      */
+    @Suppress("ForbiddenAnnotation")
     @JvmName("coolColumn2")
     inline fun <P> column(
         getter: KProperty1<E, P>,
         op: TreeTableColumnWrapper<E, P>.() -> Unit = {}
-    ): TreeTableColumnWrapper<E, P> = column(getter.name) {
-        VarProp(getter.call(it.value.value))
-    }.apply(op)
-
+    ): TreeTableColumnWrapper<E, P> =
+        column(getter.name) {
+            VarProp(getter.call(it.value.value))
+        }.apply(op)
 }
 
-//fun <T> TreeTableViewWrapper<T & Any>.selectFirst() = selectionModel.selectFirst()
 
 
 fun <T> TreeTableViewWrapper<T & Any>.bindSelected(property: Property<T>) {
@@ -348,9 +321,10 @@ fun <T : Any> TreeTableViewWrapper<T>.populate(
 }
 
 
-fun TreeTableViewWrapper<*>.editableWhen(predicate: ObservableValue<Boolean>) = apply {
-    editableProperty().bind(predicate)
-}
+fun TreeTableViewWrapper<*>.editableWhen(predicate: ObservableValue<Boolean>) =
+    apply {
+        editableProperty().bind(predicate)
+    }
 
 fun <T : Any> TreeTableViewWrapper<T>.multiSelect(enable: Boolean = true) {
     selectionModel.selectionMode = if (enable) SelectionMode.MULTIPLE else SelectionMode.SINGLE

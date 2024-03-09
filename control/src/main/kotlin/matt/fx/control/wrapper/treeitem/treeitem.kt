@@ -4,6 +4,7 @@ import javafx.collections.ObservableMap
 import javafx.scene.control.CheckBoxTreeItem
 import javafx.scene.control.TreeItem
 import matt.fx.base.wrapper.obs.collect.list.createMutableWrapper
+import matt.fx.base.wrapper.obs.obsval.prop.NonNullFXBackedBindableProp
 import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.control.wrapper.wrapped.wrapped
 import matt.fx.graphics.service.uncheckedWrapperConverter
@@ -15,7 +16,7 @@ open class TreeItemWrapper<T : Any>(node: TreeItem<T> = TreeItem()) : SingularEv
     constructor(item: T) : this(TreeItem(item))
 
 
-    val value by node::value
+    val value: T by node::value
 
     final override val properties: ObservableMap<Any, Any?>
         get() = TODO()
@@ -35,7 +36,7 @@ open class TreeItemWrapper<T : Any>(node: TreeItem<T> = TreeItem()) : SingularEv
         TODO()
     }
 
-    val expandedProperty by lazy { node.expandedProperty().toNonNullableProp() }
+    val expandedProperty: NonNullFXBackedBindableProp<Boolean> by lazy { node.expandedProperty().toNonNullableProp() }
     var isExpanded by expandedProperty
     val parent get() = node.parent?.wrapped()
     val children by lazy {
@@ -43,14 +44,13 @@ open class TreeItemWrapper<T : Any>(node: TreeItem<T> = TreeItem()) : SingularEv
     }
 
 
-    // -- TreeItem helpers
     /**
      * Expand this [TreeItem] and matt.fx.control.layout.children down to `depth`.
      */
     fun expandTo(depth: Int) {
         if (depth > 0) {
-            this.isExpanded = true
-            this.children.forEach { it.expandTo(depth - 1) }
+            isExpanded = true
+            children.forEach { it.expandTo(depth - 1) }
         }
     }
 
@@ -64,8 +64,8 @@ open class TreeItemWrapper<T : Any>(node: TreeItem<T> = TreeItem()) : SingularEv
      */
 
     fun collapseAll() {
-        this.isExpanded = false
-        this.children.forEach { it.collapseAll() }
+        isExpanded = false
+        children.forEach { it.collapseAll() }
     }
 }
 

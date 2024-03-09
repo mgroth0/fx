@@ -12,12 +12,13 @@ import matt.fx.graphics.wrapper.node.attachTo
 import matt.lang.assertions.require.requireNull
 import matt.obs.bindings.str.ObsS
 
-fun ET.buttonbar(buttonOrder: String? = null, op: (ButtonBarWrapper.()->Unit)) = ButtonBarWrapper().attachTo(this, op) {
-    if (buttonOrder != null) it.buttonOrder = buttonOrder
-}
+fun ET.buttonbar(buttonOrder: String? = null, op: (ButtonBarWrapper.() -> Unit)) =
+    ButtonBarWrapper().attachTo(this, op) {
+        if (buttonOrder != null) it.buttonOrder = buttonOrder
+    }
 
 class ButtonBarWrapper(
-    node: ButtonBar = ButtonBar(),
+    node: ButtonBar = ButtonBar()
 ): ControlWrapperImpl<ButtonBar>(node) {
 
 
@@ -34,14 +35,13 @@ class ButtonBarWrapper(
         buttons.add(child.node)
     }
 
-    //  fun setButtonData() = node.butt
 
 
     fun button(
         text: String = "",
         type: ButtonBar.ButtonData? = null,
         graphic: NodeWrapper? = null,
-        op: ButtonWrapper.()->Unit = {}
+        op: ButtonWrapper.() -> Unit = {}
     ) = ButtonWrapper().apply { this.text = text }.also {
         if (type != null) ButtonBar.setButtonData(it.node, type)
         if (graphic != null) it.graphic = graphic
@@ -53,7 +53,7 @@ class ButtonBarWrapper(
         text: ObsS,
         type: ButtonBar.ButtonData? = null,
         graphic: NodeWrapper? = null,
-        op: ButtonWrapper.()->Unit = {}
+        op: ButtonWrapper.() -> Unit = {}
     ) = ButtonWrapper().also {
         it.textProperty.bind(text)
         if (type != null) ButtonBar.setButtonData(it.node, type)
@@ -61,5 +61,4 @@ class ButtonBarWrapper(
         buttons += it.node
         op(it)
     }
-
 }

@@ -50,7 +50,7 @@ import matt.fx.control.css.BooleanCssMetaData
 import matt.fx.control.popup.popupcontrol.node.MyPopupControl
 import matt.fx.control.popup.popupcontrol.node.bridge.MyPopUpCSSBridge
 import matt.fx.control.popup.tooltip.node.skin.MyTooltipSkin
-import matt.lang.addAll
+import matt.lang.common.addAll
 import java.util.Collections
 
 
@@ -78,18 +78,21 @@ class MyTooltip @JvmOverloads constructor(text: String? = null) : MyPopupControl
 
     fun getText(): String = if (text.value == null) "" else text.value
 
-    private val text: StringProperty = object : SimpleStringProperty(this, "text", "") {
-        override fun invalidated() {
-            super.invalidated()
-            val value = get()
-            if (isShowing && value != null && value != getText()) {
-                //Dynamic tooltip content is location-dependant.
-                //Chromium trick.
-                anchorX = BEHAVIOR.lastMouseX
-                anchorY = BEHAVIOR.lastMouseY
+    private val text: StringProperty =
+        object : SimpleStringProperty(this, "text", "") {
+            override fun invalidated() {
+                super.invalidated()
+                val value = get()
+                if (isShowing && value != null && value != getText()) {
+                    /*
+                    Dynamic tooltip content is location-dependant.
+                    Chromium trick.
+                     */
+                    anchorX = BEHAVIOR.lastMouseX
+                    anchorY = BEHAVIOR.lastMouseY
+                }
             }
         }
-    }
 
     /**
      * Specifies the behavior for lines of text *when text is multiline*.
@@ -106,9 +109,10 @@ class MyTooltip @JvmOverloads constructor(text: String? = null) : MyPopupControl
 
     fun getTextAlignment(): TextAlignment = textAlignmentProperty().value
 
-    private val textAlignment: ObjectProperty<TextAlignment> = SimpleStyleableObjectProperty(
-        TEXT_ALIGNMENT, this, "textAlignment", LEFT
-    )
+    private val textAlignment: ObjectProperty<TextAlignment> =
+        SimpleStyleableObjectProperty(
+            TEXT_ALIGNMENT, this, "textAlignment", LEFT
+        )
 
     /**
      * Specifies the behavior to use if the text of the `Tooltip`
@@ -123,9 +127,10 @@ class MyTooltip @JvmOverloads constructor(text: String? = null) : MyPopupControl
 
     fun getTextOverrun(): OverrunStyle = textOverrunProperty().value
 
-    private val textOverrun: ObjectProperty<OverrunStyle> = SimpleStyleableObjectProperty(
-        TEXT_OVERRUN, this, "textOverrun", ELLIPSIS
-    )
+    private val textOverrun: ObjectProperty<OverrunStyle> =
+        SimpleStyleableObjectProperty(
+            TEXT_OVERRUN, this, "textOverrun", ELLIPSIS
+        )
 
     /**
      * If a run of text exceeds the width of the Tooltip, then this variable
@@ -157,48 +162,53 @@ class MyTooltip @JvmOverloads constructor(text: String? = null) : MyPopupControl
 
     fun getFont(): Font = fontProperty().value
 
-    private val font: ObjectProperty<Font> = object : StyleableObjectProperty<Font>(Font.getDefault()) {
-        private var fontSetByCss = false
-        override fun applyStyle(
-            newOrigin: StyleOrigin,
-            value: Font
-        ) {
-            // RT-20727 - if CSS is setting the font, then make sure invalidate doesn't call NodeHelper.reapplyCSS
-            try {
-                // super.applyStyle calls set which might throw if value is bound.
-                // Have to make sure fontSetByCss is reset.
-                fontSetByCss = true
-                super.applyStyle(newOrigin, value)
-            } catch (e: Exception) {
-                throw e
-            } finally {
-                fontSetByCss = false
+    private val font: ObjectProperty<Font> =
+        object : StyleableObjectProperty<Font>(Font.getDefault()) {
+            private var fontSetByCss = false
+            override fun applyStyle(
+                newOrigin: StyleOrigin,
+                value: Font
+            ) {
+                /* RT-20727 - if CSS is setting the font, then make sure invalidate doesn't call NodeHelper.reapplyCSS */
+                try {
+                    /*
+                    super.applyStyle calls set which might throw if value is bound.
+                    Have to make sure fontSetByCss is reset.
+                     */
+                    fontSetByCss = true
+                    super.applyStyle(newOrigin, value)
+                } catch (e: Exception) {
+                    throw e
+                } finally {
+                    fontSetByCss = false
+                }
             }
-        }
 
-        override fun set(value: Font?) {
-            val oldValue = get()
-            val origin = (this as StyleableObjectProperty<Font>).styleOrigin
-            if (origin == null || (if (value != null) value != oldValue else oldValue != null)) {
-                super.set(value)
+            override fun set(value: Font?) {
+                val oldValue = get()
+                val origin = (this as StyleableObjectProperty<Font>).styleOrigin
+                if (origin == null || (if (value != null) value != oldValue else oldValue != null)) {
+                    super.set(value)
+                }
             }
-        }
 
-        override fun invalidated() {
-            // RT-20727 - if font is changed by calling setFont, then
-            // css might need to be reapplied since font size affects
-            // calculated values for styles with relative values
-            if (fontSetByCss == false) {
-                NodeHelper.reapplyCSS(bridge)
+            override fun invalidated() {
+                /*
+                RT-20727 - if font is changed by calling setFont, then
+                css might need to be reapplied since font size affects
+                calculated values for styles with relative values
+                 */
+                if (fontSetByCss == false) {
+                    NodeHelper.reapplyCSS(bridge)
+                }
             }
+
+            override fun getCssMetaData(): CssMetaData<MyToolTipCSSBridge, Font> = FONT
+
+            override fun getBean(): Any = this@MyTooltip
+
+            override fun getName(): String = "font"
         }
-
-        override fun getCssMetaData(): CssMetaData<MyToolTipCSSBridge, Font> = FONT
-
-        override fun getBean(): Any = this@MyTooltip
-
-        override fun getName(): String = "font"
-    }
 
     /**
      * The delay between the mouse entering the hovered node and when the associated tooltip will be shown to the user.
@@ -213,9 +223,10 @@ class MyTooltip @JvmOverloads constructor(text: String? = null) : MyPopupControl
     fun setShowDelay(showDelay: Duration) = showDelayProperty.set(showDelay)
 
     val showDelay: Duration get() = showDelayProperty.get()
-    private val showDelayProperty: ObjectProperty<Duration> = SimpleStyleableObjectProperty(
-        SHOW_DELAY, this, "showDelay", Duration(1000.0)
-    )
+    private val showDelayProperty: ObjectProperty<Duration> =
+        SimpleStyleableObjectProperty(
+            SHOW_DELAY, this, "showDelay", Duration(1000.0)
+        )
 
     /**
      * The duration that the tooltip should remain showing for until it is no longer visible to the user.
@@ -230,9 +241,10 @@ class MyTooltip @JvmOverloads constructor(text: String? = null) : MyPopupControl
     fun showDurationProperty(): ObjectProperty<Duration> = showDurationProperty
     fun setShowDuration(showDuration: Duration) = showDurationProperty.set(showDuration)
     val showDuration: Duration get() = showDurationProperty.get()
-    private val showDurationProperty: ObjectProperty<Duration> = SimpleStyleableObjectProperty(
-        SHOW_DURATION, this, "showDuration", Duration(5000.0)
-    )
+    private val showDurationProperty: ObjectProperty<Duration> =
+        SimpleStyleableObjectProperty(
+            SHOW_DURATION, this, "showDuration", Duration(5000.0)
+        )
 
     /**
      * The duration in which to continue showing the tooltip after the mouse has left the node. Once this time has
@@ -247,9 +259,10 @@ class MyTooltip @JvmOverloads constructor(text: String? = null) : MyPopupControl
     fun setHideDelay(hideDelay: Duration) = hideDelayProperty.set(hideDelay)
 
     val hideDelay: Duration get() = hideDelayProperty.get()
-    private val hideDelayProperty: ObjectProperty<Duration> = SimpleStyleableObjectProperty(
-        HIDE_DELAY, this, "hideDelay", Duration(200.0)
-    )
+    private val hideDelayProperty: ObjectProperty<Duration> =
+        SimpleStyleableObjectProperty(
+            HIDE_DELAY, this, "hideDelay", Duration(200.0)
+        )
 
     /**
      * An optional icon for the Tooltip. This can be positioned relative to the
@@ -269,104 +282,123 @@ class MyTooltip @JvmOverloads constructor(text: String? = null) : MyPopupControl
     fun getGraphic(): Node? = graphicProperty().value
 
 
-    private val graphic: ObjectProperty<Node?> = object : StyleableObjectProperty<Node?>() {
-        // The graphic is styleable by css, but it is the
-        // imageUrlProperty that handles the style value.
-        /*Note from Matt: this is weird*/
-        @Suppress("UNCHECKED_CAST")
-        override fun getCssMetaData() = GRAPHIC as CssMetaData<Styleable, Node?>
+    private val graphic: ObjectProperty<Node?> =
+        object : StyleableObjectProperty<Node?>() {
 
-        override fun getBean(): Any = this@MyTooltip
+            /*
 
-        override fun getName(): String = "graphic"
-    }
+            The graphic is styleable by css, but it is the
+
+            imageUrlProperty that handles the style value.
+
+
+
+
+            Note from Matt: this is weird
+
+             */
+            @Suppress("UNCHECKED_CAST")
+            override fun getCssMetaData() = GRAPHIC as CssMetaData<Styleable, Node?>
+
+            override fun getBean(): Any = this@MyTooltip
+
+            override fun getName(): String = "graphic"
+        }
 
     private fun imageUrlProperty(): StyleableStringProperty {
         if (imageUrl == null) {
-            imageUrl = object : StyleableStringProperty() {
-                // If imageUrlProperty is invalidated, this is the origin of the style that
-                // triggered the invalidation. This is used in the invaildated() method where the
-                // value of super.getStyleOrigin() is not valid until after the call to set(v) returns,
-                // by which time invalidated will have been called.
-                // This value is initialized to USER in case someone calls set on the imageUrlProperty, which
-                // is possible:
-                //     CssMetaData metaData = ((StyleableProperty)labeled.graphicProperty()).getCssMetaData();
-                //     StyleableProperty prop = metaData.getStyleableProperty(labeled);
-                //     prop.set(someUrl);
-                //
-                // TO DO (from JavaFx not from Matt): Note that prop != labeled, which violates the contract between StyleableProperty and CssMetaData.
-                var origin = USER
-                override fun applyStyle(
-                    origin: StyleOrigin,
-                    v: String
-                ) {
-                    this.origin = origin
+            imageUrl =
+                object : StyleableStringProperty() {
+                    /*
+If imageUrlProperty is invalidated, this is the origin of the style that
+triggered the invalidation. This is used in the invaildated() method where the
+value of super.getStyleOrigin() is not valid until after the call to set(v) returns,
+by which time invalidated will have been called.
+This value is initialized to USER in case someone calls set on the imageUrlProperty, which
+is possible:
+CssMetaData metaData = ((StyleableProperty)labeled.graphicProperty()).getCssMetaData();
+StyleableProperty prop = metaData.getStyleableProperty(labeled);
+prop.set(someUrl);
 
-                    // Don't want applyStyle to throw an exception which would leave this.origin set to the wrong value
-                    if (!graphic.isBound) super.applyStyle(origin, v)
+TO DO (from JavaFx not from Matt): Note that prop != labeled, which violates the contract between StyleableProperty and CssMetaData.
+*/
+                    var origin = USER
+                    override fun applyStyle(
+                        origin: StyleOrigin,
+                        v: String
+                    ) {
+                        this.origin = origin
 
-                    // Origin is only valid for this invocation of applyStyle, so reset it to USER in case someone calls set.
-                    this.origin = USER
-                }
+                        /* Don't want applyStyle to throw an exception which would leave this.origin set to the wrong value */
+                        if (!graphic.isBound) super.applyStyle(origin, v)
 
-                override fun invalidated() {
+                        /* Origin is only valid for this invocation of applyStyle, so reset it to USER in case someone calls set. */
+                        this.origin = USER
+                    }
 
-                    // need to call super.get() here since get() is overridden to return the graphicProperty's value
-                    val url = super.get()
-                    if (url == null) {
-                        @Suppress("UNCHECKED_CAST")
-                        (graphicProperty() as StyleableProperty<Node?>).applyStyle(origin, null)
-                    } else {
-                        // RT-34466 - if graphic's url is the same as this property's value, then don't overwrite.
-                        val graphicNode = getGraphic()
-                        if (graphicNode is ImageView) {
-                            val image = graphicNode.image
-                            if (image != null) {
-                                val imageViewUrl = image.url
-                                if (url == imageViewUrl) return
+                    override fun invalidated() {
+
+                        /* need to call super.get() here since get() is overridden to return the graphicProperty's value */
+                        val url = super.get()
+                        if (url == null) {
+                            @Suppress("UNCHECKED_CAST")
+                            (graphicProperty() as StyleableProperty<Node?>).applyStyle(origin, null)
+                        } else {
+                            /* RT-34466 - if graphic's url is the same as this property's value, then don't overwrite. */
+                            val graphicNode = getGraphic()
+                            if (graphicNode is ImageView) {
+                                val image = graphicNode.image
+                                if (image != null) {
+                                    val imageViewUrl = image.url
+                                    if (url == imageViewUrl) return
+                                }
+                            }
+                            val img = StyleManager.getInstance().getCachedImage(url)
+                            if (img != null) {
+                                /*
+                                Note that it is tempting to try to re-use existing ImageView simply by setting
+                                the image on the current ImageView, if there is one. This would effectively change
+                                the image, but not the ImageView which means that no graphicProperty listeners would
+                                be notified. This is probably not what we want.
+                                Have to call applyStyle on graphicProperty so that the graphicProperty's
+                                origin matches the imageUrlProperty's origin.
+                                 */
+                                @Suppress("UNCHECKED_CAST")
+                                (graphicProperty() as StyleableProperty<Node?>).applyStyle(origin, ImageView(img))
                             }
                         }
-                        val img = StyleManager.getInstance().getCachedImage(url)
-                        if (img != null) {
-                            // Note that it is tempting to try to re-use existing ImageView simply by setting
-                            // the image on the current ImageView, if there is one. This would effectively change
-                            // the image, but not the ImageView which means that no graphicProperty listeners would
-                            // be notified. This is probably not what we want.
-
-                            // Have to call applyStyle on graphicProperty so that the graphicProperty's
-                            // origin matches the imageUrlProperty's origin.
-                            @Suppress("UNCHECKED_CAST")
-                            (graphicProperty() as StyleableProperty<Node?>).applyStyle(origin, ImageView(img))
-                        }
                     }
-                }
 
-                override fun get(): String? {
-                    // The value of the imageUrlProperty is that of the graphicProperty.
-                    // Return the value in a way that doesn't expand the graphicProperty.
-                    val graphic = getGraphic()
-                    if (graphic is ImageView) {
-                        val image = graphic.image
-                        if (image != null) {
-                            return image.url
+                    override fun get(): String? {
+                        /*
+                        The value of the imageUrlProperty is that of the graphicProperty.
+                        Return the value in a way that doesn't expand the graphicProperty.
+                         */
+                        val graphic = getGraphic()
+                        if (graphic is ImageView) {
+                            val image = graphic.image
+                            if (image != null) {
+                                return image.url
+                            }
                         }
+                        return null
                     }
-                    return null
+
+                    override fun getStyleOrigin(): StyleOrigin? {
+                        /*
+                        The origin of the imageUrlProperty is that of the graphicProperty.
+                        Return the origin in a way that doesn't expand the graphicProperty.
+                         */
+                        @Suppress("UNCHECKED_CAST")
+                        return (graphic as StyleableProperty<Node?>).styleOrigin
+                    }
+
+                    override fun getBean(): Any = this@MyTooltip
+
+                    override fun getName(): String = "imageUrl"
+
+                    override fun getCssMetaData(): CssMetaData<MyToolTipCSSBridge, String> = GRAPHIC
                 }
-
-                override fun getStyleOrigin(): StyleOrigin? {
-                    // The origin of the imageUrlProperty is that of the graphicProperty.
-                    // Return the origin in a way that doesn't expand the graphicProperty.
-                    @Suppress("UNCHECKED_CAST")
-                    return (graphic as StyleableProperty<Node?>).styleOrigin
-                }
-
-                override fun getBean(): Any = this@MyTooltip
-
-                override fun getName(): String = "imageUrl"
-
-                override fun getCssMetaData(): CssMetaData<MyToolTipCSSBridge, String> = GRAPHIC
-            }
         }
         return imageUrl!!
     }
@@ -385,9 +417,10 @@ class MyTooltip @JvmOverloads constructor(text: String? = null) : MyPopupControl
 
     fun getContentDisplay(): ContentDisplay = contentDisplayProperty().value
 
-    private val contentDisplay: ObjectProperty<ContentDisplay> = SimpleStyleableObjectProperty(
-        CONTENT_DISPLAY, this, "contentDisplay", ContentDisplay.LEFT
-    )
+    private val contentDisplay: ObjectProperty<ContentDisplay> =
+        SimpleStyleableObjectProperty(
+            CONTENT_DISPLAY, this, "contentDisplay", ContentDisplay.LEFT
+        )
 
     /**
      * The amount of space between the graphic and text
@@ -401,12 +434,13 @@ class MyTooltip @JvmOverloads constructor(text: String? = null) : MyPopupControl
 
     fun getGraphicTextGap(): Double = graphicTextGapProperty().value
 
-    private val graphicTextGap: DoubleProperty = SimpleStyleableDoubleProperty(
-        GRAPHIC_TEXT_GAP,
-        this,
-        "graphicTextGap",
-        4.0
-    )
+    private val graphicTextGap: DoubleProperty =
+        SimpleStyleableDoubleProperty(
+            GRAPHIC_TEXT_GAP,
+            this,
+            "graphicTextGap",
+            4.0
+        )
 
     /**
      * Typically, the tooltip is "activated" when the mouse moves over a Control.
@@ -420,11 +454,7 @@ class MyTooltip @JvmOverloads constructor(text: String? = null) : MyPopupControl
     fun isActivated(): Boolean = activated.get()
 
     fun activatedProperty(): ReadOnlyBooleanProperty = activated.readOnlyProperty
-    /* *************************************************************************
-     *                                                                         *
-     * Methods                                                                 *
-     *                                                                         *
-     **************************************************************************/
+
     /** {@inheritDoc}  */
     override fun createDefaultSkin(): Skin<*> = MyTooltipSkin(this)
 
@@ -433,13 +463,9 @@ class MyTooltip @JvmOverloads constructor(text: String? = null) : MyPopupControl
      * Creates a tooltip with the specified text.
      *
      * @param text A text string for the tooltip.
-     */
-    /* *************************************************************************
-     *                                                                         *
-     * Constructors                                                            *
-     *                                                                         *
-     **************************************************************************/
-    /**
+
+
+
      * Creates a tooltip with an empty string for its text.
      */
     init {
@@ -455,9 +481,10 @@ class MyTooltip @JvmOverloads constructor(text: String? = null) : MyPopupControl
      */
     override fun getCssMetaData(): List<CssMetaData<out Styleable, *>> = classCssMetaData
 
-    override fun getStyleableParent(): Styleable = if (BEHAVIOR.hoveredNode == null) {
-        super.getStyleableParent()
-    } else BEHAVIOR.hoveredNode!!
+    override fun getStyleableParent(): Styleable =
+        if (BEHAVIOR.hoveredNode == null) {
+            super.getStyleableParent()
+        } else BEHAVIOR.hoveredNode!!
 
     /* *************************************************************************
      *                                                                         *
@@ -542,211 +569,243 @@ class MyTooltip @JvmOverloads constructor(text: String? = null) : MyPopupControl
          * (if ACTIVATION_TIMER is running), or skip the ACTIVATION_TIMER and just
          * show the tooltip (if the LEFT_TIMER is running).
          */
-        private val MOVE_HANDLER = EventHandler<MouseEvent> { event: MouseEvent ->
-            //Screen coordinates need to be actual for dynamic tooltip.
-            //See Tooltip.setText
-            lastMouseX = event.screenX
-            lastMouseY = event.screenY
+        private val MOVE_HANDLER =
+            EventHandler<MouseEvent> { event: MouseEvent ->
+                /*
+Screen coordinates need to be actual for dynamic tooltip.
+See Tooltip.setText
+*/
+                lastMouseX = event.screenX
+                lastMouseY = event.screenY
 
-            // If the HIDE_TIMER is running, then we don't want this event
-            // handler to do anything, or change any state at all.
+                /*
+                If the HIDE_TIMER is running, then we don't want this event
+                handler to do anything, or change any state at all.
+                 */
 
-            if (hideTimer.status == Animation.Status.RUNNING) {
-                return@EventHandler
-            }
-
-            // Note that the "install" step will both register this handler
-            // with the target node and also associate the tooltip with the
-            // target node, by stashing it in the client properties of the node.
-            hoveredNode = event.source as Node
-            val t = hoveredNode!!.properties[TOOLTIP_PROP_KEY] as MyTooltip?
-            if (t != null) {
-                // In theory we should never get here with an invisible or
-                // non-existant window hierarchy, but might in some cases where
-                // people are feeding fake mouse events into the hierarchy. So
-                // we'll guard against that case.
-                val owner = getWindow(hoveredNode)
-                val treeVisible = isWindowHierarchyVisible(hoveredNode)
-                if (owner != null && treeVisible) {
-                    // Now we know that the currently HOVERED node has a tooltip
-                    // and that it is part of a visible window Hierarchy.
-                    // If LEFT_TIMER is running, then we make this tooltip
-                    // visible immediately, stop the LEFT_TIMER, and start the
-                    // HIDE_TIMER.
-                    if (leftTimer.status == Animation.Status.RUNNING) {
-                        if (visibleTooltip != null) visibleTooltip!!.hide()
-                        visibleTooltip = t
-                        t.show(
-                            owner, event.screenX + TOOLTIP_XOFFSET,
-                            event.screenY + TOOLTIP_YOFFSET
-                        )
-                        leftTimer.stop()
-                        @Suppress("SENSELESS_COMPARISON")
-                        if (t.showDuration != null) {
-                            hideTimer.keyFrames.setAll(KeyFrame(t.showDuration))
-                        }
-                        hideTimer.playFromStart()
-                    } else {
-                        // Force the CSS to be processed for the tooltip so that it uses the
-                        // appropriate timings for showDelay, showDuration, and hideDelay.
-                        if (!cssForced) {
-                            val opacity = t.opacity
-                            t.opacity = 0.0
-                            t.show(owner)
-                            t.hide()
-                            t.opacity = opacity
-                            cssForced = true
-                        }
-
-                        // Start / restart the timer and make sure the tooltip
-                        // is marked as activated.
-                        t.setActivated(true)
-                        activatedTooltip = t
-                        activationTimer.stop()
-                        @Suppress("SENSELESS_COMPARISON")
-                        if (t.showDelay != null) {
-                            activationTimer.keyFrames.setAll(KeyFrame(t.showDelay))
-                        }
-                        activationTimer.playFromStart()
-                    }
+                if (hideTimer.status == Animation.Status.RUNNING) {
+                    return@EventHandler
                 }
-            } else {
-                // TODO should deregister, no point being here anymore!
+
+                /*
+                Note that the "install" step will both register this handler
+                with the target node and also associate the tooltip with the
+                target node, by stashing it in the client properties of the node.
+                 */
+                hoveredNode = event.source as Node
+                val t = hoveredNode!!.properties[TOOLTIP_PROP_KEY] as MyTooltip?
+                if (t != null) {
+                    /*
+                    In theory we should never get here with an invisible or
+                    non-existant window hierarchy, but might in some cases where
+                    people are feeding fake mouse events into the hierarchy. So
+                    we'll guard against that case.
+                     */
+                    val owner = getWindow(hoveredNode)
+                    val treeVisible = isWindowHierarchyVisible(hoveredNode)
+                    if (owner != null && treeVisible) {
+                        /*
+                        Now we know that the currently HOVERED node has a tooltip
+                        and that it is part of a visible window Hierarchy.
+                        If LEFT_TIMER is running, then we make this tooltip
+                        visible immediately, stop the LEFT_TIMER, and start the
+                        HIDE_TIMER.
+                         */
+                        if (leftTimer.status == Animation.Status.RUNNING) {
+                            if (visibleTooltip != null) visibleTooltip!!.hide()
+                            visibleTooltip = t
+                            t.show(
+                                owner, event.screenX + TOOLTIP_XOFFSET,
+                                event.screenY + TOOLTIP_YOFFSET
+                            )
+                            leftTimer.stop()
+                            @Suppress("SENSELESS_COMPARISON")
+                            if (t.showDuration != null) {
+                                hideTimer.keyFrames.setAll(KeyFrame(t.showDuration))
+                            }
+                            hideTimer.playFromStart()
+                        } else {
+                            /*
+                            Force the CSS to be processed for the tooltip so that it uses the
+                            appropriate timings for showDelay, showDuration, and hideDelay.
+                             */
+                            if (!cssForced) {
+                                val opacity = t.opacity
+                                t.opacity = 0.0
+                                t.show(owner)
+                                t.hide()
+                                t.opacity = opacity
+                                cssForced = true
+                            }
+
+                            /*
+                            Start / restart the timer and make sure the tooltip
+                            is marked as activated.
+                             */
+                            t.setActivated(true)
+                            activatedTooltip = t
+                            activationTimer.stop()
+                            @Suppress("SENSELESS_COMPARISON")
+                            if (t.showDelay != null) {
+                                activationTimer.keyFrames.setAll(KeyFrame(t.showDelay))
+                            }
+                            activationTimer.playFromStart()
+                        }
+                    }
+                } else {
+                    /* TODO should deregister, no point being here anymore! */
+                }
             }
-        }
 
         /**
          * Registers for mouse exit events. If the ACTIVATION_TIMER is running then
          * this will simply stop it. If the HIDE_TIMER is running then this will
          * stop the HIDE_TIMER, hide the tooltip, and start the LEFT_TIMER.
          */
-        private val LEAVING_HANDLER = EventHandler<MouseEvent> { event: MouseEvent ->
-            // detect bogus mouse exit events, if it didn't really move then ignore it
-            if (activationTimer.status == Animation.Status.RUNNING) {
-                activationTimer.stop()
-            } else if (hideTimer.status == Animation.Status.RUNNING) {
-                assert(visibleTooltip != null)
-                hideTimer.stop()
-                if (hideOnExit) visibleTooltip!!.hide()
-                val source = event.source as Node
-                val t = source.properties[TOOLTIP_PROP_KEY] as MyTooltip?
-                if (t != null) {
-                    @Suppress("SENSELESS_COMPARISON")
-                    if (t.hideDelay != null) {
-                        leftTimer.keyFrames.setAll(KeyFrame(t.hideDelay))
+        private val LEAVING_HANDLER =
+            EventHandler<MouseEvent> { event: MouseEvent ->
+                /* detect bogus mouse exit events, if it didn't really move then ignore it */
+                if (activationTimer.status == Animation.Status.RUNNING) {
+                    activationTimer.stop()
+                } else if (hideTimer.status == Animation.Status.RUNNING) {
+                    assert(visibleTooltip != null)
+                    hideTimer.stop()
+                    if (hideOnExit) visibleTooltip!!.hide()
+                    val source = event.source as Node
+                    val t = source.properties[TOOLTIP_PROP_KEY] as MyTooltip?
+                    if (t != null) {
+                        @Suppress("SENSELESS_COMPARISON")
+                        if (t.hideDelay != null) {
+                            leftTimer.keyFrames.setAll(KeyFrame(t.hideDelay))
+                        }
+                        leftTimer.playFromStart()
                     }
-                    leftTimer.playFromStart()
                 }
+                hoveredNode = null
+                activatedTooltip = null
+                if (hideOnExit) visibleTooltip = null
             }
-            hoveredNode = null
-            activatedTooltip = null
-            if (hideOnExit) visibleTooltip = null
-        }
 
         /**
          * Registers for mouse click, press, release, drag events. If any of these
          * occur, then the tooltip is hidden (if it is visible), it is deactivated,
          * and any and all timers are stopped.
          */
-        private val KILL_HANDLER = EventHandler { _: MouseEvent ->
-            activationTimer.stop()
-            hideTimer.stop()
-            leftTimer.stop()
-            if (visibleTooltip != null) visibleTooltip!!.hide()
-            hoveredNode = null
-            activatedTooltip = null
-            visibleTooltip = null
-        }
+        private val KILL_HANDLER =
+            EventHandler { _: MouseEvent ->
+                activationTimer.stop()
+                hideTimer.stop()
+                leftTimer.stop()
+                if (visibleTooltip != null) visibleTooltip!!.hide()
+                hoveredNode = null
+                activatedTooltip = null
+                visibleTooltip = null
+            }
 
         init {
-            activationTimer.onFinished = EventHandler {
-                assert(activatedTooltip != null)
-                val owner = getWindow(hoveredNode)
-                val treeVisible = isWindowHierarchyVisible(hoveredNode)
+            activationTimer.onFinished =
+                EventHandler {
+                    assert(activatedTooltip != null)
+                    val owner = getWindow(hoveredNode)
+                    val treeVisible = isWindowHierarchyVisible(hoveredNode)
 
-                // If the ACTIVATED tooltip is part of a visible window
-                // hierarchy, we can go ahead and show the tooltip and
-                // start the HIDE_TIMER.
-                //
-                // If the owner is null or invisible, then it either means a
-                // bug in our code, the node was removed from a scene or
-                // window or made invisible, or the node is not part of a
-                // visible window hierarchy. In that case, we don't show the
-                // tooltip, and we don't start the HIDE_TIMER. We simply let
-                // ACTIVATED_TIMER expire, and wait until the next mouse
-                // the movement to start it again.
-                if (owner != null && owner.isShowing && treeVisible) {
-                    var x = lastMouseX
-                    var y = lastMouseY
+                    /*
+                    If the ACTIVATED tooltip is part of a visible window
+                    hierarchy, we can go ahead and show the tooltip and
+                    start the HIDE_TIMER.
 
-                    // The tooltip always inherits the nodeOrientation of
-                    // the Node that it is attached to (see RT-26147). It
-                    // is possible to override this for the Tooltip content
-                    // (but not the popup placement) by setting the
-                    // nodeOrientation on tooltip.getScene().getRoot().
-                    val nodeOrientation = hoveredNode!!.effectiveNodeOrientation
-                    activatedTooltip!!.scene.nodeOrientation = nodeOrientation
-                    if (nodeOrientation == RIGHT_TO_LEFT) {
-                        x -= activatedTooltip!!.width
-                    }
-                    activatedTooltip!!.show(
-                        owner,
-                        x + TOOLTIP_XOFFSET,
-                        y + TOOLTIP_YOFFSET
-                    )
+                    If the owner is null or invisible, then it either means a
+                    bug in our code, the node was removed from a scene or
+                    window or made invisible, or the node is not part of a
+                    visible window hierarchy. In that case, we don't show the
+                    tooltip, and we don't start the HIDE_TIMER. We simply let
+                    ACTIVATED_TIMER expire, and wait until the next mouse
+                    the movement to start it again.
+                     */
+                    if (owner != null && owner.isShowing && treeVisible) {
+                        var x = lastMouseX
+                        var y = lastMouseY
 
-                    // RT-37107: Ensure the tooltip is displayed in a position
-                    // where it will not be under the mouse, even when the tooltip
-                    // is near the edge of the screen
-                    if (y + TOOLTIP_YOFFSET > activatedTooltip!!.anchorY) {
-                        // the tooltip has been shifted vertically upwards,
-                        // most likely to be underneath the mouse cursor, so we
-                        // need to shift it further by hiding and reshowing
-                        // in another location
-                        activatedTooltip!!.hide()
-                        y -= activatedTooltip!!.height
-                        activatedTooltip!!.show(owner, x + TOOLTIP_XOFFSET, y)
+                        /*
+                        The tooltip always inherits the nodeOrientation of
+                        the Node that it is attached to (see RT-26147). It
+                        is possible to override this for the Tooltip content
+                        (but not the popup placement) by setting the
+                        nodeOrientation on tooltip.getScene().getRoot().
+                         */
+                        val nodeOrientation = hoveredNode!!.effectiveNodeOrientation
+                        activatedTooltip!!.scene.nodeOrientation = nodeOrientation
+                        if (nodeOrientation == RIGHT_TO_LEFT) {
+                            x -= activatedTooltip!!.width
+                        }
+                        activatedTooltip!!.show(
+                            owner,
+                            x + TOOLTIP_XOFFSET,
+                            y + TOOLTIP_YOFFSET
+                        )
+
+                        /*
+                        RT-37107: Ensure the tooltip is displayed in a position
+                        where it will not be under the mouse, even when the tooltip
+                        is near the edge of the screen
+                         */
+                        if (y + TOOLTIP_YOFFSET > activatedTooltip!!.anchorY) {
+                            /*
+                            the tooltip has been shifted vertically upwards,
+                            most likely to be underneath the mouse cursor, so we
+                            need to shift it further by hiding and reshowing
+                            in another location
+                             */
+                            activatedTooltip!!.hide()
+                            y -= activatedTooltip!!.height
+                            activatedTooltip!!.show(owner, x + TOOLTIP_XOFFSET, y)
+                        }
+                        visibleTooltip = activatedTooltip
+                        hoveredNode = null
+                        @Suppress("SENSELESS_COMPARISON")
+                        if (activatedTooltip!!.showDuration != null) {
+                            hideTimer.keyFrames.setAll(KeyFrame(activatedTooltip!!.showDuration))
+                        }
+                        hideTimer.playFromStart()
                     }
-                    visibleTooltip = activatedTooltip
-                    hoveredNode = null
-                    @Suppress("SENSELESS_COMPARISON")
-                    if (activatedTooltip!!.showDuration != null) {
-                        hideTimer.keyFrames.setAll(KeyFrame(activatedTooltip!!.showDuration))
-                    }
-                    hideTimer.playFromStart()
+
+                    /*
+                    Once the activation timer has expired, the tooltip is no
+                    longer in the activated state, it is only in the visible
+                    state, so we go ahead and set activated to false
+                     */
+                    activatedTooltip!!.setActivated(false)
+                    activatedTooltip = null
                 }
-
-                // Once the activation timer has expired, the tooltip is no
-                // longer in the activated state, it is only in the visible
-                // state, so we go ahead and set activated to false
-                activatedTooltip!!.setActivated(false)
-                activatedTooltip = null
-            }
-            hideTimer.onFinished = EventHandler { _: ActionEvent? ->
-                assert(visibleTooltip != null)
-                visibleTooltip!!.hide()
-                visibleTooltip = null
-                hoveredNode = null
-            }
-            leftTimer.onFinished = EventHandler { _: ActionEvent? ->
-                if (!hideOnExit) {
-                    // Hide the currently visible tooltip.
+            hideTimer.onFinished =
+                EventHandler { _: ActionEvent? ->
                     assert(visibleTooltip != null)
                     visibleTooltip!!.hide()
                     visibleTooltip = null
                     hoveredNode = null
                 }
-            }
+            leftTimer.onFinished =
+                EventHandler { _: ActionEvent? ->
+                    if (!hideOnExit) {
+                        /* Hide the currently visible tooltip. */
+                        assert(visibleTooltip != null)
+                        visibleTooltip!!.hide()
+                        visibleTooltip = null
+                        hoveredNode = null
+                    }
+                }
         }
 
         fun install(
             node: Node?,
             t: MyTooltip
         ) {
-            // Install the MOVE_HANDLER, LEAVING_HANDLER, and KILL_HANDLER on
-            // the given node. Stash the tooltip in the node's client properties
-            // map so that it is not gc'd. The handlers must all be installed
-            // with a TODO weak reference so as not to cause a memory leak
+            /*
+            Install the MOVE_HANDLER, LEAVING_HANDLER, and KILL_HANDLER on
+            the given node. Stash the tooltip in the node's client properties
+            map so that it is not gc'd. The handlers must all be installed
+            with a TODO weak reference so as not to cause a memory leak
+             */
             if (node == null) return
             node.addEventHandler(MouseEvent.MOUSE_MOVED, MOVE_HANDLER)
             node.addEventHandler(MouseEvent.MOUSE_EXITED, LEAVING_HANDLER)
@@ -797,12 +856,14 @@ class MyTooltip @JvmOverloads constructor(text: String? = null) : MyPopupControl
     companion object {
         private const val TOOLTIP_PROP_KEY = "fx.Tooltip"
 
-        // RT-31134 : the tooltip style includes a shadow around the tooltip with a
-        // width of 9 and height of 5. This causes mouse events to not reach the control
-        // underneath resulting in losing hover state on the control while the tooltip is showing.
-        // Displaying the tooltip at an offset indicated below resolves this issue.
-        // RT-37107: The y-offset was upped to 7 to ensure no overlaps when the tooltip
-        // is shown near the right edge of the screen.
+        /*
+RT-31134 : the tooltip style includes a shadow around the tooltip with a
+width of 9 and height of 5. This causes mouse events to not reach the control
+underneath resulting in losing hover state on the control while the tooltip is showing.
+Displaying the tooltip at an offset indicated below resolves this issue.
+RT-37107: The y-offset was upped to 7 to ensure no overlaps when the tooltip
+is shown near the right edge of the screen.
+*/
         private const val TOOLTIP_XOFFSET = 10
         private const val TOOLTIP_YOFFSET = 7
         private val BEHAVIOR = TooltipBehavior(false)
@@ -839,17 +900,18 @@ class MyTooltip @JvmOverloads constructor(text: String? = null) : MyPopupControl
          *                                                                         *
          **************************************************************************/
 
-        private val FONT: CssMetaData<MyToolTipCSSBridge, Font> = object : FontCssMetaData<MyToolTipCSSBridge>(
-            "-fx-font",
-            Font.getDefault()
-        ) {
-            override fun isSettable(cssBridge: MyToolTipCSSBridge): Boolean =
-                !cssBridge.popupControl.fontProperty().isBound
+        private val FONT: CssMetaData<MyToolTipCSSBridge, Font> =
+            object : FontCssMetaData<MyToolTipCSSBridge>(
+                "-fx-font",
+                Font.getDefault()
+            ) {
+                override fun isSettable(cssBridge: MyToolTipCSSBridge): Boolean =
+                    !cssBridge.popupControl.fontProperty().isBound
 
-            @Suppress("UNCHECKED_CAST")
-            override fun getStyleableProperty(cssBridge: MyToolTipCSSBridge) =
-                cssBridge.popupControl.fontProperty() as StyleableProperty<Font>
-        }
+                @Suppress("UNCHECKED_CAST")
+                override fun getStyleableProperty(cssBridge: MyToolTipCSSBridge) =
+                    cssBridge.popupControl.fontProperty() as StyleableProperty<Font>
+            }
         private val TEXT_ALIGNMENT: CssMetaData<MyToolTipCSSBridge, TextAlignment> =
             object : CssMetaData<MyToolTipCSSBridge, TextAlignment>(
                 "-fx-text-alignment",
@@ -972,9 +1034,10 @@ class MyTooltip @JvmOverloads constructor(text: String? = null) : MyPopupControl
          */
         val classCssMetaData: List<CssMetaData<out Styleable, *>> by lazy {
 
-            val styleables: MutableList<CssMetaData<out Styleable, *>> = ArrayList(
-                MyPopupControl.classCssMetaData
-            )
+            val styleables: MutableList<CssMetaData<out Styleable, *>> =
+                ArrayList(
+                    MyPopupControl.classCssMetaData
+                )
             styleables.addAll(
                 FONT,
                 TEXT_ALIGNMENT,
@@ -989,11 +1052,10 @@ class MyTooltip @JvmOverloads constructor(text: String? = null) : MyPopupControl
             )
             Collections.unmodifiableList(styleables)
         }
-
     }
 
 
-//  override val bridge = MyPopUpCSSBridge()
+    /* override val bridge = MyPopUpCSSBridge() */
 }
 
 

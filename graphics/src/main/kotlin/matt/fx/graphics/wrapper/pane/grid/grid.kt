@@ -9,6 +9,7 @@ import javafx.scene.layout.GridPane
 import javafx.scene.layout.Priority
 import javafx.scene.layout.RowConstraints
 import matt.fx.base.wrapper.obs.collect.list.createMutableWrapper
+import matt.fx.base.wrapper.obs.obsval.prop.NonNullFXBackedBindableProp
 import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.graphics.style.inset.MarginableConstraints
 import matt.fx.graphics.wrapper.ET
@@ -22,7 +23,7 @@ import matt.lang.assertions.require.requireNotEqual
 
 
 fun <T : NodeWrapper> T.gridpaneConstraints(op: (GridPaneConstraint.() -> Unit)): T {
-    val gpc = GridPaneConstraint(this.node)
+    val gpc = GridPaneConstraint(node)
     gpc.op()
     return gpc.applyToNode(this)
 }
@@ -31,6 +32,9 @@ fun ET.grid(op: GridPaneWrapper<NW>.() -> Unit = {}) = gridpane<NW>(op)
 
 fun <C : NodeWrapper> ET.gridpane(op: GridPaneWrapper<C>.() -> Unit = {}) = attach(GridPaneWrapper(), op)
 open class GridPaneWrapper<C : NodeWrapper>(node: GridPane = GridPane()) : PaneWrapperImpl<GridPane, C>(node) {
+
+
+
     companion object {
         fun setConstraints(
             child: Node,
@@ -48,7 +52,7 @@ open class GridPaneWrapper<C : NodeWrapper>(node: GridPane = GridPane()) : PaneW
     }
 
 
-    val gridLinesVisibleProp by lazy {
+    val gridLinesVisibleProp: NonNullFXBackedBindableProp<Boolean> by lazy {
         node.gridLinesVisibleProperty().toNonNullableProp()
     }
     var gridLinesVisible by gridLinesVisibleProp
@@ -107,8 +111,6 @@ open class GridPaneWrapper<C : NodeWrapper>(node: GridPane = GridPane()) : PaneW
     var hGap by hgapProperty
     val vgapProperty by lazy { node.hgapProperty().toNonNullableProp().cast<Double>() }
     var vGap by vgapProperty
-
-
 }
 
 

@@ -42,6 +42,4 @@ interface SceneLikeWrapper<N : EventTarget, R : ParentWrapper<*>> : EventTargetW
         requireNull(index)/*matt was here*/
         rootProperty.set((child as ParentWrapper<*>).node)
     }
-
-
 }

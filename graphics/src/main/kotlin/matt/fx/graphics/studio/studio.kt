@@ -16,10 +16,11 @@ import matt.model.data.rect.IntRectSize
 import matt.time.dur.sleep
 import kotlin.time.Duration.Companion.milliseconds
 
-private val DEFAULT_SNAP_SIZE = IntRectSize(
-    width = 1000,
-    height = 500
-)
+private val DEFAULT_SNAP_SIZE =
+    IntRectSize(
+        width = 1000,
+        height = 500
+    )
 private const val DEFAULT_RESOLUTION_SCALE = 2
 
 abstract class Studio(
@@ -43,36 +44,37 @@ abstract class Studio(
         prepareRegion(region)
         sleep(100.milliseconds)
 
-        val img = ensureInFXThreadInPlace {
-            region.snapshot(snapshotParams, imageBuffer)
-        }
+        val img =
+            ensureInFXThreadInPlace {
+                region.snapshot(snapshotParams, imageBuffer)
+            }
 
         return img
-
     }
 
 
-    private val snapshotParams = SnapshotParameters().apply {
-        fill = Color.BLACK
-        if (resolutionScale > 1) {
-            transform = Transform.scale(resolutionScale.toDouble(), resolutionScale.toDouble())
+    private val snapshotParams =
+        SnapshotParameters().apply {
+            fill = Color.BLACK
+            if (resolutionScale > 1) {
+                transform = Transform.scale(resolutionScale.toDouble(), resolutionScale.toDouble())
+            }
         }
-    }
 
 
     /*private var imageBuffer = WritableImage(max(fftChartM.width.toInt(), 1), max(fftChartM.height.toInt(), 1))*/
-    private var imageBuffer = WritableImage(snapshotWidth * resolutionScale, snapshotHeight * resolutionScale)
-    protected val snapshotSceneRoot = AnchorPaneWrapperImpl<NodeWrapper>().apply {
-        exactWidth = snapshotWidth
-        exactHeight = snapshotHeight
-    }
-    protected val snapshotScene = SceneWrapper<ParentWrapper<*>>(
-        snapshotSceneRoot, userWidth = snapshotWidth.toDouble(), userHeight = snapshotHeight.toDouble()
-    ).apply {
-        reloadStyle(darkMode = true)
-    }
-
-
+    private val imageBuffer = WritableImage(snapshotWidth * resolutionScale, snapshotHeight * resolutionScale)
+    protected val snapshotSceneRoot =
+        AnchorPaneWrapperImpl<NodeWrapper>().apply {
+            exactWidth = snapshotWidth
+            exactHeight = snapshotHeight
+        }
+    protected val snapshotScene =
+        SceneWrapper<ParentWrapper<*>>(
+            snapshotSceneRoot, userWidth = snapshotWidth.toDouble(), userHeight = snapshotHeight.toDouble()
+        ).apply {
+            reloadStyle(darkMode = true)
+        }
 }
 
 

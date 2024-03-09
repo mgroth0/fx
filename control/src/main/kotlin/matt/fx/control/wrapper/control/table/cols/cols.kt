@@ -7,15 +7,15 @@ import matt.fx.control.wrapper.cellfact.SimpleFactory
 import matt.fx.control.wrapper.control.column.TableColumnWrapper
 import matt.fx.graphics.wrapper.FXNodeWrapperDSL
 import matt.fx.graphics.wrapper.node.NodeWrapper
-import matt.obs.prop.BindableProperty
 import matt.obs.prop.ObsVal
-import matt.obs.prop.toVarProp
+import matt.obs.prop.writable.BindableProperty
+import matt.obs.prop.writable.toVarProp
 import kotlin.reflect.KFunction
 import kotlin.reflect.KMutableProperty1
 import kotlin.reflect.KProperty1
 
-private  val DEFAULT_TITLE: String? = null
-private  val DEFAULT_PREF_WIDTH: Double? = null
+private val DEFAULT_TITLE: String? = null
+private val DEFAULT_PREF_WIDTH: Double? = null
 
 @FXNodeWrapperDSL
 interface ColumnsDSL<E : Any> {
@@ -40,7 +40,7 @@ interface ColumnsDSL<E : Any> {
     fun <P> column(
         title: String,
         prefWidth: Double? = DEFAULT_PREF_WIDTH,
-        valueProvider: (TableColumn.CellDataFeatures<E, P>) -> ObsVal<P>,
+        valueProvider: (TableColumn.CellDataFeatures<E, P>) -> ObsVal<P>
     ): TableColumnWrapper<E, P>
 
  /*   fun <P> columnDebug1(
@@ -56,7 +56,7 @@ interface ColumnsDSL<E : Any> {
     fun nodeColumn(
         title: String,
         prefWidth: Double? = DEFAULT_PREF_WIDTH,
-        nodeProvider: (E) -> NodeWrapper,
+        nodeProvider: (E) -> NodeWrapper
     ): TableColumnWrapper<E, NodeWrapper>
 
     fun <P> column(
@@ -74,8 +74,6 @@ interface ColumnsDSL<E : Any> {
         getter: KProperty1<E, P>,
         op: TableColumnWrapper<E, P>.() -> Unit = {}
     ): TableColumnWrapper<E, P>
-
-
 }
 
 class ColumnsDSLImpl<E : Any>(private val columns: ObservableList<TableColumn<E, *>>) : ColumnsDSL<E> {
@@ -123,13 +121,15 @@ class ColumnsDSLImpl<E : Any>(private val columns: ObservableList<TableColumn<E,
     override fun nodeColumn(
         title: String,
         prefWidth: Double?,
-        nodeProvider: (E) -> NodeWrapper,
+        nodeProvider: (E) -> NodeWrapper
     ) = column(title, prefWidth = prefWidth) {
         BindableProperty(nodeProvider(it.value))
     }.apply {
-        simpleCellFactory(SimpleFactory {
-            "" to it
-        })
+        simpleCellFactory(
+            SimpleFactory {
+                "" to it
+            }
+        )
     }
 
     override fun <P> column(
@@ -142,18 +142,17 @@ class ColumnsDSLImpl<E : Any>(private val columns: ObservableList<TableColumn<E,
     override fun <P> column(
         title: String,
         prefWidth: Double?,
-        valueProvider: (TableColumn.CellDataFeatures<E, P>) -> ObsVal<P>,
+        valueProvider: (TableColumn.CellDataFeatures<E, P>) -> ObsVal<P>
     ): TableColumnWrapper<E, P> {
         val column = TableColumnWrapper<E, P>(title)
-        column.cellValueFactory = Callback {
-            valueProvider(it)
-        }
+        column.cellValueFactory =
+            Callback {
+                valueProvider(it)
+            }
         prefWidth?.let { column.prefWidth = it }
         columns.add(column.node)
         return column
     }
-
-
 }
 
 

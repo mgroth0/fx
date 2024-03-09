@@ -12,7 +12,8 @@ internal fun <T: MathAndComparable<T>> NumberAxisWrapper<T>.applyBounds(result: 
 }
 
 internal class BoundCalcResult<T: MathAndComparable<T>>(
-    val lowerBound: T, val upperBound: T
+    val lowerBound: T,
+    val upperBound: T
 )
 
 internal fun <T: MathAndComparable<T>> calcAutoBounds(
@@ -22,7 +23,7 @@ internal fun <T: MathAndComparable<T>> calcAutoBounds(
 ) = run {
     if (mn == null || mx == null) return@run null
     val range = mx - mn
-    val margin = range*0.1
+    val margin = range * 0.1
     BoundCalcResult(
         lowerBound = forceMin ?: (mn - margin), upperBound = mx + margin
     )

@@ -13,21 +13,22 @@ import matt.fx.graphics.wrapper.node.attach
 import matt.fx.graphics.wrapper.region.RegionWrapperImpl
 import matt.fx.graphics.wrapper.text.TextWrapper
 import matt.obs.listen.MyListenerInter
-import matt.obs.prop.BindableProperty
 import matt.obs.prop.ObsVal
+import matt.obs.prop.writable.BindableProperty
 import kotlin.time.Duration
 
-fun ET.swap(nodeProp: BindableProperty<out NW?>) = swapper(
-    prop = nodeProp
-) {
-    this
-}
+fun ET.swap(nodeProp: BindableProperty<out NW?>) =
+    swapper(
+        prop = nodeProp
+    ) {
+        this
+    }
 
 fun <P: Any, N: NodeWrapper> ET.swapperNeverNull(
     prop: ObsVal<P>,
     fadeOutDur: Duration? = null,
     fadeInDur: Duration? = null,
-    op: (P).()->N,
+    op: (P).() -> N
 
 ): Swapper<P, N> {
     val swapper = Swapper<P, N>()
@@ -40,7 +41,7 @@ fun <P, N: NodeWrapper> ET.swapper(
     nullMessage: String? = null,
     fadeOutDur: Duration? = null,
     fadeInDur: Duration? = null,
-    op: (P & Any).()->N,
+    op: (P & Any).() -> N
 
 ): Swapper<P, N> {
     val swapper = Swapper<P, N>()
@@ -52,7 +53,7 @@ fun <P, N: NodeWrapper> ET.swapperNullable(
     prop: ObsVal<P>,
     fadeOutDur: Duration? = null,
     fadeInDur: Duration? = null,
-    op: (P).()->N,
+    op: (P).() -> N
 ): Swapper<P, N> {
     val swapper = Swapper<P, N>()
     swapper.setupSwappingNullable(prop, fadeOutDur = fadeOutDur, fadeInDur = fadeInDur, op)
@@ -64,7 +65,7 @@ fun <P> ET.swapperR(
     nullMessage: String? = null,
     fadeOutDur: Duration? = null,
     fadeInDur: Duration? = null,
-    op: (ET).(P & Any)->Unit,
+    op: (ET).(P & Any) -> Unit
 ): Swapper<P, NW> {
     val swapper = Swapper<P, NW>()
     swapper.setupSwappingWithReceiver(prop, nullMessage = nullMessage, fadeOutDur = fadeOutDur, fadeInDur = fadeInDur, op)
@@ -75,7 +76,7 @@ fun <P> ET.swapperRNullable(
     prop: ObsVal<P>,
     fadeOutDur: Duration? = null,
     fadeInDur: Duration? = null,
-    op: (ET).(P)->Unit,
+    op: (ET).(P) -> Unit
 ): Swapper<P, NW> {
     val swapper = Swapper<P, NW>()
     swapper.setupSwappingWithReceiverNullable(prop, fadeOutDur = fadeOutDur, fadeInDur = fadeInDur, op)
@@ -96,7 +97,7 @@ open class Swapper<P, C: NodeWrapper>: RegionWrapperImpl<Region, C>(AnchorPane()
         nullMessage: String? = null,
         fadeOutDur: Duration? = null,
         fadeInDur: Duration? = null,
-        op: (ET).(P & Any)->Unit,
+        op: (ET).(P & Any) -> Unit
 
     ) {
         initSetup(prop)
@@ -108,15 +109,17 @@ open class Swapper<P, C: NodeWrapper>: RegionWrapperImpl<Region, C>(AnchorPane()
                     nullValueButNoMessage()
                 }
             } else {
-                val proxy = ProxyEventTargetWrapper {
-                    setInnerNode(it, fadeOutDur = fadeOutDur, fadeInDur = fadeInDur)
-                }
+                val proxy =
+                    ProxyEventTargetWrapper {
+                        setInnerNode(it, fadeOutDur = fadeOutDur, fadeInDur = fadeInDur)
+                    }
                 proxy.op(value)
             }
         }
-        listener = fxWatcherProp!!.onChangeWithWeak(this) { swap, it ->
-            swap.refresh(it)
-        }
+        listener =
+            fxWatcherProp!!.onChangeWithWeak(this) { swap, it ->
+                swap.refresh(it)
+            }
         refresh(fxWatcherProp!!.value)
     }
 
@@ -125,19 +128,21 @@ open class Swapper<P, C: NodeWrapper>: RegionWrapperImpl<Region, C>(AnchorPane()
         prop: ObsVal<P>,
         fadeOutDur: Duration? = null,
         fadeInDur: Duration? = null,
-        op: (ET).(P)->Unit,
+        op: (ET).(P) -> Unit
 
     ) {
         initSetup(prop)
         fun Swapper<P, C>.refresh(value: P) {
-            val proxy = ProxyEventTargetWrapper {
-                setInnerNode(it, fadeOutDur = fadeOutDur, fadeInDur = fadeInDur)
-            }
+            val proxy =
+                ProxyEventTargetWrapper {
+                    setInnerNode(it, fadeOutDur = fadeOutDur, fadeInDur = fadeInDur)
+                }
             proxy.op(value)
         }
-        listener = fxWatcherProp!!.onChangeWithWeak(this) { swap, it ->
-            swap.refresh(it)
-        }
+        listener =
+            fxWatcherProp!!.onChangeWithWeak(this) { swap, it ->
+                swap.refresh(it)
+            }
         refresh(fxWatcherProp!!.value)
     }
 
@@ -147,7 +152,7 @@ open class Swapper<P, C: NodeWrapper>: RegionWrapperImpl<Region, C>(AnchorPane()
         nullMessage: String? = null,
         fadeOutDur: Duration? = null,
         fadeInDur: Duration? = null,
-        op: (P & Any).()->C,
+        op: (P & Any).() -> C
 
     ) {
         initSetup(prop)
@@ -162,9 +167,10 @@ open class Swapper<P, C: NodeWrapper>: RegionWrapperImpl<Region, C>(AnchorPane()
                 setInnerNode(op(value), fadeOutDur = fadeOutDur, fadeInDur = fadeInDur)
             }
         }
-        this.listener = fxWatcherProp!!.onChangeWithWeak(this) { swap, it ->
-            swap.refresh(it)
-        }
+        listener =
+            fxWatcherProp!!.onChangeWithWeak(this) { swap, it ->
+                swap.refresh(it)
+            }
         refresh(fxWatcherProp!!.value)
     }
 
@@ -173,15 +179,16 @@ open class Swapper<P, C: NodeWrapper>: RegionWrapperImpl<Region, C>(AnchorPane()
         prop: ObsVal<P>,
         fadeOutDur: Duration? = null,
         fadeInDur: Duration? = null,
-        op: (P).()->C,
+        op: (P).() -> C
     ) {
         initSetup(prop)
         fun Swapper<P, C>.refresh(value: P) {
             setInnerNode(op(value), fadeOutDur = fadeOutDur, fadeInDur = fadeInDur)
         }
-        this.listener = fxWatcherProp!!.onChangeWithWeak(this) { swap, it ->
-            swap.refresh(it)
-        }
+        listener =
+            fxWatcherProp!!.onChangeWithWeak(this) { swap, it ->
+                swap.refresh(it)
+            }
         refresh(fxWatcherProp!!.value)
     }
 
@@ -191,9 +198,10 @@ open class Swapper<P, C: NodeWrapper>: RegionWrapperImpl<Region, C>(AnchorPane()
         fxWatcherProp = prop.nonBlockingFXWatcher()
     }
 
-    val nullNodeFact = BindableProperty<(String)->NodeWrapper> {
-        TextWrapper(it)
-    }
+    val nullNodeFact =
+        BindableProperty<(String) -> NodeWrapper> {
+            TextWrapper(it)
+        }
 
     private fun nullMessageNode(nullMessage: String) = nullNodeFact.value(nullMessage)
 
@@ -214,7 +222,6 @@ open class Swapper<P, C: NodeWrapper>: RegionWrapperImpl<Region, C>(AnchorPane()
                 opacity = 0.0
             ) {
                 setOnFinished {
-                    //		  println("half way! opacity is now $opacity")
                     anchor.children.removeAll { it != node.node }
                     addInnerNode(node, fadeInDur = fadeInDur)
                 }
@@ -234,10 +241,9 @@ open class Swapper<P, C: NodeWrapper>: RegionWrapperImpl<Region, C>(AnchorPane()
         if (fadeInDur != null) {
             fade(
                 time = fadeInDur.toFXDuration(),
-                opacity = 1.0,
+                opacity = 1.0
             ) {
                 setOnFinished {
-                    //		  println("done! opacity is now $opacity")
                     node.setAsTopAnchor(0.0)
                     node.setAsBottomAnchor(0.0)
                     node.setAsLeftAnchor(0.0)
@@ -251,7 +257,6 @@ open class Swapper<P, C: NodeWrapper>: RegionWrapperImpl<Region, C>(AnchorPane()
             node.setAsLeftAnchor(0.0)
             node.setAsRightAnchor(0.0)
         }
-
     }
 
     final override fun addChild(child: NodeWrapper, index: Int?) {

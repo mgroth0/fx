@@ -15,13 +15,13 @@ import matt.fx.control.chart.axis.value.axis.AxisForPackagePrivateProps
 import matt.fx.control.chart.line.highperf.relinechart.xy.XYChartForPackagePrivateProps
 import matt.fx.control.chart.linelike.LineLikeChartNodeWithOptionalSymbols.LineOrArea.area
 import matt.fx.control.css.BooleanCssMetaData
-import matt.lang.go
+import matt.lang.common.go
 import java.util.Collections
 
 
 abstract class LineLikeChartNode<X, Y>(
     xAxis: AxisForPackagePrivateProps<X>,
-    yAxis: AxisForPackagePrivateProps<Y>,
+    yAxis: AxisForPackagePrivateProps<Y>
 ) : XYChartForPackagePrivateProps<X, Y>(xAxis, yAxis) {
 
 
@@ -42,42 +42,43 @@ abstract class LineLikeChartNode<X, Y>(
             removeSeriesFromDisplay(series)
         }
     }
-
-
 }
 
 
 abstract class LineLikeChartNodeWithOptionalSymbols<X, Y>(
     xAxis: AxisForPackagePrivateProps<X>,
-    yAxis: AxisForPackagePrivateProps<Y>,
+    yAxis: AxisForPackagePrivateProps<Y>
 
 ) : LineLikeChartNode<X, Y>(xAxis, yAxis) {
 
-    val createSymbols: BooleanProperty = object : StyleableBooleanProperty(true) {
-        override fun invalidated() {
-            for (seriesIndex in getData().indices) {
-                val series = getData()[seriesIndex]
-                for (itemIndex in series.data.value.indices) {
-                    val item = series.data.value[itemIndex]
-                    var symbol = item.nodeProp.value
-                    if (get() && symbol == null) { // create any symbols
-                        symbol = createSymbol(series, getData().indexOf(series), item, itemIndex)
-                        plotChildren.add(symbol)
-                    } else if (!get() && symbol != null) { // remove symbols
-                        plotChildren.remove(symbol)
-                        item.nodeProp.value = null
+    val createSymbols: BooleanProperty =
+        object : StyleableBooleanProperty(true) {
+            override fun invalidated() {
+                for (seriesIndex in getData().indices) {
+                    val series = getData()[seriesIndex]
+                    for (itemIndex in series.data.value.indices) {
+                        val item = series.data.value[itemIndex]
+                        var symbol = item.nodeProp.value
+                        if (get() && symbol == null) {
+                            /* create any symbols */
+                            symbol = createSymbol(series, getData().indexOf(series), item, itemIndex)
+                            plotChildren.add(symbol)
+                        } else if (!get() && symbol != null) {
+                            /* remove symbols */
+                            plotChildren.remove(symbol)
+                            item.nodeProp.value = null
+                        }
                     }
                 }
+                requestChartLayout()
             }
-            requestChartLayout()
+
+            override fun getBean(): Any = this@LineLikeChartNodeWithOptionalSymbols
+
+            override fun getName(): String = "createSymbols"
+
+            override fun getCssMetaData(): CssMetaData<out LineLikeChartNodeWithOptionalSymbols<*, *>, Boolean> = styleableProps.CREATE_SYMBOLS
         }
-
-        override fun getBean(): Any = this@LineLikeChartNodeWithOptionalSymbols
-
-        override fun getName(): String = "createSymbols"
-
-        override fun getCssMetaData(): CssMetaData<out LineLikeChartNodeWithOptionalSymbols<*, *>, Boolean> = styleableProps.CREATE_SYMBOLS
-    }
 
     fun createSymbolsProperty(): BooleanProperty = createSymbols
 
@@ -98,7 +99,7 @@ abstract class LineLikeChartNodeWithOptionalSymbols<X, Y>(
         itemIndex: Int
     ): Node? {
         var symbol = item.node
-        // check if symbol has already been created
+        /* check if symbol has already been created */
         if (symbol == null && getCreateSymbols()) {
             symbol = StackPane()
             symbol.setAccessibleRole(TEXT)
@@ -106,8 +107,10 @@ abstract class LineLikeChartNodeWithOptionalSymbols<X, Y>(
             symbol.focusTraversableProperty().bind(Platform.accessibilityActiveProperty())
             item.node = symbol
         }
-        // set symbol styles
-        // Note not sure if we want to add or check, ie be more careful and efficient here
+        /*
+        set symbol styles
+        Note not sure if we want to add or check, ie be more careful and efficient here
+         */
         symbol?.styleClass?.setAll(
             "chart-${lineOrArea.name}-symbol", "series$seriesIndex", "data$itemIndex",
             series.defaultColorStyleClass
@@ -141,15 +144,18 @@ abstract class LineLikeChartNodeWithOptionalSymbols<X, Y>(
     protected abstract class StyleableProps<T : LineLikeChartNodeWithOptionalSymbols<*, *>> {
 
 
-        internal val CREATE_SYMBOLS: CssMetaData<T, Boolean> = object : BooleanCssMetaData<T>(
-            "-fx-create-symbols", true
-        ) {
+        internal val CREATE_SYMBOLS: CssMetaData<T, Boolean> =
+            object : BooleanCssMetaData<T>(
+                "-fx-create-symbols", true
+            ) {
 
-            override fun isSettable(node: T): Boolean = !node.createSymbolsIsBound()
+                override fun isSettable(node: T): Boolean = !node.createSymbolsIsBound()
 
-            @Suppress("UNCHECKED_CAST")
-            override fun getStyleableProperty(node: T): StyleableProperty<Boolean> = node.createSymbolsProperty() as StyleableProperty<Boolean>
-        }
+                @Suppress("UNCHECKED_CAST")
+                override fun getStyleableProperty(
+                    node: T
+                ): StyleableProperty<Boolean> = node.createSymbolsProperty() as StyleableProperty<Boolean>
+            }
 
 
         val classCssMetaData: List<CssMetaData<out Styleable?, *>> by lazy {
@@ -157,8 +163,6 @@ abstract class LineLikeChartNodeWithOptionalSymbols<X, Y>(
             styleables.add(CREATE_SYMBOLS)
             Collections.unmodifiableList(styleables)
         }
-
     }
-
 }
 

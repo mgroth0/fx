@@ -12,7 +12,9 @@ import matt.fx.graphics.wrapper.node.attach
  * Create a PieChart with optional title data and add to the parent pane. The optional op will be performed on the new instance.
  */
 fun ET.piechart(
-    title: String? = null, data: ObservableList<Data>? = null, op: PieChartWrapper.()->Unit = {}
+    title: String? = null,
+    data: ObservableList<Data>? = null,
+    op: PieChartWrapper.() -> Unit = {}
 ): PieChartWrapper {
     val chart = if (data != null) PieChartWrapper(data) else PieChartWrapper()
     chart.title = title
@@ -21,7 +23,7 @@ fun ET.piechart(
 
 
 open class PieChartWrapper(
-    node: PieChartForWrapper = PieChartForWrapper(),
+    node: PieChartForWrapper = PieChartForWrapper()
 ): ChartWrapper<PieChartForWrapper>(node) {
 
     constructor(data: ObservableList<Data>): this(PieChartForWrapper(data))
@@ -36,15 +38,14 @@ open class PieChartWrapper(
      *
      * @return The new Data entry
      */
-    fun data(name: String, value: Double, op: PieChartForWrapper.Data.() -> Unit = {}) = PieChartForWrapper.Data(name, value).apply {
-        data.add(this)
-        op(this)
-    }
+    fun data(name: String, value: Double, op: PieChartForWrapper.Data.() -> Unit = {}) =
+        PieChartForWrapper.Data(name, value).apply {
+            data.add(this)
+            op(this)
+        }
 
     /**
      * Add and create multiple PieChart.Data entries from the given map.
      */
     fun data(value: Map<String, Double>) = value.forEach { data(it.key, it.value) }
-
-
 }

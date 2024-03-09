@@ -15,13 +15,14 @@ import matt.model.data.point.Point
     private val linesM = mutableListOf<LineWrapper>()
     val lines: List<LineWrapper> = linesM
     fun to(point: Point) {
-        linesM += parent.line {
-            startX = current.xDouble
-            startY = current.yDouble
-            endX = point.xDouble
-            endY = point.yDouble
-            current = BasicPoint(x = endX, y = endY)
-        }
+        linesM +=
+            parent.line {
+                startX = current.xDouble
+                startY = current.yDouble
+                endX = point.xDouble
+                endY = point.yDouble
+                current = BasicPoint(x = endX, y = endY)
+            }
     }
 
     @Suppress("unused") val x get() = current.xDouble
@@ -39,7 +40,9 @@ import matt.model.data.point.Point
 }
 
 fun PaneWrapperImpl<*, *>.drawLine(
-    color: FXColor, start: Point, op: LineDrawDSL.()->Unit
+    color: FXColor,
+    start: Point,
+    op: LineDrawDSL.() -> Unit
 ) {
     LineDrawDSL(this, start).apply {
         op()

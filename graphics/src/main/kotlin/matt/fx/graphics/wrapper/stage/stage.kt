@@ -1,10 +1,13 @@
 package matt.fx.graphics.wrapper.stage
 
 import javafx.beans.property.ReadOnlyBooleanProperty
+import javafx.collections.ObservableList
+import javafx.scene.image.Image
 import javafx.stage.Modality
 import javafx.stage.Stage
 import javafx.stage.StageStyle
 import javafx.stage.Window
+import matt.fx.base.wrapper.obs.obsval.NonNullFXBackedReadOnlyBindableProp
 import matt.fx.base.wrapper.obs.obsval.prop.NullableFXBackedBindableProp
 import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
 import matt.fx.base.wrapper.obs.obsval.toNonNullableROProp
@@ -14,7 +17,7 @@ import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.scene.SceneWrapper
 import matt.fx.graphics.wrapper.window.WindowWrapper
 import matt.lang.delegation.lazyDelegate
-import matt.log.warn.warn
+import matt.log.warn.common.warn
 
 open class StageWrapper(node: Stage = Stage()) : WindowWrapper<Stage>(node), Titled {
 
@@ -22,7 +25,7 @@ open class StageWrapper(node: Stage = Stage()) : WindowWrapper<Stage>(node), Tit
 
     final override val titleProperty: NullableFXBackedBindableProp<String> by lazy { node.titleProperty().toNullableProp() }
 
-    val icons get() = node.icons
+    val icons: ObservableList<Image> get() = node.icons
 
     fun showAndWait() = node.showAndWait()
 
@@ -33,7 +36,7 @@ open class StageWrapper(node: Stage = Stage()) : WindowWrapper<Stage>(node), Tit
     fun initModality(m: Modality) = node.initModality(m)
     fun initStyle(style: StageStyle) = node.initStyle(style)
 
-    val iconifiedProperty by lazy { node.iconifiedProperty().toNonNullableROProp() }
+    val iconifiedProperty: NonNullFXBackedReadOnlyBindableProp<Boolean> by lazy { node.iconifiedProperty().toNonNullableROProp() }
     val isIconified by lazyDelegate { iconifiedProperty }
 
     fun makeIconinfied() {
@@ -92,6 +95,4 @@ open class StageWrapper(node: Stage = Stage()) : WindowWrapper<Stage>(node), Tit
         }
 
     fun alwaysOnTopProperty(): ReadOnlyBooleanProperty = node.alwaysOnTopProperty()
-
-
 }

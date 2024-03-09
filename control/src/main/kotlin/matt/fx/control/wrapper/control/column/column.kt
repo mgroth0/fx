@@ -10,6 +10,7 @@ import javafx.scene.control.TableCell
 import javafx.scene.control.TableColumn
 import javafx.scene.control.TableColumn.CellDataFeatures
 import javafx.scene.control.TableColumn.CellEditEvent
+import javafx.scene.control.TableColumn.SortType
 import javafx.scene.control.cell.ChoiceBoxTableCell
 import javafx.scene.control.cell.ComboBoxTableCell
 import javafx.scene.control.cell.TextFieldTableCell
@@ -18,6 +19,7 @@ import javafx.util.Callback
 import javafx.util.StringConverter
 import matt.fx.base.converter.callbackConverter
 import matt.fx.base.prop.stringBinding
+import matt.fx.base.wrapper.obs.obsval.prop.NonNullFXBackedBindableProp
 import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
 import matt.fx.base.wrapper.obs.obsval.toNullableROProp
@@ -30,15 +32,16 @@ import matt.fx.control.wrapper.control.table.cols.ColumnsDSL
 import matt.fx.control.wrapper.control.table.cols.ColumnsDSLImpl
 import matt.fx.control.wrapper.wrapped.wrapped
 import matt.fx.graphics.wrapper.node.NodeWrapper
-import matt.obs.prop.BindableProperty
 import matt.obs.prop.ObsVal
-import matt.obs.prop.Var
+import matt.obs.prop.writable.BindableProperty
+import matt.obs.prop.writable.Var
+import java.util.Comparator
 
 private typealias CellValFact<E, P> = Callback<CellDataFeatures<E, P>, ObservableValue<P>?>
 
 
 class TableColumnWrapper<E : Any, P>(
-    override val node: TableColumn<E, P>
+    node: TableColumn<E, P>
 ) : TableColumnBaseWrapper<E, P, TableColumn<E, P>>(node),
     TableCellFactory<TableColumn<E, P>, E, P>,
     CellValueFactory<CellDataFeatures<E, P>, P>,
@@ -51,7 +54,7 @@ class TableColumnWrapper<E : Any, P>(
     val sortTypeProp by lazy {
         node.sortTypeProperty().toNonNullableProp()
     }
-    var sortType by sortTypeProp
+    var sortType: SortType by sortTypeProp
 
 
     var isSortable
@@ -74,7 +77,7 @@ class TableColumnWrapper<E : Any, P>(
     fun getCellObservableValue(item: E) = node.getCellObservableValue(item).toNullableROProp()
 
     override fun removeFromParent() {
-        node.tableView.columns.remove(this.node)
+        node.tableView.columns.remove(node)
     }
 
 
@@ -93,17 +96,20 @@ class TableColumnWrapper<E : Any, P>(
     override var cellValueFactory by cellValueFactoryProperty
 
     infix fun value(cvf: (CellDataFeatures<E, P>) -> P) {
-        this.cellValueFactory = Callback { it: CellDataFeatures<E, P> ->
-            val createdValue = cvf(it)
-            BindableProperty(createdValue)
-        }
+        cellValueFactory =
+            Callback { it: CellDataFeatures<E, P> ->
+                val createdValue = cvf(it)
+                BindableProperty(createdValue)
+            }
     }
 
+    @Suppress("ForbiddenAnnotation")
     @JvmName("value1")
     infix fun value(cvf: (CellDataFeatures<E, P>) -> ObsVal<P>) {
-        this.cellValueFactory = Callback { it: CellDataFeatures<E, P> ->
-            cvf(it)
-        }
+        cellValueFactory =
+            Callback { it: CellDataFeatures<E, P> ->
+                cvf(it)
+            }
     }
 
     fun enableTextWrap() {
@@ -113,15 +119,17 @@ class TableColumnWrapper<E : Any, P>(
                 graphic = text
                 prefHeight = Control.USE_COMPUTED_SIZE
                 text.wrappingWidthProperty()
-                    .bind(this.widthProperty().subtract(Bindings.multiply(2.0, graphicTextGapProperty())))
-                text.textProperty().bind(itemProperty().stringBinding {
-                    it?.toString() ?: ""
-                })
+                    .bind(widthProperty().subtract(Bindings.multiply(2.0, graphicTextGapProperty())))
+                text.textProperty().bind(
+                    itemProperty().stringBinding {
+                        it?.toString() ?: ""
+                    }
+                )
             }
         }
     }
 
-    val comparatorProp by lazy {
+    val comparatorProp: NonNullFXBackedBindableProp<Comparator<P>> by lazy {
         node.comparatorProperty().toNonNullableProp()
     }
     var comparator by comparatorProp
@@ -207,20 +215,18 @@ class TableColumnWrapper<E : Any, P>(
             property.value = it.newValue
             afterCommit(it)
         }
-
-
     }
 
-    fun makeEditable(converter: StringConverter<P>): TableColumnWrapper<E, P> = apply {
+    fun makeEditable(converter: StringConverter<P>): TableColumnWrapper<E, P> =
+        apply {
+            tableView!!.isEditable = true
+            cellFactory = TextFieldTableCell.forTableColumn(converter)
+        }
+}
+
+
+fun <E : Any> TableColumnWrapper<E, String>.makeEditable(): TableColumnWrapper<E, String> =
+    apply {
         tableView!!.isEditable = true
-        cellFactory = TextFieldTableCell.forTableColumn(converter)
+        cellFactory = TextFieldTableCell.forTableColumn()
     }
-
-
-}
-
-
-fun <E : Any> TableColumnWrapper<E, String>.makeEditable(): TableColumnWrapper<E, String> = apply {
-    tableView!!.isEditable = true
-    cellFactory = TextFieldTableCell.forTableColumn()
-}

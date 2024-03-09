@@ -4,15 +4,15 @@ import com.sun.javafx.application.PlatformImpl.runLater
 import javafx.scene.image.Image
 import matt.async.thread.namedThread
 import matt.collect.map.dmap.DefaultStoringMap
-import matt.collect.map.dmap.withStoringDefault
+import matt.collect.map.dmap.inter.withStoringDefault
 import matt.fx.graphics.wrapper.imageview.ImageViewWrapper
 import matt.fx.image.toFXImage
 import matt.image.fav.tryToLoadImageStreamAndTakeLargestImage
 import matt.lang.atomic.AtomicInt
 import matt.lang.model.value.Value
 import matt.lang.url.getHostName
-import matt.log.warn.warn
-import matt.model.code.errreport.ThrowReport
+import matt.log.warn.common.warn
+import matt.model.code.errreport.createThrowReport
 import matt.model.data.rect.DoubleRectSize
 import java.awt.image.BufferedImage
 import java.net.URI
@@ -60,14 +60,12 @@ object FaviconLoader {
                     val faviconUrl = URI(it.getHostName() + "favicon.ico").toURL()
                     tryToLoadImageStreamAndTakeLargestImage(faviconUrl, onMinorException = {
                         warn("$it for $faviconUrl")
-                        ThrowReport(it).print()
+                        createThrowReport(it).print()
                     })
                 }
             )
         }
     }
-
-
 }
 
 

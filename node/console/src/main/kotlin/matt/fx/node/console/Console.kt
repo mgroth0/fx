@@ -6,6 +6,10 @@ import javafx.scene.control.ScrollPane.ScrollBarPolicy
 import javafx.scene.input.Clipboard
 import javafx.scene.input.KeyEvent
 import javafx.scene.paint.Color
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import matt.async.safe.SemaphoreString
 import matt.async.safe.sync
 import matt.async.thread.daemon
@@ -14,12 +18,15 @@ import matt.async.thread.schedule.every
 import matt.auto.console.mem.CONSOLE_MEM_FOLD
 import matt.auto.console.mem.ConsoleMemory
 import matt.auto.macapp.sublime.SublimeText
-import matt.file.commons.mattLogContext
+import matt.file.commons.reg.mattLogContext
 import matt.file.construct.mFile
 import matt.file.ext.backup.doubleBackupWrite
-import matt.file.ext.clearIfTooBigThenAppendText
-import matt.file.ext.mkparents
+import matt.file.ext.j.clearIfTooBigThenAppendText
+import matt.file.ext.j.mkparents
 import matt.file.toJioFile
+import matt.file.watch.tailflow.NewContent
+import matt.file.watch.tailflow.Reset
+import matt.file.watch.tailflow.tailFlow
 import matt.fx.control.wrapper.scroll.ScrollPaneWrapper
 import matt.fx.graphics.clip.copyToClipboard
 import matt.fx.graphics.fxthread.ensureInFXThreadInPlace
@@ -29,61 +36,49 @@ import matt.fx.graphics.wrapper.node.parent.ParentWrapper
 import matt.fx.node.console.Console.RefreshRate.NORMAL
 import matt.fx.node.console.text.ConsoleTextFlow
 import matt.gui.menu.context.mcontextmenu
-import matt.lang.assertions.require.requireNot
-import matt.lang.err
-import matt.lang.go
+import matt.kjlib.socket.client.clients.InterAppServices
+import matt.lang.common.err
+import matt.lang.common.go
 import matt.lang.model.file.FsFile
 import matt.lang.model.file.MacFileSystem
 import matt.lang.seq.charSequence
-import matt.log.warn.warn
 import matt.obs.bindings.bool.not
-import matt.obs.prop.BindableProperty
-import matt.prim.charset.newDefaultCharsetDecoder
+import matt.obs.prop.writable.BindableProperty
 import matt.prim.str.throttled
-import matt.shell.context.ReapingShellExecutionContext
+import matt.shell.commonj.context.ReapingShellExecutionContext
 import matt.shell.proc.forEachErrChar
 import matt.shell.proc.forEachOutChar
 import matt.stream.ReaderEndReason
-import matt.stream.redirect.redirectErr
-import matt.stream.redirect.redirectOut
-import matt.time.dur.ms
-import matt.time.dur.sec
-import matt.time.dur.sleep
+import matt.time.dur.common.ms
+import matt.time.dur.common.sec
 import java.io.BufferedReader
 import java.io.BufferedWriter
 import java.io.IOException
 import java.io.PipedInputStream
 import java.io.PipedOutputStream
 import java.io.PrintWriter
-import java.nio.ByteBuffer
-import java.nio.CharBuffer
-import java.nio.channels.FileChannel
-import java.nio.file.NoSuchFileException
-import kotlin.time.Duration.Companion.seconds
 
 
-context(ReapingShellExecutionContext)
+context(ReapingShellExecutionContext, InterAppServices)
 fun ParentWrapper<NodeWrapper>.processConsole(
     process: Process? = null,
     name: String = "new process console",
     op: ProcessConsole.() -> Unit = {}
-): ProcessConsole = addr(ProcessConsole(name).apply {
-    process?.let(::attachProcess)
-    op()
-})
+): ProcessConsole =
+    addr(
+        ProcessConsole(name, this@InterAppServices).apply {
+            process?.let(::attachProcess)
+            op()
+        }
+    )
 
-context(ReapingShellExecutionContext)
-fun ParentWrapper<NodeWrapper>.interceptConsole(
-    name: String = "new intercept console",
-    op: SystemRedirectConsole.() -> Unit = {}
-): SystemRedirectConsole = addr(SystemRedirectConsole(name).apply(op))
 
-context(ReapingShellExecutionContext)
+context(ReapingShellExecutionContext, InterAppServices)
 fun ParentWrapper<NodeWrapper>.customConsole(
     name: String = "new custom console",
     takesInput: Boolean = true,
     op: CustomConsole.() -> Unit = {}
-): CustomConsole = addr(CustomConsole(name, takesInput).apply(op))
+): CustomConsole = addr(CustomConsole(name, takesInput, this@InterAppServices).apply(op))
 
 
 private const val DEFAULT_MAX_LINES: Int = 1000
@@ -91,6 +86,7 @@ private const val DEFAULT_MAX_LINES: Int = 1000
 context(ReapingShellExecutionContext)
 sealed class Console(
     val name: String,
+    services: InterAppServices,
     val takesInput: Boolean = true,
     throttle: Boolean = true,
     maxLines: Int? = DEFAULT_MAX_LINES
@@ -101,9 +97,9 @@ sealed class Console(
     }
 
     object RefreshRate {
-        const val NORMAL = 500L // ms
-        const val HASTE = 10L // ms
-        private const val HASTE_DUR = 1000L // ms
+        const val NORMAL = 500L /* ms */
+        const val HASTE = 10L /* ms */
+        private const val HASTE_DUR = 1000L /* ms */
         const val HASTE_COUNT = (HASTE_DUR / HASTE).toInt()
     }
 
@@ -122,8 +118,8 @@ sealed class Console(
     private val autoscrollProp = BindableProperty(true)
     private val throttleProp = BindableProperty(throttle)
     private val enableProp = BindableProperty(true)
-    private var autoscroll by autoscrollProp
-    private var throttle by throttleProp
+    private val autoscroll by autoscrollProp
+    private val throttle by throttleProp
 
     fun hasText() = consoleTextFlow.hasText()
 
@@ -142,8 +138,9 @@ sealed class Console(
         }
 
         consoleTextFlow.displayInputAsSentAndClearStoredInput()
-        mem.handle_sent_input(theInput)
-
+        runBlocking {
+            mem.launchSentInputHandler(theInput)
+        }
     }
 
     protected var unShownOutput = SemaphoreString("")
@@ -169,37 +166,40 @@ sealed class Console(
     private var clearLogI = 0
 
     private val logWorker = QueueWorker()
-    private val refresh: () -> Unit = sync {
-        if (enableProp.value) {
-            var newString = unShownOutput.takeAndClear()
-            if (newString.isNotEmpty()) {
+    private val refresh: () -> Unit =
+        sync {
+            if (enableProp.value) {
+                var newString = unShownOutput.takeAndClear()
+                if (newString.isNotEmpty()) {
 
-                if (throttle && newString.length > THROTTLE_THRESHOLD) {
-                    newString =
-                        newString.throttled() // when I accidentally printed a huge array in python console, whole app crashed
-                }
-                runLater {
-                    consoleTextFlow.displayNewText(newString)
-                    if (takesInput) consoleTextFlow.clearStoredAndDisplayedInput()
-                }
-                logWorker.schedule {
-                    if (clearLogI == 1000) {
-                        logfile.toJioFile().clearIfTooBigThenAppendText(newString)
-                        clearLogI = 0
-                    } else {
-                        logfile.append(newString)
-                        clearLogI += 1
+                    if (throttle && newString.length > THROTTLE_THRESHOLD) {
+                        newString =
+                            newString.throttled() /* when I accidentally printed a huge array in python console, whole app crashed */
+                    }
+                    runLater {
+                        with(services) {
+                            consoleTextFlow.displayNewText(newString)
+                        }
+                        if (takesInput) consoleTextFlow.clearStoredAndDisplayedInput()
+                    }
+                    logWorker.schedule {
+                        if (clearLogI == 1000) {
+                            logfile.toJioFile().clearIfTooBigThenAppendText(newString)
+                            clearLogI = 0
+                        } else {
+                            logfile.append(newString)
+                            clearLogI += 1
+                        }
                     }
                 }
             }
         }
-    }
 
     init {
 
         hScrollOption.onChange {
 
-            consoleTextFlow.requestLayout() // this works!!
+            consoleTextFlow.requestLayout() /* this works!! */
         }
 
 
@@ -219,16 +219,20 @@ sealed class Console(
 
 
 
-        content = consoleTextFlow.apply {
-            minWidthProperty.bind(this@Console.widthProperty)
-            minHeightProperty.bind(this@Console.heightProperty)
-        }
+        content =
+            consoleTextFlow.apply {
+                minWidthProperty.bind(this@Console.widthProperty)
+                minHeightProperty.bind(this@Console.heightProperty)
+            }
         backgroundFill = Color.BLACK
         every(1.sec) {
-            runLater {        //                THIS ACTUALLY WORKS!!!
-                //                 THIS SOLVES THE PROBLEM WHERE THE CONSOLE IS TOO SMALL
-                //                ITS ABSOLUTELY AN INTERNAL JFX BUG
-                autosize() // matt.log.level.getDEBUG
+            runLater {
+                /*
+THIS ACTUALLY WORKS!!!
+THIS SOLVES THE PROBLEM WHERE THE CONSOLE IS TOO SMALL
+ITS ABSOLUTELY AN INTERNAL JFX BUG
+*/
+                autosize() /* DEBUG */
             }
         }
 
@@ -246,9 +250,9 @@ sealed class Console(
 
 
 
-        if (takesInput) {        /*parent?.apply {*/
+        if (takesInput) {
+            /*parent?.apply {*/
             addEventFilter(KeyEvent.KEY_TYPED) {
-//                println("console got key typed")
                 if (!it.isMetaDown) {
                     if (it.character == "\r") Unit /*hitEnter()*/
                     else consoleTextFlow.displayAndHoldNewUnsentInputChar(it.character)
@@ -271,9 +275,11 @@ sealed class Console(
                 X.meta op ::cut
             }
             UP.meta { vvalue = 0.0 }
-            UP op { mem.up()?.go { consoleTextFlow.setInputToMem(it) } }
+            UP op {
+                runBlocking { mem.up() }?.go { consoleTextFlow.setInputToMem(it) }
+            }
             DOWN.meta { vvalue = consoleTextFlow.height }
-            DOWN op { consoleTextFlow.setInputToMem(mem.down()) }
+            DOWN op { consoleTextFlow.setInputToMem(runBlocking { mem.down() }) }
             RIGHT.meta { hvalue = consoleTextFlow.width }
             LEFT.meta { hvalue = 0.0 }
             K.meta op consoleTextFlow::clearOutputAndStoredInput
@@ -331,169 +337,85 @@ sealed class Console(
     }
 }
 
+
+
+
 context(ReapingShellExecutionContext)
 sealed class TailCapableConsole(
     name: String,
     takesInput: Boolean,
     throttle: Boolean,
+    services: InterAppServices,
     maxLines: Int? = DEFAULT_MAX_LINES
-) : Console(name, takesInput = takesInput, throttle = throttle, maxLines = maxLines) {
-    companion object {
-        const val BUFF_SIZE = 1000
-    }
-
-    private val interval = 1.seconds
-    protected var shouldContinue = true
-    protected fun tail(logFile: FsFile) = daemon(name = "TailCapableConsole.tail Thread") {
-        val decoder = newDefaultCharsetDecoder()
-        var reader: FileChannel? = null
-        try {
-            var pos = 0
-            val charBuffer = CharBuffer.allocate(BUFF_SIZE)
-            val byteBuffer = ByteBuffer.allocate(BUFF_SIZE)
-            val charArray = CharArray(BUFF_SIZE)
-            var lastSize = logFile.toJioFile().size()
-
-            fun localReset() {
-                reader?.close()
-                reader = null
-                pos = 0
-                charBuffer.clear()
-                byteBuffer.clear()
-                reset()
-            }
+) : Console(name, takesInput = takesInput, throttle = throttle, maxLines = maxLines, services = services) {
 
 
-            while (shouldContinue) {
-
-                val newSize = try {
-                    logFile.toJioFile().size()
-                } catch (e: NoSuchFileException) {
-                    localReset()
-                    sleep(interval)
-                    continue
-                }
 
 
-                val theReader = reader ?: logFile.toJioFile().readChannel().also {
-                    reader = it
-                }
-
-                /*LOOPHOLE: The file contents may have changed before `position`, without the file size shrinking, and in that case I would not catch it*/
-                if (newSize < lastSize) {
-                    theReader.position(0)
-                }
-                lastSize = newSize
-
-
-                val numBytesRead = theReader.read(byteBuffer)
-                pos += numBytesRead
-                byteBuffer.flip()
-                val decodeResult = decoder.decode(byteBuffer, charBuffer, !shouldContinue)
-                check(!decodeResult.isError)
-                byteBuffer.clear()
-                @Suppress("UNUSED_VARIABLE")
-                val endOfStream = numBytesRead == -1
-                if (numBytesRead > 0) {
-                    charBuffer.flip()
-                    val numChars = charBuffer.remaining()
-                    charBuffer.get(charArray, 0, numChars)
-                    charBuffer.clear()
-                    unShownOutput += charArray.concatToString(0, numChars)
-                } else {
-                    sleep(interval)
+    protected fun CoroutineScope.tail(logFile: FsFile) =
+        launch(IO) {
+            logFile.tailFlow().collect {
+                when (it) {
+                    is NewContent -> {
+                        unShownOutput += it.content
+                    }
+                    Reset         -> reset()
                 }
             }
-        } finally {
-            reader?.close()
         }
-
-    }
 }
+
+
+
+
 
 context(ReapingShellExecutionContext)
 class ProcessConsole(
     name: String,
+    services: InterAppServices
 ) :
-    TailCapableConsole(name, takesInput = true, throttle = true) {
-    fun alsoTail(logFile: FsFile) = tail(logFile)
+    TailCapableConsole(name, takesInput = true, throttle = true, services = services) {
+
+
+    fun CoroutineScope.alsoTail(logFile: FsFile) = tail(logFile)
 
     fun attachProcess(p: Process) {
         logfile.toJioFile().doubleBackupWrite("")
         errFile.toJioFile().doubleBackupWrite("")
         writer = p.outputStream.bufferedWriter()
         daemon(name = "attachProcess Thread 1") {
-            val endReason = p.forEachOutChar {
-                unShownOutput += it
-            }
+            val endReason =
+                p.forEachOutChar {
+                    unShownOutput += it
+                }
             handleEndOfStream(endReason)
         }
         daemon(name = "attachProcess Thread 2") {
-            val endReason = p.forEachErrChar {
-                unShownOutput += it
-                errFile.toJioFile().append(it)
-            }
+            val endReason =
+                p.forEachErrChar {
+                    unShownOutput += it
+                    errFile.toJioFile().append(it)
+                }
             handleEndOfStream(endReason)
         }
     }
 }
 
-context(ReapingShellExecutionContext)
-class TailConsole(
-    name: String,
-    val file: FsFile,
-) : TailCapableConsole(name, takesInput = false, throttle = false, maxLines = null) {
-
-    private var started = false
-    private var stopped = false
-
-    @Synchronized
-    fun start() {
-        requireNot(started)
-        requireNot(stopped)
-        started = true
-        tail(file)
-    }
-
-    @Synchronized
-    fun stop() {
-        shouldContinue = false
-        stopped = true
-    }
-
-}
-
-context(ReapingShellExecutionContext)
-class SystemRedirectConsole(name: String) :
-    Console(name, takesInput = false) {
-    fun interceptStdOutErr() {
-        logfile.toJioFile().doubleBackupWrite("")
-        errFile.toJioFile().doubleBackupWrite("")
-
-        warn("must be called at the VERY beginning. FAIL!")
-        redirectOut { unShownOutput += it }
-        redirectErr {
-            unShownOutput += it
-            errFile.toJioFile().append(it)
-        }
-        warn("must be called at the VERY beginning. FAIL!")
-    }
-
-
-}
 
 context(ReapingShellExecutionContext)
 class CustomConsole(
     name: String,
-    takesInput: Boolean
-) : Console(name, takesInput) {
+    takesInput: Boolean,
+    services: InterAppServices
+) : Console(name, takesInput = takesInput, services = services) {
     fun custom(): Pair<PrintWriter, BufferedReader?> {
-        val userInput = if (takesInput) {
-            val inpUser = PipedInputStream()
-            val outUser = PipedOutputStream(inpUser)
-            writer = outUser.bufferedWriter()
-            inpUser.bufferedReader()
-        } else null
+        val userInput =
+            if (takesInput) {
+                val inpUser = PipedInputStream()
+                val outUser = PipedOutputStream(inpUser)
+                writer = outUser.bufferedWriter()
+                inpUser.bufferedReader()
+            } else null
 
         val inpConsole = PipedInputStream()
         val outConsole = PipedOutputStream(inpConsole)

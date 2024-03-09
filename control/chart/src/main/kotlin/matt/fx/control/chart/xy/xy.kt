@@ -26,49 +26,33 @@ open class XYChartWrapper<X : Any, Y : Any, N : XYChartForPackagePrivateProps<X,
     val data: MutableObsList<SeriesWrapper<X, Y>> by lazy {
         error(
             """
-                Super weird K2 error:  https://youtrack.jetbrains.com/issue/KT-63569/Kotlin-2.0.0-Beta-1-IllegalStateException-id1
-                
-                private val nodeDataForK2: ObjectProperty<ObservableList<Series<X, Y>>> = nodeDifferentNameForK2.data
+                        Super weird K2 error:  https://youtrack.jetbrains.com/issue/KT-63569/Kotlin-2.0.0-Beta-1-IllegalStateException-id1
+                        
+                        private val nodeDataForK2: ObjectProperty<ObservableList<Series<X, Y>>> = nodeDifferentNameForK2.data
 
-    private fun nodeDataValueMutableWrapperForK2() = nodeDataForK2.value.createMutableWrapper()
-                
-                nodeDataValueMutableWrapperForK2().toSyncedList(SeriesConverter())
-                
+            private fun nodeDataValueMutableWrapperForK2() = nodeDataForK2.value.createMutableWrapper()
+                        
+                        nodeDataValueMutableWrapperForK2().toSyncedList(SeriesConverter())
+                        
             """.trimIndent()
         )
-
     }
 
     fun temporaryK2Replacement(): XYChartForPackagePrivateProps<X, Y> {
         error(
             """
-                Super weird K2 error:  https://youtrack.jetbrains.com/issue/KT-63569/Kotlin-2.0.0-Beta-1-IllegalStateException-id1
-                
-                
+            Super weird K2 error:  https://youtrack.jetbrains.com/issue/KT-63569/Kotlin-2.0.0-Beta-1-IllegalStateException-id1
+            
+            
             """.trimIndent()
         )
-
     }
 
     open val yAxis: MAxis<Y> by lazy {
 
         temporaryK2Replacement().yAxis.wrapped()
-
     }
     open val xAxis: MAxis<X> by lazy { temporaryK2Replacement().xAxis.wrapped() }
-
-    //  /*https://stackoverflow.com/questions/52179664/how-to-change-the-axis-color-of-javafx-chart*/
-    //  var axesColor: Color
-    //	get() = NOT_IMPLEMENTED
-    //	set(value) {
-    //	  val h = value.hex()
-    //	  val sty = """
-    //	d
-    //		""".trimIndent()
-    //	  style += sty
-    //	  xAxis.style += sty
-    //	  yAxis.style += sty
-    //	}
 
 
     val horizontalZeroLineVisibleProperty: NonNullFXBackedBindableProp<Boolean> by lazy {
@@ -112,8 +96,6 @@ open class XYChartWrapper<X : Any, Y : Any, N : XYChartForPackagePrivateProps<X,
 
     val dataItemChangedAnimDur = temporaryK2Replacement().dataItemChangedAnimDur
     val dataItemChangedAnimInterp = temporaryK2Replacement().dataItemChangedAnimInterp
-
-
 }
 
 

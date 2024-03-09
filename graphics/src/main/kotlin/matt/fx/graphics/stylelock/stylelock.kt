@@ -14,7 +14,8 @@ import kotlin.reflect.jvm.javaField
 fun <T: Any> Property<T>.toNullableStyleProp() = NullableFXBackedUserStyleProp(this as StyleableObjectProperty<T>)
 fun <T: Any> Property<T>.toNonNullableStyleProp() = NonNullFXBackedUserStyleProp(this as StyleableObjectProperty<T>)
 
-class NullableFXBackedUserStyleProp<T>(private val o: StyleableObjectProperty<T>): NullableFXBackedBindableProp<T?>(o),
+class NullableFXBackedUserStyleProp<T>(private val o: StyleableObjectProperty<T>):
+    NullableFXBackedBindableProp<T?>(o),
     WritableFXBackedProp<T?> {
 
 
@@ -29,8 +30,6 @@ class NullableFXBackedUserStyleProp<T>(private val o: StyleableObjectProperty<T>
 
             o.value = v
         }
-
-
 }
 
 class NonNullFXBackedUserStyleProp<T: Any>(private val o: StyleableObjectProperty<T>):
@@ -38,12 +37,13 @@ class NonNullFXBackedUserStyleProp<T: Any>(private val o: StyleableObjectPropert
     WritableFXBackedProp<T> {
 
     companion object {
-        val originProp = StyleableObjectProperty::class.declaredMemberProperties.first {
-            it.name == "origin"
-        }.also {
+        val originProp =
+            StyleableObjectProperty::class.declaredMemberProperties.first {
+                it.name == "origin"
+            }.also {
 
-            it.isAccessible = true
-        }
+                it.isAccessible = true
+            }
     }
 
     override var value: T
@@ -51,14 +51,17 @@ class NonNullFXBackedUserStyleProp<T: Any>(private val o: StyleableObjectPropert
         set(v) {
 
             o.set(v)
-            /*doing it this way instead of `o.value = v` causes origin to be StyleOrigin.USER, which will prevent CSS-passes from pseudoclass transitions to affect this property!*/
+            /*
 
-            /*USER_AGENT puts an even stricter lock on I think... needed sometimes when psuedos are changing or something*/
-            /*originProp.call(StyleOrigin.USER_AGENT)*/
+            // doing it this way instead of `o.value = v` causes origin to be StyleOrigin.USER, which will prevent CSS-passes from pseudoclass transitions to affect this property!
+
+            // USER_AGENT puts an even stricter lock on I think... needed sometimes when psuedos are changing or something
+
+
+            originProp.call(StyleOrigin.USER_AGENT)
+
+             */
 
             originProp.javaField!!.set(o, StyleOrigin.USER_AGENT)
-
         }
-
-
 }

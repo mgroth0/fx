@@ -10,18 +10,19 @@ import matt.obs.bind.smartBind
 import matt.obs.prop.ObsVal
 
 
-fun ET.progressbar(initialValue: Double? = null, op: ProgressBarWrapper.()->Unit = {}) =
+fun ET.progressbar(initialValue: Double? = null, op: ProgressBarWrapper.() -> Unit = {}) =
     ProgressBarWrapper().attachTo(this, op) {
         if (initialValue != null) it.progress = initialValue
     }
 
-fun ET.progressbar(property: ObsVal<Double>, op: ProgressBarWrapper.()->Unit = {}) = progressbar().apply {
-    bind(property)
-    op(this)
-}
+fun ET.progressbar(property: ObsVal<Double>, op: ProgressBarWrapper.() -> Unit = {}) =
+    progressbar().apply {
+        bind(property)
+        op(this)
+    }
 
 class ProgressBarWrapper(
-    node: ProgressBar = ProgressBar(),
+    node: ProgressBar = ProgressBar()
 ): ControlWrapperImpl<ProgressBar>(node) {
 
 

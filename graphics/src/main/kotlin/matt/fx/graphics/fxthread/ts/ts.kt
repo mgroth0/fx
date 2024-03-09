@@ -9,8 +9,8 @@ import matt.obs.bind.MyBinding
 import matt.obs.col.change.mirror
 import matt.obs.col.olist.BasicObservableListImpl
 import matt.obs.col.olist.MutableObsList
-import matt.obs.prop.BindableProperty
 import matt.obs.prop.ObsVal
+import matt.obs.prop.writable.BindableProperty
 import matt.obs.watch.otherwatch.PropertyWatcher
 
 private class BlockingFXWatcher<T>(source: ObsVal<T>): MyBinding<T>(calcArg = {
@@ -64,9 +64,11 @@ private class BlockingFXListWatcher<E>(source: MutableObsList<E>): BasicObservab
 }
 
 
-fun <E> MutableObsList<E>.nonBlockingFXWatcher(): MutableObsList<E> = (this as? NonBlockingFXListWatcher<E>) ?: NonBlockingFXListWatcher(this)
+fun <E> MutableObsList<E>.nonBlockingFXWatcher(): MutableObsList<E> =
+    (this as? NonBlockingFXListWatcher<E>) ?: NonBlockingFXListWatcher(this)
 
-fun <E> MutableObsList<E>.blockingFXWatcher(): MutableObsList<E> = (this as? BlockingFXListWatcher<E>) ?: BlockingFXListWatcher(this)
+fun <E> MutableObsList<E>.blockingFXWatcher(): MutableObsList<E> =
+    (this as? BlockingFXListWatcher<E>) ?: BlockingFXListWatcher(this)
 
 
 class FXThreadSafeProp<T>(value: T): BindableProperty<T>(value) {

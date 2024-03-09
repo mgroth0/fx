@@ -10,21 +10,20 @@ import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
 
-fun ET.menubar(op: MenuBarWrapper.()->Unit = {}) = MenuBarWrapper().attachTo(this, op)
+fun ET.menubar(op: MenuBarWrapper.() -> Unit = {}) = MenuBarWrapper().attachTo(this, op)
 
 open class MenuBarWrapper(
-    node: MenuBar = MenuBar(),
+    node: MenuBar = MenuBar()
 ): ControlWrapperImpl<MenuBar>(node) {
 
     val menus: ObservableList<Menu> get() = node.menus
 
     operator fun plusAssign(menu: MenuWrapper) {
-        this.menus += menu.node
+        menus += menu.node
     }
 
 
-    //MenuBar extensions
-    fun menu(name: String? = null, graphic: Node? = null, op: MenuWrapper.()->Unit = {}) =
+    fun menu(name: String? = null, graphic: Node? = null, op: MenuWrapper.() -> Unit = {}) =
         MenuWrapper(name, graphic).also {
             op(it)
             this += it
@@ -33,6 +32,4 @@ open class MenuBarWrapper(
     final override fun addChild(child: NodeWrapper, index: Int?) {
         TODO()
     }
-
-
 }

@@ -32,11 +32,9 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
     @NamedArg("data")
     data: ObservableList<Series<X, Y>> = FXCollections.observableArrayList()
 ) : LineLikeChartNodeWithOptionalSymbols<X, Y>(xAxis, yAxis) {
-    // -------------- PRIVATE FIELDS ------------------------------------------
     /** A multiplier for the Y values that we store for each series, it is used to animate in a new series  */
     private val seriesYMultiplierMap: MutableMap<Series<X, Y>, DoubleProperty> = HashMap()
     private var timeline: Timeline? = null
-    // -------------- PUBLIC PROPERTIES ----------------------------------------
 
 
     /**
@@ -45,9 +43,7 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
      * @param xAxis The x axis to use
      * @param yAxis The y axis to use
      * @param data The data to use, this is the actual list used so any changes to it will be reflected in the chart
-     */
-    // -------------- CONSTRUCTORS ----------------------------------------------
-    /**
+
      * Construct a new Area Chart with the given axis
      *
      * @param xAxis The x axis to use
@@ -100,15 +96,17 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
                 val x2 = xAxis.toNumericValue(item.xValueProp.value)
                 @Suppress("UNUSED_VARIABLE") val y2 = yAxis.toNumericValue(item.yValueProp.value)
 
-                //                //1. y intercept of the line : y = ((y3-y1)/(x3-x1)) * x2 + (x3y1 - y3x1)/(x3 -x1)
+                /* //1. y intercept of the line : y = ((y3-y1)/(x3-x1)) * x2 + (x3y1 - y3x1)/(x3 -x1) */
                 val y = (y3 - y1) / (x3 - x1) * x2 + (x3 * y1 - y3 * x1) / (x3 - x1)
                 item.currentY.value = yAxis.toRealValue(y)
                 item.setCurrentX(xAxis.toRealValue(x2)!!)
-                //2. we can simply use the midpoint on the line as well..
-                //                double x = (x3 + x1)/2;
-                //                double y = (y3 + y1)/2;
-                //                item.setCurrentX(x);
-                //                item.setCurrentY(y);
+                /*
+                2. we can simply use the midpoint on the line as well..
+                double x = (x3 + x1)/2;
+                double y = (y3 + y1)/2;
+                item.setCurrentX(x);
+                item.setCurrentY(y);
+                 */
             } else if (itemIndex == 0 && series.data.value.size > 1) {
                 animate = true
                 item.currentX.value = series.data.value[1].xValueProp.value
@@ -120,7 +118,7 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
                 item.currentY.value = series.data.value[last].yValueProp.value
             }
             if (symbol != null) {
-                // fade in new symbol
+                /* fade in new symbol */
                 symbol.opacity = 0.0
                 plotChildren.add(symbol)
                 val ft = FadeTransition(Duration.millis(500.0), symbol)
@@ -148,7 +146,8 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
                         )
                     ),
                     KeyFrame(
-                        Duration.millis(800.0), KeyValue(
+                        Duration.millis(800.0),
+                        KeyValue(
                             item.currentYProperty(),
                             item.yValueProp.value, MyInterpolator.EASE_BOTH
                         ),
@@ -171,14 +170,16 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
         val symbol = item.nodeProp.value
         symbol?.focusTraversableProperty()?.unbind()
 
-        // remove item from sorted list
+        /* remove item from sorted list */
         val itemIndex = series.getItemIndex(item)
         if (shouldAnimate()) {
             var animate = false
-            // dataSize represents size of currently visible data. After this operation, the number will decrement by 1
+            /* dataSize represents size of currently visible data. After this operation, the number will decrement by 1 */
             val dataSize = series.dataSize
-            // This is the size of current data list in Series. Note that it might be totaly different from dataSize as
-            // some big operation might have happened on the list.
+            /*
+            This is the size of current data list in Series. Note that it might be totaly different from dataSize as
+            some big operation might have happened on the list.
+             */
             val dataListSize = series.data.value.size
             if (itemIndex > 0 && itemIndex < dataSize - 1) {
                 animate = true
@@ -191,17 +192,19 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
                 val x2 = xAxis.toNumericValue(item.xValueProp.value)
                 val y2 = yAxis.toNumericValue(item.yValueProp.value)
 
-                //                //1.  y intercept of the line : y = ((y3-y1)/(x3-x1)) * x2 + (x3y1 - y3x1)/(x3 -x1)
+                /* //1.  y intercept of the line : y = ((y3-y1)/(x3-x1)) * x2 + (x3y1 - y3x1)/(x3 -x1) */
                 val y = (y3 - y1) / (x3 - x1) * x2 + (x3 * y1 - y3 * x1) / (x3 - x1)
                 item.currentX.value = xAxis.toRealValue(x2)
                 item.currentY.value = yAxis.toRealValue(y2)
                 item.xValueProp.value = xAxis.toRealValue(x2)
                 item.yValue = (yAxis.toRealValue(y)!!)
-                //2.  we can simply use the midpoint on the line as well..
-                //                double x = (x3 + x1)/2;
-                //                double y = (y3 + y1)/2;
-                //                item.setCurrentX(x);
-                //                item.setCurrentY(y);
+                /*
+                2.  we can simply use the midpoint on the line as well..
+                double x = (x3 + x1)/2;
+                double y = (y3 + y1)/2;
+                item.setCurrentX(x);
+                item.setCurrentY(y);
+                 */
             } else if (itemIndex == 0 && dataListSize > 1) {
                 animate = true
                 item.xValueProp.value = series.data.value[0].xValueProp.value
@@ -212,14 +215,15 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
                 item.xValueProp.value = series.data.value[last].xValueProp.value
                 item.yValue = (series.data.value[last].yValueProp.value)
             } else if (symbol != null) {
-                // fade out symbol
+                /* fade out symbol */
                 symbol.opacity = 0.0
                 val ft = FadeTransition(Duration.millis(500.0), symbol)
                 ft.toValue = 0.0
-                ft.onFinished = EventHandler {
-                    plotChildren.remove(symbol)
-                    removeDataItemFromDisplay(series, item)
-                }
+                ft.onFinished =
+                    EventHandler {
+                        plotChildren.remove(symbol)
+                        removeDataItemFromDisplay(series, item)
+                    }
                 ft.play()
             } else {
                 item.setSeries(null)
@@ -228,11 +232,13 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
             if (animate) {
                 animate(
                     KeyFrame(
-                        Duration.ZERO, KeyValue(
+                        Duration.ZERO,
+                        KeyValue(
                             item.currentYProperty(),
                             item.currentY.value,
                             MyInterpolator.MY_DEFAULT_INTERPOLATOR
-                        ), KeyValue(
+                        ),
+                        KeyValue(
                             item.currentXProperty(),
                             item.currentX.value, MyInterpolator.MY_DEFAULT_INTERPOLATOR
                         )
@@ -259,7 +265,7 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
             plotChildren.remove(symbol)
             removeDataItemFromDisplay(series, item)
         }
-        //Note: better animation here, point should move from old position to new position at center point between prev and next symbols
+        /* Note: better animation here, point should move from old position to new position at center point between prev and next symbols */
     }
 
     override fun updateStyleClassOf(
@@ -281,16 +287,16 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
         series: Series<X, Y>,
         seriesIndex: Int
     ) {
-        // create new paths for series
+        /* create new paths for series */
         val seriesLine = Path()
         val fillPath = Path()
         seriesLine.strokeLineJoin = BEVEL
         val areaGroup = Group(fillPath, seriesLine)
         series.node.value = areaGroup
-        // create series Y multiplier
+        /* create series Y multiplier */
         val seriesYAnimMultiplier: DoubleProperty = SimpleDoubleProperty(this, "seriesYMultiplier")
         seriesYMultiplierMap[series] = seriesYAnimMultiplier
-        // handle any data already in series
+        /* handle any data already in series */
         if (shouldAnimate()) {
             seriesYAnimMultiplier.value = 0.0
         } else {
@@ -299,7 +305,7 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
         plotChildren.add(areaGroup)
         val keyFrames: MutableList<KeyFrame> = ArrayList()
         if (shouldAnimate()) {
-            // animate in new series
+            /* animate in new series */
             keyFrames.add(
                 KeyFrame(
                     Duration.ZERO,
@@ -327,7 +333,7 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
                 if (shouldAnimate()) {
                     symbol.opacity = 0.0
                     plotChildren.add(symbol)
-                    // fade in new symbol
+                    /* fade in new symbol */
                     keyFrames.add(
                         KeyFrame(
                             Duration.ZERO,
@@ -349,9 +355,9 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
     }
 
     override fun seriesRemoved(series: Series<X, Y>) {
-        // remove series Y multiplier
+        /* remove series Y multiplier */
         seriesYMultiplierMap.remove(series)
-        // remove all symbol nodes
+        /* remove all symbol nodes */
         if (shouldAnimate()) {
             timeline = Timeline(*createSeriesRemoveTimeLine(series, 400))
             timeline!!.play()
@@ -364,9 +370,10 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
 
     /** {@inheritDoc}  */
     override fun layoutPlotChildren() {
-        val constructedPath: MutableList<LineTo> = ArrayList(
-            dataSize
-        )
+        val constructedPath: MutableList<LineTo> =
+            ArrayList(
+                dataSize
+            )
         for (seriesIndex in 0 until dataSize) {
             val series = data.value[seriesIndex]
             val seriesYAnimMultiplier = seriesYMultiplierMap[series]
@@ -395,7 +402,6 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
     override fun getCssMetaData() = StyleableProperties.classCssMetaData
 
     companion object {
-        // -------------- METHODS ------------------------------------------------------------------------------------------
         @Suppress("unused")
         private fun doubleValue(
             number: Number?,
@@ -427,9 +433,10 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
             while (it.hasNext()) {
                 val item = it.next()
                 val x = axisX.getDisplayPosition(item.currentX.value)
-                val y = axisY.getDisplayPosition(
-                    axisY.toRealValue(axisY.toNumericValue(item.currentY.value) * yAnimMultiplier)!!
-                )
+                val y =
+                    axisY.getDisplayPosition(
+                        axisY.toRealValue(axisY.toNumericValue(item.currentY.value) * yAnimMultiplier)!!
+                    )
                 val skip = java.lang.Double.isNaN(x) || java.lang.Double.isNaN(y)
                 val symbol = item.nodeProp.value
                 if (symbol != null) {
@@ -472,7 +479,7 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
                         e1.y.compareTo(e2.y)
                     }
                 } else {
-                    // assert prevDataPoint == null && nextDataPoint == null
+                    /* assert prevDataPoint == null && nextDataPoint == null */
                 }
                 if (prevDataPoint != null) {
                     constructedPath.add(0, prevDataPoint)
@@ -481,7 +488,7 @@ class AreaChartForPrivateProps<X, Y> @JvmOverloads constructor(
                     constructedPath.add(nextDataPoint)
                 }
 
-                // assert !constructedPath.isEmpty()
+                /* assert !constructedPath.isEmpty() */
                 val first = constructedPath[0]
                 val last = constructedPath[constructedPath.size - 1]
                 val displayYPos = first.y

@@ -22,7 +22,7 @@ fun String.copyToClipboard() {
 fun JioFile.copyToClipboard() {
     val clipboard = Clipboard.getSystemClipboard()
     val content = ClipboardContent()
-    content.putFiles(listOf(this.toJFile()))
+    content.putFiles(listOf(toJFile()))
     clipboard.setContent(content)
 }
 

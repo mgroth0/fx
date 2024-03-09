@@ -43,16 +43,16 @@ import matt.fx.graphics.wrapper.scene.SceneWrapper
 import matt.fx.graphics.wrapper.stage.StageWrapper
 import matt.fx.graphics.wrapper.style.StyleableWrapper
 import matt.fx.graphics.wrapper.window.HasScene
-import matt.lang.NOT_IMPLEMENTED
 import matt.lang.anno.Open
 import matt.lang.assertions.require.requireNotEqual
+import matt.lang.common.NOT_IMPLEMENTED
 import matt.obs.bindings.bool.ObsB
 import matt.obs.bindings.bool.not
-import matt.obs.prop.BindableProperty
-import matt.obs.prop.MObservableValNewAndOld
 import matt.obs.prop.ObsVal
 import matt.obs.prop.ValProp
-import matt.obs.prop.Var
+import matt.obs.prop.newold.MObservableValNewAndOld
+import matt.obs.prop.writable.BindableProperty
+import matt.obs.prop.writable.Var
 import kotlin.contracts.InvocationKind.EXACTLY_ONCE
 import kotlin.contracts.contract
 
@@ -60,18 +60,20 @@ import kotlin.contracts.contract
 inline fun <reified T : NodeWrapper> NW.findRecursivelyFirstOrNull(
     shuffleChildrenOrders: Boolean = false
 ): T? =
-    ensureInFXThreadInPlace {/*has to be in FX thread since I'm searching through all nodes in a huge tree. any could change at any time on the FX thread causing concurrent mod errors (and it has, I think)*/
+    ensureInFXThreadInPlace {
+        /*has to be in FX thread since I'm searching through all nodes in a huge tree. any could change at any time on the FX thread causing concurrent mod errors (and it has, I think)*/
         recurseSelfAndChildNodes<T>(shuffleChildrenOrders = shuffleChildrenOrders).firstOrNull()
     }
 
 
 inline fun <reified T : NodeWrapper> NW.recurseSelfAndChildNodes(
     shuffleChildrenOrders: Boolean = false
-): Sequence<T> = recurse {
-    (it as? RegionWrapper<*>)?.children?.let {
-        if (shuffleChildrenOrders) it.shuffled() else it
-    } ?: listOf()
-}.filterIsInstance<T>()
+): Sequence<T> =
+    recurse {
+        (it as? RegionWrapper<*>)?.children?.let {
+            if (shuffleChildrenOrders) it.shuffled() else it
+        } ?: listOf()
+    }.filterIsInstance<T>()
 
 
 typealias NW = NodeWrapper
@@ -187,7 +189,6 @@ interface NodeWrapper : EventTargetWrapper, StyleableWrapper, HasScene {
 
     @Open fun fireEvent(e: Event) = node.fireEvent(e)
 
-    //  val styleClass get() = node.styleClass
 
 
     @Open fun setOnContextMenuRequested(value: EventHandler<ContextMenuEvent>) = node.setOnContextMenuRequested(value)
@@ -461,7 +462,7 @@ interface NodeWrapper : EventTargetWrapper, StyleableWrapper, HasScene {
         removeAllOtherProxiesOnBoth: Boolean = true /*critical to avoid memory leaks*/
     ) {
 
-        requireNotEqual(this.node, other.node)
+        requireNotEqual(node, other.node)
 
         require(hgrow == other.hgrow || (hgrow == null || other.hgrow == null))
         if (hgrow != null) other.hgrow = hgrow
@@ -485,7 +486,7 @@ interface NodeWrapper : EventTargetWrapper, StyleableWrapper, HasScene {
 
     @Open
     var hgrow: Priority?
-        get() = HBox.getHgrow(this.node)
+        get() = HBox.getHgrow(node)
         set(value) {
             layoutProxyNetwork().forEach {
                 HBox.setHgrow(it.node, value)
@@ -493,7 +494,7 @@ interface NodeWrapper : EventTargetWrapper, StyleableWrapper, HasScene {
         }
     @Open
     var vgrow: Priority?
-        get() = VBox.getVgrow(this.node)
+        get() = VBox.getVgrow(node)
         set(value) {
             layoutProxyNetwork().forEach {
                 VBox.setVgrow(it.node, value)
@@ -509,7 +510,7 @@ interface NodeWrapper : EventTargetWrapper, StyleableWrapper, HasScene {
 
     @Open
     var hMargin: Insets?
-        get() = HBox.getMargin(this.node)
+        get() = HBox.getMargin(node)
         set(value) {
             layoutProxyNetwork().forEach {
                 HBox.setMargin(it.node, value)
@@ -523,7 +524,7 @@ interface NodeWrapper : EventTargetWrapper, StyleableWrapper, HasScene {
         }
     @Open
     var vMargin: Insets?
-        get() = VBox.getMargin(this.node)
+        get() = VBox.getMargin(node)
         set(value) {
             layoutProxyNetwork().forEach {
                 VBox.setMargin(it.node, value)
@@ -597,8 +598,6 @@ interface NodeWrapper : EventTargetWrapper, StyleableWrapper, HasScene {
     override fun removeFromParent() {
         node.parent?.wrapped()?.childList?.remove(node)
     }
-
-
 }
 
 
@@ -640,7 +639,7 @@ inline fun <T : NodeWrapper> T.attachTo(
         callsInPlace(before, EXACTLY_ONCE)
         callsInPlace(after, EXACTLY_ONCE)
     }
-    return this.also(before).attachTo(parent, after)
+    return also(before).attachTo(parent, after)
 }
 
 
@@ -657,7 +656,6 @@ fun NodeWrapper.setOnDoubleClick(
             if (it.clickCount == 2) action(it)
         }
     }
-
 }
 
 
@@ -694,7 +692,7 @@ fun NodeWrapper.onRightClick(
 }
 
 
-private object TFX_TRANSITIONING_PROPERTY
+private object TfxTransitioningProperty
 
 /**
  * Whether this node is currently being used in a [ViewTransition]. Used to determine whether it can be used in a
@@ -702,11 +700,11 @@ private object TFX_TRANSITIONING_PROPERTY
  */
 internal var NodeWrapper.isTransitioning: Boolean
     get() {
-        val x = node.properties[TFX_TRANSITIONING_PROPERTY]
+        val x = node.properties[TfxTransitioningProperty]
         return x != null && (x !is Boolean || x != false)
     }
     set(value) {
-        node.properties[TFX_TRANSITIONING_PROPERTY] = value
+        node.properties[TfxTransitioningProperty] = value
     }
 
 
@@ -734,54 +732,62 @@ fun NodeWrapper.whenVisible(
 
 fun <T : NodeWrapper> T.managedWhen(expr: () -> ObsB): T = managedWhen(expr())
 
-fun <T : NodeWrapper> T.managedWhen(predicate: ObsB) = apply {
-    managedProperty.bind(predicate)
-}
+fun <T : NodeWrapper> T.managedWhen(predicate: ObsB) =
+    apply {
+        managedProperty.bind(predicate)
+    }
 
-fun <T : NodeWrapper> T.visibleWhen(predicate: ObsB) = apply {
+fun <T : NodeWrapper> T.visibleWhen(predicate: ObsB) =
+    apply {
 
-    visibleProperty.bind(predicate)
-}
+        visibleProperty.bind(predicate)
+    }
 
-fun <T : NodeWrapper> T.visibleAndManagedWhen(predicate: ObsB) = apply {
+fun <T : NodeWrapper> T.visibleAndManagedWhen(predicate: ObsB) =
+    apply {
 
-    visibleAndManagedProp.bind(predicate)
-}
+        visibleAndManagedProp.bind(predicate)
+    }
 
 fun <T : NodeWrapper> T.visibleWhen(expr: () -> ObsB): T = visibleWhen(expr())
 fun <T : NodeWrapper> T.visibleAndManagedWhen(expr: () -> ObsB): T = visibleAndManagedWhen(expr())
 
 fun <T : NodeWrapper> T.hiddenWhen(expr: () -> ObsB): T = hiddenWhen(expr())
 
-fun <T : NodeWrapper> T.hiddenWhen(predicate: ObsB) = apply {
-    val binding = predicate.not()
-    visibleProperty.bind(binding)
-}
+fun <T : NodeWrapper> T.hiddenWhen(predicate: ObsB) =
+    apply {
+        val binding = predicate.not()
+        visibleProperty.bind(binding)
+    }
 
 fun <T : NodeWrapper> T.disableWhen(expr: () -> ObsB): T = disableWhen(expr())
 
-fun <T : NodeWrapper> T.disableWhen(predicate: ObsB) = apply {
-    disableProperty.bind(predicate)
-}
+fun <T : NodeWrapper> T.disableWhen(predicate: ObsB) =
+    apply {
+        disableProperty.bind(predicate)
+    }
 
 fun <T : NodeWrapper> T.enableWhen(expr: () -> ObsB): T = enableWhen(expr())
 
-fun <T : NodeWrapper> T.enableWhen(predicate: ObsB) = apply {
-    enableProperty.bind(predicate.nonBlockingFXWatcher())
-}
+fun <T : NodeWrapper> T.enableWhen(predicate: ObsB) =
+    apply {
+        enableProperty.bind(predicate.nonBlockingFXWatcher())
+    }
 
 fun <T : NodeWrapper> T.removeWhen(expr: () -> ValProp<Boolean>): T = removeWhen(expr())
 
-fun <T : NodeWrapper> T.removeWhen(predicate: ValProp<Boolean>) = apply {
-    val remove = predicate.not()
-    visibleProperty.bind(remove)
-    managedProperty.bind(remove)
-}
+fun <T : NodeWrapper> T.removeWhen(predicate: ValProp<Boolean>) =
+    apply {
+        val remove = predicate.not()
+        visibleProperty.bind(remove)
+        managedProperty.bind(remove)
+    }
 
 
-fun NodeWrapper.onHover(onHover: (Boolean) -> Unit) = apply {
-    hoverProperty.onChange(onHover)
-}
+fun NodeWrapper.onHover(onHover: (Boolean) -> Unit) =
+    apply {
+        hoverProperty.onChange(onHover)
+    }
 
 
 fun NW.minYRelativeTo(ancestor: NodeWrapper): Double? {

@@ -51,10 +51,6 @@ abstract class ShapeWrapper<N : Shape>(node: N) : NodeWrapperImpl<N>(node) {
         get() = TODO()
         set(value) {
             sty {
-//                println("setting color 1: ${value}")
-//                println("setting color 1.5: ${value.toAwtColor()}")
-//                println("setting color 2: ${value.toMColor()}")
-//                println("setting color 3: ${value.toMColor().css}")
                 fxFill = value
             }
         }
@@ -65,5 +61,4 @@ abstract class ShapeWrapper<N : Shape>(node: N) : NodeWrapperImpl<N>(node) {
     ) {
         TODO()
     }
-
 }

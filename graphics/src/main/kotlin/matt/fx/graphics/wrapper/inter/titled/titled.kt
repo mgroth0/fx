@@ -2,7 +2,7 @@ package matt.fx.graphics.wrapper.inter.titled
 
 import matt.fx.graphics.wrapper.EventTargetWrapper
 import matt.lang.anno.Open
-import matt.obs.prop.Var
+import matt.obs.prop.writable.Var
 
 interface Titled : EventTargetWrapper {
     val titleProperty: Var<String?>

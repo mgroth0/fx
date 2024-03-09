@@ -12,6 +12,7 @@ import javafx.scene.control.SeparatorMenuItem
 import javafx.scene.control.ToggleGroup
 import javafx.scene.input.KeyCombination
 import matt.async.thread.namedThread
+import matt.fx.base.wrapper.obs.obsval.prop.NonNullFXBackedBindableProp
 import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.control.wrapper.menu.item.MenuItemWrapper
 import matt.fx.control.wrapper.menu.item.SimpleMenuItem
@@ -41,34 +42,35 @@ fun ET.contextmenu(op: ContextMenu.() -> Unit = {}): ContextMenu {
 /**
  * Add a context menu to the target which will be created on demand.
  */
-fun ET.lazyContextmenu(op: ContextMenu.() -> Unit = {}) = apply {
-    var currentMenu: ContextMenu? = null
-    (this as? Node)?.setOnContextMenuRequested { event ->
-        currentMenu?.hide()
-        currentMenu = ContextMenu().also {
-            it.setOnCloseRequest { currentMenu = null }
-            op(it)
-            it.show(this, event.screenX, event.screenY)
+fun ET.lazyContextmenu(op: ContextMenu.() -> Unit = {}) =
+    apply {
+        var currentMenu: ContextMenu? = null
+        (this as? Node)?.setOnContextMenuRequested { event ->
+            currentMenu?.hide()
+            currentMenu =
+                ContextMenu().also {
+                    it.setOnCloseRequest { currentMenu = null }
+                    op(it)
+                    it.show(this, event.screenX, event.screenY)
+                }
+            event.consume()
         }
-        event.consume()
     }
-}
 
 
 class ContextMenuWrapper(node: ContextMenu = ContextMenu()) : WindowWrapper<ContextMenu>(node) {
     val items: ObservableList<MenuItem> get() = node.items
 
 
-    val autoHideProperty by lazy { node.autoHideProperty().toNonNullableProp() }
+    val autoHideProperty: NonNullFXBackedBindableProp<Boolean> by lazy { node.autoHideProperty().toNonNullableProp() }
     var isAutoHide by autoHideProperty
     var isAutoFix by autoHideProperty
 
 
     operator fun <T : MenuItem> plusAssign(menuItem: T) {
-        this.items += menuItem
+        items += menuItem
     }
 
-    //ContextMenu extensions
     fun menu(
         name: String? = null,
         op: Menu.() -> Unit = {}
@@ -92,9 +94,10 @@ class ContextMenuWrapper(node: ContextMenu = ContextMenu()) : WindowWrapper<Cont
         keyCombination: String,
         graphic: Node? = null,
         onAction: () -> Unit = {}
-    ): MenuItemWrapper<*> = item(name, KeyCombination.valueOf(keyCombination), graphic).apply {
-        action(onAction)
-    }
+    ): MenuItemWrapper<*> =
+        item(name, KeyCombination.valueOf(keyCombination), graphic).apply {
+            action(onAction)
+        }
 
     fun checkmenuitem(
         name: String,
@@ -118,7 +121,7 @@ class ContextMenuWrapper(node: ContextMenu = ContextMenu()) : WindowWrapper<Cont
         graphic: Node? = null,
         op: MenuItemWrapper<*>.() -> Unit = {}
     ) = SimpleMenuItem().apply {
-        this.text = name;
+        text = name
         this.graphic = graphic
     }.also {
         keyCombination?.apply { it.accelerator = this }
@@ -198,7 +201,7 @@ class ContextMenuWrapper(node: ContextMenu = ContextMenu()) : WindowWrapper<Cont
         }
     }
 
-    // because when in listcells, "item" is taken
+    /* because when in listcells, "item" is taken */
     @Suppress("unused")
     fun menuitem(
         name: String,
@@ -213,6 +216,4 @@ class ContextMenuWrapper(node: ContextMenu = ContextMenu()) : WindowWrapper<Cont
     ) {
         TODO()
     }
-
-
 }

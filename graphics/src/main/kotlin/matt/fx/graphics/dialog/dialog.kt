@@ -10,9 +10,9 @@ import matt.fx.graphics.dialog.ChooseFileFor.SAVE
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.stage.StageWrapper
 import matt.fx.graphics.wrapper.window.WindowWrapper
+import matt.lang.common.go
 import matt.lang.file.toJFile
 import matt.lang.function.Dsl
-import matt.lang.go
 import matt.lang.model.file.FsFile
 import matt.lang.model.file.MacFileSystem
 
@@ -103,16 +103,17 @@ sealed class ChoseFileBase<T>(
     }
 
     protected fun createChooser(): FileChooser {
-        val chooser = FileChooser().apply {
-            initialDir?.go { initialDirectory = it.toJFile() }
-            title?.go { this.title = it }
-            filters.takeIf { it.isNotEmpty() }?.go {
-                extensionFilters.setAll(it)
+        val chooser =
+            FileChooser().apply {
+                initialDir?.go { initialDirectory = it.toJFile() }
+                this@ChoseFileBase.title?.go { title = it }
+                filters.takeIf { it.isNotEmpty() }?.go {
+                    extensionFilters.setAll(it)
+                }
+                initialSaveFileName?.go {
+                    initialFileName = it
+                }
             }
-            initialSaveFileName?.go {
-                initialFileName = it
-            }
-        }
         return chooser
     }
 
@@ -127,12 +128,13 @@ class ChooseFileDSL(
 
 
     override fun showDialog(): FsFile? {
-        val f = createChooser().run {
-            when (fileFor) {
-                SAVE -> showSaveDialog(stage?.node)
-                OPEN -> showOpenDialog(stage?.node)
+        val f =
+            createChooser().run {
+                when (fileFor) {
+                    SAVE -> showSaveDialog(stage?.node)
+                    OPEN -> showOpenDialog(stage?.node)
+                }
             }
-        }
         return f?.toMFile(MacFileSystem)
     }
 }
@@ -140,7 +142,10 @@ class ChooseFileDSL(
 class ChoseMultipleFilesDSL(
     stage: StageWrapper?
 ) : ChoseFileBase<List<FsFile>>(stage) {
-    override fun showDialog(): List<FsFile>? = createChooser().showOpenMultipleDialog(stage?.node)?.let { it.map { it.toMFile(MacFileSystem) } }
+    override fun showDialog(): List<FsFile>? =
+        createChooser().showOpenMultipleDialog(stage?.node)?.let {
+            it.map { it.toMFile(MacFileSystem) }
+        }
 }
 
 class ChooseFolderDSL(
@@ -148,8 +153,9 @@ class ChooseFolderDSL(
 ) : ChoseFile {
     override var initialDir: FsFile? = null
     override var title: String? = null
-    fun showDialog(): FsFile? = DirectoryChooser().apply {
-        initialDir?.go { initialDirectory = it.toJFile() }
-        title?.go { this.title = it }
-    }.showDialog(stage?.node)?.toMFile(MacFileSystem)
+    fun showDialog(): FsFile? =
+        DirectoryChooser().apply {
+            initialDir?.go { initialDirectory = it.toJFile() }
+            this@ChooseFolderDSL.title?.go { title = it }
+        }.showDialog(stage?.node)?.toMFile(MacFileSystem)
 }

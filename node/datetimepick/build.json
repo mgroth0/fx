@@ -4,12 +4,18 @@
         {
             "type": "Lib",
             "cfg": "implementation",
-            "key": "fx-controls","checkIfUsed": false
+            "key": "fx-controls",
+            "checkIfUsed": false
         },
         {
             "type": "Lib",
             "cfg": "api",
             "key": "kt-stdlib"
+        },
+        {
+            "type": "Project",
+            "cfg": "api",
+            "path": ":k:time"
         },
         {
             "type": "Project",

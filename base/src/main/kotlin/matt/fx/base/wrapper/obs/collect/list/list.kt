@@ -6,17 +6,14 @@ import javafx.collections.ListChangeListener
 import javafx.collections.ObservableList
 import javafx.collections.transformation.FilteredList
 import javafx.collections.transformation.SortedList
-import javafx.util.Subscription
 import matt.collect.fake.FakeMutableList
 import matt.fx.base.wrapper.obs.collect.list.change.toFXChange
-import matt.lang.ILLEGAL
 import matt.lang.anno.Open
+import matt.lang.common.ILLEGAL
 import matt.lang.convert.BiConverter
 import matt.lang.function.Consume
 import matt.lang.function.Op
-import matt.lang.ktversion.ifPastInitialK2
 import matt.lang.setall.setAll
-import matt.log.warn.warn
 import matt.model.op.prints.Prints
 import matt.obs.bindhelp.BindableList
 import matt.obs.bindhelp.BindableListImpl
@@ -52,100 +49,91 @@ fun <E> MyObservableListWrapper<E>.onRemove(op: Consume<E>) = listen(onAdd = { }
 
 fun <E> MyObservableListWrapper<E>.listen(
     onAdd: ((E) -> Unit),
-    onRemove: ((E) -> Unit),
+    onRemove: ((E) -> Unit)
 ) {
-    addListener(ListChangeListener {
-        while (it.next()) {
-            it.addedSubList.forEach {
-                onAdd(it)
-            }
-            it.removed.forEach {
-                onRemove(it)
+    addListener(
+        ListChangeListener {
+            while (it.next()) {
+                it.addedSubList.forEach {
+                    onAdd(it)
+                }
+                it.removed.forEach {
+                    onRemove(it)
+                }
             }
         }
-    })
+    )
 }
 
 
-fun <E> MyObservableListWrapper<E>.changeListener(op: (ListChangeListener.Change<out E>) -> Unit) = run {
-    val l = ListChangeListener<E> { op(it) }
-    addListener(l)
-    l
-}
+fun <E> MyObservableListWrapper<E>.changeListener(op: (ListChangeListener.Change<out E>) -> Unit) =
+    run {
+        val l = ListChangeListener<E> { op(it) }
+        addListener(l)
+        l
+    }
 
-fun <E> MyObservableListWrapper<E>.onChange(op: (ListChangeListener.Change<out E>) -> Unit) = apply {
-    addListener(ListChangeListener { op(it) })
-}
+fun <E> MyObservableListWrapper<E>.onChange(op: (ListChangeListener.Change<out E>) -> Unit) =
+    apply {
+        addListener(ListChangeListener { op(it) })
+    }
 
 
 interface MyObservableListWrapperPlusList<E> : MyObservableListWrapper<E>, List<E>
-//interface MyObservableListWrapperPlusMutableList<E>: matt.hurricanefx.eye.wrapper.obs.collect.list.MyObservableListWrapperPlusList<E>, MutableList<E>
 
-fun <E> mfxListConverter() = object : BiConverter<ObservableList<E>, MutableObsList<E>> {
-    override fun convertToB(a: ObservableList<E>): MutableObsList<E> {
-        @Suppress("UNCHECKED_CAST")
-        return when (a) {
-            is MBackedFXObservableList<*> -> a.mList as MutableObsList<E>
-            else                          -> a.createMutableWrapper()
+
+fun <E> mfxListConverter() =
+    object : BiConverter<ObservableList<E>, MutableObsList<E>> {
+        override fun convertToB(a: ObservableList<E>): MutableObsList<E> {
+            @Suppress("UNCHECKED_CAST")
+            return when (a) {
+                is MBackedFXObservableList<*> -> a.mList as MutableObsList<E>
+                else                          -> a.createMutableWrapper()
+            }
+        }
+
+        override fun convertToA(b: MutableObsList<E>): ObservableList<E> {
+            @Suppress("UNCHECKED_CAST")
+            return when (b) {
+                is FXBackedObsList<*> -> b.obs as ObservableList<E>
+                else                  -> b.createFXWrapper()
+            }
         }
     }
 
-    override fun convertToA(b: MutableObsList<E>): ObservableList<E> {
-        @Suppress("UNCHECKED_CAST")
-        return when (b) {
-            is FXBackedObsList<*> -> b.obs as ObservableList<E>
-            else                  -> b.createFXWrapper()
+fun <E> mfxMutableListConverter() =
+    object : BiConverter<ObservableList<E>, MutableObsList<E>> {
+        override fun convertToB(a: ObservableList<E>): MutableObsList<E> {
+            @Suppress("UNCHECKED_CAST")
+            return when (a) {
+                is MBackedFXObservableList<*> -> a.mList as MutableObsList<E>
+                else                          -> a.createMutableWrapper()
+            }
+        }
+
+        override fun convertToA(b: MutableObsList<E>): ObservableList<E> {
+            @Suppress("UNCHECKED_CAST")
+            return when (b) {
+                is FXBackedObsList<*> -> b.obs as ObservableList<E>
+
+                else                  -> b.createMutableFXWrapper()
+            }
         }
     }
-}
-
-fun <E> mfxMutableListConverter() = object : BiConverter<ObservableList<E>, MutableObsList<E>> {
-    override fun convertToB(a: ObservableList<E>): MutableObsList<E> {
-        @Suppress("UNCHECKED_CAST")
-        return when (a) {
-            is MBackedFXObservableList<*> -> a.mList as MutableObsList<E>
-            else                          -> a.createMutableWrapper()
-        }
-    }
-
-    override fun convertToA(b: MutableObsList<E>): ObservableList<E> {
-        @Suppress("UNCHECKED_CAST")
-        return when (b) {
-            is FXBackedObsList<*> -> b.obs as ObservableList<E>
-
-            else                  -> b.createMutableFXWrapper()
-        }
-    }
-}
 
 abstract class FXBackedObsList<E>(internal val obs: ObservableList<E>)
 
-abstract class ObservableListWrapperImpl<E>(obs: ObservableList<E>) : FXBackedObsList<E>(obs),
+abstract class ObservableListWrapperImpl<E>(obs: ObservableList<E>) :
+    FXBackedObsList<E>(obs),
     MyObservableListWrapperPlusList<E>,
-    Observable {
+    Observable by obs {
 
-    init {
-        ifPastInitialK2 {
-            warn("You know the deal. Kotlin 2.0.0-Beta1")
-        }
-    }
-
-    final override fun addListener(listener: InvalidationListener?) {
-        obs.addListener(listener)
-    }
-
-    final override fun removeListener(listener: InvalidationListener?) {
-        obs.removeListener(listener)
-    }
-
-    final override fun subscribe(invalidationSubscriber: Runnable?): Subscription = obs.subscribe(invalidationSubscriber)
 
     final override fun addListener(listener: ListChangeListener<E>) = obs.addListener(listener)
     final override fun removeListener(listener: ListChangeListener<E>) = obs.removeListener(listener)
-    final override fun filtered(predicate: Predicate<E>) = obs.filtered(predicate)
-    final override fun sorted(comparator: Comparator<E>) = obs.sorted(comparator)
-    final override fun sorted() = obs.sorted()
-
+    final override fun filtered(predicate: Predicate<E>): FilteredList<E> = obs.filtered(predicate)
+    final override fun sorted(comparator: Comparator<E>): SortedList<E> = obs.sorted(comparator)
+    final override fun sorted(): SortedList<E> = obs.sorted()
 }
 
 interface FXOListWrapperAndBasic<E> : MyObservableListWrapper<E>, MutableObsList<E>, BindableList<E>
@@ -195,9 +183,10 @@ class FXBackedMutableObservableListBase<E>(obs: ObservableList<E>) :
         listenerName: String?,
         op: (ListChange<E>) -> Unit
     ): ListListener<E> {
-        val listener = ListListener {
-            op(it)
-        }
+        val listener =
+            ListListener {
+                op(it)
+            }
         if (listenerName != null) {
             listener.name = listenerName
         }
@@ -210,29 +199,31 @@ class FXBackedMutableObservableListBase<E>(obs: ObservableList<E>) :
 
     @Synchronized
     override fun addListener(listener: ListListenerBase<E>): ListListenerBase<E> {
-        val oListener = ListChangeListener<E> {
-            while (it.next()) {
-                if (it.wasRemoved()) when (it.removedSize) {
-                    0    -> Unit
-                    1    -> listener.notify(ListUpdate(RemoveAt(obs, it.removed[0], it.from)))
-                    else -> listener.notify(
-                        ListUpdate(
-                            RemoveAtIndices(
-                                obs,
-                                it.removed.zip(it.from..<it.from + it.removed.size)
-                                    .map { IndexedValue(it.second, it.first) },
-                                quickIsRange = true
-                            ),
-                        )
-                    )
-                }
-                if (it.wasAdded()) when (it.addedSize) {
-                    0    -> Unit
-                    1    -> listener.notify(ListUpdate(AddAt(obs, it.addedSubList[0], it.from)))
-                    else -> listener.notify(ListUpdate(MultiAddAt(obs, it.addedSubList, it.from)))
+        val oListener =
+            ListChangeListener<E> {
+                while (it.next()) {
+                    if (it.wasRemoved()) when (it.removedSize) {
+                        0    -> Unit
+                        1    -> listener.notify(ListUpdate(RemoveAt(obs, it.removed[0], it.from)))
+                        else ->
+                            listener.notify(
+                                ListUpdate(
+                                    RemoveAtIndices(
+                                        obs,
+                                        it.removed.zip(it.from..<it.from + it.removed.size)
+                                            .map { IndexedValue(it.second, it.first) },
+                                        quickIsRange = true
+                                    )
+                                )
+                            )
+                    }
+                    if (it.wasAdded()) when (it.addedSize) {
+                        0    -> Unit
+                        1    -> listener.notify(ListUpdate(AddAt(obs, it.addedSubList[0], it.from)))
+                        else -> listener.notify(ListUpdate(MultiAddAt(obs, it.addedSubList, it.from)))
+                    }
                 }
             }
-        }
         addListener(oListener)
         listenersMap[listener] = oListener
         return listener
@@ -253,18 +244,18 @@ class FXBackedMutableObservableListBase<E>(obs: ObservableList<E>) :
     override fun releaseUpdatesAfter(op: Op) {
         TODO()
     }
-
-
 }
 
 
-class FXBackedImmutableObservableList<E>(obs: ObservableList<E>) : FXBackedObsList<E>(obs),
+class FXBackedImmutableObservableList<E>(obs: ObservableList<E>) :
+    FXBackedObsList<E>(obs),
     FXOListWrapperAndBasic<E> by FXBackedMutableObservableListBase(
         obs
     )
 
 
-class FXBackedMutableObservableList<E>(obs: ObservableList<E>) : FXBackedObsList<E>(obs),
+class FXBackedMutableObservableList<E>(obs: ObservableList<E>) :
+    FXBackedObsList<E>(obs),
     FXOLMutableListWrapperAndBasic<E> by FXBackedMutableObservableListBase(
         obs
     ),
@@ -274,7 +265,8 @@ fun <E> MutableObsList<E>.createMutableFXWrapper() = MutableMBackedFXObservableL
 fun <E> ImmutableObsList<E>.createFXWrapper() = MBackedFXObservableList(this)
 
 
-open class MBackedFXObservableList<E>(internal open val mList: ImmutableObsList<E>) : ObservableList<E>,
+open class MBackedFXObservableList<E>(internal open val mList: ImmutableObsList<E>) :
+    ObservableList<E>,
     MutableList<E> by FakeMutableList(mList) {
 
 
@@ -295,9 +287,10 @@ open class MBackedFXObservableList<E>(internal open val mList: ImmutableObsList<
     private val invalidationListenerMap = mutableMapOf<InvalidationListener, MyListenerInter<*>>()
     private val changeListenerMap = mutableMapOf<ListChangeListener<in E>, MyListenerInter<*>>()
     final override fun addListener(listener: InvalidationListener) {
-        invalidationListenerMap[listener] = mList.observe {
-            listener.invalidated(this)
-        }
+        invalidationListenerMap[listener] =
+            mList.observe {
+                listener.invalidated(this)
+            }
     }
 
     final override fun removeListener(listener: InvalidationListener) {
@@ -305,10 +298,10 @@ open class MBackedFXObservableList<E>(internal open val mList: ImmutableObsList<
     }
 
     final override fun addListener(listener: ListChangeListener<in E>) {
-        changeListenerMap[listener] = mList.onChange {
-//            println("BUGGY CHANGE: ${it}")
-            listener.onChanged(it.toFXChange(this))
-        }
+        changeListenerMap[listener] =
+            mList.onChange {
+                listener.onChanged(it.toFXChange(this))
+            }
     }
 
     final override fun removeListener(listener: ListChangeListener<in E>) {

@@ -12,20 +12,17 @@ import matt.obs.bindhelp.BindableValueHelper
 import matt.obs.listen.OldAndNewListener
 import matt.obs.listen.update.ValueChange
 import matt.obs.prop.MObservableVal
-import matt.obs.prop.MWritableValNewAndOld
-import matt.obs.prop.Var
-import matt.obs.prop.WritableMObservableVal
+import matt.obs.prop.cast.CastedWritableProp
+import matt.obs.prop.writable.MWritableValNewAndOld
+import matt.obs.prop.writable.Var
+import matt.obs.prop.writable.WritableMObservableVal
 
-//fun <T> Property<T>.bindBidirectional(other: NullableFXBackedBindableProp<T>) =
-//  other.getBoundedBidirectionallyFrom(this)
 
-//fun <T: Any> Property<T>.bindBidirectional(other: NonNullFXBackedBindableProp<T>) =
-//  other.getBoundedBidirectionallyFrom(this)
-
-fun <T> Property<T>.toNullableProp() = NullableFXBackedBindableProp(this)
+fun <T: Any> Property<T>.toNullableProp(): NullableFXBackedBindableProp<T> = NullableFXBackedBindableProp(this)
 fun <T : Any> Property<T>.toNonNullableProp() = NonNullFXBackedBindableProp(this)
 
-interface WritableFXBackedProp<FX_T> : FXBackedProp<FX_T>,
+interface WritableFXBackedProp<FX_T> :
+    FXBackedProp<FX_T>,
     WritableMObservableVal<FX_T, ValueChange<FX_T>, OldAndNewListener<FX_T, ValueChange<FX_T>, out ValueChange<FX_T>>> {
     /*fun getBoundedBidirectionallyFrom(p: Property<FX_T>)
     fun bind(p: ObservableValue<FX_T>)
@@ -59,20 +56,19 @@ interface WritableFXBackedProp<FX_T> : FXBackedProp<FX_T>,
 
     @Open
     override fun unbind() = bindManager.unbind()
-
-
 }
 
-open class NullableFXBackedBindableProp<T>(private val o: Property<T>) : NullableFXBackedReadOnlyBindableProp<T?>(o),
+open class NullableFXBackedBindableProp<T>(private val o: Property<T>) :
+    NullableFXBackedReadOnlyBindableProp<T?>(o),
     WritableFXBackedProp<T?>,
     MWritableValNewAndOld<T?> {
 
-    //  override var boundTo: MObservableROPropBase<out T?>? = null
+    final override fun <R> cast() = CastedWritableProp<T?, R>(this)
+
 
     final override val bindManager = BindableValueHelper(this)
     final override var theBind by bindManager::theBind
 
-    //  override val isBound get() = o.isBound
 
     @Open
     override var value: T?
@@ -83,7 +79,7 @@ open class NullableFXBackedBindableProp<T>(private val o: Property<T>) : Nullabl
         }
 
 
-    final   override val isFXBound get() = o.isBound
+    final override val isFXBound get() = o.isBound
 
     /*override fun getBoundedBidirectionallyFrom(p: Property<T>) {
       Bindings.bindBidirectional(p, o)
@@ -94,10 +90,12 @@ open class NullableFXBackedBindableProp<T>(private val o: Property<T>) : Nullabl
     override fun bindBidirectional(p: Property<T>) = o.bindBidirectional(p)*/
 }
 
-open class NonNullFXBackedBindableProp<T : Any>(private val o: Property<T>) : NonNullFXBackedReadOnlyBindableProp<T>(o),
+open class NonNullFXBackedBindableProp<T : Any>(private val o: Property<T>) :
+    NonNullFXBackedReadOnlyBindableProp<T>(o),
     WritableFXBackedProp<T>,
     MWritableValNewAndOld<T> {
 
+    final override fun <R> cast() = CastedWritableProp<T, R>(this)
 
     final override val bindManager = BindableValueHelper(this)
     final override var theBind by bindManager::theBind
@@ -121,5 +119,4 @@ open class NonNullFXBackedBindableProp<T : Any>(private val o: Property<T>) : No
             }
         }
     }
-
 }

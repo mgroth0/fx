@@ -7,8 +7,8 @@ import matt.fx.control.wrapper.wrapped.wrapped
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
 
-fun EventTarget.htmleditor(html: String? = null, op: HTMLEditorWrapper.()->Unit = {}) =
-    HTMLEditorWrapper().attachTo(this.wrapped(), op) {
+fun EventTarget.htmleditor(html: String? = null, op: HTMLEditorWrapper.() -> Unit = {}) =
+    HTMLEditorWrapper().attachTo(wrapped(), op) {
         if (html != null) it.htmlText = html
     }
 

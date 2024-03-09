@@ -10,7 +10,7 @@ import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attach
 
 fun ET.splitpane(
-    orientation: Orientation = javafx.geometry.Orientation.HORIZONTAL,
+    orientation: Orientation = Orientation.HORIZONTAL,
     vararg nodes: Node,
     op: SplitPaneWrapper.() -> Unit = {}
 ): SplitPaneWrapper {
@@ -40,6 +40,5 @@ open class SplitPaneWrapper(node: SplitPane = SplitPane()) : ControlWrapperImpl<
         } else {
             items.add(child.node)
         }
-
     }
 }

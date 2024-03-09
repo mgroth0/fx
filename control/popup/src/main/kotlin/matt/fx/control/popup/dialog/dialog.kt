@@ -13,7 +13,8 @@ import matt.fx.graphics.service.uncheckedNullableWrapperConverter
 import matt.fx.graphics.wrapper.SingularEventTargetWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.window.WindowWrapper
-import matt.lang.NOT_IMPLEMENTED
+import matt.lang.common.NOT_IMPLEMENTED
+import java.util.Optional
 
 open class DialogWrapper<R>(dialog: Dialog<R> = Dialog()): SingularEventTargetWrapper<Dialog<R>>(dialog) {
     final override val properties get() = NOT_IMPLEMENTED
@@ -29,7 +30,7 @@ open class DialogWrapper<R>(dialog: Dialog<R> = Dialog()): SingularEventTargetWr
         TODO()
     }
 
-    fun showAndWait() = node.showAndWait()
+    fun showAndWait(): Optional<R> = node.showAndWait()
     fun show() = node.show()
 
     fun initModality(modality: Modality) = node.initModality(modality)

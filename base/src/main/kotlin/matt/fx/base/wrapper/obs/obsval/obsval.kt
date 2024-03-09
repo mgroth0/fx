@@ -12,11 +12,10 @@ import javafx.beans.binding.StringBinding
 import javafx.beans.property.Property
 import javafx.beans.value.ObservableValue
 import matt.lang.anno.Open
-import matt.obs.listen.OldAndNewListener
 import matt.obs.listen.update.ValueChange
-import matt.obs.prop.FXBackedPropBase
-import matt.obs.prop.MObservableROValBase
-import matt.obs.prop.MObservableValNewAndOld
+import matt.obs.prop.IntermediateROValPropIdkWhy
+import matt.obs.prop.fx.FXBackedPropBase
+import matt.obs.prop.newold.MObservableValNewAndOld
 
 fun <T> ObservableValue<T>.toNullableROProp() = NullableFXBackedReadOnlyBindableProp(this)
 fun <T : Any> ObservableValue<T>.toNonNullableROProp() = NonNullFXBackedReadOnlyBindableProp(this)
@@ -104,17 +103,14 @@ private class ReadingBinder<FX_T>(private val o: ObservableValue<FX_T>) : Readab
         op: (FX_T?) -> String
     ): StringBinding =
         Bindings.createStringBinding({ op(o.value) }, o, *dependencies)
-
-
 }
 
 
 open class NullableFXBackedReadOnlyBindableProp<T>(private val o: ObservableValue<T>) :
-    MObservableROValBase<T?, ValueChange<T?>, OldAndNewListener<T?, ValueChange<T?>, out ValueChange<T?>>>(),
+    IntermediateROValPropIdkWhy<T?>(),
     FXBackedProp<T>,
     MObservableValNewAndOld<T?>,
     ReadableFXBackedPropBinder<T> by ReadingBinder(o) {
-
 
 
     @Open
@@ -131,14 +127,15 @@ open class NullableFXBackedReadOnlyBindableProp<T>(private val o: ObservableValu
             notifyListeners(ValueChange(old = old, new = new))
         }
     }
-
 }
 
 open class NonNullFXBackedReadOnlyBindableProp<T : Any>(private val o: ObservableValue<T>) :
-    MObservableROValBase<T, ValueChange<T>, OldAndNewListener<T, ValueChange<T>, out ValueChange<T>>>(),
+    IntermediateROValPropIdkWhy<T>(),
     FXBackedProp<T>,
     MObservableValNewAndOld<T>,
     ReadableFXBackedPropBinder<T> by ReadingBinder(o) {
+
+
 
     @Open override val isFXBound get() = (o as? Property<*>)?.isBound ?: false
     @Open override val value: T
@@ -151,5 +148,4 @@ open class NonNullFXBackedReadOnlyBindableProp<T : Any>(private val o: Observabl
             notifyListeners(ValueChange(old = old, new = new))
         }
     }
-
 }

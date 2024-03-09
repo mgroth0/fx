@@ -11,20 +11,21 @@ import matt.fx.control.wrapper.button.radio.radiobutton
 import matt.fx.graphics.wrapper.FXNodeWrapperDSL
 import matt.fx.graphics.wrapper.node.NW
 import matt.fx.graphics.wrapper.node.NodeWrapper
-import matt.lang.weak.MyWeakRef
-import matt.log.warn.warn
+import matt.lang.weak.common.WeakRefInter
+import matt.lang.weak.weak
+import matt.log.warn.common.warn
 import matt.model.flowlogic.keypass.KeyPass
 import matt.model.flowlogic.recursionblocker.RecursionBlocker
 import matt.obs.col.change.SetAdditionBase
 import matt.obs.col.change.SetRemovalBase
 import matt.obs.col.oset.basicObservableSetOf
-import matt.obs.listen.Listener
-import matt.obs.prop.BindableProperty
+import matt.obs.listen.MyListenerInter
+import matt.obs.prop.writable.BindableProperty
 
 
 fun <V: Any> NW.toggles(
     initialValue: V,
-    op: ToggleDSL<V>.()->Unit = {}
+    op: ToggleDSL<V>.() -> Unit = {}
 ): ToggleMechanism<V> {
     val dsl = ToggleDSL<V>(this).apply(op)
     dsl.mech.selectedValue.value = initialValue
@@ -33,7 +34,7 @@ fun <V: Any> NW.toggles(
 
 @FXNodeWrapperDSL class ToggleDSL<V: Any>(private val nw: NodeWrapper) {
     internal val mech = ToggleMechanism<V>()
-    fun radio(text: String, v: V, op: RadioButtonWrapper.()->Unit = {}) =
+    fun radio(text: String, v: V, op: RadioButtonWrapper.() -> Unit = {}) =
         nw.radiobutton(text = text, group = mech, value = v, op = op)
 }
 
@@ -42,7 +43,7 @@ fun <V: Any> NW.toggles(
 class ToggleMechanism<V: Any>() {
 
 
-    val toggles = basicObservableSetOf<MyWeakRef<SelectableValue<V>>>()
+    val toggles = basicObservableSetOf<WeakRefInter<SelectableValue<V>>>()
     fun derefToggles(): Set<SelectableValue<V>> {
         val itr = toggles.iterator()
         val r = mutableSetOf<SelectableValue<V>>()
@@ -81,22 +82,24 @@ class ToggleMechanism<V: Any>() {
         }
         selectedValue.onChange { newVal ->
             rBlocker.with {
-                selectedToggle.value = newVal?.let {
-                    derefToggles().first { it.value == newVal }
-                }
+                selectedToggle.value =
+                    newVal?.let {
+                        derefToggles().first { it.value == newVal }
+                    }
             }
         }
     }
 
-    private val listeners = WeakMap<SelectableValue<V>, Listener>()
+    private val listeners = WeakMap<SelectableValue<V>, MyListenerInter<*>>()
 
-    private var selecting = KeyPass()
-    private fun didSelectToggle(toggle: SelectableValue<V>) = selecting.with {
-        derefToggles().filter { it != toggle }.forEach {
-            it.isSelected = false
+    private val selecting = KeyPass()
+    private fun didSelectToggle(toggle: SelectableValue<V>) =
+        selecting.with {
+            derefToggles().filter { it != toggle }.forEach {
+                it.isSelected = false
+            }
+            selectedToggle.value = toggle
         }
-        selectedToggle.value = toggle
-    }
 
     private fun didUnSelectToggle(toggle: SelectableValue<V>) {
         if (selecting.isNotHeld) {
@@ -117,7 +120,7 @@ class ToggleMechanism<V: Any>() {
     }
 
     fun addToggle(s: SelectableValue<V>) {
-        toggles.add(MyWeakRef(s))
+        toggles.add(weak(s))
     }
 
     init {
@@ -125,19 +128,21 @@ class ToggleMechanism<V: Any>() {
             (change as? SetAdditionBase)?.addedElements?.forEach { toggle ->
                 val togg = toggle.deref()!!
                 println("adding tog listener")
-                listeners[togg] = togg.selectedProperty.onChangeWithAlreadyWeak(toggle) { tog: SelectableValue<V>, sel ->        /*println("selectedProperty of
+                listeners[togg] =
+                    togg.selectedProperty.onChangeWithAlreadyWeak(toggle) { tog: SelectableValue<V>, sel ->
+                        /*println("selectedProperty of
 
 
 		 toggle ${toggle} changed to ${it}")
 		  println("selectedToggle.value=${selectedToggle.value}")
 		  println("selectedValue.value=${selectedValue.value}")*/
 
-                    println("tog selected: $tog, $sel")
+                        println("tog selected: $tog, $sel")
 
 
-                    if (sel) didSelectToggle(tog)
-                    else didUnSelectToggle(tog)
-                }
+                        if (sel) didSelectToggle(tog)
+                        else didUnSelectToggle(tog)
+                    }
                 if (togg.isSelected) {
                     if (hasSelection()) togg.isSelected = false
                     else selectedToggle.value = togg

@@ -14,20 +14,24 @@ import matt.fx.graphics.wrapper.inter.titled.Titled
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attach
 import matt.fx.graphics.wrapper.pane.vbox.VBoxW
-import matt.lang.err
-import matt.lang.go
-import matt.obs.prop.MObservableValNewAndOld
+import matt.lang.common.err
+import matt.lang.common.go
 import matt.obs.prop.ValProp
+import matt.obs.prop.newold.MObservableValNewAndOld
 import java.text.Format
 
 
 fun ET.titledpane(
-    title: String? = null, node: NodeWrapper? = null, collapsible: Boolean = true, op: (TitledPaneWrapper).()->Unit = {}
+    title: String? = null,
+    node: NodeWrapper? = null,
+    collapsible: Boolean = true,
+    op: (TitledPaneWrapper).() -> Unit = {}
 ): TitledPaneWrapper {
-    val titledPane = TitledPaneWrapper().apply {
-        title?.let { text = it };
-        graphic = node
-    }
+    val titledPane =
+        TitledPaneWrapper().apply {
+            title?.let { text = it }
+            graphic = node
+        }
     titledPane.isCollapsible = collapsible
     attach(titledPane, op)
     return titledPane
@@ -37,12 +41,13 @@ fun ET.titledpane(
     title: ValProp<String>,
     node: NodeWrapper? = null,
     collapsible: Boolean = true,
-    op: (TitledPaneWrapper).()->Unit = {}
+    op: (TitledPaneWrapper).() -> Unit = {}
 ): TitledPaneWrapper {
-    val titledPane = TitledPaneWrapper().apply {
-        text = "";
-        graphic = node
-    }
+    val titledPane =
+        TitledPaneWrapper().apply {
+            text = ""
+            graphic = node
+        }
     titledPane.textProperty.bind(title)
     titledPane.isCollapsible = collapsible
     attach(titledPane, op)
@@ -50,7 +55,7 @@ fun ET.titledpane(
 }
 
 open class TitledPaneWrapper(
-    node: TitledPane = TitledPane(),
+    node: TitledPane = TitledPane()
 ): LabeledWrapper<TitledPane>(node), Titled {
 
     final override val titleProperty by lazy { textProperty }

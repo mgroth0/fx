@@ -1,7 +1,9 @@
 package matt.fx.control.wrapper.control.tab
 
+import javafx.collections.ObservableMap
 import javafx.scene.control.Tab
 import javafx.scene.control.TabPane
+import matt.fx.base.wrapper.obs.obsval.prop.NonNullFXBackedBindableProp
 import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
 import matt.fx.base.wrapper.obs.obsval.toNonNullableROProp
@@ -23,10 +25,10 @@ open class TabWrapper<C : NodeWrapper?>(
         content: C? = null
     ) : this(Tab(text, content?.node))
 
-    val closableProp by lazy { node.closableProperty().toNonNullableProp() }
+    val closableProp: NonNullFXBackedBindableProp<Boolean> by lazy { node.closableProperty().toNonNullableProp() }
     var isClosable by closableProp
 
-    final override val properties get() = node.properties
+    final override val properties: ObservableMap<Any, Any?> get() = node.properties
 
     final override fun removeFromParent() {
         node.tabPane?.tabs?.remove(node)
@@ -45,7 +47,7 @@ open class TabWrapper<C : NodeWrapper?>(
     val disableProperty by lazy { node.disableProperty().toNonNullableProp() }
     val closableProperty by lazy { node.closableProperty().toNonNullableProp() }
     val selectedProperty by lazy { node.selectedProperty().toNonNullableROProp() }
-    val isSelected by selectedProperty
+    val isSelected: Boolean by selectedProperty
     val tabPane: TabPane? get() = node.tabPane
 
 
@@ -62,8 +64,8 @@ open class TabWrapper<C : NodeWrapper?>(
     fun visibleWhen(predicate: ObsB) {
         val localTabPane = tabPane
         fun updateState() {
-            if (predicate.value.not()) localTabPane!!.tabs.remove(this.node)
-            else if (this.node !in tabPane!!.tabs) localTabPane!!.tabs.add(this.node)
+            if (predicate.value.not()) localTabPane!!.tabs.remove(node)
+            else if (node !in tabPane!!.tabs) localTabPane!!.tabs.add(node)
         }
         updateState()
         predicate.onChange { updateState() }
@@ -71,12 +73,6 @@ open class TabWrapper<C : NodeWrapper?>(
 
     fun close() = removeFromParent()
 
-    //fun TabPane.matt.prim.str.build.tab(text: String? = null, node: Node? = null, op: Tab.() -> Unit = {}): Tab {
-    //    val matt.prim.str.build.tab = Tab(text,node)
-    ////    matt.prim.str.build.tab.tag = tag
-    //    tabs.add(matt.prim.str.build.tab)
-    //    return matt.prim.str.build.tab.also(op)
-    //}
 
     fun whenSelected(op: () -> Unit) {
         selectedProperty.onChange { if (it) op() }

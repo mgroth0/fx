@@ -3,29 +3,29 @@ package matt.fx.graphics.icon
 import javafx.scene.image.Image
 import matt.collect.map.lazyMap
 import matt.file.JioFile
-import matt.file.commons.ICON_FOLDER
+import matt.file.commons.reg.ICON_FOLDER
 import matt.file.ext.FileExtension.Companion.IMAGE_EXTENSIONS
 import matt.file.ext.FileExtension.Companion.SVG
-import matt.file.ext.hasExtension
-import matt.file.ext.withExtension
+import matt.file.ext.j.hasExtension
+import matt.file.ext.j.withExtension
 import matt.file.toJioFile
 import matt.fx.graphics.effect.INVERSION_EFFECT
 import matt.fx.graphics.wrapper.imageview.ImageViewWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.image.toFXImage
-import matt.lang.file.toJFile
 import matt.lang.model.file.FsFile
 import matt.model.data.rect.DoubleRectSize
 import matt.obs.bind.binding
 import matt.obs.bindings.str.ObsS
-import matt.obs.prop.FakeObsVal
 import matt.obs.prop.ObsVal
 import matt.svg.render.svgToImage
+import kotlin.io.path.extension
 
-val ICON_SIZE = DoubleRectSize(
-    width = 20.0,
-    height = 20.0
-)
+val ICON_SIZE =
+    DoubleRectSize(
+        width = 20.0,
+        height = 20.0
+    )
 
 fun NodeWrapper.icon(
     file: FsFile,
@@ -91,13 +91,29 @@ fun ObsFileIcon(
 fun Icon(
     image: Image,
     invert: Boolean = false
-): ImageViewWrapper = ObsIcon(FakeObsVal(image), invert = invert)
+): ImageViewWrapper = NotObsIcon(image, invert = invert)
 
 fun ObsIcon(
     image: ObsVal<Image>,
     invert: Boolean = false
-): ImageViewWrapper = ImageViewWrapper().apply {
-    imageProperty.bind(image)
+): ImageViewWrapper =
+    ImageViewWrapper().apply {
+        imageProperty.bind(image)
+        configIcon(invert = invert)
+    }
+
+fun NotObsIcon(
+    image: Image,
+    invert: Boolean = false
+): ImageViewWrapper =
+    ImageViewWrapper().apply {
+        this.image = image
+        configIcon(invert = invert)
+    }
+
+private fun ImageViewWrapper.configIcon(
+    invert: Boolean = false
+) {
     isPreserveRatio = false
     fitWidth = ICON_SIZE.width
     fitHeight = ICON_SIZE.height
@@ -105,19 +121,23 @@ fun ObsIcon(
 }
 
 
-private val images = lazyMap<JioFile, Image> { file ->
-    (file.takeIf { it.exists() }
-        ?: if (file.toJFile().extension.isNotBlank()) IMAGE_EXTENSIONS.map { file.withExtension(it) }
-            .firstOrNull {
-                it.exists()
-            } ?: FALLBACK_FILE else FALLBACK_FILE).let { f ->
-        if (f.hasExtension(SVG)) svgToImage(f, size = ICON_SIZE.toIntSize()).toFXImage()
-        else Image(f.toJFile().toPath().toUri().toURL().toString())
+private val images =
+    lazyMap<JioFile, Image> { file ->
+        (
+            file.takeIf { it.exists() }
+                ?: if (file.extension.isNotBlank()) IMAGE_EXTENSIONS.map { file.withExtension(it) }
+                    .firstOrNull {
+                        it.exists()
+                    } ?: FALLBACK_FILE else FALLBACK_FILE
+        ).let { f ->
+            if (f.hasExtension(SVG)) svgToImage(f, size = ICON_SIZE.toIntSize()).toFXImage()
+            else Image(f.toUri().toURL().toString())
+        }
     }
-}
 
-fun IconImage(file: FsFile): Image = IconImage(FakeObsVal(file)).value
-fun IconImage(file: ObsVal<FsFile>): ObsVal<Image> = file.binding { images[it.toJioFile()] }
+
+fun IconImage(file: ObsVal<FsFile>): ObsVal<Image> = file.binding { IconImage(it) }
+fun IconImage(file: FsFile): Image = images[file.toJioFile()]
 
 
 

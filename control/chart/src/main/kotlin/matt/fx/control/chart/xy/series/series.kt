@@ -18,11 +18,13 @@ import matt.lang.setall.setAll
 import matt.model.op.convert.NullToBlankStringConverter
 import matt.obs.col.olist.MutableObsList
 import matt.obs.listen.Listener
-import matt.obs.prop.BindableProperty
+import matt.obs.prop.onNonNullChange
+import matt.obs.prop.writable.BindableProperty
 
-fun <X, Y> List<Data<X, Y>>.toSeries() = SeriesWrapper<X, Y>().apply {
-    data.setAll(this@toSeries)
-}
+fun <X, Y> List<Data<X, Y>>.toSeries() =
+    SeriesWrapper<X, Y>().apply {
+        data.setAll(this@toSeries)
+    }
 
 class SeriesConverter<X, Y>() : BiConverter<Series<X, Y>, SeriesWrapper<X, Y>>, SeriesIdea {
     override fun convertToB(a: Series<X, Y>): SeriesWrapper<X, Y> {
@@ -64,26 +66,28 @@ class SeriesWrapper<X, Y>(val series: Series<X, Y> = Series<X, Y>()) {
     var node by nodeProperty
 
     private var strokeListener: Listener? = null
-    val strokeProp = BindableProperty<Color?>(null).apply {
-        strokeListener = onChange {
-            fun update(node: Node) {
-                (node as Path).apply {
-                    stroke = it
-                    strokeProperty().addListener { _, _, n ->
-                        /*yup need to do it this way so javafx cannot get their colors in*/
-                        if (n != value) {
-                            stroke = value
+    val strokeProp =
+        BindableProperty<Color?>(null).apply {
+            strokeListener =
+                onChange {
+                    fun update(node: Node) {
+                        (node as Path).apply {
+                            stroke = it
+                            strokeProperty().addListener { _, _, n ->
+                                /*yup need to do it this way so javafx cannot get their colors in*/
+                                if (n != value) {
+                                    stroke = value
+                                }
+                            }
                         }
                     }
+                    strokeListener?.let(nodeProperty::removeListener)
+                    nodeProperty.onNonNullChange {
+                        update(it)
+                    }
+                    node?.let(::update)
                 }
-            }
-            strokeListener?.let(nodeProperty::removeListener)
-            nodeProperty.onNonNullChange {
-                update(it)
-            }
-            node?.let(::update)
         }
-    }
 
     var stroke by strokeProp
 
@@ -97,6 +101,4 @@ class SeriesWrapper<X, Y>(val series: Series<X, Y> = Series<X, Y>()) {
         ds.strokeProp.bind(strokeProp)
         ds
     }
-
-
 }

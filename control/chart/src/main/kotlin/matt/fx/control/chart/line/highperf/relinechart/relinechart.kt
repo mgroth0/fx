@@ -32,7 +32,6 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
     yAxis: AxisForPackagePrivateProps<Y>,
     data: ObservableList<Series<X, Y>> = FXCollections.observableArrayList()
 ) : LineLikeChartNodeWithOptionalSymbols<X, Y>(xAxis, yAxis) {
-    // -------------- PRIVATE FIELDS ------------------------------------------
     /** A multiplier for the Y values that we store for each series, it is used to animate in a new series  */
     private val seriesYMultiplierMap: MutableMap<Series<X, Y>, DoubleProperty> = HashMap()
     private var dataRemoveTimeline: Timeline? = null
@@ -41,11 +40,10 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
     private var fadeSymbolTransition: FadeTransition? = null
     private val XYValueMap: MutableMap<Data<X, Y>, Double> = HashMap()
     private var seriesRemoveTimeline: Timeline? = null
-    // -------------- PUBLIC PROPERTIES ----------------------------------------
-    /** When true, CSS styleable symbols are created for any data items that don't have a symbol node specified.  */
+    /** When true, CSS styleable symbols are created for any data items that don't have a symbol node specified.
 
 
-    /**
+
      * Indicates whether the data passed to LineChart should be sorted by natural order of one of the axes.
      * If this is set to [SortingPolicy.NONE], the order in [.dataProperty] will be used.
      *
@@ -54,15 +52,16 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
      *
      * @defaultValue SortingPolicy#X_AXIS
      */
-    private val axisSortingPolicy: ObjectProperty<SortingPolicy> = object : ObjectPropertyBase<SortingPolicy>(X_AXIS) {
-        override fun invalidated() {
-            requestChartLayout()
+    private val axisSortingPolicy: ObjectProperty<SortingPolicy> =
+        object : ObjectPropertyBase<SortingPolicy>(X_AXIS) {
+            override fun invalidated() {
+                requestChartLayout()
+            }
+
+            override fun getBean(): Any = this@MorePerfOptionsLineChart
+
+            override fun getName(): String = "axisSortingPolicy"
         }
-
-        override fun getBean(): Any = this@MorePerfOptionsLineChart
-
-        override fun getName(): String = "axisSortingPolicy"
-    }
 
     fun getAxisSortingPolicy(): SortingPolicy = axisSortingPolicy.value
 
@@ -79,9 +78,7 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
      * @param xAxis The x axis to use
      * @param yAxis The y axis to use
      * @param data The data to use, this is the actual list used so any changes to it will be reflected in the chart
-     */
-    // -------------- CONSTRUCTORS ----------------------------------------------
-    /**
+
      * Construct a new LineChart with the given axis.
      *
      * @param xAxis The x axis to use
@@ -90,7 +87,6 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
     init {
         setData(data)
     }
-    // -------------- METHODS ------------------------------------------------------------------------------------------
     /** {@inheritDoc}  */
     final override fun updateAxisRange() {
         val xa = xAxis
@@ -106,7 +102,7 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
                     yData?.add(data.yValueProp.value)
                 }
             }
-            // RT-32838 No need to invalidate range if there is one data item - whose value is zero.
+            /* RT-32838 No need to invalidate range if there is one data item - whose value is zero. */
             if (xData != null && !(xData.size == 1 && xAxis.toNumericValue(xData[0]!!) == 0.0)) {
                 xa.invalidateRange(xData)
             }
@@ -144,14 +140,13 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
                     val x3 = xAxis.toNumericValue(p2.xValueProp.value)
                     val y3 = yAxis.toNumericValue(p2.yValueProp.value)
                     val x2 = xAxis.toNumericValue(item.xValueProp.value)
-                    //double y2 = getYAxis().toNumericValue(item.getYValue());
                     if (x2 > x1 && x2 < x3) {
-                        //1. y intercept of the line : y = ((y3-y1)/(x3-x1)) * x2 + (x3y1 - y3x1)/(x3 -x1)
+                        /* 1. y intercept of the line */
                         val y = (y3 - y1) / (x3 - x1) * x2 + (x3 * y1 - y3 * x1) / (x3 - x1)
                         item.currentY.value = yAxis.toRealValue(y)
                         item.setCurrentX(xAxis.toRealValue(x2)!!)
                     } else {
-                        //2. we can simply use the midpoint on the line as well..
+                        /* 2. we can simply use the midpoint on the line as well.. */
                         val x = (x3 + x1) / 2
                         val y = (y3 + y1) / 2
                         item.currentX.value = xAxis.toRealValue(x)
@@ -168,7 +163,7 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
                 item.currentX.value = series.data.value[last].xValueProp.value
                 item.setCurrentY(series.data.value[last].yValueProp.value)
             } else if (symbol != null) {
-                // fade in new symbol
+                /* fade in new symbol */
                 symbol.opacity = 0.0
                 plotChildren.add(symbol)
                 val ft = FadeTransition(Duration.millis(500.0), symbol)
@@ -179,19 +174,25 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
                 animate(
                     KeyFrame(
                         Duration.ZERO, {
-                            @Suppress("SENSELESS_COMPARISON") if (symbol != null && !plotChildren.contains(
+                            @Suppress("SENSELESS_COMPARISON") if (symbol != null &&
+                                !plotChildren.contains(
                                     symbol
                                 )
                             ) plotChildren.add(symbol)
-                        }, KeyValue(
+                        },
+                        KeyValue(
                             item.currentYProperty(), item.currentY.value, MyInterpolator.MY_DEFAULT_INTERPOLATOR
-                        ), KeyValue(
+                        ),
+                        KeyValue(
                             item.currentXProperty(), item.currentX.value, MyInterpolator.MY_DEFAULT_INTERPOLATOR
                         )
-                    ), KeyFrame(
-                        Duration.millis(700.0), KeyValue(
+                    ),
+                    KeyFrame(
+                        Duration.millis(700.0),
+                        KeyValue(
                             item.currentYProperty(), item.yValueProp.value, MyInterpolator.EASE_BOTH
-                        ), KeyValue(
+                        ),
+                        KeyValue(
                             item.currentXProperty(), item.xValueProp.value, MyInterpolator.EASE_BOTH
                         )
                     )
@@ -209,15 +210,17 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
         val symbol = item.nodeProp.value
         symbol?.focusTraversableProperty()?.unbind()
 
-        // remove item from sorted list
+        /* remove item from sorted list */
         val itemIndex = series.getItemIndex(item)
         if (shouldAnimate()) {
             XYValueMap.clear()
             var animate = false
-            // dataSize represents size of currently visible data. After this operation, the number will decrement by 1
+            /* dataSize represents size of currently visible data. After this operation, the number will decrement by 1 */
             val dataSize = series.dataSize
-            // This is the size of current data list in Series. Note that it might be totaly different from dataSize as
-            // some big operation might have happened on the list.
+            /*
+            This is the size of current data list in Series. Note that it might be totaly different from dataSize as
+            some big operation might have happened on the list.
+             */
             val dataListSize = series.data.value.size
             if (itemIndex > 0 && itemIndex < dataSize - 1) {
                 animate = true
@@ -230,14 +233,14 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
                 val x2 = xAxis.toNumericValue(item.xValueProp.value)
                 val y2 = yAxis.toNumericValue(item.yValueProp.value)
                 if (x2 > x1 && x2 < x3) {
-                    //                //1.  y intercept of the line : y = ((y3-y1)/(x3-x1)) * x2 + (x3y1 - y3x1)/(x3 -x1)
+                    /* //1.  y intercept of the line : y = ((y3-y1)/(x3-x1)) * x2 + (x3y1 - y3x1)/(x3 -x1) */
                     val y = (y3 - y1) / (x3 - x1) * x2 + (x3 * y1 - y3 * x1) / (x3 - x1)
                     item.currentX.value = xAxis.toRealValue(x2)
                     item.currentY.value = yAxis.toRealValue(y2)
                     item.xValueProp.value = xAxis.toRealValue(x2)
                     item.yValue = (yAxis.toRealValue(y)!!)
                 } else {
-                    //2.  we can simply use the midpoint on the line as well..
+                    /* 2.  we can simply use the midpoint on the line as well.. */
                     val x = (x3 + x1) / 2
                     val y = (y3 + y1) / 2
                     item.currentX.value = xAxis.toRealValue(x)
@@ -253,15 +256,16 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
                 item.xValueProp.value = series.data.value[last].xValueProp.value
                 item.yValue = (series.data.value[last].yValueProp.value)
             } else if (symbol != null) {
-                // fade out symbol
+                /* fade out symbol */
                 fadeSymbolTransition = FadeTransition(Duration.millis(500.0), symbol)
                 fadeSymbolTransition!!.toValue = 0.0
-                fadeSymbolTransition!!.onFinished = EventHandler {
-                    item.setSeries(null)
-                    plotChildren.remove(symbol)
-                    removeDataItemFromDisplay(series, item)
-                    symbol.opacity = 1.0
-                }
+                fadeSymbolTransition!!.onFinished =
+                    EventHandler {
+                        item.setSeries(null)
+                        plotChildren.remove(symbol)
+                        removeDataItemFromDisplay(series, item)
+                        symbol.opacity = 1.0
+                    }
                 fadeSymbolTransition!!.play()
             } else {
                 item.setSeries(null)
@@ -278,7 +282,7 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
             if (symbol != null) plotChildren.remove(symbol)
             removeDataItemFromDisplay(series, item)
         }
-        //Note: better animation here, point should move from old position to new position at center point between prev and next symbols
+        /* Note: better animation here, point should move from old position to new position at center point between prev and next symbols */
     }
 
     final override fun updateStyleClassOf(
@@ -295,49 +299,20 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
 
     final override val lineOrArea = line
 
-//  private fun updateStyleClassOf(s: Series<X, Y>, i: Int) {
-//	val seriesNode = s.node.value
-//	seriesNode?.styleClass?.matt.lang.setall.setAll("chart-series-line", "series$i", s.defaultColorStyleClass)
-//	for (j in s.data.value.indices) {
-//	  val symbol = s.data.value[j].nodeProp.value
-//	  symbol?.styleClass?.matt.lang.setall.setAll("`chart-line-symbol`", "series$i", "data$j", s.defaultColorStyleClass)
-//	}
-//  }
-//
-//
-//  private val lastSeriesIndices = WeakMap<Series<*, *>, Int>()
-//  override fun seriesChanged(c: Change<out Series<*, *>>) {
-//	// Update style classes for all series lines and symbols
-//	// Note: is there a more efficient way of doing this?
-//	/*Matt: Yes, there is.*/
-//
-//	synchronized(lastSeriesIndices) {
-//
-//	  data.value.forEach {
-//		val previous = lastSeriesIndices[it]
-//		val i = c.list.indexOf(it)
-//		if (previous == null || previous != i) {
-//		  updateStyleClassOf(it as Series<X, Y>, i)
-//		  lastSeriesIndices[it] = i
-//		}
-//	  }
-//
-//	}
-//  }
 
 
     final override fun seriesAdded(
         series: Series<X, Y>,
         seriesIndex: Int
     ) {
-        // create new path for series
+        /* create new path for series */
         val seriesLine = Path()
         seriesLine.strokeLineJoin = BEVEL
         series.node.value = seriesLine
-        // create series Y multiplier
+        /* create series Y multiplier */
         val seriesYAnimMultiplier: DoubleProperty = SimpleDoubleProperty(this, "seriesYMultiplier")
         seriesYMultiplierMap[series] = seriesYAnimMultiplier
-        // handle any data already in series
+        /* handle any data already in series */
         if (shouldAnimate()) {
             seriesLine.opacity = 0.0
             seriesYAnimMultiplier.value = 0.0
@@ -347,7 +322,7 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
         plotChildren.add(seriesLine)
         val keyFrames: MutableList<KeyFrame> = ArrayList()
         if (shouldAnimate()) {
-            // animate in new series
+            /* animate in new series */
             keyFrames.add(
                 KeyFrame(
                     Duration.ZERO,
@@ -374,7 +349,7 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
                 if (shouldAnimate()) symbol.opacity = 0.0
                 plotChildren.add(symbol)
                 if (shouldAnimate()) {
-                    // fade in new symbol
+                    /* fade in new symbol */
                     keyFrames.add(
                         KeyFrame(
                             Duration.ZERO, KeyValue(symbol.opacityProperty(), 0, MyInterpolator.MY_DEFAULT_INTERPOLATOR)
@@ -393,11 +368,10 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
     }
 
     final override fun seriesRemoved(series: Series<X, Y>) {
-        // remove all symbol nodes
+        /* remove all symbol nodes */
         seriesYMultiplierMap.remove(series)
         if (shouldAnimate()) {
             seriesRemoveTimeline = Timeline(*createSeriesRemoveTimeLine(series, 900))
-//            mattsBeingRemovedSet.first { it.seriesBeingRemoved == series }.timeline = seriesRemoveTimeline
             seriesRemoveTimeline!!.play()
         } else {
             plotChildren.remove(series.node.value)
@@ -409,9 +383,10 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
     final
     /** {@inheritDoc}  */
     override fun layoutPlotChildren() {
-        val constructedPath = ArrayList<LineTo>(
-            dataSize
-        )
+        val constructedPath =
+            ArrayList<LineTo>(
+                dataSize
+            )
         for (seriesIndex in 0 until dataSize) {
             val series = data.value[seriesIndex]
             val seriesYAnimMultiplier = seriesYMultiplierMap[series]
@@ -449,7 +424,7 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
         item.setSeries(null)
         removeDataItemFromDisplay(series, item)
 
-        // restore values to item
+        /* restore values to item */
         val value = XYValueMap[item]
         if (value != null) {
             @Suppress("UNCHECKED_CAST")
@@ -473,23 +448,28 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
         series: Series<X, Y>
     ): Timeline {
         val t = Timeline()
-        // save data values in case the same data item gets added immediately.
+        /* save data values in case the same data item gets added immediately. */
         XYValueMap[item] = (item.yValueProp.value as Number?)!!.toDouble()
         t.keyFrames.addAll(
             KeyFrame(
-                Duration.ZERO, KeyValue(
+                Duration.ZERO,
+                KeyValue(
                     item.currentYProperty(), item.currentY.value, MyInterpolator.MY_DEFAULT_INTERPOLATOR
-                ), KeyValue(
+                ),
+                KeyValue(
                     item.currentXProperty(), item.currentX.value, MyInterpolator.MY_DEFAULT_INTERPOLATOR
                 )
-            ), KeyFrame(
+            ),
+            KeyFrame(
                 Duration.millis(500.0), {
                     if (symbol != null) plotChildren.remove(symbol)
                     removeDataItemFromDisplay(series, item)
                     XYValueMap.clear()
-                }, KeyValue(
+                },
+                KeyValue(
                     item.currentYProperty(), item.yValueProp.value, MyInterpolator.EASE_BOTH
-                ), KeyValue(
+                ),
+                KeyValue(
                     item.currentXProperty(), item.xValueProp.value, MyInterpolator.EASE_BOTH
                 )
             )
@@ -506,5 +486,4 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
     enum class SortingPolicy {
         NONE, X_AXIS, Y_AXIS
     }
-
 }
