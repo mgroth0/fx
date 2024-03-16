@@ -5,6 +5,10 @@ import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.value.ObservableValue
 import javafx.scene.control.SpinnerValueFactory
 
+
+
+
+
 /*avoids stupid errors*/
 class MyIntegerSpinnerValueFactory @JvmOverloads constructor(
     min: Int,

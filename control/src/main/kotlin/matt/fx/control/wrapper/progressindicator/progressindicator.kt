@@ -53,7 +53,7 @@ class ProgressIndicatorWrapper(
             node.progress = value
         }
 
-    val progressProperty by lazy { node.progressProperty().toNonNullableProp().cast<Double>() }
+    val progressProperty by lazy { node.progressProperty().toNonNullableProp().cast<Double>(Double::class) }
     override fun addChild(
         child: NodeWrapper,
         index: Int?
@@ -72,7 +72,7 @@ fun ProgressIndicatorWrapper.bind(
     )
 
 
-class PerformantProgressIndicator : VBoxW() {
+class PerformantProgressIndicator : VBoxW(childClass = NodeWrapper::class) {
 
     companion object {
         private var instances = mutableSetOf<WeakReference<TextWrapper>>()

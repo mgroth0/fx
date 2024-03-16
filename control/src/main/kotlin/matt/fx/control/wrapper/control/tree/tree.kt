@@ -14,12 +14,13 @@ import matt.fx.control.wrapper.control.tree.like.TreeLikeWrapper
 import matt.fx.control.wrapper.control.tree.like.populateTree
 import matt.fx.control.wrapper.selects.wrap
 import matt.fx.control.wrapper.treeitem.TreeItemWrapper
-import matt.fx.graphics.service.uncheckedNullableWrapperConverter
+import matt.fx.control.wrapper.wrapped.findWrapper
+import matt.fx.graphics.service.nullableWrapperConverter
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
 
-fun <T: Any> TreeViewWrapper<T>.items(): Sequence<TreeItemWrapper<T>> = root!!.recurse { it.children }
+fun <T: Any> TreeViewWrapper<T>.items(): Sequence<TreeItemWrapper<T>> = root!!.recurse { it.children.map { TreeItemWrapper(it) } }
 
 
 fun <T: Any> TreeViewWrapper<T>.select(o: T?) {
@@ -57,7 +58,7 @@ class TreeViewWrapper<T: Any>(node: TreeView<T> = TreeView(), op: TreeViewWrappe
 
 
     override val rootProperty by lazy {
-        node.rootProperty().toNullableProp().proxy(uncheckedNullableWrapperConverter<TreeItem<T>, TreeItemWrapper<T>>())
+        node.rootProperty().toNullableProp().proxy(nullableWrapperConverter<TreeItem<T>, TreeItemWrapper<T>>())
     }
 
     override var isShowRoot: Boolean
@@ -78,7 +79,11 @@ class TreeViewWrapper<T: Any>(node: TreeView<T> = TreeView(), op: TreeViewWrappe
     fun populate(
         itemFactory: (T) -> TreeItemWrapper<T> = { TreeItemWrapper(it) },
         childFactory: (TreeItemWrapper<T>) -> Iterable<T>?
-    ) = populateTree(root!!, itemFactory, childFactory)
+    ) = populateTree(root!!.node, { itemFactory(it).node }, {
+        val t = it.findWrapper<TreeItemWrapper<T>>()!!
+        /*val t = TreeItemWrapper(it)*/
+        childFactory(t)
+    })
 }
 
 

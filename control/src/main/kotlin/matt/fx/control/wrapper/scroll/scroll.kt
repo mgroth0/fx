@@ -20,6 +20,8 @@ import matt.fx.graphics.wrapper.region.RegionWrapper
 import matt.lang.assertions.require.requireNull
 import matt.lang.assertions.require.requireOne
 import matt.lang.assertions.require.requireZero
+import kotlin.reflect.KClass
+import kotlin.reflect.cast
 
 
 fun NW.isFullyVisibleIn(sp: ScrollPaneWrapper<*>): Boolean {
@@ -50,13 +52,13 @@ infix fun RegionWrapper<*>.wrappedIn(sp: ScrollPaneWrapper<in NodeWrapper>): Scr
 
 
 
-fun <C : NodeWrapper> ET.scrollpane(
+inline fun <reified C : NodeWrapper> ET.scrollpane(
     content: C? = null,
     fitToWidth: Boolean = false,
     fitToHeight: Boolean = false,
     op: ScrollPaneWrapper<C>.() -> Unit = {}
 ): ScrollPaneWrapper<C> {
-    val pane = if (content != null) ScrollPaneWrapper(content) else ScrollPaneWrapper()
+    val pane = if (content != null) ScrollPaneWrapper(content) else ScrollPaneWrapper(contentCls = C::class)
     pane.isFitToWidth = fitToWidth
     pane.isFitToHeight = fitToHeight
     attach(pane, op)
@@ -64,8 +66,11 @@ fun <C : NodeWrapper> ET.scrollpane(
 }
 
 
-open class ScrollPaneWrapper<C : NodeWrapper>(node: ScrollPane = ScrollPane()) : ControlWrapperImpl<ScrollPane>(node) {
-    constructor (content: C) : this(ScrollPane(content.node))
+open class ScrollPaneWrapper<C : NodeWrapper>(node: ScrollPane = ScrollPane(), private val contentCls: KClass<C>) : ControlWrapperImpl<ScrollPane>(node) {
+    companion object {
+        inline operator fun <reified C: NodeWrapper> invoke(content: C) = ScrollPaneWrapper(ScrollPane(content.node), C::class)
+    }
+
 
     var viewportBounds: Bounds
         get() = node.viewportBounds
@@ -128,15 +133,19 @@ open class ScrollPaneWrapper<C : NodeWrapper>(node: ScrollPane = ScrollPane()) :
             node.prefViewportHeight = value
         }
 
-    val hValueProp by lazy { node.hvalueProperty().toNonNullableProp().cast<Double>() }
-    val vValueProp by lazy { node.vvalueProperty().toNonNullableProp().cast<Double>() }
+    val hValueProp by lazy { node.hvalueProperty().toNonNullableProp().cast({ it as Double }, { it }) }
+    val vValueProp by lazy {
+
+
+
+        node.vvalueProperty().toNonNullableProp().cast<Double>(Double::class)
+    }
 
     var hvalue by hValueProp
-    var vvalue by vValueProp
+    var vvalue: Double by vValueProp
 
-    @Suppress("UNCHECKED_CAST")
     var content: C?
-        get() = node.content?.wrapped() as C?
+        get() = node.content?.wrapped()?.let { contentCls.cast(it) }
         set(value) {
             node.content = value?.node
         }

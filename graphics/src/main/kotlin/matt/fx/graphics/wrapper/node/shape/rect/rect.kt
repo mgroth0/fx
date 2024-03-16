@@ -29,20 +29,20 @@ open class RectangleWrapper(
     constructor(width: Double, height: Double): this(Rectangle(width, height))
 
     final override val widthProperty by lazy {
-        node.widthProperty().toNonNullableProp().cast<Double>()
+        node.widthProperty().toNonNullableProp().cast<Double>(Double::class)
     }
 
-    final override val heightProperty by lazy { node.heightProperty().toNonNullableProp().cast<Double>() }
+    final override val heightProperty by lazy { node.heightProperty().toNonNullableProp().cast<Double>(Double::class) }
 
 
     val xProperty by lazy {
-        node.xProperty().toNonNullableProp().cast<Double>()
+        node.xProperty().toNonNullableProp().cast<Double>(Double::class)
     }
-    var x by lazyVarDelegate { xProperty }
+    var x: Double by lazyVarDelegate { xProperty }
     val yProperty by lazy {
-        node.yProperty().toNonNullableProp().cast<Double>()
+        node.yProperty().toNonNullableProp().cast<Double>(Double::class)
     }
-    var y by lazyVarDelegate { yProperty }
+    var y: Double by lazyVarDelegate { yProperty }
 
 
     @Open

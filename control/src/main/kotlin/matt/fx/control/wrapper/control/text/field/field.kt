@@ -7,38 +7,35 @@ import matt.fx.control.wrapper.control.text.input.TextInputControlWrapper
 import matt.fx.control.wrapper.control.value.HasWritableValue
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.attachTo
-import matt.lang.convert.BiConverter
 import matt.model.op.convert.MyNumberStringConverter
 import matt.obs.prop.writable.Var
 import matt.prim.converters.StringConverter
-import kotlin.reflect.KClass
 
-
-val converters =
-    mapOf<KClass<*>, StringConverter<*>>(
-        Number::class to MyNumberStringConverter
-    )
-
-
-inline fun <reified T: Any> ET.textfield(property: Var<T>, op: TextFieldWrapper.() -> Unit = {}) =
+@Suppress("ForbiddenAnnotation")
+@JvmName("textfield1")
+inline fun ET.textfield(property: Var<String>, op: TextFieldWrapper.() -> Unit = {}) =
     textfield().apply {
-        if (T::class == String::class) {
-            @Suppress("UNCHECKED_CAST")
-            textProperty.bindBidirectional(property as Var<String>)
-        } else {
-            @Suppress("UNCHECKED_CAST")
-            textProperty.bindBidirectional(property, converters[T::class]!! as BiConverter<String, T>)
-        }
+        textProperty.bindBidirectional(property)
+        op(this)
+    }
 
+@Suppress("ForbiddenAnnotation")
+@JvmName("textfield2")
+inline fun ET.textfield(property: Var<Number>, op: TextFieldWrapper.() -> Unit = {}) =
+    textfield().apply {
+        textProperty.bindBidirectional(property, MyNumberStringConverter)
         op(this)
     }
 
 
+@Suppress("ForbiddenAnnotation")
+@JvmName("textfield3")
 fun ET.textfield(value: String? = null, op: TextFieldWrapper.() -> Unit = {}) =
     TextFieldWrapper().attachTo(this, op) {
         if (value != null) it.text = value
     }
-
+@Suppress("ForbiddenAnnotation")
+@JvmName("textfield4")
 fun <T> ET.textfield(
     property: Var<T>,
     converter: StringConverter<T>,

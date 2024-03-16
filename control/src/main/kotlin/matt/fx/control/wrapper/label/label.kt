@@ -24,8 +24,11 @@ inline fun <reified T> ET.label(
 ) = label().apply {
     if (converter == null) {
         if (T::class == String::class) {
-            @Suppress("UNCHECKED_CAST")
-            textProperty.bind(observable as ObsVal<String>)
+            textProperty.bind(
+                observable.cast {
+                    it as String
+                }
+            )
         } else {
             textProperty.bind(observable.binding { it?.toString() })
         }

@@ -12,7 +12,6 @@ import javafx.animation.KeyValue
 import javafx.animation.Timeline
 import javafx.application.Platform
 import javafx.beans.binding.StringBinding
-import javafx.beans.property.BooleanProperty
 import javafx.beans.property.DoubleProperty
 import javafx.beans.property.DoublePropertyBase
 import javafx.beans.property.ObjectProperty
@@ -209,7 +208,7 @@ class PieChartForWrapper @JvmOverloads constructor(data: ObservableList<Data> = 
         fun dataProperty(): ObjectProperty<ObservableList<Data>> = data
 
         /** The angle to start the first pie slice at  */
-        private val startAngle: DoubleProperty =
+        private val startAngle: StyleableDoubleProperty =
             object : StyleableDoubleProperty(0.0) {
                 public override fun invalidated() {
                     get()
@@ -229,10 +228,10 @@ class PieChartForWrapper @JvmOverloads constructor(data: ObservableList<Data> = 
             startAngle.value = value
         }
 
-        fun startAngleProperty(): DoubleProperty = startAngle
+        fun startAngleProperty(): StyleableDoubleProperty = startAngle
 
         /** When true we start placing slices clockwise from the startAngle  */
-        private val clockwise: BooleanProperty =
+        private val clockwise: StyleableBooleanProperty =
             object : StyleableBooleanProperty(true) {
                 public override fun invalidated() {
                     get()
@@ -252,10 +251,10 @@ class PieChartForWrapper @JvmOverloads constructor(data: ObservableList<Data> = 
 
         fun isClockwise(): Boolean = clockwise.value
 
-        fun clockwiseProperty(): BooleanProperty = clockwise
+        fun clockwiseProperty(): StyleableBooleanProperty = clockwise
 
         /** The length of the line from the outside of the pie to the slice labels.  */
-        private val labelLineLength: DoubleProperty =
+        private val labelLineLength: StyleableDoubleProperty =
             object : StyleableDoubleProperty(20.0) {
                 public override fun invalidated() {
                     get()
@@ -275,10 +274,10 @@ class PieChartForWrapper @JvmOverloads constructor(data: ObservableList<Data> = 
             labelLineLength.value = value
         }
 
-        fun labelLineLengthProperty(): DoubleProperty = labelLineLength
+        fun labelLineLengthProperty(): StyleableDoubleProperty = labelLineLength
 
         /** When true pie slice labels are drawn  */
-        private val labelsVisible: BooleanProperty =
+        private val labelsVisible: StyleableBooleanProperty =
             object : StyleableBooleanProperty(true) {
                 public override fun invalidated() {
                     get()
@@ -302,7 +301,7 @@ class PieChartForWrapper @JvmOverloads constructor(data: ObservableList<Data> = 
          */
         fun getLabelsVisible(): Boolean = labelsVisible.value
 
-        fun labelsVisibleProperty(): BooleanProperty = labelsVisible
+        fun labelsVisibleProperty(): StyleableBooleanProperty = labelsVisible
         /**
          * Construct a new PieChart with the given data
          *
@@ -1063,10 +1062,7 @@ compare the size of the slices, and hide the label of the smaller slice.
                 ) {
                     override fun isSettable(node: PieChartForWrapper): Boolean = node.clockwise.value == null || !node.clockwise.isBound
 
-                    override fun getStyleableProperty(node: PieChartForWrapper): StyleableProperty<Boolean?> {
-                        @Suppress("UNCHECKED_CAST")
-                        return node.clockwiseProperty() as StyleableProperty<Boolean?>
-                    }
+                    override fun getStyleableProperty(node: PieChartForWrapper): StyleableProperty<Boolean?> = node.clockwiseProperty()
                 }
             val LABELS_VISIBLE: BooleanCssMetaData<PieChartForWrapper> =
                 object : BooleanCssMetaData<PieChartForWrapper>(
@@ -1077,10 +1073,7 @@ compare the size of the slices, and hide the label of the smaller slice.
                         node: PieChartForWrapper
                     ): Boolean = node.labelsVisible.value == null || !node.labelsVisible.isBound
 
-                    override fun getStyleableProperty(node: PieChartForWrapper): StyleableProperty<Boolean?> {
-                        @Suppress("UNCHECKED_CAST")
-                        return node.labelsVisibleProperty() as StyleableProperty<Boolean?>
-                    }
+                    override fun getStyleableProperty(node: PieChartForWrapper): StyleableProperty<Boolean?> = node.labelsVisibleProperty()
                 }
             val LABEL_LINE_LENGTH: CssMetaData<PieChartForWrapper, Number> =
                 object : CssMetaData<PieChartForWrapper, Number>(
@@ -1091,10 +1084,7 @@ compare the size of the slices, and hide the label of the smaller slice.
                         node: PieChartForWrapper
                     ): Boolean = node.labelLineLength.value == null || !node.labelLineLength.isBound
 
-                    override fun getStyleableProperty(node: PieChartForWrapper): StyleableProperty<Number?> {
-                        @Suppress("UNCHECKED_CAST")
-                        return node.labelLineLengthProperty() as StyleableProperty<Number?>
-                    }
+                    override fun getStyleableProperty(node: PieChartForWrapper): StyleableProperty<Number?> = node.labelLineLengthProperty()
                 }
             val START_ANGLE: CssMetaData<PieChartForWrapper, Number> =
                 object : CssMetaData<PieChartForWrapper, Number>(
@@ -1103,10 +1093,7 @@ compare the size of the slices, and hide the label of the smaller slice.
                 ) {
                     override fun isSettable(node: PieChartForWrapper): Boolean = node.startAngle.value == null || !node.startAngle.isBound
 
-                    override fun getStyleableProperty(node: PieChartForWrapper): StyleableProperty<Number?> {
-                        @Suppress("UNCHECKED_CAST")
-                        return node.startAngleProperty() as StyleableProperty<Number?>
-                    }
+                    override fun getStyleableProperty(node: PieChartForWrapper): StyleableProperty<Number?> = node.startAngleProperty()
                 }
             val classCssMetaData: List<CssMetaData<out Styleable?, *>>? by lazy {
                 val styleables: MutableList<CssMetaData<out Styleable?, *>> = ArrayList(getClassCssMetaData())

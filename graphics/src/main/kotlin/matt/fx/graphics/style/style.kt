@@ -6,8 +6,8 @@ import javafx.geometry.Insets
 import javafx.scene.Node
 import javafx.scene.paint.Color
 import matt.color.common.IntColor
-import matt.css.MyStyleDsl
-import matt.css.props.ColorLikeCssConverter
+import matt.css.rep.props.ColorLikeCssConverter
+import matt.css.write.MyStyleDsl
 import matt.fx.graphics.wrapper.FXNodeWrapperDSL
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.scene.SceneWrapper

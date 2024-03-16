@@ -90,7 +90,7 @@ sealed class Console(
     val takesInput: Boolean = true,
     throttle: Boolean = true,
     maxLines: Int? = DEFAULT_MAX_LINES
-) : ScrollPaneWrapper<ConsoleTextFlow>(), NodeWrapper {
+) : ScrollPaneWrapper<ConsoleTextFlow>(contentCls = ConsoleTextFlow::class), NodeWrapper {
 
     companion object {
         private const val THROTTLE_THRESHOLD = 100_000

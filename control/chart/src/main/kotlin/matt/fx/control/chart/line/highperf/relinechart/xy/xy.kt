@@ -7,7 +7,6 @@ import com.sun.javafx.scene.control.skin.resources.ControlResources
 import javafx.animation.KeyFrame
 import javafx.animation.KeyValue
 import javafx.beans.binding.StringBinding
-import javafx.beans.property.BooleanProperty
 import javafx.beans.property.ObjectProperty
 import javafx.beans.property.ObjectPropertyBase
 import javafx.beans.property.ReadOnlyObjectProperty
@@ -291,7 +290,7 @@ abstract class XYChartForPackagePrivateProps<X, Y>(
     fun dataProperty(): ObjectProperty<ObservableList<Series<X, Y>>> = data
 
     /** True if vertical grid lines should be drawn  */
-    private val verticalGridLinesVisible: BooleanProperty =
+    private val verticalGridLinesVisible: StyleableBooleanProperty =
         object : StyleableBooleanProperty(true) {
             override fun invalidated() {
                 requestChartLayout()
@@ -316,10 +315,10 @@ abstract class XYChartForPackagePrivateProps<X, Y>(
         verticalGridLinesVisible.set(value)
     }
 
-    fun verticalGridLinesVisibleProperty(): BooleanProperty = verticalGridLinesVisible
+    fun verticalGridLinesVisibleProperty(): StyleableBooleanProperty = verticalGridLinesVisible
 
     /** True if horizontal grid lines should be drawn  */
-    private val horizontalGridLinesVisible: BooleanProperty =
+    private val horizontalGridLinesVisible: StyleableBooleanProperty =
         object : StyleableBooleanProperty(true) {
             override fun invalidated() {
                 requestChartLayout()
@@ -338,10 +337,10 @@ abstract class XYChartForPackagePrivateProps<X, Y>(
         horizontalGridLinesVisible.set(value)
     }
 
-    fun horizontalGridLinesVisibleProperty(): BooleanProperty = horizontalGridLinesVisible
+    fun horizontalGridLinesVisibleProperty(): StyleableBooleanProperty = horizontalGridLinesVisible
 
     /** If true then alternative vertical columns will have fills  */
-    private val alternativeColumnFillVisible: BooleanProperty =
+    private val alternativeColumnFillVisible: StyleableBooleanProperty =
         object : StyleableBooleanProperty(false) {
             override fun invalidated() {
                 requestChartLayout()
@@ -360,10 +359,10 @@ abstract class XYChartForPackagePrivateProps<X, Y>(
         alternativeColumnFillVisible.value = value
     }
 
-    fun alternativeColumnFillVisibleProperty(): BooleanProperty = alternativeColumnFillVisible
+    fun alternativeColumnFillVisibleProperty(): StyleableBooleanProperty = alternativeColumnFillVisible
 
     /** If true then alternative horizontal rows will have fills  */
-    private val alternativeRowFillVisible: BooleanProperty =
+    private val alternativeRowFillVisible: StyleableBooleanProperty =
         object : StyleableBooleanProperty(true) {
             override fun invalidated() {
                 requestChartLayout()
@@ -382,7 +381,7 @@ abstract class XYChartForPackagePrivateProps<X, Y>(
         alternativeRowFillVisible.value = value
     }
 
-    fun alternativeRowFillVisibleProperty(): BooleanProperty = alternativeRowFillVisible
+    fun alternativeRowFillVisibleProperty(): StyleableBooleanProperty = alternativeRowFillVisible
 
     /**
      * If this is true and the vertical axis has both positive and negative values then a additional axis line
@@ -390,7 +389,7 @@ abstract class XYChartForPackagePrivateProps<X, Y>(
      *
      * @defaultValue true
      */
-    private val verticalZeroLineVisible: BooleanProperty =
+    private val verticalZeroLineVisible: StyleableBooleanProperty =
         object : StyleableBooleanProperty(true) {
             override fun invalidated() {
                 requestChartLayout()
@@ -409,7 +408,7 @@ abstract class XYChartForPackagePrivateProps<X, Y>(
         verticalZeroLineVisible.set(value)
     }
 
-    fun verticalZeroLineVisibleProperty(): BooleanProperty = verticalZeroLineVisible
+    fun verticalZeroLineVisibleProperty(): StyleableBooleanProperty = verticalZeroLineVisible
 
     /**
      * If this is true and the horizontal axis has both positive and negative values then a additional axis line
@@ -417,7 +416,7 @@ abstract class XYChartForPackagePrivateProps<X, Y>(
      *
      * @defaultValue true
      */
-    private val horizontalZeroLineVisible: BooleanProperty =
+    private val horizontalZeroLineVisible: StyleableBooleanProperty =
         object : StyleableBooleanProperty(true) {
             override fun invalidated() {
                 requestChartLayout()
@@ -436,7 +435,7 @@ abstract class XYChartForPackagePrivateProps<X, Y>(
         horizontalZeroLineVisible.set(value)
     }
 
-    fun horizontalZeroLineVisibleProperty(): BooleanProperty = horizontalZeroLineVisible
+    fun horizontalZeroLineVisibleProperty(): StyleableBooleanProperty = horizontalZeroLineVisible
 
     protected val plotChildren: ObservableList<Node>
         /**
@@ -1232,10 +1231,7 @@ abstract class XYChartForPackagePrivateProps<X, Y>(
                     node.horizontalGridLinesVisible.value == null ||
                         !node.horizontalGridLinesVisible.isBound
 
-                override fun getStyleableProperty(node: XYChartForPackagePrivateProps<*, *>): StyleableProperty<Boolean?> {
-                    @Suppress("UNCHECKED_CAST")
-                    return node.horizontalGridLinesVisibleProperty() as StyleableProperty<Boolean?>
-                }
+                override fun getStyleableProperty(node: XYChartForPackagePrivateProps<*, *>): StyleableProperty<Boolean?> = node.horizontalGridLinesVisibleProperty()
             }
         val HORIZONTAL_ZERO_LINE_VISIBLE: BooleanCssMetaData<XYChartForPackagePrivateProps<*, *>> =
             object : BooleanCssMetaData<XYChartForPackagePrivateProps<*, *>>(
@@ -1246,10 +1242,7 @@ abstract class XYChartForPackagePrivateProps<X, Y>(
                     node.horizontalZeroLineVisible.value == null ||
                         !node.horizontalZeroLineVisible.isBound
 
-                override fun getStyleableProperty(node: XYChartForPackagePrivateProps<*, *>): StyleableProperty<Boolean?> {
-                    @Suppress("UNCHECKED_CAST")
-                    return node.horizontalZeroLineVisibleProperty() as StyleableProperty<Boolean?>
-                }
+                override fun getStyleableProperty(node: XYChartForPackagePrivateProps<*, *>): StyleableProperty<Boolean?> = node.horizontalZeroLineVisibleProperty()
             }
         val ALTERNATIVE_ROW_FILL_VISIBLE: BooleanCssMetaData<XYChartForPackagePrivateProps<*, *>> =
             object : BooleanCssMetaData<XYChartForPackagePrivateProps<*, *>>(
@@ -1260,10 +1253,7 @@ abstract class XYChartForPackagePrivateProps<X, Y>(
                     node.alternativeRowFillVisible.value == null ||
                         !node.alternativeRowFillVisible.isBound
 
-                override fun getStyleableProperty(node: XYChartForPackagePrivateProps<*, *>): StyleableProperty<Boolean?> {
-                    @Suppress("UNCHECKED_CAST")
-                    return node.alternativeRowFillVisibleProperty() as StyleableProperty<Boolean?>
-                }
+                override fun getStyleableProperty(node: XYChartForPackagePrivateProps<*, *>): StyleableProperty<Boolean?> = node.alternativeRowFillVisibleProperty()
             }
         val VERTICAL_GRID_LINE_VISIBLE: BooleanCssMetaData<XYChartForPackagePrivateProps<*, *>> =
             object : BooleanCssMetaData<XYChartForPackagePrivateProps<*, *>>(
@@ -1274,10 +1264,7 @@ abstract class XYChartForPackagePrivateProps<X, Y>(
                     node.verticalGridLinesVisible.value == null ||
                         !node.verticalGridLinesVisible.isBound
 
-                override fun getStyleableProperty(node: XYChartForPackagePrivateProps<*, *>): StyleableProperty<Boolean?> {
-                    @Suppress("UNCHECKED_CAST")
-                    return node.verticalGridLinesVisibleProperty() as StyleableProperty<Boolean?>
-                }
+                override fun getStyleableProperty(node: XYChartForPackagePrivateProps<*, *>): StyleableProperty<Boolean?> = node.verticalGridLinesVisibleProperty()
             }
         val VERTICAL_ZERO_LINE_VISIBLE: BooleanCssMetaData<XYChartForPackagePrivateProps<*, *>> =
             object : BooleanCssMetaData<XYChartForPackagePrivateProps<*, *>>(
@@ -1288,10 +1275,7 @@ abstract class XYChartForPackagePrivateProps<X, Y>(
                     node.verticalZeroLineVisible.value == null ||
                         !node.verticalZeroLineVisible.isBound
 
-                override fun getStyleableProperty(node: XYChartForPackagePrivateProps<*, *>): StyleableProperty<Boolean?> {
-                    @Suppress("UNCHECKED_CAST")
-                    return node.verticalZeroLineVisibleProperty() as StyleableProperty<Boolean?>
-                }
+                override fun getStyleableProperty(node: XYChartForPackagePrivateProps<*, *>): StyleableProperty<Boolean?> = node.verticalZeroLineVisibleProperty()
             }
         val ALTERNATIVE_COLUMN_FILL_VISIBLE: BooleanCssMetaData<XYChartForPackagePrivateProps<*, *>> =
             object : BooleanCssMetaData<XYChartForPackagePrivateProps<*, *>>(
@@ -1302,10 +1286,7 @@ abstract class XYChartForPackagePrivateProps<X, Y>(
                     node.alternativeColumnFillVisible.value == null ||
                         !node.alternativeColumnFillVisible.isBound
 
-                override fun getStyleableProperty(node: XYChartForPackagePrivateProps<*, *>): StyleableProperty<Boolean?> {
-                    @Suppress("UNCHECKED_CAST")
-                    return node.alternativeColumnFillVisibleProperty() as StyleableProperty<Boolean?>
-                }
+                override fun getStyleableProperty(node: XYChartForPackagePrivateProps<*, *>): StyleableProperty<Boolean?> = node.alternativeColumnFillVisibleProperty()
             }
         val classCssMetaData: List<CssMetaData<out Styleable?, *>>? by lazy {
             val styleables: MutableList<CssMetaData<out Styleable?, *>> = ArrayList(getClassCssMetaData())

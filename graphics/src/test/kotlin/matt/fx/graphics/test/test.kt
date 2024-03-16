@@ -9,6 +9,6 @@ import kotlin.test.Test
 class GraphicsTests : FxTests() {
     @Test
     fun createGridPane() {
-        GridPaneWrapper<NodeWrapper>()
+        GridPaneWrapper<NodeWrapper>(childClass = NodeWrapper::class)
     }
 }

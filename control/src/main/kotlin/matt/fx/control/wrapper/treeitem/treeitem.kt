@@ -7,10 +7,9 @@ import matt.fx.base.wrapper.obs.collect.list.createMutableWrapper
 import matt.fx.base.wrapper.obs.obsval.prop.NonNullFXBackedBindableProp
 import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.control.wrapper.wrapped.wrapped
-import matt.fx.graphics.service.uncheckedWrapperConverter
+import matt.fx.control.wrapper.wrapped.wrapper
 import matt.fx.graphics.wrapper.SingularEventTargetWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
-import matt.obs.col.olist.sync.toSyncedList
 
 open class TreeItemWrapper<T : Any>(node: TreeItem<T> = TreeItem()) : SingularEventTargetWrapper<TreeItem<T>>(node) {
     constructor(item: T) : this(TreeItem(item))
@@ -40,7 +39,7 @@ open class TreeItemWrapper<T : Any>(node: TreeItem<T> = TreeItem()) : SingularEv
     var isExpanded by expandedProperty
     val parent get() = node.parent?.wrapped()
     val children by lazy {
-        node.children.createMutableWrapper().toSyncedList(uncheckedWrapperConverter<TreeItem<T>, TreeItemWrapper<T>>())
+        node.children.createMutableWrapper()/*.toSyncedList(wrapperConverter<TreeItem<T>, TreeItemWrapper<T>>())*/
     }
 
 
@@ -50,7 +49,9 @@ open class TreeItemWrapper<T : Any>(node: TreeItem<T> = TreeItem()) : SingularEv
     fun expandTo(depth: Int) {
         if (depth > 0) {
             isExpanded = true
-            children.forEach { it.expandTo(depth - 1) }
+            children.forEach {
+                (it.wrapper as TreeItemWrapper<*>).expandTo(depth - 1)
+            }
         }
     }
 
@@ -65,7 +66,7 @@ open class TreeItemWrapper<T : Any>(node: TreeItem<T> = TreeItem()) : SingularEv
 
     fun collapseAll() {
         isExpanded = false
-        children.forEach { it.collapseAll() }
+        children.forEach { (it.wrapper as TreeItemWrapper<*>).collapseAll() }
     }
 }
 

@@ -29,8 +29,8 @@ fun ET.pagination(
 
 
 class PaginationWrapper(node: Pagination = Pagination()): ControlWrapperImpl<Pagination>(node) {
-    val pageCountProperty = node.pageCountProperty().toNonNullableProp().cast<Int>()
-    var pageCount by pageCountProperty
+    val pageCountProperty = node.pageCountProperty().toNonNullableProp().cast<Int>(Int::class)
+    var pageCount: Int by pageCountProperty
     val currentPageIndexProperty: NonNullFXBackedBindableProp<Number> = node.currentPageIndexProperty().toNonNullableProp()
     var currentPageIndex by currentPageIndexProperty
 
@@ -57,7 +57,7 @@ fun listPagination(list: MutableObsList<out NodeWrapper>) = ListPagination(list)
 class ListPagination<E>(
     private val list: MutableObsList<E>,
     factory: (E) -> NodeWrapper
-): AnchorPaneWrapperImpl<NW>() {
+): AnchorPaneWrapperImpl<NW>(childClass = NW::class) {
 
     private val paginator = PaginationWrapper()
 

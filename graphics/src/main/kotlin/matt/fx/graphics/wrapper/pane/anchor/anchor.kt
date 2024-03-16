@@ -10,8 +10,9 @@ import matt.fx.graphics.wrapper.pane.PaneWrapper
 import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
 import matt.lang.anno.Open
 import matt.lang.common.NOT_IMPLEMENTED
+import kotlin.reflect.KClass
 
-fun <C: NodeWrapper> ET.anchorpane(
+inline fun <reified C: NodeWrapper> ET.anchorpane(
     vararg nodes: C,
     op: AnchorPaneWrapperImpl<C>.() -> Unit = {}
 ): AnchorPaneWrapperImpl<C> {
@@ -63,11 +64,16 @@ interface AnchorPaneWrapper<C: NodeWrapper>: PaneWrapper<C> {
 }
 
 
-open class AnchorPaneWrapperImpl<C: NodeWrapper>(node: AnchorPane = AnchorPane()):
-    PaneWrapperImpl<AnchorPane, C>(node),
+open class AnchorPaneWrapperImpl<C: NodeWrapper>(node: AnchorPane = AnchorPane(), childClass: KClass<C>):
+    PaneWrapperImpl<AnchorPane, C>(node, childClass),
     AnchorPaneWrapper<C> {
 
-    constructor (vararg children: NodeWrapper): this(AnchorPane(*children.mapToArray { it.node }))
+
+    companion object {
+        inline operator fun <reified C: NodeWrapper> invoke(
+            vararg children: NodeWrapper
+        ) = AnchorPaneWrapperImpl(AnchorPane(*children.mapToArray { it.node }), C::class)
+    }
 }
 
 

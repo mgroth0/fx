@@ -15,8 +15,8 @@ import matt.async.thread.daemon
 import matt.async.thread.schedule.AccurateTimer
 import matt.async.thread.schedule.every
 import matt.auto.openInFinder
-import matt.css.props.Color.black
-import matt.css.sty
+import matt.css.rep.props.Color.black
+import matt.css.write.sty
 import matt.file.ext.FileExtension.Companion.APP
 import matt.file.ext.FileExtension.Companion.COFFEESCRIPT
 import matt.file.ext.FileExtension.Companion.CSS
@@ -39,12 +39,16 @@ import matt.file.ext.j.hasAnyExtension
 import matt.file.ext.j.hasExtension
 import matt.file.ext.j.isImage
 import matt.file.ext.singleExtension
+import matt.file.model.file.types.FolderType
+import matt.file.model.file.types.Html
+import matt.file.model.file.types.Log
+import matt.file.model.file.types.Svg
 import matt.file.toJioFile
 import matt.file.types.typed
 import matt.fx.control.lang.actionbutton
 import matt.fx.control.wrapper.checkbox.checkbox
 import matt.fx.control.wrapper.control.button.button
-import matt.fx.control.wrapper.control.spinner.spinner
+import matt.fx.control.wrapper.control.spinner.intSpinner
 import matt.fx.control.wrapper.control.text.area.textarea
 import matt.fx.graphics.drag.BetterTransferMode
 import matt.fx.graphics.drag.dragsFile
@@ -76,10 +80,6 @@ import matt.lang.common.substringAfterSingular
 import matt.lang.common.substringBeforeSingular
 import matt.lang.file.toJFile
 import matt.lang.model.file.FsFile
-import matt.lang.model.file.types.FolderType
-import matt.lang.model.file.types.Html
-import matt.lang.model.file.types.Log
-import matt.lang.model.file.types.Svg
 import matt.obs.bind.binding
 import matt.obs.prop.ObsVal
 import matt.obs.prop.writable.BindableProperty
@@ -203,7 +203,7 @@ private fun matt.file.JioFile.createNodeInner(renderHTMLAndSVG: Boolean = false)
                     val infiniteLines = BindableProperty(false)
                     hbox<NodeWrapper> {
                         checkbox("infinite", property = infiniteLines)
-                        spinner(property = lineLimit, amountToStepBy = 1000) {
+                        intSpinner(property = lineLimit, amountToStepBy = 1000) {
                             disableWhen { infiniteLines }
                         }
                         actionbutton("perma-clear") {

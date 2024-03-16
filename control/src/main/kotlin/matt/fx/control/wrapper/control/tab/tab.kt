@@ -13,17 +13,23 @@ import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.lang.assertions.require.requireNull
 import matt.obs.bindings.bool.ObsB
 import matt.obs.bindings.bool.not
+import kotlin.reflect.KClass
+import kotlin.reflect.cast
 
-open class TabWrapper<C : NodeWrapper?>(
-    node: Tab = Tab()
+open class TabWrapper<C : NodeWrapper>(
+    node: Tab = Tab(),
+    private val nodeCls: KClass<C>
 ) : SingularEventTargetWrapper<Tab>(node) {
 
     final override fun isInsideRow() = false
 
-    constructor(
-        text: String?,
-        content: C? = null
-    ) : this(Tab(text, content?.node))
+    companion object {
+        inline operator fun <reified C: NodeWrapper> invoke(
+            text: String?,
+            content: C
+        ) = TabWrapper(Tab(text, content.node), C::class)
+    }
+
 
     val closableProp: NonNullFXBackedBindableProp<Boolean> by lazy { node.closableProperty().toNonNullableProp() }
     var isClosable by closableProp
@@ -37,9 +43,8 @@ open class TabWrapper<C : NodeWrapper?>(
     val contentProperty by lazy { node.contentProperty().toNullableProp() }
 
     open var content: C
-        @Suppress("UNCHECKED_CAST")
-        get() = node.content?.wrapped() as C
-        set(value) = contentProperty v (value?.node)
+        get() = nodeCls.cast(node.content?.wrapped())
+        set(value) = contentProperty v (value.node)
 
     val graphicProperty by lazy { node.graphicProperty().toNullableProp() }
     var graphic by graphicProperty

@@ -12,7 +12,7 @@ interface ControlWrapper: RegionWrapper<NodeWrapper> {
 }
 
 abstract class ControlWrapperImpl<N: Control>(node: N):
-    RegionWrapperImpl<N, NodeWrapper>(node),
+    RegionWrapperImpl<N, NodeWrapper>(node, NodeWrapper::class),
     ControlWrapper {
 
 
@@ -21,7 +21,7 @@ abstract class ControlWrapperImpl<N: Control>(node: N):
     // Don't use this. It requires that I use the built in Tooltip, which I do not
 
           final override val tooltipProp by lazy {
-	node.tooltipProperty().toNullableProp().proxy(uncheckedWrapperConverter<Tooltip, tooltipWrapper>().nullable())
+	node.tooltipProperty().toNullableProp().proxy(wrapperConverter<Tooltip, tooltipWrapper>().nullable())
   }
 
 

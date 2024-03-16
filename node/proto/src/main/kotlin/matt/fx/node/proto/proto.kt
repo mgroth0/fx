@@ -1,6 +1,7 @@
 package matt.fx.node.proto
 
 import javafx.scene.canvas.GraphicsContext
+import javafx.scene.control.Tab
 import matt.fx.control.wrapper.control.tab.TabWrapper
 import matt.fx.control.wrapper.control.text.area.TextAreaWrapper
 import matt.fx.control.wrapper.tab.TabPaneWrapper
@@ -113,10 +114,10 @@ class EnumTabPane<E : Enum<E>, C : NW>(
     cls: KClass<E>,
     builder: (E) -> C
 ) :
-    TabPaneWrapper<EnumTab<E, C>>() {
+    TabPaneWrapper<EnumTab<*, *>>(tabClass = EnumTab::class) {
     init {
         cls.java.enumConstants.forEach {
-            tabs += EnumTab(it, builder(it)).apply { isClosable = false }
+            tabs += EnumTab(it, builder(it), NW::class).apply { isClosable = false }
         }
     }
 
@@ -141,8 +142,9 @@ class EnumTabPane<E : Enum<E>, C : NW>(
 
 class EnumTab<E : Enum<E>, C : NW>(
     val cnst: E,
-    content: C
-) : TabWrapper<C>(cnst.name, content)
+    content: C,
+    contentCls: KClass<C>
+) : TabWrapper<C>(Tab(cnst.name, content.node), nodeCls = contentCls)
 
 
 interface Refreshable {

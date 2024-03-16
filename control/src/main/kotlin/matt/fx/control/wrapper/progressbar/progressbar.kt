@@ -32,7 +32,7 @@ class ProgressBarWrapper(
             node.progress = value
         }
 
-    val progressProperty by lazy { node.progressProperty().toNonNullableProp().cast<Double>() }
+    val progressProperty by lazy { node.progressProperty().toNonNullableProp().cast<Double>(Double::class) }
     override fun addChild(child: NodeWrapper, index: Int?) {
         TODO()
     }

@@ -9,7 +9,7 @@ import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
 import matt.fx.base.wrapper.obs.obsval.toNonNullableROProp
 import matt.fx.base.wrapper.obs.obsval.toNullableROProp
-import matt.fx.graphics.service.uncheckedNullableWrapperConverter
+import matt.fx.graphics.service.nullableWrapperConverter
 import matt.fx.graphics.wrapper.SingularEventTargetWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.scene.SceneWrapper
@@ -30,22 +30,22 @@ abstract class NodeWrapperImpl<out N : Node>(
         node.cursorProperty().toNullableProp()
     }
 
-    final override val layoutYProperty: BindableProperty<Double> by lazy {
-        node.layoutYProperty().toNonNullableProp().cast()
+    final override val layoutYProperty by lazy {
+        node.layoutYProperty().toNonNullableProp().cast(Double::class)
     }
-    final override val layoutXProperty: BindableProperty<Double> by lazy {
-        node.layoutXProperty().toNonNullableProp().cast()
+    final override val layoutXProperty by lazy {
+        node.layoutXProperty().toNonNullableProp().cast(Double::class)
     }
-    final override val scaleXProperty: BindableProperty<Double> by lazy {
-        node.scaleXProperty().toNonNullableProp().cast()
+    final override val scaleXProperty by lazy {
+        node.scaleXProperty().toNonNullableProp().cast(Double::class)
     }
-    final override val scaleYProperty: BindableProperty<Double> by lazy {
-        node.scaleYProperty().toNonNullableProp().cast()
+    final override val scaleYProperty by lazy {
+        node.scaleYProperty().toNonNullableProp().cast(Double::class)
     }
 
     final override val sceneProperty by lazy {
         node.sceneProperty().toNullableROProp().binding(
-            converter = uncheckedNullableWrapperConverter<Scene, SceneWrapper<*>>()
+            converter = nullableWrapperConverter(Scene::class, SceneWrapper::class)
         )
     }
 

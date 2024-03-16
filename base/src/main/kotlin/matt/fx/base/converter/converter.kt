@@ -5,14 +5,10 @@ import javafx.util.Callback
 import javafx.util.StringConverter
 import matt.fx.base.mtofx.createROFXPropWrapper
 import matt.fx.base.wrapper.obs.obsval.toNullableROProp
+import matt.lang.cast.castFun
 import matt.lang.convert.BiConverter
 import matt.obs.prop.ObsVal
-
-fun <T> BiConverter<T, String>.toFXConverter() =
-    object : StringConverter<T>() {
-        override fun toString(`object`: T) = convertToB(`object`)
-        override fun fromString(string: String) = convertToA(string)
-    }
+import kotlin.reflect.KClass
 
 @Suppress("ForbiddenAnnotation")
 @JvmName("toFXConverter2")
@@ -36,7 +32,8 @@ class ConverterConverter<T>() : BiConverter<StringConverter<T>, matt.prim.conver
     override fun convertToA(b: matt.prim.converters.StringConverter<T>): StringConverter<T> = b.toFXConverter()
 }
 
-fun <I, O> callbackConverter() =
+inline fun <I, reified O: Any> callbackConverter() = callbackConverter<I, O>(O::class)
+fun <I, O: Any> callbackConverter(oClass: KClass<O>) =
     object : BiConverter<Callback<I, ObservableValue<O>>, Callback<I, ObsVal<O>>> {
 
 
@@ -45,7 +42,7 @@ fun <I, O> callbackConverter() =
                 val o = a.call(param)!!
 
 
-                val m = o.toNullableROProp().cast<O>()
+                val m = o.toNullableROProp().cast(oClass.castFun())
                 m
             }
 

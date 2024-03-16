@@ -486,7 +486,7 @@ class MoreGenericNumberAxis<T : Any>(
      }
 
      override fun getStyleableProperty(n: MoreGenericNumberAxis<*>): StyleableProperty<Number> {
-     @Suppress("UNCHECKED_CAST")
+
      return n.tickUnitProperty() as StyleableProperty<Number>
      }
      }

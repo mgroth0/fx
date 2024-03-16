@@ -12,9 +12,16 @@ import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attach
 import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
 import matt.lang.assertions.require.requireNull
+import kotlin.reflect.KClass
 
-fun <C: NodeWrapper> ET.borderpane(op: BorderPaneWrapper<C>.() -> Unit = {}) = attach(BorderPaneWrapper(), op)
-open class BorderPaneWrapper<C: NodeWrapper>(node: BorderPane = BorderPane()): PaneWrapperImpl<BorderPane, C>(node) {
+inline fun <reified C: NodeWrapper> ET.borderpane(
+    op: BorderPaneWrapper<C>.() -> Unit = {
+    }
+) = attach(BorderPaneWrapper(childClass = C::class), op)
+open class BorderPaneWrapper<C: NodeWrapper>(
+    node: BorderPane = BorderPane(),
+    childClass: KClass<C>
+): PaneWrapperImpl<BorderPane, C>(node, childClass) {
 
     var center: NW?
         get() = node.center?.wrapped()

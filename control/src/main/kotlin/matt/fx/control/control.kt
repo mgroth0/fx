@@ -1,5 +1,6 @@
 package matt.fx.control
 
+import javafx.scene.control.Tab
 import javafx.scene.control.TreeTableView
 import javafx.scene.input.ContextMenuEvent
 import javafx.scene.layout.ColumnConstraints
@@ -23,6 +24,7 @@ import matt.obs.prop.writable.Var
 import matt.prim.str.urlEncode
 import java.awt.Desktop
 import java.net.URI
+import kotlin.reflect.KClass
 
 
 interface Scrolls {
@@ -59,21 +61,22 @@ var RowConstraints.exactHeight: Number
     get() = NEVER
 
 
-fun <N : NodeWrapper> TabPaneWrapper<in TabWrapper<N>>.lazyTab(
+inline fun <reified N : NodeWrapper> TabPaneWrapper<in TabWrapper<N>>.lazyTab(
     name: String,
     closable: Boolean = true,
-    nodeOp: () -> N
-) = object : LazyTab<N>(name, closable = closable) {
+    crossinline nodeOp: () -> N
+) = object : LazyTab<N>(name, closable = closable, N::class) {
     override fun nodeOp() = nodeOp()
 }.apply {
     this@lazyTab.tabs += this
 }
 
 
-abstract class LazyTab<N : NodeWrapper?>(
+abstract class LazyTab<N : NodeWrapper>(
     name: String,
-    closable: Boolean = true
-) : TabWrapper<N>(name) {
+    closable: Boolean = true,
+    contentCls: KClass<N>
+) : TabWrapper<N>(Tab(name), contentCls) {
     abstract fun nodeOp(): N
 
     init {

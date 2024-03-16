@@ -4,7 +4,7 @@ import javafx.scene.control.skin.TableColumnHeader
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.region.RegionWrapperImpl
 
-class TableColumnHeaderWrapper(node: TableColumnHeader): RegionWrapperImpl<TableColumnHeader, NodeWrapper>(node) {
+class TableColumnHeaderWrapper(node: TableColumnHeader): RegionWrapperImpl<TableColumnHeader, NodeWrapper>(node, NodeWrapper::class) {
 
     override fun isInsideRow() = false
 

@@ -11,7 +11,7 @@ import matt.fx.graphics.wrapper.region.RegionWrapperImpl
 import matt.lang.common.NOT_IMPLEMENTED
 
 
-open class ChartWrapper<N: ChartForPrivateProps>(node: N): RegionWrapperImpl<N, NodeWrapper>(node), Titled {
+open class ChartWrapper<N: ChartForPrivateProps>(node: N): RegionWrapperImpl<N, NodeWrapper>(node, childClass = NodeWrapper::class), Titled {
 
 
     final override val titleProperty: NullableFXBackedBindableProp<String> by lazy { node.titleProperty().toNullableProp() }

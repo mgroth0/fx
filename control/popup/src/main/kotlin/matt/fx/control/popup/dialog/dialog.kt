@@ -9,11 +9,12 @@ import javafx.stage.StageStyle
 import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
 import matt.fx.base.wrapper.obs.obsval.toNonNullableROProp
 import matt.fx.control.wrapper.wrapped.wrapped
-import matt.fx.graphics.service.uncheckedNullableWrapperConverter
+import matt.fx.graphics.service.nullableWrapperConverter
 import matt.fx.graphics.wrapper.SingularEventTargetWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.window.WindowWrapper
 import matt.lang.common.NOT_IMPLEMENTED
+import matt.obs.prop.MObservableVal
 import java.util.Optional
 
 open class DialogWrapper<R>(dialog: Dialog<R> = Dialog()): SingularEventTargetWrapper<Dialog<R>>(dialog) {
@@ -42,7 +43,7 @@ open class DialogWrapper<R>(dialog: Dialog<R> = Dialog()): SingularEventTargetWr
     }
 
     val graphicProp by lazy {
-        node.graphicProperty().toNullableProp().proxy(uncheckedNullableWrapperConverter<Node, NodeWrapper>())
+        node.graphicProperty().toNullableProp().proxy(nullableWrapperConverter<Node, NodeWrapper>())
     }
     var graphic by graphicProp
 
@@ -61,15 +62,15 @@ open class DialogWrapper<R>(dialog: Dialog<R> = Dialog()): SingularEventTargetWr
 
     val widthProp by lazy {
 
-        node.widthProperty().toNonNullableROProp().cast<Double>()
+        node.widthProperty().toNonNullableROProp().cast<Double>(Double::class)
     }
-    var width
+    var width: Double
         get() = widthProp.value
         set(value) {
             node.width = value
         }
-    val heightProp by lazy {
-        node.heightProperty().toNonNullableROProp().cast<Double>()
+    val heightProp: MObservableVal<Double, *, *> by lazy {
+        node.heightProperty().toNonNullableROProp().cast<Double>(Double::class)
     }
     var height
         get() = heightProp.value

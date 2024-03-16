@@ -20,6 +20,7 @@ import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
 import matt.fx.graphics.wrapper.pane.grid.GridPaneWrapper.GridDSLType.COL
 import matt.fx.graphics.wrapper.pane.grid.GridPaneWrapper.GridDSLType.ROW
 import matt.lang.assertions.require.requireNotEqual
+import kotlin.reflect.KClass
 
 
 fun <T : NodeWrapper> T.gridpaneConstraints(op: (GridPaneConstraint.() -> Unit)): T {
@@ -30,8 +31,14 @@ fun <T : NodeWrapper> T.gridpaneConstraints(op: (GridPaneConstraint.() -> Unit))
 
 fun ET.grid(op: GridPaneWrapper<NW>.() -> Unit = {}) = gridpane<NW>(op)
 
-fun <C : NodeWrapper> ET.gridpane(op: GridPaneWrapper<C>.() -> Unit = {}) = attach(GridPaneWrapper(), op)
-open class GridPaneWrapper<C : NodeWrapper>(node: GridPane = GridPane()) : PaneWrapperImpl<GridPane, C>(node) {
+inline fun <reified C : NodeWrapper> ET.gridpane(
+    op: GridPaneWrapper<C>.() -> Unit = {
+    }
+) = attach(GridPaneWrapper(childClass = C::class), op)
+open class GridPaneWrapper<C : NodeWrapper>(
+    node: GridPane = GridPane(),
+    childClass: KClass<C>
+) : PaneWrapperImpl<GridPane, C>(node, childClass) {
 
 
 
@@ -107,10 +114,10 @@ open class GridPaneWrapper<C : NodeWrapper>(node: GridPane = GridPane()) : PaneW
         return children.filter { it !in oldChildren }
     }
 
-    val hgapProperty by lazy { node.hgapProperty().toNonNullableProp().cast<Double>() }
-    var hGap by hgapProperty
-    val vgapProperty by lazy { node.hgapProperty().toNonNullableProp().cast<Double>() }
-    var vGap by vgapProperty
+    val hgapProperty by lazy { node.hgapProperty().toNonNullableProp().cast<Double>(Double::class) }
+    var hGap: Double by hgapProperty
+    val vgapProperty by lazy { node.hgapProperty().toNonNullableProp().cast<Double>(Double::class) }
+    var vGap: Double by vgapProperty
 }
 
 

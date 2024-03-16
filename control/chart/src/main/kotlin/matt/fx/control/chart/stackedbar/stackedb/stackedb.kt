@@ -8,7 +8,6 @@ import javafx.animation.ParallelTransition
 import javafx.animation.Timeline
 import javafx.application.Platform
 import javafx.beans.NamedArg
-import javafx.beans.property.DoubleProperty
 import javafx.collections.FXCollections
 import javafx.collections.ListChangeListener
 import javafx.collections.ObservableList
@@ -34,6 +33,7 @@ import matt.fx.control.chart.axis.value.moregenval.MoreGenericValueAxis
 import matt.fx.control.chart.line.highperf.relinechart.xy.XYChartForPackagePrivateProps
 import matt.fx.control.chart.stackedbar.stackedb.StackedBarChartForWrapper.StyleableProperties.classCssMetaData
 import matt.fx.graphics.anim.interp.MyInterpolator
+import matt.reflect.j.CastedList
 import java.util.Collections
 
 /**
@@ -77,7 +77,7 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
                 }
             }
         /** The gap to leave between bars in separate categories  */
-        private val categoryGap: DoubleProperty =
+        private val categoryGap: StyleableDoubleProperty =
             object : StyleableDoubleProperty(10.0) {
                 override fun invalidated() {
                     get()
@@ -97,7 +97,7 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
             categoryGap.value = value
         }
 
-        fun categoryGapProperty(): DoubleProperty = categoryGap
+        fun categoryGapProperty(): StyleableDoubleProperty = categoryGap
 
         /**
          * Construct a new StackedBarChart with the given axis and data. The two axis should be a ValueAxis/NumberAxis and a
@@ -307,8 +307,7 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
                         if (data != null) cData.add(if (categoryIsX) data.xValueProp.value else data.yValueProp.value)
                     }
                 }
-                @Suppress("UNCHECKED_CAST")
-                categoryAxis!!.invalidateRange(cData as List<String>)
+                categoryAxis!!.invalidateRange(CastedList(cData) { it as String } /*as List<String>*/)
             }
             if (valueAxis!!.isAutoRanging()) {
                 val vData: MutableList<Number> = ArrayList()
@@ -323,12 +322,21 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
                             @Suppress("SENSELESS_COMPARISON")
                             if (item != null) {
                                 val isNegative = item.nodeProp.value.styleClass.contains("negative")
-                                @Suppress("IMPLICIT_CAST_TO_ANY") val value =
-                                    (if (categoryIsX) item.yValueProp.value else item.xValueProp.value) as Number?
-                                if (!isNegative) {
-                                    totalXP += toNumericValueFromValueAxis(value)
+
+                                if (categoryIsX) {
+                                    val value = item.yValueProp.value
+                                    if (!isNegative) {
+                                        totalXP += toNumericValueFromValueAxis(value)
+                                    } else {
+                                        totalXN += toNumericValueFromValueAxis(value)
+                                    }
                                 } else {
-                                    totalXN += toNumericValueFromValueAxis(value)
+                                    val value = item.xValueProp.value
+                                    if (!isNegative) {
+                                        totalXP += toNumericValueFromValueAxis(value)
+                                    } else {
+                                        totalXN += toNumericValueFromValueAxis(value)
+                                    }
                                 }
                             }
                         }
@@ -336,29 +344,49 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
                     vData.add(totalXP)
                     vData.add(totalXN)
                 }
-                @Suppress("UNCHECKED_CAST")
-                valueAxisInvalidateRange(vData as List<String>)
+                valueAxisInvalidateRange(CastedList(vData) { it as String } /* as List<String>*/)
             }
         }
 
-        @Suppress("UNCHECKED_CAST")
-        private fun toNumericValueFromValueAxis(v: Any?): Double {
+
+    /*    private fun toNumericValueFromValueAxis(v: Number?): Double {
             if (xAxis is CategoryAxisForCatAxisWrapper) {
                 return (xAxis.toNumericValue(v as X))
             } else {
                 return (yAxis.toNumericValue(v as Y))
             }
+        }*/
+        @Suppress("ForbiddenAnnotation")
+        @JvmName("toNumericValueFromValueAxisX")
+        private fun toNumericValueFromValueAxis(v: X): Double {
+            check(xAxis is CategoryAxisForCatAxisWrapper)
+            return (xAxis.toNumericValue(v))
+        }
+        @Suppress("ForbiddenAnnotation")
+        @JvmName("toNumericValueFromValueAxisY")
+        private fun toNumericValueFromValueAxis(v: Y): Double {
+            check(xAxis !is CategoryAxisForCatAxisWrapper)
+            return (yAxis.toNumericValue(v))
         }
 
 
-        @Suppress("UNCHECKED_CAST")
-        private fun valueAxisGetDisplayPosition(v: Any?): Double {
+        private fun valueAxisGetDisplayPosition(v: Double): Double {
             if (xAxis is CategoryAxisForCatAxisWrapper) {
-                return (xAxis.getDisplayPosition(v as X))
+                return (xAxis.getDisplayPosition(xAxis.toRealValue(v)!!/* as X*/))
             } else {
-                return (yAxis.getDisplayPosition(v as Y))
+                return (yAxis.getDisplayPosition(yAxis.toRealValue(v)!!/* as Y*/))
             }
         }
+/*
+    private fun valueAxisGetDisplayPosition(v: X): Double {
+        check(xAxis is CategoryAxisForCatAxisWrapper)
+            return (xAxis.getDisplayPosition(v as X))
+    }
+    private fun valueAxisGetDisplayPosition(v: Y): Double {
+        check(xAxis !is CategoryAxisForCatAxisWrapper)
+        return (yAxis.getDisplayPosition(v as Y))
+    }
+*/
 
 
         private fun valueAxisInvalidateRange(list: List<String>) {
@@ -640,10 +668,10 @@ class StackedBarChartForWrapper<X, Y> @JvmOverloads constructor(
                         node: StackedBarChartForWrapper<*, *>
                     ): Boolean = node.categoryGap.value == null || !node.categoryGap.isBound
 
-                    @Suppress("UNCHECKED_CAST")
+
                     override fun getStyleableProperty(
                         node: StackedBarChartForWrapper<*, *>
-                    ): StyleableProperty<Number?> = node.categoryGapProperty() as StyleableProperty<Number?>
+                    ): StyleableProperty<Number?> = node.categoryGapProperty()
                 }
             val classCssMetaData: List<CssMetaData<out Styleable?, *>> by lazy {
                 val styleables: MutableList<CssMetaData<out Styleable?, *>> = ArrayList(getClassCssMetaData())

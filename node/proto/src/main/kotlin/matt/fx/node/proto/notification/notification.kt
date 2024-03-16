@@ -54,7 +54,8 @@ fun notification(
                     setOnMousePressed {
                         stage.close()
                     }
-                }
+                },
+                rootCls = VBoxWrapperImpl::class
             ).apply {
                 fill = Color.SKYBLUE
             }

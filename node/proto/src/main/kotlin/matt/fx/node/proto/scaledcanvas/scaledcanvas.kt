@@ -74,7 +74,7 @@ open class ScaledCanvas(
     initializeInLoadingMode: Boolean = false,
     progressIndicatorWidthAndHeight: Double? = null,
     delayLoadingIndicatorBy: Duration? = null
-) : RegionWrapperImpl<Pane, CanvasWrapper>(Pane()), Canv by canvas {
+) : RegionWrapperImpl<Pane, CanvasWrapper>(Pane(), childClass = CanvasWrapper::class), Canv by canvas {
 
     companion object {
         private val worker = SchedulingDaemon(500.milliseconds, "ScaledCanvas Worker")

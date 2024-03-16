@@ -11,17 +11,25 @@ import matt.fx.graphics.wrapper.node.NW
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attach
 import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
+import kotlin.reflect.KClass
 
-inline fun <C: NodeWrapper> ET.stackpane(initialChildren: Iterable<C>? = null, op: StackPaneWrapper<C>.() -> Unit = {}) =
+inline fun <reified C: NodeWrapper> ET.stackpane(initialChildren: Iterable<C>? = null, op: StackPaneWrapper<C>.() -> Unit = {}) =
     attach(
-        StackPaneWrapper<C>().apply { if (initialChildren != null) children.addAll(initialChildren) }, op
+        StackPaneWrapper(childClass = C::class).apply { if (initialChildren != null) children.addAll(initialChildren) }, op
     )
 
-open class StackPaneW: StackPaneWrapper<NW>()
+open class StackPaneW: StackPaneWrapper<NW>(childClass = NW::class)
 
-open class StackPaneWrapper<C: NodeWrapper>(node: StackPane = StackPane()): PaneWrapperImpl<StackPane, C>(node) {
+open class StackPaneWrapper<C: NodeWrapper>(node: StackPane = StackPane(), childClass: KClass<C>): PaneWrapperImpl<StackPane, C>(node, childClass) {
 
-    constructor(vararg nodes: C): this(StackPane(*nodes.map { it.node }.toTypedArray()))
+    companion object {
+        inline operator fun <reified C: NodeWrapper> invoke(vararg nodes: C): StackPaneWrapper<C> =
+            StackPaneWrapper(
+                StackPane(*nodes.map { it.node }.toTypedArray()),
+                C::class
+            )
+    }
+
 
 
     var alignment: Pos

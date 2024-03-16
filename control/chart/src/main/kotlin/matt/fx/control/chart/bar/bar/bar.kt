@@ -8,7 +8,6 @@ import javafx.animation.ParallelTransition
 import javafx.animation.Timeline
 import javafx.application.Platform
 import javafx.beans.NamedArg
-import javafx.beans.property.DoubleProperty
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import javafx.css.CssMetaData
@@ -61,7 +60,7 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
         /* For storing data values in case removed and added immediately. */
         private val XYValueMap: MutableMap<Data<X, Y>, Double> = HashMap()
         /** The gap to leave between bars in the same category  */
-        private val barGap: DoubleProperty =
+        private val barGap: StyleableDoubleProperty =
             object : StyleableDoubleProperty(4.0) {
                 override fun invalidated() {
                     get()
@@ -81,10 +80,10 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
             barGap.value = value
         }
 
-        fun barGapProperty(): DoubleProperty = barGap
+        fun barGapProperty(): StyleableDoubleProperty = barGap
 
         /** The gap to leave between bars in separate categories  */
-        private val categoryGap: DoubleProperty =
+        private val categoryGap: StyleableDoubleProperty =
             object : StyleableDoubleProperty(10.0) {
                 override fun invalidated() {
                     get()
@@ -104,7 +103,7 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
             categoryGap.value = value
         }
 
-        fun categoryGapProperty(): DoubleProperty = categoryGap
+        fun categoryGapProperty(): StyleableDoubleProperty = categoryGap
 
         /**
          * Construct a new BarChart with the given axis and data. The two axis should be a ValueAxis/NumberAxis and a
@@ -301,25 +300,31 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
             }
         }
 
-
-        @Suppress("UNCHECKED_CAST")
+/*
         private fun toNumericValueFromValueAxis(v: Any?): Double {
             if (xAxis is CategoryAxisForCatAxisWrapper) {
                 return (xAxis.toNumericValue(v as X))
             } else {
                 return (yAxis.toNumericValue(v as Y))
             }
-        }
+        }*/
 
-        @Suppress("UNCHECKED_CAST")
-        private fun valueAxisGetDisplayPosition(v: Any?): Double {
+
+
+
+
+        private fun valueAxisGetDisplayPosition(v: Double): Double {
             if (xAxis is CategoryAxisForCatAxisWrapper) {
-                return (xAxis.getDisplayPosition(v as X))
+                return (xAxis.getDisplayPosition(xAxis.toRealValue(v)!!))
             } else {
-                return (yAxis.getDisplayPosition(v as Y))
+                return (yAxis.getDisplayPosition(yAxis.toRealValue(v)!!))
             }
         }
 
+
+        private fun xAxisGetDisplayPosition(v: X): Double = (xAxis.getDisplayPosition(v))
+
+        private fun yAxisGetDisplayPosition(v: Y): Double = (yAxis.getDisplayPosition(v))
 
         /** {@inheritDoc}  */
         override fun layoutPlotChildren() {
@@ -330,7 +335,7 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
             val barOffset = -((catSpace - getCategoryGap()) / 2)
             val zeroPos =
                 if (valueAxis!!.lowerBound.value as Double > 0.0) valueAxisGetDisplayPosition(
-                    valueAxis!!.lowerBound
+                    valueAxis!!.lowerBound.value as Double
                 ) else valueAxis!!.zeroPosition
             /* RT-24813 : if the data in a series gets too large, barWidth can get negative. */
             if (barWidth <= 0) barWidth = 1.0
@@ -548,13 +553,18 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
             val value = XYValueMap[item]
             if (value != null) {
                 /* Restoring original X/Y values */
-                @Suppress("UNCHECKED_CAST")
                 if (orientation == VERTICAL) {
-                    item.yValue = (value as Y)
-                    item.setCurrentY(value)
+                    val theValue = yAxis.toRealValue(value)!!
+                    /*item.yValue = (value as Y)
+                    item.setCurrentY(value)*/
+                    item.yValue = theValue
+                    item.setCurrentY(theValue)
                 } else {
-                    item.xValue = (value as X)
-                    item.setCurrentX(value)
+                    /*item.xValue = (value as X)
+                    item.setCurrentX(value)*/
+                    val theValue = xAxis.toRealValue(value)!!
+                    item.xValue = theValue
+                    item.setCurrentX(theValue)
                 }
             }
         }
@@ -624,10 +634,9 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
 
                     override fun isSettable(node: BarChartForWrapper<*, *>): Boolean = node.barGap.value == null || !node.barGap.isBound
 
-                    @Suppress("UNCHECKED_CAST")
                     override fun getStyleableProperty(
                         node: BarChartForWrapper<*, *>
-                    ): StyleableProperty<Number?> = node.barGapProperty() as StyleableProperty<Number?>
+                    ): StyleableProperty<Number?> = node.barGapProperty()
                 }
             internal val CATEGORY_GAP: CssMetaData<BarChartForWrapper<*, *>, Number> =
                 object : CssMetaData<BarChartForWrapper<*, *>, Number>(
@@ -638,10 +647,7 @@ class BarChartForWrapper<X, Y> @JvmOverloads constructor(
                         node: BarChartForWrapper<*, *>
                     ): Boolean = node.categoryGap.value == null || !node.categoryGap.isBound
 
-                    override fun getStyleableProperty(node: BarChartForWrapper<*, *>): StyleableProperty<Number?> {
-                        @Suppress("UNCHECKED_CAST")
-                        return node.categoryGapProperty() as StyleableProperty<Number?>
-                    }
+                    override fun getStyleableProperty(node: BarChartForWrapper<*, *>): StyleableProperty<Number?> = node.categoryGapProperty()
                 }
             val classCssMetaData: List<CssMetaData<out Styleable?, *>>? by lazy {
                 val styleables: MutableList<CssMetaData<out Styleable?, *>> = ArrayList(getClassCssMetaData())

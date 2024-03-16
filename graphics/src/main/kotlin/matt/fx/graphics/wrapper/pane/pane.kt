@@ -7,7 +7,7 @@ import javafx.scene.input.MouseEvent
 import javafx.scene.layout.Pane
 import javafx.scene.paint.Color
 import matt.fx.base.wrapper.obs.collect.list.createMutableWrapper
-import matt.fx.graphics.service.uncheckedWrapperConverter
+import matt.fx.graphics.service.wrapperConverter
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attach
@@ -24,8 +24,9 @@ import matt.model.data.corner.Corner.SE
 import matt.model.data.corner.Corner.SW
 import matt.obs.col.olist.MutableObsList
 import matt.obs.col.olist.sync.toSyncedList
+import kotlin.reflect.KClass
 
-fun <C : NodeWrapper> ET.pane(op: PaneWrapperImpl<*, C>.() -> Unit = {}) = attach(SimplePaneWrapper(), op)
+inline fun <reified C : NodeWrapper> ET.pane(op: PaneWrapperImpl<*, C>.() -> Unit = {}) = attach(SimplePaneWrapper(), op)
 
 private var didThisWarning = false
 interface PaneWrapper<C : NodeWrapper> : RegionWrapper<C> {
@@ -44,8 +45,7 @@ interface PaneWrapper<C : NodeWrapper> : RegionWrapper<C> {
         }
 
         requireNull(index)
-        @Suppress("UNCHECKED_CAST")
-        children.add(child as C)
+        children.add(castChild(child))
     }
 
     @Open operator fun Collection<C>.unaryPlus() {
@@ -180,12 +180,13 @@ fun <C : NodeWrapper> PaneWrapper<C>.vSpacer(size: Double = 20.0) {
 }
 
 
-fun <C : NodeWrapper> SimplePaneWrapper() = PaneWrapperImpl<_, C>(Pane())
+inline fun <reified C : NodeWrapper> SimplePaneWrapper() = PaneWrapperImpl<_, C>(Pane(), C::class)
 
 
 open class PaneWrapperImpl<N : Pane, C : NodeWrapper>(
-    node: N
-) : RegionWrapperImpl<N, C>(node), PaneWrapper<C> {
+    node: N,
+    childClass: KClass<C>
+) : RegionWrapperImpl<N, C>(node, childClass), PaneWrapper<C> {
 
 
     open override fun addChild(
@@ -198,6 +199,6 @@ open class PaneWrapperImpl<N : Pane, C : NodeWrapper>(
 
     final override val childList: ObservableList<Node> get() = node.children
     final override val children by lazy {
-        node.children.createMutableWrapper().toSyncedList(uncheckedWrapperConverter<Node, C>())
+        node.children.createMutableWrapper().toSyncedList(wrapperConverter<Node, C>(Node::class, childClass))
     }
 }

@@ -19,6 +19,7 @@ import matt.fx.graphics.wrapper.pane.box.BoxWrapperImpl
 import matt.lang.common.B
 import matt.lang.delegation.lazyVarDelegate
 import matt.obs.prop.writable.Var
+import kotlin.reflect.KClass
 
 fun ET.h(
     spacing: Number? = null,
@@ -26,12 +27,12 @@ fun ET.h(
     op: HBoxWrapper<NW>.() -> Unit = {}
 ) = hbox(spacing, alignment, op)
 
-fun <C: NodeWrapper> ET.hbox(
+inline fun <reified C: NodeWrapper> ET.hbox(
     spacing: Number? = null,
     alignment: Pos? = null,
     op: HBoxWrapper<C>.() -> Unit = {}
 ): HBoxWrapper<C> {
-    val hbox = HBoxWrapperImpl<C>(HBox())
+    val hbox = HBoxWrapperImpl<C>(HBox(), C::class)
     if (alignment != null) hbox.alignment = alignment
     if (spacing != null) hbox.spacing = spacing.toDouble()
     return attach(hbox, op)
@@ -44,8 +45,11 @@ interface HBoxWrapper<C: NodeWrapper>: BoxWrapper<C> {
     var isFillHeight: B
 }
 
-open class HBoxWrapperImpl<C: NodeWrapper>(node: HBox = HBox()): BoxWrapperImpl<HBox, C>(node), HBoxWrapper<C> {
-    constructor(vararg nodes: NodeWrapper): this(HBox(*nodes.map { it.node }.toTypedArray()))
+open class HBoxWrapperImpl<C: NodeWrapper>(node: HBox = HBox(), childClass: KClass<C>): BoxWrapperImpl<HBox, C>(node, childClass = childClass), HBoxWrapper<C> {
+    companion object {
+        operator fun invoke(vararg nodes: NodeWrapper) = HBoxWrapperImpl(HBox(*nodes.map { it.node }.toTypedArray()), NodeWrapper::class)
+    }
+
 
     final override val fillHeightProperty: NonNullFXBackedBindableProp<Boolean> by lazy {
         node.fillHeightProperty().toNonNullableProp()

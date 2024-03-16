@@ -27,7 +27,7 @@ import kotlin.reflect.KProperty
 
 
 @ExperimentalContracts
-class ProcessInspectPane(initialValue: Process?) : HBoxWrapperImpl<NodeWrapper>() {
+class ProcessInspectPane(initialValue: Process?) : HBoxWrapperImpl<NodeWrapper>(childClass = NodeWrapper::class) {
     val procProp =
         VarProp(initialValue).apply {
             addListener(

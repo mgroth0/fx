@@ -1,5 +1,3 @@
-@file:Suppress("UNCHECKED_CAST")
-
 /*slightly modified code I stole from tornadofx*/
 
 package matt.fx.control.toggle.mech

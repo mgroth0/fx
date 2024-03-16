@@ -94,11 +94,11 @@ open class WindowWrapper<W : Window>(node: W) :
 
 
 
-    final override val heightProperty by lazy { node.heightProperty().toNonNullableROProp().cast<Double>() }
+    final override val heightProperty by lazy { node.heightProperty().toNonNullableROProp().cast<Double>(Double::class) }
 
 
 
-    final override val widthProperty by lazy { node.widthProperty().toNonNullableROProp().cast<Double>() }
+    final override val widthProperty by lazy { node.widthProperty().toNonNullableROProp().cast<Double>(Double::class) }
 
     fun setOnShowing(value: EventHandler<WindowEvent>) = node.setOnShowing(value)
 

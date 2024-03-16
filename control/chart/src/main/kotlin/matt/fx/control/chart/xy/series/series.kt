@@ -5,7 +5,6 @@ import javafx.scene.paint.Color
 import javafx.scene.shape.Path
 import matt.collect.list.downSampled
 import matt.collect.weak.WeakMap
-import matt.fig.modell.series.SeriesIdea
 import matt.fx.base.wrapper.obs.collect.list.mfxMutableListConverter
 import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
@@ -13,7 +12,6 @@ import matt.fx.base.wrapper.obs.obsval.toNullableROProp
 import matt.fx.control.chart.line.highperf.relinechart.xy.XYChartForPackagePrivateProps.Data
 import matt.fx.control.chart.line.highperf.relinechart.xy.XYChartForPackagePrivateProps.Series
 import matt.fx.control.chart.xy.series.SeriesWrapper.Companion.wrappers
-import matt.lang.convert.BiConverter
 import matt.lang.setall.setAll
 import matt.model.op.convert.NullToBlankStringConverter
 import matt.obs.col.olist.MutableObsList
@@ -26,14 +24,6 @@ fun <X, Y> List<Data<X, Y>>.toSeries() =
         data.setAll(this@toSeries)
     }
 
-class SeriesConverter<X, Y>() : BiConverter<Series<X, Y>, SeriesWrapper<X, Y>>, SeriesIdea {
-    override fun convertToB(a: Series<X, Y>): SeriesWrapper<X, Y> {
-        @Suppress("UNCHECKED_CAST")
-        return a.wrapped() as SeriesWrapper<X, Y>
-    }
-
-    override fun convertToA(b: SeriesWrapper<X, Y>): Series<X, Y> = b.series
-}
 
 fun <X, Y> Series<X, Y>.wrapped() = wrappers[this] ?: SeriesWrapper(this)
 

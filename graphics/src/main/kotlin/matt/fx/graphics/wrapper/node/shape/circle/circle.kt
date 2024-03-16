@@ -42,7 +42,7 @@ open class CircleWrapper(
     val centerYProperty by lazy { node.centerYProperty().toNonNullableProp() }
 
 
-    fun toPoint() = DynamicPoint(x = centerXProperty.cast(), y = centerYProperty.cast())
+    fun toPoint() = DynamicPoint(x = centerXProperty.cast(Double::class), y = centerYProperty.cast(Double::class))
 }
 
 

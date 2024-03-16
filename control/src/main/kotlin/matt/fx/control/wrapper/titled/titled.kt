@@ -82,7 +82,7 @@ open class TitledPaneWrapper(
             is Pane -> content!!.addChild(child, index)
 
             is Node -> {
-                val container = VBoxW()
+                val container = VBoxW(childClass = NodeWrapper::class)
                 content?.go {
                     container.children.add(it)
                 }

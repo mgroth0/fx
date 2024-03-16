@@ -427,10 +427,11 @@ open class MorePerfOptionsLineChart<X, Y> @JvmOverloads constructor(
         /* restore values to item */
         val value = XYValueMap[item]
         if (value != null) {
-            @Suppress("UNCHECKED_CAST")
-            item.yValue = (value as Y)
-            @Suppress("UNCHECKED_CAST")
-            item.setCurrentY(value as Y)
+            /*item.yValue = (value as Y)
+            item.setCurrentY(value as Y)*/
+            val theValue = yAxis.toRealValue(value)!!
+            item.yValue = (theValue)
+            item.setCurrentY(theValue)
         }
         XYValueMap.clear()
     }

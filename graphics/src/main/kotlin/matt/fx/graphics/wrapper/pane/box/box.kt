@@ -7,13 +7,14 @@ import javafx.scene.layout.VBox
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.pane.PaneWrapper
 import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
+import kotlin.reflect.KClass
 
 interface BoxWrapper<C: NodeWrapper>: PaneWrapper<C> {
     var alignment: Pos
     var spacing: Double
 }
 
-abstract class BoxWrapperImpl<N: Pane, C: NodeWrapper>(node: N): PaneWrapperImpl<N, C>(node), BoxWrapper<C> {
+abstract class BoxWrapperImpl<N: Pane, C: NodeWrapper>(node: N, childClass: KClass<C>): PaneWrapperImpl<N, C>(node, childClass), BoxWrapper<C> {
 
     final override var alignment: Pos
         get() = (node as? HBox)?.alignment ?: (node as VBox).alignment

@@ -59,8 +59,8 @@ open class TextWrapper(
 
     fun textAlignmentProperty(): ObjectProperty<TextAlignment> = node.textAlignmentProperty()
 
-    val xProperty by lazy { node.xProperty().toNonNullableProp().cast<Double>() }
-    var x by lazyVarDelegate { xProperty }
-    val yProperty by lazy { node.yProperty().toNonNullableProp().cast<Double>() }
-    var y by lazyVarDelegate { yProperty }
+    val xProperty by lazy { node.xProperty().toNonNullableProp().cast<Double>(Double::class) }
+    var x: Double by lazyVarDelegate { xProperty }
+    val yProperty by lazy { node.yProperty().toNonNullableProp().cast<Double>(Double::class) }
+    var y: Double by lazyVarDelegate { yProperty }
 }

@@ -1,6 +1,5 @@
 package matt.fx.graphics.wrapper.region
 
-import javafx.collections.ObservableList
 import javafx.geometry.Insets
 import javafx.scene.Node
 import javafx.scene.Parent
@@ -8,6 +7,7 @@ import javafx.scene.input.DataFormat
 import javafx.scene.input.TransferMode
 import javafx.scene.layout.Background
 import javafx.scene.layout.Border
+import javafx.scene.layout.Pane
 import javafx.scene.layout.Region
 import javafx.scene.paint.Color
 import javafx.scene.paint.Paint
@@ -18,7 +18,7 @@ import matt.fx.base.wrapper.obs.obsval.prop.NonNullFXBackedBindableProp
 import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
 import matt.fx.base.wrapper.obs.obsval.toNonNullableROProp
-import matt.fx.graphics.service.uncheckedWrapperConverter
+import matt.fx.graphics.service.wrapperConverter
 import matt.fx.graphics.studio.DefaultStudio
 import matt.fx.graphics.style.background.backgroundFromColor
 import matt.fx.graphics.style.border.FXBorder
@@ -33,6 +33,7 @@ import matt.fx.graphics.wrapper.region.RegionWrapper.Companion.computePrefWidthF
 import matt.fx.graphics.wrapper.sizeman.SizeManaged
 import matt.fx.image.toBufferedImage
 import matt.image.common.Png
+import matt.image.common.PngRasterizable
 import matt.image.convert.toPng
 import matt.lang.anno.Open
 import matt.lang.common.NEVER
@@ -42,7 +43,6 @@ import matt.lang.delegation.lazyVarDelegate
 import matt.lang.model.file.FsFile
 import matt.lang.model.file.MacFileSystem
 import matt.model.data.rect.IntRectSize
-import matt.model.obj.raster.PngRasterizable
 import matt.obs.bindhelp.bindMultipleTargetsTogether
 import matt.obs.col.olist.ImmutableObsList
 import matt.obs.col.olist.mappedlist.toLazyMappedList
@@ -52,6 +52,7 @@ import matt.obs.prop.proxy.ProxyProp
 import matt.obs.prop.writable.BindableProperty
 import matt.obs.prop.writable.Var
 import matt.obs.prop.writable.VarProp
+import kotlin.reflect.KClass
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.jvm.isAccessible
 
@@ -252,7 +253,7 @@ fun RegionWrapper<*>.computePrefWidth(height: Double) =
     }
 
 
-open class RegionWrapperImpl<N : Region, C : NodeWrapper>(node: N) : ParentWrapperImpl<N, C>(node), RegionWrapper<C> {
+open class RegionWrapperImpl<N : Region, C : NodeWrapper>(node: N, childClass: KClass<C>) : ParentWrapperImpl<N, C>(node, childClass), RegionWrapper<C> {
     /*any temporary border changes might want to come back to this after
 
 
@@ -269,11 +270,15 @@ open class RegionWrapperImpl<N : Region, C : NodeWrapper>(node: N) : ParentWrapp
         }
     }
 
-    @Suppress("UNCHECKED_CAST")
     protected val regionChildren by lazy {
-        (regionChildrenProp.call(this@RegionWrapperImpl.node) as ObservableList<Node>).createMutableWrapper()
+        /*this will clearly fail once I have a non-pane Region. Deal with it then, if ever. I'm moving on from FX...*/
+        (node as Pane).children
+            /*(regionChildrenProp.call(this@RegionWrapperImpl.node) as ObservableList<Node>)*/.createMutableWrapper()
             .toSyncedList(
-                uncheckedWrapperConverter()
+                wrapperConverter(
+                    eClass = Node::class,
+                    wClass = childClass
+                )
             )
     }
 
@@ -281,20 +286,20 @@ open class RegionWrapperImpl<N : Region, C : NodeWrapper>(node: N) : ParentWrapp
         node.borderProperty().toNullableProp()
     }
 
-    final override val widthProperty by lazy { node.widthProperty().toNonNullableROProp().cast<Double>() }
-    final override val prefWidthProperty by lazy { node.prefWidthProperty().toNonNullableProp().cast<Double>() }
-    final override val minWidthProperty by lazy { node.minWidthProperty().toNonNullableProp().cast<Double>() }
-    final override val maxWidthProperty by lazy { node.maxWidthProperty().toNonNullableProp().cast<Double>() }
-    final override val heightProperty by lazy { node.heightProperty().toNonNullableROProp().cast<Double>() }
-    final override val prefHeightProperty by lazy { node.prefHeightProperty().toNonNullableProp().cast<Double>() }
-    final override val minHeightProperty by lazy { node.minHeightProperty().toNonNullableProp().cast<Double>() }
-    final override val maxHeightProperty by lazy { node.maxHeightProperty().toNonNullableProp().cast<Double>() }
+    final override val widthProperty by lazy { node.widthProperty().toNonNullableROProp().cast<Double>(Double::class) }
+    final override val prefWidthProperty by lazy { node.prefWidthProperty().toNonNullableProp().cast<Double>(Double::class) }
+    final override val minWidthProperty by lazy { node.minWidthProperty().toNonNullableProp().cast<Double>(Double::class) }
+    final override val maxWidthProperty by lazy { node.maxWidthProperty().toNonNullableProp().cast<Double>(Double::class) }
+    final override val heightProperty by lazy { node.heightProperty().toNonNullableROProp().cast<Double>(Double::class) }
+    final override val prefHeightProperty by lazy { node.prefHeightProperty().toNonNullableProp().cast<Double>(Double::class) }
+    final override val minHeightProperty by lazy { node.minHeightProperty().toNonNullableProp().cast<Double>(Double::class) }
+    final override val maxHeightProperty by lazy { node.maxHeightProperty().toNonNullableProp().cast<Double>(Double::class) }
 
 
     @Open override val children: ImmutableObsList<C> by lazy {
         /*trying to avoid initializing wrappers to quickly (and getting the wrong ones as a result)*/
         node.childrenUnmodifiable.createImmutableWrapper().toLazyMappedList {
-            uncheckedWrapperConverter<Node, C>().convertToB(it)
+            wrapperConverter<Node, C>(Node::class, childClass).convertToB(it)
         }
     }
 

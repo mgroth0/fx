@@ -7,15 +7,18 @@ import matt.fx.base.wrapper.obs.obsval.NonNullFXBackedReadOnlyBindableProp
 import matt.fx.base.wrapper.obs.obsval.NullableFXBackedReadOnlyBindableProp
 import matt.lang.anno.Open
 import matt.lang.convert.BiConverter
-import matt.obs.bindhelp.BindableValue
 import matt.obs.bindhelp.BindableValueHelper
 import matt.obs.listen.OldAndNewListener
 import matt.obs.listen.update.ValueChange
 import matt.obs.prop.MObservableVal
+import matt.obs.prop.ObsVal
 import matt.obs.prop.cast.CastedWritableProp
 import matt.obs.prop.writable.MWritableValNewAndOld
 import matt.obs.prop.writable.Var
+import matt.obs.prop.writable.VarProp
 import matt.obs.prop.writable.WritableMObservableVal
+import kotlin.reflect.KClass
+import kotlin.reflect.cast
 
 
 fun <T: Any> Property<T>.toNullableProp(): NullableFXBackedBindableProp<T> = NullableFXBackedBindableProp(this)
@@ -30,7 +33,7 @@ interface WritableFXBackedProp<FX_T> :
     fun bindBidirectional(p: Property<FX_T>)*/
 
 
-    override val bindManager: BindableValue<FX_T>
+    override val bindManager: BindableValueHelper<FX_T>
 
     @Open
     override fun bindBidirectional(
@@ -63,7 +66,25 @@ open class NullableFXBackedBindableProp<T>(private val o: Property<T>) :
     WritableFXBackedProp<T?>,
     MWritableValNewAndOld<T?> {
 
-    final override fun <R> cast() = CastedWritableProp<T?, R>(this)
+    @Open
+    override fun <R> cast(
+        cast: (T?) -> R,
+        castBack: (R) -> T?
+    ): CastedWritableProp<T?, R> = CastedWritableProp(this, cast, castBack)
+
+    @Open
+    override fun <R> cast(cast: (T?) -> R): ObsVal<R> = super<NullableFXBackedReadOnlyBindableProp>.cast(cast)
+
+    @Open
+    override fun <R : T?> cast(cls: KClass<R & Any>): Var<R> =
+        cast(
+            cast = { cls.cast(it) },
+            castBack =  {
+                it
+            }
+        )
+
+
 
 
     final override val bindManager = BindableValueHelper(this)
@@ -95,7 +116,28 @@ open class NonNullFXBackedBindableProp<T : Any>(private val o: Property<T>) :
     WritableFXBackedProp<T>,
     MWritableValNewAndOld<T> {
 
-    final override fun <R> cast() = CastedWritableProp<T, R>(this)
+
+    @Open
+    override fun <R : T> cast(cls: KClass<R>): VarProp<R> =
+        cast(
+            cast = { cls.cast(it) },
+            castBack =  {
+                it
+            }
+        )
+    inline fun <reified R: T> cast() =
+        CastedWritableProp(this, {
+            it as R
+        }, { it })
+
+    @Open
+    override fun <R> cast(cast: (T) -> R): ObsVal<R> = super<NonNullFXBackedReadOnlyBindableProp>.cast(cast)
+
+    @Open
+    override fun <R> cast(
+        cast: (T) -> R,
+        castBack: (R) -> T
+    ): VarProp<R> = CastedWritableProp(this, cast, castBack)
 
     final override val bindManager = BindableValueHelper(this)
     final override var theBind by bindManager::theBind

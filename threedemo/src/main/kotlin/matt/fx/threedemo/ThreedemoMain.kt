@@ -8,6 +8,7 @@ import matt.fx.graphics.hotkey.hotkeys
 import matt.fx.graphics.wrapper.camera.PerspectiveCameraWrapper
 import matt.fx.graphics.wrapper.group.GroupWrapper
 import matt.fx.graphics.wrapper.node.NodeWrapper
+import matt.fx.graphics.wrapper.node.parent.ParentWrapper
 import matt.fx.graphics.wrapper.node.shape.threed.box.BoxWrapper3D
 import matt.fx.graphics.wrapper.transform.RotateWrapper
 import matt.fx.graphics.wrapper.transform.TranslateWrapper
@@ -30,9 +31,10 @@ fun main() =
         GuiApp {
             scene =
                 MScene(
-                    GroupWrapper<NodeWrapper>().apply {
+                    GroupWrapper(childClass = NodeWrapper::class).apply {
                         addChild(demoBox)
-                    }
+                    },
+                    rootCls = ParentWrapper::class
                 )
             val pivot = TranslateWrapper()
             val yRotate = RotateWrapper(Rotate(0.0, Rotate.Y_AXIS))

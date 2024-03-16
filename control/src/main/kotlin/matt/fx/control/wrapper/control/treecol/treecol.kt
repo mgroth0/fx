@@ -13,24 +13,29 @@ import matt.fx.control.wrapper.control.colbase.TableColumnBaseWrapper
 import matt.fx.control.wrapper.control.hascols.HasCols
 import matt.fx.control.wrapper.control.treetable.TreeTableViewWrapper
 import matt.fx.control.wrapper.wrapped.wrapped
+import kotlin.reflect.KClass
 
 
-class TreeTableColumnWrapper<E: Any, P>(
-    node: TreeTableColumn<E, P>
+class TreeTableColumnWrapper<E: Any, P: Any>(
+    node: TreeTableColumn<E, P>,
+    private val pClass: KClass<P>
 ): TableColumnBaseWrapper<TreeItem<E>, P, TreeTableColumn<E, P>>(node),
     TreeTableCellFactory<TreeTableColumn<E, P>, E, P>,
     CellValueFactory<CellDataFeatures<E, P>, P>,
     HasCols<TreeItem<E>> {
 
+    companion object {
+        inline operator fun <reified P: Any> invoke(name: String) = TreeTableColumnWrapper(TreeTableColumn(name), P::class)
+        inline fun <E: Any, reified P: Any> invoke2(name: String) = TreeTableColumnWrapper<E, P>(TreeTableColumn(name), P::class)
+    }
 
-    constructor(name: String): this(TreeTableColumn(name))
 
     override val cellFactoryProperty by lazy { node.cellFactoryProperty().toNonNullableProp() }
 
 
     val cellValueFactoryProperty by lazy {
         node.cellValueFactoryProperty().toNullableProp().proxy(
-            callbackConverter<CellDataFeatures<E, P>, P>().nullable()
+            callbackConverter<CellDataFeatures<E, P>, P>(pClass).nullable()
         )
     }
     override var cellValueFactory by cellValueFactoryProperty

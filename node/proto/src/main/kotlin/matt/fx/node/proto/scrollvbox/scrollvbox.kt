@@ -12,9 +12,9 @@ import matt.lang.common.applyIt
 import matt.obs.math.double.op.minus
 
 abstract class ScrollVBox(
-    scrollpane: ScrollPaneWrapper<VBoxWrapperImpl<*>> = ScrollPaneWrapper(),
+    scrollpane: ScrollPaneWrapper<VBoxWrapperImpl<*>> = ScrollPaneWrapper(contentCls = VBoxWrapperImpl::class),
     val vbox: VBoxWrapperImpl<NodeWrapper> = VBoxWrapperImpl()
-) : PaneWrapperImpl<Pane, NodeWrapper>(Pane()), Scrolls { /* Refreshable */
+) : PaneWrapperImpl<Pane, NodeWrapper>(Pane(), NodeWrapper::class), Scrolls { /* Refreshable */
     final override val scrollPane = scrollpane
 
     init {

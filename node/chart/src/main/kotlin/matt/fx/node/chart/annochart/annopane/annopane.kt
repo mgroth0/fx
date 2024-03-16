@@ -51,7 +51,7 @@ class AnnotationPane<X: MathAndComparable<X>, Y: MathAndComparable<Y>>(
 
     val chartBounds by chartBoundsProp
 
-    val annotationLayer = PaneWrapperImpl<Pane, NW>(Pane())
+    val annotationLayer = PaneWrapperImpl<Pane, NW>(Pane(), NW::class)
     fun clear() = annotationLayer.clear()
 
     override fun staticRectangle(minX: X, maxX: X): RectangleWrapper {

@@ -1,8 +1,6 @@
 package matt.fx.control.chart.axis.value.moregenval
 
-import javafx.beans.property.BooleanProperty
 import javafx.beans.property.DoubleProperty
-import javafx.beans.property.IntegerProperty
 import javafx.beans.property.ObjectProperty
 import javafx.beans.property.ObjectPropertyBase
 import javafx.beans.property.ReadOnlyDoubleProperty
@@ -75,7 +73,7 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
      */
     protected val currentLowerBound: DoubleProperty = SimpleDoubleProperty(this, "currentLowerBound")
     /** true if minor tick marks should be displayed  */
-    private val minorTickVisible: BooleanProperty =
+    private val minorTickVisible: StyleableBooleanProperty =
         object : StyleableBooleanProperty(true) {
             override fun invalidated() {
                 minorTickPath.isVisible = get()
@@ -95,7 +93,7 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
         minorTickVisible.set(value)
     }
 
-    fun minorTickVisibleProperty(): BooleanProperty = minorTickVisible
+    fun minorTickVisibleProperty(): StyleableBooleanProperty = minorTickVisible
 
     /** The scale factor from data units to visual units  */
     internal val scale: ReadOnlyDoubleWrapper =
@@ -161,7 +159,7 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
     fun tickLabelFormatterProperty(): ObjectProperty<StringConverter<in T>> = tickLabelFormatter
 
     /** The length of minor tick mark lines. Set to 0 to not display minor tick marks.  */
-    private val minorTickLength: DoubleProperty =
+    private val minorTickLength: StyleableDoubleProperty =
         object : StyleableDoubleProperty(5.0) {
             override fun invalidated() {
                 requestAxisLayout()
@@ -180,13 +178,13 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
         minorTickLength.set(value)
     }
 
-    fun minorTickLengthProperty(): DoubleProperty = minorTickLength
+    fun minorTickLengthProperty(): StyleableDoubleProperty = minorTickLength
 
     /**
      * The number of minor tick divisions to be displayed between each major tick mark.
      * The number of actual minor tick marks will be one less than this.
      */
-    protected val minorTickCount: IntegerProperty =
+    protected val minorTickCount: StyleableIntegerProperty =
         object : StyleableIntegerProperty(5) {
             override fun invalidated() {
                 invalidateRange()
@@ -206,7 +204,7 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
         minorTickCount.set(value)
     }
 
-    fun minorTickCountProperty(): IntegerProperty = minorTickCount
+    fun minorTickCountProperty(): StyleableIntegerProperty = minorTickCount
     /**
      * Creates a auto-ranging matt.fx.control.wrapper.chart.axis.value.fxextend.ValueAxis.
      */
@@ -499,10 +497,7 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
                     n: MoreGenericValueAxis<out UpperBound>
                 ): Boolean = n.minorTickLength.value == null || !n.minorTickLength.isBound
 
-                override fun getStyleableProperty(n: MoreGenericValueAxis<out UpperBound>): StyleableProperty<Number> {
-                    @Suppress("UNCHECKED_CAST")
-                    return n.minorTickLengthProperty() as StyleableProperty<Number>
-                }
+                override fun getStyleableProperty(n: MoreGenericValueAxis<out UpperBound>): StyleableProperty<Number> = n.minorTickLengthProperty()
             }
         val MINOR_TICK_COUNT: CssMetaData<MoreGenericValueAxis<out UpperBound>, Number> =
             object : CssMetaData<MoreGenericValueAxis<out UpperBound>, Number>(
@@ -513,10 +508,7 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
                     n: MoreGenericValueAxis<out UpperBound>
                 ): Boolean = n.minorTickCount.value == null || !n.minorTickCount.isBound
 
-                override fun getStyleableProperty(n: MoreGenericValueAxis<out UpperBound>): StyleableProperty<Number> {
-                    @Suppress("UNCHECKED_CAST")
-                    return n.minorTickCountProperty() as StyleableProperty<Number>
-                }
+                override fun getStyleableProperty(n: MoreGenericValueAxis<out UpperBound>): StyleableProperty<Number> = n.minorTickCountProperty()
             }
 
         val MINOR_TICK_VISIBLE: CssMetaData<MoreGenericValueAxis<out UpperBound>, Boolean> =
@@ -529,10 +521,7 @@ abstract class MoreGenericValueAxis<T : UpperBound>(
                     n: MoreGenericValueAxis<out UpperBound>
                 ): Boolean = n.minorTickVisible.value == null || !n.minorTickVisible.isBound
 
-                override fun getStyleableProperty(n: MoreGenericValueAxis<out UpperBound>): StyleableProperty<Boolean> {
-                    @Suppress("UNCHECKED_CAST")
-                    return n.minorTickVisibleProperty() as StyleableProperty<Boolean>
-                }
+                override fun getStyleableProperty(n: MoreGenericValueAxis<out UpperBound>): StyleableProperty<Boolean> = n.minorTickVisibleProperty()
             }
         var classCssMetaData: List<CssMetaData<out Styleable?, *>>? = null
             private set

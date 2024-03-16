@@ -15,6 +15,7 @@ import matt.fx.graphics.wrapper.text.TextWrapper
 import matt.obs.listen.MyListenerInter
 import matt.obs.prop.ObsVal
 import matt.obs.prop.writable.BindableProperty
+import kotlin.reflect.KClass
 import kotlin.time.Duration
 
 fun ET.swap(nodeProp: BindableProperty<out NW?>) =
@@ -24,11 +25,11 @@ fun ET.swap(nodeProp: BindableProperty<out NW?>) =
         this
     }
 
-fun <P: Any, N: NodeWrapper> ET.swapperNeverNull(
+inline fun <P: Any, reified N: NodeWrapper> ET.swapperNeverNull(
     prop: ObsVal<P>,
     fadeOutDur: Duration? = null,
     fadeInDur: Duration? = null,
-    op: (P).() -> N
+    noinline op: (P).() -> N
 
 ): Swapper<P, N> {
     val swapper = Swapper<P, N>()
@@ -36,12 +37,12 @@ fun <P: Any, N: NodeWrapper> ET.swapperNeverNull(
     return attach(swapper)
 }
 
-fun <P, N: NodeWrapper> ET.swapper(
+inline fun <P, reified N: NodeWrapper> ET.swapper(
     prop: ObsVal<P>,
     nullMessage: String? = null,
     fadeOutDur: Duration? = null,
     fadeInDur: Duration? = null,
-    op: (P & Any).() -> N
+    noinline op: (P & Any).() -> N
 
 ): Swapper<P, N> {
     val swapper = Swapper<P, N>()
@@ -49,11 +50,11 @@ fun <P, N: NodeWrapper> ET.swapper(
     return attach(swapper)
 }
 
-fun <P, N: NodeWrapper> ET.swapperNullable(
+inline fun <P, reified N: NodeWrapper> ET.swapperNullable(
     prop: ObsVal<P>,
     fadeOutDur: Duration? = null,
     fadeInDur: Duration? = null,
-    op: (P).() -> N
+    noinline op: (P).() -> N
 ): Swapper<P, N> {
     val swapper = Swapper<P, N>()
     swapper.setupSwappingNullable(prop, fadeOutDur = fadeOutDur, fadeInDur = fadeInDur, op)
@@ -83,7 +84,12 @@ fun <P> ET.swapperRNullable(
     return attach(swapper)
 }
 
-open class Swapper<P, C: NodeWrapper>: RegionWrapperImpl<Region, C>(AnchorPane()) {
+open class Swapper<P, C: NodeWrapper>(childClass: KClass<C>): RegionWrapperImpl<Region, C>(AnchorPane(), childClass) {
+
+    companion object {
+        /*operator fun <P> invoke() = Swapper<P,NodeWrapper>(NodeWrapper::class)*/
+        inline operator fun <P, reified C: NodeWrapper> invoke() = Swapper<P, C>(C::class)
+    }
 
     private val anchor get() = this@Swapper.node as AnchorPane
 

@@ -61,7 +61,7 @@ class ImageViewWrapper(
             node.fitWidth = value
         }
 
-    val fitWidthProperty by lazy { node.fitWidthProperty().toNonNullableProp().cast<Double>() }
+    val fitWidthProperty by lazy { node.fitWidthProperty().toNonNullableProp().cast<Double>(Double::class) }
 
     var fitHeight
         get() = node.fitHeight
@@ -69,7 +69,7 @@ class ImageViewWrapper(
             node.fitHeight = value
         }
 
-    val fitHeightProperty by lazy { node.fitHeightProperty().toNonNullableProp().cast<Double>() }
+    val fitHeightProperty by lazy { node.fitHeightProperty().toNonNullableProp().cast<Double>(Double::class) }
 
 
     var isSmooth

@@ -98,7 +98,7 @@ abstract class ChartForPrivateProps : Region() {
      * The side of the chart where the title is displayed
      * @defaultValue Side.TOP
      */
-    private val titleSide: ObjectProperty<Side> =
+    private val titleSide: StyleableObjectProperty<Side> =
         object : StyleableObjectProperty<Side>(TOP) {
             override fun invalidated() {
                 requestLayout()
@@ -117,7 +117,7 @@ abstract class ChartForPrivateProps : Region() {
         titleSide.set(value)
     }
 
-    fun titleSideProperty(): ObjectProperty<Side> = titleSide
+    fun titleSideProperty(): StyleableObjectProperty<Side> = titleSide
 
     /**
      * The node to display as the Legend. Subclasses can set a node here to be displayed on a side as the legend. If
@@ -152,7 +152,7 @@ abstract class ChartForPrivateProps : Region() {
     /**
      * When true the chart will display a legend if the chart implementation supports a legend.
      */
-    private val legendVisible: BooleanProperty =
+    private val legendVisible: StyleableBooleanProperty =
         object : StyleableBooleanProperty(true) {
             override fun invalidated() {
                 requestLayout()
@@ -171,14 +171,14 @@ abstract class ChartForPrivateProps : Region() {
         legendVisible.value = value
     }
 
-    fun legendVisibleProperty(): BooleanProperty = legendVisible
+    fun legendVisibleProperty(): StyleableBooleanProperty = legendVisible
 
     /**
      * The side of the chart where the legend should be displayed
      *
      * @defaultValue Side.BOTTOM
      */
-    internal val legendSide: ObjectProperty<Side> =
+    internal val legendSide: StyleableObjectProperty<Side> =
         object : StyleableObjectProperty<Side>(BOTTOM) {
             override fun invalidated() {
                 val legendSide = get()
@@ -200,7 +200,7 @@ abstract class ChartForPrivateProps : Region() {
         legendSide.set(value)
     }
 
-    fun legendSideProperty(): ObjectProperty<Side> = legendSide
+    fun legendSideProperty(): StyleableObjectProperty<Side> = legendSide
 
     /** When true any data changes will be animated.  */
     internal val animated: BooleanProperty = SimpleBooleanProperty(this, "animated", true)
@@ -426,10 +426,7 @@ abstract class ChartForPrivateProps : Region() {
             ) {
                 override fun isSettable(node: ChartForPrivateProps): Boolean = node.titleSide.value == null || !node.titleSide.isBound
 
-                override fun getStyleableProperty(node: ChartForPrivateProps): StyleableProperty<Side> {
-                    @Suppress("UNCHECKED_CAST")
-                    return node.titleSideProperty() as StyleableProperty<Side>
-                }
+                override fun getStyleableProperty(node: ChartForPrivateProps): StyleableProperty<Side> = node.titleSideProperty()
             }
         val LEGEND_SIDE: CssMetaData<ChartForPrivateProps, Side> =
             object : CssMetaData<ChartForPrivateProps, Side>(
@@ -439,10 +436,7 @@ abstract class ChartForPrivateProps : Region() {
             ) {
                 override fun isSettable(node: ChartForPrivateProps): Boolean = node.legendSide.value == null || !node.legendSide.isBound
 
-                override fun getStyleableProperty(node: ChartForPrivateProps): StyleableProperty<Side> {
-                    @Suppress("UNCHECKED_CAST")
-                    return node.legendSideProperty() as StyleableProperty<Side>
-                }
+                override fun getStyleableProperty(node: ChartForPrivateProps): StyleableProperty<Side> = node.legendSideProperty()
             }
         val LEGEND_VISIBLE: BooleanCssMetaData<ChartForPrivateProps> =
             object : BooleanCssMetaData<ChartForPrivateProps>(
@@ -453,10 +447,7 @@ abstract class ChartForPrivateProps : Region() {
                     node: ChartForPrivateProps
                 ): Boolean = node.legendVisible.value == null || !node.legendVisible.isBound
 
-                override fun getStyleableProperty(node: ChartForPrivateProps): StyleableProperty<Boolean?> {
-                    @Suppress("UNCHECKED_CAST")
-                    return node.legendVisibleProperty() as StyleableProperty<Boolean?>
-                }
+                override fun getStyleableProperty(node: ChartForPrivateProps): StyleableProperty<Boolean?> = node.legendVisibleProperty()
             }
         val classCssMetaData: List<CssMetaData<out Styleable?, *>>? by lazy {
             val styleables: MutableList<CssMetaData<out Styleable?, *>> = ArrayList(getClassCssMetaData())

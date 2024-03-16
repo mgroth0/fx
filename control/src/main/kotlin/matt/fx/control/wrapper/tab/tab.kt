@@ -8,33 +8,41 @@ import matt.fx.control.wrapper.control.tab.TabWrapper
 import matt.fx.control.wrapper.selects.SelectModWrap
 import matt.fx.control.wrapper.selects.Selects
 import matt.fx.control.wrapper.selects.wrap
-import matt.fx.graphics.service.uncheckedWrapperConverter
+import matt.fx.graphics.service.wrapperConverter
 import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapper
 import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapperImpl
 import matt.obs.col.olist.sync.toSyncedList
+import kotlin.reflect.KClass
+import kotlin.reflect.cast
 
 
-fun <T : TabWrapper<*>> ET.tabpane(op: TabPaneWrapper<T>.() -> Unit = {}) = TabPaneWrapper<T>().attachTo(this, op)
+inline fun <reified T : TabWrapper<*>> ET.tabpane(op: TabPaneWrapper<T>.() -> Unit = {}) = TabPaneWrapper<T>().attachTo(this, op)
 
 
 open class TabPaneWrapper<T : TabWrapper<*>>(
-    node: TabPane = TabPane()
+    node: TabPane = TabPane(),
+    private val tabClass: KClass<T>
 ) : ControlWrapperImpl<TabPane>(node), Selects<T> {
-    constructor(vararg tabs: T) : this(
-        TabPane(
-            *tabs.map { it.node }.toTypedArray()
-        )
-    )
+    companion object {
+        inline operator fun <reified T: TabWrapper<*>> invoke(vararg tabs: T): TabPaneWrapper<T> =
+            TabPaneWrapper(
+                TabPane(
+                    *tabs.map { it.node }.toTypedArray()
+                ),
+                T::class
+            )
+    }
 
 
-    val tabs get() = node.tabs.createMutableWrapper().toSyncedList<Tab, T>(uncheckedWrapperConverter())
+
+    val tabs get() = node.tabs.createMutableWrapper().toSyncedList<Tab, T>(wrapperConverter(Tab::class, tabClass))
 
     final override val selectionModel: SelectModWrap<T> by lazy {
         println("actually selection model is a property...")
-        node.selectionModel.wrap(uncheckedWrapperConverter())
+        node.selectionModel.wrap(wrapperConverter(Tab::class, tabClass))
     }
 
     fun add(tab: T) = tabs.add(tab)
@@ -50,15 +58,14 @@ open class TabPaneWrapper<T : TabWrapper<*>>(
         child: NodeWrapper,
         index: Int?
     ) {
-        val tab = TabWrapper<NodeWrapper>(child.toString(), child)
-        @Suppress("UNCHECKED_CAST")
-        if (index == null) (this as TabPaneWrapper<TabWrapper<NodeWrapper>>).add(tab)
-        else (this as TabPaneWrapper<TabWrapper<NodeWrapper>>).add(index, tab)
+        val tab = TabWrapper(child.toString(), child)
+        if (index == null) add(tabClass.cast(tab))
+        else add(index, tabClass.cast(tab))
     }
 }
 
 
-fun <W : NodeWrapper> TabPaneWrapper<TabWrapper<W>>.tab(
+inline fun <reified W : NodeWrapper> TabPaneWrapper<TabWrapper<W>>.tab(
     text: String,
     content: W,
     index: Int? = null,
@@ -72,9 +79,9 @@ fun <W : NodeWrapper> TabPaneWrapper<TabWrapper<W>>.tab(
     return tab
 }
 
-fun <C : NodeWrapper> TabPaneWrapper<TabWrapper<VBoxWrapper<C>>>.vtab(
+inline fun <reified C : NodeWrapper> TabPaneWrapper<TabWrapper<VBoxWrapper<C>>>.vtab(
     s: String = "",
-    op: VBoxWrapper<C>.() -> Unit = {}
+    crossinline op: VBoxWrapper<C>.() -> Unit = {}
 ): TabWrapper<VBoxWrapper<C>> =
     tab(s, VBoxWrapperImpl(), closable = false) {
         op()

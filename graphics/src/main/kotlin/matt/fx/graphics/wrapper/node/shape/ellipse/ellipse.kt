@@ -34,7 +34,7 @@ open class EllipseWrapper(
             node.radiusX = value
         }
 
-    val radiusXProperty by lazy { node.radiusXProperty().toNonNullableProp().cast<Double>() }
+    val radiusXProperty by lazy { node.radiusXProperty().toNonNullableProp().cast<Double>(Double::class) }
 
 
     var radiusY
@@ -43,5 +43,5 @@ open class EllipseWrapper(
             node.radiusY = value
         }
 
-    val radiusYProperty by lazy { node.radiusYProperty().toNonNullableProp().cast<Double>() }
+    val radiusYProperty by lazy { node.radiusYProperty().toNonNullableProp().cast<Double>(Double::class) }
 }

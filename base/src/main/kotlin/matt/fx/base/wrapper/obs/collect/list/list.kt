@@ -11,7 +11,6 @@ import matt.fx.base.wrapper.obs.collect.list.change.toFXChange
 import matt.lang.anno.Open
 import matt.lang.common.ILLEGAL
 import matt.lang.convert.BiConverter
-import matt.lang.function.Consume
 import matt.lang.function.Op
 import matt.lang.setall.setAll
 import matt.model.op.prints.Prints
@@ -30,6 +29,7 @@ import matt.obs.listen.ListListenerBase
 import matt.obs.listen.MyListenerInter
 import matt.obs.listen.update.ListUpdate
 import matt.obs.prop.ObsVal
+import java.util.Spliterator
 import java.util.function.Predicate
 
 fun <E> ObservableList<E>.createImmutableWrapper() = FXBackedImmutableObservableList(this)
@@ -43,9 +43,6 @@ interface MyObservableListWrapper<E> : Observable {
     fun sorted(comparator: Comparator<E>): SortedList<E>
     fun sorted(): SortedList<E>
 }
-
-fun <E> MyObservableListWrapper<E>.onAdd(op: Consume<E>) = listen(onAdd = op, onRemove = {})
-fun <E> MyObservableListWrapper<E>.onRemove(op: Consume<E>) = listen(onAdd = { }, onRemove = op)
 
 fun <E> MyObservableListWrapper<E>.listen(
     onAdd: ((E) -> Unit),
@@ -65,14 +62,6 @@ fun <E> MyObservableListWrapper<E>.listen(
     )
 }
 
-
-fun <E> MyObservableListWrapper<E>.changeListener(op: (ListChangeListener.Change<out E>) -> Unit) =
-    run {
-        val l = ListChangeListener<E> { op(it) }
-        addListener(l)
-        l
-    }
-
 fun <E> MyObservableListWrapper<E>.onChange(op: (ListChangeListener.Change<out E>) -> Unit) =
     apply {
         addListener(ListChangeListener { op(it) })
@@ -81,47 +70,23 @@ fun <E> MyObservableListWrapper<E>.onChange(op: (ListChangeListener.Change<out E
 
 interface MyObservableListWrapperPlusList<E> : MyObservableListWrapper<E>, List<E>
 
-
-fun <E> mfxListConverter() =
-    object : BiConverter<ObservableList<E>, MutableObsList<E>> {
-        override fun convertToB(a: ObservableList<E>): MutableObsList<E> {
-            @Suppress("UNCHECKED_CAST")
-            return when (a) {
-                is MBackedFXObservableList<*> -> a.mList as MutableObsList<E>
-                else                          -> a.createMutableWrapper()
-            }
-        }
-
-        override fun convertToA(b: MutableObsList<E>): ObservableList<E> {
-            @Suppress("UNCHECKED_CAST")
-            return when (b) {
-                is FXBackedObsList<*> -> b.obs as ObservableList<E>
-                else                  -> b.createFXWrapper()
-            }
-        }
-    }
-
 fun <E> mfxMutableListConverter() =
     object : BiConverter<ObservableList<E>, MutableObsList<E>> {
-        override fun convertToB(a: ObservableList<E>): MutableObsList<E> {
-            @Suppress("UNCHECKED_CAST")
-            return when (a) {
-                is MBackedFXObservableList<*> -> a.mList as MutableObsList<E>
+        override fun convertToB(a: ObservableList<E>): MutableObsList<E> =
+            when (a) {
+                is MBackedFXObservableList -> a.mList as MutableObsList<E>
                 else                          -> a.createMutableWrapper()
             }
-        }
 
-        override fun convertToA(b: MutableObsList<E>): ObservableList<E> {
-            @Suppress("UNCHECKED_CAST")
-            return when (b) {
-                is FXBackedObsList<*> -> b.obs as ObservableList<E>
+        override fun convertToA(b: MutableObsList<E>): ObservableList<E> =
+            when (b) {
+                is FXBackedObsList -> b.obs/* as ObservableList<E>*/
 
                 else                  -> b.createMutableFXWrapper()
             }
-        }
     }
 
-abstract class FXBackedObsList<E>(internal val obs: ObservableList<E>)
+abstract class FXBackedObsList<E>(internal val obs: ObservableList<E>): MutableObsList<E>
 
 abstract class ObservableListWrapperImpl<E>(obs: ObservableList<E>) :
     FXBackedObsList<E>(obs),
@@ -146,6 +111,10 @@ class FXBackedMutableObservableListBase<E>(obs: ObservableList<E>) :
     FXOLMutableListWrapperAndBasic<E>,
     BindableList<E> {
 
+
+    override fun spliterator(): Spliterator<E> {
+        error("I WOULD REMOVE THIS OVERRIDE BUT CURRENTLY THAT CAUSES A BUGGED COMPILER ERROR")
+    }
 
     val bindableListHelper by lazy { BindableListImpl(this) }
     override fun <S> bind(

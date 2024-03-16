@@ -248,8 +248,8 @@ a reference to the old value.
     /**
      * A property that acts as a proxy between the skin property and css.
      */
-    private var skinClassName: StringProperty? = null
-    private fun skinClassNameProperty(): StringProperty {
+    private var skinClassName: StyleableStringProperty? = null
+    private fun skinClassNameProperty(): StyleableStringProperty {
         if (skinClassName == null) {
             skinClassName =
                 object: StyleableStringProperty() {
@@ -1073,7 +1073,6 @@ doesn't render
             ) {
                 override fun isSettable(cssBridge: MyPopUpCSSBridge): Boolean = !cssBridge.popupControl.skinProperty().isBound
 
-                @Suppress("UNCHECKED_CAST")
                 override fun getStyleableProperty(cssBridge: MyPopUpCSSBridge): StyleableProperty<String> =
                     cssBridge.popupControl.skinClassNameProperty() as StyleableProperty<String>
             }

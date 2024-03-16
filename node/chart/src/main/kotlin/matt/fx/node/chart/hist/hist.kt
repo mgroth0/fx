@@ -22,7 +22,7 @@ import matt.obs.prop.writable.BindableProperty
 import matt.obs.prop.writable.VarProp
 
 
-class HistogramImpl<Y : MathAndComparable<Y>> : RegionWrapperImpl<Region, NodeWrapper>(VBox()), Titled, Histogram<Y> {
+class HistogramImpl<Y : MathAndComparable<Y>> : RegionWrapperImpl<Region, NodeWrapper>(VBox(), NodeWrapper::class), Titled, Histogram<Y> {
 
 
 

@@ -10,10 +10,11 @@ import matt.fx.graphics.wrapper.ET
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attach
 import matt.fx.graphics.wrapper.pane.PaneWrapperImpl
+import kotlin.reflect.KClass
 
-fun <C: NodeWrapper> ET.flowpane(op: FlowPaneWrapper<C>.() -> Unit = {}) = attach(FlowPaneWrapper(), op)
+inline fun <reified C: NodeWrapper> ET.flowpane(op: FlowPaneWrapper<C>.() -> Unit = {}) = attach(FlowPaneWrapper(childClass = C::class), op)
 
-open class FlowPaneWrapper<C: NodeWrapper>(node: FlowPane = FlowPane()): PaneWrapperImpl<FlowPane, C>(node) {
+open class FlowPaneWrapper<C: NodeWrapper>(node: FlowPane = FlowPane(), childClass: KClass<C>): PaneWrapperImpl<FlowPane, C>(node, childClass) {
 
     var orientation: Orientation
         get() = node.orientation

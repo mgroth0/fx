@@ -61,7 +61,7 @@ class SliderWrapper(
             node.value = value
         }
 
-    val valueProperty by lazy { node.valueProperty().toNonNullableProp().cast<Double>() }
+    val valueProperty by lazy { node.valueProperty().toNonNullableProp().cast<Double>(Double::class) }
 
 
     val valueChangingProperty: NonNullFXBackedBindableProp<Boolean> by lazy { node.valueChangingProperty().toNonNullableProp() }

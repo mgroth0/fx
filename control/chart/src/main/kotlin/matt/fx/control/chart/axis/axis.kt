@@ -9,7 +9,7 @@ import matt.fx.graphics.wrapper.region.RegionWrapperImpl
 
 typealias MAxis<T> = AxisWrapper<T, out AxisForPackagePrivateProps<T>>
 
-abstract class AxisWrapper<T, N : AxisForPackagePrivateProps<T>>(node: N) : RegionWrapperImpl<N, NodeWrapper>(node) {
+abstract class AxisWrapper<T, N : AxisForPackagePrivateProps<T>>(node: N) : RegionWrapperImpl<N, NodeWrapper>(node, childClass = NodeWrapper::class) {
     val autoRangingProperty: NonNullFXBackedBindableProp<Boolean> by lazy { node.autoRangingProperty().toNonNullableProp() }
     var isAutoRanging by autoRangingProperty
     val tickMarkVisibleProperty: NonNullFXBackedBindableProp<Boolean> by lazy { node.tickMarkVisibleProperty().toNonNullableProp() }

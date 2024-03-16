@@ -62,7 +62,7 @@ class ProcessConsolePane(
     override val name: String,
     val processBuilder: ProcessBuilder,
     private val services: InterAppServices
-) : VBoxWrapperImpl<NodeWrapper>(), ProcessNode {
+) : VBoxWrapperImpl<NodeWrapper>(childClass = NodeWrapper::class), ProcessNode {
 
     fun clone() =
         ProcessConsolePane(

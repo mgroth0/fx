@@ -2,6 +2,7 @@ package matt.fx.node.inspect.test
 
 
 import matt.fx.graphics.node.Inspectable
+import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.pane.vbox.VBoxW
 import matt.fx.node.inspect.InspectionView
 import matt.mbuild.mtest.fx.FXTester
@@ -18,5 +19,5 @@ class InspectTests : FxTests() {
 }
 
 object TestInspectable : Inspectable<VBoxW> {
-    override fun inspect(): VBoxW = VBoxW()
+    override fun inspect(): VBoxW = VBoxW(childClass = NodeWrapper::class)
 }

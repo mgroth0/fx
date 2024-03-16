@@ -8,16 +8,13 @@ import matt.fig.modell.plot.GenericPlotData
 import matt.fig.modell.plot.axis.Axis
 import matt.fig.modell.plot.axis.BasicNumberAxis
 import matt.fig.modell.plot.axis.CategoricalAxis
-import matt.fig.modell.plot.axis.NumericalAxis
 import matt.fig.modell.series.Series
 import matt.fig.render.GenericPlotRenderer
 import matt.file.JioFile
 import matt.fx.control.chart.ChartWrapper
 import matt.fx.control.chart.axis.AxisWrapper
-import matt.fx.control.chart.axis.MAxis
 import matt.fx.control.chart.axis.cat.CategoryAxisWrapper
 import matt.fx.control.chart.axis.value.axis.AxisForPackagePrivateProps
-import matt.fx.control.chart.axis.value.number.NumberAxisWrapper
 import matt.fx.control.chart.axis.value.number.numAxis
 import matt.fx.control.chart.line.highperf.relinechart.xy.XYChartForPackagePrivateProps
 import matt.fx.control.chart.line.highperf.relinechart.xy.XYChartForPackagePrivateProps.Data
@@ -70,10 +67,9 @@ class FxPlotRenderer<X, Y> : GenericPlotRenderer<X, Y, ChartWrapper<*>> {
             buildNode {
                 val axisX = figData.xAxis.toFxAxis<X>()
                 val axisY = figData.yAxis.toFxAxis<Y>()
-                @Suppress("UNCHECKED_CAST")
                 scatterChart(
-                    x = axisX as MAxis<out Any>,
-                    y = axisY as MAxis<out Any>
+                    x = axisX,
+                    y = axisY
                 ) {
                     animated = false
                     figData.title?.go {
@@ -200,7 +196,7 @@ fun Series<*, *>.toFxSeries(): SeriesWrapper<MathAndComparable<*>, MathAndCompar
 }
 
 
-fun <T> Axis.toFxAxis(): AxisWrapper<out T, out AxisForPackagePrivateProps<out T>> {
+fun <T> Axis.toFxAxis(): AxisWrapper<out Any, out AxisForPackagePrivateProps<out Any>> {
     val r =
         when (this) {
             is CategoricalAxis    ->
@@ -209,7 +205,7 @@ fun <T> Axis.toFxAxis(): AxisWrapper<out T, out AxisForPackagePrivateProps<out T
                         FXCollections.observableList(
                             this@toFxAxis.sortedCategories
                         )
-                }
+                } as AxisWrapper<out Any, out AxisForPackagePrivateProps<out Any>>
 
 
             is BasicNumberAxis<*> -> {
@@ -239,7 +235,7 @@ fun <T> Axis.toFxAxis(): AxisWrapper<out T, out AxisForPackagePrivateProps<out T
                         /*it::tickUnit.set(tu)*/
                     }
                     it.isTickMarkVisible = showTicks
-                }
+                } as AxisWrapper<out Any, out AxisForPackagePrivateProps<out Any>>
             }
         }
     r.apply {
@@ -250,9 +246,8 @@ fun <T> Axis.toFxAxis(): AxisWrapper<out T, out AxisForPackagePrivateProps<out T
         r.axisLabel = it
     }
 
-    @Suppress("UNCHECKED_CAST")
-    return r as AxisWrapper<out T, out AxisForPackagePrivateProps<out T>>
+    return r
 }
 
-@Suppress("UNCHECKED_CAST")
-fun <T: MathAndComparable<T>> NumericalAxis<T>.toFxAxis(): AxisWrapper<*, *> = (this as Axis).toFxAxis<T>() as NumberAxisWrapper<T>
+
+/*fun <T: MathAndComparable<T>> NumericalAxis<T>.toFxAxis(): AxisWrapper<*, *> = (this as Axis).toFxAxis<T>() as NumberAxisWrapper<T>*/

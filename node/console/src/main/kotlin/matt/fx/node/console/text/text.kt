@@ -53,7 +53,7 @@ private val NEWLINES = listOf('\n', '\r')
 class ConsoleTextFlow(
     private val takesInput: Boolean = true,
     private val maxLines: Int?
-) : TextFlowWrapper<ConsoleBlock>() {
+) : TextFlowWrapper<ConsoleBlock>(childClass = ConsoleBlock::class) {
 
     companion object {
         private const val MAX_FONT_SIZE = 50.0

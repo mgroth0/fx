@@ -12,35 +12,42 @@ import javafx.stage.Window
 import matt.fx.base.wrapper.obs.collect.list.createMutableWrapper
 import matt.fx.base.wrapper.obs.obsval.toNonNullableROProp
 import matt.fx.base.wrapper.obs.obsval.toNullableROProp
-import matt.fx.graphics.service.uncheckedNullableWrapperConverter
+import matt.fx.graphics.service.nullableWrapperConverter
 import matt.fx.graphics.service.wrapped
 import matt.fx.graphics.wrapper.SingularEventTargetWrapper
+import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.parent.ParentWrapper
 import matt.fx.graphics.wrapper.scenelike.SceneLikeWrapper
 import matt.fx.graphics.wrapper.stage.StageWrapper
 import matt.fx.graphics.wrapper.window.WindowWrapper
 import matt.obs.bind.binding
+import kotlin.reflect.KClass
+import kotlin.reflect.cast
 
 
 open class SceneWrapper<R : ParentWrapper<*>>(
-    node: Scene
+    node: Scene,
+    val parentCls: KClass<R>
 ) : SingularEventTargetWrapper<Scene>(node), SceneLikeWrapper<Scene, R> {
 
+    companion object {
+        inline operator fun <reified P: ParentWrapper<*>> invoke(root: P) = SceneWrapper(Scene(root.node), P::class)
+        inline operator fun <reified P: ParentWrapper<*>> invoke(
+            root: P,
+            userWidth: Double,
+            userHeight: Double
+        ) = SceneWrapper(
+            Scene(root.node, userWidth, userHeight), P::class
+        )
+    }
 
-    constructor(root: ParentWrapper<*>) : this(Scene(root.node))
-    constructor(
-        root: ParentWrapper<*>,
-        userWidth: Double,
-        userHeight: Double
-    ) : this(
-        Scene(root.node, userWidth, userHeight)
-    )
 
+    final override fun castRoot(nw: NodeWrapper): R = parentCls.cast(nw)
 
     val focusOwner get() = node.focusOwner?.wrapped()
 
-    final override val widthProperty get() = node.widthProperty().toNonNullableROProp().cast<Double>()
-    final override val heightProperty get() = node.heightProperty().toNonNullableROProp().cast<Double>()
+    final override val widthProperty get() = node.widthProperty().toNonNullableROProp().cast<Double>(Double::class)
+    final override val heightProperty get() = node.heightProperty().toNonNullableROProp().cast<Double>(Double::class)
 
     val stylesheets by lazy {
         node.stylesheets.createMutableWrapper()
@@ -63,7 +70,11 @@ open class SceneWrapper<R : ParentWrapper<*>>(
 
     val windowProperty by lazy {
         node.windowProperty().toNullableROProp().binding(
-            converter = uncheckedNullableWrapperConverter<Window, WindowWrapper<*>>()
+            converter =
+                nullableWrapperConverter<Window, WindowWrapper<*>>(
+                    Window::class,
+                    WindowWrapper::class
+                )
         )
     }
     val window get() = windowProperty.value

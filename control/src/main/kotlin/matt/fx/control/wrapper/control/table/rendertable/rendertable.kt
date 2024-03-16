@@ -8,6 +8,7 @@ import matt.fx.graphics.wrapper.getterdsl.buildNode
 import matt.fx.graphics.wrapper.pane.vbox.VBoxWrapper
 import matt.fx.graphics.wrapper.pane.vbox.v
 import matt.lang.common.go
+import matt.obs.bind.binding
 import matt.obs.col.olist.toBasicObservableList
 import matt.obs.prop.writable.toVarProp
 
@@ -24,16 +25,20 @@ class FXTableRenderer : FormattedTableRenderer<VBoxWrapper<*>> {
                 tableview(items = figData.rows().map { it.value }.toBasicObservableList()) {
 
                     column(
+                        pClass = String::class,
                         title = "row name"
                     ) {
+
                         it.value.toVarProp()
                     }
 
                     figData.columns().forEach { col ->
+
                         column(
+                            pClass = String::class,
                             title = col.value
                         ) {
-                            col[it.value].toVarProp()
+                            col[it.value].toVarProp().binding { it!! }
                         }
                     }
                 }

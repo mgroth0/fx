@@ -11,7 +11,7 @@ import matt.obs.col.olist.MutableObsList
 
 class MyLegend(
     val items: MutableObsList<LegendItem>
-): GridPaneWrapper<NW>() {
+): GridPaneWrapper<NW>(childClass = NW::class) {
 
     fun update() {
         clear()

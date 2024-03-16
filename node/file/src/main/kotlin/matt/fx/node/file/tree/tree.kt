@@ -2,14 +2,10 @@ package matt.fx.node.file.tree
 
 import javafx.geometry.Pos.CENTER_LEFT
 import javafx.scene.control.SelectionMode.MULTIPLE
-import javafx.scene.control.TreeItem
 import javafx.scene.layout.Priority.ALWAYS
 import matt.auto.actions
 import matt.auto.moveToTrash
 import matt.auto.open
-import matt.collect.itr.recurse.chain.chain
-import matt.collect.itr.recurse.recurse
-import matt.collect.itr.sameContentsAnyOrder
 import matt.collect.map.lazyMap
 import matt.file.construct.mFile
 import matt.file.ext.singleExtension
@@ -19,12 +15,9 @@ import matt.fx.control.wrapper.control.row.TreeCellWrapper
 import matt.fx.control.wrapper.control.row.TreeTableRowWrapper
 import matt.fx.control.wrapper.control.tree.TreeViewWrapper
 import matt.fx.control.wrapper.control.tree.like.TreeLikeWrapper
-import matt.fx.control.wrapper.control.tree.like.populateTree
 import matt.fx.control.wrapper.control.treetable.TreeTableViewWrapper
 import matt.fx.control.wrapper.control.treetable.autoResizeColumns
-import matt.fx.control.wrapper.selects.MultiSelectWrap
 import matt.fx.control.wrapper.treeitem.TreeItemWrapper
-import matt.fx.control.wrapper.wrapped.wrapped
 import matt.fx.fxauto.actionitem
 import matt.fx.fxauto.fxActions
 import matt.fx.graphics.icon.view
@@ -42,24 +35,20 @@ import matt.gui.interact.WinGeom
 import matt.gui.interact.openInNewWindow
 import matt.gui.menu.context.mcontextmenu
 import matt.gui.mstage.WMode.CLOSE
-import matt.gui.refresh.refreshWhileInSceneEvery
 import matt.kjlib.socket.client.clients.InterAppServices
 import matt.lang.common.NEVER
 import matt.lang.common.inList
 import matt.lang.common.scope
+import matt.lang.common.unsafeErr
 import matt.lang.model.file.FsFile
 import matt.lang.model.file.MacFileSystem
-import matt.log.taball
-import matt.log.warn.common.warn
 import matt.obs.col.olist.BasicObservableListImpl
 import matt.obs.col.olist.toBasicObservableList
-import matt.obs.listen.OldAndNewListenerImpl
 import matt.obs.math.double.op.div
 import matt.obs.prop.writable.BindableProperty
 import matt.shell.common.context.shell.UnixDirectCommandsOnly
 import matt.shell.commonj.context.ReapingShellExecutionContext
 import matt.shell.commonj.context.UnknownShellExecutionContext
-import matt.time.dur.common.sec
 
 private const val HEIGHT = 300.0
 
@@ -67,7 +56,7 @@ context(ReapingShellExecutionContext, InterAppServices)
 fun fileTreeAndViewerPane(
     rootFile: FsFile,
     doubleClickInsteadOfSelect: Boolean = false
-) = HBoxWrapperImpl<NodeWrapper>().apply {
+) = HBoxWrapperImpl<NodeWrapper>(childClass = NodeWrapper::class).apply {
     val hBox = this
     alignment = CENTER_LEFT
     val treeTableView =
@@ -110,46 +99,6 @@ fun fileTreeAndViewerPane(
     }
 }
 
-fun TreeLikeWrapper<*, out FsFile>.nav(f: FsFile) {
-
-    val roo = root ?: return
-
-    val fam = f.chain { it.parent }.toList()
-
-    if (f.toJioFile().doesNotExist) return
-
-    roo.children.firstOrNull { it.value in fam }?.let { subRoot ->
-        println("good to nav")
-        var nextSubRoot = subRoot as FileTreeItem
-        var keepGoing = true
-        while (keepGoing) {
-            println("refreshing and checking ${nextSubRoot.value}")
-            nextSubRoot.refreshChilds()
-            nextSubRoot.children.forEach {
-                (it as FileTreeItem).refreshChilds()
-                warn("so I can see if they can expand... need a better way")
-            }
-            nextSubRoot.children.firstOrNull {
-                it.value in fam
-            }?.let {
-                println("$it?")
-                if (it.value == f) {
-                    println("found treeitem: $it")
-                    it.parent?.chain { it.parent }?.forEach { it.isExpanded = true }
-                    @Suppress("UNCHECKED_CAST")
-
-                    (selectionModel as MultiSelectWrap<TreeItem<FsFile>>).select(it.node)
-                    @Suppress("UNCHECKED_CAST")
-                    scrollTo((this as TreeLikeWrapper<*, FsFile>).getRow(it.node))
-                    keepGoing = false
-                } else nextSubRoot = it as FileTreeItem
-            } ?: run {
-                keepGoing = false
-            }
-        }
-    }
-}
-
 context(ReapingShellExecutionContext, InterAppServices)
 fun PaneWrapperImpl<*, *>.fileTree(
     rootFile: FsFile,
@@ -178,7 +127,8 @@ fun PaneWrapperImpl<*, *>.fileTree(
             setupGUI()
         }
 
-        setupContent(rootFiles, strategy)
+        unsafeErr("FX IS DEAD: here content was set up. Basically, it added file tree items and set it up to automatically repopulate in the acbkground")
+        /*setupContent(rootFiles, strategy)*/
 
 
         root!!.isExpanded = true
@@ -197,7 +147,8 @@ fun PaneWrapperImpl<*, *>.fileTableTree(
         UnknownShellExecutionContext(UnixDirectCommandsOnly).scope {
             setupGUI()
         }
-        setupContent(rootFiles, strategy)
+        unsafeErr("FX IS DEAD: here content was set up. Basically, it added file tree items and set it up to automatically repopulate in the acbkground")
+        /*setupContent(rootFiles, strategy)*/
 
 
         root!!.isExpanded = true
@@ -332,55 +283,9 @@ private fun TreeLikeWrapper<*, FsFile>.setupGUI() {
     }
 }
 
-private fun TreeLikeWrapper<*, FsFile>.setupContent(
-    rootFiles: BasicObservableListImpl<out FsFile>,
-    strategy: FileTreePopulationStrategy
-) {
-    root = TreeItemWrapper<FsFile>()
-    root!!.children.bind(rootFiles) {
-        (FileTreeItem(it))
-    }
-    isShowRoot = false
-    setupPopulating(strategy)
-}
 
-private fun TreeLikeWrapper<*, FsFile>.rePop() {
-    root!!.children.forEach { child ->
-        populateTree(child, {
-            FileTreeItem(it)
-        }) { item ->
-            val cs = item.value.toJioFile().childs()
-            taball("cs of ${item.value}", cs)
-            cs
-        }
-    }
-    (this as? TreeTableViewWrapper<*>)?.autoResizeColumns()
-}
 
-private fun TreeLikeWrapper<*, FsFile>.setupPopulating(strategy: FileTreePopulationStrategy) {
-    if (strategy == AUTOMATIC) {
-        rePop()
-        refreshWhileInSceneEvery(5.sec) {
-            if (root!!.children.flatMap { it.recurse { it.children } }.any {
-                    !it.children.map { it.value }
-                        .sameContentsAnyOrder(it.value.toJioFile().listFiles()?.toList() ?: listOf())
-                }
-            ) {
-                rePop()
-            }
-        }
-    } else {
-        root!!.children.forEach { (it as FileTreeItem).refreshChilds() }
-        setOnSelectionChange { v ->
-            if (v != null) {
-                (v.wrapped() as FileTreeItem).refreshChilds()
-                v.children.forEach {
-                    (it.wrapped() as FileTreeItem).refreshChilds()
-                } /*so i can always see which have matt.fx.control.layout.children*/
-            }
-        }
-    }
-}
+
 
 
 private fun matt.file.JioFile.childs() =
@@ -394,26 +299,4 @@ private val FILE_SORT_RULE_ITEMS =
 
 enum class FileTreePopulationStrategy {
     AUTOMATIC, EFFICIENT
-}
-
-private class FileTreeItem(file: FsFile) : TreeItemWrapper<FsFile>(file) {
-
-    init {
-        expandedProperty.addListener(
-            OldAndNewListenerImpl { o, n ->
-                if (o != n && !n) {
-                    (this@FileTreeItem as TreeItemWrapper<FsFile>).recurse { it.children }.forEach { it.isExpanded = false }
-                }
-            }
-        )
-    }
-
-    fun refreshChilds() {
-        val childs = value.toJioFile().childs() ?: listOf()
-        children.removeAll { it.value !in childs }
-        childs.filter { it !in children.map { it.value } }.forEach {
-            children.add(FileTreeItem(it))
-        }
-        children.sortWith(FILE_SORT_RULE_ITEMS)
-    }
 }

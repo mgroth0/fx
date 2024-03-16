@@ -1,6 +1,7 @@
 package matt.fx.node.chart.test
 
 
+import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.pane.vbox.VBoxW
 import matt.fx.node.chart.annochart.annopane.legend.MyLegend
 import matt.fx.node.chart.annochart.annopane.legend.MyLegend.LegendItem
@@ -13,7 +14,7 @@ class ChartTests : Tests() {
     @Test
     fun instantiateClasses() {
         FXTester.runFXHeadlessApp {
-            val items = listOf(LegendItem({ VBoxW() }, "a"))
+            val items = listOf(LegendItem({ VBoxW(childClass = NodeWrapper::class) }, "a"))
             MyLegend(items.toBasicObservableList())
         }
     }

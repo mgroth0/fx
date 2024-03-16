@@ -8,8 +8,6 @@ import matt.collect.map.FakeMutableSet
 import matt.lang.anno.JetBrainsYouTrackProject.KT
 import matt.lang.anno.Open
 import matt.lang.anno.YouTrackIssue
-import matt.lang.convert.BiConverter
-import matt.lang.function.Consume
 import matt.lang.function.Op
 import matt.model.op.prints.Prints
 import matt.obs.bindhelp.BindableSet
@@ -39,9 +37,6 @@ interface MyObservableSetWrapper<E> : Observable {
     fun removeListener(listener: SetChangeListener<E>)
 }
 
-fun <E> MyObservableSetWrapper<E>.onAdd(op: Consume<E>) = listen(onAdd = op, onRemove = {})
-fun <E> MyObservableSetWrapper<E>.onRemove(op: Consume<E>) = listen(onAdd = { }, onRemove = op)
-
 fun <E> MyObservableSetWrapper<E>.listen(
     onAdd: ((E) -> Unit),
     onRemove: ((E) -> Unit)
@@ -59,12 +54,6 @@ fun <E> MyObservableSetWrapper<E>.listen(
 }
 
 
-fun <E> MyObservableSetWrapper<E>.changeListener(op: (SetChangeListener.Change<out E>) -> Unit) =
-    run {
-        val l = SetChangeListener<E> { op(it) }
-        addListener(l)
-        l
-    }
 
 fun <E> MyObservableSetWrapper<E>.onChange(op: (SetChangeListener.Change<out E>) -> Unit) =
     apply {
@@ -96,46 +85,6 @@ interface MyObservableSetWrapperPlusSet<E> : MyObservableSetWrapper<E> {
         }
 }
 
-fun <E> mfxSetConverter() =
-    object : BiConverter<ObservableSet<E>, ObsSet<E>> {
-        override fun convertToB(a: ObservableSet<E>): ObsSet<E> {
-            @Suppress("UNCHECKED_CAST")
-            return when (a) {
-                is MBackedFXObservableSet<*> -> a.mSet as ObsSet<E>
-                else                         -> a.createMutableWrapper()
-            }
-        }
-
-        override fun convertToA(b: ObsSet<E>): ObservableSet<E> {
-            @Suppress("UNCHECKED_CAST")
-            return when (b) {
-                is FXBackedObsSet<*> -> b.obs as ObservableSet<E>
-                else                 -> b.createFXWrapper()
-            }
-        }
-    }
-
-
-
-fun <E> mfxMutableSetConverter() =
-    object : BiConverter<ObservableSet<E>, MutableObsSet<E>> {
-        override fun convertToB(a: ObservableSet<E>): MutableObsSet<E> {
-            @Suppress("UNCHECKED_CAST")
-            return when (a) {
-                is MBackedFXObservableSet<*> -> a.mSet as MutableObsSet<E>
-                else                         -> a.createMutableWrapper()
-            }
-        }
-
-        override fun convertToA(b: MutableObsSet<E>): ObservableSet<E> {
-            @Suppress("UNCHECKED_CAST")
-            return when (b) {
-                is FXBackedObsSet<*> -> b.obs as ObservableSet<E>
-
-                else                 -> b.createMutableFXWrapper()
-            }
-        }
-    }
 
 abstract class FXBackedObsSet<E>(internal val obs: ObservableSet<E>)
 

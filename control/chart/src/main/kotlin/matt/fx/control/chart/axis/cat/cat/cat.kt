@@ -3,7 +3,6 @@ package matt.fx.control.chart.axis.cat.cat
 import com.sun.javafx.charts.ChartLayoutAnimator
 import javafx.animation.KeyFrame
 import javafx.animation.KeyValue
-import javafx.beans.property.BooleanProperty
 import javafx.beans.property.DoubleProperty
 import javafx.beans.property.ObjectProperty
 import javafx.beans.property.ObjectPropertyBase
@@ -65,7 +64,7 @@ class CategoryAxisForCatAxisWrapper : AxisForPackagePrivateProps<String> {
             }
         }
     /** The margin between the axis start and the first tick-mark  */
-    private val startMargin: DoubleProperty =
+    private val startMargin: StyleableDoubleProperty =
         object : StyleableDoubleProperty(5.0) {
             override fun invalidated() {
                 requestAxisLayout()
@@ -84,10 +83,10 @@ class CategoryAxisForCatAxisWrapper : AxisForPackagePrivateProps<String> {
         startMargin.value = value
     }
 
-    fun startMarginProperty(): DoubleProperty = startMargin
+    fun startMarginProperty(): StyleableDoubleProperty = startMargin
 
     /** The margin between the last tick mark and the axis end  */
-    private val endMargin: DoubleProperty =
+    private val endMargin: StyleableDoubleProperty =
         object : StyleableDoubleProperty(5.0) {
             override fun invalidated() {
                 requestAxisLayout()
@@ -106,12 +105,12 @@ class CategoryAxisForCatAxisWrapper : AxisForPackagePrivateProps<String> {
         endMargin.value = value
     }
 
-    fun endMarginProperty(): DoubleProperty = endMargin
+    fun endMarginProperty(): StyleableDoubleProperty = endMargin
 
     /** If this is true then half the space between ticks is left at the start
      * and end
      */
-    private val gapStartAndEnd: BooleanProperty =
+    private val gapStartAndEnd: StyleableBooleanProperty =
         object : StyleableBooleanProperty(true) {
             override fun invalidated() {
                 requestAxisLayout()
@@ -130,7 +129,7 @@ class CategoryAxisForCatAxisWrapper : AxisForPackagePrivateProps<String> {
         gapStartAndEnd.value = value
     }
 
-    fun gapStartAndEndProperty(): BooleanProperty = gapStartAndEnd
+    fun gapStartAndEndProperty(): StyleableBooleanProperty = gapStartAndEnd
 
     internal val categories: ObjectProperty<ObservableList<String>> =
         object : ObjectPropertyBase<ObservableList<String>>() {
@@ -531,10 +530,9 @@ class CategoryAxisForCatAxisWrapper : AxisForPackagePrivateProps<String> {
             ) {
                 override fun isSettable(n: CategoryAxisForCatAxisWrapper): Boolean = n.startMargin.value == null || !n.startMargin.isBound
 
-                @Suppress("UNCHECKED_CAST")
                 override fun getStyleableProperty(
                     n: CategoryAxisForCatAxisWrapper
-                ): StyleableProperty<Number?> = n.startMarginProperty() as StyleableProperty<Number?>
+                ): StyleableProperty<Number?> = n.startMarginProperty()
             }
         val END_MARGIN: CssMetaData<CategoryAxisForCatAxisWrapper, Number> =
             object : CssMetaData<CategoryAxisForCatAxisWrapper, Number>(
@@ -543,10 +541,9 @@ class CategoryAxisForCatAxisWrapper : AxisForPackagePrivateProps<String> {
             ) {
                 override fun isSettable(n: CategoryAxisForCatAxisWrapper): Boolean = n.endMargin.value == null || !n.endMargin.isBound
 
-                @Suppress("UNCHECKED_CAST")
                 override fun getStyleableProperty(
                     n: CategoryAxisForCatAxisWrapper
-                ): StyleableProperty<Number?> = n.endMarginProperty() as StyleableProperty<Number?>
+                ): StyleableProperty<Number?> = n.endMarginProperty()
             }
         val GAP_START_AND_END: CssMetaData<CategoryAxisForCatAxisWrapper, Boolean> =
             object : BooleanCssMetaData<CategoryAxisForCatAxisWrapper>(
@@ -557,10 +554,9 @@ class CategoryAxisForCatAxisWrapper : AxisForPackagePrivateProps<String> {
                     n: CategoryAxisForCatAxisWrapper
                 ): Boolean = n.gapStartAndEnd.value == null || !n.gapStartAndEnd.isBound
 
-                @Suppress("UNCHECKED_CAST")
                 override fun getStyleableProperty(
                     n: CategoryAxisForCatAxisWrapper
-                ): StyleableProperty<Boolean?> = n.gapStartAndEndProperty() as StyleableProperty<Boolean?>
+                ): StyleableProperty<Boolean?> = n.gapStartAndEndProperty()
             }
         val classCssMetaData: List<CssMetaData<out Styleable?, *>> by lazy {
             val styleables: MutableList<CssMetaData<out Styleable?, *>> = ArrayList(getClassCssMetaData())

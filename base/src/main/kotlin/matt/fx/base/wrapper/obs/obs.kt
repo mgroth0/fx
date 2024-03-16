@@ -12,4 +12,6 @@ open class FXObservableBackMObservable(o: Observable) : ObservableObject<FXObser
             markInvalid()
         }
     }
+
+    final override fun cast(o: Any?): FXObservableBackMObservable = o as FXObservableBackMObservable
 }

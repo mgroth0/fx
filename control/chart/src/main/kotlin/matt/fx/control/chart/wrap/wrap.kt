@@ -32,22 +32,22 @@ fun <X : MathAndComparable<X>, Y : MathAndComparable<Y>> MorePerfOptionsLineChar
     findWrapper() ?: LineChartWrapper(this@wrapped)
 
 
-@Suppress("UNCHECKED_CAST") fun AreaChartForPrivateProps<*, *>.wrapped(): AreaChartWrapper<*, *> =
+fun AreaChartForPrivateProps<Any, Any>.wrapped(): AreaChartWrapper<*, *> =
     findWrapper() ?: AreaChartWrapper(
-        this@wrapped as AreaChartForPrivateProps<Any, Any>
+        this@wrapped
     )
 
-@Suppress("UNCHECKED_CAST") fun BarChartForWrapper<*, *>.wrapped(): BarChartWrapper<*, *> =
-    findWrapper() ?: BarChartWrapper(this@wrapped as BarChartForWrapper<Any, Any>)
+fun BarChartForWrapper<Any, Any>.wrapped(): BarChartWrapper<*, *> =
+    findWrapper() ?: BarChartWrapper(this@wrapped)
 
-@Suppress("UNCHECKED_CAST") fun BubbleChartForWrapper<*, *>.wrapped(): BubbleChartWrapper<*, *> =
-    findWrapper() ?: BubbleChartWrapper(this@wrapped as BubbleChartForWrapper<Any, Any>)
+fun BubbleChartForWrapper<Any, Any>.wrapped(): BubbleChartWrapper<*, *> =
+    findWrapper() ?: BubbleChartWrapper(this@wrapped)
 
-@Suppress("UNCHECKED_CAST") fun ScatterChartForWrapper<*, *>.wrapped(): ScatterChartWrapper<*, *> =
-    findWrapper() ?: ScatterChartWrapper(this@wrapped as ScatterChartForWrapper<Any, Any>)
+fun ScatterChartForWrapper<Any, Any>.wrapped(): ScatterChartWrapper<*, *> =
+    findWrapper() ?: ScatterChartWrapper(this@wrapped)
 
-@Suppress("UNCHECKED_CAST") fun StackedBarChartForWrapper<*, *>.wrapped(): StackedBarChartWrapper<*, *> =
-    findWrapper() ?: StackedBarChartWrapper(this@wrapped as StackedBarChartForWrapper<Any, Any>)
+fun StackedBarChartForWrapper<Any, Any>.wrapped(): StackedBarChartWrapper<*, *> =
+    findWrapper() ?: StackedBarChartWrapper(this@wrapped)
 
 
 fun PieChartForWrapper.wrapped(): PieChartWrapper = findWrapper() ?: PieChartWrapper(this@wrapped)
@@ -60,18 +60,18 @@ fun <T : MathAndComparable<T>> MoreGenericNumberAxis<T>.wrapped(): NumberAxisWra
 fun CategoryAxisForCatAxisWrapper.wrapped(): CategoryAxisWrapper = findWrapper() ?: CategoryAxisWrapper(this@wrapped)
 
 
-/*@Suppress("UNCHECKED_CAST") fun <T: Number> MoreGenericValueAxis<T>.wrapped(): OldValueAxisWrapper<T> =
+/* fun <T: Number> MoreGenericValueAxis<T>.wrapped(): OldValueAxisWrapper<T> =
   findWrapper() ?: when (this) {
 	is MoreGenericNumberAxis -> wrapped() as OldValueAxisWrapper<T>
 	else                     -> cannotFindWrapper()
   }*/
 
 
-@Suppress("UNCHECKED_CAST")
+
 fun <T> AxisForPackagePrivateProps<T>.wrapped(): AxisWrapper<T, AxisForPackagePrivateProps<T>> =
     findWrapper() ?: when (this) {
         is MoreGenericNumberAxis         -> wrapped()
-        is MoreGenericValueAxis          -> (this as MoreGenericValueAxis<out Number>).wrapped() as AxisWrapper<T, AxisForPackagePrivateProps<T>>
-        is CategoryAxisForCatAxisWrapper -> wrapped() as AxisWrapper<T, AxisForPackagePrivateProps<T>>
+        is MoreGenericValueAxis          -> error("FX IS DEAD")
+        is CategoryAxisForCatAxisWrapper -> error("FX IS DEAD")
         else                             -> cannotFindWrapper()
     }

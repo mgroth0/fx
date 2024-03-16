@@ -3,7 +3,6 @@ package matt.fx.graphics.anim.interp
 import javafx.animation.Interpolatable
 import javafx.animation.Interpolator
 import matt.fx.base.rewrite.ReWrittenFxClass
-import matt.model.data.interp.BasicInterpolatable
 import java.lang.reflect.Method
 
 
@@ -52,11 +51,25 @@ abstract class MyInterpolator: Interpolator() {
                     startValue, endValue, fraction
                 )
 
+
+            /*
+
+             * Might need to implement branches for each concrete type... but I am abandoning FX so just do that with the few of them as needed before I finish my transition
+
+
+
+
+
+            (startValue is DoubleWrapper<*> && endValue is DoubleWrapper<*>) -> {
+                DoubleWrapperInterpolator<DoubleWrapper<*>>().interpolate(startValue,endValue,curve(fraction))
+            }
+
+
             (startValue is BasicInterpolatable<*> && endValue is BasicInterpolatable<*>) ->
                 startValue.interpolate(
                     endValue, curve(fraction)
                 )
-
+*/
             else                                                                         ->
                 super.interpolate(
                     startValue, endValue, fraction

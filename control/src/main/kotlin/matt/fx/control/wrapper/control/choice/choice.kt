@@ -23,6 +23,7 @@ import matt.lang.anno.SeeURL
 import matt.lang.assertions.require.requireNull
 import matt.lang.common.go
 import matt.lang.delegation.lazyVarDelegate
+import matt.obs.bind.binding
 import matt.obs.bind.smartBind
 import matt.obs.col.olist.MutableObsList
 import matt.obs.col.olist.toBasicObservableList
@@ -34,7 +35,7 @@ import java.lang.System.currentTimeMillis
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
 
-inline fun <T : Any> ET.choicebox(
+inline fun <reified T : Any> ET.choicebox(
     property: BindableProperty<T>? = null,
     nullableProp: BindableProperty<T?>? = null,
     values: List<T>? = null,
@@ -54,7 +55,7 @@ inline fun <T : Any> ET.choicebox(
 }
 
 
-inline fun <T : Any> ET.choicebox(
+inline fun <reified T : Any> ET.choicebox(
     property: BindableProperty<T>? = null,
     nullableProp: BindableProperty<T?>? = null,
     values: Array<T>? = null,
@@ -160,8 +161,11 @@ fun <T : Any> ChoiceBoxWrapper<T>.bind(
 
 @Suppress("ForbiddenAnnotation")
 @JvmName("bindNonNull")
-fun <T : Any> ChoiceBoxWrapper<T>.bind(
+inline fun <reified T : Any> ChoiceBoxWrapper<T>.bind(
     property: ValProp<T>,
     readonly: Boolean = false
 ) =
-    valueProperty.smartBind(property.cast(), readonly)
+    valueProperty.smartBind(
+        property = property.binding { it } /*WEIRD THAT BINDING IS REQUIRED HERE*/,
+        readonly = readonly
+    )

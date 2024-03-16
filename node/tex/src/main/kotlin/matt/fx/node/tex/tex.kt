@@ -7,6 +7,7 @@ import matt.collect.map.dmap.inter.withStoringDefault
 import matt.fig.modell.EquationIr
 import matt.fig.render.EquationRenderer
 import matt.fx.graphics.style.DarkModeController
+import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.pane.vbox.VBoxW
 import matt.fx.node.proto.scaledcanvas.ScaledCanvas
 import matt.fx.node.proto.scaledcanvas.toCanvas
@@ -62,7 +63,7 @@ class TexCanvas(
     someScaleThing: Double,
     private val fact: TexNodeFactory,
     private val code: TexCode
-) : VBoxW() {
+) : VBoxW(childClass = NodeWrapper::class) {
     val fontSizeSortOf = BindableProperty(12.0)
 
     init {

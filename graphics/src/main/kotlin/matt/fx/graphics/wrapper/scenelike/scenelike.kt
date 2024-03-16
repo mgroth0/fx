@@ -16,10 +16,12 @@ interface SceneLikeWrapper<N : EventTarget, R : ParentWrapper<*>> : EventTargetW
     override val node: N
     val rootProperty: ObjectProperty<Parent>
 
+    fun castRoot(nw: NodeWrapper): R
+
 
     @Open
     var root: R
-        @Suppress("UNCHECKED_CAST") get() = rootProperty.get().wrapped() as R
+        get() = castRoot(rootProperty.get().wrapped())
         set(value) {
             rootProperty.set(value.node)
         }

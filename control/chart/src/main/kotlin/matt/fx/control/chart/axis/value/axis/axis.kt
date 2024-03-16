@@ -133,7 +133,7 @@ abstract class AxisForPackagePrivateProps<T> : Region() {
     fun getTickMarks(): ObservableList<TickMark<T>> = unmodifiableTickMarks
 
     /** The side of the plot which this axis is being drawn on  */
-    internal val side: ObjectProperty<Side> =
+    internal val side: StyleableObjectProperty<Side> =
         object : StyleableObjectProperty<Side>() {
             override fun invalidated() {
                 /* cause refreshTickMarks */
@@ -158,7 +158,7 @@ abstract class AxisForPackagePrivateProps<T> : Region() {
         side.set(value)
     }
 
-    fun sideProperty(): ObjectProperty<Side> = side
+    fun sideProperty(): StyleableObjectProperty<Side> = side
 
     fun setEffectiveOrientation(orientation: Orientation?) {
         effectiveOrientation = orientation
@@ -201,7 +201,7 @@ abstract class AxisForPackagePrivateProps<T> : Region() {
     fun labelProperty(): ObjectProperty<String> = label
 
     /** true if tick marks should be displayed  */
-    private val tickMarkVisible: BooleanProperty =
+    private val tickMarkVisible: StyleableBooleanProperty =
         object : StyleableBooleanProperty(true) {
             override fun invalidated() {
                 tickMarkPath.isVisible = get()
@@ -221,10 +221,10 @@ abstract class AxisForPackagePrivateProps<T> : Region() {
         tickMarkVisible.set(value)
     }
 
-    fun tickMarkVisibleProperty(): BooleanProperty = tickMarkVisible
+    fun tickMarkVisibleProperty(): StyleableBooleanProperty = tickMarkVisible
 
     /** true if tick mark labels should be displayed  */
-    private val tickLabelsVisible: BooleanProperty =
+    private val tickLabelsVisible: StyleableBooleanProperty =
         object : StyleableBooleanProperty(true) {
             override fun invalidated() {
                 /* update textNode visibility for each tick */
@@ -248,10 +248,10 @@ abstract class AxisForPackagePrivateProps<T> : Region() {
         tickLabelsVisible.set(value)
     }
 
-    fun tickLabelsVisibleProperty(): BooleanProperty = tickLabelsVisible
+    fun tickLabelsVisibleProperty(): StyleableBooleanProperty = tickLabelsVisible
 
     /** The length of tick mark lines  */
-    private val tickLength: DoubleProperty =
+    private val tickLength: StyleableDoubleProperty =
         object : StyleableDoubleProperty(8.0) {
             override fun invalidated() {
                 if (get() < 0 && !isBound) {
@@ -274,7 +274,7 @@ abstract class AxisForPackagePrivateProps<T> : Region() {
         tickLength.set(value)
     }
 
-    fun tickLengthProperty(): DoubleProperty = tickLength
+    fun tickLengthProperty(): StyleableDoubleProperty = tickLength
 
     /** This is true when the axis determines its range from the data automatically  */
     private val autoRanging: BooleanProperty =
@@ -303,7 +303,7 @@ abstract class AxisForPackagePrivateProps<T> : Region() {
     fun autoRangingProperty(): BooleanProperty = autoRanging
 
     /** The font for all tick labels  */
-    internal val tickLabelFont: ObjectProperty<Font> =
+    internal val tickLabelFont: StyleableObjectProperty<Font> =
         object : StyleableObjectProperty<Font>(Font.font("System", 8.0)) {
             override fun invalidated() {
                 val f = get()
@@ -328,10 +328,10 @@ abstract class AxisForPackagePrivateProps<T> : Region() {
         tickLabelFont.set(value)
     }
 
-    fun tickLabelFontProperty(): ObjectProperty<Font> = tickLabelFont
+    fun tickLabelFontProperty(): StyleableObjectProperty<Font> = tickLabelFont
 
     /** The fill for all tick labels  */
-    private val tickLabelFill: ObjectProperty<Paint> =
+    private val tickLabelFill: StyleableObjectProperty<Paint> =
         object : StyleableObjectProperty<Paint>(Color.BLACK) {
             override fun invalidated() {
                 for (tick in tickMarks) {
@@ -352,10 +352,10 @@ abstract class AxisForPackagePrivateProps<T> : Region() {
         tickLabelFill.set(value)
     }
 
-    fun tickLabelFillProperty(): ObjectProperty<Paint> = tickLabelFill
+    fun tickLabelFillProperty(): StyleableObjectProperty<Paint> = tickLabelFill
 
     /** The gap between tick labels and the tick mark lines  */
-    private val tickLabelGap: DoubleProperty =
+    private val tickLabelGap: StyleableDoubleProperty =
         object : StyleableDoubleProperty(3.0) {
             override fun invalidated() {
                 requestAxisLayout()
@@ -374,7 +374,7 @@ abstract class AxisForPackagePrivateProps<T> : Region() {
         tickLabelGap.set(value)
     }
 
-    fun tickLabelGapProperty(): DoubleProperty = tickLabelGap
+    fun tickLabelGapProperty(): StyleableDoubleProperty = tickLabelGap
 
     /**
      * When true any changes to the axis and its range will be animated.
@@ -1096,7 +1096,6 @@ abstract class AxisForPackagePrivateProps<T> : Region() {
         override fun toString(): String = value.get().toString()
     }
 
-    @Suppress("UNCHECKED_CAST")
     private object StyleableProperties {
         val SIDE: CssMetaData<AxisForPackagePrivateProps<*>, Side> =
             object : CssMetaData<AxisForPackagePrivateProps<*>, Side>(
@@ -1104,7 +1103,7 @@ abstract class AxisForPackagePrivateProps<T> : Region() {
             ) {
                 override fun isSettable(n: AxisForPackagePrivateProps<*>): Boolean = n.side.value == null || !n.side.isBound
 
-                override fun getStyleableProperty(n: AxisForPackagePrivateProps<*>): StyleableProperty<Side> = n.sideProperty() as StyleableProperty<Side>
+                override fun getStyleableProperty(n: AxisForPackagePrivateProps<*>): StyleableProperty<Side> = n.sideProperty()
             }
         val TICK_LENGTH: CssMetaData<AxisForPackagePrivateProps<*>, Number> =
             object : CssMetaData<AxisForPackagePrivateProps<*>, Number>(
@@ -1112,7 +1111,7 @@ abstract class AxisForPackagePrivateProps<T> : Region() {
             ) {
                 override fun isSettable(n: AxisForPackagePrivateProps<*>): Boolean = n.tickLength.value == null || !n.tickLength.isBound
 
-                override fun getStyleableProperty(n: AxisForPackagePrivateProps<*>): StyleableProperty<Number?> = n.tickLengthProperty() as StyleableProperty<Number?>
+                override fun getStyleableProperty(n: AxisForPackagePrivateProps<*>): StyleableProperty<Number?> = n.tickLengthProperty()
             }
         val TICK_LABEL_FONT: CssMetaData<AxisForPackagePrivateProps<*>, Font> =
             object : FontCssMetaData<AxisForPackagePrivateProps<*>>(
@@ -1122,7 +1121,7 @@ abstract class AxisForPackagePrivateProps<T> : Region() {
                     n: AxisForPackagePrivateProps<*>
                 ): Boolean = n.tickLabelFont.value == null || !n.tickLabelFont.isBound
 
-                override fun getStyleableProperty(n: AxisForPackagePrivateProps<*>): StyleableProperty<Font> = n.tickLabelFontProperty() as StyleableProperty<Font>
+                override fun getStyleableProperty(n: AxisForPackagePrivateProps<*>): StyleableProperty<Font> = n.tickLabelFontProperty()
             }
         val TICK_LABEL_FILL: CssMetaData<AxisForPackagePrivateProps<*>, Paint> =
             object : CssMetaData<AxisForPackagePrivateProps<*>, Paint>(
@@ -1132,7 +1131,7 @@ abstract class AxisForPackagePrivateProps<T> : Region() {
                     n: AxisForPackagePrivateProps<*>
                 ): Boolean = (n.tickLabelFill.value == null) or !n.tickLabelFill.isBound
 
-                override fun getStyleableProperty(n: AxisForPackagePrivateProps<*>): StyleableProperty<Paint> = n.tickLabelFillProperty() as StyleableProperty<Paint>
+                override fun getStyleableProperty(n: AxisForPackagePrivateProps<*>): StyleableProperty<Paint> = n.tickLabelFillProperty()
             }
         val TICK_LABEL_TICK_GAP: CssMetaData<AxisForPackagePrivateProps<*>, Number> =
             object : CssMetaData<AxisForPackagePrivateProps<*>, Number>(
@@ -1140,7 +1139,7 @@ abstract class AxisForPackagePrivateProps<T> : Region() {
             ) {
                 override fun isSettable(n: AxisForPackagePrivateProps<*>): Boolean = n.tickLabelGap.value == null || !n.tickLabelGap.isBound
 
-                override fun getStyleableProperty(n: AxisForPackagePrivateProps<*>): StyleableProperty<Number?> = n.tickLabelGapProperty() as StyleableProperty<Number?>
+                override fun getStyleableProperty(n: AxisForPackagePrivateProps<*>): StyleableProperty<Number?> = n.tickLabelGapProperty()
             }
         val TICK_MARK_VISIBLE: CssMetaData<AxisForPackagePrivateProps<*>, Boolean> =
             object : BooleanCssMetaData<AxisForPackagePrivateProps<*>>(
@@ -1150,7 +1149,7 @@ abstract class AxisForPackagePrivateProps<T> : Region() {
                     n: AxisForPackagePrivateProps<*>
                 ): Boolean = n.tickMarkVisible.value == null || !n.tickMarkVisible.isBound
 
-                override fun getStyleableProperty(n: AxisForPackagePrivateProps<*>): StyleableProperty<Boolean?> = n.tickMarkVisibleProperty() as StyleableProperty<Boolean?>
+                override fun getStyleableProperty(n: AxisForPackagePrivateProps<*>): StyleableProperty<Boolean?> = n.tickMarkVisibleProperty()
             }
         val TICK_LABELS_VISIBLE: CssMetaData<AxisForPackagePrivateProps<*>, Boolean> =
             object : BooleanCssMetaData<AxisForPackagePrivateProps<*>>("-fx-tick-labels-visible", true) {
@@ -1158,7 +1157,7 @@ abstract class AxisForPackagePrivateProps<T> : Region() {
                     n: AxisForPackagePrivateProps<*>
                 ): Boolean = n.tickLabelsVisible.value == null || !n.tickLabelsVisible.isBound
 
-                override fun getStyleableProperty(n: AxisForPackagePrivateProps<*>): StyleableProperty<Boolean?> = n.tickLabelsVisibleProperty() as StyleableProperty<Boolean?>
+                override fun getStyleableProperty(n: AxisForPackagePrivateProps<*>): StyleableProperty<Boolean?> = n.tickLabelsVisibleProperty()
             }
         val classCssMetaData: List<CssMetaData<out Styleable?, *>>? by lazy {
             val styleables: MutableList<CssMetaData<out Styleable?, *>> = ArrayList(getClassCssMetaData())

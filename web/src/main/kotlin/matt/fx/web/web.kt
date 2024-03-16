@@ -278,7 +278,7 @@ fun RegionWrapper<*>.specialTransferingToWindowAndBack(par: PaneWrapper<*>) {
 open class WebViewPane private constructor(
     file: FsFile? = null,
     html: String? = null
-) : VBoxWrapperImpl<NodeWrapper>() {
+) : VBoxWrapperImpl<NodeWrapper>(childClass = NodeWrapper::class) {
 
     constructor(file: FsFile) : this(file = file, html = null)
 
@@ -377,7 +377,7 @@ class JavaBridge {
 }
 
 
-class WebViewWrapper(node: WebView = WebView()) : ParentWrapperImpl<WebView, NodeWrapper>(node) {
+class WebViewWrapper(node: WebView = WebView()) : ParentWrapperImpl<WebView, NodeWrapper>(node, childClass = NodeWrapper::class) {
 
     companion object {
         fun WebView.wrapped() = WebViewWrapper(this)

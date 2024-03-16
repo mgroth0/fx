@@ -104,7 +104,7 @@ abstract class SelectionModelWrapperBase<T: Any, W: Any>(
     @Open override fun isSelected(index: Int) = sm.isSelected(index)
     @Open override val selectedIndex: Int? get() = selectedIndexProperty.value
     @Open override val selectedIndexProperty by lazy {
-        sm.selectedIndexProperty().toNonNullableROProp().cast<Int>().binding {
+        sm.selectedIndexProperty().toNonNullableROProp().cast<Int>(Int::class).binding {
             it.takeIf { it >= 0 }
         }
     }

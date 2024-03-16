@@ -425,7 +425,7 @@ interface NodeWrapper : EventTargetWrapper, StyleableWrapper, HasScene {
         }
 
 
-    val layoutXProperty: BindableProperty<Double>
+    val layoutXProperty: Var<Double>
 
 
     @Open var layoutY
@@ -434,7 +434,7 @@ interface NodeWrapper : EventTargetWrapper, StyleableWrapper, HasScene {
             node.layoutY = value
         }
 
-    val layoutYProperty: BindableProperty<Double>
+    val layoutYProperty: Var<Double>
 
 
     @Open var scaleX
@@ -443,7 +443,7 @@ interface NodeWrapper : EventTargetWrapper, StyleableWrapper, HasScene {
             node.scaleX = value
         }
 
-    val scaleXProperty: BindableProperty<Double>
+    val scaleXProperty: Var<Double>
     @Open var scaleY
         get() = node.scaleY
         set(value) {
@@ -451,7 +451,7 @@ interface NodeWrapper : EventTargetWrapper, StyleableWrapper, HasScene {
         }
 
     @Open
-    val scaleYProperty: BindableProperty<Double>
+    val scaleYProperty: Var<Double>
 
     @Open
     fun requestFocus() = node.requestFocus()

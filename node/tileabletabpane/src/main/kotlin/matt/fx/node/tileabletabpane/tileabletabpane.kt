@@ -20,7 +20,7 @@ import java.util.concurrent.Semaphore
 open class TileableTabPane(
     protected vararg var panes: Pair<String, RegionWrapper<NodeWrapper>>,
     orientation: Orientation = VERTICAL
-): VBoxWrapperImpl<NodeWrapper>() {
+): VBoxWrapperImpl<NodeWrapper>(childClass = NodeWrapper::class) {
     private val mysem = Semaphore(1)
     var lastSelected: Int? = null
     val istabmodeprop =

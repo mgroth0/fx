@@ -9,7 +9,7 @@ import matt.lang.classname.j.jvmQualifiedClassName
 
 val CLIPPED_CONTAINER_QNAME = JvmQualifiedClassName("javafx.scene.control.skin.VirtualFlow.ClippedContainer")
 
-class ClippedContainerWrapper(node: Region) : RegionWrapperImpl<Region, NodeWrapper>(node) {
+class ClippedContainerWrapper(node: Region) : RegionWrapperImpl<Region, NodeWrapper>(node, childClass = NodeWrapper::class) {
     init {
         requireEquals(node::class.jvmQualifiedClassName, CLIPPED_CONTAINER_QNAME) {
             "this class is reserved for ClippedContainer, but was created with a ${node::class.qualifiedName}"

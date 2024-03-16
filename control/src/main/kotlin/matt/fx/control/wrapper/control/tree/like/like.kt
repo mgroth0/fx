@@ -11,7 +11,6 @@ import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.region.RegionWrapper
 import matt.fx.graphics.wrapper.sizeman.SizeManaged
 import matt.lang.anno.Open
-import matt.lang.setall.setAll
 import matt.obs.prop.writable.Var
 
 fun <T> TreeItem<T>.treeitem(value: T? = null, op: TreeItem<T>.() -> Unit = {}): TreeItem<T> {
@@ -52,14 +51,18 @@ interface TreeLikeWrapper<N: Region, T: Any>: RegionWrapper<NodeWrapper>, Select
  * function is called for each of the generated child items.
  */
 fun <T: Any> populateTree(
-    item: TreeItemWrapper<T>,
-    itemFactory: (T) -> TreeItemWrapper<T>,
-    childFactory: (TreeItemWrapper<T>) -> Iterable<T>?
+    item: TreeItem<T>,
+    itemFactory: (T) -> TreeItem<T>,
+    childFactory: (TreeItem<T>) -> Iterable<T>?
 ) {
     val children = childFactory.invoke(item)
 
     children?.map { itemFactory(it) }?.apply {
-        item.children.setAll(this)
+        item.children.clear()
+        forEach {
+            item.children.add(it)
+        }
+        /*item.children.setAll(this)*/
         forEach { populateTree(it, itemFactory, childFactory) }
     }
 

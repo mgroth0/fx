@@ -6,9 +6,6 @@ import com.sun.javafx.stage.PopupWindowHelper
 import javafx.animation.Animation
 import javafx.animation.KeyFrame
 import javafx.animation.Timeline
-import javafx.beans.property.BooleanProperty
-import javafx.beans.property.DoubleProperty
-import javafx.beans.property.ObjectProperty
 import javafx.beans.property.ReadOnlyBooleanProperty
 import javafx.beans.property.ReadOnlyBooleanWrapper
 import javafx.beans.property.SimpleStringProperty
@@ -101,7 +98,7 @@ class MyTooltip @JvmOverloads constructor(text: String? = null) : MyPopupControl
      * relative to the text bounds.
      * @return the text alignment property
      */
-    fun textAlignmentProperty(): ObjectProperty<TextAlignment> = textAlignment
+    fun textAlignmentProperty(): SimpleStyleableObjectProperty<TextAlignment> = textAlignment
 
     fun setTextAlignment(value: TextAlignment) {
         textAlignmentProperty().value = value
@@ -109,7 +106,7 @@ class MyTooltip @JvmOverloads constructor(text: String? = null) : MyPopupControl
 
     fun getTextAlignment(): TextAlignment = textAlignmentProperty().value
 
-    private val textAlignment: ObjectProperty<TextAlignment> =
+    private val textAlignment: SimpleStyleableObjectProperty<TextAlignment> =
         SimpleStyleableObjectProperty(
             TEXT_ALIGNMENT, this, "textAlignment", LEFT
         )
@@ -119,7 +116,7 @@ class MyTooltip @JvmOverloads constructor(text: String? = null) : MyPopupControl
      * exceeds the available space for rendering the text.
      * @return the text overrun property
      */
-    fun textOverrunProperty(): ObjectProperty<OverrunStyle> = textOverrun
+    fun textOverrunProperty(): SimpleStyleableObjectProperty<OverrunStyle> = textOverrun
 
     fun setTextOverrun(value: OverrunStyle) {
         textOverrunProperty().value = value
@@ -127,7 +124,7 @@ class MyTooltip @JvmOverloads constructor(text: String? = null) : MyPopupControl
 
     fun getTextOverrun(): OverrunStyle = textOverrunProperty().value
 
-    private val textOverrun: ObjectProperty<OverrunStyle> =
+    private val textOverrun: SimpleStyleableObjectProperty<OverrunStyle> =
         SimpleStyleableObjectProperty(
             TEXT_OVERRUN, this, "textOverrun", ELLIPSIS
         )
@@ -137,7 +134,7 @@ class MyTooltip @JvmOverloads constructor(text: String? = null) : MyPopupControl
      * indicates whether the text should wrap onto another line.
      * @return the wrap text property
      */
-    fun wrapTextProperty(): BooleanProperty = wrapText
+    fun wrapTextProperty(): SimpleStyleableBooleanProperty = wrapText
 
     fun setWrapText(value: Boolean) {
         wrapTextProperty().value = value
@@ -145,7 +142,7 @@ class MyTooltip @JvmOverloads constructor(text: String? = null) : MyPopupControl
 
     fun isWrapText(): Boolean = wrapTextProperty().value
 
-    private val wrapText: BooleanProperty = SimpleStyleableBooleanProperty(WRAP_TEXT, this, "wrapText", false)
+    private val wrapText: SimpleStyleableBooleanProperty = SimpleStyleableBooleanProperty(WRAP_TEXT, this, "wrapText", false)
 
     /**
      * The default font to use for text in the Tooltip. If the Tooltip's text is
@@ -154,7 +151,7 @@ class MyTooltip @JvmOverloads constructor(text: String? = null) : MyPopupControl
      * font is required, this font will be used.
      * @return the font property
      */
-    fun fontProperty(): ObjectProperty<Font> = font
+    fun fontProperty(): StyleableObjectProperty<Font> = font
 
     fun setFont(value: Font) {
         fontProperty().value = value
@@ -162,7 +159,7 @@ class MyTooltip @JvmOverloads constructor(text: String? = null) : MyPopupControl
 
     fun getFont(): Font = fontProperty().value
 
-    private val font: ObjectProperty<Font> =
+    private val font: StyleableObjectProperty<Font> =
         object : StyleableObjectProperty<Font>(Font.getDefault()) {
             private var fontSetByCss = false
             override fun applyStyle(
@@ -218,12 +215,12 @@ class MyTooltip @JvmOverloads constructor(text: String? = null) : MyPopupControl
      * @since 9
      * @defaultValue 1000ms
      */
-    fun showDelayProperty(): ObjectProperty<Duration> = showDelayProperty
+    fun showDelayProperty(): SimpleStyleableObjectProperty<Duration> = showDelayProperty
 
     fun setShowDelay(showDelay: Duration) = showDelayProperty.set(showDelay)
 
     val showDelay: Duration get() = showDelayProperty.get()
-    private val showDelayProperty: ObjectProperty<Duration> =
+    private val showDelayProperty: SimpleStyleableObjectProperty<Duration> =
         SimpleStyleableObjectProperty(
             SHOW_DELAY, this, "showDelay", Duration(1000.0)
         )
@@ -238,10 +235,10 @@ class MyTooltip @JvmOverloads constructor(text: String? = null) : MyPopupControl
      * @since 9
      * @defaultValue 5000ms
      */
-    fun showDurationProperty(): ObjectProperty<Duration> = showDurationProperty
+    fun showDurationProperty(): SimpleStyleableObjectProperty<Duration> = showDurationProperty
     fun setShowDuration(showDuration: Duration) = showDurationProperty.set(showDuration)
     val showDuration: Duration get() = showDurationProperty.get()
-    private val showDurationProperty: ObjectProperty<Duration> =
+    private val showDurationProperty: SimpleStyleableObjectProperty<Duration> =
         SimpleStyleableObjectProperty(
             SHOW_DURATION, this, "showDuration", Duration(5000.0)
         )
@@ -254,12 +251,12 @@ class MyTooltip @JvmOverloads constructor(text: String? = null) : MyPopupControl
      * @since 9
      * @defaultValue 200ms
      */
-    fun hideDelayProperty(): ObjectProperty<Duration> = hideDelayProperty
+    fun hideDelayProperty(): SimpleStyleableObjectProperty<Duration> = hideDelayProperty
 
     fun setHideDelay(hideDelay: Duration) = hideDelayProperty.set(hideDelay)
 
     val hideDelay: Duration get() = hideDelayProperty.get()
-    private val hideDelayProperty: ObjectProperty<Duration> =
+    private val hideDelayProperty: SimpleStyleableObjectProperty<Duration> =
         SimpleStyleableObjectProperty(
             HIDE_DELAY, this, "hideDelay", Duration(200.0)
         )
@@ -273,7 +270,7 @@ class MyTooltip @JvmOverloads constructor(text: String? = null) : MyPopupControl
      * See the class description of [Node][javafx.scene.Node] for more detail.
      * @return the graphic property
      */
-    fun graphicProperty(): ObjectProperty<Node?> = graphic
+    fun graphicProperty(): StyleableObjectProperty<Node?> = graphic
 
     fun setGraphic(value: Node?) {
         graphicProperty().value = value
@@ -282,7 +279,7 @@ class MyTooltip @JvmOverloads constructor(text: String? = null) : MyPopupControl
     fun getGraphic(): Node? = graphicProperty().value
 
 
-    private val graphic: ObjectProperty<Node?> =
+    private val graphic: StyleableObjectProperty<Node?> =
         object : StyleableObjectProperty<Node?>() {
 
             /*
@@ -297,8 +294,18 @@ class MyTooltip @JvmOverloads constructor(text: String? = null) : MyPopupControl
             Note from Matt: this is weird
 
              */
-            @Suppress("UNCHECKED_CAST")
-            override fun getCssMetaData() = GRAPHIC as CssMetaData<Styleable, Node?>
+            override fun getCssMetaData(): CssMetaData<out Styleable, Node?>? {
+
+                error(
+                    """
+                    
+                    WTF? Is it a Node or a String? This makes no sense.
+                    
+                    GRAPHIC as CssMetaData<Styleable, Node?>
+                    
+                    """.trimIndent()
+                )
+            }
 
             override fun getBean(): Any = this@MyTooltip
 
@@ -341,8 +348,7 @@ TO DO (from JavaFx not from Matt): Note that prop != labeled, which violates the
                         /* need to call super.get() here since get() is overridden to return the graphicProperty's value */
                         val url = super.get()
                         if (url == null) {
-                            @Suppress("UNCHECKED_CAST")
-                            (graphicProperty() as StyleableProperty<Node?>).applyStyle(origin, null)
+                            (graphicProperty()).applyStyle(origin, null)
                         } else {
                             /* RT-34466 - if graphic's url is the same as this property's value, then don't overwrite. */
                             val graphicNode = getGraphic()
@@ -363,7 +369,7 @@ TO DO (from JavaFx not from Matt): Note that prop != labeled, which violates the
                                 Have to call applyStyle on graphicProperty so that the graphicProperty's
                                 origin matches the imageUrlProperty's origin.
                                  */
-                                @Suppress("UNCHECKED_CAST")
+
                                 (graphicProperty() as StyleableProperty<Node?>).applyStyle(origin, ImageView(img))
                             }
                         }
@@ -389,7 +395,7 @@ TO DO (from JavaFx not from Matt): Note that prop != labeled, which violates the
                         The origin of the imageUrlProperty is that of the graphicProperty.
                         Return the origin in a way that doesn't expand the graphicProperty.
                          */
-                        @Suppress("UNCHECKED_CAST")
+
                         return (graphic as StyleableProperty<Node?>).styleOrigin
                     }
 
@@ -409,7 +415,7 @@ TO DO (from JavaFx not from Matt): Note that prop != labeled, which violates the
      * Specifies the positioning of the graphic relative to the text.
      * @return the content display property
      */
-    fun contentDisplayProperty(): ObjectProperty<ContentDisplay> = contentDisplay
+    fun contentDisplayProperty(): SimpleStyleableObjectProperty<ContentDisplay> = contentDisplay
 
     fun setContentDisplay(value: ContentDisplay) {
         contentDisplayProperty().value = value
@@ -417,7 +423,7 @@ TO DO (from JavaFx not from Matt): Note that prop != labeled, which violates the
 
     fun getContentDisplay(): ContentDisplay = contentDisplayProperty().value
 
-    private val contentDisplay: ObjectProperty<ContentDisplay> =
+    private val contentDisplay: SimpleStyleableObjectProperty<ContentDisplay> =
         SimpleStyleableObjectProperty(
             CONTENT_DISPLAY, this, "contentDisplay", ContentDisplay.LEFT
         )
@@ -426,7 +432,7 @@ TO DO (from JavaFx not from Matt): Note that prop != labeled, which violates the
      * The amount of space between the graphic and text
      * @return the graphic text gap property
      */
-    fun graphicTextGapProperty(): DoubleProperty = graphicTextGap
+    fun graphicTextGapProperty(): SimpleStyleableDoubleProperty = graphicTextGap
 
     fun setGraphicTextGap(value: Double) {
         graphicTextGapProperty().value = value
@@ -434,7 +440,7 @@ TO DO (from JavaFx not from Matt): Note that prop != labeled, which violates the
 
     fun getGraphicTextGap(): Double = graphicTextGapProperty().value
 
-    private val graphicTextGap: DoubleProperty =
+    private val graphicTextGap: SimpleStyleableDoubleProperty =
         SimpleStyleableDoubleProperty(
             GRAPHIC_TEXT_GAP,
             this,
@@ -908,9 +914,8 @@ is shown near the right edge of the screen.
                 override fun isSettable(cssBridge: MyToolTipCSSBridge): Boolean =
                     !cssBridge.popupControl.fontProperty().isBound
 
-                @Suppress("UNCHECKED_CAST")
                 override fun getStyleableProperty(cssBridge: MyToolTipCSSBridge) =
-                    cssBridge.popupControl.fontProperty() as StyleableProperty<Font>
+                    cssBridge.popupControl.fontProperty()
             }
         private val TEXT_ALIGNMENT: CssMetaData<MyToolTipCSSBridge, TextAlignment> =
             object : CssMetaData<MyToolTipCSSBridge, TextAlignment>(
@@ -922,9 +927,9 @@ is shown near the right edge of the screen.
             ) {
                 override fun isSettable(cssBridge: MyToolTipCSSBridge): Boolean = !cssBridge.popupControl.textAlignmentProperty().isBound
 
-                @Suppress("UNCHECKED_CAST")
+
                 override fun getStyleableProperty(cssBridge: MyToolTipCSSBridge) =
-                    cssBridge.popupControl.textAlignmentProperty() as StyleableProperty<TextAlignment>
+                    cssBridge.popupControl.textAlignmentProperty()
             }
         private val TEXT_OVERRUN: CssMetaData<MyToolTipCSSBridge, OverrunStyle> =
             object : CssMetaData<MyToolTipCSSBridge, OverrunStyle>(
@@ -937,18 +942,18 @@ is shown near the right edge of the screen.
                 override fun isSettable(cssBridge: MyToolTipCSSBridge): Boolean =
                     !cssBridge.popupControl.textOverrunProperty().isBound
 
-                @Suppress("UNCHECKED_CAST")
+
                 override fun getStyleableProperty(cssBridge: MyToolTipCSSBridge) =
-                    cssBridge.popupControl.textOverrunProperty() as StyleableProperty<OverrunStyle>
+                    cssBridge.popupControl.textOverrunProperty()
             }
         private val WRAP_TEXT: BooleanCssMetaData<MyToolTipCSSBridge> =
             object : BooleanCssMetaData<MyToolTipCSSBridge>("-fx-wrap-text", false) {
                 override fun isSettable(cssBridge: MyToolTipCSSBridge): Boolean =
                     !cssBridge.popupControl.wrapTextProperty().isBound
 
-                @Suppress("UNCHECKED_CAST")
+
                 override fun getStyleableProperty(cssBridge: MyToolTipCSSBridge) =
-                    cssBridge.popupControl.wrapTextProperty() as StyleableProperty<Boolean>
+                    cssBridge.popupControl.wrapTextProperty()
             }
         private val GRAPHIC: CssMetaData<MyToolTipCSSBridge, String> =
             object : CssMetaData<MyToolTipCSSBridge, String>("-fx-graphic", StringConverter.getInstance()) {
@@ -969,9 +974,9 @@ is shown near the right edge of the screen.
                 override fun isSettable(cssBridge: MyToolTipCSSBridge) =
                     !cssBridge.popupControl.contentDisplayProperty().isBound
 
-                @Suppress("UNCHECKED_CAST")
+
                 override fun getStyleableProperty(cssBridge: MyToolTipCSSBridge) =
-                    cssBridge.popupControl.contentDisplayProperty() as StyleableProperty<ContentDisplay>
+                    cssBridge.popupControl.contentDisplayProperty()
             }
         private val GRAPHIC_TEXT_GAP: CssMetaData<MyToolTipCSSBridge, Number> =
             object : CssMetaData<MyToolTipCSSBridge, Number>(
@@ -982,9 +987,9 @@ is shown near the right edge of the screen.
                 override fun isSettable(cssBridge: MyToolTipCSSBridge) =
                     !cssBridge.popupControl.graphicTextGapProperty().isBound
 
-                @Suppress("UNCHECKED_CAST")
+
                 override fun getStyleableProperty(cssBridge: MyToolTipCSSBridge) =
-                    cssBridge.popupControl.graphicTextGapProperty() as StyleableProperty<Number>
+                    cssBridge.popupControl.graphicTextGapProperty()
             }
         private val SHOW_DELAY: CssMetaData<MyToolTipCSSBridge, Duration> =
             object : CssMetaData<MyToolTipCSSBridge, Duration>(
@@ -995,9 +1000,9 @@ is shown near the right edge of the screen.
                 override fun isSettable(cssBridge: MyToolTipCSSBridge) =
                     !cssBridge.popupControl.showDelayProperty().isBound
 
-                @Suppress("UNCHECKED_CAST")
+
                 override fun getStyleableProperty(cssBridge: MyToolTipCSSBridge) =
-                    cssBridge.popupControl.showDelayProperty() as StyleableProperty<Duration>
+                    cssBridge.popupControl.showDelayProperty()
             }
         private val SHOW_DURATION: CssMetaData<MyToolTipCSSBridge, Duration> =
             object : CssMetaData<MyToolTipCSSBridge, Duration>(
@@ -1008,9 +1013,9 @@ is shown near the right edge of the screen.
                 override fun isSettable(cssBridge: MyToolTipCSSBridge) =
                     !cssBridge.popupControl.showDurationProperty().isBound
 
-                @Suppress("UNCHECKED_CAST")
+
                 override fun getStyleableProperty(cssBridge: MyToolTipCSSBridge) =
-                    cssBridge.popupControl.showDurationProperty() as StyleableProperty<Duration>
+                    cssBridge.popupControl.showDurationProperty()
             }
         private val HIDE_DELAY: CssMetaData<MyToolTipCSSBridge, Duration> =
             object : CssMetaData<MyToolTipCSSBridge, Duration>(
@@ -1021,9 +1026,9 @@ is shown near the right edge of the screen.
                 override fun isSettable(cssBridge: MyToolTipCSSBridge): Boolean =
                     !cssBridge.popupControl.hideDelayProperty().isBound
 
-                @Suppress("UNCHECKED_CAST")
+
                 override fun getStyleableProperty(cssBridge: MyToolTipCSSBridge) =
-                    cssBridge.popupControl.hideDelayProperty() as StyleableProperty<Duration>
+                    cssBridge.popupControl.hideDelayProperty()
             }
 
         /**

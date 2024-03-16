@@ -6,9 +6,9 @@ import javafx.css.Styleable
 import javafx.scene.Node
 import javafx.scene.paint.Color
 import matt.color.AwtColor
-import matt.color.common.ContrastAlgorithm
 import matt.color.common.IntColor
-import matt.color.common.calculateContrastingColor
+import matt.color.contrast.ContrastAlgorithm
+import matt.color.contrast.calculateContrastingColor
 import matt.color.name.findName
 import matt.color.toAwtColor
 import matt.color.toMColor

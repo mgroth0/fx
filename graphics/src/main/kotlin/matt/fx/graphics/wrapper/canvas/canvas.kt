@@ -71,9 +71,9 @@ open class CanvasWrapper(node: Canvas = Canvas()) : NodeWrapperImpl<Canvas>(node
     ) : this(width = size.width, height = size.height)
 
 
-    final override val widthProperty = node.widthProperty().toNonNullableProp().cast<Double>()
+    final override val widthProperty = node.widthProperty().toNonNullableProp().cast(Double::class)
     final override var pixelWidth by lazyVarDelegate { widthProperty }
-    final override val heightProperty = node.heightProperty().toNonNullableProp().cast<Double>()
+    final override val heightProperty = node.heightProperty().toNonNullableProp().cast(Double::class)
     final override var pixelHeight by lazyVarDelegate { heightProperty }
 
     final override val actualWidth by lazy { widthProperty * scaleXProperty }

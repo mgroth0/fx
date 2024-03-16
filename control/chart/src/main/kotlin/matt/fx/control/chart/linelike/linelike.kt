@@ -3,7 +3,6 @@ package matt.fx.control.chart.linelike
 import com.sun.javafx.charts.Legend.LegendItem
 import javafx.animation.Animation
 import javafx.application.Platform
-import javafx.beans.property.BooleanProperty
 import javafx.css.CssMetaData
 import javafx.css.Styleable
 import javafx.css.StyleableBooleanProperty
@@ -51,7 +50,7 @@ abstract class LineLikeChartNodeWithOptionalSymbols<X, Y>(
 
 ) : LineLikeChartNode<X, Y>(xAxis, yAxis) {
 
-    val createSymbols: BooleanProperty =
+    val createSymbols: StyleableBooleanProperty =
         object : StyleableBooleanProperty(true) {
             override fun invalidated() {
                 for (seriesIndex in getData().indices) {
@@ -80,7 +79,7 @@ abstract class LineLikeChartNodeWithOptionalSymbols<X, Y>(
             override fun getCssMetaData(): CssMetaData<out LineLikeChartNodeWithOptionalSymbols<*, *>, Boolean> = styleableProps.CREATE_SYMBOLS
         }
 
-    fun createSymbolsProperty(): BooleanProperty = createSymbols
+    fun createSymbolsProperty(): StyleableBooleanProperty = createSymbols
 
     fun getCreateSymbols(): Boolean = createSymbols.value
 
@@ -151,10 +150,9 @@ abstract class LineLikeChartNodeWithOptionalSymbols<X, Y>(
 
                 override fun isSettable(node: T): Boolean = !node.createSymbolsIsBound()
 
-                @Suppress("UNCHECKED_CAST")
                 override fun getStyleableProperty(
                     node: T
-                ): StyleableProperty<Boolean> = node.createSymbolsProperty() as StyleableProperty<Boolean>
+                ): StyleableProperty<Boolean> = node.createSymbolsProperty()
             }
 
 

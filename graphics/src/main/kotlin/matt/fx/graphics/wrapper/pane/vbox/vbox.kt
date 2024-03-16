@@ -20,6 +20,7 @@ import matt.fx.graphics.wrapper.pane.box.BoxWrapperImpl
 import matt.lang.common.B
 import matt.lang.delegation.lazyVarDelegate
 import matt.obs.prop.writable.Var
+import kotlin.reflect.KClass
 
 fun ET.v(
     spacing: Number? = null,
@@ -27,16 +28,18 @@ fun ET.v(
     op: VBoxWrapper<NW>.() -> Unit = {}
 ) = vbox(spacing, alignment, op)
 
-fun <C: NodeWrapper> ET.vbox(
+inline fun <reified C: NodeWrapper> ET.vbox(
     spacing: Number? = null,
     alignment: Pos? = null,
     op: VBoxWrapper<C>.() -> Unit = {}
 ): VBoxWrapper<C> {
-    val vbox = VBoxWrapperImpl<C>(VBox())
+    val vbox = VBoxWrapperImpl<C>(VBox(), childClass = C::class)
     if (alignment != null) vbox.alignment = alignment
     if (spacing != null) vbox.spacing = spacing.toDouble()
     return attach(vbox, op)
 }
+
+class VBoxSimple: VBoxWrapperImpl<NodeWrapper>(VBox(), NodeWrapper::class)
 
 typealias VBoxW = VBoxWrapperImpl<NodeWrapper>
 
@@ -45,8 +48,13 @@ interface VBoxWrapper<C: NodeWrapper>: BoxWrapper<C> {
     var isFillWidth: B
 }
 
-open class VBoxWrapperImpl<C: NodeWrapper>(node: VBox = VBox()): BoxWrapperImpl<VBox, C>(node), VBoxWrapper<C> {
-    constructor(vararg nodes: C): this(VBox(*nodes.map { it.node }.toTypedArray()))
+open class VBoxWrapperImpl<C: NodeWrapper>(node: VBox = VBox(), childClass: KClass<C>): BoxWrapperImpl<VBox, C>(node, childClass = childClass), VBoxWrapper<C> {
+    companion object {
+        inline operator fun <reified C:NodeWrapper> invoke(
+            vararg nodes: C
+        ) = VBoxWrapperImpl(VBox(*nodes.map { it.node }.toTypedArray()), C::class)
+    }
+
 
 
     final override val fillWidthProperty: NonNullFXBackedBindableProp<Boolean> by lazy {

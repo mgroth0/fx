@@ -4,6 +4,7 @@ import javafx.scene.layout.Priority.ALWAYS
 import matt.codegen.markdown.Markdown
 import matt.codegen.markdown.embedInHtml
 import matt.fx.graphics.wrapper.ET
+import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.attachTo
 import matt.fx.graphics.wrapper.pane.vbox.VBoxW
 import matt.fx.web.webview
@@ -12,7 +13,7 @@ import matt.obs.prop.writable.BindableProperty
 
 fun ET.markdownViewer(op: Dsl<MarkDownViewer> = {}) = MarkDownViewer().attachTo(this, op)
 
-class MarkDownViewer : VBoxW() {
+class MarkDownViewer : VBoxW(childClass = NodeWrapper::class) {
     private val wv =
         webview {
             vgrow = ALWAYS

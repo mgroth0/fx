@@ -24,7 +24,7 @@ class InspectionView<N: PaneWrapperImpl<*, *>, T: Inspectable<N>>(
     dir: Orientation = Orientation.HORIZONTAL,
     table: Boolean = false,
     wrap_lv: PaneWrapperImpl<*, *>? = null
-): BoxWrapperImpl<Pane, NodeWrapper>(if (dir == Orientation.HORIZONTAL) HBox() else VBox()) {
+): BoxWrapperImpl<Pane, NodeWrapper>(if (dir == Orientation.HORIZONTAL) HBox() else VBox(), childClass = NodeWrapper::class) {
 
     private val oitems = if (items is ObservableList) items else items.toObservable()
     val lv: SelectingControl<T> = if (table) TableViewWrapper(oitems) else ListViewWrapper(oitems)
@@ -37,7 +37,9 @@ class InspectionView<N: PaneWrapperImpl<*, *>, T: Inspectable<N>>(
             }
         )
         val inspectHolder: BoxWrapperImpl<*, *> =
-            if (dir == Orientation.HORIZONTAL) HBoxWrapperImpl<NodeWrapper>() else VBoxWrapperImpl<NodeWrapper>()
+            if (dir ==
+                Orientation.HORIZONTAL
+            ) HBoxWrapperImpl<NodeWrapper>(childClass = NodeWrapper::class) else VBoxWrapperImpl<NodeWrapper>()
         inspectHolder.vgrow = ALWAYS
         inspectHolder.hgrow = ALWAYS
         add(inspectHolder)

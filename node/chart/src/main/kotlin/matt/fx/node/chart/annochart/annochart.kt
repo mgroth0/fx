@@ -45,7 +45,7 @@ open class AnnotateableChart<X : MathAndComparable<X>, Y : MathAndComparable<Y>>
     xAxis: NumberAxisWrapper<X>,
     yAxis: NumberAxisWrapper<Y>,
     scatter: Boolean
-) : RegionWrapperImpl<Region, NW>(stack), Annotateable<X, Y>, ChartLocater<X, Y>, AnnotatedFigure {
+) : RegionWrapperImpl<Region, NW>(stack, NW::class), Annotateable<X, Y>, ChartLocater<X, Y>, AnnotatedFigure {
 
     constructor(
         xAxis: NumberAxisWrapper<X>,

@@ -22,10 +22,10 @@ abstract class TableColumnBaseWrapper<E: Any, P, F: TableColumnBase<E, P>>(
 
     final override fun isInsideRow() = false
 
-    final override val widthProperty get() = node.widthProperty().toNonNullableROProp().cast<Double>()
-    final override val prefWidthProperty get() = node.prefWidthProperty().toNonNullableProp().cast<Double>()
-    final override val minWidthProperty get() = node.minWidthProperty().toNonNullableProp().cast<Double>()
-    final override val maxWidthProperty get() = node.maxWidthProperty().toNonNullableProp().cast<Double>()
+    final override val widthProperty get() = node.widthProperty().toNonNullableROProp().cast<Double>(Double::class)
+    final override val prefWidthProperty get() = node.prefWidthProperty().toNonNullableProp().cast<Double>(Double::class)
+    final override val minWidthProperty get() = node.minWidthProperty().toNonNullableProp().cast<Double>(Double::class)
+    final override val maxWidthProperty get() = node.maxWidthProperty().toNonNullableProp().cast<Double>(Double::class)
 
     final override val properties: ObservableMap<Any, Any?>
         get() = node.properties

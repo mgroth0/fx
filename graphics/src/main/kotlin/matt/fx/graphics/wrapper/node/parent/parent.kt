@@ -14,9 +14,13 @@ import matt.fx.graphics.wrapper.node.tri.Triangle
 import matt.lang.anno.Open
 import matt.obs.bind.binding
 import matt.obs.col.olist.mappedlist.toMappedList
+import kotlin.reflect.KClass
+import kotlin.reflect.cast
 
 interface ParentWrapper<C : NodeWrapper> : NodeWrapper {
     override val node: Parent
+
+    fun castChild(a: Any): C
 
     @Open
     fun polygon(vararg points: Number, op: PolygonWrapper.() -> Unit = {}) =
@@ -54,17 +58,22 @@ interface ParentWrapper<C : NodeWrapper> : NodeWrapper {
     }
 }
 
-abstract class ParentWrapperImpl<out N : Parent, C : NodeWrapper>(node: N) :
+abstract class ParentWrapperImpl<out N : Parent, C : NodeWrapper>(
+    node: N,
+    val childClass: KClass<C>
+) :
     NodeWrapperImpl<N>(node),
-    ParentWrapper<C> {
+        ParentWrapper<C> {
 
 
+    final override fun castChild(a: Any): C = childClass.cast(a)
 
 
 
     val childrenUnmodifiable by lazy {
-        @Suppress("UNCHECKED_CAST")
-        node.childrenUnmodifiable.createImmutableWrapper().toMappedList { it.wrapped() as C }
+        node.childrenUnmodifiable.createImmutableWrapper().toMappedList {
+            childClass.cast(it.wrapped())
+        }
     }
 
     fun requestLayout() = node.requestLayout()

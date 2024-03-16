@@ -7,7 +7,6 @@ import matt.fx.base.wrapper.obs.obsval.prop.toNonNullableProp
 import matt.fx.base.wrapper.obs.obsval.prop.toNullableProp
 import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.fx.graphics.wrapper.node.impl.NodeWrapperImpl
-import matt.fx.graphics.wrapper.pane.grid.GridPaneWrapper
 
 fun Media.play(): java.lang.Exception {
     MediaPlayer(this).play()
@@ -30,12 +29,5 @@ class MediaViewWrapper(
     val fitWidthProperty by lazy { node.fitWidthProperty().toNonNullableProp().cast<Double>() }
     val fitHeightProperty by lazy { node.fitHeightProperty().toNonNullableProp().cast<Double>() }
 }
-
-
-fun yesIWillUseGraphics() {
-    println(GridPaneWrapper<NodeWrapper>())
-}
-
-
 
 

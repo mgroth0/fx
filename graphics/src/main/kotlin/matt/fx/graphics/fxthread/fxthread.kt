@@ -12,6 +12,7 @@ import matt.fx.graphics.wrapper.node.NodeWrapper
 import matt.lang.assertions.require.requireEquals
 import matt.lang.exec.Exec
 import matt.lang.function.Produce
+import matt.lang.model.value.Value
 import matt.model.flowlogic.runner.Run
 import matt.model.flowlogic.runner.Runner
 import matt.obs.subscribe.j.LatchManager
@@ -46,11 +47,11 @@ object FXAppStateWatcher {
 val RunLaterReturnLatchManager by lazy { LatchManager() }
 
 fun <T> runLaterReturn(op: () -> T): T {
-    var r: Any? = object {}
+    var r: Value<T>? = null
     val latch = RunLaterReturnLatchManager.getLatch()
     try {
         runLater {
-            r = op()
+            r = Value(op())
             latch.open()
         }
     } catch (e: Exception) {
@@ -58,7 +59,7 @@ fun <T> runLaterReturn(op: () -> T): T {
         e.printStackTrace()
     }
     latch.await()
-    @Suppress("UNCHECKED_CAST") return (r as T)
+    return r!!.value
 }
 
 inline fun <T> ensureInFXThreadInPlace(crossinline op: () -> T): T =
