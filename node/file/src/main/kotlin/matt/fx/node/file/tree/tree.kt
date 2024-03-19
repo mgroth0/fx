@@ -127,6 +127,7 @@ fun PaneWrapperImpl<*, *>.fileTree(
             setupGUI()
         }
 
+
         unsafeErr("FX IS DEAD: here content was set up. Basically, it added file tree items and set it up to automatically repopulate in the acbkground")
         /*setupContent(rootFiles, strategy)*/
 
