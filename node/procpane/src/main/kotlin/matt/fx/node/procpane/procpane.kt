@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalContracts::class)
+
 package matt.fx.node.procpane
 
 
@@ -37,6 +39,7 @@ import matt.obs.prop.writable.VarProp
 import matt.obs.prop.writable.toggle
 import matt.time.ONE_MINUTE
 import java.lang.Thread.sleep
+import kotlin.contracts.ExperimentalContracts
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.DurationUnit

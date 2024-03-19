@@ -36,6 +36,7 @@ import matt.obs.prop.writable.BindableProperty
 import matt.obs.prop.writable.toggle
 import matt.prim.str.joinWithNewLinesAndTabs
 import java.lang.System.currentTimeMillis
+import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind.EXACTLY_ONCE
 import kotlin.contracts.contract
 
@@ -320,6 +321,7 @@ class FXHotkeyDSL : HotkeyDsl() {
     }
 }
 
+@OptIn(ExperimentalContracts::class)
 @SeeURL("https://youtrack.jetbrains.com/issue/KT-65158/K2-Contracts-False-positive-WRONGINVOCATIONKIND-with-unrelated-higher-order-function-call")
 @Suppress("WRONG_INVOCATION_KIND")
 inline fun EventTargetWrapper.hotkeys(

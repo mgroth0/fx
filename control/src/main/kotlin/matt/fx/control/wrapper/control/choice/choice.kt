@@ -32,9 +32,11 @@ import matt.obs.prop.writable.BindableProperty
 import matt.prim.str.upper
 import matt.time.dur.common.sec
 import java.lang.System.currentTimeMillis
+import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
 
+@OptIn(ExperimentalContracts::class)
 inline fun <reified T : Any> ET.choicebox(
     property: BindableProperty<T>? = null,
     nullableProp: BindableProperty<T?>? = null,

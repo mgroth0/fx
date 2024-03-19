@@ -53,6 +53,7 @@ import matt.obs.prop.ValProp
 import matt.obs.prop.newold.MObservableValNewAndOld
 import matt.obs.prop.writable.BindableProperty
 import matt.obs.prop.writable.Var
+import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind.EXACTLY_ONCE
 import kotlin.contracts.contract
 
@@ -601,6 +602,7 @@ interface NodeWrapper : EventTargetWrapper, StyleableWrapper, HasScene {
 }
 
 
+@OptIn(ExperimentalContracts::class)
 inline fun <T : NodeWrapper> EventTargetWrapper.attach(
     child: T,
     op: T.() -> Unit = {}
@@ -613,6 +615,7 @@ inline fun <T : NodeWrapper> EventTargetWrapper.attach(
     return child
 }
 
+@OptIn(ExperimentalContracts::class)
 inline fun <T : NodeWrapper> T.attachTo(
     parent: EventTargetWrapper,
     op: T.() -> Unit = {}
@@ -630,6 +633,7 @@ inline fun <T : NodeWrapper> T.attachTo(
  * Attaches the node to the pane and invokes the node operation.
  * Because the framework sometimes needs to setup the node, another lambda can be provided
  */
+@OptIn(ExperimentalContracts::class)
 inline fun <T : NodeWrapper> T.attachTo(
     parent: EventTargetWrapper,
     after: T.() -> Unit,
